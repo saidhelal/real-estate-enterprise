@@ -867,6 +867,2751 @@ paths:
                 items:
                   $ref: "#/components/schemas/AuditLog"
 
+  /unit-types:
+    get:
+      operationId: listUnitTypes
+      tags: [unitTypes]
+      summary: List unit-types
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitTypes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitTypeListResponse"
+    post:
+      operationId: createUnitType
+      tags: [unitTypes]
+      summary: Create a UnitType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitTypeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitType"
+
+  /unit-types/{id}:
+    get:
+      operationId: getUnitType
+      tags: [unitTypes]
+      summary: Get a UnitType
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitType
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitType"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitType
+      tags: [unitTypes]
+      summary: Update a UnitType
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitTypeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitType"
+    delete:
+      operationId: deleteUnitType
+      tags: [unitTypes]
+      summary: Soft-delete a UnitType
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /unit-statuses:
+    get:
+      operationId: listUnitStatuses
+      tags: [unitStatuses]
+      summary: List unit-statuses
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitStatuses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitStatusListResponse"
+    post:
+      operationId: createUnitStatus
+      tags: [unitStatuses]
+      summary: Create a UnitStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitStatusInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitStatus"
+
+  /unit-statuses/{id}:
+    get:
+      operationId: getUnitStatus
+      tags: [unitStatuses]
+      summary: Get a UnitStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitStatus
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitStatus"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitStatus
+      tags: [unitStatuses]
+      summary: Update a UnitStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitStatus"
+    delete:
+      operationId: deleteUnitStatus
+      tags: [unitStatuses]
+      summary: Soft-delete a UnitStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List projects
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectListResponse"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a Project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a Project
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a Project
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Soft-delete a Project
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /phases:
+    get:
+      operationId: listPhases
+      tags: [phases]
+      summary: List phases
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Phases
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PhaseListResponse"
+    post:
+      operationId: createPhase
+      tags: [phases]
+      summary: Create a Phase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PhaseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Phase"
+
+  /phases/{id}:
+    get:
+      operationId: getPhase
+      tags: [phases]
+      summary: Get a Phase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Phase
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Phase"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePhase
+      tags: [phases]
+      summary: Update a Phase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PhaseUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Phase"
+    delete:
+      operationId: deletePhase
+      tags: [phases]
+      summary: Soft-delete a Phase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /buildings:
+    get:
+      operationId: listBuildings
+      tags: [buildings]
+      summary: List buildings
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: phaseId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Buildings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuildingListResponse"
+    post:
+      operationId: createBuilding
+      tags: [buildings]
+      summary: Create a Building
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BuildingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Building"
+
+  /buildings/{id}:
+    get:
+      operationId: getBuilding
+      tags: [buildings]
+      summary: Get a Building
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Building
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Building"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBuilding
+      tags: [buildings]
+      summary: Update a Building
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BuildingUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Building"
+    delete:
+      operationId: deleteBuilding
+      tags: [buildings]
+      summary: Soft-delete a Building
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /floors:
+    get:
+      operationId: listFloors
+      tags: [floors]
+      summary: List floors
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: buildingId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Floors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FloorListResponse"
+    post:
+      operationId: createFloor
+      tags: [floors]
+      summary: Create a Floor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FloorInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
+
+  /floors/{id}:
+    get:
+      operationId: getFloor
+      tags: [floors]
+      summary: Get a Floor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Floor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateFloor
+      tags: [floors]
+      summary: Update a Floor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FloorUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Floor"
+    delete:
+      operationId: deleteFloor
+      tags: [floors]
+      summary: Soft-delete a Floor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /units:
+    get:
+      operationId: listUnits
+      tags: [units]
+      summary: List units
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: buildingId, in: query, required: false, schema: { type: string } }
+        - { name: floorId, in: query, required: false, schema: { type: string } }
+        - { name: unitTypeId, in: query, required: false, schema: { type: string } }
+        - { name: unitStatusId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Units
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitListResponse"
+    post:
+      operationId: createUnit
+      tags: [units]
+      summary: Create a Unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+
+  /units/{id}:
+    get:
+      operationId: getUnit
+      tags: [units]
+      summary: Get a Unit
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Unit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnit
+      tags: [units]
+      summary: Update a Unit
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+    delete:
+      operationId: deleteUnit
+      tags: [units]
+      summary: Soft-delete a Unit
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /lead-sources:
+    get:
+      operationId: listLeadSources
+      tags: [leadSources]
+      summary: List lead-sources
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeadSources
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadSourceListResponse"
+    post:
+      operationId: createLeadSource
+      tags: [leadSources]
+      summary: Create a LeadSource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadSourceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadSource"
+
+  /lead-sources/{id}:
+    get:
+      operationId: getLeadSource
+      tags: [leadSources]
+      summary: Get a LeadSource
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeadSource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadSource"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeadSource
+      tags: [leadSources]
+      summary: Update a LeadSource
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadSourceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadSource"
+    delete:
+      operationId: deleteLeadSource
+      tags: [leadSources]
+      summary: Soft-delete a LeadSource
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /leads:
+    get:
+      operationId: listLeads
+      tags: [leads]
+      summary: List leads
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: sourceId, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Leads
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadListResponse"
+    post:
+      operationId: createLead
+      tags: [leads]
+      summary: Create a Lead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+
+  /leads/{id}:
+    get:
+      operationId: getLead
+      tags: [leads]
+      summary: Get a Lead
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Lead
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLead
+      tags: [leads]
+      summary: Update a Lead
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+    delete:
+      operationId: deleteLead
+      tags: [leads]
+      summary: Soft-delete a Lead
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /lead-activities:
+    get:
+      operationId: listLeadActivities
+      tags: [leadActivities]
+      summary: List lead-activities
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: leadId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeadActivities
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadActivityListResponse"
+    post:
+      operationId: createLeadActivity
+      tags: [leadActivities]
+      summary: Create a LeadActivity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadActivityInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadActivity"
+
+  /lead-activities/{id}:
+    get:
+      operationId: getLeadActivity
+      tags: [leadActivities]
+      summary: Get a LeadActivity
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeadActivity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadActivity"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeadActivity
+      tags: [leadActivities]
+      summary: Update a LeadActivity
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadActivityUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadActivity"
+    delete:
+      operationId: deleteLeadActivity
+      tags: [leadActivities]
+      summary: Soft-delete a LeadActivity
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /lead-follow-ups:
+    get:
+      operationId: listLeadFollowUps
+      tags: [leadFollowUps]
+      summary: List lead-follow-ups
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: leadId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeadFollowUps
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadFollowUpListResponse"
+    post:
+      operationId: createLeadFollowUp
+      tags: [leadFollowUps]
+      summary: Create a LeadFollowUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadFollowUpInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadFollowUp"
+
+  /lead-follow-ups/{id}:
+    get:
+      operationId: getLeadFollowUp
+      tags: [leadFollowUps]
+      summary: Get a LeadFollowUp
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeadFollowUp
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadFollowUp"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeadFollowUp
+      tags: [leadFollowUps]
+      summary: Update a LeadFollowUp
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadFollowUpUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadFollowUp"
+    delete:
+      operationId: deleteLeadFollowUp
+      tags: [leadFollowUps]
+      summary: Soft-delete a LeadFollowUp
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /lead-assignments:
+    get:
+      operationId: listLeadAssignments
+      tags: [leadAssignments]
+      summary: List lead-assignments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: leadId, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeadAssignments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadAssignmentListResponse"
+    post:
+      operationId: createLeadAssignment
+      tags: [leadAssignments]
+      summary: Create a LeadAssignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadAssignmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadAssignment"
+
+  /lead-assignments/{id}:
+    get:
+      operationId: getLeadAssignment
+      tags: [leadAssignments]
+      summary: Get a LeadAssignment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeadAssignment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadAssignment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeadAssignment
+      tags: [leadAssignments]
+      summary: Update a LeadAssignment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadAssignmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadAssignment"
+    delete:
+      operationId: deleteLeadAssignment
+      tags: [leadAssignments]
+      summary: Soft-delete a LeadAssignment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /lead-conversions:
+    get:
+      operationId: listLeadConversions
+      tags: [leadConversions]
+      summary: List lead-conversions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: leadId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeadConversions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadConversionListResponse"
+    post:
+      operationId: createLeadConversion
+      tags: [leadConversions]
+      summary: Create a LeadConversion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadConversionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadConversion"
+
+  /lead-conversions/{id}:
+    get:
+      operationId: getLeadConversion
+      tags: [leadConversions]
+      summary: Get a LeadConversion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeadConversion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadConversion"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeadConversion
+      tags: [leadConversions]
+      summary: Update a LeadConversion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadConversionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadConversion"
+    delete:
+      operationId: deleteLeadConversion
+      tags: [leadConversions]
+      summary: Soft-delete a LeadConversion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customers:
+    get:
+      operationId: listCustomers
+      tags: [customers]
+      summary: List customers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: type, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerListResponse"
+    post:
+      operationId: createCustomer
+      tags: [customers]
+      summary: Create a Customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+
+  /customers/{id}:
+    get:
+      operationId: getCustomer
+      tags: [customers]
+      summary: Get a Customer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCustomer
+      tags: [customers]
+      summary: Update a Customer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    delete:
+      operationId: deleteCustomer
+      tags: [customers]
+      summary: Soft-delete a Customer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customer-contacts:
+    get:
+      operationId: listCustomerContacts
+      tags: [customerContacts]
+      summary: List customer-contacts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CustomerContacts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerContactListResponse"
+    post:
+      operationId: createCustomerContact
+      tags: [customerContacts]
+      summary: Create a CustomerContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerContactInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerContact"
+
+  /customer-contacts/{id}:
+    get:
+      operationId: getCustomerContact
+      tags: [customerContacts]
+      summary: Get a CustomerContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CustomerContact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerContact"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCustomerContact
+      tags: [customerContacts]
+      summary: Update a CustomerContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerContactUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerContact"
+    delete:
+      operationId: deleteCustomerContact
+      tags: [customerContacts]
+      summary: Soft-delete a CustomerContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customer-documents:
+    get:
+      operationId: listCustomerDocuments
+      tags: [customerDocuments]
+      summary: List customer-documents
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CustomerDocuments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDocumentListResponse"
+    post:
+      operationId: createCustomerDocument
+      tags: [customerDocuments]
+      summary: Create a CustomerDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerDocumentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDocument"
+
+  /customer-documents/{id}:
+    get:
+      operationId: getCustomerDocument
+      tags: [customerDocuments]
+      summary: Get a CustomerDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CustomerDocument
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDocument"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCustomerDocument
+      tags: [customerDocuments]
+      summary: Update a CustomerDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerDocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDocument"
+    delete:
+      operationId: deleteCustomerDocument
+      tags: [customerDocuments]
+      summary: Soft-delete a CustomerDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customer-notes:
+    get:
+      operationId: listCustomerNotes
+      tags: [customerNotes]
+      summary: List customer-notes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CustomerNotes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerNoteListResponse"
+    post:
+      operationId: createCustomerNote
+      tags: [customerNotes]
+      summary: Create a CustomerNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerNoteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerNote"
+
+  /customer-notes/{id}:
+    get:
+      operationId: getCustomerNote
+      tags: [customerNotes]
+      summary: Get a CustomerNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CustomerNote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerNote"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCustomerNote
+      tags: [customerNotes]
+      summary: Update a CustomerNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerNoteUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerNote"
+    delete:
+      operationId: deleteCustomerNote
+      tags: [customerNotes]
+      summary: Soft-delete a CustomerNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /reservations:
+    get:
+      operationId: listReservations
+      tags: [reservations]
+      summary: List reservations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Reservations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationListResponse"
+    post:
+      operationId: createReservation
+      tags: [reservations]
+      summary: Create a Reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+
+  /reservations/{id}:
+    get:
+      operationId: getReservation
+      tags: [reservations]
+      summary: Get a Reservation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateReservation
+      tags: [reservations]
+      summary: Update a Reservation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+    delete:
+      operationId: deleteReservation
+      tags: [reservations]
+      summary: Soft-delete a Reservation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /reservation-payments:
+    get:
+      operationId: listReservationPayments
+      tags: [reservationPayments]
+      summary: List reservation-payments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: reservationId, in: query, required: false, schema: { type: string } }
+        - { name: method, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ReservationPayments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationPaymentListResponse"
+    post:
+      operationId: createReservationPayment
+      tags: [reservationPayments]
+      summary: Create a ReservationPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationPaymentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationPayment"
+
+  /reservation-payments/{id}:
+    get:
+      operationId: getReservationPayment
+      tags: [reservationPayments]
+      summary: Get a ReservationPayment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ReservationPayment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationPayment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateReservationPayment
+      tags: [reservationPayments]
+      summary: Update a ReservationPayment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationPaymentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationPayment"
+    delete:
+      operationId: deleteReservationPayment
+      tags: [reservationPayments]
+      summary: Soft-delete a ReservationPayment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contracts:
+    get:
+      operationId: listContracts
+      tags: [contracts]
+      summary: List contracts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: reservationId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Contracts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractListResponse"
+    post:
+      operationId: createContract
+      tags: [contracts]
+      summary: Create a Contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+
+  /contracts/{id}:
+    get:
+      operationId: getContract
+      tags: [contracts]
+      summary: Get a Contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContract
+      tags: [contracts]
+      summary: Update a Contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+    delete:
+      operationId: deleteContract
+      tags: [contracts]
+      summary: Soft-delete a Contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contract-amendments:
+    get:
+      operationId: listContractAmendments
+      tags: [contractAmendments]
+      summary: List contract-amendments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractAmendments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractAmendmentListResponse"
+    post:
+      operationId: createContractAmendment
+      tags: [contractAmendments]
+      summary: Create a ContractAmendment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractAmendmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractAmendment"
+
+  /contract-amendments/{id}:
+    get:
+      operationId: getContractAmendment
+      tags: [contractAmendments]
+      summary: Get a ContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractAmendment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractAmendment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractAmendment
+      tags: [contractAmendments]
+      summary: Update a ContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractAmendmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractAmendment"
+    delete:
+      operationId: deleteContractAmendment
+      tags: [contractAmendments]
+      summary: Soft-delete a ContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contract-cancellations:
+    get:
+      operationId: listContractCancellations
+      tags: [contractCancellations]
+      summary: List contract-cancellations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractCancellations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractCancellationListResponse"
+    post:
+      operationId: createContractCancellation
+      tags: [contractCancellations]
+      summary: Create a ContractCancellation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractCancellationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractCancellation"
+
+  /contract-cancellations/{id}:
+    get:
+      operationId: getContractCancellation
+      tags: [contractCancellations]
+      summary: Get a ContractCancellation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractCancellation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractCancellation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractCancellation
+      tags: [contractCancellations]
+      summary: Update a ContractCancellation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractCancellationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractCancellation"
+    delete:
+      operationId: deleteContractCancellation
+      tags: [contractCancellations]
+      summary: Soft-delete a ContractCancellation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /unit-transfers:
+    get:
+      operationId: listUnitTransfers
+      tags: [unitTransfers]
+      summary: List unit-transfers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitTransfers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitTransferListResponse"
+    post:
+      operationId: createUnitTransfer
+      tags: [unitTransfers]
+      summary: Create a UnitTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitTransferInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitTransfer"
+
+  /unit-transfers/{id}:
+    get:
+      operationId: getUnitTransfer
+      tags: [unitTransfers]
+      summary: Get a UnitTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitTransfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitTransfer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitTransfer
+      tags: [unitTransfers]
+      summary: Update a UnitTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitTransferUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitTransfer"
+    delete:
+      operationId: deleteUnitTransfer
+      tags: [unitTransfers]
+      summary: Soft-delete a UnitTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /installment-plans:
+    get:
+      operationId: listInstallmentPlans
+      tags: [installmentPlans]
+      summary: List installment-plans
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+        - { name: frequency, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InstallmentPlans
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentPlanListResponse"
+    post:
+      operationId: createInstallmentPlan
+      tags: [installmentPlans]
+      summary: Create a InstallmentPlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallmentPlanInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentPlan"
+
+  /installment-plans/{id}:
+    get:
+      operationId: getInstallmentPlan
+      tags: [installmentPlans]
+      summary: Get a InstallmentPlan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InstallmentPlan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentPlan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInstallmentPlan
+      tags: [installmentPlans]
+      summary: Update a InstallmentPlan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallmentPlanUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentPlan"
+    delete:
+      operationId: deleteInstallmentPlan
+      tags: [installmentPlans]
+      summary: Soft-delete a InstallmentPlan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /installment-schedules:
+    get:
+      operationId: listInstallmentSchedules
+      tags: [installmentSchedules]
+      summary: List installment-schedules
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: planId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InstallmentSchedules
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentScheduleListResponse"
+    post:
+      operationId: createInstallmentSchedule
+      tags: [installmentSchedules]
+      summary: Create a InstallmentSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallmentScheduleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentSchedule"
+
+  /installment-schedules/{id}:
+    get:
+      operationId: getInstallmentSchedule
+      tags: [installmentSchedules]
+      summary: Get a InstallmentSchedule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InstallmentSchedule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentSchedule"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInstallmentSchedule
+      tags: [installmentSchedules]
+      summary: Update a InstallmentSchedule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallmentScheduleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentSchedule"
+    delete:
+      operationId: deleteInstallmentSchedule
+      tags: [installmentSchedules]
+      summary: Soft-delete a InstallmentSchedule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /installment-collections:
+    get:
+      operationId: listInstallmentCollections
+      tags: [installmentCollections]
+      summary: List installment-collections
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: scheduleId, in: query, required: false, schema: { type: string } }
+        - { name: method, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InstallmentCollections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentCollectionListResponse"
+    post:
+      operationId: createInstallmentCollection
+      tags: [installmentCollections]
+      summary: Create a InstallmentCollection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallmentCollectionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentCollection"
+
+  /installment-collections/{id}:
+    get:
+      operationId: getInstallmentCollection
+      tags: [installmentCollections]
+      summary: Get a InstallmentCollection
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InstallmentCollection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentCollection"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInstallmentCollection
+      tags: [installmentCollections]
+      summary: Update a InstallmentCollection
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallmentCollectionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentCollection"
+    delete:
+      operationId: deleteInstallmentCollection
+      tags: [installmentCollections]
+      summary: Soft-delete a InstallmentCollection
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /penalty-rules:
+    get:
+      operationId: listPenaltyRules
+      tags: [penaltyRules]
+      summary: List penalty-rules
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: penaltyType, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PenaltyRules
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PenaltyRuleListResponse"
+    post:
+      operationId: createPenaltyRule
+      tags: [penaltyRules]
+      summary: Create a PenaltyRule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PenaltyRuleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PenaltyRule"
+
+  /penalty-rules/{id}:
+    get:
+      operationId: getPenaltyRule
+      tags: [penaltyRules]
+      summary: Get a PenaltyRule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PenaltyRule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PenaltyRule"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePenaltyRule
+      tags: [penaltyRules]
+      summary: Update a PenaltyRule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PenaltyRuleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PenaltyRule"
+    delete:
+      operationId: deletePenaltyRule
+      tags: [penaltyRules]
+      summary: Soft-delete a PenaltyRule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /unit-price-lists:
+    get:
+      operationId: listUnitPriceLists
+      tags: [unitPriceLists]
+      summary: List unit-price-lists
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitPriceLists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPriceListListResponse"
+    post:
+      operationId: createUnitPriceList
+      tags: [unitPriceLists]
+      summary: Create a UnitPriceList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitPriceListInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPriceList"
+
+  /unit-price-lists/{id}:
+    get:
+      operationId: getUnitPriceList
+      tags: [unitPriceLists]
+      summary: Get a UnitPriceList
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitPriceList
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPriceList"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitPriceList
+      tags: [unitPriceLists]
+      summary: Update a UnitPriceList
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitPriceListUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPriceList"
+    delete:
+      operationId: deleteUnitPriceList
+      tags: [unitPriceLists]
+      summary: Soft-delete a UnitPriceList
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /unit-pricing:
+    get:
+      operationId: listUnitPricings
+      tags: [unitPricing]
+      summary: List unit-pricing
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: priceListId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitPricings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPricingListResponse"
+    post:
+      operationId: createUnitPricing
+      tags: [unitPricing]
+      summary: Create a UnitPricing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitPricingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPricing"
+
+  /unit-pricing/{id}:
+    get:
+      operationId: getUnitPricing
+      tags: [unitPricing]
+      summary: Get a UnitPricing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitPricing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPricing"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitPricing
+      tags: [unitPricing]
+      summary: Update a UnitPricing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitPricingUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitPricing"
+    delete:
+      operationId: deleteUnitPricing
+      tags: [unitPricing]
+      summary: Soft-delete a UnitPricing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /unit-discounts:
+    get:
+      operationId: listUnitDiscounts
+      tags: [unitDiscounts]
+      summary: List unit-discounts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: discountType, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitDiscounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitDiscountListResponse"
+    post:
+      operationId: createUnitDiscount
+      tags: [unitDiscounts]
+      summary: Create a UnitDiscount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitDiscountInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitDiscount"
+
+  /unit-discounts/{id}:
+    get:
+      operationId: getUnitDiscount
+      tags: [unitDiscounts]
+      summary: Get a UnitDiscount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitDiscount
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitDiscount"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitDiscount
+      tags: [unitDiscounts]
+      summary: Update a UnitDiscount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitDiscountUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitDiscount"
+    delete:
+      operationId: deleteUnitDiscount
+      tags: [unitDiscounts]
+      summary: Soft-delete a UnitDiscount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /unit-availability:
+    get:
+      operationId: getUnitAvailability
+      tags: [unitManagement]
+      summary: Unit availability summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: buildingId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Availability
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitAvailability"
+
+  /overdue-installments:
+    get:
+      operationId: listOverdueInstallments
+      tags: [installments]
+      summary: Overdue installment schedules
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: planId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Overdue schedules
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallmentScheduleListResponse"
+
+  /realestate/dashboard:
+    get:
+      operationId: getRealEstateDashboard
+      tags: [dashboard]
+      summary: Real estate dashboard stats
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RealEstateDashboard"
+
 components:
   parameters:
     IdParam:
@@ -1284,3 +4029,1533 @@ components:
         fiscalYears: { type: integer }
         currencies: { type: integer }
         auditEvents: { type: integer }
+
+    UnitType:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitTypeInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+
+    UnitTypeUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+
+    UnitTypeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitType" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitStatus:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        color: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitStatusInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        color: { type: string }
+
+    UnitStatusUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        color: { type: string }
+
+    UnitStatusListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitStatus" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Project:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ProjectInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        location: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+
+    ProjectUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        location: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+
+    ProjectListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Project" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Phase:
+      type: object
+      required: [id, companyId, projectId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        projectId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PhaseInput:
+      type: object
+      required: [companyId, projectId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        projectId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+
+    PhaseUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        projectId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+
+    PhaseListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Phase" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Building:
+      type: object
+      required: [id, companyId, projectId, code, name, nameAr, floorsCount, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        floorsCount: { type: integer }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BuildingInput:
+      type: object
+      required: [companyId, projectId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        floorsCount: { type: integer }
+
+    BuildingUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        floorsCount: { type: integer }
+
+    BuildingListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Building" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Floor:
+      type: object
+      required: [id, companyId, buildingId, code, name, nameAr, floorNumber, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        buildingId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        floorNumber: { type: integer }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    FloorInput:
+      type: object
+      required: [companyId, buildingId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        buildingId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        floorNumber: { type: integer }
+
+    FloorUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        buildingId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        floorNumber: { type: integer }
+
+    FloorListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Floor" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Unit:
+      type: object
+      required: [id, companyId, projectId, buildingId, floorId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        projectId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        unitTypeId: { type: ["string", "null"] }
+        unitStatusId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        area: { type: ["string", "null"] }
+        bedrooms: { type: ["integer", "null"] }
+        bathrooms: { type: ["integer", "null"] }
+        basePrice: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitInput:
+      type: object
+      required: [companyId, projectId, buildingId, floorId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        projectId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        unitTypeId: { type: string }
+        unitStatusId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        area: { type: string }
+        bedrooms: { type: integer }
+        bathrooms: { type: integer }
+        basePrice: { type: string }
+
+    UnitUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        projectId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        unitTypeId: { type: string }
+        unitStatusId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        area: { type: string }
+        bedrooms: { type: integer }
+        bathrooms: { type: integer }
+        basePrice: { type: string }
+
+    UnitListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Unit" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LeadSource:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LeadSourceInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+
+    LeadSourceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+
+    LeadSourceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeadSource" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Lead:
+      type: object
+      required: [id, companyId, code, fullName, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        fullName: { type: string }
+        phone: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
+        status: { type: string }
+        budget: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LeadInput:
+      type: object
+      required: [companyId, code, fullName]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        fullName: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        sourceId: { type: string }
+        assignedToUserId: { type: string }
+        status: { type: string }
+        budget: { type: string }
+        notes: { type: string }
+
+    LeadUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        fullName: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        sourceId: { type: string }
+        assignedToUserId: { type: string }
+        status: { type: string }
+        budget: { type: string }
+        notes: { type: string }
+
+    LeadListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Lead" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LeadActivity:
+      type: object
+      required: [id, companyId, leadId, activityType, activityDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        leadId: { type: string }
+        activityType: { type: string }
+        subject: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        activityDate: { type: string }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LeadActivityInput:
+      type: object
+      required: [companyId, leadId, activityDate]
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        activityType: { type: string }
+        subject: { type: string }
+        notes: { type: string }
+        activityDate: { type: string }
+        userId: { type: string }
+
+    LeadActivityUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        activityType: { type: string }
+        subject: { type: string }
+        notes: { type: string }
+        activityDate: { type: string }
+        userId: { type: string }
+
+    LeadActivityListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeadActivity" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LeadFollowUp:
+      type: object
+      required: [id, companyId, leadId, dueDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        leadId: { type: string }
+        dueDate: { type: string }
+        notes: { type: ["string", "null"] }
+        status: { type: string }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LeadFollowUpInput:
+      type: object
+      required: [companyId, leadId, dueDate]
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+        status: { type: string }
+        userId: { type: string }
+
+    LeadFollowUpUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+        status: { type: string }
+        userId: { type: string }
+
+    LeadFollowUpListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeadFollowUp" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LeadAssignment:
+      type: object
+      required: [id, companyId, leadId, assignedToUserId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        leadId: { type: string }
+        assignedToUserId: { type: string }
+        assignedByUserId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LeadAssignmentInput:
+      type: object
+      required: [companyId, leadId, assignedToUserId]
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        assignedToUserId: { type: string }
+        assignedByUserId: { type: string }
+        notes: { type: string }
+
+    LeadAssignmentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        assignedToUserId: { type: string }
+        assignedByUserId: { type: string }
+        notes: { type: string }
+
+    LeadAssignmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeadAssignment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LeadConversion:
+      type: object
+      required: [id, companyId, leadId, customerId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        leadId: { type: string }
+        customerId: { type: string }
+        convertedByUserId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LeadConversionInput:
+      type: object
+      required: [companyId, leadId, customerId]
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        customerId: { type: string }
+        convertedByUserId: { type: string }
+        notes: { type: string }
+
+    LeadConversionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        leadId: { type: string }
+        customerId: { type: string }
+        convertedByUserId: { type: string }
+        notes: { type: string }
+
+    LeadConversionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeadConversion" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Customer:
+      type: object
+      required: [id, companyId, code, fullName, type, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        fullName: { type: string }
+        nameAr: { type: ["string", "null"] }
+        type: { type: string }
+        nationalId: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CustomerInput:
+      type: object
+      required: [companyId, code, fullName]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        fullName: { type: string }
+        nameAr: { type: string }
+        type: { type: string }
+        nationalId: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        address: { type: string }
+
+    CustomerUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        fullName: { type: string }
+        nameAr: { type: string }
+        type: { type: string }
+        nationalId: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        address: { type: string }
+
+    CustomerListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Customer" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CustomerContact:
+      type: object
+      required: [id, companyId, customerId, name, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        customerId: { type: string }
+        name: { type: string }
+        relation: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CustomerContactInput:
+      type: object
+      required: [companyId, customerId, name]
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        name: { type: string }
+        relation: { type: string }
+        phone: { type: string }
+        email: { type: string }
+
+    CustomerContactUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        name: { type: string }
+        relation: { type: string }
+        phone: { type: string }
+        email: { type: string }
+
+    CustomerContactListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerContact" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CustomerDocument:
+      type: object
+      required: [id, companyId, customerId, docType, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        customerId: { type: string }
+        docType: { type: string }
+        docNumber: { type: ["string", "null"] }
+        fileName: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CustomerDocumentInput:
+      type: object
+      required: [companyId, customerId, docType]
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        docType: { type: string }
+        docNumber: { type: string }
+        fileName: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    CustomerDocumentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        docType: { type: string }
+        docNumber: { type: string }
+        fileName: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    CustomerDocumentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerDocument" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CustomerNote:
+      type: object
+      required: [id, companyId, customerId, note, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        customerId: { type: string }
+        note: { type: string }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CustomerNoteInput:
+      type: object
+      required: [companyId, customerId, note]
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        note: { type: string }
+        userId: { type: string }
+
+    CustomerNoteUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        note: { type: string }
+        userId: { type: string }
+
+    CustomerNoteListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerNote" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Reservation:
+      type: object
+      required: [id, companyId, code, unitId, customerId, reservationDate, amount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        reservationDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ReservationInput:
+      type: object
+      required: [companyId, code, unitId, customerId, reservationDate]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        reservationDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    ReservationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        reservationDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    ReservationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Reservation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ReservationPayment:
+      type: object
+      required: [id, companyId, reservationId, amount, paymentDate, method, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        reservationId: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        method: { type: string }
+        reference: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ReservationPaymentInput:
+      type: object
+      required: [companyId, reservationId, paymentDate]
+      properties:
+        companyId: { type: string }
+        reservationId: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        method: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+
+    ReservationPaymentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        reservationId: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        method: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+
+    ReservationPaymentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ReservationPayment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Contract:
+      type: object
+      required: [id, companyId, code, unitId, customerId, contractDate, totalPrice, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        reservationId: { type: ["string", "null"] }
+        unitId: { type: string }
+        customerId: { type: string }
+        contractDate: { type: string }
+        totalPrice: { type: string }
+        downPayment: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractInput:
+      type: object
+      required: [companyId, code, unitId, customerId, contractDate]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        reservationId: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        contractDate: { type: string }
+        totalPrice: { type: string }
+        downPayment: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    ContractUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        reservationId: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        contractDate: { type: string }
+        totalPrice: { type: string }
+        downPayment: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    ContractListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Contract" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractAmendment:
+      type: object
+      required: [id, companyId, contractId, amendmentDate, description, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        contractId: { type: string }
+        code: { type: ["string", "null"] }
+        amendmentDate: { type: string }
+        description: { type: string }
+        oldValue: { type: ["string", "null"] }
+        newValue: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractAmendmentInput:
+      type: object
+      required: [companyId, contractId, amendmentDate, description]
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        code: { type: string }
+        amendmentDate: { type: string }
+        description: { type: string }
+        oldValue: { type: string }
+        newValue: { type: string }
+        userId: { type: string }
+
+    ContractAmendmentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        code: { type: string }
+        amendmentDate: { type: string }
+        description: { type: string }
+        oldValue: { type: string }
+        newValue: { type: string }
+        userId: { type: string }
+
+    ContractAmendmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractAmendment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractCancellation:
+      type: object
+      required: [id, companyId, contractId, cancellationDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        contractId: { type: string }
+        cancellationDate: { type: string }
+        reason: { type: ["string", "null"] }
+        refundAmount: { type: ["string", "null"] }
+        penaltyAmount: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractCancellationInput:
+      type: object
+      required: [companyId, contractId, cancellationDate]
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        cancellationDate: { type: string }
+        reason: { type: string }
+        refundAmount: { type: string }
+        penaltyAmount: { type: string }
+        userId: { type: string }
+
+    ContractCancellationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        cancellationDate: { type: string }
+        reason: { type: string }
+        refundAmount: { type: string }
+        penaltyAmount: { type: string }
+        userId: { type: string }
+
+    ContractCancellationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractCancellation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitTransfer:
+      type: object
+      required: [id, companyId, contractId, fromUnitId, toUnitId, transferDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        contractId: { type: string }
+        fromUnitId: { type: string }
+        toUnitId: { type: string }
+        transferDate: { type: string }
+        reason: { type: ["string", "null"] }
+        priceDifference: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitTransferInput:
+      type: object
+      required: [companyId, contractId, fromUnitId, toUnitId, transferDate]
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        fromUnitId: { type: string }
+        toUnitId: { type: string }
+        transferDate: { type: string }
+        reason: { type: string }
+        priceDifference: { type: string }
+        userId: { type: string }
+
+    UnitTransferUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        fromUnitId: { type: string }
+        toUnitId: { type: string }
+        transferDate: { type: string }
+        reason: { type: string }
+        priceDifference: { type: string }
+        userId: { type: string }
+
+    UnitTransferListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitTransfer" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InstallmentPlan:
+      type: object
+      required: [id, companyId, code, contractId, totalAmount, numberOfInstallments, frequency, startDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        totalAmount: { type: string }
+        downPayment: { type: ["string", "null"] }
+        numberOfInstallments: { type: integer }
+        frequency: { type: string }
+        startDate: { type: string }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InstallmentPlanInput:
+      type: object
+      required: [companyId, code, contractId, startDate]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        totalAmount: { type: string }
+        downPayment: { type: string }
+        numberOfInstallments: { type: integer }
+        frequency: { type: string }
+        startDate: { type: string }
+        status: { type: string }
+
+    InstallmentPlanUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        totalAmount: { type: string }
+        downPayment: { type: string }
+        numberOfInstallments: { type: integer }
+        frequency: { type: string }
+        startDate: { type: string }
+        status: { type: string }
+
+    InstallmentPlanListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InstallmentPlan" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InstallmentSchedule:
+      type: object
+      required: [id, companyId, planId, installmentNumber, dueDate, amount, paidAmount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        planId: { type: string }
+        installmentNumber: { type: integer }
+        dueDate: { type: string }
+        amount: { type: string }
+        paidAmount: { type: string }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InstallmentScheduleInput:
+      type: object
+      required: [companyId, planId, dueDate]
+      properties:
+        companyId: { type: string }
+        planId: { type: string }
+        installmentNumber: { type: integer }
+        dueDate: { type: string }
+        amount: { type: string }
+        paidAmount: { type: string }
+        status: { type: string }
+
+    InstallmentScheduleUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        planId: { type: string }
+        installmentNumber: { type: integer }
+        dueDate: { type: string }
+        amount: { type: string }
+        paidAmount: { type: string }
+        status: { type: string }
+
+    InstallmentScheduleListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InstallmentSchedule" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InstallmentCollection:
+      type: object
+      required: [id, companyId, scheduleId, amount, collectionDate, method, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        scheduleId: { type: string }
+        amount: { type: string }
+        collectionDate: { type: string }
+        method: { type: string }
+        reference: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InstallmentCollectionInput:
+      type: object
+      required: [companyId, scheduleId, collectionDate]
+      properties:
+        companyId: { type: string }
+        scheduleId: { type: string }
+        amount: { type: string }
+        collectionDate: { type: string }
+        method: { type: string }
+        reference: { type: string }
+        userId: { type: string }
+
+    InstallmentCollectionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        scheduleId: { type: string }
+        amount: { type: string }
+        collectionDate: { type: string }
+        method: { type: string }
+        reference: { type: string }
+        userId: { type: string }
+
+    InstallmentCollectionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InstallmentCollection" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PenaltyRule:
+      type: object
+      required: [id, companyId, code, name, nameAr, daysAfterDue, penaltyType, penaltyValue, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        daysAfterDue: { type: integer }
+        penaltyType: { type: string }
+        penaltyValue: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PenaltyRuleInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        daysAfterDue: { type: integer }
+        penaltyType: { type: string }
+        penaltyValue: { type: string }
+
+    PenaltyRuleUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        daysAfterDue: { type: integer }
+        penaltyType: { type: string }
+        penaltyValue: { type: string }
+
+    PenaltyRuleListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PenaltyRule" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitPriceList:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: ["string", "null"] }
+        effectiveFrom: { type: ["string", "null"] }
+        effectiveTo: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitPriceListInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: string }
+        effectiveFrom: { type: string }
+        effectiveTo: { type: string }
+
+    UnitPriceListUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: string }
+        effectiveFrom: { type: string }
+        effectiveTo: { type: string }
+
+    UnitPriceListListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitPriceList" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitPricing:
+      type: object
+      required: [id, companyId, priceListId, unitId, price, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        priceListId: { type: string }
+        unitId: { type: string }
+        price: { type: string }
+        effectiveDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitPricingInput:
+      type: object
+      required: [companyId, priceListId, unitId]
+      properties:
+        companyId: { type: string }
+        priceListId: { type: string }
+        unitId: { type: string }
+        price: { type: string }
+        effectiveDate: { type: string }
+
+    UnitPricingUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        priceListId: { type: string }
+        unitId: { type: string }
+        price: { type: string }
+        effectiveDate: { type: string }
+
+    UnitPricingListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitPricing" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitDiscount:
+      type: object
+      required: [id, companyId, code, name, nameAr, discountType, discountValue, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        discountType: { type: string }
+        discountValue: { type: string }
+        validFrom: { type: ["string", "null"] }
+        validTo: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitDiscountInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        discountType: { type: string }
+        discountValue: { type: string }
+        validFrom: { type: string }
+        validTo: { type: string }
+
+    UnitDiscountUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        discountType: { type: string }
+        discountValue: { type: string }
+        validFrom: { type: string }
+        validTo: { type: string }
+
+    UnitDiscountListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitDiscount" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitAvailability:
+      type: object
+      required: [total, available, reserved, sold, other]
+      properties:
+        total: { type: integer }
+        available: { type: integer }
+        reserved: { type: integer }
+        sold: { type: integer }
+        other: { type: integer }
+
+    RealEstateDashboard:
+      type: object
+      required: [projects, buildings, units, availableUnits, reservedUnits, soldUnits, leads, customers, reservations, contracts, overdueInstallments, totalContractValue]
+      properties:
+        projects: { type: integer }
+        buildings: { type: integer }
+        units: { type: integer }
+        availableUnits: { type: integer }
+        reservedUnits: { type: integer }
+        soldUnits: { type: integer }
+        leads: { type: integer }
+        customers: { type: integer }
+        reservations: { type: integer }
+        contracts: { type: integer }
+        overdueInstallments: { type: integer }
+        totalContractValue: { type: string }

@@ -1,0 +1,430 @@
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLanguage } from "@/lib/language-provider";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+
+export type FieldType = "text" | "textarea" | "number" | "money" | "date" | "select";
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface ResourceField {
+  name: string;
+  label: string;
+  labelAr?: string;
+  type?: FieldType;
+  required?: boolean;
+  rtl?: boolean;
+  /** Disabled when editing (e.g. immutable code). */
+  createOnly?: boolean;
+  /** For select fields. */
+  options?: SelectOption[];
+}
+
+export interface ResourceColumn<T> {
+  header: string;
+  headerAr?: string;
+  render: (row: T) => React.ReactNode;
+}
+
+interface MutationLike {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mutate: (vars: any, opts?: any) => void;
+  isPending: boolean;
+}
+
+interface ListLike<T> {
+  data?: { data: T[]; total: number };
+  isLoading: boolean;
+}
+
+export interface ResourceManagerProps<T extends { id: string }> {
+  title: string;
+  titleAr?: string;
+  columns: ResourceColumn<T>[];
+  fields: ResourceField[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  useList: (params?: any) => ListLike<T>;
+  useCreate: () => MutationLike;
+  useUpdate: () => MutationLike;
+  useDelete: () => MutationLike;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getListQueryKey: (params?: any) => readonly unknown[];
+  /** Default companyId to inject into create payloads. */
+  companyId?: string;
+  searchable?: boolean;
+  pageSize?: number;
+}
+
+const NONE = "__none__";
+
+export function ResourceManager<T extends { id: string }>(props: ResourceManagerProps<T>) {
+  const {
+    title,
+    titleAr,
+    columns,
+    fields,
+    useList,
+    useCreate,
+    useUpdate,
+    useDelete,
+    getListQueryKey,
+    companyId,
+    searchable = true,
+    pageSize = 10,
+  } = props;
+
+  const { language, t } = useLanguage();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editing, setEditing] = useState<T | null>(null);
+
+  const params: Record<string, unknown> = { page, pageSize };
+  if (search) params.search = search;
+
+  const { data, isLoading } = useList(params);
+  const rows = data?.data ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  const deleteMutation = useDelete();
+
+  const heading = language === "ar" && titleAr ? titleAr : title;
+  const colHeader = (c: ResourceColumn<T>) =>
+    language === "ar" && c.headerAr ? c.headerAr : c.header;
+
+  const invalidate = () =>
+    queryClient.invalidateQueries({ queryKey: getListQueryKey() });
+
+  const handleDelete = (id: string) => {
+    if (!confirm(t("common.delete") + "?")) return;
+    deleteMutation.mutate(
+      { id },
+      {
+        onSuccess: () => {
+          toast({ title: t("common.deleted") });
+          invalidate();
+        },
+        onError: () => toast({ title: t("common.error"), variant: "destructive" }),
+      },
+    );
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+        <h2 className="text-2xl font-bold tracking-tight">{heading}</h2>
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              {t("common.create")}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{t("common.create")}</DialogTitle>
+            </DialogHeader>
+            <ResourceForm
+              fields={fields}
+              companyId={companyId}
+              useCreate={useCreate}
+              useUpdate={useUpdate}
+              onSuccess={() => {
+                setIsCreateOpen(false);
+                invalidate();
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {searchable && (
+        <Input
+          placeholder={t("common.search")}
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
+          className="max-w-sm"
+        />
+      )}
+
+      <div className="rounded-md border bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((c, i) => (
+                <TableHead key={i}>{colHeader(c)}</TableHead>
+              ))}
+              <TableHead className="text-right">{t("common.actions")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length + 1} className="text-center h-24">
+                  {t("common.loading")}
+                </TableCell>
+              </TableRow>
+            ) : rows.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length + 1} className="text-center h-24">
+                  {t("common.no_results")}
+                </TableCell>
+              </TableRow>
+            ) : (
+              rows.map((row) => (
+                <TableRow key={row.id}>
+                  {columns.map((c, i) => (
+                    <TableCell key={i}>{c.render(row)}</TableCell>
+                  ))}
+                  <TableCell className="text-right space-x-2 whitespace-nowrap">
+                    <Button variant="ghost" size="icon" onClick={() => setEditing(row)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive"
+                      onClick={() => handleDelete(row.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {t("common.total")}: {total}
+        </p>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-sm">
+            {page} / {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
+          </DialogHeader>
+          {editing && (
+            <ResourceForm
+              fields={fields}
+              companyId={companyId}
+              record={editing}
+              useCreate={useCreate}
+              useUpdate={useUpdate}
+              onSuccess={() => {
+                setEditing(null);
+                invalidate();
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function ResourceForm<T extends { id: string }>({
+  fields,
+  record,
+  companyId,
+  useCreate,
+  useUpdate,
+  onSuccess,
+}: {
+  fields: ResourceField[];
+  record?: T;
+  companyId?: string;
+  useCreate: () => MutationLike;
+  useUpdate: () => MutationLike;
+  onSuccess: () => void;
+}) {
+  const { language, t } = useLanguage();
+  const { toast } = useToast();
+  const createMutation = useCreate();
+  const updateMutation = useUpdate();
+  const isEdit = !!record;
+
+  const initial: Record<string, string> = {};
+  for (const f of fields) {
+    const v = record ? (record as Record<string, unknown>)[f.name] : undefined;
+    initial[f.name] = v === null || v === undefined ? "" : String(v);
+  }
+  const [formData, setFormData] = useState<Record<string, string>>(initial);
+
+  const fieldLabel = (f: ResourceField) =>
+    language === "ar" && f.labelAr ? f.labelAr : f.label;
+
+  const buildPayload = (): Record<string, unknown> => {
+    const payload: Record<string, unknown> = {};
+    for (const f of fields) {
+      if (isEdit && f.createOnly) continue;
+      const raw = formData[f.name];
+      if (raw === undefined || raw === "" || raw === NONE) continue;
+      if (f.type === "number") payload[f.name] = Number(raw);
+      else if (f.type === "money") payload[f.name] = String(raw);
+      else payload[f.name] = raw;
+    }
+    return payload;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = buildPayload();
+    if (!isEdit && companyId && !payload.companyId) payload.companyId = companyId;
+
+    if (isEdit && record) {
+      updateMutation.mutate(
+        { id: record.id, data: payload },
+        {
+          onSuccess: () => {
+            toast({ title: t("common.saved") });
+            onSuccess();
+          },
+          onError: () => toast({ title: t("common.error"), variant: "destructive" }),
+        },
+      );
+    } else {
+      createMutation.mutate(
+        { data: payload },
+        {
+          onSuccess: () => {
+            toast({ title: t("common.created") });
+            onSuccess();
+          },
+          onError: () => toast({ title: t("common.error"), variant: "destructive" }),
+        },
+      );
+    }
+  };
+
+  const setValue = (name: string, value: string) =>
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {fields
+        .filter((f) => f.name !== "companyId")
+        .map((f) => {
+          const disabled = isEdit && f.createOnly;
+          return (
+            <div key={f.name} className="space-y-2">
+              <Label>
+                {fieldLabel(f)}
+                {f.required && <span className="text-destructive"> *</span>}
+              </Label>
+              {f.type === "textarea" ? (
+                <Textarea
+                  value={formData[f.name] ?? ""}
+                  onChange={(e) => setValue(f.name, e.target.value)}
+                  required={f.required}
+                  dir={f.rtl ? "rtl" : undefined}
+                />
+              ) : f.type === "select" ? (
+                <Select
+                  value={formData[f.name] || (f.required ? "" : NONE)}
+                  onValueChange={(v) => setValue(f.name, v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={fieldLabel(f)} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {!f.required && <SelectItem value={NONE}>—</SelectItem>}
+                    {(f.options ?? []).map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  type={
+                    f.type === "number" || f.type === "money"
+                      ? "number"
+                      : f.type === "date"
+                        ? "date"
+                        : "text"
+                  }
+                  step={f.type === "money" ? "0.01" : undefined}
+                  value={formData[f.name] ?? ""}
+                  onChange={(e) => setValue(f.name, e.target.value)}
+                  required={f.required}
+                  disabled={disabled}
+                  dir={f.rtl ? "rtl" : undefined}
+                />
+              )}
+            </div>
+          );
+        })}
+      <div className="flex justify-end gap-2 pt-4">
+        <Button type="button" variant="outline" onClick={onSuccess}>
+          {t("common.cancel")}
+        </Button>
+        <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+          {isEdit ? t("common.save") : t("common.create")}
+        </Button>
+      </div>
+    </form>
+  );
+}

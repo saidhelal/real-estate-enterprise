@@ -927,3 +927,3393 @@ export const GetRecentActivityResponseItem = zod.object({
 export const GetRecentActivityResponse = zod.array(GetRecentActivityResponseItem)
 
 
+/**
+ * @summary List unit-types
+ */
+export const ListUnitTypesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListUnitTypesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitType
+ */
+export const CreateUnitTypeBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitType
+ */
+export const GetUnitTypeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitTypeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitType
+ */
+export const UpdateUnitTypeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitTypeBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateUnitTypeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitType
+ */
+export const DeleteUnitTypeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitTypeResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List unit-statuses
+ */
+export const ListUnitStatusesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListUnitStatusesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "color": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitStatus
+ */
+export const CreateUnitStatusBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "color": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitStatus
+ */
+export const GetUnitStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "color": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitStatus
+ */
+export const UpdateUnitStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitStatusBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "color": zod.string().optional()
+})
+
+export const UpdateUnitStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "color": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitStatus
+ */
+export const DeleteUnitStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitStatusResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List projects
+ */
+export const ListProjectsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListProjectsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Project
+ */
+export const CreateProjectBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().optional(),
+  "location": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Project
+ */
+export const GetProjectParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetProjectResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Project
+ */
+export const UpdateProjectParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateProjectBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "location": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateProjectResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Project
+ */
+export const DeleteProjectParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteProjectResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List phases
+ */
+export const ListPhasesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListPhasesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Phase
+ */
+export const CreatePhaseBody = zod.object({
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Phase
+ */
+export const GetPhaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPhaseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Phase
+ */
+export const UpdatePhaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePhaseBody = zod.object({
+  "companyId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdatePhaseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Phase
+ */
+export const DeletePhaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePhaseResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List buildings
+ */
+export const ListBuildingsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "phaseId": zod.coerce.string().optional()
+})
+
+export const ListBuildingsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorsCount": zod.number(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Building
+ */
+export const CreateBuildingBody = zod.object({
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "phaseId": zod.string().optional(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorsCount": zod.number().optional()
+})
+
+
+/**
+ * @summary Get a Building
+ */
+export const GetBuildingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBuildingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorsCount": zod.number(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Building
+ */
+export const UpdateBuildingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateBuildingBody = zod.object({
+  "companyId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "floorsCount": zod.number().optional()
+})
+
+export const UpdateBuildingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorsCount": zod.number(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Building
+ */
+export const DeleteBuildingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteBuildingResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List floors
+ */
+export const ListFloorsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "buildingId": zod.coerce.string().optional()
+})
+
+export const ListFloorsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "buildingId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorNumber": zod.number(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Floor
+ */
+export const CreateFloorBody = zod.object({
+  "companyId": zod.string(),
+  "buildingId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorNumber": zod.number().optional()
+})
+
+
+/**
+ * @summary Get a Floor
+ */
+export const GetFloorParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetFloorResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "buildingId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorNumber": zod.number(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Floor
+ */
+export const UpdateFloorParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateFloorBody = zod.object({
+  "companyId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "floorNumber": zod.number().optional()
+})
+
+export const UpdateFloorResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "buildingId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "floorNumber": zod.number(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Floor
+ */
+export const DeleteFloorParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteFloorResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List units
+ */
+export const ListUnitsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "buildingId": zod.coerce.string().optional(),
+  "floorId": zod.coerce.string().optional(),
+  "unitTypeId": zod.coerce.string().optional(),
+  "unitStatusId": zod.coerce.string().optional()
+})
+
+export const ListUnitsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string(),
+  "buildingId": zod.string(),
+  "floorId": zod.string(),
+  "unitTypeId": zod.string().nullish(),
+  "unitStatusId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "area": zod.string().nullish(),
+  "bedrooms": zod.number().nullish(),
+  "bathrooms": zod.number().nullish(),
+  "basePrice": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Unit
+ */
+export const CreateUnitBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "projectId": zod.string(),
+  "buildingId": zod.string(),
+  "floorId": zod.string(),
+  "unitTypeId": zod.string().optional(),
+  "unitStatusId": zod.string().optional(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "area": zod.string().optional(),
+  "bedrooms": zod.number().optional(),
+  "bathrooms": zod.number().optional(),
+  "basePrice": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Unit
+ */
+export const GetUnitParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string(),
+  "buildingId": zod.string(),
+  "floorId": zod.string(),
+  "unitTypeId": zod.string().nullish(),
+  "unitStatusId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "area": zod.string().nullish(),
+  "bedrooms": zod.number().nullish(),
+  "bathrooms": zod.number().nullish(),
+  "basePrice": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Unit
+ */
+export const UpdateUnitParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "floorId": zod.string().optional(),
+  "unitTypeId": zod.string().optional(),
+  "unitStatusId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "area": zod.string().optional(),
+  "bedrooms": zod.number().optional(),
+  "bathrooms": zod.number().optional(),
+  "basePrice": zod.string().optional()
+})
+
+export const UpdateUnitResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string(),
+  "buildingId": zod.string(),
+  "floorId": zod.string(),
+  "unitTypeId": zod.string().nullish(),
+  "unitStatusId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "area": zod.string().nullish(),
+  "bedrooms": zod.number().nullish(),
+  "bathrooms": zod.number().nullish(),
+  "basePrice": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Unit
+ */
+export const DeleteUnitParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List lead-sources
+ */
+export const ListLeadSourcesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLeadSourcesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LeadSource
+ */
+export const CreateLeadSourceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string()
+})
+
+
+/**
+ * @summary Get a LeadSource
+ */
+export const GetLeadSourceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLeadSourceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LeadSource
+ */
+export const UpdateLeadSourceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLeadSourceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional()
+})
+
+export const UpdateLeadSourceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LeadSource
+ */
+export const DeleteLeadSourceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLeadSourceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List leads
+ */
+export const ListLeadsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "sourceId": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListLeadsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "budget": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Lead
+ */
+export const CreateLeadBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "budget": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Lead
+ */
+export const GetLeadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLeadResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "budget": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Lead
+ */
+export const UpdateLeadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLeadBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "fullName": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "budget": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLeadResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "budget": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Lead
+ */
+export const DeleteLeadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLeadResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List lead-activities
+ */
+export const ListLeadActivitiesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "leadId": zod.coerce.string().optional()
+})
+
+export const ListLeadActivitiesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "activityType": zod.string(),
+  "subject": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "activityDate": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LeadActivity
+ */
+export const CreateLeadActivityBody = zod.object({
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "activityType": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "activityDate": zod.string(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LeadActivity
+ */
+export const GetLeadActivityParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLeadActivityResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "activityType": zod.string(),
+  "subject": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "activityDate": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LeadActivity
+ */
+export const UpdateLeadActivityParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLeadActivityBody = zod.object({
+  "companyId": zod.string().optional(),
+  "leadId": zod.string().optional(),
+  "activityType": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "activityDate": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateLeadActivityResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "activityType": zod.string(),
+  "subject": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "activityDate": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LeadActivity
+ */
+export const DeleteLeadActivityParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLeadActivityResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List lead-follow-ups
+ */
+export const ListLeadFollowUpsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "leadId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListLeadFollowUpsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "dueDate": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LeadFollowUp
+ */
+export const CreateLeadFollowUpBody = zod.object({
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "dueDate": zod.string(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LeadFollowUp
+ */
+export const GetLeadFollowUpParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLeadFollowUpResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "dueDate": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LeadFollowUp
+ */
+export const UpdateLeadFollowUpParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLeadFollowUpBody = zod.object({
+  "companyId": zod.string().optional(),
+  "leadId": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateLeadFollowUpResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "dueDate": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LeadFollowUp
+ */
+export const DeleteLeadFollowUpParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLeadFollowUpResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List lead-assignments
+ */
+export const ListLeadAssignmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "leadId": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional()
+})
+
+export const ListLeadAssignmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "assignedToUserId": zod.string(),
+  "assignedByUserId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LeadAssignment
+ */
+export const CreateLeadAssignmentBody = zod.object({
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "assignedToUserId": zod.string(),
+  "assignedByUserId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LeadAssignment
+ */
+export const GetLeadAssignmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLeadAssignmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "assignedToUserId": zod.string(),
+  "assignedByUserId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LeadAssignment
+ */
+export const UpdateLeadAssignmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLeadAssignmentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "leadId": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "assignedByUserId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLeadAssignmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "assignedToUserId": zod.string(),
+  "assignedByUserId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LeadAssignment
+ */
+export const DeleteLeadAssignmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLeadAssignmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List lead-conversions
+ */
+export const ListLeadConversionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "leadId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional()
+})
+
+export const ListLeadConversionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "customerId": zod.string(),
+  "convertedByUserId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LeadConversion
+ */
+export const CreateLeadConversionBody = zod.object({
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "customerId": zod.string(),
+  "convertedByUserId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LeadConversion
+ */
+export const GetLeadConversionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLeadConversionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "customerId": zod.string(),
+  "convertedByUserId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LeadConversion
+ */
+export const UpdateLeadConversionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLeadConversionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "leadId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "convertedByUserId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLeadConversionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "customerId": zod.string(),
+  "convertedByUserId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LeadConversion
+ */
+export const DeleteLeadConversionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLeadConversionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customers
+ */
+export const ListCustomersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "type": zod.coerce.string().optional()
+})
+
+export const ListCustomersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "type": zod.string(),
+  "nationalId": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Customer
+ */
+export const CreateCustomerBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "nameAr": zod.string().optional(),
+  "type": zod.string().optional(),
+  "nationalId": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "address": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Customer
+ */
+export const GetCustomerParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCustomerResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "type": zod.string(),
+  "nationalId": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Customer
+ */
+export const UpdateCustomerParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCustomerBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "fullName": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "type": zod.string().optional(),
+  "nationalId": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "address": zod.string().optional()
+})
+
+export const UpdateCustomerResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "type": zod.string(),
+  "nationalId": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Customer
+ */
+export const DeleteCustomerParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCustomerResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customer-contacts
+ */
+export const ListCustomerContactsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional()
+})
+
+export const ListCustomerContactsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "name": zod.string(),
+  "relation": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CustomerContact
+ */
+export const CreateCustomerContactBody = zod.object({
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "name": zod.string(),
+  "relation": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CustomerContact
+ */
+export const GetCustomerContactParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCustomerContactResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "name": zod.string(),
+  "relation": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CustomerContact
+ */
+export const UpdateCustomerContactParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCustomerContactBody = zod.object({
+  "companyId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "name": zod.string().optional(),
+  "relation": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional()
+})
+
+export const UpdateCustomerContactResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "name": zod.string(),
+  "relation": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CustomerContact
+ */
+export const DeleteCustomerContactParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCustomerContactResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customer-documents
+ */
+export const ListCustomerDocumentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional()
+})
+
+export const ListCustomerDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CustomerDocument
+ */
+export const CreateCustomerDocumentBody = zod.object({
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CustomerDocument
+ */
+export const GetCustomerDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCustomerDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CustomerDocument
+ */
+export const UpdateCustomerDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCustomerDocumentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "docType": zod.string().optional(),
+  "docNumber": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateCustomerDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CustomerDocument
+ */
+export const DeleteCustomerDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCustomerDocumentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customer-notes
+ */
+export const ListCustomerNotesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional()
+})
+
+export const ListCustomerNotesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CustomerNote
+ */
+export const CreateCustomerNoteBody = zod.object({
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CustomerNote
+ */
+export const GetCustomerNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCustomerNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CustomerNote
+ */
+export const UpdateCustomerNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCustomerNoteBody = zod.object({
+  "companyId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "note": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateCustomerNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CustomerNote
+ */
+export const DeleteCustomerNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCustomerNoteResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List reservations
+ */
+export const ListReservationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListReservationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "reservationDate": zod.string(),
+  "amount": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Reservation
+ */
+export const CreateReservationBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "reservationDate": zod.string(),
+  "amount": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Reservation
+ */
+export const GetReservationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetReservationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "reservationDate": zod.string(),
+  "amount": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Reservation
+ */
+export const UpdateReservationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateReservationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "reservationDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateReservationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "reservationDate": zod.string(),
+  "amount": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Reservation
+ */
+export const DeleteReservationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteReservationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List reservation-payments
+ */
+export const ListReservationPaymentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "reservationId": zod.coerce.string().optional(),
+  "method": zod.coerce.string().optional()
+})
+
+export const ListReservationPaymentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "method": zod.string(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ReservationPayment
+ */
+export const CreateReservationPaymentBody = zod.object({
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "amount": zod.string().optional(),
+  "paymentDate": zod.string(),
+  "method": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ReservationPayment
+ */
+export const GetReservationPaymentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetReservationPaymentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "method": zod.string(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ReservationPayment
+ */
+export const UpdateReservationPaymentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateReservationPaymentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "reservationId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "paymentDate": zod.string().optional(),
+  "method": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateReservationPaymentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "method": zod.string(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ReservationPayment
+ */
+export const DeleteReservationPaymentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteReservationPaymentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List contracts
+ */
+export const ListContractsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "reservationId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListContractsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Contract
+ */
+export const CreateContractBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "reservationId": zod.string().optional(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string().optional(),
+  "downPayment": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Contract
+ */
+export const GetContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Contract
+ */
+export const UpdateContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "reservationId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "contractDate": zod.string().optional(),
+  "totalPrice": zod.string().optional(),
+  "downPayment": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Contract
+ */
+export const DeleteContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List contract-amendments
+ */
+export const ListContractAmendmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional()
+})
+
+export const ListContractAmendmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "code": zod.string().nullish(),
+  "amendmentDate": zod.string(),
+  "description": zod.string(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractAmendment
+ */
+export const CreateContractAmendmentBody = zod.object({
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "code": zod.string().optional(),
+  "amendmentDate": zod.string(),
+  "description": zod.string(),
+  "oldValue": zod.string().optional(),
+  "newValue": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractAmendment
+ */
+export const GetContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "code": zod.string().nullish(),
+  "amendmentDate": zod.string(),
+  "description": zod.string(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractAmendment
+ */
+export const UpdateContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractAmendmentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "description": zod.string().optional(),
+  "oldValue": zod.string().optional(),
+  "newValue": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateContractAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "code": zod.string().nullish(),
+  "amendmentDate": zod.string(),
+  "description": zod.string(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ContractAmendment
+ */
+export const DeleteContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractAmendmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List contract-cancellations
+ */
+export const ListContractCancellationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional()
+})
+
+export const ListContractCancellationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "cancellationDate": zod.string(),
+  "reason": zod.string().nullish(),
+  "refundAmount": zod.string().nullish(),
+  "penaltyAmount": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractCancellation
+ */
+export const CreateContractCancellationBody = zod.object({
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "cancellationDate": zod.string(),
+  "reason": zod.string().optional(),
+  "refundAmount": zod.string().optional(),
+  "penaltyAmount": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractCancellation
+ */
+export const GetContractCancellationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractCancellationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "cancellationDate": zod.string(),
+  "reason": zod.string().nullish(),
+  "refundAmount": zod.string().nullish(),
+  "penaltyAmount": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractCancellation
+ */
+export const UpdateContractCancellationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractCancellationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "cancellationDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "refundAmount": zod.string().optional(),
+  "penaltyAmount": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateContractCancellationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "cancellationDate": zod.string(),
+  "reason": zod.string().nullish(),
+  "refundAmount": zod.string().nullish(),
+  "penaltyAmount": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ContractCancellation
+ */
+export const DeleteContractCancellationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractCancellationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List unit-transfers
+ */
+export const ListUnitTransfersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional()
+})
+
+export const ListUnitTransfersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "fromUnitId": zod.string(),
+  "toUnitId": zod.string(),
+  "transferDate": zod.string(),
+  "reason": zod.string().nullish(),
+  "priceDifference": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitTransfer
+ */
+export const CreateUnitTransferBody = zod.object({
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "fromUnitId": zod.string(),
+  "toUnitId": zod.string(),
+  "transferDate": zod.string(),
+  "reason": zod.string().optional(),
+  "priceDifference": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitTransfer
+ */
+export const GetUnitTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "fromUnitId": zod.string(),
+  "toUnitId": zod.string(),
+  "transferDate": zod.string(),
+  "reason": zod.string().nullish(),
+  "priceDifference": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitTransfer
+ */
+export const UpdateUnitTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitTransferBody = zod.object({
+  "companyId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "fromUnitId": zod.string().optional(),
+  "toUnitId": zod.string().optional(),
+  "transferDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "priceDifference": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateUnitTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "fromUnitId": zod.string(),
+  "toUnitId": zod.string(),
+  "transferDate": zod.string(),
+  "reason": zod.string().nullish(),
+  "priceDifference": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitTransfer
+ */
+export const DeleteUnitTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitTransferResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List installment-plans
+ */
+export const ListInstallmentPlansQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional(),
+  "frequency": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListInstallmentPlansResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string(),
+  "totalAmount": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "numberOfInstallments": zod.number(),
+  "frequency": zod.string(),
+  "startDate": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InstallmentPlan
+ */
+export const CreateInstallmentPlanBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string(),
+  "totalAmount": zod.string().optional(),
+  "downPayment": zod.string().optional(),
+  "numberOfInstallments": zod.number().optional(),
+  "frequency": zod.string().optional(),
+  "startDate": zod.string(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InstallmentPlan
+ */
+export const GetInstallmentPlanParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInstallmentPlanResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string(),
+  "totalAmount": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "numberOfInstallments": zod.number(),
+  "frequency": zod.string(),
+  "startDate": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InstallmentPlan
+ */
+export const UpdateInstallmentPlanParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInstallmentPlanBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "downPayment": zod.string().optional(),
+  "numberOfInstallments": zod.number().optional(),
+  "frequency": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateInstallmentPlanResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string(),
+  "totalAmount": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "numberOfInstallments": zod.number(),
+  "frequency": zod.string(),
+  "startDate": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InstallmentPlan
+ */
+export const DeleteInstallmentPlanParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInstallmentPlanResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List installment-schedules
+ */
+export const ListInstallmentSchedulesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "planId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListInstallmentSchedulesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "planId": zod.string(),
+  "installmentNumber": zod.number(),
+  "dueDate": zod.string(),
+  "amount": zod.string(),
+  "paidAmount": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InstallmentSchedule
+ */
+export const CreateInstallmentScheduleBody = zod.object({
+  "companyId": zod.string(),
+  "planId": zod.string(),
+  "installmentNumber": zod.number().optional(),
+  "dueDate": zod.string(),
+  "amount": zod.string().optional(),
+  "paidAmount": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InstallmentSchedule
+ */
+export const GetInstallmentScheduleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInstallmentScheduleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "planId": zod.string(),
+  "installmentNumber": zod.number(),
+  "dueDate": zod.string(),
+  "amount": zod.string(),
+  "paidAmount": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InstallmentSchedule
+ */
+export const UpdateInstallmentScheduleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInstallmentScheduleBody = zod.object({
+  "companyId": zod.string().optional(),
+  "planId": zod.string().optional(),
+  "installmentNumber": zod.number().optional(),
+  "dueDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "paidAmount": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateInstallmentScheduleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "planId": zod.string(),
+  "installmentNumber": zod.number(),
+  "dueDate": zod.string(),
+  "amount": zod.string(),
+  "paidAmount": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InstallmentSchedule
+ */
+export const DeleteInstallmentScheduleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInstallmentScheduleResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List installment-collections
+ */
+export const ListInstallmentCollectionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "scheduleId": zod.coerce.string().optional(),
+  "method": zod.coerce.string().optional()
+})
+
+export const ListInstallmentCollectionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "amount": zod.string(),
+  "collectionDate": zod.string(),
+  "method": zod.string(),
+  "reference": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InstallmentCollection
+ */
+export const CreateInstallmentCollectionBody = zod.object({
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "amount": zod.string().optional(),
+  "collectionDate": zod.string(),
+  "method": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InstallmentCollection
+ */
+export const GetInstallmentCollectionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInstallmentCollectionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "amount": zod.string(),
+  "collectionDate": zod.string(),
+  "method": zod.string(),
+  "reference": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InstallmentCollection
+ */
+export const UpdateInstallmentCollectionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInstallmentCollectionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "collectionDate": zod.string().optional(),
+  "method": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateInstallmentCollectionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "amount": zod.string(),
+  "collectionDate": zod.string(),
+  "method": zod.string(),
+  "reference": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InstallmentCollection
+ */
+export const DeleteInstallmentCollectionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInstallmentCollectionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List penalty-rules
+ */
+export const ListPenaltyRulesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "penaltyType": zod.coerce.string().optional()
+})
+
+export const ListPenaltyRulesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "daysAfterDue": zod.number(),
+  "penaltyType": zod.string(),
+  "penaltyValue": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PenaltyRule
+ */
+export const CreatePenaltyRuleBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "daysAfterDue": zod.number().optional(),
+  "penaltyType": zod.string().optional(),
+  "penaltyValue": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PenaltyRule
+ */
+export const GetPenaltyRuleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPenaltyRuleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "daysAfterDue": zod.number(),
+  "penaltyType": zod.string(),
+  "penaltyValue": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PenaltyRule
+ */
+export const UpdatePenaltyRuleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePenaltyRuleBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "daysAfterDue": zod.number().optional(),
+  "penaltyType": zod.string().optional(),
+  "penaltyValue": zod.string().optional()
+})
+
+export const UpdatePenaltyRuleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "daysAfterDue": zod.number(),
+  "penaltyType": zod.string(),
+  "penaltyValue": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PenaltyRule
+ */
+export const DeletePenaltyRuleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePenaltyRuleResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List unit-price-lists
+ */
+export const ListUnitPriceListsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional()
+})
+
+export const ListUnitPriceListsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitPriceList
+ */
+export const CreateUnitPriceListBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().optional(),
+  "effectiveFrom": zod.string().optional(),
+  "effectiveTo": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitPriceList
+ */
+export const GetUnitPriceListParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitPriceListResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitPriceList
+ */
+export const UpdateUnitPriceListParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitPriceListBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "effectiveFrom": zod.string().optional(),
+  "effectiveTo": zod.string().optional()
+})
+
+export const UpdateUnitPriceListResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "effectiveFrom": zod.string().nullish(),
+  "effectiveTo": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitPriceList
+ */
+export const DeleteUnitPriceListParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitPriceListResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List unit-pricing
+ */
+export const ListUnitPricingsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "priceListId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional()
+})
+
+export const ListUnitPricingsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "priceListId": zod.string(),
+  "unitId": zod.string(),
+  "price": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitPricing
+ */
+export const CreateUnitPricingBody = zod.object({
+  "companyId": zod.string(),
+  "priceListId": zod.string(),
+  "unitId": zod.string(),
+  "price": zod.string().optional(),
+  "effectiveDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitPricing
+ */
+export const GetUnitPricingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitPricingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "priceListId": zod.string(),
+  "unitId": zod.string(),
+  "price": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitPricing
+ */
+export const UpdateUnitPricingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitPricingBody = zod.object({
+  "companyId": zod.string().optional(),
+  "priceListId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "price": zod.string().optional(),
+  "effectiveDate": zod.string().optional()
+})
+
+export const UpdateUnitPricingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "priceListId": zod.string(),
+  "unitId": zod.string(),
+  "price": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitPricing
+ */
+export const DeleteUnitPricingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitPricingResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List unit-discounts
+ */
+export const ListUnitDiscountsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "discountType": zod.coerce.string().optional()
+})
+
+export const ListUnitDiscountsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "discountType": zod.string(),
+  "discountValue": zod.string(),
+  "validFrom": zod.string().nullish(),
+  "validTo": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitDiscount
+ */
+export const CreateUnitDiscountBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "discountType": zod.string().optional(),
+  "discountValue": zod.string().optional(),
+  "validFrom": zod.string().optional(),
+  "validTo": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitDiscount
+ */
+export const GetUnitDiscountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitDiscountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "discountType": zod.string(),
+  "discountValue": zod.string(),
+  "validFrom": zod.string().nullish(),
+  "validTo": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitDiscount
+ */
+export const UpdateUnitDiscountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitDiscountBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "discountType": zod.string().optional(),
+  "discountValue": zod.string().optional(),
+  "validFrom": zod.string().optional(),
+  "validTo": zod.string().optional()
+})
+
+export const UpdateUnitDiscountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "discountType": zod.string(),
+  "discountValue": zod.string(),
+  "validFrom": zod.string().nullish(),
+  "validTo": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitDiscount
+ */
+export const DeleteUnitDiscountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitDiscountResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Unit availability summary
+ */
+export const GetUnitAvailabilityQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "buildingId": zod.coerce.string().optional()
+})
+
+export const GetUnitAvailabilityResponse = zod.object({
+  "total": zod.number(),
+  "available": zod.number(),
+  "reserved": zod.number(),
+  "sold": zod.number(),
+  "other": zod.number()
+})
+
+
+/**
+ * @summary Overdue installment schedules
+ */
+export const ListOverdueInstallmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "planId": zod.coerce.string().optional()
+})
+
+export const ListOverdueInstallmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "planId": zod.string(),
+  "installmentNumber": zod.number(),
+  "dueDate": zod.string(),
+  "amount": zod.string(),
+  "paidAmount": zod.string(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Real estate dashboard stats
+ */
+export const GetRealEstateDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetRealEstateDashboardResponse = zod.object({
+  "projects": zod.number(),
+  "buildings": zod.number(),
+  "units": zod.number(),
+  "availableUnits": zod.number(),
+  "reservedUnits": zod.number(),
+  "soldUnits": zod.number(),
+  "leads": zod.number(),
+  "customers": zod.number(),
+  "reservations": zod.number(),
+  "contracts": zod.number(),
+  "overdueInstallments": zod.number(),
+  "totalContractValue": zod.string()
+})
+
+

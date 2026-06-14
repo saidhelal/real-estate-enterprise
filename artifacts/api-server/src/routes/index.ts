@@ -11,6 +11,12 @@ import settingsRouter from "./settings";
 import numberSequencesRouter from "./number-sequences";
 import auditRouter from "./audit";
 import dashboardRouter from "./dashboard";
+import realEstateRouter from "./real-estate";
+import crmRouter from "./crm";
+import customersRouter from "./customers";
+import salesRouter from "./sales";
+import installmentsRouter from "./installments";
+import unitManagementRouter from "./unit-management";
 
 const router: IRouter = Router();
 
@@ -26,5 +32,11 @@ router.use(settingsRouter);
 router.use(numberSequencesRouter);
 router.use(auditRouter);
 router.use(dashboardRouter);
+router.use(realEstateRouter);
+router.use(crmRouter);
+router.use(customersRouter);
+router.use(salesRouter);
+router.use(installmentsRouter);
+router.use(unitManagementRouter);
 
 export default router;

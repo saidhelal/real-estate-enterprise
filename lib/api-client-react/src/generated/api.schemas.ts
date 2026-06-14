@@ -423,6 +423,1338 @@ export interface DashboardSummary {
   auditEvents: number;
 }
 
+export interface UnitType {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitTypeInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  description?: string;
+}
+
+export interface UnitTypeUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  description?: string;
+}
+
+export interface UnitTypeListResponse {
+  data: UnitType[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitStatus {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  color?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitStatusInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  color?: string;
+}
+
+export interface UnitStatusUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  color?: string;
+}
+
+export interface UnitStatusListResponse {
+  data: UnitStatus[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Project {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ProjectInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  description?: string;
+  location?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+}
+
+export interface ProjectUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  description?: string;
+  location?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+}
+
+export interface ProjectListResponse {
+  data: Project[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Phase {
+  id: string;
+  companyId: string;
+  projectId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PhaseInput {
+  companyId: string;
+  projectId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+}
+
+export interface PhaseUpdate {
+  companyId?: string;
+  projectId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+}
+
+export interface PhaseListResponse {
+  data: Phase[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Building {
+  id: string;
+  companyId: string;
+  projectId: string;
+  /** @nullable */
+  phaseId?: string | null;
+  code: string;
+  name: string;
+  nameAr: string;
+  floorsCount: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface BuildingInput {
+  companyId: string;
+  projectId: string;
+  phaseId?: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  floorsCount?: number;
+}
+
+export interface BuildingUpdate {
+  companyId?: string;
+  projectId?: string;
+  phaseId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  floorsCount?: number;
+}
+
+export interface BuildingListResponse {
+  data: Building[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Floor {
+  id: string;
+  companyId: string;
+  buildingId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  floorNumber: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface FloorInput {
+  companyId: string;
+  buildingId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  floorNumber?: number;
+}
+
+export interface FloorUpdate {
+  companyId?: string;
+  buildingId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  floorNumber?: number;
+}
+
+export interface FloorListResponse {
+  data: Floor[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Unit {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  projectId: string;
+  buildingId: string;
+  floorId: string;
+  /** @nullable */
+  unitTypeId?: string | null;
+  /** @nullable */
+  unitStatusId?: string | null;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  area?: string | null;
+  /** @nullable */
+  bedrooms?: number | null;
+  /** @nullable */
+  bathrooms?: number | null;
+  /** @nullable */
+  basePrice?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitInput {
+  companyId: string;
+  branchId?: string;
+  projectId: string;
+  buildingId: string;
+  floorId: string;
+  unitTypeId?: string;
+  unitStatusId?: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  area?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  basePrice?: string;
+}
+
+export interface UnitUpdate {
+  companyId?: string;
+  branchId?: string;
+  projectId?: string;
+  buildingId?: string;
+  floorId?: string;
+  unitTypeId?: string;
+  unitStatusId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  area?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  basePrice?: string;
+}
+
+export interface UnitListResponse {
+  data: Unit[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeadSource {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeadSourceInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+}
+
+export interface LeadSourceUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+}
+
+export interface LeadSourceListResponse {
+  data: LeadSource[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Lead {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  fullName: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  status: string;
+  /** @nullable */
+  budget?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeadInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  fullName: string;
+  phone?: string;
+  email?: string;
+  sourceId?: string;
+  assignedToUserId?: string;
+  status?: string;
+  budget?: string;
+  notes?: string;
+}
+
+export interface LeadUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  fullName?: string;
+  phone?: string;
+  email?: string;
+  sourceId?: string;
+  assignedToUserId?: string;
+  status?: string;
+  budget?: string;
+  notes?: string;
+}
+
+export interface LeadListResponse {
+  data: Lead[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeadActivity {
+  id: string;
+  companyId: string;
+  leadId: string;
+  activityType: string;
+  /** @nullable */
+  subject?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  activityDate: string;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeadActivityInput {
+  companyId: string;
+  leadId: string;
+  activityType?: string;
+  subject?: string;
+  notes?: string;
+  activityDate: string;
+  userId?: string;
+}
+
+export interface LeadActivityUpdate {
+  companyId?: string;
+  leadId?: string;
+  activityType?: string;
+  subject?: string;
+  notes?: string;
+  activityDate?: string;
+  userId?: string;
+}
+
+export interface LeadActivityListResponse {
+  data: LeadActivity[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeadFollowUp {
+  id: string;
+  companyId: string;
+  leadId: string;
+  dueDate: string;
+  /** @nullable */
+  notes?: string | null;
+  status: string;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeadFollowUpInput {
+  companyId: string;
+  leadId: string;
+  dueDate: string;
+  notes?: string;
+  status?: string;
+  userId?: string;
+}
+
+export interface LeadFollowUpUpdate {
+  companyId?: string;
+  leadId?: string;
+  dueDate?: string;
+  notes?: string;
+  status?: string;
+  userId?: string;
+}
+
+export interface LeadFollowUpListResponse {
+  data: LeadFollowUp[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeadAssignment {
+  id: string;
+  companyId: string;
+  leadId: string;
+  assignedToUserId: string;
+  /** @nullable */
+  assignedByUserId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeadAssignmentInput {
+  companyId: string;
+  leadId: string;
+  assignedToUserId: string;
+  assignedByUserId?: string;
+  notes?: string;
+}
+
+export interface LeadAssignmentUpdate {
+  companyId?: string;
+  leadId?: string;
+  assignedToUserId?: string;
+  assignedByUserId?: string;
+  notes?: string;
+}
+
+export interface LeadAssignmentListResponse {
+  data: LeadAssignment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeadConversion {
+  id: string;
+  companyId: string;
+  leadId: string;
+  customerId: string;
+  /** @nullable */
+  convertedByUserId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeadConversionInput {
+  companyId: string;
+  leadId: string;
+  customerId: string;
+  convertedByUserId?: string;
+  notes?: string;
+}
+
+export interface LeadConversionUpdate {
+  companyId?: string;
+  leadId?: string;
+  customerId?: string;
+  convertedByUserId?: string;
+  notes?: string;
+}
+
+export interface LeadConversionListResponse {
+  data: LeadConversion[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Customer {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  fullName: string;
+  /** @nullable */
+  nameAr?: string | null;
+  type: string;
+  /** @nullable */
+  nationalId?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  address?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CustomerInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  fullName: string;
+  nameAr?: string;
+  type?: string;
+  nationalId?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+}
+
+export interface CustomerUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  fullName?: string;
+  nameAr?: string;
+  type?: string;
+  nationalId?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+}
+
+export interface CustomerListResponse {
+  data: Customer[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomerContact {
+  id: string;
+  companyId: string;
+  customerId: string;
+  name: string;
+  /** @nullable */
+  relation?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  email?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CustomerContactInput {
+  companyId: string;
+  customerId: string;
+  name: string;
+  relation?: string;
+  phone?: string;
+  email?: string;
+}
+
+export interface CustomerContactUpdate {
+  companyId?: string;
+  customerId?: string;
+  name?: string;
+  relation?: string;
+  phone?: string;
+  email?: string;
+}
+
+export interface CustomerContactListResponse {
+  data: CustomerContact[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomerDocument {
+  id: string;
+  companyId: string;
+  customerId: string;
+  docType: string;
+  /** @nullable */
+  docNumber?: string | null;
+  /** @nullable */
+  fileName?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CustomerDocumentInput {
+  companyId: string;
+  customerId: string;
+  docType: string;
+  docNumber?: string;
+  fileName?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface CustomerDocumentUpdate {
+  companyId?: string;
+  customerId?: string;
+  docType?: string;
+  docNumber?: string;
+  fileName?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface CustomerDocumentListResponse {
+  data: CustomerDocument[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomerNote {
+  id: string;
+  companyId: string;
+  customerId: string;
+  note: string;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CustomerNoteInput {
+  companyId: string;
+  customerId: string;
+  note: string;
+  userId?: string;
+}
+
+export interface CustomerNoteUpdate {
+  companyId?: string;
+  customerId?: string;
+  note?: string;
+  userId?: string;
+}
+
+export interface CustomerNoteListResponse {
+  data: CustomerNote[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Reservation {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  unitId: string;
+  customerId: string;
+  reservationDate: string;
+  amount: string;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ReservationInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  unitId: string;
+  customerId: string;
+  reservationDate: string;
+  amount?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ReservationUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  unitId?: string;
+  customerId?: string;
+  reservationDate?: string;
+  amount?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ReservationListResponse {
+  data: Reservation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ReservationPayment {
+  id: string;
+  companyId: string;
+  reservationId: string;
+  amount: string;
+  paymentDate: string;
+  method: string;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ReservationPaymentInput {
+  companyId: string;
+  reservationId: string;
+  amount?: string;
+  paymentDate: string;
+  method?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface ReservationPaymentUpdate {
+  companyId?: string;
+  reservationId?: string;
+  amount?: string;
+  paymentDate?: string;
+  method?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface ReservationPaymentListResponse {
+  data: ReservationPayment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Contract {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  /** @nullable */
+  reservationId?: string | null;
+  unitId: string;
+  customerId: string;
+  contractDate: string;
+  totalPrice: string;
+  /** @nullable */
+  downPayment?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  reservationId?: string;
+  unitId: string;
+  customerId: string;
+  contractDate: string;
+  totalPrice?: string;
+  downPayment?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ContractUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  reservationId?: string;
+  unitId?: string;
+  customerId?: string;
+  contractDate?: string;
+  totalPrice?: string;
+  downPayment?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ContractListResponse {
+  data: Contract[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractAmendment {
+  id: string;
+  companyId: string;
+  contractId: string;
+  /** @nullable */
+  code?: string | null;
+  amendmentDate: string;
+  description: string;
+  /** @nullable */
+  oldValue?: string | null;
+  /** @nullable */
+  newValue?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractAmendmentInput {
+  companyId: string;
+  contractId: string;
+  code?: string;
+  amendmentDate: string;
+  description: string;
+  oldValue?: string;
+  newValue?: string;
+  userId?: string;
+}
+
+export interface ContractAmendmentUpdate {
+  companyId?: string;
+  contractId?: string;
+  code?: string;
+  amendmentDate?: string;
+  description?: string;
+  oldValue?: string;
+  newValue?: string;
+  userId?: string;
+}
+
+export interface ContractAmendmentListResponse {
+  data: ContractAmendment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractCancellation {
+  id: string;
+  companyId: string;
+  contractId: string;
+  cancellationDate: string;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  refundAmount?: string | null;
+  /** @nullable */
+  penaltyAmount?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractCancellationInput {
+  companyId: string;
+  contractId: string;
+  cancellationDate: string;
+  reason?: string;
+  refundAmount?: string;
+  penaltyAmount?: string;
+  userId?: string;
+}
+
+export interface ContractCancellationUpdate {
+  companyId?: string;
+  contractId?: string;
+  cancellationDate?: string;
+  reason?: string;
+  refundAmount?: string;
+  penaltyAmount?: string;
+  userId?: string;
+}
+
+export interface ContractCancellationListResponse {
+  data: ContractCancellation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitTransfer {
+  id: string;
+  companyId: string;
+  contractId: string;
+  fromUnitId: string;
+  toUnitId: string;
+  transferDate: string;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  priceDifference?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitTransferInput {
+  companyId: string;
+  contractId: string;
+  fromUnitId: string;
+  toUnitId: string;
+  transferDate: string;
+  reason?: string;
+  priceDifference?: string;
+  userId?: string;
+}
+
+export interface UnitTransferUpdate {
+  companyId?: string;
+  contractId?: string;
+  fromUnitId?: string;
+  toUnitId?: string;
+  transferDate?: string;
+  reason?: string;
+  priceDifference?: string;
+  userId?: string;
+}
+
+export interface UnitTransferListResponse {
+  data: UnitTransfer[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InstallmentPlan {
+  id: string;
+  companyId: string;
+  code: string;
+  contractId: string;
+  totalAmount: string;
+  /** @nullable */
+  downPayment?: string | null;
+  numberOfInstallments: number;
+  frequency: string;
+  startDate: string;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InstallmentPlanInput {
+  companyId: string;
+  code: string;
+  contractId: string;
+  totalAmount?: string;
+  downPayment?: string;
+  numberOfInstallments?: number;
+  frequency?: string;
+  startDate: string;
+  status?: string;
+}
+
+export interface InstallmentPlanUpdate {
+  companyId?: string;
+  code?: string;
+  contractId?: string;
+  totalAmount?: string;
+  downPayment?: string;
+  numberOfInstallments?: number;
+  frequency?: string;
+  startDate?: string;
+  status?: string;
+}
+
+export interface InstallmentPlanListResponse {
+  data: InstallmentPlan[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InstallmentSchedule {
+  id: string;
+  companyId: string;
+  planId: string;
+  installmentNumber: number;
+  dueDate: string;
+  amount: string;
+  paidAmount: string;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InstallmentScheduleInput {
+  companyId: string;
+  planId: string;
+  installmentNumber?: number;
+  dueDate: string;
+  amount?: string;
+  paidAmount?: string;
+  status?: string;
+}
+
+export interface InstallmentScheduleUpdate {
+  companyId?: string;
+  planId?: string;
+  installmentNumber?: number;
+  dueDate?: string;
+  amount?: string;
+  paidAmount?: string;
+  status?: string;
+}
+
+export interface InstallmentScheduleListResponse {
+  data: InstallmentSchedule[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InstallmentCollection {
+  id: string;
+  companyId: string;
+  scheduleId: string;
+  amount: string;
+  collectionDate: string;
+  method: string;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InstallmentCollectionInput {
+  companyId: string;
+  scheduleId: string;
+  amount?: string;
+  collectionDate: string;
+  method?: string;
+  reference?: string;
+  userId?: string;
+}
+
+export interface InstallmentCollectionUpdate {
+  companyId?: string;
+  scheduleId?: string;
+  amount?: string;
+  collectionDate?: string;
+  method?: string;
+  reference?: string;
+  userId?: string;
+}
+
+export interface InstallmentCollectionListResponse {
+  data: InstallmentCollection[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PenaltyRule {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  daysAfterDue: number;
+  penaltyType: string;
+  penaltyValue: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PenaltyRuleInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  daysAfterDue?: number;
+  penaltyType?: string;
+  penaltyValue?: string;
+}
+
+export interface PenaltyRuleUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  daysAfterDue?: number;
+  penaltyType?: string;
+  penaltyValue?: string;
+}
+
+export interface PenaltyRuleListResponse {
+  data: PenaltyRule[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitPriceList {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  effectiveFrom?: string | null;
+  /** @nullable */
+  effectiveTo?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitPriceListInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  projectId?: string;
+  effectiveFrom?: string;
+  effectiveTo?: string;
+}
+
+export interface UnitPriceListUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  projectId?: string;
+  effectiveFrom?: string;
+  effectiveTo?: string;
+}
+
+export interface UnitPriceListListResponse {
+  data: UnitPriceList[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitPricing {
+  id: string;
+  companyId: string;
+  priceListId: string;
+  unitId: string;
+  price: string;
+  /** @nullable */
+  effectiveDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitPricingInput {
+  companyId: string;
+  priceListId: string;
+  unitId: string;
+  price?: string;
+  effectiveDate?: string;
+}
+
+export interface UnitPricingUpdate {
+  companyId?: string;
+  priceListId?: string;
+  unitId?: string;
+  price?: string;
+  effectiveDate?: string;
+}
+
+export interface UnitPricingListResponse {
+  data: UnitPricing[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitDiscount {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  discountType: string;
+  discountValue: string;
+  /** @nullable */
+  validFrom?: string | null;
+  /** @nullable */
+  validTo?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitDiscountInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  discountType?: string;
+  discountValue?: string;
+  validFrom?: string;
+  validTo?: string;
+}
+
+export interface UnitDiscountUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  discountType?: string;
+  discountValue?: string;
+  validFrom?: string;
+  validTo?: string;
+}
+
+export interface UnitDiscountListResponse {
+  data: UnitDiscount[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitAvailability {
+  total: number;
+  available: number;
+  reserved: number;
+  sold: number;
+  other: number;
+}
+
+export interface RealEstateDashboard {
+  projects: number;
+  buildings: number;
+  units: number;
+  availableUnits: number;
+  reservedUnits: number;
+  soldUnits: number;
+  leads: number;
+  customers: number;
+  reservations: number;
+  contracts: number;
+  overdueInstallments: number;
+  totalContractValue: string;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -444,5 +1776,287 @@ companyId?: string;
 export type ListAuditLogsParams = {
 entity?: string;
 action?: string;
+};
+
+export type ListUnitTypesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListUnitStatusesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListProjectsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+status?: string;
+};
+
+export type ListPhasesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+projectId?: string;
+status?: string;
+};
+
+export type ListBuildingsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+projectId?: string;
+phaseId?: string;
+};
+
+export type ListFloorsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+buildingId?: string;
+};
+
+export type ListUnitsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+projectId?: string;
+buildingId?: string;
+floorId?: string;
+unitTypeId?: string;
+unitStatusId?: string;
+};
+
+export type ListLeadSourcesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLeadsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+sourceId?: string;
+assignedToUserId?: string;
+status?: string;
+};
+
+export type ListLeadActivitiesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+leadId?: string;
+};
+
+export type ListLeadFollowUpsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+leadId?: string;
+status?: string;
+};
+
+export type ListLeadAssignmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+leadId?: string;
+assignedToUserId?: string;
+};
+
+export type ListLeadConversionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+leadId?: string;
+customerId?: string;
+};
+
+export type ListCustomersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+type?: string;
+};
+
+export type ListCustomerContactsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+};
+
+export type ListCustomerDocumentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+};
+
+export type ListCustomerNotesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+};
+
+export type ListReservationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+unitId?: string;
+customerId?: string;
+status?: string;
+};
+
+export type ListReservationPaymentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+reservationId?: string;
+method?: string;
+};
+
+export type ListContractsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+reservationId?: string;
+unitId?: string;
+customerId?: string;
+status?: string;
+};
+
+export type ListContractAmendmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractId?: string;
+};
+
+export type ListContractCancellationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractId?: string;
+};
+
+export type ListUnitTransfersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractId?: string;
+};
+
+export type ListInstallmentPlansParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractId?: string;
+frequency?: string;
+status?: string;
+};
+
+export type ListInstallmentSchedulesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+planId?: string;
+status?: string;
+};
+
+export type ListInstallmentCollectionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+scheduleId?: string;
+method?: string;
+};
+
+export type ListPenaltyRulesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+penaltyType?: string;
+};
+
+export type ListUnitPriceListsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+projectId?: string;
+};
+
+export type ListUnitPricingsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+priceListId?: string;
+unitId?: string;
+};
+
+export type ListUnitDiscountsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+discountType?: string;
+};
+
+export type GetUnitAvailabilityParams = {
+companyId?: string;
+projectId?: string;
+buildingId?: string;
+};
+
+export type ListOverdueInstallmentsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+planId?: string;
+};
+
+export type GetRealEstateDashboardParams = {
+companyId?: string;
 };
 

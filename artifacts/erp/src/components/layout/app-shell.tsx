@@ -4,23 +4,13 @@ import { Link, useLocation } from "wouter";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  LayoutDashboard, 
-  Users, 
-  ShieldCheck, 
-  Building2, 
-  MapPin, 
-  CalendarDays, 
-  Banknote, 
-  Hash, 
-  ListOrdered, 
-  History, 
-  Settings, 
-  KeyRound, 
-  LogOut,
-  Menu,
-  Sun,
-  Moon
+import {
+  LayoutDashboard, Users, ShieldCheck, Building2, Building, MapPin, CalendarDays,
+  Banknote, Hash, ListOrdered, History, Settings, KeyRound, LogOut, Menu, Sun, Moon,
+  Layers, Rows3, Home, Boxes, BadgeCheck, ClipboardList, DollarSign, Percent,
+  UserPlus, Megaphone, Activity, CalendarClock, UserCheck, ArrowRightLeft,
+  Contact, FileText, StickyNote, BookMarked, Wallet, FileSignature, FilePen, FileX,
+  ArrowLeftRight, CalendarRange, Receipt, AlertTriangle,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -33,18 +23,64 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, labelKey: "nav.dashboard" },
-  { href: "/users", icon: Users, labelKey: "nav.users" },
-  { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles" },
-  { href: "/companies", icon: Building2, labelKey: "nav.companies" },
-  { href: "/branches", icon: MapPin, labelKey: "nav.branches" },
-  { href: "/fiscal-years", icon: CalendarDays, labelKey: "nav.fiscal_years" },
-  { href: "/currencies", icon: Banknote, labelKey: "nav.currencies" },
-  { href: "/number-sequences", icon: Hash, labelKey: "nav.number_sequences" },
-  { href: "/audit-logs", icon: ListOrdered, labelKey: "nav.audit_logs" },
-  { href: "/login-history", icon: History, labelKey: "nav.login_history" },
-  { href: "/settings", icon: Settings, labelKey: "nav.settings" },
+const NAV_GROUPS = [
+  { titleKey: "nav.group.general", items: [
+    { href: "/", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+  ]},
+  { titleKey: "nav.group.real_estate", items: [
+    { href: "/projects", icon: Building, labelKey: "nav.projects" },
+    { href: "/phases", icon: Layers, labelKey: "nav.phases" },
+    { href: "/buildings", icon: Building2, labelKey: "nav.buildings" },
+    { href: "/floors", icon: Rows3, labelKey: "nav.floors" },
+    { href: "/units", icon: Home, labelKey: "nav.units" },
+    { href: "/unit-types", icon: Boxes, labelKey: "nav.unit_types" },
+    { href: "/unit-statuses", icon: BadgeCheck, labelKey: "nav.unit_statuses" },
+  ]},
+  { titleKey: "nav.group.unit_management", items: [
+    { href: "/unit-price-lists", icon: ClipboardList, labelKey: "nav.unit_price_lists" },
+    { href: "/unit-pricing", icon: DollarSign, labelKey: "nav.unit_pricing" },
+    { href: "/unit-discounts", icon: Percent, labelKey: "nav.unit_discounts" },
+  ]},
+  { titleKey: "nav.group.crm", items: [
+    { href: "/leads", icon: UserPlus, labelKey: "nav.leads" },
+    { href: "/lead-sources", icon: Megaphone, labelKey: "nav.lead_sources" },
+    { href: "/lead-activities", icon: Activity, labelKey: "nav.lead_activities" },
+    { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
+    { href: "/lead-assignments", icon: UserCheck, labelKey: "nav.lead_assignments" },
+    { href: "/lead-conversions", icon: ArrowRightLeft, labelKey: "nav.lead_conversions" },
+  ]},
+  { titleKey: "nav.group.customers", items: [
+    { href: "/customers", icon: Users, labelKey: "nav.customers" },
+    { href: "/customer-contacts", icon: Contact, labelKey: "nav.customer_contacts" },
+    { href: "/customer-documents", icon: FileText, labelKey: "nav.customer_documents" },
+    { href: "/customer-notes", icon: StickyNote, labelKey: "nav.customer_notes" },
+  ]},
+  { titleKey: "nav.group.sales", items: [
+    { href: "/reservations", icon: BookMarked, labelKey: "nav.reservations" },
+    { href: "/reservation-payments", icon: Wallet, labelKey: "nav.reservation_payments" },
+    { href: "/contracts", icon: FileSignature, labelKey: "nav.contracts" },
+    { href: "/contract-amendments", icon: FilePen, labelKey: "nav.contract_amendments" },
+    { href: "/contract-cancellations", icon: FileX, labelKey: "nav.contract_cancellations" },
+    { href: "/unit-transfers", icon: ArrowLeftRight, labelKey: "nav.unit_transfers" },
+  ]},
+  { titleKey: "nav.group.installments", items: [
+    { href: "/installment-plans", icon: CalendarRange, labelKey: "nav.installment_plans" },
+    { href: "/installment-schedules", icon: ListOrdered, labelKey: "nav.installment_schedules" },
+    { href: "/installment-collections", icon: Receipt, labelKey: "nav.installment_collections" },
+    { href: "/penalty-rules", icon: AlertTriangle, labelKey: "nav.penalty_rules" },
+  ]},
+  { titleKey: "nav.group.administration", items: [
+    { href: "/users", icon: Users, labelKey: "nav.users" },
+    { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles" },
+    { href: "/companies", icon: Building2, labelKey: "nav.companies" },
+    { href: "/branches", icon: MapPin, labelKey: "nav.branches" },
+    { href: "/fiscal-years", icon: CalendarDays, labelKey: "nav.fiscal_years" },
+    { href: "/currencies", icon: Banknote, labelKey: "nav.currencies" },
+    { href: "/number-sequences", icon: Hash, labelKey: "nav.number_sequences" },
+    { href: "/audit-logs", icon: ListOrdered, labelKey: "nav.audit_logs" },
+    { href: "/login-history", icon: History, labelKey: "nav.login_history" },
+    { href: "/settings", icon: Settings, labelKey: "nav.settings" },
+  ]},
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -58,21 +94,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const NavLinks = () => (
     <>
-      {NAV_ITEMS.map((item) => {
-        const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
-        return (
-          <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
-            <span
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                isActive ? "bg-muted text-primary font-medium" : "text-muted-foreground"
-              }`}
-            >
-              <item.icon className="h-4 w-4" />
-              {t(item.labelKey)}
-            </span>
-          </Link>
-        );
-      })}
+      {NAV_GROUPS.map((group) => (
+        <div key={group.titleKey} className="pb-2">
+          <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+            {t(group.titleKey)}
+          </p>
+          {group.items.map((item) => {
+            const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+            return (
+              <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
+                <span
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    isActive ? "bg-muted text-primary font-medium" : "text-muted-foreground"
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {t(item.labelKey)}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      ))}
     </>
   );
 
