@@ -2392,6 +2392,422 @@ paths:
               schema:
                 $ref: "#/components/schemas/OkResponse"
 
+  /contract-notes:
+    get:
+      operationId: listContractNotes
+      tags: [contractNotes]
+      summary: List contract-notes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractNotes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractNoteListResponse"
+    post:
+      operationId: createContractNote
+      tags: [contractNotes]
+      summary: Create a ContractNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractNoteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractNote"
+
+  /contract-notes/{id}:
+    get:
+      operationId: getContractNote
+      tags: [contractNotes]
+      summary: Get a ContractNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractNote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractNote"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractNote
+      tags: [contractNotes]
+      summary: Update a ContractNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractNoteUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractNote"
+    delete:
+      operationId: deleteContractNote
+      tags: [contractNotes]
+      summary: Soft-delete a ContractNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contract-documents:
+    get:
+      operationId: listContractDocuments
+      tags: [contractDocuments]
+      summary: List contract-documents
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractDocuments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractDocumentListResponse"
+    post:
+      operationId: createContractDocument
+      tags: [contractDocuments]
+      summary: Create a ContractDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractDocumentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractDocument"
+
+  /contract-documents/{id}:
+    get:
+      operationId: getContractDocument
+      tags: [contractDocuments]
+      summary: Get a ContractDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractDocument
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractDocument"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractDocument
+      tags: [contractDocuments]
+      summary: Update a ContractDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractDocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractDocument"
+    delete:
+      operationId: deleteContractDocument
+      tags: [contractDocuments]
+      summary: Soft-delete a ContractDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /reservation-notes:
+    get:
+      operationId: listReservationNotes
+      tags: [reservationNotes]
+      summary: List reservation-notes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: reservationId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ReservationNotes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationNoteListResponse"
+    post:
+      operationId: createReservationNote
+      tags: [reservationNotes]
+      summary: Create a ReservationNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationNoteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationNote"
+
+  /reservation-notes/{id}:
+    get:
+      operationId: getReservationNote
+      tags: [reservationNotes]
+      summary: Get a ReservationNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ReservationNote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationNote"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateReservationNote
+      tags: [reservationNotes]
+      summary: Update a ReservationNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationNoteUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationNote"
+    delete:
+      operationId: deleteReservationNote
+      tags: [reservationNotes]
+      summary: Soft-delete a ReservationNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /reservation-documents:
+    get:
+      operationId: listReservationDocuments
+      tags: [reservationDocuments]
+      summary: List reservation-documents
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: reservationId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ReservationDocuments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationDocumentListResponse"
+    post:
+      operationId: createReservationDocument
+      tags: [reservationDocuments]
+      summary: Create a ReservationDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationDocumentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationDocument"
+
+  /reservation-documents/{id}:
+    get:
+      operationId: getReservationDocument
+      tags: [reservationDocuments]
+      summary: Get a ReservationDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ReservationDocument
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationDocument"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateReservationDocument
+      tags: [reservationDocuments]
+      summary: Update a ReservationDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationDocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReservationDocument"
+    delete:
+      operationId: deleteReservationDocument
+      tags: [reservationDocuments]
+      summary: Soft-delete a ReservationDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /reservations/{id}/convert:
+    post:
+      operationId: convertReservation
+      tags: [reservations]
+      summary: Convert a reservation into a contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConvertReservationInput"
+      responses:
+        "201":
+          description: Created contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /installment-plans/{id}/generate:
+    post:
+      operationId: generateInstallmentSchedules
+      tags: [installmentPlans]
+      summary: Generate installment schedule rows for a plan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "201":
+          description: Generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateInstallmentsResult"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /reservations:
     get:
       operationId: listReservations
@@ -5262,6 +5678,10 @@ components:
         nameAr: { type: ["string", "null"] }
         type: { type: string }
         nationalId: { type: ["string", "null"] }
+        passport: { type: ["string", "null"] }
+        companyName: { type: ["string", "null"] }
+        taxNumber: { type: ["string", "null"] }
+        commercialRegistration: { type: ["string", "null"] }
         phone: { type: ["string", "null"] }
         email: { type: ["string", "null"] }
         address: { type: ["string", "null"] }
@@ -5279,6 +5699,10 @@ components:
         nameAr: { type: string }
         type: { type: string }
         nationalId: { type: string }
+        passport: { type: string }
+        companyName: { type: string }
+        taxNumber: { type: string }
+        commercialRegistration: { type: string }
         phone: { type: string }
         email: { type: string }
         address: { type: string }
@@ -5293,6 +5717,10 @@ components:
         nameAr: { type: string }
         type: { type: string }
         nationalId: { type: string }
+        passport: { type: string }
+        companyName: { type: string }
+        taxNumber: { type: string }
+        commercialRegistration: { type: string }
         phone: { type: string }
         email: { type: string }
         address: { type: string }
@@ -5457,6 +5885,7 @@ components:
         unitId: { type: string }
         customerId: { type: string }
         reservationDate: { type: string }
+        expiryDate: { type: ["string", "null"] }
         amount: { type: string }
         status: { type: string }
         notes: { type: ["string", "null"] }
@@ -5473,6 +5902,7 @@ components:
         unitId: { type: string }
         customerId: { type: string }
         reservationDate: { type: string }
+        expiryDate: { type: string }
         amount: { type: string }
         status: { type: string }
         notes: { type: string }
@@ -5486,6 +5916,7 @@ components:
         unitId: { type: string }
         customerId: { type: string }
         reservationDate: { type: string }
+        expiryDate: { type: string }
         amount: { type: string }
         status: { type: string }
         notes: { type: string }
@@ -6521,3 +6952,203 @@ components:
       properties:
         created: { type: integer }
         totalAmount: { type: string }
+
+    ContractNote:
+      type: object
+      required: [id, companyId, contractId, note, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        contractId: { type: string }
+        note: { type: string }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractNoteInput:
+      type: object
+      required: [companyId, contractId, note]
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        note: { type: string }
+        userId: { type: string }
+
+    ContractNoteUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        note: { type: string }
+        userId: { type: string }
+
+    ContractNoteListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractNote" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractDocument:
+      type: object
+      required: [id, companyId, contractId, docType, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        contractId: { type: string }
+        docType: { type: string }
+        docNumber: { type: ["string", "null"] }
+        fileName: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractDocumentInput:
+      type: object
+      required: [companyId, contractId, docType]
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        docType: { type: string }
+        docNumber: { type: string }
+        fileName: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    ContractDocumentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        docType: { type: string }
+        docNumber: { type: string }
+        fileName: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    ContractDocumentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractDocument" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ReservationNote:
+      type: object
+      required: [id, companyId, reservationId, note, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        reservationId: { type: string }
+        note: { type: string }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ReservationNoteInput:
+      type: object
+      required: [companyId, reservationId, note]
+      properties:
+        companyId: { type: string }
+        reservationId: { type: string }
+        note: { type: string }
+        userId: { type: string }
+
+    ReservationNoteUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        reservationId: { type: string }
+        note: { type: string }
+        userId: { type: string }
+
+    ReservationNoteListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ReservationNote" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ReservationDocument:
+      type: object
+      required: [id, companyId, reservationId, docType, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        reservationId: { type: string }
+        docType: { type: string }
+        docNumber: { type: ["string", "null"] }
+        fileName: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ReservationDocumentInput:
+      type: object
+      required: [companyId, reservationId, docType]
+      properties:
+        companyId: { type: string }
+        reservationId: { type: string }
+        docType: { type: string }
+        docNumber: { type: string }
+        fileName: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    ReservationDocumentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        reservationId: { type: string }
+        docType: { type: string }
+        docNumber: { type: string }
+        fileName: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    ReservationDocumentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ReservationDocument" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ConvertReservationInput:
+      type: object
+      properties:
+        code: { type: string }
+        contractDate: { type: string }
+        totalPrice: { type: string }
+        downPayment: { type: string }
+        notes: { type: string }
+
+    GenerateInstallmentsResult:
+      type: object
+      required: [created]
+      properties:
+        created: { type: integer }
+        planId: { type: string }

@@ -58,9 +58,13 @@ const NAV_GROUPS = [
   { titleKey: "nav.group.sales", items: [
     { href: "/reservations", icon: BookMarked, labelKey: "nav.reservations" },
     { href: "/reservation-payments", icon: Wallet, labelKey: "nav.reservation_payments" },
+    { href: "/reservation-notes", icon: StickyNote, labelKey: "nav.reservation_notes" },
+    { href: "/reservation-documents", icon: FileText, labelKey: "nav.reservation_documents" },
     { href: "/contracts", icon: FileSignature, labelKey: "nav.contracts" },
     { href: "/contract-amendments", icon: FilePen, labelKey: "nav.contract_amendments" },
     { href: "/contract-cancellations", icon: FileX, labelKey: "nav.contract_cancellations" },
+    { href: "/contract-notes", icon: StickyNote, labelKey: "nav.contract_notes" },
+    { href: "/contract-documents", icon: FileText, labelKey: "nav.contract_documents" },
     { href: "/unit-transfers", icon: ArrowLeftRight, labelKey: "nav.unit_transfers" },
   ]},
   { titleKey: "nav.group.installments", items: [

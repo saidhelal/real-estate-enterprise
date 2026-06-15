@@ -291,6 +291,59 @@ router.delete("/penalty-rules/:id", requirePermission("penaltyRules.delete"), as
   res.json({ success: true });
 });
 
+// ----- generate installment schedules from a plan -----
+router.post("/installment-plans/:id/generate", requirePermission("installmentSchedules.create"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  let conflict: string | null = null;
+  const created = await db.transaction(async (tx) => {
+    const [plan] = await tx
+      .select()
+      .from(installmentPlansTable)
+      .where(and(eq(installmentPlansTable.id, id), eq(installmentPlansTable.isDeleted, false)))
+      .for("update");
+    if (!plan) { conflict = "404"; return []; }
+    const [existing] = await tx
+      .select({ count: sql<number>`count(*)::int` })
+      .from(installmentSchedulesTable)
+      .where(and(eq(installmentSchedulesTable.planId, id), eq(installmentSchedulesTable.isDeleted, false)));
+    if (existing && existing.count > 0) { conflict = "Schedules already generated for this plan"; return []; }
+
+    const n = Math.max(1, plan.numberOfInstallments);
+    const total = Number(plan.totalAmount);
+    const down = plan.downPayment != null ? Number(plan.downPayment) : 0;
+    const financed = Math.max(0, total - down);
+    const base = Math.floor((financed / n) * 100) / 100;
+    const monthsStep =
+      plan.frequency === "quarterly" ? 3 :
+      plan.frequency === "semi_annual" ? 6 :
+      plan.frequency === "annual" ? 12 : 1;
+
+    const start = new Date(`${plan.startDate}T00:00:00Z`);
+    const values = [] as (typeof installmentSchedulesTable.$inferInsert)[];
+    let allocated = 0;
+    for (let i = 0; i < n; i++) {
+      const amount = i === n - 1 ? Math.round((financed - allocated) * 100) / 100 : base;
+      allocated = Math.round((allocated + base) * 100) / 100;
+      const due = new Date(start);
+      due.setUTCMonth(due.getUTCMonth() + monthsStep * (i + 1));
+      values.push({
+        companyId: plan.companyId,
+        planId: plan.id,
+        installmentNumber: i + 1,
+        dueDate: due.toISOString().slice(0, 10),
+        amount: amount.toFixed(2),
+        paidAmount: "0",
+        status: "pending",
+      });
+    }
+    return tx.insert(installmentSchedulesTable).values(values).returning();
+  });
+  if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+  if (conflict) { res.status(409).json({ error: conflict }); return; }
+  await recordAudit(req, { action: "generate", entity: "installmentPlan", entityId: id, newValue: { created: created.length } });
+  res.status(201).json({ created: created.length, planId: id });
+});
+
 // ----- overdue installments (special read) -----
 router.get("/overdue-installments", requirePermission("installmentSchedules.view"), async (req, res): Promise<void> => {
   const q = req.query as Record<string, unknown>;

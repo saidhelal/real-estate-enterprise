@@ -995,6 +995,14 @@ export interface Customer {
   /** @nullable */
   nationalId?: string | null;
   /** @nullable */
+  passport?: string | null;
+  /** @nullable */
+  companyName?: string | null;
+  /** @nullable */
+  taxNumber?: string | null;
+  /** @nullable */
+  commercialRegistration?: string | null;
+  /** @nullable */
   phone?: string | null;
   /** @nullable */
   email?: string | null;
@@ -1012,6 +1020,10 @@ export interface CustomerInput {
   nameAr?: string;
   type?: string;
   nationalId?: string;
+  passport?: string;
+  companyName?: string;
+  taxNumber?: string;
+  commercialRegistration?: string;
   phone?: string;
   email?: string;
   address?: string;
@@ -1025,6 +1037,10 @@ export interface CustomerUpdate {
   nameAr?: string;
   type?: string;
   nationalId?: string;
+  passport?: string;
+  companyName?: string;
+  taxNumber?: string;
+  commercialRegistration?: string;
   phone?: string;
   email?: string;
   address?: string;
@@ -1166,6 +1182,8 @@ export interface Reservation {
   unitId: string;
   customerId: string;
   reservationDate: string;
+  /** @nullable */
+  expiryDate?: string | null;
   amount: string;
   status: string;
   /** @nullable */
@@ -1181,6 +1199,7 @@ export interface ReservationInput {
   unitId: string;
   customerId: string;
   reservationDate: string;
+  expiryDate?: string;
   amount?: string;
   status?: string;
   notes?: string;
@@ -1193,6 +1212,7 @@ export interface ReservationUpdate {
   unitId?: string;
   customerId?: string;
   reservationDate?: string;
+  expiryDate?: string;
   amount?: string;
   status?: string;
   notes?: string;
@@ -2106,6 +2126,179 @@ export interface CalculatePenaltiesResult {
   totalAmount?: string;
 }
 
+export interface ContractNote {
+  id: string;
+  companyId: string;
+  contractId: string;
+  note: string;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractNoteInput {
+  companyId: string;
+  contractId: string;
+  note: string;
+  userId?: string;
+}
+
+export interface ContractNoteUpdate {
+  companyId?: string;
+  contractId?: string;
+  note?: string;
+  userId?: string;
+}
+
+export interface ContractNoteListResponse {
+  data: ContractNote[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractDocument {
+  id: string;
+  companyId: string;
+  contractId: string;
+  docType: string;
+  /** @nullable */
+  docNumber?: string | null;
+  /** @nullable */
+  fileName?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractDocumentInput {
+  companyId: string;
+  contractId: string;
+  docType: string;
+  docNumber?: string;
+  fileName?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface ContractDocumentUpdate {
+  companyId?: string;
+  contractId?: string;
+  docType?: string;
+  docNumber?: string;
+  fileName?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface ContractDocumentListResponse {
+  data: ContractDocument[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ReservationNote {
+  id: string;
+  companyId: string;
+  reservationId: string;
+  note: string;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ReservationNoteInput {
+  companyId: string;
+  reservationId: string;
+  note: string;
+  userId?: string;
+}
+
+export interface ReservationNoteUpdate {
+  companyId?: string;
+  reservationId?: string;
+  note?: string;
+  userId?: string;
+}
+
+export interface ReservationNoteListResponse {
+  data: ReservationNote[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ReservationDocument {
+  id: string;
+  companyId: string;
+  reservationId: string;
+  docType: string;
+  /** @nullable */
+  docNumber?: string | null;
+  /** @nullable */
+  fileName?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ReservationDocumentInput {
+  companyId: string;
+  reservationId: string;
+  docType: string;
+  docNumber?: string;
+  fileName?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface ReservationDocumentUpdate {
+  companyId?: string;
+  reservationId?: string;
+  docType?: string;
+  docNumber?: string;
+  fileName?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface ReservationDocumentListResponse {
+  data: ReservationDocument[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ConvertReservationInput {
+  code?: string;
+  contractDate?: string;
+  totalPrice?: string;
+  downPayment?: string;
+  notes?: string;
+}
+
+export interface GenerateInstallmentsResult {
+  created: number;
+  planId?: string;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -2275,6 +2468,38 @@ pageSize?: number;
 search?: string;
 companyId?: string;
 customerId?: string;
+};
+
+export type ListContractNotesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractId?: string;
+};
+
+export type ListContractDocumentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractId?: string;
+};
+
+export type ListReservationNotesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+reservationId?: string;
+};
+
+export type ListReservationDocumentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+reservationId?: string;
 };
 
 export type ListReservationsParams = {

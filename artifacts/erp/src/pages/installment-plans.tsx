@@ -4,6 +4,8 @@ import {
   useUpdateInstallmentPlan,
   useDeleteInstallmentPlan,
   getListInstallmentPlansQueryKey,
+  useGenerateInstallmentSchedules,
+  getListInstallmentSchedulesQueryKey,
   useListContracts,
   useListCompanies,
   type InstallmentPlan,
@@ -14,12 +16,18 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ListPlus } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLanguage } from "@/lib/language-provider";
+import { useToast } from "@/hooks/use-toast";
 
 const FREQUENCY = [
   { value: "monthly", label: "Monthly" },
   { value: "quarterly", label: "Quarterly" },
   { value: "semi_annual", label: "Semi Annual" },
   { value: "annual", label: "Annual" },
+  { value: "custom", label: "Custom" },
 ];
 
 const STATUS = [
@@ -29,10 +37,14 @@ const STATUS = [
 ];
 
 export default function InstallmentPlansPage() {
+  const { language, t } = useLanguage();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { data: companies } = useListCompanies();
   const { data: contracts } = useListContracts({ pageSize: 200 });
   const companyId = companies?.[0]?.id;
   const contractOptions = (contracts?.data ?? []).map((c) => ({ value: c.id, label: c.code }));
+  const generate = useGenerateInstallmentSchedules();
 
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
@@ -53,6 +65,30 @@ export default function InstallmentPlansPage() {
     { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
   ];
 
+  const handleGenerate = (r: InstallmentPlan) => {
+    const label =
+      language === "ar"
+        ? "إنشاء جدول الأقساط لهذه الخطة؟"
+        : "Generate the installment schedule for this plan?";
+    if (!confirm(label)) return;
+    generate.mutate(
+      { id: r.id },
+      {
+        onSuccess: (res) => {
+          toast({
+            title: language === "ar" ? "تم إنشاء الأقساط" : "Schedules generated",
+            description:
+              language === "ar"
+                ? `${res?.created ?? 0} قسط`
+                : `${res?.created ?? 0} installments created`,
+          });
+          queryClient.invalidateQueries({ queryKey: getListInstallmentSchedulesQueryKey() });
+        },
+        onError: () => toast({ title: t("common.error"), variant: "destructive" }),
+      },
+    );
+  };
+
   return (
     <ResourceManager
       title="Installment Plans"
@@ -65,6 +101,18 @@ export default function InstallmentPlansPage() {
       useDelete={useDeleteInstallmentPlan}
       getListQueryKey={getListInstallmentPlansQueryKey}
       companyId={companyId}
+      rowActions={(r) => (
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={generate.isPending}
+          onClick={() => handleGenerate(r)}
+          title={language === "ar" ? "إنشاء الأقساط" : "Generate schedules"}
+        >
+          <ListPlus className="h-4 w-4 mr-1" />
+          {language === "ar" ? "إنشاء" : "Generate"}
+        </Button>
+      )}
     />
   );
 }

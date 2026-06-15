@@ -8,6 +8,10 @@ import {
   contractsTable,
   contractAmendmentsTable,
   contractCancellationsTable,
+  contractNotesTable,
+  contractDocumentsTable,
+  reservationNotesTable,
+  reservationDocumentsTable,
   unitTransfersTable,
 } from "@workspace/db";
 import {
@@ -15,6 +19,7 @@ import {
   CreateReservationBody,
   GetReservationResponse,
   UpdateReservationBody,
+  ConvertReservationBody,
   ListReservationPaymentsResponse,
   CreateReservationPaymentBody,
   GetReservationPaymentResponse,
@@ -31,6 +36,22 @@ import {
   CreateContractCancellationBody,
   GetContractCancellationResponse,
   UpdateContractCancellationBody,
+  ListContractNotesResponse,
+  CreateContractNoteBody,
+  GetContractNoteResponse,
+  UpdateContractNoteBody,
+  ListContractDocumentsResponse,
+  CreateContractDocumentBody,
+  GetContractDocumentResponse,
+  UpdateContractDocumentBody,
+  ListReservationNotesResponse,
+  CreateReservationNoteBody,
+  GetReservationNoteResponse,
+  UpdateReservationNoteBody,
+  ListReservationDocumentsResponse,
+  CreateReservationDocumentBody,
+  GetReservationDocumentResponse,
+  UpdateReservationDocumentBody,
   ListUnitTransfersResponse,
   CreateUnitTransferBody,
   GetUnitTransferResponse,
@@ -38,6 +59,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextDocumentNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -443,6 +465,280 @@ router.delete("/unit-transfers/:id", requirePermission("unitTransfers.delete"), 
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "unitTransfer", entityId: id });
   res.json({ success: true });
+});
+
+// ----- contractNotes -----
+router.get("/contract-notes", requirePermission("contractNotes.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(contractNotesTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(contractNotesTable.note, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(contractNotesTable.companyId, companyId));
+  const contractId = qStr(q, "contractId");
+  if (contractId) filters.push(eq(contractNotesTable.contractId, contractId));
+  const where = and(...filters);
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(contractNotesTable).where(where);
+  const rows = await db.select().from(contractNotesTable).where(where).orderBy(desc(contractNotesTable.createdAt)).limit(pageSize).offset(offset);
+  res.json(ListContractNotesResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/contract-notes", requirePermission("contractNotes.create"), async (req, res): Promise<void> => {
+  const parsed = CreateContractNoteBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(contractNotesTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "contractNote", entityId: row.id, newValue: row });
+  res.status(201).json(GetContractNoteResponse.parse(serializeRow(row)));
+});
+
+router.get("/contract-notes/:id", requirePermission("contractNotes.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(contractNotesTable).where(and(eq(contractNotesTable.id, id), eq(contractNotesTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetContractNoteResponse.parse(serializeRow(row)));
+});
+
+router.patch("/contract-notes/:id", requirePermission("contractNotes.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateContractNoteBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(contractNotesTable).where(and(eq(contractNotesTable.id, id), eq(contractNotesTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(contractNotesTable).set(update).where(eq(contractNotesTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "contractNote", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetContractNoteResponse.parse(serializeRow(row)));
+});
+
+router.delete("/contract-notes/:id", requirePermission("contractNotes.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(contractNotesTable).set({ isDeleted: true, isActive: false }).where(and(eq(contractNotesTable.id, id), eq(contractNotesTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "contractNote", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- contractDocuments -----
+router.get("/contract-documents", requirePermission("contractDocuments.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(contractDocumentsTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(contractDocumentsTable.docType, `%${search}%`), ilike(contractDocumentsTable.docNumber, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(contractDocumentsTable.companyId, companyId));
+  const contractId = qStr(q, "contractId");
+  if (contractId) filters.push(eq(contractDocumentsTable.contractId, contractId));
+  const where = and(...filters);
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(contractDocumentsTable).where(where);
+  const rows = await db.select().from(contractDocumentsTable).where(where).orderBy(desc(contractDocumentsTable.createdAt)).limit(pageSize).offset(offset);
+  res.json(ListContractDocumentsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/contract-documents", requirePermission("contractDocuments.create"), async (req, res): Promise<void> => {
+  const parsed = CreateContractDocumentBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(contractDocumentsTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "contractDocument", entityId: row.id, newValue: row });
+  res.status(201).json(GetContractDocumentResponse.parse(serializeRow(row)));
+});
+
+router.get("/contract-documents/:id", requirePermission("contractDocuments.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(contractDocumentsTable).where(and(eq(contractDocumentsTable.id, id), eq(contractDocumentsTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetContractDocumentResponse.parse(serializeRow(row)));
+});
+
+router.patch("/contract-documents/:id", requirePermission("contractDocuments.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateContractDocumentBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(contractDocumentsTable).where(and(eq(contractDocumentsTable.id, id), eq(contractDocumentsTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(contractDocumentsTable).set(update).where(eq(contractDocumentsTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "contractDocument", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetContractDocumentResponse.parse(serializeRow(row)));
+});
+
+router.delete("/contract-documents/:id", requirePermission("contractDocuments.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(contractDocumentsTable).set({ isDeleted: true, isActive: false }).where(and(eq(contractDocumentsTable.id, id), eq(contractDocumentsTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "contractDocument", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- reservationNotes -----
+router.get("/reservation-notes", requirePermission("reservationNotes.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(reservationNotesTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(reservationNotesTable.note, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(reservationNotesTable.companyId, companyId));
+  const reservationId = qStr(q, "reservationId");
+  if (reservationId) filters.push(eq(reservationNotesTable.reservationId, reservationId));
+  const where = and(...filters);
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(reservationNotesTable).where(where);
+  const rows = await db.select().from(reservationNotesTable).where(where).orderBy(desc(reservationNotesTable.createdAt)).limit(pageSize).offset(offset);
+  res.json(ListReservationNotesResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/reservation-notes", requirePermission("reservationNotes.create"), async (req, res): Promise<void> => {
+  const parsed = CreateReservationNoteBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(reservationNotesTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "reservationNote", entityId: row.id, newValue: row });
+  res.status(201).json(GetReservationNoteResponse.parse(serializeRow(row)));
+});
+
+router.get("/reservation-notes/:id", requirePermission("reservationNotes.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(reservationNotesTable).where(and(eq(reservationNotesTable.id, id), eq(reservationNotesTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetReservationNoteResponse.parse(serializeRow(row)));
+});
+
+router.patch("/reservation-notes/:id", requirePermission("reservationNotes.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateReservationNoteBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(reservationNotesTable).where(and(eq(reservationNotesTable.id, id), eq(reservationNotesTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(reservationNotesTable).set(update).where(eq(reservationNotesTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "reservationNote", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetReservationNoteResponse.parse(serializeRow(row)));
+});
+
+router.delete("/reservation-notes/:id", requirePermission("reservationNotes.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(reservationNotesTable).set({ isDeleted: true, isActive: false }).where(and(eq(reservationNotesTable.id, id), eq(reservationNotesTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "reservationNote", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- reservationDocuments -----
+router.get("/reservation-documents", requirePermission("reservationDocuments.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(reservationDocumentsTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(reservationDocumentsTable.docType, `%${search}%`), ilike(reservationDocumentsTable.docNumber, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(reservationDocumentsTable.companyId, companyId));
+  const reservationId = qStr(q, "reservationId");
+  if (reservationId) filters.push(eq(reservationDocumentsTable.reservationId, reservationId));
+  const where = and(...filters);
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(reservationDocumentsTable).where(where);
+  const rows = await db.select().from(reservationDocumentsTable).where(where).orderBy(desc(reservationDocumentsTable.createdAt)).limit(pageSize).offset(offset);
+  res.json(ListReservationDocumentsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/reservation-documents", requirePermission("reservationDocuments.create"), async (req, res): Promise<void> => {
+  const parsed = CreateReservationDocumentBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(reservationDocumentsTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "reservationDocument", entityId: row.id, newValue: row });
+  res.status(201).json(GetReservationDocumentResponse.parse(serializeRow(row)));
+});
+
+router.get("/reservation-documents/:id", requirePermission("reservationDocuments.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(reservationDocumentsTable).where(and(eq(reservationDocumentsTable.id, id), eq(reservationDocumentsTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetReservationDocumentResponse.parse(serializeRow(row)));
+});
+
+router.patch("/reservation-documents/:id", requirePermission("reservationDocuments.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateReservationDocumentBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(reservationDocumentsTable).where(and(eq(reservationDocumentsTable.id, id), eq(reservationDocumentsTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(reservationDocumentsTable).set(update).where(eq(reservationDocumentsTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "reservationDocument", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetReservationDocumentResponse.parse(serializeRow(row)));
+});
+
+router.delete("/reservation-documents/:id", requirePermission("reservationDocuments.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(reservationDocumentsTable).set({ isDeleted: true, isActive: false }).where(and(eq(reservationDocumentsTable.id, id), eq(reservationDocumentsTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "reservationDocument", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- convert reservation -> contract -----
+router.post("/reservations/:id/convert", requirePermission("contracts.create"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = ConvertReservationBody.safeParse(req.body ?? {});
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const today = new Date().toISOString().slice(0, 10);
+  let conflict: string | null = null;
+  const contract = await db.transaction(async (tx) => {
+    const [reservation] = await tx
+      .select()
+      .from(reservationsTable)
+      .where(and(eq(reservationsTable.id, id), eq(reservationsTable.isDeleted, false)))
+      .for("update");
+    if (!reservation) { conflict = "404"; return null; }
+    if (reservation.status === "converted") { conflict = "Reservation already converted"; return null; }
+    const [existingContract] = await tx
+      .select()
+      .from(contractsTable)
+      .where(and(eq(contractsTable.reservationId, id), eq(contractsTable.isDeleted, false)));
+    if (existingContract) { conflict = "A contract already exists for this reservation"; return null; }
+    const code = parsed.data.code || (await nextDocumentNumber("Contract")) || `CON-${Date.now()}`;
+    const [created] = await tx
+      .insert(contractsTable)
+      .values({
+        companyId: reservation.companyId,
+        branchId: reservation.branchId,
+        code,
+        reservationId: reservation.id,
+        unitId: reservation.unitId,
+        customerId: reservation.customerId,
+        contractDate: parsed.data.contractDate || today,
+        totalPrice: parsed.data.totalPrice ?? reservation.amount,
+        downPayment: parsed.data.downPayment ?? reservation.amount,
+        status: "draft",
+        notes: parsed.data.notes ?? reservation.notes,
+      })
+      .returning();
+    await tx.update(reservationsTable).set({ status: "converted" }).where(eq(reservationsTable.id, id));
+    return created;
+  });
+  if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+  if (conflict) { res.status(409).json({ error: conflict }); return; }
+  await recordAudit(req, { action: "convert", entity: "reservation", entityId: id, newValue: contract });
+  res.status(201).json(GetContractResponse.parse(serializeRow(contract!)));
 });
 
 export default router;

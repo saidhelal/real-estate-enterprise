@@ -21,7 +21,12 @@ import {
   unitsTable,
   leadsTable,
   customersTable,
+  reservationsTable,
+  reservationNotesTable,
+  reservationDocumentsTable,
   contractsTable,
+  contractNotesTable,
+  contractDocumentsTable,
   installmentPlansTable,
   installmentSchedulesTable,
   penaltyRulesTable,
@@ -65,9 +70,13 @@ const MODULES: Array<{ module: string; label: string }> = [
   { module: "customerNotes", label: "Customer Notes" },
   { module: "reservations", label: "Reservations" },
   { module: "reservationPayments", label: "Reservation Payments" },
+  { module: "reservationNotes", label: "Reservation Notes" },
+  { module: "reservationDocuments", label: "Reservation Documents" },
   { module: "contracts", label: "Contracts" },
   { module: "contractAmendments", label: "Contract Amendments" },
   { module: "contractCancellations", label: "Contract Cancellations" },
+  { module: "contractNotes", label: "Contract Notes" },
+  { module: "contractDocuments", label: "Contract Documents" },
   { module: "unitTransfers", label: "Unit Transfers" },
   { module: "installmentPlans", label: "Installment Plans" },
   { module: "installmentSchedules", label: "Installment Schedules" },
@@ -392,23 +401,93 @@ async function seedRealEstate(): Promise<void> {
     })),
   );
 
-  // 5 customers
-  await db.insert(customersTable).values(
-    Array.from({ length: 5 }, (_, i) => ({
-      companyId,
-      branchId,
-      code: `CUST-${String(i + 1).padStart(3, "0")}`,
-      fullName: `Customer ${i + 1}`,
-      nameAr: `عميل ${i + 1}`,
-      type: "individual",
-      phone: `+96655000${String(2000 + i)}`,
-      email: `customer${i + 1}@example.local`,
-    })),
-  );
+  // 5 customers (mix of individuals and corporate)
+  const seededCustomers = await db.insert(customersTable).values(
+    Array.from({ length: 5 }, (_, i) => {
+      const isCompany = i >= 3;
+      return {
+        companyId,
+        branchId,
+        code: `CUST-${String(i + 1).padStart(3, "0")}`,
+        fullName: isCompany ? `Acme Holdings ${i - 2}` : `Customer ${i + 1}`,
+        nameAr: isCompany ? `شركة آكمي ${i - 2}` : `عميل ${i + 1}`,
+        type: isCompany ? "company" : "individual",
+        nationalId: isCompany ? null : `1${String(100000000 + i)}`,
+        passport: isCompany ? null : `A${String(1234567 + i)}`,
+        companyName: isCompany ? `Acme Holdings ${i - 2} LLC` : null,
+        taxNumber: isCompany ? `30012345600${i}` : null,
+        commercialRegistration: isCompany ? `CR-10203${i}` : null,
+        phone: `+96655000${String(2000 + i)}`,
+        email: `customer${i + 1}@example.local`,
+      };
+    }),
+  ).returning();
 
+  void seededCustomers;
   console.log(
     "Seeded real estate demo data: 1 project, 2 buildings, 5 floors, 20 units, 5 leads, 5 customers",
   );
+}
+
+async function seedReservations(): Promise<void> {
+  const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
+  if (!company) {
+    console.log("No sample company found, skipping reservation demo data");
+    return;
+  }
+  const companyId = company.id;
+  const [branch] = await db.select().from(branchesTable).where(eq(branchesTable.companyId, companyId));
+  const branchId = branch?.id ?? null;
+
+  const [existing] = await db.select().from(reservationsTable).where(eq(reservationsTable.code, "RSV-001"));
+  if (existing) {
+    console.log("Reservation demo data already exists, skipping");
+    return;
+  }
+
+  // Backfill corporate fields on the last two demo customers (idempotent)
+  await db.update(customersTable).set({
+    type: "company", companyName: "Acme Holdings 1 LLC", taxNumber: "300123456001", commercialRegistration: "CR-102031",
+  }).where(and(eq(customersTable.companyId, companyId), eq(customersTable.code, "CUST-004")));
+  await db.update(customersTable).set({
+    type: "company", companyName: "Acme Holdings 2 LLC", taxNumber: "300123456002", commercialRegistration: "CR-102032",
+  }).where(and(eq(customersTable.companyId, companyId), eq(customersTable.code, "CUST-005")));
+
+  const customers = await db.select().from(customersTable).where(eq(customersTable.companyId, companyId)).limit(5);
+  const units = await db.select().from(unitsTable).where(eq(unitsTable.companyId, companyId)).limit(3);
+  if (customers.length < 4 || units.length < 3) {
+    console.log("Skipping reservation seed: missing customers/units");
+    return;
+  }
+
+  const reservations = await db.insert(reservationsTable).values([
+    { companyId, branchId, code: "RSV-001", unitId: units[0].id, customerId: customers[0].id, reservationDate: "2026-05-01", expiryDate: "2026-06-01", amount: "50000.00", status: "active", notes: "Initial hold" },
+    { companyId, branchId, code: "RSV-002", unitId: units[1].id, customerId: customers[1].id, reservationDate: "2026-05-10", expiryDate: "2026-06-10", amount: "75000.00", status: "active" },
+    { companyId, branchId, code: "RSV-003", unitId: units[2].id, customerId: customers[3].id, reservationDate: "2026-05-15", expiryDate: "2026-06-15", amount: "120000.00", status: "expired" },
+  ]).returning();
+
+  await db.insert(reservationNotesTable).values([
+    { companyId, reservationId: reservations[0].id, note: "Customer requested a sea-view unit." },
+    { companyId, reservationId: reservations[1].id, note: "Awaiting down payment confirmation." },
+  ]);
+  await db.insert(reservationDocumentsTable).values([
+    { companyId, reservationId: reservations[0].id, docType: "national_id", docNumber: "1100000000", fileName: "id-copy.pdf", issueDate: "2020-01-01", expiryDate: "2030-01-01" },
+    { companyId, reservationId: reservations[2].id, docType: "commercial_registration", docNumber: "CR-102030", fileName: "cr.pdf" },
+  ]);
+
+  const [contract] = await db.select().from(contractsTable).where(eq(contractsTable.code, "CON-FIN-001"));
+  if (contract) {
+    await db.insert(contractNotesTable).values([
+      { companyId, contractId: contract.id, note: "Contract signed at the head office." },
+      { companyId, contractId: contract.id, note: "Down payment received in full." },
+    ]);
+    await db.insert(contractDocumentsTable).values([
+      { companyId, contractId: contract.id, docType: "signed_contract", docNumber: "DOC-CON-001", fileName: "contract-signed.pdf", issueDate: "2025-12-01" },
+      { companyId, contractId: contract.id, docType: "id_copy", docNumber: "DOC-ID-001", fileName: "buyer-id.pdf" },
+    ]);
+  }
+
+  console.log("Seeded reservation demo data: 3 reservations, 2 notes, 2 documents, 2 corporate customers");
 }
 
 async function seedFinance(): Promise<void> {
@@ -505,6 +584,7 @@ async function main(): Promise<void> {
   await seedSettings();
   await seedRealEstate();
   await seedFinance();
+  await seedReservations();
   console.log("Seed complete.");
 }
 

@@ -6,19 +6,19 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Reservation {
+export interface ReservationDocument {
   id: string;
   companyId: string;
+  reservationId: string;
+  docType: string;
   /** @nullable */
-  branchId?: string | null;
-  code: string;
-  unitId: string;
-  customerId: string;
-  reservationDate: string;
+  docNumber?: string | null;
+  /** @nullable */
+  fileName?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
   /** @nullable */
   expiryDate?: string | null;
-  amount: string;
-  status: string;
   /** @nullable */
   notes?: string | null;
   isActive: boolean;

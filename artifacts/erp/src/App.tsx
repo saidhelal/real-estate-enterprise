@@ -43,9 +43,13 @@ import CustomerDocumentsPage from "@/pages/customer-documents";
 import CustomerNotesPage from "@/pages/customer-notes";
 import ReservationsPage from "@/pages/reservations";
 import ReservationPaymentsPage from "@/pages/reservation-payments";
+import ReservationNotesPage from "@/pages/reservation-notes";
+import ReservationDocumentsPage from "@/pages/reservation-documents";
 import ContractsPage from "@/pages/contracts";
 import ContractAmendmentsPage from "@/pages/contract-amendments";
 import ContractCancellationsPage from "@/pages/contract-cancellations";
+import ContractNotesPage from "@/pages/contract-notes";
+import ContractDocumentsPage from "@/pages/contract-documents";
 import UnitTransfersPage from "@/pages/unit-transfers";
 import InstallmentPlansPage from "@/pages/installment-plans";
 import InstallmentSchedulesPage from "@/pages/installment-schedules";
@@ -109,9 +113,13 @@ function Router() {
             <Route path="/customer-notes" component={CustomerNotesPage} />
             <Route path="/reservations" component={ReservationsPage} />
             <Route path="/reservation-payments" component={ReservationPaymentsPage} />
+            <Route path="/reservation-notes" component={ReservationNotesPage} />
+            <Route path="/reservation-documents" component={ReservationDocumentsPage} />
             <Route path="/contracts" component={ContractsPage} />
             <Route path="/contract-amendments" component={ContractAmendmentsPage} />
             <Route path="/contract-cancellations" component={ContractCancellationsPage} />
+            <Route path="/contract-notes" component={ContractNotesPage} />
+            <Route path="/contract-documents" component={ContractDocumentsPage} />
             <Route path="/unit-transfers" component={UnitTransfersPage} />
             <Route path="/installment-plans" component={InstallmentPlansPage} />
             <Route path="/installment-schedules" component={InstallmentSchedulesPage} />

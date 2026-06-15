@@ -2374,6 +2374,10 @@ export const ListCustomersResponse = zod.object({
   "nameAr": zod.string().nullish(),
   "type": zod.string(),
   "nationalId": zod.string().nullish(),
+  "passport": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialRegistration": zod.string().nullish(),
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "address": zod.string().nullish(),
@@ -2397,6 +2401,10 @@ export const CreateCustomerBody = zod.object({
   "nameAr": zod.string().optional(),
   "type": zod.string().optional(),
   "nationalId": zod.string().optional(),
+  "passport": zod.string().optional(),
+  "companyName": zod.string().optional(),
+  "taxNumber": zod.string().optional(),
+  "commercialRegistration": zod.string().optional(),
   "phone": zod.string().optional(),
   "email": zod.string().optional(),
   "address": zod.string().optional()
@@ -2419,6 +2427,10 @@ export const GetCustomerResponse = zod.object({
   "nameAr": zod.string().nullish(),
   "type": zod.string(),
   "nationalId": zod.string().nullish(),
+  "passport": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialRegistration": zod.string().nullish(),
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "address": zod.string().nullish(),
@@ -2442,6 +2454,10 @@ export const UpdateCustomerBody = zod.object({
   "nameAr": zod.string().optional(),
   "type": zod.string().optional(),
   "nationalId": zod.string().optional(),
+  "passport": zod.string().optional(),
+  "companyName": zod.string().optional(),
+  "taxNumber": zod.string().optional(),
+  "commercialRegistration": zod.string().optional(),
   "phone": zod.string().optional(),
   "email": zod.string().optional(),
   "address": zod.string().optional()
@@ -2456,6 +2472,10 @@ export const UpdateCustomerResponse = zod.object({
   "nameAr": zod.string().nullish(),
   "type": zod.string(),
   "nationalId": zod.string().nullish(),
+  "passport": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialRegistration": zod.string().nullish(),
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "address": zod.string().nullish(),
@@ -2786,6 +2806,442 @@ export const DeleteCustomerNoteResponse = zod.object({
 
 
 /**
+ * @summary List contract-notes
+ */
+export const ListContractNotesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional()
+})
+
+export const ListContractNotesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractNote
+ */
+export const CreateContractNoteBody = zod.object({
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractNote
+ */
+export const GetContractNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractNote
+ */
+export const UpdateContractNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractNoteBody = zod.object({
+  "companyId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "note": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateContractNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ContractNote
+ */
+export const DeleteContractNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractNoteResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List contract-documents
+ */
+export const ListContractDocumentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional()
+})
+
+export const ListContractDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractDocument
+ */
+export const CreateContractDocumentBody = zod.object({
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractDocument
+ */
+export const GetContractDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractDocument
+ */
+export const UpdateContractDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractDocumentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "docType": zod.string().optional(),
+  "docNumber": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateContractDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "contractId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ContractDocument
+ */
+export const DeleteContractDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractDocumentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List reservation-notes
+ */
+export const ListReservationNotesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "reservationId": zod.coerce.string().optional()
+})
+
+export const ListReservationNotesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ReservationNote
+ */
+export const CreateReservationNoteBody = zod.object({
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ReservationNote
+ */
+export const GetReservationNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetReservationNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ReservationNote
+ */
+export const UpdateReservationNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateReservationNoteBody = zod.object({
+  "companyId": zod.string().optional(),
+  "reservationId": zod.string().optional(),
+  "note": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateReservationNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ReservationNote
+ */
+export const DeleteReservationNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteReservationNoteResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List reservation-documents
+ */
+export const ListReservationDocumentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "reservationId": zod.coerce.string().optional()
+})
+
+export const ListReservationDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ReservationDocument
+ */
+export const CreateReservationDocumentBody = zod.object({
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ReservationDocument
+ */
+export const GetReservationDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetReservationDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ReservationDocument
+ */
+export const UpdateReservationDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateReservationDocumentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "reservationId": zod.string().optional(),
+  "docType": zod.string().optional(),
+  "docNumber": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateReservationDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "reservationId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ReservationDocument
+ */
+export const DeleteReservationDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteReservationDocumentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Convert a reservation into a contract
+ */
+export const ConvertReservationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ConvertReservationBody = zod.object({
+  "code": zod.string().optional(),
+  "contractDate": zod.string().optional(),
+  "totalPrice": zod.string().optional(),
+  "downPayment": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Generate installment schedule rows for a plan
+ */
+export const GenerateInstallmentSchedulesParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+/**
  * @summary List reservations
  */
 export const ListReservationsQueryParams = zod.object({
@@ -2808,6 +3264,7 @@ export const ListReservationsResponse = zod.object({
   "unitId": zod.string(),
   "customerId": zod.string(),
   "reservationDate": zod.string(),
+  "expiryDate": zod.string().nullish(),
   "amount": zod.string(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
@@ -2830,6 +3287,7 @@ export const CreateReservationBody = zod.object({
   "unitId": zod.string(),
   "customerId": zod.string(),
   "reservationDate": zod.string(),
+  "expiryDate": zod.string().optional(),
   "amount": zod.string().optional(),
   "status": zod.string().optional(),
   "notes": zod.string().optional()
@@ -2851,6 +3309,7 @@ export const GetReservationResponse = zod.object({
   "unitId": zod.string(),
   "customerId": zod.string(),
   "reservationDate": zod.string(),
+  "expiryDate": zod.string().nullish(),
   "amount": zod.string(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
@@ -2873,6 +3332,7 @@ export const UpdateReservationBody = zod.object({
   "unitId": zod.string().optional(),
   "customerId": zod.string().optional(),
   "reservationDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
   "amount": zod.string().optional(),
   "status": zod.string().optional(),
   "notes": zod.string().optional()
@@ -2886,6 +3346,7 @@ export const UpdateReservationResponse = zod.object({
   "unitId": zod.string(),
   "customerId": zod.string(),
   "reservationDate": zod.string(),
+  "expiryDate": zod.string().nullish(),
   "amount": zod.string(),
   "status": zod.string(),
   "notes": zod.string().nullish(),

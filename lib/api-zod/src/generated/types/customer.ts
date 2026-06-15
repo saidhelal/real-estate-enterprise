@@ -19,6 +19,14 @@ export interface Customer {
   /** @nullable */
   nationalId?: string | null;
   /** @nullable */
+  passport?: string | null;
+  /** @nullable */
+  companyName?: string | null;
+  /** @nullable */
+  taxNumber?: string | null;
+  /** @nullable */
+  commercialRegistration?: string | null;
+  /** @nullable */
   phone?: string | null;
   /** @nullable */
   email?: string | null;

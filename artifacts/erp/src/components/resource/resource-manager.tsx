@@ -84,6 +84,12 @@ export interface ResourceManagerProps<T extends { id: string }> {
   searchable?: boolean;
   /** Hide the create action (e.g. system-generated records). Defaults to true. */
   canCreate?: boolean;
+  /** Hide the edit action. Defaults to true. */
+  canEdit?: boolean;
+  /** Hide the delete action. Defaults to true. */
+  canDelete?: boolean;
+  /** Extra per-row action buttons rendered before edit/delete. */
+  rowActions?: (row: T) => React.ReactNode;
   pageSize?: number;
 }
 
@@ -103,6 +109,9 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     companyId,
     searchable = true,
     canCreate = true,
+    canEdit = true,
+    canDelete = true,
+    rowActions,
     pageSize = 10,
   } = props;
 
@@ -219,17 +228,22 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                     <TableCell key={i}>{c.render(row)}</TableCell>
                   ))}
                   <TableCell className="text-right space-x-2 whitespace-nowrap">
-                    <Button variant="ghost" size="icon" onClick={() => setEditing(row)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive"
-                      onClick={() => handleDelete(row.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {rowActions?.(row)}
+                    {canEdit && (
+                      <Button variant="ghost" size="icon" onClick={() => setEditing(row)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    )}
+                    {canDelete && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive"
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))

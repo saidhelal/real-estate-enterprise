@@ -14,6 +14,10 @@ export interface CustomerInput {
   nameAr?: string;
   type?: string;
   nationalId?: string;
+  passport?: string;
+  companyName?: string;
+  taxNumber?: string;
+  commercialRegistration?: string;
   phone?: string;
   email?: string;
   address?: string;

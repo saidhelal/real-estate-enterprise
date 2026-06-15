@@ -26,6 +26,7 @@ export const reservationsTable = pgTable("reservations", {
   unitId: uuid("unit_id").notNull(),
   customerId: uuid("customer_id").notNull(),
   reservationDate: date("reservation_date").notNull(),
+  expiryDate: date("expiry_date"),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
   status: text("status").notNull().default("active"),
   notes: text("notes"),
@@ -89,6 +90,54 @@ export const contractCancellationsTable = pgTable("contract_cancellations", {
   ...audit,
 });
 export type ContractCancellationRow = typeof contractCancellationsTable.$inferSelect;
+
+export const contractNotesTable = pgTable("contract_notes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  contractId: uuid("contract_id").notNull(),
+  note: text("note").notNull(),
+  userId: uuid("user_id"),
+  ...audit,
+});
+export type ContractNoteRow = typeof contractNotesTable.$inferSelect;
+
+export const contractDocumentsTable = pgTable("contract_documents", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  contractId: uuid("contract_id").notNull(),
+  docType: text("doc_type").notNull(),
+  docNumber: text("doc_number"),
+  fileName: text("file_name"),
+  issueDate: date("issue_date"),
+  expiryDate: date("expiry_date"),
+  notes: text("notes"),
+  ...audit,
+});
+export type ContractDocumentRow = typeof contractDocumentsTable.$inferSelect;
+
+export const reservationNotesTable = pgTable("reservation_notes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  reservationId: uuid("reservation_id").notNull(),
+  note: text("note").notNull(),
+  userId: uuid("user_id"),
+  ...audit,
+});
+export type ReservationNoteRow = typeof reservationNotesTable.$inferSelect;
+
+export const reservationDocumentsTable = pgTable("reservation_documents", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  reservationId: uuid("reservation_id").notNull(),
+  docType: text("doc_type").notNull(),
+  docNumber: text("doc_number"),
+  fileName: text("file_name"),
+  issueDate: date("issue_date"),
+  expiryDate: date("expiry_date"),
+  notes: text("notes"),
+  ...audit,
+});
+export type ReservationDocumentRow = typeof reservationDocumentsTable.$inferSelect;
 
 export const unitTransfersTable = pgTable("unit_transfers", {
   id: uuid("id").primaryKey().defaultRandom(),
