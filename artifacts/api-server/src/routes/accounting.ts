@@ -591,7 +591,7 @@ router.delete("/journal-entries/:id", requirePermission("journalEntries.delete")
   const id = String(req.params.id);
   const [existing] = await db.select().from(journalEntriesTable).where(and(eq(journalEntriesTable.id, id), eq(journalEntriesTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status === "posted") { res.status(409).json({ error: "Cannot delete a posted entry; reverse it instead" }); return; }
+  if (existing.status !== "draft") { res.status(409).json({ error: "Only a draft entry can be deleted; post/reverse it instead" }); return; }
   await db.transaction(async (tx) => {
     await tx.update(journalEntriesTable).set({ isDeleted: true, isActive: false }).where(eq(journalEntriesTable.id, id));
     await tx.update(journalEntryLinesTable).set({ isDeleted: true, isActive: false }).where(eq(journalEntryLinesTable.entryId, id));

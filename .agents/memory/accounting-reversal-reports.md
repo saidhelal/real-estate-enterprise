@@ -18,3 +18,9 @@ Reversing a journal entry creates a posted *mirror* entry (swapped debit/credit,
 `postAutomaticEntry` no-ops (returns the existing row) when a non-deleted automatic JE already exists for the same `(sourceType, sourceId)` and is not `reversed`. This prevents duplicate postings from retries/double calls overstating balances. A new post is allowed again only after the prior one is reversed.
 
 **How to apply:** integration hooks (receipts, treasury, bank, installment collections, reservation payments, contracts) call `postAutomaticEntry` on create inside the same tx, and `reverseAutomaticEntriesForSource` on delete. Both are best-effort and skip cleanly when accounting is unconfigured.
+
+# Journal-entry lifecycle integrity
+
+A journal entry may be deleted (soft) **only while `status === 'draft'`**. Once it has been posted, approved, or reversed it is immutable — delete returns 409 ("post/reverse it instead").
+
+**Why:** reversal flips the original to `reversed` while keeping its lines and adds a posted mirror. If delete only blocked `posted`, a reversed original was still deletable — dropping its lines while the mirror lived on, reintroducing a phantom balance and breaking audit/immutability. Guard on `!== 'draft'`, never on a single status.
