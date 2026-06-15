@@ -321,6 +321,11 @@ const translations: Record<Language, Record<string, string>> = {
     "acc.entry_count": "Total Entries",
     "acc.select_account_prompt": "Select an account to view its ledger.",
     "acc.automatic": "Auto",
+    "acc.export": "Export",
+    "acc.export_excel": "Export to Excel",
+    "acc.export_pdf": "Export to PDF",
+    "acc.generated": "Generated",
+    "acc.all_dates": "All dates",
   },
   ar: {
     "login.title": "تسجيل الدخول",
@@ -618,6 +623,11 @@ const translations: Record<Language, Record<string, string>> = {
     "acc.entry_count": "إجمالي القيود",
     "acc.select_account_prompt": "اختر حسابًا لعرض دفتر الأستاذ الخاص به.",
     "acc.automatic": "تلقائي",
+    "acc.export": "تصدير",
+    "acc.export_excel": "تصدير إلى Excel",
+    "acc.export_pdf": "تصدير إلى PDF",
+    "acc.generated": "تاريخ الإصدار",
+    "acc.all_dates": "كل التواريخ",
   },
 };
 

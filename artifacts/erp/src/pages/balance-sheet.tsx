@@ -17,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
-import { ReportExportButtons } from "@/components/report-export-buttons";
-import type { ReportDoc, ReportSection } from "@/lib/report-export";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 
 interface SectionRow {
   accountId: string;
@@ -74,31 +74,27 @@ export default function BalanceSheetPage() {
     query: { enabled: !!companyId, queryKey: getGetBalanceSheetQueryKey(params) },
   });
 
-  const buildDoc = (): ReportDoc => {
-    const meta = [{ label: t("export.generated"), value: new Date().toLocaleString() }];
-    if (asOfDate) meta.push({ label: t("export.as_of"), value: asOfDate });
-    const section = (title: string, secRows: SectionRow[], total: string): ReportSection => ({
-      title,
-      columns: [
-        { header: t("common.code") },
-        { header: language === "ar" ? "الحساب" : "Account" },
-        { header: language === "ar" ? "المبلغ" : "Amount", align: "right", numeric: true },
-      ],
-      rows: secRows.map((r) => [r.code, (language === "ar" ? r.nameAr : r.name) ?? "", r.amount]),
-      footer: [language === "ar" ? "الإجمالي" : "Total", "", total],
-    });
+  const companyName = (language === "ar" ? company?.nameAr : company?.name) ?? company?.name ?? "";
+
+  const buildReport = (): ReportExport | null => {
+    if (!data) return null;
+    const mapRows = (rows: SectionRow[]) =>
+      rows.map((r) => [r.code, language === "ar" ? r.nameAr : r.name, r.amount]);
     return {
       title: t("nav.balance_sheet"),
-      companyName: (language === "ar" ? company?.nameAr ?? company?.name : company?.name) ?? "",
-      meta,
-      rtl: language === "ar",
-      sections: data
-        ? [
-            section(t("acc.assets"), data.assets, data.totalAssets),
-            section(t("acc.liabilities"), data.liabilities, data.totalLiabilities),
-            section(t("acc.equity"), data.equity, data.totalEquity),
-          ]
-        : [],
+      companyName,
+      language,
+      meta: [{ label: t("acc.as_of_date"), value: asOfDate || new Date().toISOString().slice(0, 10) }],
+      columns: [
+        { header: t("common.code") },
+        { header: t("acc.account") },
+        { header: t("acc.amount"), numeric: true },
+      ],
+      sections: [
+        { title: t("acc.assets"), rows: mapRows(data.assets), totalRow: [t("acc.total_assets"), "", data.totalAssets] },
+        { title: t("acc.liabilities"), rows: mapRows(data.liabilities), totalRow: [t("acc.total_liabilities"), "", data.totalLiabilities] },
+        { title: t("acc.equity"), rows: mapRows(data.equity), totalRow: [t("acc.total_equity"), "", data.totalEquity] },
+      ],
     };
   };
 
@@ -112,10 +108,10 @@ export default function BalanceSheetPage() {
               {data.balanced ? t("acc.balanced") : t("acc.not_balanced")}
             </Badge>
           )}
-          <ReportExportButtons
+          <ReportExportButton
+            build={buildReport}
+            baseFilename="balance-sheet"
             disabled={!data}
-            filename="balance-sheet"
-            buildDoc={buildDoc}
             audit={{ reportType: "balance-sheet", companyId, asOfDate: asOfDate || undefined }}
           />
         </div>

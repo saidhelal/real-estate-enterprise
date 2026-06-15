@@ -11,3 +11,4 @@
 - [ERP i18n / enum localization](erp-i18n.md) — UI chrome uses t() (provider, EN/AR parity); enum options/badges use central lib/enums.ts ENUM_LABELS — new enum values must go there.
 - [Orval body naming](orval-body-naming.md) — name OpenAPI request-body schemas as nouns (not *Body) to avoid operationId-derived collisions; OkResponse is type-only, don't .parse it.
 - [Accounting reversal & reports](accounting-reversal-reports.md) — ledger aggregations must count status IN (posted,reversed) or reversals leave a phantom balance; auto-posting is idempotent per (sourceType,sourceId).
+- [Report export Excel/PDF](report-export.md) — shared ReportExport descriptor; PDF via HTML window.print (Arabic/RTL), Excel via SheetJS; GL export needs pageSize 200.
