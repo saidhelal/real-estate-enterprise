@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
   db,
   pool,
@@ -116,13 +116,40 @@ async function seedSuperAdminRole(): Promise<string> {
   return role.id;
 }
 
+const SUPER_ADMIN_PASSWORD = "Admin@123456";
+
 async function seedSuperAdminUser(roleId: string): Promise<void> {
+  const passwordHash = await hashPassword(SUPER_ADMIN_PASSWORD);
   const [existing] = await db
     .select()
     .from(usersTable)
     .where(eq(usersTable.username, "superadmin"));
   if (existing) {
-    console.log("Super admin user already exists, skipping");
+    await db
+      .update(usersTable)
+      .set({
+        passwordHash,
+        status: "active",
+        isActive: true,
+        lockedUntil: null,
+        failedAttempts: 0,
+      })
+      .where(eq(usersTable.id, existing.id));
+    const [hasRole] = await db
+      .select()
+      .from(userRolesTable)
+      .where(
+        and(
+          eq(userRolesTable.userId, existing.id),
+          eq(userRolesTable.roleId, roleId)
+        )
+      );
+    if (!hasRole) {
+      await db.insert(userRolesTable).values({ userId: existing.id, roleId });
+    }
+    console.log(
+      `Super admin user reset (username: superadmin, password: ${SUPER_ADMIN_PASSWORD})`
+    );
     return;
   }
   const [user] = await db
@@ -131,13 +158,15 @@ async function seedSuperAdminUser(roleId: string): Promise<void> {
       username: "superadmin",
       fullName: "Super Administrator",
       email: "superadmin@erp.local",
-      passwordHash: await hashPassword("Admin@12345"),
+      passwordHash,
       status: "active",
       isActive: true,
     })
     .returning();
   await db.insert(userRolesTable).values({ userId: user.id, roleId });
-  console.log("Seeded superadmin user (password: Admin@12345)");
+  console.log(
+    `Seeded superadmin user (username: superadmin, password: ${SUPER_ADMIN_PASSWORD})`
+  );
 }
 
 async function seedCurrencies(): Promise<void> {

@@ -12,7 +12,7 @@ An enterprise back-office ERP for a real-estate holding company: authentication,
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL`, `SESSION_SECRET`
 
-Seeded super admin: username `superadmin`, password `Admin@12345`.
+Seeded super admin: username `superadmin`, password `Admin@123456`. Re-running the seed resets this account's password to the default (and clears any lockout), so it is always recoverable.
 
 ## Stack
 

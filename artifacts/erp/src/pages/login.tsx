@@ -10,7 +10,7 @@ import { useLanguage } from "@/lib/language-provider";
 
 export default function Login() {
   const [username, setUsername] = useState("superadmin");
-  const [password, setPassword] = useState("Admin@12345");
+  const [password, setPassword] = useState("Admin@123456");
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const loginMutation = useLogin();
@@ -63,6 +63,15 @@ export default function Login() {
               {loginMutation.isPending ? "..." : t("login.submit")}
             </Button>
           </form>
+          <div className="mt-6 rounded-md border border-dashed bg-muted/50 p-3 text-sm">
+            <p className="font-medium">{t("login.defaultCredentials")}</p>
+            <p className="mt-1 text-muted-foreground">
+              {t("login.username")}: <span className="font-mono">superadmin</span>
+            </p>
+            <p className="text-muted-foreground">
+              {t("login.password")}: <span className="font-mono">Admin@123456</span>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
