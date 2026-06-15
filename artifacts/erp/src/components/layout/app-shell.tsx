@@ -95,6 +95,8 @@ const NAV_GROUPS = [
     { href: "/cash-flow", icon: LineChart, labelKey: "nav.cash_flow" },
     { href: "/fiscal-periods", icon: CalendarRange, labelKey: "nav.fiscal_periods" },
     { href: "/budgets", icon: PiggyBank, labelKey: "nav.budgets" },
+    { href: "/budget-lines", icon: ListOrdered, labelKey: "nav.budget_lines" },
+    { href: "/budget-vs-actual", icon: Scale, labelKey: "nav.budget_vs_actual" },
     { href: "/account-mappings", icon: Link2, labelKey: "nav.account_mappings" },
   ]},
   { titleKey: "nav.group.administration", items: [

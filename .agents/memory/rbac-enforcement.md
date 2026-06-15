@@ -23,3 +23,13 @@ router had checks, and only a per-route 403 smoke test caught it.
 - Account state (inactive/locked/deleted) must be re-checked on every
   authenticated request and on token refresh, not only at login, or a disabled
   user keeps working until their access token expires.
+
+**Granular actions beyond CRUD:** high-risk lifecycle endpoints must get their
+own permission codes, not be folded under generic `update`. Posting/approving/
+reversing journal entries and closing/reopening fiscal periods use dedicated
+codes (`journalEntries.post|approve|reverse`, `fiscalPeriods.close|reopen`). The
+seed's permission generator carries an optional `extraActions` per module so
+these codes are registered alongside the standard view/create/update/delete set.
+**Why:** gating a financially irreversible action behind a broad `update` lets
+any role that can merely edit a draft also post or reverse it. The super-admin
+`"*"` path masks this — only a non-`*` role test exposes it.

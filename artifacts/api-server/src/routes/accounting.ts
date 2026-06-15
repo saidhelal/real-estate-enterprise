@@ -285,7 +285,7 @@ router.delete("/fiscal-periods/:id", requirePermission("fiscalPeriods.delete"), 
   res.json({ success: true });
 });
 
-router.post("/fiscal-periods/:id/close", requirePermission("fiscalPeriods.update"), async (req, res): Promise<void> => {
+router.post("/fiscal-periods/:id/close", requirePermission("fiscalPeriods.close"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const [existing] = await db.select().from(fiscalPeriodsTable).where(and(eq(fiscalPeriodsTable.id, id), eq(fiscalPeriodsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
@@ -295,7 +295,7 @@ router.post("/fiscal-periods/:id/close", requirePermission("fiscalPeriods.update
   res.json(GetFiscalPeriodResponse.parse(serializeRow(row)));
 });
 
-router.post("/fiscal-periods/:id/reopen", requirePermission("fiscalPeriods.update"), async (req, res): Promise<void> => {
+router.post("/fiscal-periods/:id/reopen", requirePermission("fiscalPeriods.reopen"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const [existing] = await db.select().from(fiscalPeriodsTable).where(and(eq(fiscalPeriodsTable.id, id), eq(fiscalPeriodsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
@@ -600,7 +600,7 @@ router.delete("/journal-entries/:id", requirePermission("journalEntries.delete")
   res.json({ success: true });
 });
 
-router.post("/journal-entries/:id/post", requirePermission("journalEntries.update"), async (req, res): Promise<void> => {
+router.post("/journal-entries/:id/post", requirePermission("journalEntries.post"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   try {
     const updated = await db.transaction((tx) => postEntry(tx, id, uid(req)));
@@ -613,7 +613,7 @@ router.post("/journal-entries/:id/post", requirePermission("journalEntries.updat
   }
 });
 
-router.post("/journal-entries/:id/approve", requirePermission("journalEntries.update"), async (req, res): Promise<void> => {
+router.post("/journal-entries/:id/approve", requirePermission("journalEntries.approve"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   try {
     const updated = await db.transaction((tx) => approveEntry(tx, id, uid(req)));
@@ -626,7 +626,7 @@ router.post("/journal-entries/:id/approve", requirePermission("journalEntries.up
   }
 });
 
-router.post("/journal-entries/:id/reverse", requirePermission("journalEntries.update"), async (req, res): Promise<void> => {
+router.post("/journal-entries/:id/reverse", requirePermission("journalEntries.reverse"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const parsed = ReverseJournalEntryBody.safeParse(req.body ?? {});
   const opts = parsed.success ? parsed.data : {};

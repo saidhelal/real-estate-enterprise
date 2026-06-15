@@ -42,7 +42,7 @@ import {
 } from "@workspace/db";
 import { hashPassword } from "./lib/auth";
 
-const MODULES: Array<{ module: string; label: string }> = [
+const MODULES: Array<{ module: string; label: string; extraActions?: string[] }> = [
   { module: "users", label: "Users" },
   { module: "roles", label: "Roles & Permissions" },
   { module: "companies", label: "Companies" },
@@ -94,8 +94,8 @@ const MODULES: Array<{ module: string; label: string }> = [
   { module: "penalties", label: "Penalties" },
   { module: "accounts", label: "Chart of Accounts" },
   { module: "costCenters", label: "Cost Centers" },
-  { module: "fiscalPeriods", label: "Fiscal Periods" },
-  { module: "journalEntries", label: "Journal Entries" },
+  { module: "fiscalPeriods", label: "Fiscal Periods", extraActions: ["close", "reopen"] },
+  { module: "journalEntries", label: "Journal Entries", extraActions: ["post", "approve", "reverse"] },
   { module: "accountMappings", label: "Account Mappings" },
   { module: "budgets", label: "Budgets" },
   { module: "accountingReports", label: "Accounting Reports" },
@@ -103,8 +103,8 @@ const MODULES: Array<{ module: string; label: string }> = [
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 
 async function seedPermissions(): Promise<void> {
-  const values = MODULES.flatMap(({ module, label }) =>
-    ACTIONS.map((action) => ({
+  const values = MODULES.flatMap(({ module, label, extraActions }) =>
+    [...ACTIONS, ...(extraActions ?? [])].map((action) => ({
       code: `${module}.${action}`,
       module,
       description: `${action[0].toUpperCase()}${action.slice(1)} ${label}`,

@@ -72,6 +72,8 @@ import IncomeStatementPage from "@/pages/income-statement";
 import CashFlowPage from "@/pages/cash-flow";
 import FiscalPeriodsPage from "@/pages/fiscal-periods";
 import BudgetsPage from "@/pages/budgets";
+import BudgetLinesPage from "@/pages/budget-lines";
+import BudgetVsActualPage from "@/pages/budget-vs-actual";
 import AccountMappingsPage from "@/pages/account-mappings";
 import AccountingDashboardPage from "@/pages/accounting-dashboard";
 
@@ -156,6 +158,8 @@ function Router() {
             <Route path="/cash-flow" component={CashFlowPage} />
             <Route path="/fiscal-periods" component={FiscalPeriodsPage} />
             <Route path="/budgets" component={BudgetsPage} />
+            <Route path="/budget-lines" component={BudgetLinesPage} />
+            <Route path="/budget-vs-actual" component={BudgetVsActualPage} />
             <Route path="/account-mappings" component={AccountMappingsPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
