@@ -1,8 +1,8 @@
 import { useAuth } from "@/lib/auth-provider";
 import { useLanguage } from "@/lib/language-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Building2, MapPin, ShieldCheck, Activity, CalendarDays, Banknote, History, Building, Home, BadgeCheck, BookMarked, FileSignature, UserPlus, AlertTriangle, Banknote as BanknoteIcon } from "lucide-react";
-import { useGetDashboardSummary, useGetRecentActivity, useGetRealEstateDashboard } from "@workspace/api-client-react";
+import { Users, Building2, MapPin, ShieldCheck, Activity, CalendarDays, Banknote, History, Building, Home, BadgeCheck, BookMarked, FileSignature, UserPlus, AlertTriangle, Banknote as BanknoteIcon, Wallet, Receipt, TrendingUp, Landmark, CircleDollarSign } from "lucide-react";
+import { useGetDashboardSummary, useGetRecentActivity, useGetRealEstateDashboard, useGetFinanceDashboard } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
@@ -13,6 +13,7 @@ export default function Dashboard() {
   const { data: summary, isLoading: summaryLoading } = useGetDashboardSummary();
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
   const { data: re, isLoading: reLoading } = useGetRealEstateDashboard();
+  const { data: fin, isLoading: finLoading } = useGetFinanceDashboard();
 
   if (!user) return null;
 
@@ -91,6 +92,20 @@ export default function Dashboard() {
           <StatCard title={t("dashboard.contracts")} value={re?.contracts} icon={FileSignature} isLoading={reLoading} />
           <StatCard title={t("dashboard.overdue_installments")} value={re?.overdueInstallments} icon={AlertTriangle} isLoading={reLoading} />
           <StatCard title={t("dashboard.total_contract_value")} value={re?.totalContractValue} icon={BanknoteIcon} isLoading={reLoading} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-lg font-semibold tracking-tight">{t("dashboard.finance")}</h3>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <StatCard title={t("dashboard.total_sales")} value={fin?.totalSales} icon={TrendingUp} isLoading={finLoading} />
+          <StatCard title={t("dashboard.total_collections")} value={fin?.totalCollections} icon={CircleDollarSign} isLoading={finLoading} />
+          <StatCard title={t("dashboard.outstanding_installments")} value={fin?.outstandingInstallments} icon={BanknoteIcon} isLoading={finLoading} />
+          <StatCard title={t("dashboard.overdue_amount")} value={fin?.overdueAmount} icon={AlertTriangle} isLoading={finLoading} />
+          <StatCard title={t("dashboard.treasury_balance")} value={fin?.treasuryBalance} icon={Wallet} isLoading={finLoading} />
+          <StatCard title={t("dashboard.bank_balance")} value={fin?.bankBalance} icon={Landmark} isLoading={finLoading} />
+          <StatCard title={t("dashboard.receipts")} value={fin?.receipts} icon={Receipt} isLoading={finLoading} />
+          <StatCard title={t("dashboard.pending_penalties")} value={fin?.pendingPenalties} icon={AlertTriangle} isLoading={finLoading} />
         </div>
       </div>
 

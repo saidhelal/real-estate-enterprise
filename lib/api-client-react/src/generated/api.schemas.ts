@@ -1755,6 +1755,357 @@ export interface RealEstateDashboard {
   totalContractValue: string;
 }
 
+export interface Cashbox {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  name: string;
+  nameAr: string;
+  openingBalance?: string;
+  currentBalance?: string;
+  status?: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CashboxInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  openingBalance?: string;
+  currentBalance?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface CashboxUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  openingBalance?: string;
+  currentBalance?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface CashboxListResponse {
+  data: Cashbox[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface TreasuryTransaction {
+  id: string;
+  companyId: string;
+  cashboxId: string;
+  type: string;
+  amount?: string;
+  transactionDate: string;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  receiptId?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface TreasuryTransactionInput {
+  companyId: string;
+  cashboxId: string;
+  type?: string;
+  amount?: string;
+  transactionDate: string;
+  reference?: string;
+  description?: string;
+  receiptId?: string;
+  userId?: string;
+}
+
+export interface TreasuryTransactionUpdate {
+  companyId?: string;
+  cashboxId?: string;
+  type?: string;
+  amount?: string;
+  transactionDate?: string;
+  reference?: string;
+  description?: string;
+  receiptId?: string;
+  userId?: string;
+}
+
+export interface TreasuryTransactionListResponse {
+  data: TreasuryTransaction[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface BankAccount {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  bankName: string;
+  bankNameAr: string;
+  accountNumber: string;
+  /** @nullable */
+  iban?: string | null;
+  openingBalance?: string;
+  currentBalance?: string;
+  status?: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface BankAccountInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  bankName: string;
+  bankNameAr: string;
+  accountNumber: string;
+  iban?: string;
+  openingBalance?: string;
+  currentBalance?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface BankAccountUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  bankName?: string;
+  bankNameAr?: string;
+  accountNumber?: string;
+  iban?: string;
+  openingBalance?: string;
+  currentBalance?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface BankAccountListResponse {
+  data: BankAccount[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface BankTransaction {
+  id: string;
+  companyId: string;
+  bankAccountId: string;
+  type: string;
+  amount?: string;
+  transactionDate: string;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  receiptId?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface BankTransactionInput {
+  companyId: string;
+  bankAccountId: string;
+  type?: string;
+  amount?: string;
+  transactionDate: string;
+  reference?: string;
+  description?: string;
+  receiptId?: string;
+  userId?: string;
+}
+
+export interface BankTransactionUpdate {
+  companyId?: string;
+  bankAccountId?: string;
+  type?: string;
+  amount?: string;
+  transactionDate?: string;
+  reference?: string;
+  description?: string;
+  receiptId?: string;
+  userId?: string;
+}
+
+export interface BankTransactionListResponse {
+  data: BankTransaction[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Receipt {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  customerId: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  scheduleId?: string | null;
+  amount?: string;
+  receiptDate: string;
+  paymentMethod: string;
+  /** @nullable */
+  cashboxId?: string | null;
+  /** @nullable */
+  bankAccountId?: string | null;
+  /** @nullable */
+  chequeNumber?: string | null;
+  /** @nullable */
+  chequeDate?: string | null;
+  /** @nullable */
+  bankName?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  status?: string;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ReceiptInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  customerId: string;
+  contractId?: string;
+  scheduleId?: string;
+  amount?: string;
+  receiptDate: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  chequeNumber?: string;
+  chequeDate?: string;
+  bankName?: string;
+  reference?: string;
+  status?: string;
+  notes?: string;
+  userId?: string;
+}
+
+export interface ReceiptUpdate {
+  companyId?: string;
+  branchId?: string;
+  code?: string;
+  customerId?: string;
+  contractId?: string;
+  scheduleId?: string;
+  amount?: string;
+  receiptDate?: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  chequeNumber?: string;
+  chequeDate?: string;
+  bankName?: string;
+  reference?: string;
+  status?: string;
+  notes?: string;
+  userId?: string;
+}
+
+export interface ReceiptListResponse {
+  data: Receipt[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Penalty {
+  id: string;
+  companyId: string;
+  scheduleId: string;
+  ruleId: string;
+  amount?: string;
+  daysOverdue?: number;
+  assessedDate: string;
+  status?: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PenaltyInput {
+  companyId: string;
+  scheduleId: string;
+  ruleId: string;
+  amount?: string;
+  daysOverdue?: number;
+  assessedDate: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface PenaltyUpdate {
+  companyId?: string;
+  scheduleId?: string;
+  ruleId?: string;
+  amount?: string;
+  daysOverdue?: number;
+  assessedDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface PenaltyListResponse {
+  data: Penalty[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface FinanceDashboard {
+  totalSales: string;
+  totalCollections: string;
+  outstandingInstallments: string;
+  overdueAmount: string;
+  treasuryBalance: string;
+  bankBalance: string;
+  receipts: number;
+  pendingPenalties: number;
+}
+
+export interface CalculatePenaltiesInput {
+  companyId?: string;
+}
+
+export interface CalculatePenaltiesResult {
+  created: number;
+  totalAmount?: string;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -2057,6 +2408,66 @@ planId?: string;
 };
 
 export type GetRealEstateDashboardParams = {
+companyId?: string;
+};
+
+export type ListCashboxesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+};
+
+export type ListTreasuryTransactionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+cashboxId?: string;
+type?: string;
+};
+
+export type ListBankAccountsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+};
+
+export type ListBankTransactionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+bankAccountId?: string;
+type?: string;
+};
+
+export type ListReceiptsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+contractId?: string;
+scheduleId?: string;
+paymentMethod?: string;
+status?: string;
+};
+
+export type ListPenaltiesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+scheduleId?: string;
+ruleId?: string;
+status?: string;
+};
+
+export type GetFinanceDashboardParams = {
 companyId?: string;
 };
 

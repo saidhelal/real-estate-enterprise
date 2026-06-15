@@ -82,6 +82,8 @@ export interface ResourceManagerProps<T extends { id: string }> {
   /** Default companyId to inject into create payloads. */
   companyId?: string;
   searchable?: boolean;
+  /** Hide the create action (e.g. system-generated records). Defaults to true. */
+  canCreate?: boolean;
   pageSize?: number;
 }
 
@@ -100,6 +102,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     getListQueryKey,
     companyId,
     searchable = true,
+    canCreate = true,
     pageSize = 10,
   } = props;
 
@@ -147,29 +150,31 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
         <h2 className="text-2xl font-bold tracking-tight">{heading}</h2>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              {t("common.create")}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{t("common.create")}</DialogTitle>
-            </DialogHeader>
-            <ResourceForm
-              fields={fields}
-              companyId={companyId}
-              useCreate={useCreate}
-              useUpdate={useUpdate}
-              onSuccess={() => {
-                setIsCreateOpen(false);
-                invalidate();
-              }}
-            />
-          </DialogContent>
-        </Dialog>
+        {canCreate && (
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                {t("common.create")}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{t("common.create")}</DialogTitle>
+              </DialogHeader>
+              <ResourceForm
+                fields={fields}
+                companyId={companyId}
+                useCreate={useCreate}
+                useUpdate={useUpdate}
+                onSuccess={() => {
+                  setIsCreateOpen(false);
+                  invalidate();
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {searchable && (

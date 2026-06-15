@@ -78,7 +78,7 @@ router.get("/installment-plans/:id", requirePermission("installmentPlans.view"),
   res.json(GetInstallmentPlanResponse.parse(serializeRow(row)));
 });
 
-router.patch("/installmentPlans/:id", requirePermission("installmentPlans.update"), async (req, res): Promise<void> => {
+router.patch("/installment-plans/:id", requirePermission("installmentPlans.update"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const parsed = UpdateInstallmentPlanBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
@@ -139,7 +139,7 @@ router.get("/installment-schedules/:id", requirePermission("installmentSchedules
   res.json(GetInstallmentScheduleResponse.parse(serializeRow(row)));
 });
 
-router.patch("/installmentSchedules/:id", requirePermission("installmentSchedules.update"), async (req, res): Promise<void> => {
+router.patch("/installment-schedules/:id", requirePermission("installmentSchedules.update"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const parsed = UpdateInstallmentScheduleBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
@@ -205,7 +205,7 @@ router.get("/installment-collections/:id", requirePermission("installmentCollect
   res.json(GetInstallmentCollectionResponse.parse(serializeRow(row)));
 });
 
-router.patch("/installmentCollections/:id", requirePermission("installmentCollections.update"), async (req, res): Promise<void> => {
+router.patch("/installment-collections/:id", requirePermission("installmentCollections.update"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const parsed = UpdateInstallmentCollectionBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
@@ -269,7 +269,7 @@ router.get("/penalty-rules/:id", requirePermission("penaltyRules.view"), async (
   res.json(GetPenaltyRuleResponse.parse(serializeRow(row)));
 });
 
-router.patch("/penaltyRules/:id", requirePermission("penaltyRules.update"), async (req, res): Promise<void> => {
+router.patch("/penalty-rules/:id", requirePermission("penaltyRules.update"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const parsed = UpdatePenaltyRuleBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }

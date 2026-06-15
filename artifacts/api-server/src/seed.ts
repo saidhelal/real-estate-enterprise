@@ -21,6 +21,15 @@ import {
   unitsTable,
   leadsTable,
   customersTable,
+  contractsTable,
+  installmentPlansTable,
+  installmentSchedulesTable,
+  penaltyRulesTable,
+  cashboxesTable,
+  bankAccountsTable,
+  treasuryTransactionsTable,
+  bankTransactionsTable,
+  receiptsTable,
 } from "@workspace/db";
 import { hashPassword } from "./lib/auth";
 
@@ -64,6 +73,12 @@ const MODULES: Array<{ module: string; label: string }> = [
   { module: "installmentSchedules", label: "Installment Schedules" },
   { module: "installmentCollections", label: "Installment Collections" },
   { module: "penaltyRules", label: "Penalty Rules" },
+  { module: "cashboxes", label: "Cashboxes" },
+  { module: "treasuryTransactions", label: "Treasury Transactions" },
+  { module: "bankAccounts", label: "Bank Accounts" },
+  { module: "bankTransactions", label: "Bank Transactions" },
+  { module: "receipts", label: "Receipts" },
+  { module: "penalties", label: "Penalties" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 
@@ -367,6 +382,90 @@ async function seedRealEstate(): Promise<void> {
   );
 }
 
+async function seedFinance(): Promise<void> {
+  const [company] = await db.select().from(companiesTable).limit(1);
+  if (!company) {
+    console.log("Skipping finance seed: no company found");
+    return;
+  }
+  const companyId = company.id;
+  const [branch] = await db.select().from(branchesTable).where(eq(branchesTable.companyId, companyId)).limit(1);
+  const branchId = branch?.id ?? null;
+
+  const existing = await db.select().from(cashboxesTable).where(eq(cashboxesTable.code, "CB-001")).limit(1);
+  if (existing.length) {
+    console.log("Finance demo data already seeded, skipping");
+    return;
+  }
+
+  const customers = await db.select().from(customersTable).where(eq(customersTable.companyId, companyId)).limit(3);
+  const units = await db.select().from(unitsTable).where(eq(unitsTable.companyId, companyId)).limit(1);
+  if (!customers.length || !units.length) {
+    console.log("Skipping finance seed: missing customers/units");
+    return;
+  }
+
+  // 2 cashboxes, 2 bank accounts
+  const [mainCashbox, branchCashbox] = await db.insert(cashboxesTable).values([
+    { companyId, branchId, code: "CB-001", name: "Main Cashbox", nameAr: "الخزينة الرئيسية", openingBalance: "50000.00", currentBalance: "50000.00" },
+    { companyId, branchId, code: "CB-002", name: "Branch Cashbox", nameAr: "خزينة الفرع", openingBalance: "10000.00", currentBalance: "10000.00" },
+  ]).returning();
+
+  const [mainBank] = await db.insert(bankAccountsTable).values([
+    { companyId, branchId, code: "BA-001", bankName: "Al Rajhi Bank", bankNameAr: "مصرف الراجحي", accountNumber: "SA-1000-2000-3000", iban: "SA0380000000608010167519", openingBalance: "200000.00", currentBalance: "200000.00" },
+    { companyId, branchId, code: "BA-002", bankName: "Saudi National Bank", bankNameAr: "البنك الأهلي السعودي", accountNumber: "SA-4000-5000-6000", iban: "SA4420000001234567891234", openingBalance: "150000.00", currentBalance: "150000.00" },
+  ]).returning();
+
+  // penalty rules (fixed + percent)
+  await db.insert(penaltyRulesTable).values([
+    { companyId, code: "PR-FIX", name: "Late fee (fixed)", nameAr: "غرامة تأخير (ثابتة)", daysAfterDue: 7, penaltyType: "fixed", penaltyValue: "500.00" },
+    { companyId, code: "PR-PCT", name: "Late fee (2%)", nameAr: "غرامة تأخير (2%)", daysAfterDue: 30, penaltyType: "percent", penaltyValue: "2.00" },
+  ]);
+
+  // 1 contract + installment plan with an overdue schedule
+  const [contract] = await db.insert(contractsTable).values({
+    companyId, branchId, code: "CON-FIN-001", unitId: units[0].id, customerId: customers[0].id,
+    contractDate: "2025-12-01", totalPrice: "600000.00", status: "active",
+  }).returning();
+
+  const [plan] = await db.insert(installmentPlansTable).values({
+    companyId, code: "PLAN-FIN-001", contractId: contract.id, totalAmount: "500000.00",
+    numberOfInstallments: 4, frequency: "quarterly", startDate: "2026-01-15", status: "active",
+  }).returning();
+
+  const schedules = await db.insert(installmentSchedulesTable).values([
+    { companyId, planId: plan.id, installmentNumber: 1, dueDate: "2026-01-15", amount: "125000.00", paidAmount: "125000.00", status: "paid" },
+    { companyId, planId: plan.id, installmentNumber: 2, dueDate: "2026-03-15", amount: "125000.00", paidAmount: "0.00", status: "pending" },
+    { companyId, planId: plan.id, installmentNumber: 3, dueDate: "2026-09-15", amount: "125000.00", paidAmount: "0.00", status: "pending" },
+    { companyId, planId: plan.id, installmentNumber: 4, dueDate: "2026-12-15", amount: "125000.00", paidAmount: "0.00", status: "pending" },
+  ]).returning();
+
+  // 3 receipts: cash, bank transfer, cheque
+  const [cashReceipt, bankReceipt] = await db.insert(receiptsTable).values([
+    { companyId, branchId, code: "RCP-001", customerId: customers[0].id, contractId: contract.id, scheduleId: schedules[0].id, amount: "125000.00", receiptDate: "2026-01-15", paymentMethod: "cash", cashboxId: mainCashbox.id, reference: "Installment #1", status: "confirmed" },
+    { companyId, branchId, code: "RCP-002", customerId: customers[1].id, amount: "30000.00", receiptDate: "2026-02-10", paymentMethod: "bank_transfer", bankAccountId: mainBank.id, reference: "Down payment", status: "confirmed" },
+    { companyId, branchId, code: "RCP-003", customerId: customers[2].id, amount: "20000.00", receiptDate: "2026-02-20", paymentMethod: "cheque", chequeNumber: "CHQ-778812", chequeDate: "2026-03-01", bankName: "Riyad Bank", status: "confirmed" },
+  ]).returning();
+
+  // matching treasury + bank transactions, and reflect balances
+  await db.insert(treasuryTransactionsTable).values({
+    companyId, cashboxId: mainCashbox.id, type: "in", amount: "125000.00", transactionDate: "2026-01-15",
+    reference: cashReceipt.code, description: "Receipt collection (cash)", receiptId: cashReceipt.id,
+  });
+  await db.update(cashboxesTable).set({ currentBalance: "175000.00" }).where(eq(cashboxesTable.id, mainCashbox.id));
+
+  await db.insert(bankTransactionsTable).values({
+    companyId, bankAccountId: mainBank.id, type: "in", amount: "30000.00", transactionDate: "2026-02-10",
+    reference: bankReceipt.code, description: "Receipt collection (bank transfer)", receiptId: bankReceipt.id,
+  });
+  await db.update(bankAccountsTable).set({ currentBalance: "230000.00" }).where(eq(bankAccountsTable.id, mainBank.id));
+
+  void branchCashbox;
+  console.log(
+    "Seeded finance demo data: 2 cashboxes, 2 bank accounts, 2 penalty rules, 1 contract, 1 plan, 4 schedules, 3 receipts",
+  );
+}
+
 async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
@@ -376,6 +475,7 @@ async function main(): Promise<void> {
   await seedNumberSequences();
   await seedSettings();
   await seedRealEstate();
+  await seedFinance();
   console.log("Seed complete.");
 }
 

@@ -3,5 +3,6 @@
 - [Lib declaration staleness](lib-staleness.md) — run typecheck:libs after editing lib/* or artifacts see phantom "no exported member".
 - [Cookie-auth login redirect](cookie-auth-login-redirect.md) — login 200 but stuck on /login: invalidate current-user query before navigating.
 - [RBAC enforcement](rbac-enforcement.md) — requireAuth is not authorization; add requirePermission per-handler and smoke-test with a role-less user.
+- [Finance ledger integrity](finance-ledger-integrity.md) — money-moving records: parameterized balance SQL, immutable financial+status fields on PATCH, transactional delete reversal, atomic schedule updates; gate posting on immutable status.
 - [Generic JSX breaks dev plugin](generic-jsx-cartographer.md) — `<Comp<T>>` typechecks but 500s in Vite; drop the type arg, infer from props.
 - [Route path casing](route-path-casing.md) — Express path strings must match OpenAPI kebab-case keys or the generated client 404s despite green typecheck.

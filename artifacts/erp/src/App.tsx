@@ -51,6 +51,12 @@ import InstallmentPlansPage from "@/pages/installment-plans";
 import InstallmentSchedulesPage from "@/pages/installment-schedules";
 import InstallmentCollectionsPage from "@/pages/installment-collections";
 import PenaltyRulesPage from "@/pages/penalty-rules";
+import CashboxesPage from "@/pages/cashboxes";
+import TreasuryTransactionsPage from "@/pages/treasury-transactions";
+import BankAccountsPage from "@/pages/bank-accounts";
+import BankTransactionsPage from "@/pages/bank-transactions";
+import ReceiptsPage from "@/pages/receipts";
+import PenaltiesPage from "@/pages/penalties";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -111,6 +117,12 @@ function Router() {
             <Route path="/installment-schedules" component={InstallmentSchedulesPage} />
             <Route path="/installment-collections" component={InstallmentCollectionsPage} />
             <Route path="/penalty-rules" component={PenaltyRulesPage} />
+            <Route path="/cashboxes" component={CashboxesPage} />
+            <Route path="/treasury-transactions" component={TreasuryTransactionsPage} />
+            <Route path="/bank-accounts" component={BankAccountsPage} />
+            <Route path="/bank-transactions" component={BankTransactionsPage} />
+            <Route path="/receipts" component={ReceiptsPage} />
+            <Route path="/penalties" component={PenaltiesPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

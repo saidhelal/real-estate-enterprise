@@ -4317,3 +4317,801 @@ export const GetRealEstateDashboardResponse = zod.object({
 })
 
 
+/**
+ * @summary List cashboxes
+ */
+export const ListCashboxesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListCashboxesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Cashbox
+ */
+export const CreateCashboxBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Cashbox
+ */
+export const GetCashboxParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCashboxResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Cashbox
+ */
+export const UpdateCashboxParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCashboxBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateCashboxResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Cashbox
+ */
+export const DeleteCashboxParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCashboxResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List treasury-transactions
+ */
+export const ListTreasuryTransactionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "cashboxId": zod.coerce.string().optional(),
+  "type": zod.coerce.string().optional()
+})
+
+export const ListTreasuryTransactionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "cashboxId": zod.string(),
+  "type": zod.string(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a TreasuryTransaction
+ */
+export const CreateTreasuryTransactionBody = zod.object({
+  "companyId": zod.string(),
+  "cashboxId": zod.string(),
+  "type": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "receiptId": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a TreasuryTransaction
+ */
+export const GetTreasuryTransactionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetTreasuryTransactionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "cashboxId": zod.string(),
+  "type": zod.string(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a TreasuryTransaction
+ */
+export const UpdateTreasuryTransactionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateTreasuryTransactionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "cashboxId": zod.string().optional(),
+  "type": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "receiptId": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateTreasuryTransactionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "cashboxId": zod.string(),
+  "type": zod.string(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a TreasuryTransaction
+ */
+export const DeleteTreasuryTransactionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteTreasuryTransactionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List bank-accounts
+ */
+export const ListBankAccountsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListBankAccountsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "bankName": zod.string(),
+  "bankNameAr": zod.string(),
+  "accountNumber": zod.string(),
+  "iban": zod.string().nullish(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a BankAccount
+ */
+export const CreateBankAccountBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "bankName": zod.string(),
+  "bankNameAr": zod.string(),
+  "accountNumber": zod.string(),
+  "iban": zod.string().optional(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a BankAccount
+ */
+export const GetBankAccountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBankAccountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "bankName": zod.string(),
+  "bankNameAr": zod.string(),
+  "accountNumber": zod.string(),
+  "iban": zod.string().nullish(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a BankAccount
+ */
+export const UpdateBankAccountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateBankAccountBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "bankNameAr": zod.string().optional(),
+  "accountNumber": zod.string().optional(),
+  "iban": zod.string().optional(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateBankAccountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "bankName": zod.string(),
+  "bankNameAr": zod.string(),
+  "accountNumber": zod.string(),
+  "iban": zod.string().nullish(),
+  "openingBalance": zod.string().optional(),
+  "currentBalance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a BankAccount
+ */
+export const DeleteBankAccountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteBankAccountResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List bank-transactions
+ */
+export const ListBankTransactionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "bankAccountId": zod.coerce.string().optional(),
+  "type": zod.coerce.string().optional()
+})
+
+export const ListBankTransactionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "bankAccountId": zod.string(),
+  "type": zod.string(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a BankTransaction
+ */
+export const CreateBankTransactionBody = zod.object({
+  "companyId": zod.string(),
+  "bankAccountId": zod.string(),
+  "type": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "receiptId": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a BankTransaction
+ */
+export const GetBankTransactionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBankTransactionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "bankAccountId": zod.string(),
+  "type": zod.string(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a BankTransaction
+ */
+export const UpdateBankTransactionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateBankTransactionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "type": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "receiptId": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateBankTransactionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "bankAccountId": zod.string(),
+  "type": zod.string(),
+  "amount": zod.string().optional(),
+  "transactionDate": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a BankTransaction
+ */
+export const DeleteBankTransactionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteBankTransactionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List receipts
+ */
+export const ListReceiptsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional(),
+  "scheduleId": zod.coerce.string().optional(),
+  "paymentMethod": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListReceiptsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Receipt
+ */
+export const CreateReceiptBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string().optional(),
+  "cashboxId": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "chequeNumber": zod.string().optional(),
+  "chequeDate": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Receipt
+ */
+export const GetReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Receipt
+ */
+export const UpdateReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateReceiptBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string().optional(),
+  "paymentMethod": zod.string().optional(),
+  "cashboxId": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "chequeNumber": zod.string().optional(),
+  "chequeDate": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "userId": zod.string().optional()
+})
+
+export const UpdateReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Receipt
+ */
+export const DeleteReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteReceiptResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List penalties
+ */
+export const ListPenaltiesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "scheduleId": zod.coerce.string().optional(),
+  "ruleId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListPenaltiesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "ruleId": zod.string(),
+  "amount": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "assessedDate": zod.string(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Penalty
+ */
+export const CreatePenaltyBody = zod.object({
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "ruleId": zod.string(),
+  "amount": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "assessedDate": zod.string(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Penalty
+ */
+export const GetPenaltyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPenaltyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "ruleId": zod.string(),
+  "amount": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "assessedDate": zod.string(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Penalty
+ */
+export const UpdatePenaltyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePenaltyBody = zod.object({
+  "companyId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
+  "ruleId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "assessedDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePenaltyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "scheduleId": zod.string(),
+  "ruleId": zod.string(),
+  "amount": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "assessedDate": zod.string(),
+  "status": zod.string().optional(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Penalty
+ */
+export const DeletePenaltyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePenaltyResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Financial dashboard statistics
+ */
+export const GetFinanceDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetFinanceDashboardResponse = zod.object({
+  "totalSales": zod.string(),
+  "totalCollections": zod.string(),
+  "outstandingInstallments": zod.string(),
+  "overdueAmount": zod.string(),
+  "treasuryBalance": zod.string(),
+  "bankBalance": zod.string(),
+  "receipts": zod.number(),
+  "pendingPenalties": zod.number()
+})
+
+
+/**
+ * @summary Auto-assess late-payment penalties for overdue installments
+ */
+export const CalculatePenaltiesBody = zod.object({
+  "companyId": zod.string().optional()
+})
+
+export const CalculatePenaltiesResponse = zod.object({
+  "created": zod.number(),
+  "totalAmount": zod.string().optional()
+})
+
+

@@ -69,6 +69,14 @@ const NAV_GROUPS = [
     { href: "/installment-collections", icon: Receipt, labelKey: "nav.installment_collections" },
     { href: "/penalty-rules", icon: AlertTriangle, labelKey: "nav.penalty_rules" },
   ]},
+  { titleKey: "nav.group.finance", items: [
+    { href: "/cashboxes", icon: Wallet, labelKey: "nav.cashboxes" },
+    { href: "/treasury-transactions", icon: ArrowLeftRight, labelKey: "nav.treasury_transactions" },
+    { href: "/bank-accounts", icon: Banknote, labelKey: "nav.bank_accounts" },
+    { href: "/bank-transactions", icon: ArrowRightLeft, labelKey: "nav.bank_transactions" },
+    { href: "/receipts", icon: Receipt, labelKey: "nav.receipts" },
+    { href: "/penalties", icon: AlertTriangle, labelKey: "nav.penalties" },
+  ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },
     { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles" },

@@ -3612,6 +3612,583 @@ paths:
               schema:
                 $ref: "#/components/schemas/RealEstateDashboard"
 
+  /cashboxes:
+    get:
+      operationId: listCashboxes
+      tags: [cashboxes]
+      summary: List cashboxes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Cashboxs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CashboxListResponse"
+    post:
+      operationId: createCashbox
+      tags: [cashboxes]
+      summary: Create a Cashbox
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CashboxInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cashbox"
+
+  /cashboxes/{id}:
+    get:
+      operationId: getCashbox
+      tags: [cashboxes]
+      summary: Get a Cashbox
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Cashbox
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cashbox"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCashbox
+      tags: [cashboxes]
+      summary: Update a Cashbox
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CashboxUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cashbox"
+    delete:
+      operationId: deleteCashbox
+      tags: [cashboxes]
+      summary: Soft-delete a Cashbox
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse" 
+
+  /treasury-transactions:
+    get:
+      operationId: listTreasuryTransactions
+      tags: [treasuryTransactions]
+      summary: List treasury-transactions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: cashboxId, in: query, required: false, schema: { type: string } }
+        - { name: type, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: TreasuryTransactions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreasuryTransactionListResponse"
+    post:
+      operationId: createTreasuryTransaction
+      tags: [treasuryTransactions]
+      summary: Create a TreasuryTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreasuryTransactionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreasuryTransaction"
+
+  /treasury-transactions/{id}:
+    get:
+      operationId: getTreasuryTransaction
+      tags: [treasuryTransactions]
+      summary: Get a TreasuryTransaction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: TreasuryTransaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreasuryTransaction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateTreasuryTransaction
+      tags: [treasuryTransactions]
+      summary: Update a TreasuryTransaction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TreasuryTransactionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreasuryTransaction"
+    delete:
+      operationId: deleteTreasuryTransaction
+      tags: [treasuryTransactions]
+      summary: Soft-delete a TreasuryTransaction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse" 
+
+  /bank-accounts:
+    get:
+      operationId: listBankAccounts
+      tags: [bankAccounts]
+      summary: List bank-accounts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: BankAccounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccountListResponse"
+    post:
+      operationId: createBankAccount
+      tags: [bankAccounts]
+      summary: Create a BankAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankAccountInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+
+  /bank-accounts/{id}:
+    get:
+      operationId: getBankAccount
+      tags: [bankAccounts]
+      summary: Get a BankAccount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: BankAccount
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBankAccount
+      tags: [bankAccounts]
+      summary: Update a BankAccount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankAccountUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+    delete:
+      operationId: deleteBankAccount
+      tags: [bankAccounts]
+      summary: Soft-delete a BankAccount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse" 
+
+  /bank-transactions:
+    get:
+      operationId: listBankTransactions
+      tags: [bankTransactions]
+      summary: List bank-transactions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: bankAccountId, in: query, required: false, schema: { type: string } }
+        - { name: type, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: BankTransactions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankTransactionListResponse"
+    post:
+      operationId: createBankTransaction
+      tags: [bankTransactions]
+      summary: Create a BankTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankTransactionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankTransaction"
+
+  /bank-transactions/{id}:
+    get:
+      operationId: getBankTransaction
+      tags: [bankTransactions]
+      summary: Get a BankTransaction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: BankTransaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankTransaction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBankTransaction
+      tags: [bankTransactions]
+      summary: Update a BankTransaction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankTransactionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankTransaction"
+    delete:
+      operationId: deleteBankTransaction
+      tags: [bankTransactions]
+      summary: Soft-delete a BankTransaction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse" 
+
+  /receipts:
+    get:
+      operationId: listReceipts
+      tags: [receipts]
+      summary: List receipts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+        - { name: scheduleId, in: query, required: false, schema: { type: string } }
+        - { name: paymentMethod, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Receipts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptListResponse"
+    post:
+      operationId: createReceipt
+      tags: [receipts]
+      summary: Create a Receipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReceiptInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+
+  /receipts/{id}:
+    get:
+      operationId: getReceipt
+      tags: [receipts]
+      summary: Get a Receipt
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Receipt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateReceipt
+      tags: [receipts]
+      summary: Update a Receipt
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReceiptUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+    delete:
+      operationId: deleteReceipt
+      tags: [receipts]
+      summary: Soft-delete a Receipt
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse" 
+
+  /penalties:
+    get:
+      operationId: listPenalties
+      tags: [penalties]
+      summary: List penalties
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: scheduleId, in: query, required: false, schema: { type: string } }
+        - { name: ruleId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Penaltys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PenaltyListResponse"
+    post:
+      operationId: createPenalty
+      tags: [penalties]
+      summary: Create a Penalty
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PenaltyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Penalty"
+
+  /penalties/{id}:
+    get:
+      operationId: getPenalty
+      tags: [penalties]
+      summary: Get a Penalty
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Penalty
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Penalty"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePenalty
+      tags: [penalties]
+      summary: Update a Penalty
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PenaltyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Penalty"
+    delete:
+      operationId: deletePenalty
+      tags: [penalties]
+      summary: Soft-delete a Penalty
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse" 
+
+  /finance/dashboard:
+    get:
+      operationId: getFinanceDashboard
+      tags: [finance]
+      summary: Financial dashboard statistics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Finance dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinanceDashboard"
+
+  /penalties/calculate:
+    post:
+      operationId: calculatePenalties
+      tags: [penalties]
+      summary: Auto-assess late-payment penalties for overdue installments
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalculatePenaltiesInput"
+      responses:
+        "200":
+          description: Penalties assessed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalculatePenaltiesResult"
+
+
 components:
   parameters:
     IdParam:
@@ -5559,3 +6136,388 @@ components:
         contracts: { type: integer }
         overdueInstallments: { type: integer }
         totalContractValue: { type: string }
+
+    Cashbox:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        openingBalance: { type: string }
+        currentBalance: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CashboxInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        openingBalance: { type: string }
+        currentBalance: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    CashboxUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        openingBalance: { type: string }
+        currentBalance: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    CashboxListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Cashbox" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    TreasuryTransaction:
+      type: object
+      required: [id, companyId, cashboxId, type, transactionDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        cashboxId: { type: string }
+        type: { type: string }
+        amount: { type: string }
+        transactionDate: { type: string }
+        reference: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        receiptId: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    TreasuryTransactionInput:
+      type: object
+      required: [companyId, cashboxId, transactionDate]
+      properties:
+        companyId: { type: string }
+        cashboxId: { type: string }
+        type: { type: string }
+        amount: { type: string }
+        transactionDate: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        receiptId: { type: string }
+        userId: { type: string }
+
+    TreasuryTransactionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        cashboxId: { type: string }
+        type: { type: string }
+        amount: { type: string }
+        transactionDate: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        receiptId: { type: string }
+        userId: { type: string }
+
+    TreasuryTransactionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/TreasuryTransaction" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    BankAccount:
+      type: object
+      required: [id, companyId, code, bankName, bankNameAr, accountNumber, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        bankName: { type: string }
+        bankNameAr: { type: string }
+        accountNumber: { type: string }
+        iban: { type: ["string", "null"] }
+        openingBalance: { type: string }
+        currentBalance: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BankAccountInput:
+      type: object
+      required: [companyId, code, bankName, bankNameAr, accountNumber]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        bankName: { type: string }
+        bankNameAr: { type: string }
+        accountNumber: { type: string }
+        iban: { type: string }
+        openingBalance: { type: string }
+        currentBalance: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    BankAccountUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        bankName: { type: string }
+        bankNameAr: { type: string }
+        accountNumber: { type: string }
+        iban: { type: string }
+        openingBalance: { type: string }
+        currentBalance: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    BankAccountListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/BankAccount" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    BankTransaction:
+      type: object
+      required: [id, companyId, bankAccountId, type, transactionDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        bankAccountId: { type: string }
+        type: { type: string }
+        amount: { type: string }
+        transactionDate: { type: string }
+        reference: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        receiptId: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BankTransactionInput:
+      type: object
+      required: [companyId, bankAccountId, transactionDate]
+      properties:
+        companyId: { type: string }
+        bankAccountId: { type: string }
+        type: { type: string }
+        amount: { type: string }
+        transactionDate: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        receiptId: { type: string }
+        userId: { type: string }
+
+    BankTransactionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        bankAccountId: { type: string }
+        type: { type: string }
+        amount: { type: string }
+        transactionDate: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        receiptId: { type: string }
+        userId: { type: string }
+
+    BankTransactionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/BankTransaction" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Receipt:
+      type: object
+      required: [id, companyId, code, customerId, receiptDate, paymentMethod, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        customerId: { type: string }
+        contractId: { type: ["string", "null"] }
+        scheduleId: { type: ["string", "null"] }
+        amount: { type: string }
+        receiptDate: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: ["string", "null"] }
+        bankAccountId: { type: ["string", "null"] }
+        chequeNumber: { type: ["string", "null"] }
+        chequeDate: { type: ["string", "null"] }
+        bankName: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ReceiptInput:
+      type: object
+      required: [companyId, code, customerId, receiptDate]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        customerId: { type: string }
+        contractId: { type: string }
+        scheduleId: { type: string }
+        amount: { type: string }
+        receiptDate: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: string }
+        bankName: { type: string }
+        reference: { type: string }
+        status: { type: string }
+        notes: { type: string }
+        userId: { type: string }
+
+    ReceiptUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        customerId: { type: string }
+        contractId: { type: string }
+        scheduleId: { type: string }
+        amount: { type: string }
+        receiptDate: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: string }
+        bankName: { type: string }
+        reference: { type: string }
+        status: { type: string }
+        notes: { type: string }
+        userId: { type: string }
+
+    ReceiptListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Receipt" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Penalty:
+      type: object
+      required: [id, companyId, scheduleId, ruleId, assessedDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        scheduleId: { type: string }
+        ruleId: { type: string }
+        amount: { type: string }
+        daysOverdue: { type: integer }
+        assessedDate: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PenaltyInput:
+      type: object
+      required: [companyId, scheduleId, ruleId, assessedDate]
+      properties:
+        companyId: { type: string }
+        scheduleId: { type: string }
+        ruleId: { type: string }
+        amount: { type: string }
+        daysOverdue: { type: integer }
+        assessedDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    PenaltyUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        scheduleId: { type: string }
+        ruleId: { type: string }
+        amount: { type: string }
+        daysOverdue: { type: integer }
+        assessedDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    PenaltyListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Penalty" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    FinanceDashboard:
+      type: object
+      required: [totalSales, totalCollections, outstandingInstallments, overdueAmount, treasuryBalance, bankBalance, receipts, pendingPenalties]
+      properties:
+        totalSales: { type: string }
+        totalCollections: { type: string }
+        outstandingInstallments: { type: string }
+        overdueAmount: { type: string }
+        treasuryBalance: { type: string }
+        bankBalance: { type: string }
+        receipts: { type: integer }
+        pendingPenalties: { type: integer }
+
+    CalculatePenaltiesInput:
+      type: object
+      properties:
+        companyId: { type: string }
+
+    CalculatePenaltiesResult:
+      type: object
+      required: [created]
+      properties:
+        created: { type: integer }
+        totalAmount: { type: string }
