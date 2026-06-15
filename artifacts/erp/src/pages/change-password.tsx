@@ -18,10 +18,10 @@ export default function ChangePasswordPage() {
   const [error, setError] = useState("");
 
   const validatePassword = (pass: string) => {
-    if (pass.length < 8) return "Password must be at least 8 characters long";
-    if (!/[A-Z]/.test(pass)) return "Password must contain at least one uppercase letter";
-    if (!/[a-z]/.test(pass)) return "Password must contain at least one lowercase letter";
-    if (!/[0-9]/.test(pass)) return "Password must contain at least one number";
+    if (pass.length < 8) return t("change_password.req_length");
+    if (!/[A-Z]/.test(pass)) return t("change_password.req_upper");
+    if (!/[a-z]/.test(pass)) return t("change_password.req_lower");
+    if (!/[0-9]/.test(pass)) return t("change_password.req_number");
     return "";
   };
 
@@ -30,7 +30,7 @@ export default function ChangePasswordPage() {
     setError("");
 
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match");
+      setError(t("change_password.mismatch"));
       return;
     }
 
@@ -91,7 +91,7 @@ export default function ChangePasswordPage() {
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Min 8 chars, 1 uppercase, 1 lowercase, 1 number
+                {t("change_password.hint")}
               </p>
             </div>
             <div className="space-y-2">

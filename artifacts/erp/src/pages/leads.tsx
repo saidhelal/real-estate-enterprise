@@ -15,17 +15,11 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = [
-  { value: "new", label: "New" },
-  { value: "contacted", label: "Contacted" },
-  { value: "qualified", label: "Qualified" },
-  { value: "proposal", label: "Proposal" },
-  { value: "won", label: "Won" },
-  { value: "lost", label: "Lost" },
-];
+const STATUS = enumOptions(["new", "contacted", "qualified", "proposal", "won", "lost"]);
 
 export default function LeadsPage() {
   const { language } = useLanguage();
@@ -57,7 +51,7 @@ export default function LeadsPage() {
     { header: "Full Name", headerAr: "الاسم الكامل", render: (r) => r.fullName },
     { header: "Phone", headerAr: "الهاتف", render: (r) => r.phone ?? "-" },
     { header: "Budget", headerAr: "الميزانية", render: (r) => r.budget ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   return (

@@ -14,12 +14,10 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
-const TYPE = [
-  { value: "individual", label: "Individual" },
-  { value: "company", label: "Company" },
-];
+const TYPE = enumOptions(["individual", "company"]);
 
 export default function CustomersPage() {
   const { language } = useLanguage();
@@ -47,7 +45,7 @@ export default function CustomersPage() {
   const columns: ResourceColumn<Customer>[] = [
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Name", headerAr: "الاسم", render: (r) => (language === "ar" ? r.nameAr ?? r.fullName : r.fullName) },
-    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{r.type}</Badge> },
+    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{enumLabel(r.type, language)}</Badge> },
     { header: "Phone", headerAr: "الهاتف", render: (r) => r.phone ?? "-" },
     { header: "Email", headerAr: "البريد الإلكتروني", render: (r) => r.email ?? "-" },
   ];

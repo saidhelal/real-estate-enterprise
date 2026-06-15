@@ -13,16 +13,11 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = [
-  { value: "planning", label: "Planning" },
-  { value: "active", label: "Active" },
-  { value: "completed", label: "Completed" },
-  { value: "on_hold", label: "On Hold" },
-  { value: "cancelled", label: "Cancelled" },
-];
+const STATUS = enumOptions(["planning", "active", "completed", "on_hold", "cancelled"]);
 
 export default function ProjectsPage() {
   const { language } = useLanguage();
@@ -47,7 +42,7 @@ export default function ProjectsPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Name", headerAr: "الاسم", render: (r) => (language === "ar" ? r.nameAr : r.name) },
     { header: "Location", headerAr: "الموقع", render: (r) => r.location ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   return (

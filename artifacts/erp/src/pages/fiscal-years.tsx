@@ -45,16 +45,16 @@ export default function FiscalYearsPage() {
   const deleteMutation = useDeleteFiscalYear();
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this fiscal year?")) {
+    if (confirm(t("common.delete_confirm"))) {
       deleteMutation.mutate(
         { id },
         {
           onSuccess: () => {
-            toast({ title: "Fiscal year deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListFiscalYearsQueryKey() });
           },
           onError: () => {
-            toast({ title: "Failed to delete fiscal year", variant: "destructive" });
+            toast({ title: t("common.error"), variant: "destructive" });
           }
         }
       );
@@ -85,21 +85,21 @@ export default function FiscalYearsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>End Date</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("common.name")}</TableHead>
+              <TableHead>{t("common.start_date")}</TableHead>
+              <TableHead>{t("common.end_date")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : fiscalYears?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No fiscal years found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               fiscalYears?.map((fy) => (
@@ -130,7 +130,7 @@ export default function FiscalYearsPage() {
       <Dialog open={!!editingFiscalYear} onOpenChange={(open) => !open && setEditingFiscalYear(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Fiscal Year</DialogTitle>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
           </DialogHeader>
           {editingFiscalYear && (
             <FiscalYearForm 
@@ -145,6 +145,7 @@ export default function FiscalYearsPage() {
 }
 
 function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateFiscalYear();
@@ -163,7 +164,7 @@ function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; on
         { id: fiscalYear.id, data: formData },
         {
           onSuccess: () => {
-            toast({ title: "Fiscal year updated" });
+            toast({ title: t("common.saved") });
             queryClient.invalidateQueries({ queryKey: getListFiscalYearsQueryKey() });
             onSuccess();
           }
@@ -174,7 +175,7 @@ function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; on
         { data: formData as FiscalYearInput },
         {
           onSuccess: () => {
-            toast({ title: "Fiscal year created" });
+            toast({ title: t("common.created") });
             queryClient.invalidateQueries({ queryKey: getListFiscalYearsQueryKey() });
             onSuccess();
           }
@@ -186,7 +187,7 @@ function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; on
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Name (e.g. 2026)</Label>
+        <Label>{t("fiscal_years.name_hint")}</Label>
         <Input 
           value={formData.name} 
           onChange={(e) => setFormData({...formData, name: e.target.value})} 
@@ -194,7 +195,7 @@ function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; on
         />
       </div>
       <div className="space-y-2">
-        <Label>Start Date</Label>
+        <Label>{t("common.start_date")}</Label>
         <Input 
           type="date"
           value={formData.startDate} 
@@ -203,7 +204,7 @@ function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; on
         />
       </div>
       <div className="space-y-2">
-        <Label>End Date</Label>
+        <Label>{t("common.end_date")}</Label>
         <Input 
           type="date"
           value={formData.endDate} 
@@ -212,9 +213,9 @@ function FiscalYearForm({ fiscalYear, onSuccess }: { fiscalYear?: FiscalYear; on
         />
       </div>
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-          {fiscalYear ? "Update" : "Create"}
+          {fiscalYear ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

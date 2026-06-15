@@ -13,14 +13,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/lib/language-provider";
 
-const TYPES = [
-  { value: "in", label: "In" },
-  { value: "out", label: "Out" },
-];
+const TYPES = enumOptions(["in", "out"]);
 
 export default function TreasuryTransactionsPage() {
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: cashboxes } = useListCashboxes({ pageSize: 200 });
   const companyId = companies?.[0]?.id;
@@ -40,7 +40,7 @@ export default function TreasuryTransactionsPage() {
     {
       header: "Type",
       headerAr: "النوع",
-      render: (r) => <Badge variant={r.type === "out" ? "destructive" : "default"}>{r.type}</Badge>,
+      render: (r) => <Badge variant={r.type === "out" ? "destructive" : "default"}>{enumLabel(r.type, language)}</Badge>,
     },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount },
     { header: "Reference", headerAr: "المرجع", render: (r) => r.reference ?? "—" },

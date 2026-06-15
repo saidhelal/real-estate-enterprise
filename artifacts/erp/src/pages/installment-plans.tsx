@@ -15,6 +15,7 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ListPlus } from "lucide-react";
@@ -22,19 +23,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const FREQUENCY = [
-  { value: "monthly", label: "Monthly" },
-  { value: "quarterly", label: "Quarterly" },
-  { value: "semi_annual", label: "Semi Annual" },
-  { value: "annual", label: "Annual" },
-  { value: "custom", label: "Custom" },
-];
+const FREQUENCY = enumOptions(["monthly", "quarterly", "semi_annual", "annual", "custom"]);
 
-const STATUS = [
-  { value: "active", label: "Active" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
-];
+const STATUS = enumOptions(["active", "completed", "cancelled"]);
 
 export default function InstallmentPlansPage() {
   const { language, t } = useLanguage();
@@ -61,8 +52,8 @@ export default function InstallmentPlansPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Total Amount", headerAr: "المبلغ الإجمالي", render: (r) => r.totalAmount },
     { header: "Installments", headerAr: "الأقساط", render: (r) => r.numberOfInstallments },
-    { header: "Frequency", headerAr: "التكرار", render: (r) => r.frequency },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Frequency", headerAr: "التكرار", render: (r) => enumLabel(r.frequency, language) },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   const handleGenerate = (r: InstallmentPlan) => {

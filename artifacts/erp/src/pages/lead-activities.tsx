@@ -15,16 +15,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLanguage } from "@/lib/language-provider";
 
-const ACTIVITY_TYPE = [
-  { value: "note", label: "Note" },
-  { value: "call", label: "Call" },
-  { value: "meeting", label: "Meeting" },
-  { value: "email", label: "Email" },
-  { value: "visit", label: "Visit" },
-];
+const ACTIVITY_TYPE = enumOptions(["note", "call", "meeting", "email", "visit"]);
 
 export default function LeadActivitiesPage() {
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: leads } = useListLeads({ pageSize: 200 });
   const { data: users } = useListUsers();
@@ -43,7 +40,7 @@ export default function LeadActivitiesPage() {
   ];
 
   const columns: ResourceColumn<LeadActivity>[] = [
-    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{r.activityType}</Badge> },
+    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{enumLabel(r.activityType, language)}</Badge> },
     { header: "Subject", headerAr: "الموضوع", render: (r) => r.subject ?? "-" },
     { header: "Date", headerAr: "التاريخ", render: (r) => r.activityDate },
   ];

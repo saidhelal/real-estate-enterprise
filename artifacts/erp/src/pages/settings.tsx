@@ -42,11 +42,11 @@ export default function SettingsPage() {
       { data: payload },
       {
         onSuccess: () => {
-          toast({ title: "Settings saved successfully" });
+          toast({ title: t("settings.saved") });
           queryClient.invalidateQueries({ queryKey: getListSettingsQueryKey() });
         },
         onError: () => {
-          toast({ title: "Failed to save settings", variant: "destructive" });
+          toast({ title: t("settings.save_failed"), variant: "destructive" });
         }
       }
     );

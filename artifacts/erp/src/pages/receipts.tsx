@@ -19,19 +19,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
-const PAYMENT_METHODS = [
-  { value: "cash", label: "Cash" },
-  { value: "bank_transfer", label: "Bank Transfer" },
-  { value: "cheque", label: "Cheque" },
-];
+const PAYMENT_METHODS = enumOptions(["cash", "bank_transfer", "cheque"]);
 
-const STATUS = [
-  { value: "confirmed", label: "Confirmed" },
-  { value: "pending", label: "Pending" },
-  { value: "cancelled", label: "Cancelled" },
-];
+const STATUS = enumOptions(["confirmed", "pending", "cancelled"]);
 
 export default function ReceiptsPage() {
   const { language } = useLanguage();
@@ -71,8 +64,8 @@ export default function ReceiptsPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Date", headerAr: "التاريخ", render: (r) => r.receiptDate },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount },
-    { header: "Method", headerAr: "الطريقة", render: (r) => <Badge variant="outline">{r.paymentMethod}</Badge> },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Method", headerAr: "الطريقة", render: (r) => <Badge variant="outline">{enumLabel(r.paymentMethod, language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   const printVoucher = (r: Receipt) => {

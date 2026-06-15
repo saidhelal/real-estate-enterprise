@@ -43,16 +43,16 @@ export default function CompaniesPage() {
   const deleteMutation = useDeleteCompany();
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this company?")) {
+    if (confirm(t("common.delete_confirm"))) {
       deleteMutation.mutate(
         { id },
         {
           onSuccess: () => {
-            toast({ title: "Company deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
           },
           onError: () => {
-            toast({ title: "Failed to delete company", variant: "destructive" });
+            toast({ title: t("common.error"), variant: "destructive" });
           }
         }
       );
@@ -85,21 +85,21 @@ export default function CompaniesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Name (Arabic)</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("common.code")}</TableHead>
+              <TableHead>{t("common.name")}</TableHead>
+              <TableHead>{t("common.name_ar")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : companies?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No companies found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               companies?.map((company) => (
@@ -130,7 +130,7 @@ export default function CompaniesPage() {
       <Dialog open={!!editingCompany} onOpenChange={(open) => !open && setEditingCompany(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Company</DialogTitle>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
           </DialogHeader>
           {editingCompany && (
             <CompanyForm 
@@ -145,6 +145,7 @@ export default function CompaniesPage() {
 }
 
 function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateCompany();
@@ -163,7 +164,7 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
         { id: company.id, data: formData },
         {
           onSuccess: () => {
-            toast({ title: "Company updated" });
+            toast({ title: t("common.saved") });
             queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
             onSuccess();
           }
@@ -174,7 +175,7 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
         { data: formData as CompanyInput },
         {
           onSuccess: () => {
-            toast({ title: "Company created" });
+            toast({ title: t("common.created") });
             queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
             onSuccess();
           }
@@ -186,7 +187,7 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Code</Label>
+        <Label>{t("common.code")}</Label>
         <Input 
           value={formData.code} 
           onChange={(e) => setFormData({...formData, code: e.target.value})} 
@@ -195,7 +196,7 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
         />
       </div>
       <div className="space-y-2">
-        <Label>Name (English)</Label>
+        <Label>{t("common.name_en")}</Label>
         <Input 
           value={formData.name} 
           onChange={(e) => setFormData({...formData, name: e.target.value})} 
@@ -203,7 +204,7 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
         />
       </div>
       <div className="space-y-2">
-        <Label>Name (Arabic)</Label>
+        <Label>{t("common.name_ar")}</Label>
         <Input 
           value={formData.nameAr} 
           onChange={(e) => setFormData({...formData, nameAr: e.target.value})} 
@@ -212,9 +213,9 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
         />
       </div>
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-          {company ? "Update" : "Create"}
+          {company ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

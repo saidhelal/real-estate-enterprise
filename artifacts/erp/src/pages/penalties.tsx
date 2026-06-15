@@ -13,6 +13,7 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calculator, Printer } from "lucide-react";
@@ -20,11 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const STATUS = [
-  { value: "pending", label: "Pending" },
-  { value: "paid", label: "Paid" },
-  { value: "waived", label: "Waived" },
-];
+const STATUS = enumOptions(["pending", "paid", "waived"]);
 
 export default function PenaltiesPage() {
   const { data: companies } = useListCompanies();
@@ -47,7 +44,7 @@ export default function PenaltiesPage() {
     { header: "Assessed Date", headerAr: "تاريخ التقييم", render: (r) => r.assessedDate },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount },
     { header: "Days Overdue", headerAr: "أيام التأخير", render: (r) => r.daysOverdue },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   const handleCalculate = () => {

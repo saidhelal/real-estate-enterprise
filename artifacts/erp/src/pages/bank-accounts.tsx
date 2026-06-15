@@ -12,15 +12,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = [
-  { value: "active", label: "Active" },
-  { value: "inactive", label: "Inactive" },
-  { value: "closed", label: "Closed" },
-];
+const STATUS = enumOptions(["active", "inactive", "closed"]);
 
 export default function BankAccountsPage() {
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
@@ -41,7 +40,7 @@ export default function BankAccountsPage() {
     { header: "Bank", headerAr: "البنك", render: (r) => r.bankName },
     { header: "Account", headerAr: "الحساب", render: (r) => r.accountNumber },
     { header: "Current Balance", headerAr: "الرصيد الحالي", render: (r) => r.currentBalance },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   return (

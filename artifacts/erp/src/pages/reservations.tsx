@@ -16,6 +16,7 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileSignature } from "lucide-react";
@@ -24,12 +25,7 @@ import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import { getListContractsQueryKey } from "@workspace/api-client-react";
 
-const STATUS = [
-  { value: "active", label: "Active" },
-  { value: "converted", label: "Converted" },
-  { value: "cancelled", label: "Cancelled" },
-  { value: "expired", label: "Expired" },
-];
+const STATUS = enumOptions(["active", "converted", "cancelled", "expired"]);
 
 export default function ReservationsPage() {
   const { language, t } = useLanguage();
@@ -63,7 +59,7 @@ export default function ReservationsPage() {
     { header: "Date", headerAr: "التاريخ", render: (r) => r.reservationDate },
     { header: "Expiry", headerAr: "الانتهاء", render: (r) => r.expiryDate ?? "-" },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   const handleConvert = (r: Reservation) => {

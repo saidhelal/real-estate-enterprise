@@ -28,21 +28,21 @@ export default function LoginHistoryPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Timestamp</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>IP Address</TableHead>
-              <TableHead>User Agent</TableHead>
+              <TableHead>{t("common.timestamp")}</TableHead>
+              <TableHead>{t("common.user")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
+              <TableHead>{t("login_history.ip")}</TableHead>
+              <TableHead>{t("login_history.user_agent")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : history?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No login history found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               history?.map((entry) => (
@@ -53,7 +53,7 @@ export default function LoginHistoryPage() {
                   <TableCell className="font-medium">{entry.userName}</TableCell>
                   <TableCell>
                     <Badge variant={entry.success ? "default" : "destructive"}>
-                      {entry.success ? "Success" : "Failed"}
+                      {entry.success ? t("common.success") : t("common.failed")}
                     </Badge>
                   </TableCell>
                   <TableCell className="font-mono text-xs">{entry.ipAddress}</TableCell>

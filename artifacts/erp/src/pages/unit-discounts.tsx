@@ -13,12 +13,10 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
-const DISCOUNT_TYPE = [
-  { value: "percentage", label: "Percentage" },
-  { value: "fixed", label: "Fixed" },
-];
+const DISCOUNT_TYPE = enumOptions(["percentage", "fixed"]);
 
 export default function UnitDiscountsPage() {
   const { language } = useLanguage();
@@ -38,7 +36,7 @@ export default function UnitDiscountsPage() {
   const columns: ResourceColumn<UnitDiscount>[] = [
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Name", headerAr: "الاسم", render: (r) => (language === "ar" ? r.nameAr : r.name) },
-    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{r.discountType}</Badge> },
+    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{enumLabel(r.discountType, language)}</Badge> },
     { header: "Value", headerAr: "القيمة", render: (r) => r.discountValue ?? "-" },
   ];
 

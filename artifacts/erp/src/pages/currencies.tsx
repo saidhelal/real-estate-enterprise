@@ -43,16 +43,16 @@ export default function CurrenciesPage() {
   const deleteMutation = useDeleteCurrency();
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this currency?")) {
+    if (confirm(t("common.delete_confirm"))) {
       deleteMutation.mutate(
         { id },
         {
           onSuccess: () => {
-            toast({ title: "Currency deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListCurrenciesQueryKey() });
           },
           onError: () => {
-            toast({ title: "Failed to delete currency", variant: "destructive" });
+            toast({ title: t("common.error"), variant: "destructive" });
           }
         }
       );
@@ -83,21 +83,21 @@ export default function CurrenciesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Symbol</TableHead>
-              <TableHead>Base</TableHead>
+              <TableHead>{t("common.code")}</TableHead>
+              <TableHead>{t("common.name")}</TableHead>
+              <TableHead>{t("common.symbol")}</TableHead>
+              <TableHead>{t("currencies.base")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : currencies?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No currencies found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               currencies?.map((currency) => (
@@ -106,7 +106,7 @@ export default function CurrenciesPage() {
                   <TableCell>{currency.name}</TableCell>
                   <TableCell>{currency.symbol}</TableCell>
                   <TableCell>
-                    {currency.isBase && <Badge>Base</Badge>}
+                    {currency.isBase && <Badge>{t("currencies.base")}</Badge>}
                   </TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button variant="ghost" size="icon" onClick={() => setEditingCurrency(currency)}>
@@ -128,7 +128,7 @@ export default function CurrenciesPage() {
       <Dialog open={!!editingCurrency} onOpenChange={(open) => !open && setEditingCurrency(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Currency</DialogTitle>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
           </DialogHeader>
           {editingCurrency && (
             <CurrencyForm 
@@ -143,6 +143,7 @@ export default function CurrenciesPage() {
 }
 
 function CurrencyForm({ currency, onSuccess }: { currency?: Currency; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateCurrency();
@@ -184,7 +185,7 @@ function CurrencyForm({ currency, onSuccess }: { currency?: Currency; onSuccess:
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Code (e.g. SAR)</Label>
+        <Label>{t("currencies.code_hint")}</Label>
         <Input 
           value={formData.code} 
           onChange={(e) => setFormData({...formData, code: e.target.value})} 
@@ -193,7 +194,7 @@ function CurrencyForm({ currency, onSuccess }: { currency?: Currency; onSuccess:
         />
       </div>
       <div className="space-y-2">
-        <Label>Name</Label>
+        <Label>{t("common.name")}</Label>
         <Input 
           value={formData.name} 
           onChange={(e) => setFormData({...formData, name: e.target.value})} 
@@ -201,7 +202,7 @@ function CurrencyForm({ currency, onSuccess }: { currency?: Currency; onSuccess:
         />
       </div>
       <div className="space-y-2">
-        <Label>Symbol</Label>
+        <Label>{t("common.symbol")}</Label>
         <Input 
           value={formData.symbol} 
           onChange={(e) => setFormData({...formData, symbol: e.target.value})} 
@@ -209,9 +210,9 @@ function CurrencyForm({ currency, onSuccess }: { currency?: Currency; onSuccess:
         />
       </div>
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-          {currency ? "Update" : "Create"}
+          {currency ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

@@ -46,16 +46,16 @@ export default function RolesPage() {
   const deleteMutation = useDeleteRole();
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this role?")) {
+    if (confirm(t("common.delete_confirm"))) {
       deleteMutation.mutate(
         { id },
         {
           onSuccess: () => {
-            toast({ title: "Role deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListRolesQueryKey() });
           },
           onError: (err: any) => {
-            toast({ title: "Failed to delete role", description: err?.message, variant: "destructive" });
+            toast({ title: t("common.error"), description: err?.message, variant: "destructive" });
           }
         }
       );
@@ -86,21 +86,21 @@ export default function RolesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>System</TableHead>
-              <TableHead>Users</TableHead>
+              <TableHead>{t("common.name")}</TableHead>
+              <TableHead>{t("common.description")}</TableHead>
+              <TableHead>{t("roles.system")}</TableHead>
+              <TableHead>{t("roles.users")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : roles?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No roles found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               roles?.map((role) => (
@@ -108,7 +108,7 @@ export default function RolesPage() {
                   <TableCell className="font-medium">{role.name}</TableCell>
                   <TableCell>{role.description}</TableCell>
                   <TableCell>
-                    {role.isSystem && <Badge variant="secondary">System</Badge>}
+                    {role.isSystem && <Badge variant="secondary">{t("roles.system")}</Badge>}
                   </TableCell>
                   <TableCell>{role.userCount}</TableCell>
                   <TableCell className="text-right space-x-2">
@@ -131,7 +131,7 @@ export default function RolesPage() {
       <Dialog open={!!editingRole} onOpenChange={(open) => !open && setEditingRole(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Role</DialogTitle>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
           </DialogHeader>
           {editingRole && (
             <RoleForm 
@@ -146,6 +146,7 @@ export default function RolesPage() {
 }
 
 function RoleForm({ role, onSuccess }: { role?: Role; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateRole();
@@ -205,7 +206,7 @@ function RoleForm({ role, onSuccess }: { role?: Role; onSuccess: () => void }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Name</Label>
+          <Label>{t("common.name")}</Label>
           <Input 
             value={formData.name} 
             onChange={(e) => setFormData({...formData, name: e.target.value})} 
@@ -214,7 +215,7 @@ function RoleForm({ role, onSuccess }: { role?: Role; onSuccess: () => void }) {
           />
         </div>
         <div className="space-y-2">
-          <Label>Description</Label>
+          <Label>{t("common.description")}</Label>
           <Input 
             value={formData.description} 
             onChange={(e) => setFormData({...formData, description: e.target.value})} 
@@ -223,7 +224,7 @@ function RoleForm({ role, onSuccess }: { role?: Role; onSuccess: () => void }) {
       </div>
       
       <div className="space-y-2">
-        <Label>Permissions</Label>
+        <Label>{t("roles.permissions")}</Label>
         <ScrollArea className="h-[300px] border rounded-md p-4">
           {modules && Object.entries(modules).map(([module, perms]) => (
             <div key={module} className="mb-4">
@@ -247,9 +248,9 @@ function RoleForm({ role, onSuccess }: { role?: Role; onSuccess: () => void }) {
       </div>
 
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending || role?.isSystem}>
-          {role ? "Update" : "Create"}
+          {role ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

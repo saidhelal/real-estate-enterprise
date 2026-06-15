@@ -14,17 +14,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
-const METHOD = [
-  { value: "cash", label: "Cash" },
-  { value: "bank_transfer", label: "Bank Transfer" },
-  { value: "cheque", label: "Cheque" },
-  { value: "card", label: "Card" },
-];
+const METHOD = enumOptions(["cash", "bank_transfer", "cheque", "card"]);
 
 export default function ReservationPaymentsPage() {
-  useLanguage();
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: reservations } = useListReservations({ pageSize: 200 });
   const companyId = companies?.[0]?.id;
@@ -43,7 +39,7 @@ export default function ReservationPaymentsPage() {
   const columns: ResourceColumn<ReservationPayment>[] = [
     { header: "Date", headerAr: "التاريخ", render: (r) => r.paymentDate },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount ?? "-" },
-    { header: "Method", headerAr: "طريقة الدفع", render: (r) => <Badge variant="secondary">{r.method}</Badge> },
+    { header: "Method", headerAr: "طريقة الدفع", render: (r) => <Badge variant="secondary">{enumLabel(r.method, language)}</Badge> },
     { header: "Reference", headerAr: "المرجع", render: (r) => r.reference ?? "-" },
   ];
 

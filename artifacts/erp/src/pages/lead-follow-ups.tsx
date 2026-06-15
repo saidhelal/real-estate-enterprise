@@ -15,14 +15,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = [
-  { value: "pending", label: "Pending" },
-  { value: "done", label: "Done" },
-  { value: "cancelled", label: "Cancelled" },
-];
+const STATUS = enumOptions(["pending", "done", "cancelled"]);
 
 export default function LeadFollowUpsPage() {
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: leads } = useListLeads({ pageSize: 200 });
   const { data: users } = useListUsers();
@@ -42,7 +41,7 @@ export default function LeadFollowUpsPage() {
   const columns: ResourceColumn<LeadFollowUp>[] = [
     { header: "Due Date", headerAr: "تاريخ الاستحقاق", render: (r) => r.dueDate },
     { header: "Notes", headerAr: "ملاحظات", render: (r) => r.notes ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   return (

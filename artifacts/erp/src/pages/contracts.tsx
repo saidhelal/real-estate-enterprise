@@ -16,18 +16,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = [
-  { value: "draft", label: "Draft" },
-  { value: "active", label: "Active" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
-];
+const STATUS = enumOptions(["draft", "active", "completed", "cancelled"]);
 
 export default function ContractsPage() {
-  useLanguage();
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: branches } = useListBranches();
   const { data: reservations } = useListReservations({ pageSize: 200 });
@@ -57,7 +53,7 @@ export default function ContractsPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Date", headerAr: "التاريخ", render: (r) => r.contractDate },
     { header: "Total Price", headerAr: "السعر الإجمالي", render: (r) => r.totalPrice ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   return (

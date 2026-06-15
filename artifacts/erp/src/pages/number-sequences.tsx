@@ -43,16 +43,16 @@ export default function NumberSequencesPage() {
   const deleteMutation = useDeleteNumberSequence();
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this sequence?")) {
+    if (confirm(t("common.delete_confirm"))) {
       deleteMutation.mutate(
         { id },
         {
           onSuccess: () => {
-            toast({ title: "Sequence deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListNumberSequencesQueryKey() });
           },
           onError: () => {
-            toast({ title: "Failed to delete sequence", variant: "destructive" });
+            toast({ title: t("common.error"), variant: "destructive" });
           }
         }
       );
@@ -83,21 +83,21 @@ export default function NumberSequencesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Type</TableHead>
-              <TableHead>Prefix</TableHead>
-              <TableHead>Next</TableHead>
-              <TableHead>Sample</TableHead>
+              <TableHead>{t("common.type")}</TableHead>
+              <TableHead>{t("number_sequences.prefix")}</TableHead>
+              <TableHead>{t("number_sequences.next")}</TableHead>
+              <TableHead>{t("number_sequences.sample")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : sequences?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No sequences found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               sequences?.map((seq) => (
@@ -124,7 +124,7 @@ export default function NumberSequencesPage() {
       <Dialog open={!!editingSequence} onOpenChange={(open) => !open && setEditingSequence(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Sequence</DialogTitle>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
           </DialogHeader>
           {editingSequence && (
             <SequenceForm 
@@ -139,6 +139,7 @@ export default function NumberSequencesPage() {
 }
 
 function SequenceForm({ sequence, onSuccess }: { sequence?: NumberSequence; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateNumberSequence();
@@ -182,7 +183,7 @@ function SequenceForm({ sequence, onSuccess }: { sequence?: NumberSequence; onSu
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Document Type</Label>
+        <Label>{t("number_sequences.document_type")}</Label>
         <Input 
           value={formData.documentType} 
           onChange={(e) => setFormData({...formData, documentType: e.target.value})} 
@@ -191,7 +192,7 @@ function SequenceForm({ sequence, onSuccess }: { sequence?: NumberSequence; onSu
         />
       </div>
       <div className="space-y-2">
-        <Label>Prefix (e.g. INV-)</Label>
+        <Label>{t("number_sequences.prefix_hint")}</Label>
         <Input 
           value={formData.prefix} 
           onChange={(e) => setFormData({...formData, prefix: e.target.value})} 
@@ -200,7 +201,7 @@ function SequenceForm({ sequence, onSuccess }: { sequence?: NumberSequence; onSu
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Next Number</Label>
+          <Label>{t("number_sequences.next_number")}</Label>
           <Input 
             type="number"
             value={formData.nextNumber} 
@@ -209,7 +210,7 @@ function SequenceForm({ sequence, onSuccess }: { sequence?: NumberSequence; onSu
           />
         </div>
         <div className="space-y-2">
-          <Label>Padding</Label>
+          <Label>{t("number_sequences.padding")}</Label>
           <Input 
             type="number"
             value={formData.padding} 
@@ -226,13 +227,13 @@ function SequenceForm({ sequence, onSuccess }: { sequence?: NumberSequence; onSu
           checked={formData.resetYearly} 
           onCheckedChange={(checked) => setFormData({...formData, resetYearly: !!checked})}
         />
-        <label htmlFor="resetYearly" className="text-sm">Reset counter yearly</label>
+        <label htmlFor="resetYearly" className="text-sm">{t("number_sequences.reset_yearly")}</label>
       </div>
       
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-          {sequence ? "Update" : "Create"}
+          {sequence ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

@@ -50,11 +50,11 @@ export default function UsersPage() {
         { id },
         {
           onSuccess: () => {
-            toast({ title: "User deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListUsersQueryKey() });
           },
           onError: () => {
-            toast({ title: "Failed to delete user", variant: "destructive" });
+            toast({ title: t("common.error"), variant: "destructive" });
           }
         }
       );
@@ -96,21 +96,21 @@ export default function UsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Username</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("common.name")}</TableHead>
+              <TableHead>{t("common.username")}</TableHead>
+              <TableHead>{t("common.email")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : users?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No users found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               users?.map((user) => (
@@ -156,6 +156,7 @@ export default function UsersPage() {
 }
 
 function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateUser();
@@ -175,7 +176,7 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
         { id: user.id, data: { fullName: formData.fullName, email: formData.email } },
         {
           onSuccess: () => {
-            toast({ title: "User updated" });
+            toast({ title: t("common.saved") });
             queryClient.invalidateQueries({ queryKey: getListUsersQueryKey() });
             onSuccess();
           }
@@ -186,7 +187,7 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
         { data: formData as UserInput },
         {
           onSuccess: () => {
-            toast({ title: "User created" });
+            toast({ title: t("common.created") });
             queryClient.invalidateQueries({ queryKey: getListUsersQueryKey() });
             onSuccess();
           }
@@ -198,7 +199,7 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Full Name</Label>
+        <Label>{t("common.full_name")}</Label>
         <Input 
           value={formData.fullName} 
           onChange={(e) => setFormData({...formData, fullName: e.target.value})} 
@@ -207,7 +208,7 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
       </div>
       {!user && (
         <div className="space-y-2">
-          <Label>Username</Label>
+          <Label>{t("common.username")}</Label>
           <Input 
             value={formData.username} 
             onChange={(e) => setFormData({...formData, username: e.target.value})} 
@@ -216,7 +217,7 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
         </div>
       )}
       <div className="space-y-2">
-        <Label>Email</Label>
+        <Label>{t("common.email")}</Label>
         <Input 
           type="email" 
           value={formData.email} 
@@ -226,7 +227,7 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
       </div>
       {!user && (
         <div className="space-y-2">
-          <Label>Password</Label>
+          <Label>{t("common.password")}</Label>
           <Input 
             type="password" 
             value={formData.password} 
@@ -236,9 +237,9 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
         </div>
       )}
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-          {user ? "Update" : "Create"}
+          {user ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

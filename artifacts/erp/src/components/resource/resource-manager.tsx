@@ -35,6 +35,7 @@ export type FieldType = "text" | "textarea" | "number" | "money" | "date" | "sel
 export interface SelectOption {
   value: string;
   label: string;
+  labelAr?: string;
 }
 
 export interface ResourceField {
@@ -411,7 +412,7 @@ function ResourceForm<T extends { id: string }>({
                     {!f.required && <SelectItem value={NONE}>—</SelectItem>}
                     {(f.options ?? []).map((o) => (
                       <SelectItem key={o.value} value={o.value}>
-                        {o.label}
+                        {language === "ar" && o.labelAr ? o.labelAr : o.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

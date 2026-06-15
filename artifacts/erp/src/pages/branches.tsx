@@ -56,16 +56,16 @@ export default function BranchesPage() {
   const deleteMutation = useDeleteBranch();
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this branch?")) {
+    if (confirm(t("common.delete_confirm"))) {
       deleteMutation.mutate(
         { id },
         {
           onSuccess: () => {
-            toast({ title: "Branch deleted" });
+            toast({ title: t("common.deleted") });
             queryClient.invalidateQueries({ queryKey: getListBranchesQueryKey() });
           },
           onError: () => {
-            toast({ title: "Failed to delete branch", variant: "destructive" });
+            toast({ title: t("common.error"), variant: "destructive" });
           }
         }
       );
@@ -79,10 +79,10 @@ export default function BranchesPage() {
           <h2 className="text-2xl font-bold tracking-tight">{t("branches.title")}</h2>
           <Select value={selectedCompany} onValueChange={setSelectedCompany}>
             <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Filter by company" />
+              <SelectValue placeholder={t("branches.filter_company")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Companies</SelectItem>
+              <SelectItem value="all">{t("branches.all_companies")}</SelectItem>
               {companies?.map(c => (
                 <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
               ))}
@@ -109,22 +109,22 @@ export default function BranchesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Manager</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("common.code")}</TableHead>
+              <TableHead>{t("common.name")}</TableHead>
+              <TableHead>{t("common.company")}</TableHead>
+              <TableHead>{t("common.manager")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
               <TableHead className="text-right">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={6} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : branches?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">No branches found</TableCell>
+                <TableCell colSpan={6} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               branches?.map((branch) => (
@@ -156,7 +156,7 @@ export default function BranchesPage() {
       <Dialog open={!!editingBranch} onOpenChange={(open) => !open && setEditingBranch(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Branch</DialogTitle>
+            <DialogTitle>{t("common.edit")}</DialogTitle>
           </DialogHeader>
           {editingBranch && (
             <BranchForm 
@@ -171,6 +171,7 @@ export default function BranchesPage() {
 }
 
 function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => void }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMutation = useCreateBranch();
@@ -215,14 +216,14 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Company</Label>
+        <Label>{t("common.company")}</Label>
         <Select 
           value={formData.companyId} 
           onValueChange={(val) => setFormData({...formData, companyId: val})}
           disabled={!!branch}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select a company" />
+            <SelectValue placeholder={t("branches.select_company")} />
           </SelectTrigger>
           <SelectContent>
             {companies?.map(c => (
@@ -232,7 +233,7 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
         </Select>
       </div>
       <div className="space-y-2">
-        <Label>Code</Label>
+        <Label>{t("common.code")}</Label>
         <Input 
           value={formData.code} 
           onChange={(e) => setFormData({...formData, code: e.target.value})} 
@@ -241,7 +242,7 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
         />
       </div>
       <div className="space-y-2">
-        <Label>Name (English)</Label>
+        <Label>{t("common.name")}</Label>
         <Input 
           value={formData.name} 
           onChange={(e) => setFormData({...formData, name: e.target.value})} 
@@ -249,7 +250,7 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
         />
       </div>
       <div className="space-y-2">
-        <Label>Name (Arabic)</Label>
+        <Label>{t("common.name_ar")}</Label>
         <Input 
           value={formData.nameAr} 
           onChange={(e) => setFormData({...formData, nameAr: e.target.value})} 
@@ -258,16 +259,16 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
         />
       </div>
       <div className="space-y-2">
-        <Label>Manager</Label>
+        <Label>{t("common.manager")}</Label>
         <Input 
           value={formData.manager} 
           onChange={(e) => setFormData({...formData, manager: e.target.value})} 
         />
       </div>
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={onSuccess}>{t("common.cancel")}</Button>
         <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-          {branch ? "Update" : "Create"}
+          {branch ? t("common.update") : t("common.create")}
         </Button>
       </div>
     </form>

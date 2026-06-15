@@ -12,13 +12,11 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const PENALTY_TYPE = [
-  { value: "fixed", label: "Fixed" },
-  { value: "percentage", label: "Percentage" },
-];
+const PENALTY_TYPE = enumOptions(["fixed", "percentage"]);
 
 export default function PenaltyRulesPage() {
   const { language } = useLanguage();
@@ -38,7 +36,7 @@ export default function PenaltyRulesPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Name", headerAr: "الاسم", render: (r) => (language === "ar" ? r.nameAr : r.name) },
     { header: "Days After Due", headerAr: "الأيام بعد الاستحقاق", render: (r) => r.daysAfterDue },
-    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{r.penaltyType}</Badge> },
+    { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{enumLabel(r.penaltyType, language)}</Badge> },
     { header: "Value", headerAr: "القيمة", render: (r) => r.penaltyValue },
   ];
 

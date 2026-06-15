@@ -13,16 +13,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = [
-  { value: "pending", label: "Pending" },
-  { value: "partial", label: "Partial" },
-  { value: "paid", label: "Paid" },
-  { value: "overdue", label: "Overdue" },
-];
+const STATUS = enumOptions(["pending", "partial", "paid", "overdue"]);
 
 export default function InstallmentSchedulesPage() {
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: plans } = useListInstallmentPlans({ pageSize: 200 });
   const companyId = companies?.[0]?.id;
@@ -42,7 +40,7 @@ export default function InstallmentSchedulesPage() {
     { header: "Due Date", headerAr: "تاريخ الاستحقاق", render: (r) => r.dueDate },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount },
     { header: "Paid Amount", headerAr: "المبلغ المدفوع", render: (r) => r.paidAmount },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{r.status}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
   ];
 
   return (

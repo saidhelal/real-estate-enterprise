@@ -33,12 +33,12 @@ export default function AuditLogsPage() {
 
       <div className="flex gap-4 max-w-lg">
         <Input 
-          placeholder="Filter by entity (e.g. users)"
+          placeholder={t("audit_logs.filter_entity")}
           value={entityFilter}
           onChange={e => setEntityFilter(e.target.value)}
         />
         <Input 
-          placeholder="Filter by action (e.g. update)"
+          placeholder={t("audit_logs.filter_action")}
           value={actionFilter}
           onChange={e => setActionFilter(e.target.value)}
         />
@@ -48,21 +48,21 @@ export default function AuditLogsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Timestamp</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Action</TableHead>
-              <TableHead>Entity</TableHead>
-              <TableHead>Details</TableHead>
+              <TableHead>{t("common.timestamp")}</TableHead>
+              <TableHead>{t("common.user")}</TableHead>
+              <TableHead>{t("common.action")}</TableHead>
+              <TableHead>{t("common.entity")}</TableHead>
+              <TableHead>{t("common.details")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">Loading...</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
               </TableRow>
             ) : logs?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No audit logs found</TableCell>
+                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
               </TableRow>
             ) : (
               logs?.map((log) => (

@@ -14,16 +14,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/lib/language-provider";
 
-const METHOD = [
-  { value: "cash", label: "Cash" },
-  { value: "bank_transfer", label: "Bank Transfer" },
-  { value: "cheque", label: "Cheque" },
-  { value: "card", label: "Card" },
-];
+const METHOD = enumOptions(["cash", "bank_transfer", "cheque", "card"]);
 
 export default function InstallmentCollectionsPage() {
+  const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: schedules } = useListInstallmentSchedules({ pageSize: 200 });
   const { data: users } = useListUsers();
@@ -46,7 +44,7 @@ export default function InstallmentCollectionsPage() {
   const columns: ResourceColumn<InstallmentCollection>[] = [
     { header: "Amount", headerAr: "المبلغ", render: (r) => <span className="font-medium">{r.amount}</span> },
     { header: "Collection Date", headerAr: "تاريخ التحصيل", render: (r) => r.collectionDate },
-    { header: "Method", headerAr: "طريقة الدفع", render: (r) => <Badge variant="secondary">{r.method}</Badge> },
+    { header: "Method", headerAr: "طريقة الدفع", render: (r) => <Badge variant="secondary">{enumLabel(r.method, language)}</Badge> },
     { header: "Reference", headerAr: "المرجع", render: (r) => r.reference ?? "-" },
   ];
 
