@@ -23,11 +23,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButtons } from "@/components/report-export-buttons";
+import type { ReportDoc } from "@/lib/report-export";
 
 export default function GeneralLedgerPage() {
   const { language, t } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
+  const company = companies?.[0];
   const { data: accounts } = useListAccounts({ pageSize: 500 });
   const accountList = accounts?.data ?? [];
 
@@ -45,10 +48,56 @@ export default function GeneralLedgerPage() {
     query: { enabled: !!companyId && !!accountId, queryKey: getGetGeneralLedgerQueryKey(params) },
   });
   const rows = data?.data ?? [];
+  const account = accountList.find((a) => a.id === accountId);
+
+  const buildDoc = (): ReportDoc => {
+    const meta = [{ label: t("export.generated"), value: new Date().toLocaleString() }];
+    if (account) meta.push({ label: t("acc.account"), value: `${account.code} - ${(language === "ar" ? account.nameAr : account.name) ?? ""}` });
+    if (fromDate) meta.push({ label: t("export.from"), value: fromDate });
+    if (toDate) meta.push({ label: t("export.to"), value: toDate });
+    if (data) {
+      meta.push({ label: t("acc.opening_balance"), value: data.openingBalance });
+      meta.push({ label: t("acc.closing_balance"), value: data.closingBalance });
+    }
+    return {
+      title: t("nav.general_ledger"),
+      companyName: (language === "ar" ? company?.nameAr ?? company?.name : company?.name) ?? "",
+      meta,
+      rtl: language === "ar",
+      sections: [
+        {
+          columns: [
+            { header: t("common.code") },
+            { header: t("acc.entry_date") },
+            { header: t("acc.description") },
+            { header: t("acc.debit"), align: "right", numeric: true },
+            { header: t("acc.credit"), align: "right", numeric: true },
+            { header: t("acc.balance"), align: "right", numeric: true },
+          ],
+          rows: rows.map((r) => [
+            r.entryNumber,
+            r.entryDate,
+            r.description ?? "",
+            r.debit,
+            r.credit,
+            r.balance,
+          ]),
+        },
+      ],
+    };
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.general_ledger")}</h2>
+      <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+        <h2 className="text-2xl font-bold tracking-tight">{t("nav.general_ledger")}</h2>
+        <ReportExportButtons
+          disabled={!data || rows.length === 0}
+          filename="general-ledger"
+          buildDoc={buildDoc}
+          audit={{ reportType: "general-ledger", companyId, accountId: accountId || undefined, fromDate: fromDate || undefined, toDate: toDate || undefined }}
+        />
+      </div>
 
       <div className="flex flex-wrap gap-4 items-end">
         <div className="space-y-2 min-w-64">

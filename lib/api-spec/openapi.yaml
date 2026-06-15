@@ -5515,6 +5515,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountingDashboardResponse"
 
+  /reports/export-audit:
+    post:
+      operationId: recordReportExport
+      tags: [accountingReports]
+      summary: Record an audit log entry for an accounting report export (Excel/PDF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportExportInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
 
 components:
   parameters:
@@ -5543,6 +5562,22 @@ components:
       required: [success]
       properties:
         success: { type: boolean }
+
+    ReportExportInput:
+      type: object
+      required: [reportType, format]
+      properties:
+        reportType:
+          type: string
+          enum: [trial-balance, general-ledger, balance-sheet, income-statement, cash-flow]
+        format:
+          type: string
+          enum: [excel, pdf]
+        companyId: { type: ["string", "null"] }
+        fromDate: { type: ["string", "null"] }
+        toDate: { type: ["string", "null"] }
+        asOfDate: { type: ["string", "null"] }
+        accountId: { type: ["string", "null"] }
 
     LoginInput:
       type: object

@@ -263,6 +263,7 @@ import type {
   ReceiptInput,
   ReceiptListResponse,
   ReceiptUpdate,
+  ReportExportInput,
   Reservation,
   ReservationDocument,
   ReservationDocumentInput,
@@ -22945,4 +22946,75 @@ export function useGetAccountingDashboard<TData = Awaited<ReturnType<typeof getA
 
 
 
+
+export const getRecordReportExportUrl = () => {
+
+
+
+
+  return `/api/reports/export-audit`
+}
+
+/**
+ * @summary Record an audit log entry for an accounting report export (Excel/PDF)
+ */
+export const recordReportExport = async (reportExportInput: ReportExportInput, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getRecordReportExportUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      reportExportInput,)
+  }
+);}
+
+
+
+
+export const getRecordReportExportMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordReportExport>>, TError,{data: BodyType<ReportExportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordReportExport>>, TError,{data: BodyType<ReportExportInput>}, TContext> => {
+
+const mutationKey = ['recordReportExport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordReportExport>>, {data: BodyType<ReportExportInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recordReportExport(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordReportExportMutationResult = NonNullable<Awaited<ReturnType<typeof recordReportExport>>>
+    export type RecordReportExportMutationBody = BodyType<ReportExportInput>
+    export type RecordReportExportMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Record an audit log entry for an accounting report export (Excel/PDF)
+ */
+export const useRecordReportExport = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordReportExport>>, TError,{data: BodyType<ReportExportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordReportExport>>,
+        TError,
+        {data: BodyType<ReportExportInput>},
+        TContext
+      > => {
+      return useMutation(getRecordReportExportMutationOptions(options));
+    }
 

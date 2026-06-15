@@ -49,6 +49,7 @@ import {
   GetCashFlowResponse,
   GetBudgetVsActualResponse,
   GetAccountingDashboardResponse,
+  RecordReportExportBody,
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
@@ -1035,6 +1036,19 @@ router.get("/accounting/dashboard", requirePermission("accountingReports.view"),
     openPeriodCount,
     recentEntries: recent.map(serializeRow),
   }));
+});
+
+router.post("/reports/export-audit", requirePermission("accountingReports.export"), async (req, res): Promise<void> => {
+  const parsed = RecordReportExportBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Invalid body" }); return; }
+  const { reportType, format, ...filters } = parsed.data;
+  await recordAudit(req, {
+    action: "export",
+    entity: "accountingReport",
+    entityId: reportType,
+    newValue: { format, filters },
+  });
+  res.json({ success: true });
 });
 
 export default router;

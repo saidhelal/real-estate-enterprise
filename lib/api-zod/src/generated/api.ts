@@ -6879,3 +6879,21 @@ export const GetAccountingDashboardResponse = zod.object({
 })
 
 
+/**
+ * @summary Record an audit log entry for an accounting report export (Excel/PDF)
+ */
+export const RecordReportExportBody = zod.object({
+  "reportType": zod.enum(['trial-balance', 'general-ledger', 'balance-sheet', 'income-statement', 'cash-flow']),
+  "format": zod.enum(['excel', 'pdf']),
+  "companyId": zod.string().nullish(),
+  "fromDate": zod.string().nullish(),
+  "toDate": zod.string().nullish(),
+  "asOfDate": zod.string().nullish(),
+  "accountId": zod.string().nullish()
+})
+
+export const RecordReportExportResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

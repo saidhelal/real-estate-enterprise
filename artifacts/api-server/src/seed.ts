@@ -98,7 +98,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "journalEntries", label: "Journal Entries", extraActions: ["post", "approve", "reverse"] },
   { module: "accountMappings", label: "Account Mappings" },
   { module: "budgets", label: "Budgets" },
-  { module: "accountingReports", label: "Accounting Reports" },
+  { module: "accountingReports", label: "Accounting Reports", extraActions: ["export"] },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

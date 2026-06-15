@@ -9,4 +9,5 @@
 - [Generic JSX breaks dev plugin](generic-jsx-cartographer.md) — `<Comp<T>>` typechecks but 500s in Vite; drop the type arg, infer from props.
 - [Route path casing](route-path-casing.md) — Express path strings must match OpenAPI kebab-case keys or the generated client 404s despite green typecheck.
 - [ERP i18n / enum localization](erp-i18n.md) — UI chrome uses t() (provider, EN/AR parity); enum options/badges use central lib/enums.ts ENUM_LABELS — new enum values must go there.
+- [Orval body naming](orval-body-naming.md) — name OpenAPI request-body schemas as nouns (not *Body) to avoid operationId-derived collisions; OkResponse is type-only, don't .parse it.
 - [Accounting reversal & reports](accounting-reversal-reports.md) — ledger aggregations must count status IN (posted,reversed) or reversals leave a phantom balance; auto-posting is idempotent per (sourceType,sourceId).

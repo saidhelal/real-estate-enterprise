@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButtons } from "@/components/report-export-buttons";
+import type { ReportDoc, ReportSection } from "@/lib/report-export";
 
 interface StatementRow {
   accountId: string;
@@ -63,6 +65,7 @@ export default function IncomeStatementPage() {
   const { language, t } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
+  const company = companies?.[0];
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -71,9 +74,53 @@ export default function IncomeStatementPage() {
     query: { enabled: !!companyId, queryKey: getGetIncomeStatementQueryKey(params) },
   });
 
+  const buildDoc = (): ReportDoc => {
+    const meta = [{ label: t("export.generated"), value: new Date().toLocaleString() }];
+    if (fromDate) meta.push({ label: t("export.from"), value: fromDate });
+    if (toDate) meta.push({ label: t("export.to"), value: toDate });
+    const section = (title: string, secRows: StatementRow[], total: string): ReportSection => ({
+      title,
+      columns: [
+        { header: t("common.code") },
+        { header: language === "ar" ? "الحساب" : "Account" },
+        { header: language === "ar" ? "المبلغ" : "Amount", align: "right", numeric: true },
+      ],
+      rows: secRows.map((r) => [r.code, (language === "ar" ? r.nameAr : r.name) ?? "", r.amount]),
+      footer: [language === "ar" ? "الإجمالي" : "Total", "", total],
+    });
+    return {
+      title: t("nav.income_statement"),
+      companyName: (language === "ar" ? company?.nameAr ?? company?.name : company?.name) ?? "",
+      meta,
+      rtl: language === "ar",
+      sections: data
+        ? [
+            section(t("acc.revenue"), data.revenue, data.totalRevenue),
+            section(t("acc.expenses"), data.expenses, data.totalExpenses),
+            {
+              title: t("acc.net_income"),
+              columns: [
+                { header: t("acc.net_income") },
+                { header: "", align: "right", numeric: true },
+              ],
+              rows: [[t("acc.net_income"), data.netIncome]],
+            },
+          ]
+        : [],
+    };
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.income_statement")}</h2>
+      <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+        <h2 className="text-2xl font-bold tracking-tight">{t("nav.income_statement")}</h2>
+        <ReportExportButtons
+          disabled={!data}
+          filename="income-statement"
+          buildDoc={buildDoc}
+          audit={{ reportType: "income-statement", companyId, fromDate: fromDate || undefined, toDate: toDate || undefined }}
+        />
+      </div>
 
       <div className="flex flex-wrap gap-4">
         <div className="space-y-2">

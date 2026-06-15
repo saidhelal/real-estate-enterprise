@@ -17,6 +17,40 @@ export interface OkResponse {
   success: boolean;
 }
 
+export type ReportExportInputReportType = typeof ReportExportInputReportType[keyof typeof ReportExportInputReportType];
+
+
+export const ReportExportInputReportType = {
+  'trial-balance': 'trial-balance',
+  'general-ledger': 'general-ledger',
+  'balance-sheet': 'balance-sheet',
+  'income-statement': 'income-statement',
+  'cash-flow': 'cash-flow',
+} as const;
+
+export type ReportExportInputFormat = typeof ReportExportInputFormat[keyof typeof ReportExportInputFormat];
+
+
+export const ReportExportInputFormat = {
+  excel: 'excel',
+  pdf: 'pdf',
+} as const;
+
+export interface ReportExportInput {
+  reportType: ReportExportInputReportType;
+  format: ReportExportInputFormat;
+  /** @nullable */
+  companyId?: string | null;
+  /** @nullable */
+  fromDate?: string | null;
+  /** @nullable */
+  toDate?: string | null;
+  /** @nullable */
+  asOfDate?: string | null;
+  /** @nullable */
+  accountId?: string | null;
+}
+
 export interface LoginInput {
   /** @minLength 1 */
   username: string;

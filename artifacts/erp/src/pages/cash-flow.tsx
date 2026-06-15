@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButtons } from "@/components/report-export-buttons";
+import type { ReportDoc, ReportSection } from "@/lib/report-export";
 
 interface StatementRow {
   accountId: string;
@@ -63,6 +65,7 @@ export default function CashFlowPage() {
   const { language, t } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
+  const company = companies?.[0];
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -71,9 +74,54 @@ export default function CashFlowPage() {
     query: { enabled: !!companyId, queryKey: getGetCashFlowQueryKey(params) },
   });
 
+  const buildDoc = (): ReportDoc => {
+    const meta = [{ label: t("export.generated"), value: new Date().toLocaleString() }];
+    if (fromDate) meta.push({ label: t("export.from"), value: fromDate });
+    if (toDate) meta.push({ label: t("export.to"), value: toDate });
+    const section = (title: string, secRows: StatementRow[]): ReportSection => ({
+      title,
+      columns: [
+        { header: t("common.code") },
+        { header: language === "ar" ? "الحساب" : "Account" },
+        { header: language === "ar" ? "المبلغ" : "Amount", align: "right", numeric: true },
+      ],
+      rows: secRows.map((r) => [r.code, (language === "ar" ? r.nameAr : r.name) ?? "", r.amount]),
+    });
+    return {
+      title: t("nav.cash_flow"),
+      companyName: (language === "ar" ? company?.nameAr ?? company?.name : company?.name) ?? "",
+      meta,
+      rtl: language === "ar",
+      sections: data
+        ? [
+            section(t("acc.operating"), data.operating),
+            section(t("acc.investing"), data.investing),
+            section(t("acc.financing"), data.financing),
+            {
+              title: t("acc.net_change"),
+              columns: [{ header: "" }, { header: "", align: "right", numeric: true }],
+              rows: [
+                [t("acc.opening_cash"), data.openingCash],
+                [t("acc.net_change"), data.netChange],
+                [t("acc.closing_cash"), data.closingCash],
+              ],
+            },
+          ]
+        : [],
+    };
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.cash_flow")}</h2>
+      <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+        <h2 className="text-2xl font-bold tracking-tight">{t("nav.cash_flow")}</h2>
+        <ReportExportButtons
+          disabled={!data}
+          filename="cash-flow"
+          buildDoc={buildDoc}
+          audit={{ reportType: "cash-flow", companyId, fromDate: fromDate || undefined, toDate: toDate || undefined }}
+        />
+      </div>
 
       <div className="flex flex-wrap gap-4">
         <div className="space-y-2">

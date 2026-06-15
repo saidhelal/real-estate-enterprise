@@ -18,11 +18,14 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
+import { ReportExportButtons } from "@/components/report-export-buttons";
+import type { ReportDoc } from "@/lib/report-export";
 
 export default function TrialBalancePage() {
   const { language, t } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
+  const company = companies?.[0];
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -33,15 +36,54 @@ export default function TrialBalancePage() {
   const rows = data?.rows ?? [];
   const balanced = data ? data.totalDebit === data.totalCredit : false;
 
+  const buildDoc = (): ReportDoc => {
+    const meta = [{ label: t("export.generated"), value: new Date().toLocaleString() }];
+    if (fromDate) meta.push({ label: t("export.from"), value: fromDate });
+    if (toDate) meta.push({ label: t("export.to"), value: toDate });
+    return {
+      title: t("nav.trial_balance"),
+      companyName: (language === "ar" ? company?.nameAr ?? company?.name : company?.name) ?? "",
+      meta,
+      rtl: language === "ar",
+      sections: [
+        {
+          columns: [
+            { header: t("common.code") },
+            { header: t("common.name") },
+            { header: t("acc.type") },
+            { header: t("acc.debit"), align: "right", numeric: true },
+            { header: t("acc.credit"), align: "right", numeric: true },
+          ],
+          rows: rows.map((r) => [
+            r.code,
+            (language === "ar" ? r.nameAr : r.name) ?? "",
+            enumLabel(r.type, language),
+            r.debit,
+            r.credit,
+          ]),
+          footer: data ? [t("common.total"), "", "", data.totalDebit, data.totalCredit] : undefined,
+        },
+      ],
+    };
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
         <h2 className="text-2xl font-bold tracking-tight">{t("nav.trial_balance")}</h2>
-        {data && (
-          <Badge variant={balanced ? "default" : "destructive"}>
-            {balanced ? t("acc.balanced") : t("acc.not_balanced")}
-          </Badge>
-        )}
+        <div className="flex items-center gap-3">
+          {data && (
+            <Badge variant={balanced ? "default" : "destructive"}>
+              {balanced ? t("acc.balanced") : t("acc.not_balanced")}
+            </Badge>
+          )}
+          <ReportExportButtons
+            disabled={!data || rows.length === 0}
+            filename="trial-balance"
+            buildDoc={buildDoc}
+            audit={{ reportType: "trial-balance", companyId, fromDate: fromDate || undefined, toDate: toDate || undefined }}
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-4">
