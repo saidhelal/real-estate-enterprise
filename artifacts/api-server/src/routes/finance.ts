@@ -44,6 +44,14 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
+
+// Map a receipt payment method to the account-mapping event key.
+const RECEIPT_EVENT: Record<string, string> = {
+  cash: "receipt.cash",
+  bank_transfer: "receipt.bank",
+  cheque: "receipt.cheque",
+};
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -164,6 +172,21 @@ router.post("/treasury-transactions", requirePermission("treasuryTransactions.cr
     await tx.update(cashboxesTable)
       .set({ currentBalance: balance })
       .where(eq(cashboxesTable.id, data.cashboxId));
+    // Post a JE only for standalone treasury movements; receipt-linked ones are
+    // posted via the receipt to avoid double counting.
+    if (!data.receiptId) {
+      await postAutomaticEntry(tx, {
+        companyId: data.companyId,
+        eventKey: data.type === "out" ? "treasury.out" : "treasury.in",
+        amount,
+        entryDate: data.transactionDate,
+        description: data.description ?? `Treasury ${data.type}`,
+        reference: data.reference ?? null,
+        sourceType: "treasuryTransaction",
+        sourceId: created.id,
+        userId: req.authUser?.id ?? null,
+      });
+    }
     return created;
   });
   await recordAudit(req, { action: "create", entity: "treasuryTransaction", entityId: row.id, newValue: row });
@@ -204,6 +227,7 @@ router.delete("/treasury-transactions/:id", requirePermission("treasuryTransacti
       ? sql`${cashboxesTable.currentBalance} - ${amount}::numeric`
       : sql`${cashboxesTable.currentBalance} + ${amount}::numeric`;
     await tx.update(cashboxesTable).set({ currentBalance: balance }).where(eq(cashboxesTable.id, existing.cashboxId));
+    await reverseAutomaticEntriesForSource(tx, "treasuryTransaction", existing.id, req.authUser?.id ?? null);
     return existing;
   });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
@@ -306,6 +330,21 @@ router.post("/bank-transactions", requirePermission("bankTransactions.create"), 
     await tx.update(bankAccountsTable)
       .set({ currentBalance: balance })
       .where(eq(bankAccountsTable.id, data.bankAccountId));
+    // Post a JE only for standalone bank movements; receipt-linked ones are
+    // posted via the receipt to avoid double counting.
+    if (!data.receiptId) {
+      await postAutomaticEntry(tx, {
+        companyId: data.companyId,
+        eventKey: data.type === "out" ? "bank.out" : "bank.in",
+        amount,
+        entryDate: data.transactionDate,
+        description: data.description ?? `Bank ${data.type}`,
+        reference: data.reference ?? null,
+        sourceType: "bankTransaction",
+        sourceId: created.id,
+        userId: req.authUser?.id ?? null,
+      });
+    }
     return created;
   });
   await recordAudit(req, { action: "create", entity: "bankTransaction", entityId: row.id, newValue: row });
@@ -345,6 +384,7 @@ router.delete("/bank-transactions/:id", requirePermission("bankTransactions.dele
       ? sql`${bankAccountsTable.currentBalance} - ${amount}::numeric`
       : sql`${bankAccountsTable.currentBalance} + ${amount}::numeric`;
     await tx.update(bankAccountsTable).set({ currentBalance: balance }).where(eq(bankAccountsTable.id, existing.bankAccountId));
+    await reverseAutomaticEntriesForSource(tx, "bankTransaction", existing.id, req.authUser?.id ?? null);
     return existing;
   });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
@@ -422,6 +462,21 @@ router.post("/receipts", requirePermission("receipts.create"), async (req, res):
           .set({ currentBalance: sql`${bankAccountsTable.currentBalance} + ${amount}::numeric` })
           .where(eq(bankAccountsTable.id, data.bankAccountId));
       }
+
+      // Automatic ledger posting (best-effort; skipped if accounting is unconfigured).
+      const eventKey = (data.paymentMethod ? RECEIPT_EVENT[data.paymentMethod] : undefined) ?? "receipt.bank";
+      await postAutomaticEntry(tx, {
+        companyId: data.companyId,
+        branchId: data.branchId ?? null,
+        eventKey,
+        amount,
+        entryDate: data.receiptDate,
+        description: `Receipt ${created.code}`,
+        reference: created.code,
+        sourceType: "receipt",
+        sourceId: created.id,
+        userId: req.authUser?.id ?? null,
+      });
     }
     return created;
   });
@@ -478,6 +533,8 @@ router.delete("/receipts/:id", requirePermission("receipts.delete"), async (req,
         await tx.update(bankAccountsTable).set({ currentBalance: sql`${bankAccountsTable.currentBalance} - ${amount}::numeric` }).where(eq(bankAccountsTable.id, existing.bankAccountId));
         await tx.update(bankTransactionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(bankTransactionsTable.receiptId, existing.id), eq(bankTransactionsTable.isDeleted, false)));
       }
+      // Reverse any automatic ledger entries posted for this receipt.
+      await reverseAutomaticEntriesForSource(tx, "receipt", existing.id, req.authUser?.id ?? null);
     }
     return existing;
   });

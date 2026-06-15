@@ -34,6 +34,22 @@ tags:
     description: Audit and activity logs
   - name: dashboard
     description: Dashboard aggregates
+  - name: accounts
+    description: Chart of accounts
+  - name: costCenters
+    description: Cost centers
+  - name: fiscalPeriods
+    description: Fiscal periods
+  - name: journalEntries
+    description: Journal entries
+  - name: accountMappings
+    description: Account mappings for automatic posting
+  - name: budgets
+    description: Budgets
+  - name: budgetLines
+    description: Budget lines
+  - name: accountingReports
+    description: Accounting reports and dashboard
 paths:
   /healthz:
     get:
@@ -4605,6 +4621,901 @@ paths:
                 $ref: "#/components/schemas/CalculatePenaltiesResult"
 
 
+
+  /accounts:
+    get:
+      operationId: listAccounts
+      tags: [accounts]
+      summary: List accounts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: type, in: query, required: false, schema: { type: string } }
+        - { name: parentId, in: query, required: false, schema: { type: string } }
+        - { name: isPostable, in: query, required: false, schema: { type: boolean } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Accounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountListResponse"
+    post:
+      operationId: createAccount
+      tags: [accounts]
+      summary: Create a Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+
+  /accounts/{id}:
+    get:
+      operationId: getAccount
+      tags: [accounts]
+      summary: Get a Account
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAccount
+      tags: [accounts]
+      summary: Update a Account
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+    delete:
+      operationId: deleteAccount
+      tags: [accounts]
+      summary: Soft-delete a Account
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /cost-centers:
+    get:
+      operationId: listCostCenters
+      tags: [costCenters]
+      summary: List cost-centers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: kind, in: query, required: false, schema: { type: string } }
+        - { name: parentId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CostCenters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostCenterListResponse"
+    post:
+      operationId: createCostCenter
+      tags: [costCenters]
+      summary: Create a CostCenter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostCenterInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostCenter"
+
+  /cost-centers/{id}:
+    get:
+      operationId: getCostCenter
+      tags: [costCenters]
+      summary: Get a CostCenter
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CostCenter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostCenterDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCostCenter
+      tags: [costCenters]
+      summary: Update a CostCenter
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostCenterUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostCenter"
+    delete:
+      operationId: deleteCostCenter
+      tags: [costCenters]
+      summary: Soft-delete a CostCenter
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /fiscal-periods:
+    get:
+      operationId: listFiscalPeriods
+      tags: [fiscalPeriods]
+      summary: List fiscal-periods
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: fiscalYearId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: FiscalPeriods
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FiscalPeriodListResponse"
+    post:
+      operationId: createFiscalPeriod
+      tags: [fiscalPeriods]
+      summary: Create a FiscalPeriod
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FiscalPeriodInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FiscalPeriod"
+
+  /fiscal-periods/{id}:
+    get:
+      operationId: getFiscalPeriod
+      tags: [fiscalPeriods]
+      summary: Get a FiscalPeriod
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: FiscalPeriod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FiscalPeriodDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateFiscalPeriod
+      tags: [fiscalPeriods]
+      summary: Update a FiscalPeriod
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FiscalPeriodUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FiscalPeriod"
+    delete:
+      operationId: deleteFiscalPeriod
+      tags: [fiscalPeriods]
+      summary: Soft-delete a FiscalPeriod
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /account-mappings:
+    get:
+      operationId: listAccountMappings
+      tags: [accountMappings]
+      summary: List account-mappings
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: eventKey, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AccountMappings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountMappingListResponse"
+    post:
+      operationId: createAccountMapping
+      tags: [accountMappings]
+      summary: Create a AccountMapping
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountMappingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountMapping"
+
+  /account-mappings/{id}:
+    get:
+      operationId: getAccountMapping
+      tags: [accountMappings]
+      summary: Get a AccountMapping
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AccountMapping
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountMappingDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAccountMapping
+      tags: [accountMappings]
+      summary: Update a AccountMapping
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountMappingUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountMapping"
+    delete:
+      operationId: deleteAccountMapping
+      tags: [accountMappings]
+      summary: Soft-delete a AccountMapping
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /budgets:
+    get:
+      operationId: listBudgets
+      tags: [budgets]
+      summary: List budgets
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: fiscalYearId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Budgets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetListResponse"
+    post:
+      operationId: createBudget
+      tags: [budgets]
+      summary: Create a Budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budget"
+
+  /budgets/{id}:
+    get:
+      operationId: getBudget
+      tags: [budgets]
+      summary: Get a Budget
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Budget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBudget
+      tags: [budgets]
+      summary: Update a Budget
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budget"
+    delete:
+      operationId: deleteBudget
+      tags: [budgets]
+      summary: Soft-delete a Budget
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /budget-lines:
+    get:
+      operationId: listBudgetLines
+      tags: [budgetLines]
+      summary: List budget-lines
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: budgetId, in: query, required: false, schema: { type: string } }
+        - { name: accountId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: BudgetLines
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetLineListResponse"
+    post:
+      operationId: createBudgetLine
+      tags: [budgetLines]
+      summary: Create a BudgetLine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetLineInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetLine"
+
+  /budget-lines/{id}:
+    get:
+      operationId: getBudgetLine
+      tags: [budgetLines]
+      summary: Get a BudgetLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: BudgetLine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetLineDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBudgetLine
+      tags: [budgetLines]
+      summary: Update a BudgetLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetLineUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetLine"
+    delete:
+      operationId: deleteBudgetLine
+      tags: [budgetLines]
+      summary: Soft-delete a BudgetLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /journal-entries:
+    get:
+      operationId: listJournalEntries
+      tags: [journalEntries]
+      summary: List journal-entries
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: sourceType, in: query, required: false, schema: { type: string } }
+        - { name: fiscalPeriodId, in: query, required: false, schema: { type: string } }
+        - { name: fromDate, in: query, required: false, schema: { type: string } }
+        - { name: toDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: JournalEntries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntryListResponse"
+    post:
+      operationId: createJournalEntry
+      tags: [journalEntries]
+      summary: Create a JournalEntry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalEntryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntry"
+
+  /journal-entries/{id}:
+    get:
+      operationId: getJournalEntry
+      tags: [journalEntries]
+      summary: Get a JournalEntry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: JournalEntry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntryDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateJournalEntry
+      tags: [journalEntries]
+      summary: Update a JournalEntry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalEntryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntry"
+    delete:
+      operationId: deleteJournalEntry
+      tags: [journalEntries]
+      summary: Soft-delete a JournalEntry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /journal-entries/{id}/post:
+    post:
+      operationId: postJournalEntry
+      tags: [journalEntries]
+      summary: Post a journal entry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntryDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /journal-entries/{id}/reverse:
+    post:
+      operationId: reverseJournalEntry
+      tags: [journalEntries]
+      summary: Reverse a posted journal entry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReverseJournalEntryInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntryDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /journal-entries/{id}/approve:
+    post:
+      operationId: approveJournalEntry
+      tags: [journalEntries]
+      summary: Approve a journal entry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntryDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /fiscal-periods/{id}/close:
+    post:
+      operationId: closeFiscalPeriod
+      tags: [fiscalPeriods]
+      summary: Close a fiscal period
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FiscalPeriod"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /fiscal-periods/{id}/reopen:
+    post:
+      operationId: reopenFiscalPeriod
+      tags: [fiscalPeriods]
+      summary: Reopen a fiscal period
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FiscalPeriod"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /reports/general-ledger:
+    get:
+      operationId: getGeneralLedger
+      tags: [accountingReports]
+      summary: General ledger for an account
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: accountId, in: query, required: false, schema: { type: string } }
+        - { name: costCenterId, in: query, required: false, schema: { type: string } }
+        - { name: fromDate, in: query, required: false, schema: { type: string } }
+        - { name: toDate, in: query, required: false, schema: { type: string } }
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralLedgerResponse"
+
+  /reports/trial-balance:
+    get:
+      operationId: getTrialBalance
+      tags: [accountingReports]
+      summary: Trial balance
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: fromDate, in: query, required: false, schema: { type: string } }
+        - { name: toDate, in: query, required: false, schema: { type: string } }
+        - { name: fiscalPeriodId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrialBalanceResponse"
+
+  /reports/balance-sheet:
+    get:
+      operationId: getBalanceSheet
+      tags: [accountingReports]
+      summary: Balance sheet
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: asOfDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BalanceSheetResponse"
+
+  /reports/income-statement:
+    get:
+      operationId: getIncomeStatement
+      tags: [accountingReports]
+      summary: Income statement
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: fromDate, in: query, required: false, schema: { type: string } }
+        - { name: toDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomeStatementResponse"
+
+  /reports/cash-flow:
+    get:
+      operationId: getCashFlow
+      tags: [accountingReports]
+      summary: Cash flow statement
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: fromDate, in: query, required: false, schema: { type: string } }
+        - { name: toDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CashFlowResponse"
+
+  /reports/budget-vs-actual:
+    get:
+      operationId: getBudgetVsActual
+      tags: [accountingReports]
+      summary: Budget versus actual
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: budgetId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BudgetVsActualResponse"
+
+  /accounting/dashboard:
+    get:
+      operationId: getAccountingDashboard
+      tags: [accountingReports]
+      summary: Accounting dashboard aggregates
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountingDashboardResponse"
+
+
 components:
   parameters:
     IdParam:
@@ -7152,3 +8063,617 @@ components:
       properties:
         created: { type: integer }
         planId: { type: string }
+
+    Account:
+      type: object
+      required: [id, companyId, code, name, nameAr, type, normalSide, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parentId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        type: { type: string }
+        normalSide: { type: string }
+        level: { type: integer }
+        isPostable: { type: boolean }
+        currencyId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AccountDetail:
+      $ref: "#/components/schemas/Account"
+
+    AccountInput:
+      type: object
+      required: [companyId, code, name, nameAr, type, normalSide]
+      properties:
+        companyId: { type: string }
+        parentId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        type: { type: string }
+        normalSide: { type: string }
+        level: { type: integer }
+        isPostable: { type: boolean }
+        currencyId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    AccountUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parentId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        type: { type: string }
+        normalSide: { type: string }
+        level: { type: integer }
+        isPostable: { type: boolean }
+        currencyId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    AccountListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Account" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CostCenter:
+      type: object
+      required: [id, companyId, code, name, nameAr, kind, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parentId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        kind: { type: string }
+        projectId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CostCenterDetail:
+      $ref: "#/components/schemas/CostCenter"
+
+    CostCenterInput:
+      type: object
+      required: [companyId, code, name, nameAr, kind]
+      properties:
+        companyId: { type: string }
+        parentId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        kind: { type: string }
+        projectId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    CostCenterUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parentId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        kind: { type: string }
+        projectId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    CostCenterListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CostCenter" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    FiscalPeriod:
+      type: object
+      required: [id, companyId, fiscalYearId, name, nameAr, startDate, endDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        fiscalYearId: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        periodNumber: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+        closedAt: { type: ["string", "null"] }
+        closedBy: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    FiscalPeriodDetail:
+      $ref: "#/components/schemas/FiscalPeriod"
+
+    FiscalPeriodInput:
+      type: object
+      required: [companyId, fiscalYearId, name, nameAr, startDate, endDate]
+      properties:
+        companyId: { type: string }
+        fiscalYearId: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        periodNumber: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+
+    FiscalPeriodUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        fiscalYearId: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        periodNumber: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+
+    FiscalPeriodListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/FiscalPeriod" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AccountMapping:
+      type: object
+      required: [id, companyId, eventKey, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        eventKey: { type: string }
+        debitAccountId: { type: ["string", "null"] }
+        creditAccountId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AccountMappingDetail:
+      $ref: "#/components/schemas/AccountMapping"
+
+    AccountMappingInput:
+      type: object
+      required: [companyId, eventKey]
+      properties:
+        companyId: { type: string }
+        eventKey: { type: string }
+        debitAccountId: { type: string }
+        creditAccountId: { type: string }
+        description: { type: string }
+
+    AccountMappingUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        eventKey: { type: string }
+        debitAccountId: { type: string }
+        creditAccountId: { type: string }
+        description: { type: string }
+
+    AccountMappingListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AccountMapping" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Budget:
+      type: object
+      required: [id, companyId, fiscalYearId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        fiscalYearId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BudgetDetail:
+      $ref: "#/components/schemas/Budget"
+
+    BudgetInput:
+      type: object
+      required: [companyId, fiscalYearId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        fiscalYearId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    BudgetUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        fiscalYearId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    BudgetListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Budget" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    BudgetLine:
+      type: object
+      required: [id, budgetId, companyId, accountId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        budgetId: { type: string }
+        companyId: { type: string }
+        accountId: { type: string }
+        costCenterId: { type: ["string", "null"] }
+        amount: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BudgetLineDetail:
+      $ref: "#/components/schemas/BudgetLine"
+
+    BudgetLineInput:
+      type: object
+      required: [budgetId, companyId, accountId, amount]
+      properties:
+        budgetId: { type: string }
+        companyId: { type: string }
+        accountId: { type: string }
+        costCenterId: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    BudgetLineUpdate:
+      type: object
+      properties:
+        budgetId: { type: string }
+        companyId: { type: string }
+        accountId: { type: string }
+        costCenterId: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    BudgetLineListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/BudgetLine" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    JournalEntry:
+      type: object
+      required: [id, companyId, number, entryDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        number: { type: string }
+        entryDate: { type: string }
+        fiscalPeriodId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        status: { type: string }
+        sourceType: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        totalDebit: { type: string }
+        totalCredit: { type: string }
+        postedAt: { type: ["string", "null"] }
+        postedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        reversedBy: { type: ["string", "null"] }
+        reversalEntryId: { type: ["string", "null"] }
+        isAutomatic: { type: boolean }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    JournalEntryLine:
+      type: object
+      required: [id, entryId, companyId, accountId]
+      properties:
+        id: { type: string }
+        entryId: { type: string }
+        companyId: { type: string }
+        accountId: { type: string }
+        costCenterId: { type: ["string", "null"] }
+        lineNumber: { type: integer }
+        debit: { type: string }
+        credit: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    JournalEntryDetail:
+      type: object
+      required: [id, companyId, number, entryDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        number: { type: string }
+        entryDate: { type: string }
+        fiscalPeriodId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        status: { type: string }
+        sourceType: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        totalDebit: { type: string }
+        totalCredit: { type: string }
+        postedAt: { type: ["string", "null"] }
+        postedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        reversedBy: { type: ["string", "null"] }
+        reversalEntryId: { type: ["string", "null"] }
+        isAutomatic: { type: boolean }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/JournalEntryLine" }
+
+    JournalEntryLineInput:
+      type: object
+      required: [accountId]
+      properties:
+        accountId: { type: string }
+        costCenterId: { type: string }
+        debit: { type: string }
+        credit: { type: string }
+        description: { type: string }
+
+    JournalEntryInput:
+      type: object
+      required: [companyId, entryDate, lines]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        entryDate: { type: string }
+        fiscalPeriodId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        reference: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/JournalEntryLineInput" }
+
+    JournalEntryUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        entryDate: { type: string }
+        fiscalPeriodId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        reference: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/JournalEntryLineInput" }
+
+    JournalEntryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/JournalEntry" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ReverseJournalEntryInput:
+      type: object
+      properties:
+        entryDate: { type: string }
+        description: { type: string }
+
+    GeneralLedgerLine:
+      type: object
+      required: [entryId, entryNumber, entryDate, debit, credit, balance]
+      properties:
+        entryId: { type: string }
+        entryNumber: { type: string }
+        entryDate: { type: string }
+        description: { type: ["string", "null"] }
+        costCenterId: { type: ["string", "null"] }
+        debit: { type: string }
+        credit: { type: string }
+        balance: { type: string }
+
+    GeneralLedgerResponse:
+      type: object
+      required: [data, total, page, pageSize, openingBalance, closingBalance, totalDebit, totalCredit]
+      properties:
+        accountId: { type: ["string", "null"] }
+        openingBalance: { type: string }
+        closingBalance: { type: string }
+        totalDebit: { type: string }
+        totalCredit: { type: string }
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GeneralLedgerLine" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    TrialBalanceRow:
+      type: object
+      required: [accountId, code, name, nameAr, type, debit, credit]
+      properties:
+        accountId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        type: { type: string }
+        debit: { type: string }
+        credit: { type: string }
+
+    TrialBalanceResponse:
+      type: object
+      required: [rows, totalDebit, totalCredit]
+      properties:
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/TrialBalanceRow" }
+        totalDebit: { type: string }
+        totalCredit: { type: string }
+
+    StatementLine:
+      type: object
+      required: [accountId, code, name, nameAr, amount]
+      properties:
+        accountId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        amount: { type: string }
+
+    BalanceSheetResponse:
+      type: object
+      required: [assets, liabilities, equity, totalAssets, totalLiabilities, totalEquity, balanced]
+      properties:
+        assets:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        liabilities:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        equity:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        totalAssets: { type: string }
+        totalLiabilities: { type: string }
+        totalEquity: { type: string }
+        balanced: { type: boolean }
+
+    IncomeStatementResponse:
+      type: object
+      required: [revenue, expenses, totalRevenue, totalExpenses, netIncome]
+      properties:
+        revenue:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        expenses:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        totalRevenue: { type: string }
+        totalExpenses: { type: string }
+        netIncome: { type: string }
+
+    CashFlowResponse:
+      type: object
+      required: [operating, investing, financing, netChange, openingCash, closingCash]
+      properties:
+        operating:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        investing:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        financing:
+          type: array
+          items: { $ref: "#/components/schemas/StatementLine" }
+        netChange: { type: string }
+        openingCash: { type: string }
+        closingCash: { type: string }
+
+    BudgetVsActualRow:
+      type: object
+      required: [accountId, code, name, nameAr, budgeted, actual, variance]
+      properties:
+        accountId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        budgeted: { type: string }
+        actual: { type: string }
+        variance: { type: string }
+
+    BudgetVsActualResponse:
+      type: object
+      required: [rows, totalBudgeted, totalActual, totalVariance]
+      properties:
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/BudgetVsActualRow" }
+        totalBudgeted: { type: string }
+        totalActual: { type: string }
+        totalVariance: { type: string }
+
+    AccountingDashboardResponse:
+      type: object
+      required: [totalAssets, totalLiabilities, totalEquity, totalRevenue, totalExpenses, netIncome]
+      properties:
+        totalAssets: { type: string }
+        totalLiabilities: { type: string }
+        totalEquity: { type: string }
+        totalRevenue: { type: string }
+        totalExpenses: { type: string }
+        netIncome: { type: string }
+        journalEntryCount: { type: integer }
+        draftCount: { type: integer }
+        postedCount: { type: integer }
+        openPeriodCount: { type: integer }
+        recentEntries:
+          type: array
+          items: { $ref: "#/components/schemas/JournalEntry" }

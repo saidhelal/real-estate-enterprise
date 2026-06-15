@@ -35,6 +35,10 @@ import {
   treasuryTransactionsTable,
   bankTransactionsTable,
   receiptsTable,
+  accountsTable,
+  costCentersTable,
+  fiscalPeriodsTable,
+  accountMappingsTable,
 } from "@workspace/db";
 import { hashPassword } from "./lib/auth";
 
@@ -88,6 +92,13 @@ const MODULES: Array<{ module: string; label: string }> = [
   { module: "bankTransactions", label: "Bank Transactions" },
   { module: "receipts", label: "Receipts" },
   { module: "penalties", label: "Penalties" },
+  { module: "accounts", label: "Chart of Accounts" },
+  { module: "costCenters", label: "Cost Centers" },
+  { module: "fiscalPeriods", label: "Fiscal Periods" },
+  { module: "journalEntries", label: "Journal Entries" },
+  { module: "accountMappings", label: "Account Mappings" },
+  { module: "budgets", label: "Budgets" },
+  { module: "accountingReports", label: "Accounting Reports" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 
@@ -574,6 +585,131 @@ async function seedFinance(): Promise<void> {
   );
 }
 
+// Default chart of accounts: [code, name, nameAr, type, normalSide, parentCode|null, isPostable]
+const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | null, boolean]> = [
+  ["1", "Assets", "الأصول", "asset", "debit", null, false],
+  ["11", "Current Assets", "الأصول المتداولة", "asset", "debit", "1", false],
+  ["1010", "Cash on Hand", "النقد بالصندوق", "asset", "debit", "11", true],
+  ["1020", "Bank Accounts", "الحسابات البنكية", "asset", "debit", "11", true],
+  ["1030", "Accounts Receivable", "الذمم المدينة", "asset", "debit", "11", true],
+  ["12", "Non-Current Assets", "الأصول غير المتداولة", "asset", "debit", "1", false],
+  ["1210", "Property & Equipment", "الممتلكات والمعدات", "asset", "debit", "12", true],
+  ["2", "Liabilities", "الخصوم", "liability", "credit", null, false],
+  ["21", "Current Liabilities", "الخصوم المتداولة", "liability", "credit", "2", false],
+  ["2010", "Accounts Payable", "الذمم الدائنة", "liability", "credit", "21", true],
+  ["2020", "Customer Advances", "دفعات العملاء المقدمة", "liability", "credit", "21", true],
+  ["22", "Non-Current Liabilities", "الخصوم غير المتداولة", "liability", "credit", "2", false],
+  ["2210", "Loans Payable", "القروض المستحقة", "liability", "credit", "22", true],
+  ["3", "Equity", "حقوق الملكية", "equity", "credit", null, false],
+  ["3010", "Share Capital", "رأس المال", "equity", "credit", "3", true],
+  ["3020", "Retained Earnings", "الأرباح المحتجزة", "equity", "credit", "3", true],
+  ["4", "Revenue", "الإيرادات", "revenue", "credit", null, false],
+  ["4010", "Property Sales Revenue", "إيرادات مبيعات العقارات", "revenue", "credit", "4", true],
+  ["4020", "Rental Income", "إيرادات الإيجار", "revenue", "credit", "4", true],
+  ["4030", "Penalty Income", "إيرادات الغرامات", "revenue", "credit", "4", true],
+  ["5", "Expenses", "المصروفات", "expense", "debit", null, false],
+  ["5010", "Cost of Sales", "تكلفة المبيعات", "expense", "debit", "5", true],
+  ["5020", "Salaries & Wages", "الرواتب والأجور", "expense", "debit", "5", true],
+  ["5030", "General & Administrative", "مصروفات عمومية وإدارية", "expense", "debit", "5", true],
+  ["5040", "Sales Commissions", "عمولات المبيعات", "expense", "debit", "5", true],
+];
+
+// Account mappings for automatic posting: [eventKey, debitCode, creditCode, description]
+const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
+  ["receipt.cash", "1010", "1030", "Cash receipt from customer"],
+  ["receipt.bank", "1020", "1030", "Bank receipt from customer"],
+  ["receipt.cheque", "1020", "1030", "Cheque receipt from customer"],
+  ["reservation.payment", "1010", "2020", "Reservation deposit"],
+  ["installment.collection", "1010", "1030", "Installment collection"],
+  ["treasury.in", "1010", "2020", "Cash inflow"],
+  ["treasury.out", "5030", "1010", "Cash outflow"],
+  ["bank.in", "1020", "2020", "Bank inflow"],
+  ["bank.out", "5030", "1020", "Bank outflow"],
+  ["contract.created", "1030", "4010", "Property sale recognized"],
+  ["penalty.assessed", "1030", "4030", "Late-payment penalty assessed"],
+];
+
+const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTH_NAMES_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+async function seedAccounting(): Promise<void> {
+  const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
+  if (!company) {
+    console.log("No sample company found, skipping accounting seed");
+    return;
+  }
+  const companyId = company.id;
+
+  // Chart of accounts (idempotent by company + code).
+  const codeToId = new Map<string, string>();
+  const existingAccounts = await db.select().from(accountsTable).where(eq(accountsTable.companyId, companyId));
+  for (const a of existingAccounts) codeToId.set(a.code, a.id);
+  let createdAccounts = 0;
+  for (const [code, name, nameAr, type, normalSide, parentCode, isPostable] of DEFAULT_ACCOUNTS) {
+    if (codeToId.has(code)) continue;
+    const parentId = parentCode ? codeToId.get(parentCode) ?? null : null;
+    const level = code.length <= 1 ? 1 : code.length === 2 ? 2 : 3;
+    const [row] = await db
+      .insert(accountsTable)
+      .values({ companyId, code, name, nameAr, type, normalSide, parentId, level, isPostable, status: "active" })
+      .returning();
+    codeToId.set(code, row.id);
+    createdAccounts += 1;
+  }
+
+  // Cost centers (idempotent by company + code).
+  const existingCc = await db.select().from(costCentersTable).where(eq(costCentersTable.companyId, companyId));
+  if (!existingCc.length) {
+    await db.insert(costCentersTable).values([
+      { companyId, code: "HO", name: "Head Office", nameAr: "المركز الرئيسي", kind: "department", status: "active" },
+      { companyId, code: "SALES", name: "Sales Department", nameAr: "قسم المبيعات", kind: "department", status: "active" },
+    ]);
+  }
+
+  // Account mappings (idempotent by company + eventKey).
+  const existingMappings = await db.select().from(accountMappingsTable).where(eq(accountMappingsTable.companyId, companyId));
+  const mappedKeys = new Set(existingMappings.map((m) => m.eventKey));
+  let createdMappings = 0;
+  for (const [eventKey, debitCode, creditCode, description] of DEFAULT_MAPPINGS) {
+    if (mappedKeys.has(eventKey)) continue;
+    const debitAccountId = codeToId.get(debitCode) ?? null;
+    const creditAccountId = codeToId.get(creditCode) ?? null;
+    await db.insert(accountMappingsTable).values({ companyId, eventKey, debitAccountId, creditAccountId, description });
+    createdMappings += 1;
+  }
+
+  // Monthly fiscal periods from each fiscal year (idempotent by company + year + periodNumber).
+  const fiscalYears = await db.select().from(fiscalYearsTable).where(eq(fiscalYearsTable.companyId, companyId));
+  let createdPeriods = 0;
+  for (const fy of fiscalYears) {
+    const existing = await db
+      .select()
+      .from(fiscalPeriodsTable)
+      .where(and(eq(fiscalPeriodsTable.companyId, companyId), eq(fiscalPeriodsTable.fiscalYearId, fy.id)));
+    if (existing.length) continue;
+    const year = Number(fy.startDate.slice(0, 4));
+    for (let m = 0; m < 12; m += 1) {
+      const start = new Date(Date.UTC(year, m, 1));
+      const end = new Date(Date.UTC(year, m + 1, 0));
+      await db.insert(fiscalPeriodsTable).values({
+        companyId,
+        fiscalYearId: fy.id,
+        name: `${MONTH_NAMES_EN[m]} ${year}`,
+        nameAr: `${MONTH_NAMES_AR[m]} ${year}`,
+        periodNumber: m + 1,
+        startDate: start.toISOString().slice(0, 10),
+        endDate: end.toISOString().slice(0, 10),
+        status: "open",
+      });
+      createdPeriods += 1;
+    }
+  }
+
+  console.log(
+    `Seeded accounting: ${createdAccounts} accounts, ${createdMappings} mappings, ${createdPeriods} fiscal periods`,
+  );
+}
+
 async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
@@ -585,6 +721,7 @@ async function main(): Promise<void> {
   await seedRealEstate();
   await seedFinance();
   await seedReservations();
+  await seedAccounting();
   console.log("Seed complete.");
 }
 

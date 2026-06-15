@@ -11,6 +11,8 @@ import {
   UserPlus, Megaphone, Activity, CalendarClock, UserCheck, ArrowRightLeft,
   Contact, FileText, StickyNote, BookMarked, Wallet, FileSignature, FilePen, FileX,
   ArrowLeftRight, CalendarRange, Receipt, AlertTriangle,
+  BookOpen, Network, BookText, Scale, Library, TrendingUp, LineChart,
+  PiggyBank, Link2, GanttChartSquare, Calculator,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -80,6 +82,20 @@ const NAV_GROUPS = [
     { href: "/bank-transactions", icon: ArrowRightLeft, labelKey: "nav.bank_transactions" },
     { href: "/receipts", icon: Receipt, labelKey: "nav.receipts" },
     { href: "/penalties", icon: AlertTriangle, labelKey: "nav.penalties" },
+  ]},
+  { titleKey: "nav.group.accounting", items: [
+    { href: "/accounting-dashboard", icon: Calculator, labelKey: "nav.accounting_dashboard" },
+    { href: "/accounts", icon: BookOpen, labelKey: "nav.accounts" },
+    { href: "/cost-centers", icon: Network, labelKey: "nav.cost_centers" },
+    { href: "/journal-entries", icon: BookText, labelKey: "nav.journal_entries" },
+    { href: "/general-ledger", icon: Library, labelKey: "nav.general_ledger" },
+    { href: "/trial-balance", icon: Scale, labelKey: "nav.trial_balance" },
+    { href: "/balance-sheet", icon: GanttChartSquare, labelKey: "nav.balance_sheet" },
+    { href: "/income-statement", icon: TrendingUp, labelKey: "nav.income_statement" },
+    { href: "/cash-flow", icon: LineChart, labelKey: "nav.cash_flow" },
+    { href: "/fiscal-periods", icon: CalendarRange, labelKey: "nav.fiscal_periods" },
+    { href: "/budgets", icon: PiggyBank, labelKey: "nav.budgets" },
+    { href: "/account-mappings", icon: Link2, labelKey: "nav.account_mappings" },
   ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },

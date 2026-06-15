@@ -18,6 +18,7 @@ import salesRouter from "./sales";
 import installmentsRouter from "./installments";
 import unitManagementRouter from "./unit-management";
 import financeRouter from "./finance";
+import accountingRouter from "./accounting";
 
 const router: IRouter = Router();
 
@@ -40,5 +41,6 @@ router.use(salesRouter);
 router.use(installmentsRouter);
 router.use(unitManagementRouter);
 router.use(financeRouter);
+router.use(accountingRouter);
 
 export default router;

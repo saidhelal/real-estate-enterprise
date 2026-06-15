@@ -30,6 +30,7 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -193,7 +194,23 @@ router.get("/installment-collections", requirePermission("installmentCollections
 router.post("/installment-collections", requirePermission("installmentCollections.create"), async (req, res): Promise<void> => {
   const parsed = CreateInstallmentCollectionBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(installmentCollectionsTable).values({ ...parsed.data }).returning();
+  const data = parsed.data;
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(installmentCollectionsTable).values({ ...data, userId: req.authUser?.id ?? null }).returning();
+    // Automatic ledger posting (best-effort; skipped if accounting is unconfigured).
+    await postAutomaticEntry(tx, {
+      companyId: created.companyId,
+      eventKey: "installment.collection",
+      amount: created.amount,
+      entryDate: created.collectionDate,
+      description: `Installment collection${created.reference ? ` ${created.reference}` : ""}`,
+      reference: created.reference ?? null,
+      sourceType: "installmentCollection",
+      sourceId: created.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return created;
+  });
   await recordAudit(req, { action: "create", entity: "installmentCollection", entityId: row.id, newValue: row });
   res.status(201).json(GetInstallmentCollectionResponse.parse(serializeRow(row)));
 });
@@ -221,7 +238,12 @@ router.patch("/installment-collections/:id", requirePermission("installmentColle
 
 router.delete("/installment-collections/:id", requirePermission("installmentCollections.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(installmentCollectionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(installmentCollectionsTable.id, id), eq(installmentCollectionsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [deleted] = await tx.update(installmentCollectionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(installmentCollectionsTable.id, id), eq(installmentCollectionsTable.isDeleted, false))).returning();
+    if (!deleted) return null;
+    await reverseAutomaticEntriesForSource(tx, "installmentCollection", deleted.id, req.authUser?.id ?? null);
+    return deleted;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "installmentCollection", entityId: id });
   res.json({ success: true });

@@ -62,6 +62,19 @@ import BankTransactionsPage from "@/pages/bank-transactions";
 import ReceiptsPage from "@/pages/receipts";
 import PenaltiesPage from "@/pages/penalties";
 
+import AccountsPage from "@/pages/accounts";
+import CostCentersPage from "@/pages/cost-centers";
+import JournalEntriesPage from "@/pages/journal-entries";
+import GeneralLedgerPage from "@/pages/general-ledger";
+import TrialBalancePage from "@/pages/trial-balance";
+import BalanceSheetPage from "@/pages/balance-sheet";
+import IncomeStatementPage from "@/pages/income-statement";
+import CashFlowPage from "@/pages/cash-flow";
+import FiscalPeriodsPage from "@/pages/fiscal-periods";
+import BudgetsPage from "@/pages/budgets";
+import AccountMappingsPage from "@/pages/account-mappings";
+import AccountingDashboardPage from "@/pages/accounting-dashboard";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -131,6 +144,19 @@ function Router() {
             <Route path="/bank-transactions" component={BankTransactionsPage} />
             <Route path="/receipts" component={ReceiptsPage} />
             <Route path="/penalties" component={PenaltiesPage} />
+
+            <Route path="/accounting-dashboard" component={AccountingDashboardPage} />
+            <Route path="/accounts" component={AccountsPage} />
+            <Route path="/cost-centers" component={CostCentersPage} />
+            <Route path="/journal-entries" component={JournalEntriesPage} />
+            <Route path="/general-ledger" component={GeneralLedgerPage} />
+            <Route path="/trial-balance" component={TrialBalancePage} />
+            <Route path="/balance-sheet" component={BalanceSheetPage} />
+            <Route path="/income-statement" component={IncomeStatementPage} />
+            <Route path="/cash-flow" component={CashFlowPage} />
+            <Route path="/fiscal-periods" component={FiscalPeriodsPage} />
+            <Route path="/budgets" component={BudgetsPage} />
+            <Route path="/account-mappings" component={AccountMappingsPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

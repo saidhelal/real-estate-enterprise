@@ -2299,6 +2299,541 @@ export interface GenerateInstallmentsResult {
   planId?: string;
 }
 
+export interface Account {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  parentId?: string | null;
+  code: string;
+  name: string;
+  nameAr: string;
+  type: string;
+  normalSide: string;
+  level?: number;
+  isPostable?: boolean;
+  /** @nullable */
+  currencyId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status?: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type AccountDetail = Account;
+
+export interface AccountInput {
+  companyId: string;
+  parentId?: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  type: string;
+  normalSide: string;
+  level?: number;
+  isPostable?: boolean;
+  currencyId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface AccountUpdate {
+  companyId?: string;
+  parentId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  type?: string;
+  normalSide?: string;
+  level?: number;
+  isPostable?: boolean;
+  currencyId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface AccountListResponse {
+  data: Account[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CostCenter {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  parentId?: string | null;
+  code: string;
+  name: string;
+  nameAr: string;
+  kind: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status?: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type CostCenterDetail = CostCenter;
+
+export interface CostCenterInput {
+  companyId: string;
+  parentId?: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  kind: string;
+  projectId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface CostCenterUpdate {
+  companyId?: string;
+  parentId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  kind?: string;
+  projectId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface CostCenterListResponse {
+  data: CostCenter[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface FiscalPeriod {
+  id: string;
+  companyId: string;
+  fiscalYearId: string;
+  name: string;
+  nameAr: string;
+  periodNumber?: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  /** @nullable */
+  closedAt?: string | null;
+  /** @nullable */
+  closedBy?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type FiscalPeriodDetail = FiscalPeriod;
+
+export interface FiscalPeriodInput {
+  companyId: string;
+  fiscalYearId: string;
+  name: string;
+  nameAr: string;
+  periodNumber?: number;
+  startDate: string;
+  endDate: string;
+  status?: string;
+}
+
+export interface FiscalPeriodUpdate {
+  companyId?: string;
+  fiscalYearId?: string;
+  name?: string;
+  nameAr?: string;
+  periodNumber?: number;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+}
+
+export interface FiscalPeriodListResponse {
+  data: FiscalPeriod[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AccountMapping {
+  id: string;
+  companyId: string;
+  eventKey: string;
+  /** @nullable */
+  debitAccountId?: string | null;
+  /** @nullable */
+  creditAccountId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type AccountMappingDetail = AccountMapping;
+
+export interface AccountMappingInput {
+  companyId: string;
+  eventKey: string;
+  debitAccountId?: string;
+  creditAccountId?: string;
+  description?: string;
+}
+
+export interface AccountMappingUpdate {
+  companyId?: string;
+  eventKey?: string;
+  debitAccountId?: string;
+  creditAccountId?: string;
+  description?: string;
+}
+
+export interface AccountMappingListResponse {
+  data: AccountMapping[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Budget {
+  id: string;
+  companyId: string;
+  fiscalYearId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  status: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type BudgetDetail = Budget;
+
+export interface BudgetInput {
+  companyId: string;
+  fiscalYearId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  status?: string;
+  description?: string;
+}
+
+export interface BudgetUpdate {
+  companyId?: string;
+  fiscalYearId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface BudgetListResponse {
+  data: Budget[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface BudgetLine {
+  id: string;
+  budgetId: string;
+  companyId: string;
+  accountId: string;
+  /** @nullable */
+  costCenterId?: string | null;
+  amount?: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type BudgetLineDetail = BudgetLine;
+
+export interface BudgetLineInput {
+  budgetId: string;
+  companyId: string;
+  accountId: string;
+  costCenterId?: string;
+  amount: string;
+  notes?: string;
+}
+
+export interface BudgetLineUpdate {
+  budgetId?: string;
+  companyId?: string;
+  accountId?: string;
+  costCenterId?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface BudgetLineListResponse {
+  data: BudgetLine[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface JournalEntry {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  number: string;
+  entryDate: string;
+  /** @nullable */
+  fiscalPeriodId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  status: string;
+  /** @nullable */
+  sourceType?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  totalDebit?: string;
+  totalCredit?: string;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  postedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  reversedBy?: string | null;
+  /** @nullable */
+  reversalEntryId?: string | null;
+  isAutomatic?: boolean;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface JournalEntryLine {
+  id: string;
+  entryId: string;
+  companyId: string;
+  accountId: string;
+  /** @nullable */
+  costCenterId?: string | null;
+  lineNumber?: number;
+  debit?: string;
+  credit?: string;
+  /** @nullable */
+  description?: string | null;
+  isActive?: boolean;
+  createdAt?: string;
+}
+
+export interface JournalEntryDetail {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  number: string;
+  entryDate: string;
+  /** @nullable */
+  fiscalPeriodId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  status: string;
+  /** @nullable */
+  sourceType?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  totalDebit?: string;
+  totalCredit?: string;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  postedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  reversedBy?: string | null;
+  /** @nullable */
+  reversalEntryId?: string | null;
+  isAutomatic?: boolean;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  lines?: JournalEntryLine[];
+}
+
+export interface JournalEntryLineInput {
+  accountId: string;
+  costCenterId?: string;
+  debit?: string;
+  credit?: string;
+  description?: string;
+}
+
+export interface JournalEntryInput {
+  companyId: string;
+  branchId?: string;
+  entryDate: string;
+  fiscalPeriodId?: string;
+  description?: string;
+  descriptionAr?: string;
+  reference?: string;
+  lines: JournalEntryLineInput[];
+}
+
+export interface JournalEntryUpdate {
+  branchId?: string;
+  entryDate?: string;
+  fiscalPeriodId?: string;
+  description?: string;
+  descriptionAr?: string;
+  reference?: string;
+  lines?: JournalEntryLineInput[];
+}
+
+export interface JournalEntryListResponse {
+  data: JournalEntry[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ReverseJournalEntryInput {
+  entryDate?: string;
+  description?: string;
+}
+
+export interface GeneralLedgerLine {
+  entryId: string;
+  entryNumber: string;
+  entryDate: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  costCenterId?: string | null;
+  debit: string;
+  credit: string;
+  balance: string;
+}
+
+export interface GeneralLedgerResponse {
+  /** @nullable */
+  accountId?: string | null;
+  openingBalance: string;
+  closingBalance: string;
+  totalDebit: string;
+  totalCredit: string;
+  data: GeneralLedgerLine[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface TrialBalanceRow {
+  accountId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  type: string;
+  debit: string;
+  credit: string;
+}
+
+export interface TrialBalanceResponse {
+  rows: TrialBalanceRow[];
+  totalDebit: string;
+  totalCredit: string;
+}
+
+export interface StatementLine {
+  accountId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  amount: string;
+}
+
+export interface BalanceSheetResponse {
+  assets: StatementLine[];
+  liabilities: StatementLine[];
+  equity: StatementLine[];
+  totalAssets: string;
+  totalLiabilities: string;
+  totalEquity: string;
+  balanced: boolean;
+}
+
+export interface IncomeStatementResponse {
+  revenue: StatementLine[];
+  expenses: StatementLine[];
+  totalRevenue: string;
+  totalExpenses: string;
+  netIncome: string;
+}
+
+export interface CashFlowResponse {
+  operating: StatementLine[];
+  investing: StatementLine[];
+  financing: StatementLine[];
+  netChange: string;
+  openingCash: string;
+  closingCash: string;
+}
+
+export interface BudgetVsActualRow {
+  accountId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  budgeted: string;
+  actual: string;
+  variance: string;
+}
+
+export interface BudgetVsActualResponse {
+  rows: BudgetVsActualRow[];
+  totalBudgeted: string;
+  totalActual: string;
+  totalVariance: string;
+}
+
+export interface AccountingDashboardResponse {
+  totalAssets: string;
+  totalLiabilities: string;
+  totalEquity: string;
+  totalRevenue: string;
+  totalExpenses: string;
+  netIncome: string;
+  journalEntryCount?: number;
+  draftCount?: number;
+  postedCount?: number;
+  openPeriodCount?: number;
+  recentEntries?: JournalEntry[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -2693,6 +3228,114 @@ status?: string;
 };
 
 export type GetFinanceDashboardParams = {
+companyId?: string;
+};
+
+export type ListAccountsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+type?: string;
+parentId?: string;
+isPostable?: boolean;
+status?: string;
+};
+
+export type ListCostCentersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+kind?: string;
+parentId?: string;
+status?: string;
+};
+
+export type ListFiscalPeriodsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+fiscalYearId?: string;
+status?: string;
+};
+
+export type ListAccountMappingsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+eventKey?: string;
+};
+
+export type ListBudgetsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+fiscalYearId?: string;
+status?: string;
+};
+
+export type ListBudgetLinesParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+budgetId?: string;
+accountId?: string;
+};
+
+export type ListJournalEntriesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+sourceType?: string;
+fiscalPeriodId?: string;
+fromDate?: string;
+toDate?: string;
+};
+
+export type GetGeneralLedgerParams = {
+companyId?: string;
+accountId?: string;
+costCenterId?: string;
+fromDate?: string;
+toDate?: string;
+page?: number;
+pageSize?: number;
+};
+
+export type GetTrialBalanceParams = {
+companyId?: string;
+fromDate?: string;
+toDate?: string;
+fiscalPeriodId?: string;
+};
+
+export type GetBalanceSheetParams = {
+companyId?: string;
+asOfDate?: string;
+};
+
+export type GetIncomeStatementParams = {
+companyId?: string;
+fromDate?: string;
+toDate?: string;
+};
+
+export type GetCashFlowParams = {
+companyId?: string;
+fromDate?: string;
+toDate?: string;
+};
+
+export type GetBudgetVsActualParams = {
+companyId?: string;
+budgetId?: string;
+};
+
+export type GetAccountingDashboardParams = {
 companyId?: string;
 };
 

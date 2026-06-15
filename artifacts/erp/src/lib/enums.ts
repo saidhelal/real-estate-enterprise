@@ -44,6 +44,25 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   meeting: { en: "Meeting", ar: "اجتماع" },
   email: { en: "Email", ar: "بريد إلكتروني" },
   visit: { en: "Visit", ar: "زيارة" },
+  // accounting: account types
+  asset: { en: "Asset", ar: "أصول" },
+  liability: { en: "Liability", ar: "التزامات" },
+  equity: { en: "Equity", ar: "حقوق ملكية" },
+  revenue: { en: "Revenue", ar: "إيرادات" },
+  expense: { en: "Expense", ar: "مصروفات" },
+  // accounting: normal side
+  debit: { en: "Debit", ar: "مدين" },
+  credit: { en: "Credit", ar: "دائن" },
+  // accounting: journal entry status
+  posted: { en: "Posted", ar: "مرحّل" },
+  reversed: { en: "Reversed", ar: "معكوس" },
+  approved: { en: "Approved", ar: "معتمد" },
+  // accounting: cost center kind
+  department: { en: "Department", ar: "قسم" },
+  project: { en: "Project", ar: "مشروع" },
+  branch: { en: "Branch", ar: "فرع" },
+  // accounting: fiscal period / budget status
+  open: { en: "Open", ar: "مفتوح" },
 };
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {

@@ -59,6 +59,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 import { nextDocumentNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
@@ -167,7 +168,21 @@ router.get("/reservation-payments", requirePermission("reservationPayments.view"
 router.post("/reservation-payments", requirePermission("reservationPayments.create"), async (req, res): Promise<void> => {
   const parsed = CreateReservationPaymentBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(reservationPaymentsTable).values({ ...parsed.data }).returning();
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(reservationPaymentsTable).values({ ...parsed.data }).returning();
+    await postAutomaticEntry(tx, {
+      companyId: created.companyId,
+      eventKey: "reservation.payment",
+      amount: created.amount ?? "0",
+      entryDate: created.paymentDate,
+      description: created.reference ? `Reservation payment ${created.reference}` : "Reservation payment",
+      reference: created.reference ?? null,
+      sourceType: "reservationPayment",
+      sourceId: created.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return created;
+  });
   await recordAudit(req, { action: "create", entity: "reservationPayment", entityId: row.id, newValue: row });
   res.status(201).json(GetReservationPaymentResponse.parse(serializeRow(row)));
 });
@@ -195,7 +210,12 @@ router.patch("/reservation-payments/:id", requirePermission("reservationPayments
 
 router.delete("/reservation-payments/:id", requirePermission("reservationPayments.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(reservationPaymentsTable).set({ isDeleted: true, isActive: false }).where(and(eq(reservationPaymentsTable.id, id), eq(reservationPaymentsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [updated] = await tx.update(reservationPaymentsTable).set({ isDeleted: true, isActive: false }).where(and(eq(reservationPaymentsTable.id, id), eq(reservationPaymentsTable.isDeleted, false))).returning();
+    if (!updated) return null;
+    await reverseAutomaticEntriesForSource(tx, "reservationPayment", updated.id, req.authUser?.id ?? null);
+    return updated;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "reservationPayment", entityId: id });
   res.json({ success: true });
@@ -241,7 +261,23 @@ router.get("/contracts", requirePermission("contracts.view"), async (req, res): 
 router.post("/contracts", requirePermission("contracts.create"), async (req, res): Promise<void> => {
   const parsed = CreateContractBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(contractsTable).values({ ...parsed.data }).returning();
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(contractsTable).values({ ...parsed.data }).returning();
+    // Recognize the sale on the ledger (best-effort; skipped if accounting unconfigured).
+    await postAutomaticEntry(tx, {
+      companyId: created.companyId,
+      branchId: created.branchId ?? null,
+      eventKey: "contract.created",
+      amount: created.totalPrice ?? "0",
+      entryDate: created.contractDate,
+      description: `Contract ${created.code}`,
+      reference: created.code,
+      sourceType: "contract",
+      sourceId: created.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return created;
+  });
   await recordAudit(req, { action: "create", entity: "contract", entityId: row.id, newValue: row });
   res.status(201).json(GetContractResponse.parse(serializeRow(row)));
 });
@@ -269,7 +305,12 @@ router.patch("/contracts/:id", requirePermission("contracts.update"), async (req
 
 router.delete("/contracts/:id", requirePermission("contracts.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(contractsTable).set({ isDeleted: true, isActive: false }).where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [updated] = await tx.update(contractsTable).set({ isDeleted: true, isActive: false }).where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false))).returning();
+    if (!updated) return null;
+    await reverseAutomaticEntriesForSource(tx, "contract", updated.id, req.authUser?.id ?? null);
+    return updated;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "contract", entityId: id });
   res.json({ success: true });

@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
-export type FieldType = "text" | "textarea" | "number" | "money" | "date" | "select";
+export type FieldType = "text" | "textarea" | "number" | "money" | "date" | "select" | "boolean";
 
 export interface SelectOption {
   value: string;
@@ -343,6 +343,7 @@ function ResourceForm<T extends { id: string }>({
       if (raw === undefined || raw === "" || raw === NONE) continue;
       if (f.type === "number") payload[f.name] = Number(raw);
       else if (f.type === "money") payload[f.name] = String(raw);
+      else if (f.type === "boolean") payload[f.name] = raw === "true";
       else payload[f.name] = raw;
     }
     return payload;
@@ -400,6 +401,19 @@ function ResourceForm<T extends { id: string }>({
                   required={f.required}
                   dir={f.rtl ? "rtl" : undefined}
                 />
+              ) : f.type === "boolean" ? (
+                <Select
+                  value={formData[f.name] || "false"}
+                  onValueChange={(v) => setValue(f.name, v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={fieldLabel(f)} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">{language === "ar" ? "نعم" : "Yes"}</SelectItem>
+                    <SelectItem value="false">{language === "ar" ? "لا" : "No"}</SelectItem>
+                  </SelectContent>
+                </Select>
               ) : f.type === "select" ? (
                 <Select
                   value={formData[f.name] || (f.required ? "" : NONE)}
