@@ -5824,6 +5824,1095 @@ export interface ProcurementDashboard {
   requestsByStatus?: ProcurementDashboardRequestsByStatusItem[];
 }
 
+export interface Warehouse {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  branchId?: string | null;
+  warehouseType: string;
+  /** @nullable */
+  address?: string | null;
+  /** @nullable */
+  manager?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface WarehouseInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  branchId?: string;
+  warehouseType?: string;
+  address?: string;
+  manager?: string;
+  phone?: string;
+  status?: string;
+}
+
+export interface WarehouseUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  branchId?: string;
+  warehouseType?: string;
+  address?: string;
+  manager?: string;
+  phone?: string;
+  status?: string;
+}
+
+export interface WarehouseListResponse {
+  data: Warehouse[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface WarehouseLocation {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  warehouseId?: string | null;
+  /** @nullable */
+  zone?: string | null;
+  /** @nullable */
+  aisle?: string | null;
+  /** @nullable */
+  rack?: string | null;
+  /** @nullable */
+  shelf?: string | null;
+  /** @nullable */
+  bin?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface WarehouseLocationInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  warehouseId?: string;
+  zone?: string;
+  aisle?: string;
+  rack?: string;
+  shelf?: string;
+  bin?: string;
+  status?: string;
+}
+
+export interface WarehouseLocationUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  warehouseId?: string;
+  zone?: string;
+  aisle?: string;
+  rack?: string;
+  shelf?: string;
+  bin?: string;
+  status?: string;
+}
+
+export interface WarehouseLocationListResponse {
+  data: WarehouseLocation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ItemCategory {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  parentId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ItemCategoryInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  parentId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ItemCategoryUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  parentId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ItemCategoryListResponse {
+  data: ItemCategory[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ItemGroup {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  categoryId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ItemGroupInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  categoryId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ItemGroupUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  categoryId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ItemGroupListResponse {
+  data: ItemGroup[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface UnitOfMeasure {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  symbol?: string | null;
+  /** @nullable */
+  baseUnit?: string | null;
+  /** @nullable */
+  conversionFactor?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface UnitOfMeasureInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  symbol?: string;
+  baseUnit?: string;
+  conversionFactor?: string;
+  status?: string;
+}
+
+export interface UnitOfMeasureUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  symbol?: string;
+  baseUnit?: string;
+  conversionFactor?: string;
+  status?: string;
+}
+
+export interface UnitOfMeasureListResponse {
+  data: UnitOfMeasure[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InventoryItem {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  categoryId?: string | null;
+  /** @nullable */
+  groupId?: string | null;
+  /** @nullable */
+  uomId?: string | null;
+  itemType: string;
+  /** @nullable */
+  barcode?: string | null;
+  /** @nullable */
+  costPrice?: string | null;
+  /** @nullable */
+  sellingPrice?: string | null;
+  valuationMethod: string;
+  /** @nullable */
+  reorderPoint?: string | null;
+  /** @nullable */
+  minStock?: string | null;
+  /** @nullable */
+  maxStock?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InventoryItemInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  categoryId?: string;
+  groupId?: string;
+  uomId?: string;
+  itemType?: string;
+  barcode?: string;
+  costPrice?: string;
+  sellingPrice?: string;
+  valuationMethod?: string;
+  reorderPoint?: string;
+  minStock?: string;
+  maxStock?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface InventoryItemUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  categoryId?: string;
+  groupId?: string;
+  uomId?: string;
+  itemType?: string;
+  barcode?: string;
+  costPrice?: string;
+  sellingPrice?: string;
+  valuationMethod?: string;
+  reorderPoint?: string;
+  minStock?: string;
+  maxStock?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface InventoryItemListResponse {
+  data: InventoryItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ReorderLevel {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  warehouseId?: string | null;
+  /** @nullable */
+  minQuantity?: string | null;
+  /** @nullable */
+  maxQuantity?: string | null;
+  /** @nullable */
+  reorderQuantity?: string | null;
+  /** @nullable */
+  reorderPoint?: string | null;
+  /** @nullable */
+  leadTimeDays?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ReorderLevelInput {
+  companyId: string;
+  itemId?: string;
+  warehouseId?: string;
+  minQuantity?: string;
+  maxQuantity?: string;
+  reorderQuantity?: string;
+  reorderPoint?: string;
+  leadTimeDays?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ReorderLevelUpdate {
+  itemId?: string;
+  warehouseId?: string;
+  minQuantity?: string;
+  maxQuantity?: string;
+  reorderQuantity?: string;
+  reorderPoint?: string;
+  leadTimeDays?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ReorderLevelListResponse {
+  data: ReorderLevel[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface StockOpeningBalance {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  warehouseId?: string | null;
+  /** @nullable */
+  locationId?: string | null;
+  /** @nullable */
+  balanceDate?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  totalValue?: string | null;
+  /** @nullable */
+  batchNumber?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface StockOpeningBalanceInput {
+  companyId: string;
+  code: string;
+  itemId?: string;
+  warehouseId?: string;
+  locationId?: string;
+  balanceDate?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalValue?: string;
+  batchNumber?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface StockOpeningBalanceUpdate {
+  code?: string;
+  itemId?: string;
+  warehouseId?: string;
+  locationId?: string;
+  balanceDate?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalValue?: string;
+  batchNumber?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface StockOpeningBalanceListResponse {
+  data: StockOpeningBalance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GoodsReceipt {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  receiptDate?: string | null;
+  receiptType: string;
+  /** @nullable */
+  warehouseId?: string | null;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  poId?: string | null;
+  /** @nullable */
+  referenceNumber?: string | null;
+  /** @nullable */
+  totalValue?: string | null;
+  status: string;
+  /** @nullable */
+  receivedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GoodsReceiptInput {
+  companyId: string;
+  code: string;
+  receiptDate?: string;
+  receiptType?: string;
+  warehouseId?: string;
+  supplierId?: string;
+  poId?: string;
+  referenceNumber?: string;
+  totalValue?: string;
+  status?: string;
+  receivedBy?: string;
+  notes?: string;
+}
+
+export interface GoodsReceiptUpdate {
+  code?: string;
+  receiptDate?: string;
+  receiptType?: string;
+  warehouseId?: string;
+  supplierId?: string;
+  poId?: string;
+  referenceNumber?: string;
+  totalValue?: string;
+  status?: string;
+  receivedBy?: string;
+  notes?: string;
+}
+
+export interface GoodsReceiptListResponse {
+  data: GoodsReceipt[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GoodsReceiptItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  receiptId?: string | null;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  locationId?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  totalCost?: string | null;
+  /** @nullable */
+  batchNumber?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GoodsReceiptItemInput {
+  companyId: string;
+  receiptId?: string;
+  itemId?: string;
+  locationId?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  batchNumber?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface GoodsReceiptItemUpdate {
+  receiptId?: string;
+  itemId?: string;
+  locationId?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  batchNumber?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface GoodsReceiptItemListResponse {
+  data: GoodsReceiptItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GoodsIssue {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  issueDate?: string | null;
+  issueType: string;
+  /** @nullable */
+  warehouseId?: string | null;
+  /** @nullable */
+  issuedTo?: string | null;
+  /** @nullable */
+  costCenter?: string | null;
+  /** @nullable */
+  totalValue?: string | null;
+  status: string;
+  /** @nullable */
+  issuedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GoodsIssueInput {
+  companyId: string;
+  code: string;
+  issueDate?: string;
+  issueType?: string;
+  warehouseId?: string;
+  issuedTo?: string;
+  costCenter?: string;
+  totalValue?: string;
+  status?: string;
+  issuedBy?: string;
+  notes?: string;
+}
+
+export interface GoodsIssueUpdate {
+  code?: string;
+  issueDate?: string;
+  issueType?: string;
+  warehouseId?: string;
+  issuedTo?: string;
+  costCenter?: string;
+  totalValue?: string;
+  status?: string;
+  issuedBy?: string;
+  notes?: string;
+}
+
+export interface GoodsIssueListResponse {
+  data: GoodsIssue[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GoodsIssueItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  issueId?: string | null;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  locationId?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  totalCost?: string | null;
+  /** @nullable */
+  batchNumber?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GoodsIssueItemInput {
+  companyId: string;
+  issueId?: string;
+  itemId?: string;
+  locationId?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  batchNumber?: string;
+  notes?: string;
+}
+
+export interface GoodsIssueItemUpdate {
+  issueId?: string;
+  itemId?: string;
+  locationId?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  batchNumber?: string;
+  notes?: string;
+}
+
+export interface GoodsIssueItemListResponse {
+  data: GoodsIssueItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InventoryTransfer {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  transferDate?: string | null;
+  /** @nullable */
+  fromWarehouseId?: string | null;
+  /** @nullable */
+  toWarehouseId?: string | null;
+  transferType: string;
+  /** @nullable */
+  totalValue?: string | null;
+  status: string;
+  /** @nullable */
+  requestedBy?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InventoryTransferInput {
+  companyId: string;
+  code: string;
+  transferDate?: string;
+  fromWarehouseId?: string;
+  toWarehouseId?: string;
+  transferType?: string;
+  totalValue?: string;
+  status?: string;
+  requestedBy?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface InventoryTransferUpdate {
+  code?: string;
+  transferDate?: string;
+  fromWarehouseId?: string;
+  toWarehouseId?: string;
+  transferType?: string;
+  totalValue?: string;
+  status?: string;
+  requestedBy?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface InventoryTransferListResponse {
+  data: InventoryTransfer[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InventoryTransferItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  transferId?: string | null;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  fromLocationId?: string | null;
+  /** @nullable */
+  toLocationId?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  totalCost?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InventoryTransferItemInput {
+  companyId: string;
+  transferId?: string;
+  itemId?: string;
+  fromLocationId?: string;
+  toLocationId?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  notes?: string;
+}
+
+export interface InventoryTransferItemUpdate {
+  transferId?: string;
+  itemId?: string;
+  fromLocationId?: string;
+  toLocationId?: string;
+  quantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  notes?: string;
+}
+
+export interface InventoryTransferItemListResponse {
+  data: InventoryTransferItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface StockAdjustment {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  adjustmentDate?: string | null;
+  /** @nullable */
+  warehouseId?: string | null;
+  adjustmentType: string;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  totalValue?: string | null;
+  status: string;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface StockAdjustmentInput {
+  companyId: string;
+  code: string;
+  adjustmentDate?: string;
+  warehouseId?: string;
+  adjustmentType?: string;
+  reason?: string;
+  totalValue?: string;
+  status?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface StockAdjustmentUpdate {
+  code?: string;
+  adjustmentDate?: string;
+  warehouseId?: string;
+  adjustmentType?: string;
+  reason?: string;
+  totalValue?: string;
+  status?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface StockAdjustmentListResponse {
+  data: StockAdjustment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface StockAdjustmentItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  adjustmentId?: string | null;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  locationId?: string | null;
+  /** @nullable */
+  systemQuantity?: string | null;
+  /** @nullable */
+  actualQuantity?: string | null;
+  /** @nullable */
+  differenceQuantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  totalCost?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface StockAdjustmentItemInput {
+  companyId: string;
+  adjustmentId?: string;
+  itemId?: string;
+  locationId?: string;
+  systemQuantity?: string;
+  actualQuantity?: string;
+  differenceQuantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  notes?: string;
+}
+
+export interface StockAdjustmentItemUpdate {
+  adjustmentId?: string;
+  itemId?: string;
+  locationId?: string;
+  systemQuantity?: string;
+  actualQuantity?: string;
+  differenceQuantity?: string;
+  unitCost?: string;
+  totalCost?: string;
+  notes?: string;
+}
+
+export interface StockAdjustmentItemListResponse {
+  data: StockAdjustmentItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface StockCount {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  countDate?: string | null;
+  /** @nullable */
+  warehouseId?: string | null;
+  countType: string;
+  status: string;
+  /** @nullable */
+  countedBy?: string | null;
+  /** @nullable */
+  supervisedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface StockCountInput {
+  companyId: string;
+  code: string;
+  countDate?: string;
+  warehouseId?: string;
+  countType?: string;
+  status?: string;
+  countedBy?: string;
+  supervisedBy?: string;
+  notes?: string;
+}
+
+export interface StockCountUpdate {
+  code?: string;
+  countDate?: string;
+  warehouseId?: string;
+  countType?: string;
+  status?: string;
+  countedBy?: string;
+  supervisedBy?: string;
+  notes?: string;
+}
+
+export interface StockCountListResponse {
+  data: StockCount[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface StockCountItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  countId?: string | null;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  locationId?: string | null;
+  /** @nullable */
+  systemQuantity?: string | null;
+  /** @nullable */
+  countedQuantity?: string | null;
+  /** @nullable */
+  varianceQuantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  varianceValue?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface StockCountItemInput {
+  companyId: string;
+  countId?: string;
+  itemId?: string;
+  locationId?: string;
+  systemQuantity?: string;
+  countedQuantity?: string;
+  varianceQuantity?: string;
+  unitCost?: string;
+  varianceValue?: string;
+  notes?: string;
+}
+
+export interface StockCountItemUpdate {
+  countId?: string;
+  itemId?: string;
+  locationId?: string;
+  systemQuantity?: string;
+  countedQuantity?: string;
+  varianceQuantity?: string;
+  unitCost?: string;
+  varianceValue?: string;
+  notes?: string;
+}
+
+export interface StockCountItemListResponse {
+  data: StockCountItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InventoryLedger {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  itemId?: string | null;
+  /** @nullable */
+  warehouseId?: string | null;
+  /** @nullable */
+  locationId?: string | null;
+  /** @nullable */
+  transactionDate?: string | null;
+  transactionType: string;
+  /** @nullable */
+  referenceType?: string | null;
+  /** @nullable */
+  referenceNumber?: string | null;
+  /** @nullable */
+  quantityIn?: string | null;
+  /** @nullable */
+  quantityOut?: string | null;
+  /** @nullable */
+  balanceQuantity?: string | null;
+  /** @nullable */
+  unitCost?: string | null;
+  /** @nullable */
+  balanceValue?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InventoryLedgerInput {
+  companyId: string;
+  itemId?: string;
+  warehouseId?: string;
+  locationId?: string;
+  transactionDate?: string;
+  transactionType?: string;
+  referenceType?: string;
+  referenceNumber?: string;
+  quantityIn?: string;
+  quantityOut?: string;
+  balanceQuantity?: string;
+  unitCost?: string;
+  balanceValue?: string;
+  notes?: string;
+}
+
+export interface InventoryLedgerUpdate {
+  itemId?: string;
+  warehouseId?: string;
+  locationId?: string;
+  transactionDate?: string;
+  transactionType?: string;
+  referenceType?: string;
+  referenceNumber?: string;
+  quantityIn?: string;
+  quantityOut?: string;
+  balanceQuantity?: string;
+  unitCost?: string;
+  balanceValue?: string;
+  notes?: string;
+}
+
+export interface InventoryLedgerListResponse {
+  data: InventoryLedger[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export type InventoryDashboardReceiptsByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export type InventoryDashboardIssuesByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export interface InventoryDashboard {
+  itemsCount: number;
+  activeItems: number;
+  warehousesCount: number;
+  lowStockItems: number;
+  totalStockValue: string;
+  pendingReceipts: number;
+  pendingIssues: number;
+  pendingTransfers: number;
+  pendingAdjustments: number;
+  receiptsByStatus?: InventoryDashboardReceiptsByStatusItem[];
+  issuesByStatus?: InventoryDashboardIssuesByStatusItem[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -6716,6 +7805,143 @@ companyId?: string;
 };
 
 export type GetProcurementDashboardParams = {
+companyId?: string;
+};
+
+export type ListWarehousesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListWarehouseLocationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListItemCategorysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListItemGroupsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListUnitOfMeasuresParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListInventoryItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListReorderLevelsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListStockOpeningBalancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListGoodsReceiptsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListGoodsReceiptItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListGoodsIssuesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListGoodsIssueItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListInventoryTransfersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListInventoryTransferItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListStockAdjustmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListStockAdjustmentItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListStockCountsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListStockCountItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListInventoryLedgersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type GetInventoryDashboardParams = {
 companyId?: string;
 };
 

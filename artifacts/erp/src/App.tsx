@@ -136,6 +136,27 @@ import GrnItemsPage from "@/pages/grn-items";
 import PurchaseReturnsPage from "@/pages/purchase-returns";
 import PurchaseReturnItemsPage from "@/pages/purchase-return-items";
 import ProcurementApprovalsPage from "@/pages/procurement-approvals";
+import InventoryDashboardPage from "@/pages/inventory-dashboard";
+import InventoryReportsPage from "@/pages/inventory-reports";
+import WarehousesPage from "@/pages/warehouses";
+import WarehouseLocationsPage from "@/pages/warehouse-locations";
+import ItemCategorysPage from "@/pages/item-categories";
+import ItemGroupsPage from "@/pages/item-groups";
+import UnitOfMeasuresPage from "@/pages/units-of-measure";
+import InventoryItemsPage from "@/pages/inventory-items";
+import ReorderLevelsPage from "@/pages/reorder-levels";
+import StockOpeningBalancesPage from "@/pages/stock-opening-balances";
+import GoodsReceiptsPage from "@/pages/goods-receipts";
+import GoodsReceiptItemsPage from "@/pages/goods-receipt-items";
+import GoodsIssuesPage from "@/pages/goods-issues";
+import GoodsIssueItemsPage from "@/pages/goods-issue-items";
+import InventoryTransfersPage from "@/pages/inventory-transfers";
+import InventoryTransferItemsPage from "@/pages/inventory-transfer-items";
+import StockAdjustmentsPage from "@/pages/stock-adjustments";
+import StockAdjustmentItemsPage from "@/pages/stock-adjustment-items";
+import StockCountsPage from "@/pages/stock-counts";
+import StockCountItemsPage from "@/pages/stock-count-items";
+import InventoryLedgersPage from "@/pages/inventory-ledger";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -280,6 +301,27 @@ function Router() {
             <Route path="/purchase-returns" component={PurchaseReturnsPage} />
             <Route path="/purchase-return-items" component={PurchaseReturnItemsPage} />
             <Route path="/procurement-approvals" component={ProcurementApprovalsPage} />
+            <Route path="/inventory-dashboard" component={InventoryDashboardPage} />
+            <Route path="/inventory-reports" component={InventoryReportsPage} />
+            <Route path="/warehouses" component={WarehousesPage} />
+            <Route path="/warehouse-locations" component={WarehouseLocationsPage} />
+            <Route path="/item-categories" component={ItemCategorysPage} />
+            <Route path="/item-groups" component={ItemGroupsPage} />
+            <Route path="/units-of-measure" component={UnitOfMeasuresPage} />
+            <Route path="/inventory-items" component={InventoryItemsPage} />
+            <Route path="/reorder-levels" component={ReorderLevelsPage} />
+            <Route path="/stock-opening-balances" component={StockOpeningBalancesPage} />
+            <Route path="/goods-receipts" component={GoodsReceiptsPage} />
+            <Route path="/goods-receipt-items" component={GoodsReceiptItemsPage} />
+            <Route path="/goods-issues" component={GoodsIssuesPage} />
+            <Route path="/goods-issue-items" component={GoodsIssueItemsPage} />
+            <Route path="/inventory-transfers" component={InventoryTransfersPage} />
+            <Route path="/inventory-transfer-items" component={InventoryTransferItemsPage} />
+            <Route path="/stock-adjustments" component={StockAdjustmentsPage} />
+            <Route path="/stock-adjustment-items" component={StockAdjustmentItemsPage} />
+            <Route path="/stock-counts" component={StockCountsPage} />
+            <Route path="/stock-count-items" component={StockCountItemsPage} />
+            <Route path="/inventory-ledger" component={InventoryLedgersPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

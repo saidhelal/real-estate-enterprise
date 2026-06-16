@@ -10335,6 +10335,1694 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProcurementDashboard"
 
+
+  /warehouses:
+    get:
+      operationId: listWarehouses
+      tags: [warehouses]
+      summary: List warehouses
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Warehouses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseListResponse"
+    post:
+      operationId: createWarehouse
+      tags: [warehouses]
+      summary: Create a Warehouse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Warehouse"
+
+  /warehouses/{id}:
+    get:
+      operationId: getWarehouse
+      tags: [warehouses]
+      summary: Get a Warehouse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Warehouse
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Warehouse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateWarehouse
+      tags: [warehouses]
+      summary: Update a Warehouse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Warehouse"
+    delete:
+      operationId: deleteWarehouse
+      tags: [warehouses]
+      summary: Soft-delete a Warehouse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /warehouse-locations:
+    get:
+      operationId: listWarehouseLocations
+      tags: [warehouseLocations]
+      summary: List warehouse-locations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: WarehouseLocations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseLocationListResponse"
+    post:
+      operationId: createWarehouseLocation
+      tags: [warehouseLocations]
+      summary: Create a WarehouseLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseLocationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseLocation"
+
+  /warehouse-locations/{id}:
+    get:
+      operationId: getWarehouseLocation
+      tags: [warehouseLocations]
+      summary: Get a WarehouseLocation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: WarehouseLocation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseLocation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateWarehouseLocation
+      tags: [warehouseLocations]
+      summary: Update a WarehouseLocation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WarehouseLocationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehouseLocation"
+    delete:
+      operationId: deleteWarehouseLocation
+      tags: [warehouseLocations]
+      summary: Soft-delete a WarehouseLocation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /item-categories:
+    get:
+      operationId: listItemCategorys
+      tags: [itemCategories]
+      summary: List item-categories
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ItemCategorys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemCategoryListResponse"
+    post:
+      operationId: createItemCategory
+      tags: [itemCategories]
+      summary: Create a ItemCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemCategoryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemCategory"
+
+  /item-categories/{id}:
+    get:
+      operationId: getItemCategory
+      tags: [itemCategories]
+      summary: Get a ItemCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ItemCategory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemCategory"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateItemCategory
+      tags: [itemCategories]
+      summary: Update a ItemCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemCategoryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemCategory"
+    delete:
+      operationId: deleteItemCategory
+      tags: [itemCategories]
+      summary: Soft-delete a ItemCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /item-groups:
+    get:
+      operationId: listItemGroups
+      tags: [itemGroups]
+      summary: List item-groups
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ItemGroups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemGroupListResponse"
+    post:
+      operationId: createItemGroup
+      tags: [itemGroups]
+      summary: Create a ItemGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemGroupInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemGroup"
+
+  /item-groups/{id}:
+    get:
+      operationId: getItemGroup
+      tags: [itemGroups]
+      summary: Get a ItemGroup
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ItemGroup
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemGroup"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateItemGroup
+      tags: [itemGroups]
+      summary: Update a ItemGroup
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemGroupUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemGroup"
+    delete:
+      operationId: deleteItemGroup
+      tags: [itemGroups]
+      summary: Soft-delete a ItemGroup
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /units-of-measure:
+    get:
+      operationId: listUnitOfMeasures
+      tags: [unitsOfMeasure]
+      summary: List units-of-measure
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: UnitOfMeasures
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitOfMeasureListResponse"
+    post:
+      operationId: createUnitOfMeasure
+      tags: [unitsOfMeasure]
+      summary: Create a UnitOfMeasure
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitOfMeasureInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitOfMeasure"
+
+  /units-of-measure/{id}:
+    get:
+      operationId: getUnitOfMeasure
+      tags: [unitsOfMeasure]
+      summary: Get a UnitOfMeasure
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: UnitOfMeasure
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitOfMeasure"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateUnitOfMeasure
+      tags: [unitsOfMeasure]
+      summary: Update a UnitOfMeasure
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitOfMeasureUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitOfMeasure"
+    delete:
+      operationId: deleteUnitOfMeasure
+      tags: [unitsOfMeasure]
+      summary: Soft-delete a UnitOfMeasure
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inventory-items:
+    get:
+      operationId: listInventoryItems
+      tags: [inventoryItems]
+      summary: List inventory-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InventoryItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItemListResponse"
+    post:
+      operationId: createInventoryItem
+      tags: [inventoryItems]
+      summary: Create a InventoryItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+
+  /inventory-items/{id}:
+    get:
+      operationId: getInventoryItem
+      tags: [inventoryItems]
+      summary: Get a InventoryItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InventoryItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInventoryItem
+      tags: [inventoryItems]
+      summary: Update a InventoryItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+    delete:
+      operationId: deleteInventoryItem
+      tags: [inventoryItems]
+      summary: Soft-delete a InventoryItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /reorder-levels:
+    get:
+      operationId: listReorderLevels
+      tags: [reorderLevels]
+      summary: List reorder-levels
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ReorderLevels
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReorderLevelListResponse"
+    post:
+      operationId: createReorderLevel
+      tags: [reorderLevels]
+      summary: Create a ReorderLevel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderLevelInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReorderLevel"
+
+  /reorder-levels/{id}:
+    get:
+      operationId: getReorderLevel
+      tags: [reorderLevels]
+      summary: Get a ReorderLevel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ReorderLevel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReorderLevel"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateReorderLevel
+      tags: [reorderLevels]
+      summary: Update a ReorderLevel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderLevelUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReorderLevel"
+    delete:
+      operationId: deleteReorderLevel
+      tags: [reorderLevels]
+      summary: Soft-delete a ReorderLevel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /stock-opening-balances:
+    get:
+      operationId: listStockOpeningBalances
+      tags: [stockOpeningBalances]
+      summary: List stock-opening-balances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: StockOpeningBalances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOpeningBalanceListResponse"
+    post:
+      operationId: createStockOpeningBalance
+      tags: [stockOpeningBalances]
+      summary: Create a StockOpeningBalance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockOpeningBalanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOpeningBalance"
+
+  /stock-opening-balances/{id}:
+    get:
+      operationId: getStockOpeningBalance
+      tags: [stockOpeningBalances]
+      summary: Get a StockOpeningBalance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: StockOpeningBalance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOpeningBalance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateStockOpeningBalance
+      tags: [stockOpeningBalances]
+      summary: Update a StockOpeningBalance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockOpeningBalanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockOpeningBalance"
+    delete:
+      operationId: deleteStockOpeningBalance
+      tags: [stockOpeningBalances]
+      summary: Soft-delete a StockOpeningBalance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /goods-receipts:
+    get:
+      operationId: listGoodsReceipts
+      tags: [goodsReceipts]
+      summary: List goods-receipts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GoodsReceipts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptListResponse"
+    post:
+      operationId: createGoodsReceipt
+      tags: [goodsReceipts]
+      summary: Create a GoodsReceipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsReceiptInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceipt"
+
+  /goods-receipts/{id}:
+    get:
+      operationId: getGoodsReceipt
+      tags: [goodsReceipts]
+      summary: Get a GoodsReceipt
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GoodsReceipt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceipt"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGoodsReceipt
+      tags: [goodsReceipts]
+      summary: Update a GoodsReceipt
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsReceiptUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceipt"
+    delete:
+      operationId: deleteGoodsReceipt
+      tags: [goodsReceipts]
+      summary: Soft-delete a GoodsReceipt
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /goods-receipt-items:
+    get:
+      operationId: listGoodsReceiptItems
+      tags: [goodsReceiptItems]
+      summary: List goods-receipt-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GoodsReceiptItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptItemListResponse"
+    post:
+      operationId: createGoodsReceiptItem
+      tags: [goodsReceiptItems]
+      summary: Create a GoodsReceiptItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsReceiptItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptItem"
+
+  /goods-receipt-items/{id}:
+    get:
+      operationId: getGoodsReceiptItem
+      tags: [goodsReceiptItems]
+      summary: Get a GoodsReceiptItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GoodsReceiptItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGoodsReceiptItem
+      tags: [goodsReceiptItems]
+      summary: Update a GoodsReceiptItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsReceiptItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptItem"
+    delete:
+      operationId: deleteGoodsReceiptItem
+      tags: [goodsReceiptItems]
+      summary: Soft-delete a GoodsReceiptItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /goods-issues:
+    get:
+      operationId: listGoodsIssues
+      tags: [goodsIssues]
+      summary: List goods-issues
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GoodsIssues
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssueListResponse"
+    post:
+      operationId: createGoodsIssue
+      tags: [goodsIssues]
+      summary: Create a GoodsIssue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsIssueInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssue"
+
+  /goods-issues/{id}:
+    get:
+      operationId: getGoodsIssue
+      tags: [goodsIssues]
+      summary: Get a GoodsIssue
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GoodsIssue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssue"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGoodsIssue
+      tags: [goodsIssues]
+      summary: Update a GoodsIssue
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsIssueUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssue"
+    delete:
+      operationId: deleteGoodsIssue
+      tags: [goodsIssues]
+      summary: Soft-delete a GoodsIssue
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /goods-issue-items:
+    get:
+      operationId: listGoodsIssueItems
+      tags: [goodsIssueItems]
+      summary: List goods-issue-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GoodsIssueItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssueItemListResponse"
+    post:
+      operationId: createGoodsIssueItem
+      tags: [goodsIssueItems]
+      summary: Create a GoodsIssueItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsIssueItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssueItem"
+
+  /goods-issue-items/{id}:
+    get:
+      operationId: getGoodsIssueItem
+      tags: [goodsIssueItems]
+      summary: Get a GoodsIssueItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GoodsIssueItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssueItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGoodsIssueItem
+      tags: [goodsIssueItems]
+      summary: Update a GoodsIssueItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsIssueItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsIssueItem"
+    delete:
+      operationId: deleteGoodsIssueItem
+      tags: [goodsIssueItems]
+      summary: Soft-delete a GoodsIssueItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inventory-transfers:
+    get:
+      operationId: listInventoryTransfers
+      tags: [inventoryTransfers]
+      summary: List inventory-transfers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InventoryTransfers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransferListResponse"
+    post:
+      operationId: createInventoryTransfer
+      tags: [inventoryTransfers]
+      summary: Create a InventoryTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryTransferInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransfer"
+
+  /inventory-transfers/{id}:
+    get:
+      operationId: getInventoryTransfer
+      tags: [inventoryTransfers]
+      summary: Get a InventoryTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InventoryTransfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransfer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInventoryTransfer
+      tags: [inventoryTransfers]
+      summary: Update a InventoryTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryTransferUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransfer"
+    delete:
+      operationId: deleteInventoryTransfer
+      tags: [inventoryTransfers]
+      summary: Soft-delete a InventoryTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inventory-transfer-items:
+    get:
+      operationId: listInventoryTransferItems
+      tags: [inventoryTransferItems]
+      summary: List inventory-transfer-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InventoryTransferItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransferItemListResponse"
+    post:
+      operationId: createInventoryTransferItem
+      tags: [inventoryTransferItems]
+      summary: Create a InventoryTransferItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryTransferItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransferItem"
+
+  /inventory-transfer-items/{id}:
+    get:
+      operationId: getInventoryTransferItem
+      tags: [inventoryTransferItems]
+      summary: Get a InventoryTransferItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InventoryTransferItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransferItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInventoryTransferItem
+      tags: [inventoryTransferItems]
+      summary: Update a InventoryTransferItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryTransferItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryTransferItem"
+    delete:
+      operationId: deleteInventoryTransferItem
+      tags: [inventoryTransferItems]
+      summary: Soft-delete a InventoryTransferItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /stock-adjustments:
+    get:
+      operationId: listStockAdjustments
+      tags: [stockAdjustments]
+      summary: List stock-adjustments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: StockAdjustments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustmentListResponse"
+    post:
+      operationId: createStockAdjustment
+      tags: [stockAdjustments]
+      summary: Create a StockAdjustment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockAdjustmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustment"
+
+  /stock-adjustments/{id}:
+    get:
+      operationId: getStockAdjustment
+      tags: [stockAdjustments]
+      summary: Get a StockAdjustment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: StockAdjustment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateStockAdjustment
+      tags: [stockAdjustments]
+      summary: Update a StockAdjustment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockAdjustmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustment"
+    delete:
+      operationId: deleteStockAdjustment
+      tags: [stockAdjustments]
+      summary: Soft-delete a StockAdjustment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /stock-adjustment-items:
+    get:
+      operationId: listStockAdjustmentItems
+      tags: [stockAdjustmentItems]
+      summary: List stock-adjustment-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: StockAdjustmentItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustmentItemListResponse"
+    post:
+      operationId: createStockAdjustmentItem
+      tags: [stockAdjustmentItems]
+      summary: Create a StockAdjustmentItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockAdjustmentItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustmentItem"
+
+  /stock-adjustment-items/{id}:
+    get:
+      operationId: getStockAdjustmentItem
+      tags: [stockAdjustmentItems]
+      summary: Get a StockAdjustmentItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: StockAdjustmentItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustmentItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateStockAdjustmentItem
+      tags: [stockAdjustmentItems]
+      summary: Update a StockAdjustmentItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockAdjustmentItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockAdjustmentItem"
+    delete:
+      operationId: deleteStockAdjustmentItem
+      tags: [stockAdjustmentItems]
+      summary: Soft-delete a StockAdjustmentItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /stock-counts:
+    get:
+      operationId: listStockCounts
+      tags: [stockCounts]
+      summary: List stock-counts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: StockCounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCountListResponse"
+    post:
+      operationId: createStockCount
+      tags: [stockCounts]
+      summary: Create a StockCount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockCountInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCount"
+
+  /stock-counts/{id}:
+    get:
+      operationId: getStockCount
+      tags: [stockCounts]
+      summary: Get a StockCount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: StockCount
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCount"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateStockCount
+      tags: [stockCounts]
+      summary: Update a StockCount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockCountUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCount"
+    delete:
+      operationId: deleteStockCount
+      tags: [stockCounts]
+      summary: Soft-delete a StockCount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /stock-count-items:
+    get:
+      operationId: listStockCountItems
+      tags: [stockCountItems]
+      summary: List stock-count-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: StockCountItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCountItemListResponse"
+    post:
+      operationId: createStockCountItem
+      tags: [stockCountItems]
+      summary: Create a StockCountItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockCountItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCountItem"
+
+  /stock-count-items/{id}:
+    get:
+      operationId: getStockCountItem
+      tags: [stockCountItems]
+      summary: Get a StockCountItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: StockCountItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCountItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateStockCountItem
+      tags: [stockCountItems]
+      summary: Update a StockCountItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockCountItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockCountItem"
+    delete:
+      operationId: deleteStockCountItem
+      tags: [stockCountItems]
+      summary: Soft-delete a StockCountItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inventory-ledger:
+    get:
+      operationId: listInventoryLedgers
+      tags: [inventoryLedger]
+      summary: List inventory-ledger
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InventoryLedgers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryLedgerListResponse"
+    post:
+      operationId: createInventoryLedger
+      tags: [inventoryLedger]
+      summary: Create a InventoryLedger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryLedgerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryLedger"
+
+  /inventory-ledger/{id}:
+    get:
+      operationId: getInventoryLedger
+      tags: [inventoryLedger]
+      summary: Get a InventoryLedger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InventoryLedger
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryLedger"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInventoryLedger
+      tags: [inventoryLedger]
+      summary: Update a InventoryLedger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryLedgerUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryLedger"
+    delete:
+      operationId: deleteInventoryLedger
+      tags: [inventoryLedger]
+      summary: Soft-delete a InventoryLedger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inventory/dashboard:
+    get:
+      operationId: getInventoryDashboard
+      tags: [inventoryDashboard]
+      summary: Inventory dashboard KPIs
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Inventory dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryDashboard"
+
 components:
   parameters:
     IdParam:
@@ -16628,6 +18316,1140 @@ components:
               status: { type: string }
               count: { type: integer }
         requestsByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+
+    Warehouse:
+      type: object
+      required: [id, companyId, code, name, nameAr, warehouseType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        branchId: { type: ["string", "null"] }
+        warehouseType: { type: string }
+        address: { type: ["string", "null"] }
+        manager: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    WarehouseInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        branchId: { type: string }
+        warehouseType: { type: string }
+        address: { type: string }
+        manager: { type: string }
+        phone: { type: string }
+        status: { type: string }
+
+    WarehouseUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        branchId: { type: string }
+        warehouseType: { type: string }
+        address: { type: string }
+        manager: { type: string }
+        phone: { type: string }
+        status: { type: string }
+
+    WarehouseListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Warehouse" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    WarehouseLocation:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        warehouseId: { type: ["string", "null"] }
+        zone: { type: ["string", "null"] }
+        aisle: { type: ["string", "null"] }
+        rack: { type: ["string", "null"] }
+        shelf: { type: ["string", "null"] }
+        bin: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    WarehouseLocationInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        warehouseId: { type: string }
+        zone: { type: string }
+        aisle: { type: string }
+        rack: { type: string }
+        shelf: { type: string }
+        bin: { type: string }
+        status: { type: string }
+
+    WarehouseLocationUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        warehouseId: { type: string }
+        zone: { type: string }
+        aisle: { type: string }
+        rack: { type: string }
+        shelf: { type: string }
+        bin: { type: string }
+        status: { type: string }
+
+    WarehouseLocationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/WarehouseLocation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ItemCategory:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        parentId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ItemCategoryInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        parentId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    ItemCategoryUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        parentId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    ItemCategoryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ItemCategory" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ItemGroup:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ItemGroupInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    ItemGroupUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    ItemGroupListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ItemGroup" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    UnitOfMeasure:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        symbol: { type: ["string", "null"] }
+        baseUnit: { type: ["string", "null"] }
+        conversionFactor: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    UnitOfMeasureInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        symbol: { type: string }
+        baseUnit: { type: string }
+        conversionFactor: { type: string }
+        status: { type: string }
+
+    UnitOfMeasureUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        symbol: { type: string }
+        baseUnit: { type: string }
+        conversionFactor: { type: string }
+        status: { type: string }
+
+    UnitOfMeasureListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/UnitOfMeasure" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InventoryItem:
+      type: object
+      required: [id, companyId, code, name, nameAr, itemType, valuationMethod, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: ["string", "null"] }
+        groupId: { type: ["string", "null"] }
+        uomId: { type: ["string", "null"] }
+        itemType: { type: string }
+        barcode: { type: ["string", "null"] }
+        costPrice: { type: ["string", "null"] }
+        sellingPrice: { type: ["string", "null"] }
+        valuationMethod: { type: string }
+        reorderPoint: { type: ["string", "null"] }
+        minStock: { type: ["string", "null"] }
+        maxStock: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InventoryItemInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        groupId: { type: string }
+        uomId: { type: string }
+        itemType: { type: string }
+        barcode: { type: string }
+        costPrice: { type: string }
+        sellingPrice: { type: string }
+        valuationMethod: { type: string }
+        reorderPoint: { type: string }
+        minStock: { type: string }
+        maxStock: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    InventoryItemUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        groupId: { type: string }
+        uomId: { type: string }
+        itemType: { type: string }
+        barcode: { type: string }
+        costPrice: { type: string }
+        sellingPrice: { type: string }
+        valuationMethod: { type: string }
+        reorderPoint: { type: string }
+        minStock: { type: string }
+        maxStock: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    InventoryItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InventoryItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ReorderLevel:
+      type: object
+      required: [id, companyId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        itemId: { type: ["string", "null"] }
+        warehouseId: { type: ["string", "null"] }
+        minQuantity: { type: ["string", "null"] }
+        maxQuantity: { type: ["string", "null"] }
+        reorderQuantity: { type: ["string", "null"] }
+        reorderPoint: { type: ["string", "null"] }
+        leadTimeDays: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ReorderLevelInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        itemId: { type: string }
+        warehouseId: { type: string }
+        minQuantity: { type: string }
+        maxQuantity: { type: string }
+        reorderQuantity: { type: string }
+        reorderPoint: { type: string }
+        leadTimeDays: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    ReorderLevelUpdate:
+      type: object
+      properties:
+        itemId: { type: string }
+        warehouseId: { type: string }
+        minQuantity: { type: string }
+        maxQuantity: { type: string }
+        reorderQuantity: { type: string }
+        reorderPoint: { type: string }
+        leadTimeDays: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    ReorderLevelListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ReorderLevel" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    StockOpeningBalance:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        itemId: { type: ["string", "null"] }
+        warehouseId: { type: ["string", "null"] }
+        locationId: { type: ["string", "null"] }
+        balanceDate: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        totalValue: { type: ["string", "null"] }
+        batchNumber: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    StockOpeningBalanceInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        itemId: { type: string }
+        warehouseId: { type: string }
+        locationId: { type: string }
+        balanceDate: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalValue: { type: string }
+        batchNumber: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    StockOpeningBalanceUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        itemId: { type: string }
+        warehouseId: { type: string }
+        locationId: { type: string }
+        balanceDate: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalValue: { type: string }
+        batchNumber: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    StockOpeningBalanceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/StockOpeningBalance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    GoodsReceipt:
+      type: object
+      required: [id, companyId, code, receiptType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        receiptDate: { type: ["string", "null"] }
+        receiptType: { type: string }
+        warehouseId: { type: ["string", "null"] }
+        supplierId: { type: ["string", "null"] }
+        poId: { type: ["string", "null"] }
+        referenceNumber: { type: ["string", "null"] }
+        totalValue: { type: ["string", "null"] }
+        status: { type: string }
+        receivedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    GoodsReceiptInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        receiptDate: { type: string }
+        receiptType: { type: string }
+        warehouseId: { type: string }
+        supplierId: { type: string }
+        poId: { type: string }
+        referenceNumber: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        receivedBy: { type: string }
+        notes: { type: string }
+
+    GoodsReceiptUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        receiptDate: { type: string }
+        receiptType: { type: string }
+        warehouseId: { type: string }
+        supplierId: { type: string }
+        poId: { type: string }
+        referenceNumber: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        receivedBy: { type: string }
+        notes: { type: string }
+
+    GoodsReceiptListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GoodsReceipt" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    GoodsReceiptItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        receiptId: { type: ["string", "null"] }
+        itemId: { type: ["string", "null"] }
+        locationId: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        totalCost: { type: ["string", "null"] }
+        batchNumber: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    GoodsReceiptItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        receiptId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        batchNumber: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    GoodsReceiptItemUpdate:
+      type: object
+      properties:
+        receiptId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        batchNumber: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    GoodsReceiptItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GoodsReceiptItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    GoodsIssue:
+      type: object
+      required: [id, companyId, code, issueType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        issueDate: { type: ["string", "null"] }
+        issueType: { type: string }
+        warehouseId: { type: ["string", "null"] }
+        issuedTo: { type: ["string", "null"] }
+        costCenter: { type: ["string", "null"] }
+        totalValue: { type: ["string", "null"] }
+        status: { type: string }
+        issuedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    GoodsIssueInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        issueDate: { type: string }
+        issueType: { type: string }
+        warehouseId: { type: string }
+        issuedTo: { type: string }
+        costCenter: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        issuedBy: { type: string }
+        notes: { type: string }
+
+    GoodsIssueUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        issueDate: { type: string }
+        issueType: { type: string }
+        warehouseId: { type: string }
+        issuedTo: { type: string }
+        costCenter: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        issuedBy: { type: string }
+        notes: { type: string }
+
+    GoodsIssueListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GoodsIssue" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    GoodsIssueItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        issueId: { type: ["string", "null"] }
+        itemId: { type: ["string", "null"] }
+        locationId: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        totalCost: { type: ["string", "null"] }
+        batchNumber: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    GoodsIssueItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        issueId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        batchNumber: { type: string }
+        notes: { type: string }
+
+    GoodsIssueItemUpdate:
+      type: object
+      properties:
+        issueId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        batchNumber: { type: string }
+        notes: { type: string }
+
+    GoodsIssueItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GoodsIssueItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InventoryTransfer:
+      type: object
+      required: [id, companyId, code, transferType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        transferDate: { type: ["string", "null"] }
+        fromWarehouseId: { type: ["string", "null"] }
+        toWarehouseId: { type: ["string", "null"] }
+        transferType: { type: string }
+        totalValue: { type: ["string", "null"] }
+        status: { type: string }
+        requestedBy: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InventoryTransferInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        transferDate: { type: string }
+        fromWarehouseId: { type: string }
+        toWarehouseId: { type: string }
+        transferType: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        requestedBy: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    InventoryTransferUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        transferDate: { type: string }
+        fromWarehouseId: { type: string }
+        toWarehouseId: { type: string }
+        transferType: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        requestedBy: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    InventoryTransferListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InventoryTransfer" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InventoryTransferItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        transferId: { type: ["string", "null"] }
+        itemId: { type: ["string", "null"] }
+        fromLocationId: { type: ["string", "null"] }
+        toLocationId: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        totalCost: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InventoryTransferItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        transferId: { type: string }
+        itemId: { type: string }
+        fromLocationId: { type: string }
+        toLocationId: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        notes: { type: string }
+
+    InventoryTransferItemUpdate:
+      type: object
+      properties:
+        transferId: { type: string }
+        itemId: { type: string }
+        fromLocationId: { type: string }
+        toLocationId: { type: string }
+        quantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        notes: { type: string }
+
+    InventoryTransferItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InventoryTransferItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    StockAdjustment:
+      type: object
+      required: [id, companyId, code, adjustmentType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        adjustmentDate: { type: ["string", "null"] }
+        warehouseId: { type: ["string", "null"] }
+        adjustmentType: { type: string }
+        reason: { type: ["string", "null"] }
+        totalValue: { type: ["string", "null"] }
+        status: { type: string }
+        approvedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    StockAdjustmentInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        adjustmentDate: { type: string }
+        warehouseId: { type: string }
+        adjustmentType: { type: string }
+        reason: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    StockAdjustmentUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        adjustmentDate: { type: string }
+        warehouseId: { type: string }
+        adjustmentType: { type: string }
+        reason: { type: string }
+        totalValue: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    StockAdjustmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/StockAdjustment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    StockAdjustmentItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        adjustmentId: { type: ["string", "null"] }
+        itemId: { type: ["string", "null"] }
+        locationId: { type: ["string", "null"] }
+        systemQuantity: { type: ["string", "null"] }
+        actualQuantity: { type: ["string", "null"] }
+        differenceQuantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        totalCost: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    StockAdjustmentItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        adjustmentId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        systemQuantity: { type: string }
+        actualQuantity: { type: string }
+        differenceQuantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        notes: { type: string }
+
+    StockAdjustmentItemUpdate:
+      type: object
+      properties:
+        adjustmentId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        systemQuantity: { type: string }
+        actualQuantity: { type: string }
+        differenceQuantity: { type: string }
+        unitCost: { type: string }
+        totalCost: { type: string }
+        notes: { type: string }
+
+    StockAdjustmentItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/StockAdjustmentItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    StockCount:
+      type: object
+      required: [id, companyId, code, countType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        countDate: { type: ["string", "null"] }
+        warehouseId: { type: ["string", "null"] }
+        countType: { type: string }
+        status: { type: string }
+        countedBy: { type: ["string", "null"] }
+        supervisedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    StockCountInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        countDate: { type: string }
+        warehouseId: { type: string }
+        countType: { type: string }
+        status: { type: string }
+        countedBy: { type: string }
+        supervisedBy: { type: string }
+        notes: { type: string }
+
+    StockCountUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        countDate: { type: string }
+        warehouseId: { type: string }
+        countType: { type: string }
+        status: { type: string }
+        countedBy: { type: string }
+        supervisedBy: { type: string }
+        notes: { type: string }
+
+    StockCountListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/StockCount" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    StockCountItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        countId: { type: ["string", "null"] }
+        itemId: { type: ["string", "null"] }
+        locationId: { type: ["string", "null"] }
+        systemQuantity: { type: ["string", "null"] }
+        countedQuantity: { type: ["string", "null"] }
+        varianceQuantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        varianceValue: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    StockCountItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        countId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        systemQuantity: { type: string }
+        countedQuantity: { type: string }
+        varianceQuantity: { type: string }
+        unitCost: { type: string }
+        varianceValue: { type: string }
+        notes: { type: string }
+
+    StockCountItemUpdate:
+      type: object
+      properties:
+        countId: { type: string }
+        itemId: { type: string }
+        locationId: { type: string }
+        systemQuantity: { type: string }
+        countedQuantity: { type: string }
+        varianceQuantity: { type: string }
+        unitCost: { type: string }
+        varianceValue: { type: string }
+        notes: { type: string }
+
+    StockCountItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/StockCountItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InventoryLedger:
+      type: object
+      required: [id, companyId, transactionType, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        itemId: { type: ["string", "null"] }
+        warehouseId: { type: ["string", "null"] }
+        locationId: { type: ["string", "null"] }
+        transactionDate: { type: ["string", "null"] }
+        transactionType: { type: string }
+        referenceType: { type: ["string", "null"] }
+        referenceNumber: { type: ["string", "null"] }
+        quantityIn: { type: ["string", "null"] }
+        quantityOut: { type: ["string", "null"] }
+        balanceQuantity: { type: ["string", "null"] }
+        unitCost: { type: ["string", "null"] }
+        balanceValue: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InventoryLedgerInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        itemId: { type: string }
+        warehouseId: { type: string }
+        locationId: { type: string }
+        transactionDate: { type: string }
+        transactionType: { type: string }
+        referenceType: { type: string }
+        referenceNumber: { type: string }
+        quantityIn: { type: string }
+        quantityOut: { type: string }
+        balanceQuantity: { type: string }
+        unitCost: { type: string }
+        balanceValue: { type: string }
+        notes: { type: string }
+
+    InventoryLedgerUpdate:
+      type: object
+      properties:
+        itemId: { type: string }
+        warehouseId: { type: string }
+        locationId: { type: string }
+        transactionDate: { type: string }
+        transactionType: { type: string }
+        referenceType: { type: string }
+        referenceNumber: { type: string }
+        quantityIn: { type: string }
+        quantityOut: { type: string }
+        balanceQuantity: { type: string }
+        unitCost: { type: string }
+        balanceValue: { type: string }
+        notes: { type: string }
+
+    InventoryLedgerListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InventoryLedger" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InventoryDashboard:
+      type: object
+      required: [itemsCount, activeItems, warehousesCount, lowStockItems, totalStockValue, pendingReceipts, pendingIssues, pendingTransfers, pendingAdjustments]
+      properties:
+        itemsCount: { type: integer }
+        activeItems: { type: integer }
+        warehousesCount: { type: integer }
+        lowStockItems: { type: integer }
+        totalStockValue: { type: string }
+        pendingReceipts: { type: integer }
+        pendingIssues: { type: integer }
+        pendingTransfers: { type: integer }
+        pendingAdjustments: { type: integer }
+        receiptsByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+        issuesByStatus:
           type: array
           items:
             type: object

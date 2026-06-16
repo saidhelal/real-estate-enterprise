@@ -13440,3 +13440,2365 @@ export const GetProcurementDashboardResponse = zod.object({
 })
 
 
+/**
+ * @summary List warehouses
+ */
+export const ListWarehousesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListWarehousesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "branchId": zod.string().nullish(),
+  "warehouseType": zod.string(),
+  "address": zod.string().nullish(),
+  "manager": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Warehouse
+ */
+export const CreateWarehouseBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "branchId": zod.string().optional(),
+  "warehouseType": zod.string().optional(),
+  "address": zod.string().optional(),
+  "manager": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Warehouse
+ */
+export const GetWarehouseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetWarehouseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "branchId": zod.string().nullish(),
+  "warehouseType": zod.string(),
+  "address": zod.string().nullish(),
+  "manager": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Warehouse
+ */
+export const UpdateWarehouseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateWarehouseBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "warehouseType": zod.string().optional(),
+  "address": zod.string().optional(),
+  "manager": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateWarehouseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "branchId": zod.string().nullish(),
+  "warehouseType": zod.string(),
+  "address": zod.string().nullish(),
+  "manager": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Warehouse
+ */
+export const DeleteWarehouseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteWarehouseResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List warehouse-locations
+ */
+export const ListWarehouseLocationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListWarehouseLocationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "zone": zod.string().nullish(),
+  "aisle": zod.string().nullish(),
+  "rack": zod.string().nullish(),
+  "shelf": zod.string().nullish(),
+  "bin": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a WarehouseLocation
+ */
+export const CreateWarehouseLocationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "warehouseId": zod.string().optional(),
+  "zone": zod.string().optional(),
+  "aisle": zod.string().optional(),
+  "rack": zod.string().optional(),
+  "shelf": zod.string().optional(),
+  "bin": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a WarehouseLocation
+ */
+export const GetWarehouseLocationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetWarehouseLocationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "zone": zod.string().nullish(),
+  "aisle": zod.string().nullish(),
+  "rack": zod.string().nullish(),
+  "shelf": zod.string().nullish(),
+  "bin": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a WarehouseLocation
+ */
+export const UpdateWarehouseLocationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateWarehouseLocationBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "zone": zod.string().optional(),
+  "aisle": zod.string().optional(),
+  "rack": zod.string().optional(),
+  "shelf": zod.string().optional(),
+  "bin": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateWarehouseLocationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "zone": zod.string().nullish(),
+  "aisle": zod.string().nullish(),
+  "rack": zod.string().nullish(),
+  "shelf": zod.string().nullish(),
+  "bin": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a WarehouseLocation
+ */
+export const DeleteWarehouseLocationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteWarehouseLocationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List item-categories
+ */
+export const ListItemCategorysQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListItemCategorysResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "parentId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ItemCategory
+ */
+export const CreateItemCategoryBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "parentId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ItemCategory
+ */
+export const GetItemCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetItemCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "parentId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ItemCategory
+ */
+export const UpdateItemCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateItemCategoryBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "parentId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateItemCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "parentId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ItemCategory
+ */
+export const DeleteItemCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteItemCategoryResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List item-groups
+ */
+export const ListItemGroupsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListItemGroupsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ItemGroup
+ */
+export const CreateItemGroupBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ItemGroup
+ */
+export const GetItemGroupParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetItemGroupResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ItemGroup
+ */
+export const UpdateItemGroupParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateItemGroupBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "categoryId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateItemGroupResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ItemGroup
+ */
+export const DeleteItemGroupParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteItemGroupResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List units-of-measure
+ */
+export const ListUnitOfMeasuresQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListUnitOfMeasuresResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "symbol": zod.string().nullish(),
+  "baseUnit": zod.string().nullish(),
+  "conversionFactor": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a UnitOfMeasure
+ */
+export const CreateUnitOfMeasureBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "symbol": zod.string().optional(),
+  "baseUnit": zod.string().optional(),
+  "conversionFactor": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a UnitOfMeasure
+ */
+export const GetUnitOfMeasureParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUnitOfMeasureResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "symbol": zod.string().nullish(),
+  "baseUnit": zod.string().nullish(),
+  "conversionFactor": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a UnitOfMeasure
+ */
+export const UpdateUnitOfMeasureParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateUnitOfMeasureBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "symbol": zod.string().optional(),
+  "baseUnit": zod.string().optional(),
+  "conversionFactor": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateUnitOfMeasureResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "symbol": zod.string().nullish(),
+  "baseUnit": zod.string().nullish(),
+  "conversionFactor": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a UnitOfMeasure
+ */
+export const DeleteUnitOfMeasureParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteUnitOfMeasureResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List inventory-items
+ */
+export const ListInventoryItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListInventoryItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "groupId": zod.string().nullish(),
+  "uomId": zod.string().nullish(),
+  "itemType": zod.string(),
+  "barcode": zod.string().nullish(),
+  "costPrice": zod.string().nullish(),
+  "sellingPrice": zod.string().nullish(),
+  "valuationMethod": zod.string(),
+  "reorderPoint": zod.string().nullish(),
+  "minStock": zod.string().nullish(),
+  "maxStock": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InventoryItem
+ */
+export const CreateInventoryItemBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().optional(),
+  "groupId": zod.string().optional(),
+  "uomId": zod.string().optional(),
+  "itemType": zod.string().optional(),
+  "barcode": zod.string().optional(),
+  "costPrice": zod.string().optional(),
+  "sellingPrice": zod.string().optional(),
+  "valuationMethod": zod.string().optional(),
+  "reorderPoint": zod.string().optional(),
+  "minStock": zod.string().optional(),
+  "maxStock": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InventoryItem
+ */
+export const GetInventoryItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInventoryItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "groupId": zod.string().nullish(),
+  "uomId": zod.string().nullish(),
+  "itemType": zod.string(),
+  "barcode": zod.string().nullish(),
+  "costPrice": zod.string().nullish(),
+  "sellingPrice": zod.string().nullish(),
+  "valuationMethod": zod.string(),
+  "reorderPoint": zod.string().nullish(),
+  "minStock": zod.string().nullish(),
+  "maxStock": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InventoryItem
+ */
+export const UpdateInventoryItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInventoryItemBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "categoryId": zod.string().optional(),
+  "groupId": zod.string().optional(),
+  "uomId": zod.string().optional(),
+  "itemType": zod.string().optional(),
+  "barcode": zod.string().optional(),
+  "costPrice": zod.string().optional(),
+  "sellingPrice": zod.string().optional(),
+  "valuationMethod": zod.string().optional(),
+  "reorderPoint": zod.string().optional(),
+  "minStock": zod.string().optional(),
+  "maxStock": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateInventoryItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "groupId": zod.string().nullish(),
+  "uomId": zod.string().nullish(),
+  "itemType": zod.string(),
+  "barcode": zod.string().nullish(),
+  "costPrice": zod.string().nullish(),
+  "sellingPrice": zod.string().nullish(),
+  "valuationMethod": zod.string(),
+  "reorderPoint": zod.string().nullish(),
+  "minStock": zod.string().nullish(),
+  "maxStock": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InventoryItem
+ */
+export const DeleteInventoryItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInventoryItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List reorder-levels
+ */
+export const ListReorderLevelsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListReorderLevelsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "minQuantity": zod.string().nullish(),
+  "maxQuantity": zod.string().nullish(),
+  "reorderQuantity": zod.string().nullish(),
+  "reorderPoint": zod.string().nullish(),
+  "leadTimeDays": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ReorderLevel
+ */
+export const CreateReorderLevelBody = zod.object({
+  "companyId": zod.string(),
+  "itemId": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "minQuantity": zod.string().optional(),
+  "maxQuantity": zod.string().optional(),
+  "reorderQuantity": zod.string().optional(),
+  "reorderPoint": zod.string().optional(),
+  "leadTimeDays": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ReorderLevel
+ */
+export const GetReorderLevelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetReorderLevelResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "minQuantity": zod.string().nullish(),
+  "maxQuantity": zod.string().nullish(),
+  "reorderQuantity": zod.string().nullish(),
+  "reorderPoint": zod.string().nullish(),
+  "leadTimeDays": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ReorderLevel
+ */
+export const UpdateReorderLevelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateReorderLevelBody = zod.object({
+  "itemId": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "minQuantity": zod.string().optional(),
+  "maxQuantity": zod.string().optional(),
+  "reorderQuantity": zod.string().optional(),
+  "reorderPoint": zod.string().optional(),
+  "leadTimeDays": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateReorderLevelResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "minQuantity": zod.string().nullish(),
+  "maxQuantity": zod.string().nullish(),
+  "reorderQuantity": zod.string().nullish(),
+  "reorderPoint": zod.string().nullish(),
+  "leadTimeDays": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ReorderLevel
+ */
+export const DeleteReorderLevelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteReorderLevelResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List stock-opening-balances
+ */
+export const ListStockOpeningBalancesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListStockOpeningBalancesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "balanceDate": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a StockOpeningBalance
+ */
+export const CreateStockOpeningBalanceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "itemId": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "balanceDate": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "batchNumber": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a StockOpeningBalance
+ */
+export const GetStockOpeningBalanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetStockOpeningBalanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "balanceDate": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a StockOpeningBalance
+ */
+export const UpdateStockOpeningBalanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateStockOpeningBalanceBody = zod.object({
+  "code": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "balanceDate": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "batchNumber": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateStockOpeningBalanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "balanceDate": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a StockOpeningBalance
+ */
+export const DeleteStockOpeningBalanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteStockOpeningBalanceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List goods-receipts
+ */
+export const ListGoodsReceiptsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListGoodsReceiptsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "receiptDate": zod.string().nullish(),
+  "receiptType": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "poId": zod.string().nullish(),
+  "referenceNumber": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "receivedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GoodsReceipt
+ */
+export const CreateGoodsReceiptBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "receiptDate": zod.string().optional(),
+  "receiptType": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "poId": zod.string().optional(),
+  "referenceNumber": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "receivedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GoodsReceipt
+ */
+export const GetGoodsReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGoodsReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "receiptDate": zod.string().nullish(),
+  "receiptType": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "poId": zod.string().nullish(),
+  "referenceNumber": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "receivedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GoodsReceipt
+ */
+export const UpdateGoodsReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGoodsReceiptBody = zod.object({
+  "code": zod.string().optional(),
+  "receiptDate": zod.string().optional(),
+  "receiptType": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "poId": zod.string().optional(),
+  "referenceNumber": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "receivedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGoodsReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "receiptDate": zod.string().nullish(),
+  "receiptType": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "poId": zod.string().nullish(),
+  "referenceNumber": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "receivedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GoodsReceipt
+ */
+export const DeleteGoodsReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGoodsReceiptResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List goods-receipt-items
+ */
+export const ListGoodsReceiptItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListGoodsReceiptItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "receiptId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GoodsReceiptItem
+ */
+export const CreateGoodsReceiptItemBody = zod.object({
+  "companyId": zod.string(),
+  "receiptId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "batchNumber": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GoodsReceiptItem
+ */
+export const GetGoodsReceiptItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGoodsReceiptItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "receiptId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GoodsReceiptItem
+ */
+export const UpdateGoodsReceiptItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGoodsReceiptItemBody = zod.object({
+  "receiptId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "batchNumber": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGoodsReceiptItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "receiptId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GoodsReceiptItem
+ */
+export const DeleteGoodsReceiptItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGoodsReceiptItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List goods-issues
+ */
+export const ListGoodsIssuesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListGoodsIssuesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "issueDate": zod.string().nullish(),
+  "issueType": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "issuedTo": zod.string().nullish(),
+  "costCenter": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "issuedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GoodsIssue
+ */
+export const CreateGoodsIssueBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "issueDate": zod.string().optional(),
+  "issueType": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "issuedTo": zod.string().optional(),
+  "costCenter": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "issuedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GoodsIssue
+ */
+export const GetGoodsIssueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGoodsIssueResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "issueDate": zod.string().nullish(),
+  "issueType": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "issuedTo": zod.string().nullish(),
+  "costCenter": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "issuedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GoodsIssue
+ */
+export const UpdateGoodsIssueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGoodsIssueBody = zod.object({
+  "code": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "issueType": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "issuedTo": zod.string().optional(),
+  "costCenter": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "issuedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGoodsIssueResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "issueDate": zod.string().nullish(),
+  "issueType": zod.string(),
+  "warehouseId": zod.string().nullish(),
+  "issuedTo": zod.string().nullish(),
+  "costCenter": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "issuedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GoodsIssue
+ */
+export const DeleteGoodsIssueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGoodsIssueResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List goods-issue-items
+ */
+export const ListGoodsIssueItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListGoodsIssueItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "issueId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GoodsIssueItem
+ */
+export const CreateGoodsIssueItemBody = zod.object({
+  "companyId": zod.string(),
+  "issueId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "batchNumber": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GoodsIssueItem
+ */
+export const GetGoodsIssueItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGoodsIssueItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "issueId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GoodsIssueItem
+ */
+export const UpdateGoodsIssueItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGoodsIssueItemBody = zod.object({
+  "issueId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "batchNumber": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGoodsIssueItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "issueId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "batchNumber": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GoodsIssueItem
+ */
+export const DeleteGoodsIssueItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGoodsIssueItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List inventory-transfers
+ */
+export const ListInventoryTransfersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListInventoryTransfersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "transferDate": zod.string().nullish(),
+  "fromWarehouseId": zod.string().nullish(),
+  "toWarehouseId": zod.string().nullish(),
+  "transferType": zod.string(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "requestedBy": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InventoryTransfer
+ */
+export const CreateInventoryTransferBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "transferDate": zod.string().optional(),
+  "fromWarehouseId": zod.string().optional(),
+  "toWarehouseId": zod.string().optional(),
+  "transferType": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "requestedBy": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InventoryTransfer
+ */
+export const GetInventoryTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInventoryTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "transferDate": zod.string().nullish(),
+  "fromWarehouseId": zod.string().nullish(),
+  "toWarehouseId": zod.string().nullish(),
+  "transferType": zod.string(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "requestedBy": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InventoryTransfer
+ */
+export const UpdateInventoryTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInventoryTransferBody = zod.object({
+  "code": zod.string().optional(),
+  "transferDate": zod.string().optional(),
+  "fromWarehouseId": zod.string().optional(),
+  "toWarehouseId": zod.string().optional(),
+  "transferType": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "requestedBy": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInventoryTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "transferDate": zod.string().nullish(),
+  "fromWarehouseId": zod.string().nullish(),
+  "toWarehouseId": zod.string().nullish(),
+  "transferType": zod.string(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "requestedBy": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InventoryTransfer
+ */
+export const DeleteInventoryTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInventoryTransferResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List inventory-transfer-items
+ */
+export const ListInventoryTransferItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListInventoryTransferItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "transferId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "fromLocationId": zod.string().nullish(),
+  "toLocationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InventoryTransferItem
+ */
+export const CreateInventoryTransferItemBody = zod.object({
+  "companyId": zod.string(),
+  "transferId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "fromLocationId": zod.string().optional(),
+  "toLocationId": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InventoryTransferItem
+ */
+export const GetInventoryTransferItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInventoryTransferItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "transferId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "fromLocationId": zod.string().nullish(),
+  "toLocationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InventoryTransferItem
+ */
+export const UpdateInventoryTransferItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInventoryTransferItemBody = zod.object({
+  "transferId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "fromLocationId": zod.string().optional(),
+  "toLocationId": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInventoryTransferItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "transferId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "fromLocationId": zod.string().nullish(),
+  "toLocationId": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InventoryTransferItem
+ */
+export const DeleteInventoryTransferItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInventoryTransferItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List stock-adjustments
+ */
+export const ListStockAdjustmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListStockAdjustmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "adjustmentDate": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "adjustmentType": zod.string(),
+  "reason": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a StockAdjustment
+ */
+export const CreateStockAdjustmentBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "adjustmentDate": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "adjustmentType": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a StockAdjustment
+ */
+export const GetStockAdjustmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetStockAdjustmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "adjustmentDate": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "adjustmentType": zod.string(),
+  "reason": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a StockAdjustment
+ */
+export const UpdateStockAdjustmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateStockAdjustmentBody = zod.object({
+  "code": zod.string().optional(),
+  "adjustmentDate": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "adjustmentType": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "totalValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateStockAdjustmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "adjustmentDate": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "adjustmentType": zod.string(),
+  "reason": zod.string().nullish(),
+  "totalValue": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a StockAdjustment
+ */
+export const DeleteStockAdjustmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteStockAdjustmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List stock-adjustment-items
+ */
+export const ListStockAdjustmentItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListStockAdjustmentItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "adjustmentId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "systemQuantity": zod.string().nullish(),
+  "actualQuantity": zod.string().nullish(),
+  "differenceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a StockAdjustmentItem
+ */
+export const CreateStockAdjustmentItemBody = zod.object({
+  "companyId": zod.string(),
+  "adjustmentId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "systemQuantity": zod.string().optional(),
+  "actualQuantity": zod.string().optional(),
+  "differenceQuantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a StockAdjustmentItem
+ */
+export const GetStockAdjustmentItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetStockAdjustmentItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "adjustmentId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "systemQuantity": zod.string().nullish(),
+  "actualQuantity": zod.string().nullish(),
+  "differenceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a StockAdjustmentItem
+ */
+export const UpdateStockAdjustmentItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateStockAdjustmentItemBody = zod.object({
+  "adjustmentId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "systemQuantity": zod.string().optional(),
+  "actualQuantity": zod.string().optional(),
+  "differenceQuantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "totalCost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateStockAdjustmentItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "adjustmentId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "systemQuantity": zod.string().nullish(),
+  "actualQuantity": zod.string().nullish(),
+  "differenceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "totalCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a StockAdjustmentItem
+ */
+export const DeleteStockAdjustmentItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteStockAdjustmentItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List stock-counts
+ */
+export const ListStockCountsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListStockCountsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "countDate": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "countType": zod.string(),
+  "status": zod.string(),
+  "countedBy": zod.string().nullish(),
+  "supervisedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a StockCount
+ */
+export const CreateStockCountBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "countDate": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "countType": zod.string().optional(),
+  "status": zod.string().optional(),
+  "countedBy": zod.string().optional(),
+  "supervisedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a StockCount
+ */
+export const GetStockCountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetStockCountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "countDate": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "countType": zod.string(),
+  "status": zod.string(),
+  "countedBy": zod.string().nullish(),
+  "supervisedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a StockCount
+ */
+export const UpdateStockCountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateStockCountBody = zod.object({
+  "code": zod.string().optional(),
+  "countDate": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "countType": zod.string().optional(),
+  "status": zod.string().optional(),
+  "countedBy": zod.string().optional(),
+  "supervisedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateStockCountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "countDate": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "countType": zod.string(),
+  "status": zod.string(),
+  "countedBy": zod.string().nullish(),
+  "supervisedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a StockCount
+ */
+export const DeleteStockCountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteStockCountResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List stock-count-items
+ */
+export const ListStockCountItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListStockCountItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "countId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "systemQuantity": zod.string().nullish(),
+  "countedQuantity": zod.string().nullish(),
+  "varianceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "varianceValue": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a StockCountItem
+ */
+export const CreateStockCountItemBody = zod.object({
+  "companyId": zod.string(),
+  "countId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "systemQuantity": zod.string().optional(),
+  "countedQuantity": zod.string().optional(),
+  "varianceQuantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "varianceValue": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a StockCountItem
+ */
+export const GetStockCountItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetStockCountItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "countId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "systemQuantity": zod.string().nullish(),
+  "countedQuantity": zod.string().nullish(),
+  "varianceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "varianceValue": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a StockCountItem
+ */
+export const UpdateStockCountItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateStockCountItemBody = zod.object({
+  "countId": zod.string().optional(),
+  "itemId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "systemQuantity": zod.string().optional(),
+  "countedQuantity": zod.string().optional(),
+  "varianceQuantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "varianceValue": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateStockCountItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "countId": zod.string().nullish(),
+  "itemId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "systemQuantity": zod.string().nullish(),
+  "countedQuantity": zod.string().nullish(),
+  "varianceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "varianceValue": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a StockCountItem
+ */
+export const DeleteStockCountItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteStockCountItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List inventory-ledger
+ */
+export const ListInventoryLedgersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListInventoryLedgersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "transactionDate": zod.string().nullish(),
+  "transactionType": zod.string(),
+  "referenceType": zod.string().nullish(),
+  "referenceNumber": zod.string().nullish(),
+  "quantityIn": zod.string().nullish(),
+  "quantityOut": zod.string().nullish(),
+  "balanceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "balanceValue": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InventoryLedger
+ */
+export const CreateInventoryLedgerBody = zod.object({
+  "companyId": zod.string(),
+  "itemId": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "transactionDate": zod.string().optional(),
+  "transactionType": zod.string().optional(),
+  "referenceType": zod.string().optional(),
+  "referenceNumber": zod.string().optional(),
+  "quantityIn": zod.string().optional(),
+  "quantityOut": zod.string().optional(),
+  "balanceQuantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "balanceValue": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InventoryLedger
+ */
+export const GetInventoryLedgerParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInventoryLedgerResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "transactionDate": zod.string().nullish(),
+  "transactionType": zod.string(),
+  "referenceType": zod.string().nullish(),
+  "referenceNumber": zod.string().nullish(),
+  "quantityIn": zod.string().nullish(),
+  "quantityOut": zod.string().nullish(),
+  "balanceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "balanceValue": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InventoryLedger
+ */
+export const UpdateInventoryLedgerParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInventoryLedgerBody = zod.object({
+  "itemId": zod.string().optional(),
+  "warehouseId": zod.string().optional(),
+  "locationId": zod.string().optional(),
+  "transactionDate": zod.string().optional(),
+  "transactionType": zod.string().optional(),
+  "referenceType": zod.string().optional(),
+  "referenceNumber": zod.string().optional(),
+  "quantityIn": zod.string().optional(),
+  "quantityOut": zod.string().optional(),
+  "balanceQuantity": zod.string().optional(),
+  "unitCost": zod.string().optional(),
+  "balanceValue": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInventoryLedgerResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "itemId": zod.string().nullish(),
+  "warehouseId": zod.string().nullish(),
+  "locationId": zod.string().nullish(),
+  "transactionDate": zod.string().nullish(),
+  "transactionType": zod.string(),
+  "referenceType": zod.string().nullish(),
+  "referenceNumber": zod.string().nullish(),
+  "quantityIn": zod.string().nullish(),
+  "quantityOut": zod.string().nullish(),
+  "balanceQuantity": zod.string().nullish(),
+  "unitCost": zod.string().nullish(),
+  "balanceValue": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InventoryLedger
+ */
+export const DeleteInventoryLedgerParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInventoryLedgerResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Inventory dashboard KPIs
+ */
+export const GetInventoryDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetInventoryDashboardResponse = zod.object({
+  "itemsCount": zod.number(),
+  "activeItems": zod.number(),
+  "warehousesCount": zod.number(),
+  "lowStockItems": zod.number(),
+  "totalStockValue": zod.string(),
+  "pendingReceipts": zod.number(),
+  "pendingIssues": zod.number(),
+  "pendingTransfers": zod.number(),
+  "pendingAdjustments": zod.number(),
+  "receiptsByStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+})).optional(),
+  "issuesByStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+})).optional()
+})
+
+

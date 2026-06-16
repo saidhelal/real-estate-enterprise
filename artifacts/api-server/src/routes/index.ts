@@ -22,6 +22,7 @@ import accountingRouter from "./accounting";
 import engineeringRouter from "./engineering";
 import constructionRouter from "./construction";
 import procurementRouter from "./procurement";
+import inventoryRouter from "./inventory";
 
 const router: IRouter = Router();
 
@@ -48,5 +49,6 @@ router.use(accountingRouter);
 router.use(engineeringRouter);
 router.use(constructionRouter);
 router.use(procurementRouter);
+router.use(inventoryRouter);
 
 export default router;

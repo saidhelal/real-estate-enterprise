@@ -176,6 +176,28 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "purchaseReturnItems", label: "Purchase Return Items" },
   // Procurement — Approval Workflow
   { module: "procurementApprovals", label: "Procurement Approvals", extraActions: ["approve"] },
+  // Inventory — Master Data
+  { module: "warehouses", label: "Warehouses" },
+  { module: "warehouseLocations", label: "Warehouse Locations" },
+  { module: "itemCategories", label: "Item Categories" },
+  { module: "itemGroups", label: "Item Groups" },
+  { module: "unitsOfMeasure", label: "Units of Measure" },
+  { module: "inventoryItems", label: "Inventory Items" },
+  { module: "reorderLevels", label: "Reorder Levels" },
+  // Inventory — Transactions
+  { module: "stockOpeningBalances", label: "Stock Opening Balances" },
+  { module: "goodsReceipts", label: "Goods Receipts", extraActions: ["complete"] },
+  { module: "goodsReceiptItems", label: "Goods Receipt Items" },
+  { module: "goodsIssues", label: "Goods Issues", extraActions: ["complete"] },
+  { module: "goodsIssueItems", label: "Goods Issue Items" },
+  { module: "inventoryTransfers", label: "Inventory Transfers", extraActions: ["complete"] },
+  { module: "inventoryTransferItems", label: "Inventory Transfer Items" },
+  { module: "stockAdjustments", label: "Stock Adjustments", extraActions: ["approve"] },
+  { module: "stockAdjustmentItems", label: "Stock Adjustment Items" },
+  { module: "stockCounts", label: "Stock Counts", extraActions: ["complete"] },
+  { module: "stockCountItems", label: "Stock Count Items" },
+  // Inventory — Ledger
+  { module: "inventoryLedger", label: "Inventory Ledger" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 
@@ -669,6 +691,7 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["1010", "Cash on Hand", "النقد بالصندوق", "asset", "debit", "11", true],
   ["1020", "Bank Accounts", "الحسابات البنكية", "asset", "debit", "11", true],
   ["1030", "Accounts Receivable", "الذمم المدينة", "asset", "debit", "11", true],
+  ["1040", "Inventory", "المخزون", "asset", "debit", "11", true],
   ["12", "Non-Current Assets", "الأصول غير المتداولة", "asset", "debit", "1", false],
   ["1210", "Property & Equipment", "الممتلكات والمعدات", "asset", "debit", "12", true],
   ["2", "Liabilities", "الخصوم", "liability", "credit", null, false],
@@ -704,6 +727,9 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["bank.out", "5030", "1020", "Bank outflow"],
   ["contract.created", "1030", "4010", "Property sale recognized"],
   ["penalty.assessed", "1030", "4030", "Late-payment penalty assessed"],
+  ["inventory.goods_receipt", "1040", "2010", "Goods received into inventory"],
+  ["inventory.goods_issue", "5010", "1040", "Goods issued from inventory"],
+  ["inventory.stock_adjustment", "5030", "1040", "Stock adjustment"],
 ];
 
 const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
