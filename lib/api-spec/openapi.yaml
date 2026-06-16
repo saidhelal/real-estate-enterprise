@@ -8559,6 +8559,1782 @@ paths:
               schema:
                 $ref: "#/components/schemas/ConstructionDashboard"
 
+
+  /supplier-categories:
+    get:
+      operationId: listSupplierCategorys
+      tags: [supplierCategories]
+      summary: List supplier-categories
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SupplierCategorys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierCategoryListResponse"
+    post:
+      operationId: createSupplierCategory
+      tags: [supplierCategories]
+      summary: Create a SupplierCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierCategoryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierCategory"
+
+  /supplier-categories/{id}:
+    get:
+      operationId: getSupplierCategory
+      tags: [supplierCategories]
+      summary: Get a SupplierCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SupplierCategory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierCategory"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSupplierCategory
+      tags: [supplierCategories]
+      summary: Update a SupplierCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierCategoryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierCategory"
+    delete:
+      operationId: deleteSupplierCategory
+      tags: [supplierCategories]
+      summary: Soft-delete a SupplierCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /suppliers:
+    get:
+      operationId: listSuppliers
+      tags: [suppliers]
+      summary: List suppliers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Suppliers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierListResponse"
+    post:
+      operationId: createSupplier
+      tags: [suppliers]
+      summary: Create a Supplier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier"
+
+  /suppliers/{id}:
+    get:
+      operationId: getSupplier
+      tags: [suppliers]
+      summary: Get a Supplier
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Supplier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSupplier
+      tags: [suppliers]
+      summary: Update a Supplier
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier"
+    delete:
+      operationId: deleteSupplier
+      tags: [suppliers]
+      summary: Soft-delete a Supplier
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /supplier-contacts:
+    get:
+      operationId: listSupplierContacts
+      tags: [supplierContacts]
+      summary: List supplier-contacts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SupplierContacts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierContactListResponse"
+    post:
+      operationId: createSupplierContact
+      tags: [supplierContacts]
+      summary: Create a SupplierContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierContactInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierContact"
+
+  /supplier-contacts/{id}:
+    get:
+      operationId: getSupplierContact
+      tags: [supplierContacts]
+      summary: Get a SupplierContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SupplierContact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierContact"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSupplierContact
+      tags: [supplierContacts]
+      summary: Update a SupplierContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierContactUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierContact"
+    delete:
+      operationId: deleteSupplierContact
+      tags: [supplierContacts]
+      summary: Soft-delete a SupplierContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /supplier-evaluations:
+    get:
+      operationId: listSupplierEvaluations
+      tags: [supplierEvaluations]
+      summary: List supplier-evaluations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SupplierEvaluations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierEvaluationListResponse"
+    post:
+      operationId: createSupplierEvaluation
+      tags: [supplierEvaluations]
+      summary: Create a SupplierEvaluation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierEvaluationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierEvaluation"
+
+  /supplier-evaluations/{id}:
+    get:
+      operationId: getSupplierEvaluation
+      tags: [supplierEvaluations]
+      summary: Get a SupplierEvaluation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SupplierEvaluation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierEvaluation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSupplierEvaluation
+      tags: [supplierEvaluations]
+      summary: Update a SupplierEvaluation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierEvaluationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierEvaluation"
+    delete:
+      operationId: deleteSupplierEvaluation
+      tags: [supplierEvaluations]
+      summary: Soft-delete a SupplierEvaluation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-requests:
+    get:
+      operationId: listPurchaseRequests
+      tags: [purchaseRequests]
+      summary: List purchase-requests
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseRequests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequestListResponse"
+    post:
+      operationId: createPurchaseRequest
+      tags: [purchaseRequests]
+      summary: Create a PurchaseRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequest"
+
+  /purchase-requests/{id}:
+    get:
+      operationId: getPurchaseRequest
+      tags: [purchaseRequests]
+      summary: Get a PurchaseRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseRequest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseRequest
+      tags: [purchaseRequests]
+      summary: Update a PurchaseRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseRequestUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequest"
+    delete:
+      operationId: deletePurchaseRequest
+      tags: [purchaseRequests]
+      summary: Soft-delete a PurchaseRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-request-items:
+    get:
+      operationId: listPurchaseRequestItems
+      tags: [purchaseRequestItems]
+      summary: List purchase-request-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseRequestItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequestItemListResponse"
+    post:
+      operationId: createPurchaseRequestItem
+      tags: [purchaseRequestItems]
+      summary: Create a PurchaseRequestItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseRequestItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequestItem"
+
+  /purchase-request-items/{id}:
+    get:
+      operationId: getPurchaseRequestItem
+      tags: [purchaseRequestItems]
+      summary: Get a PurchaseRequestItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseRequestItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequestItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseRequestItem
+      tags: [purchaseRequestItems]
+      summary: Update a PurchaseRequestItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseRequestItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseRequestItem"
+    delete:
+      operationId: deletePurchaseRequestItem
+      tags: [purchaseRequestItems]
+      summary: Soft-delete a PurchaseRequestItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /rfqs:
+    get:
+      operationId: listRfqs
+      tags: [rfqs]
+      summary: List rfqs
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Rfqs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqListResponse"
+    post:
+      operationId: createRfq
+      tags: [rfqs]
+      summary: Create a Rfq
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfqInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rfq"
+
+  /rfqs/{id}:
+    get:
+      operationId: getRfq
+      tags: [rfqs]
+      summary: Get a Rfq
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Rfq
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rfq"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateRfq
+      tags: [rfqs]
+      summary: Update a Rfq
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfqUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rfq"
+    delete:
+      operationId: deleteRfq
+      tags: [rfqs]
+      summary: Soft-delete a Rfq
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /rfq-items:
+    get:
+      operationId: listRfqItems
+      tags: [rfqItems]
+      summary: List rfq-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: RfqItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqItemListResponse"
+    post:
+      operationId: createRfqItem
+      tags: [rfqItems]
+      summary: Create a RfqItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfqItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqItem"
+
+  /rfq-items/{id}:
+    get:
+      operationId: getRfqItem
+      tags: [rfqItems]
+      summary: Get a RfqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: RfqItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateRfqItem
+      tags: [rfqItems]
+      summary: Update a RfqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfqItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqItem"
+    delete:
+      operationId: deleteRfqItem
+      tags: [rfqItems]
+      summary: Soft-delete a RfqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /rfq-suppliers:
+    get:
+      operationId: listRfqSuppliers
+      tags: [rfqSuppliers]
+      summary: List rfq-suppliers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: RfqSuppliers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqSupplierListResponse"
+    post:
+      operationId: createRfqSupplier
+      tags: [rfqSuppliers]
+      summary: Create a RfqSupplier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfqSupplierInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqSupplier"
+
+  /rfq-suppliers/{id}:
+    get:
+      operationId: getRfqSupplier
+      tags: [rfqSuppliers]
+      summary: Get a RfqSupplier
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: RfqSupplier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqSupplier"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateRfqSupplier
+      tags: [rfqSuppliers]
+      summary: Update a RfqSupplier
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfqSupplierUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfqSupplier"
+    delete:
+      operationId: deleteRfqSupplier
+      tags: [rfqSuppliers]
+      summary: Soft-delete a RfqSupplier
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /supplier-quotations:
+    get:
+      operationId: listSupplierQuotations
+      tags: [supplierQuotations]
+      summary: List supplier-quotations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SupplierQuotations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierQuotationListResponse"
+    post:
+      operationId: createSupplierQuotation
+      tags: [supplierQuotations]
+      summary: Create a SupplierQuotation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierQuotationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierQuotation"
+
+  /supplier-quotations/{id}:
+    get:
+      operationId: getSupplierQuotation
+      tags: [supplierQuotations]
+      summary: Get a SupplierQuotation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SupplierQuotation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierQuotation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSupplierQuotation
+      tags: [supplierQuotations]
+      summary: Update a SupplierQuotation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierQuotationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierQuotation"
+    delete:
+      operationId: deleteSupplierQuotation
+      tags: [supplierQuotations]
+      summary: Soft-delete a SupplierQuotation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /quotation-items:
+    get:
+      operationId: listQuotationItems
+      tags: [quotationItems]
+      summary: List quotation-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: QuotationItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuotationItemListResponse"
+    post:
+      operationId: createQuotationItem
+      tags: [quotationItems]
+      summary: Create a QuotationItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuotationItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuotationItem"
+
+  /quotation-items/{id}:
+    get:
+      operationId: getQuotationItem
+      tags: [quotationItems]
+      summary: Get a QuotationItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: QuotationItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuotationItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateQuotationItem
+      tags: [quotationItems]
+      summary: Update a QuotationItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuotationItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuotationItem"
+    delete:
+      operationId: deleteQuotationItem
+      tags: [quotationItems]
+      summary: Soft-delete a QuotationItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-orders:
+    get:
+      operationId: listPurchaseOrders
+      tags: [purchaseOrders]
+      summary: List purchase-orders
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseOrders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderListResponse"
+    post:
+      operationId: createPurchaseOrder
+      tags: [purchaseOrders]
+      summary: Create a PurchaseOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrder"
+
+  /purchase-orders/{id}:
+    get:
+      operationId: getPurchaseOrder
+      tags: [purchaseOrders]
+      summary: Get a PurchaseOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseOrder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrder"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseOrder
+      tags: [purchaseOrders]
+      summary: Update a PurchaseOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrder"
+    delete:
+      operationId: deletePurchaseOrder
+      tags: [purchaseOrders]
+      summary: Soft-delete a PurchaseOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-order-items:
+    get:
+      operationId: listPurchaseOrderItems
+      tags: [purchaseOrderItems]
+      summary: List purchase-order-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseOrderItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderItemListResponse"
+    post:
+      operationId: createPurchaseOrderItem
+      tags: [purchaseOrderItems]
+      summary: Create a PurchaseOrderItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderItem"
+
+  /purchase-order-items/{id}:
+    get:
+      operationId: getPurchaseOrderItem
+      tags: [purchaseOrderItems]
+      summary: Get a PurchaseOrderItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseOrderItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseOrderItem
+      tags: [purchaseOrderItems]
+      summary: Update a PurchaseOrderItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseOrderItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseOrderItem"
+    delete:
+      operationId: deletePurchaseOrderItem
+      tags: [purchaseOrderItems]
+      summary: Soft-delete a PurchaseOrderItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-contracts:
+    get:
+      operationId: listPurchaseContracts
+      tags: [purchaseContracts]
+      summary: List purchase-contracts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseContracts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContractListResponse"
+    post:
+      operationId: createPurchaseContract
+      tags: [purchaseContracts]
+      summary: Create a PurchaseContract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseContractInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContract"
+
+  /purchase-contracts/{id}:
+    get:
+      operationId: getPurchaseContract
+      tags: [purchaseContracts]
+      summary: Get a PurchaseContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseContract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseContract
+      tags: [purchaseContracts]
+      summary: Update a PurchaseContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseContractUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContract"
+    delete:
+      operationId: deletePurchaseContract
+      tags: [purchaseContracts]
+      summary: Soft-delete a PurchaseContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-contract-amendments:
+    get:
+      operationId: listPurchaseContractAmendments
+      tags: [purchaseContractAmendments]
+      summary: List purchase-contract-amendments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseContractAmendments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContractAmendmentListResponse"
+    post:
+      operationId: createPurchaseContractAmendment
+      tags: [purchaseContractAmendments]
+      summary: Create a PurchaseContractAmendment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseContractAmendmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContractAmendment"
+
+  /purchase-contract-amendments/{id}:
+    get:
+      operationId: getPurchaseContractAmendment
+      tags: [purchaseContractAmendments]
+      summary: Get a PurchaseContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseContractAmendment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContractAmendment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseContractAmendment
+      tags: [purchaseContractAmendments]
+      summary: Update a PurchaseContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseContractAmendmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseContractAmendment"
+    delete:
+      operationId: deletePurchaseContractAmendment
+      tags: [purchaseContractAmendments]
+      summary: Soft-delete a PurchaseContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /goods-receipt-notes:
+    get:
+      operationId: listGoodsReceiptNotes
+      tags: [goodsReceiptNotes]
+      summary: List goods-receipt-notes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GoodsReceiptNotes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptNoteListResponse"
+    post:
+      operationId: createGoodsReceiptNote
+      tags: [goodsReceiptNotes]
+      summary: Create a GoodsReceiptNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsReceiptNoteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptNote"
+
+  /goods-receipt-notes/{id}:
+    get:
+      operationId: getGoodsReceiptNote
+      tags: [goodsReceiptNotes]
+      summary: Get a GoodsReceiptNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GoodsReceiptNote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptNote"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGoodsReceiptNote
+      tags: [goodsReceiptNotes]
+      summary: Update a GoodsReceiptNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoodsReceiptNoteUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoodsReceiptNote"
+    delete:
+      operationId: deleteGoodsReceiptNote
+      tags: [goodsReceiptNotes]
+      summary: Soft-delete a GoodsReceiptNote
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /grn-items:
+    get:
+      operationId: listGrnItems
+      tags: [grnItems]
+      summary: List grn-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GrnItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GrnItemListResponse"
+    post:
+      operationId: createGrnItem
+      tags: [grnItems]
+      summary: Create a GrnItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GrnItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GrnItem"
+
+  /grn-items/{id}:
+    get:
+      operationId: getGrnItem
+      tags: [grnItems]
+      summary: Get a GrnItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GrnItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GrnItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGrnItem
+      tags: [grnItems]
+      summary: Update a GrnItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GrnItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GrnItem"
+    delete:
+      operationId: deleteGrnItem
+      tags: [grnItems]
+      summary: Soft-delete a GrnItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-returns:
+    get:
+      operationId: listPurchaseReturns
+      tags: [purchaseReturns]
+      summary: List purchase-returns
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseReturns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturnListResponse"
+    post:
+      operationId: createPurchaseReturn
+      tags: [purchaseReturns]
+      summary: Create a PurchaseReturn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseReturnInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturn"
+
+  /purchase-returns/{id}:
+    get:
+      operationId: getPurchaseReturn
+      tags: [purchaseReturns]
+      summary: Get a PurchaseReturn
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseReturn
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturn"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseReturn
+      tags: [purchaseReturns]
+      summary: Update a PurchaseReturn
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseReturnUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturn"
+    delete:
+      operationId: deletePurchaseReturn
+      tags: [purchaseReturns]
+      summary: Soft-delete a PurchaseReturn
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /purchase-return-items:
+    get:
+      operationId: listPurchaseReturnItems
+      tags: [purchaseReturnItems]
+      summary: List purchase-return-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PurchaseReturnItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturnItemListResponse"
+    post:
+      operationId: createPurchaseReturnItem
+      tags: [purchaseReturnItems]
+      summary: Create a PurchaseReturnItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseReturnItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturnItem"
+
+  /purchase-return-items/{id}:
+    get:
+      operationId: getPurchaseReturnItem
+      tags: [purchaseReturnItems]
+      summary: Get a PurchaseReturnItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PurchaseReturnItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturnItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePurchaseReturnItem
+      tags: [purchaseReturnItems]
+      summary: Update a PurchaseReturnItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PurchaseReturnItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurchaseReturnItem"
+    delete:
+      operationId: deletePurchaseReturnItem
+      tags: [purchaseReturnItems]
+      summary: Soft-delete a PurchaseReturnItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /procurement-approvals:
+    get:
+      operationId: listProcurementApprovals
+      tags: [procurementApprovals]
+      summary: List procurement-approvals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ProcurementApprovals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcurementApprovalListResponse"
+    post:
+      operationId: createProcurementApproval
+      tags: [procurementApprovals]
+      summary: Create a ProcurementApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcurementApprovalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcurementApproval"
+
+  /procurement-approvals/{id}:
+    get:
+      operationId: getProcurementApproval
+      tags: [procurementApprovals]
+      summary: Get a ProcurementApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ProcurementApproval
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcurementApproval"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateProcurementApproval
+      tags: [procurementApprovals]
+      summary: Update a ProcurementApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProcurementApprovalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcurementApproval"
+    delete:
+      operationId: deleteProcurementApproval
+      tags: [procurementApprovals]
+      summary: Soft-delete a ProcurementApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /procurement/dashboard:
+    get:
+      operationId: getProcurementDashboard
+      tags: [procurementDashboard]
+      summary: Procurement dashboard KPIs
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Procurement dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcurementDashboard"
+
 components:
   parameters:
     IdParam:
@@ -13679,6 +15455,1179 @@ components:
               status: { type: string }
               count: { type: integer }
         certificatesByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+
+    SupplierCategory:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SupplierCategoryInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    SupplierCategoryUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    SupplierCategoryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierCategory" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Supplier:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: ["string", "null"] }
+        classification: { type: ["string", "null"] }
+        contactPerson: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        taxNumber: { type: ["string", "null"] }
+        commercialReg: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        paymentTerms: { type: ["string", "null"] }
+        rating: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SupplierInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        classification: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        taxNumber: { type: string }
+        commercialReg: { type: string }
+        address: { type: string }
+        paymentTerms: { type: string }
+        rating: { type: string }
+        status: { type: string }
+
+    SupplierUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        classification: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        taxNumber: { type: string }
+        commercialReg: { type: string }
+        address: { type: string }
+        paymentTerms: { type: string }
+        rating: { type: string }
+        status: { type: string }
+
+    SupplierListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Supplier" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    SupplierContact:
+      type: object
+      required: [id, companyId, name, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        supplierId: { type: ["string", "null"] }
+        name: { type: string }
+        position: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        isPrimary: { type: ["boolean", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SupplierContactInput:
+      type: object
+      required: [companyId, name]
+      properties:
+        companyId: { type: string }
+        supplierId: { type: string }
+        name: { type: string }
+        position: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        isPrimary: { type: boolean }
+        notes: { type: string }
+
+    SupplierContactUpdate:
+      type: object
+      properties:
+        supplierId: { type: string }
+        name: { type: string }
+        position: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        isPrimary: { type: boolean }
+        notes: { type: string }
+
+    SupplierContactListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierContact" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    SupplierEvaluation:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        supplierId: { type: ["string", "null"] }
+        evaluationDate: { type: ["string", "null"] }
+        period: { type: ["string", "null"] }
+        qualityScore: { type: ["string", "null"] }
+        deliveryScore: { type: ["string", "null"] }
+        priceScore: { type: ["string", "null"] }
+        serviceScore: { type: ["string", "null"] }
+        overallScore: { type: ["string", "null"] }
+        evaluatedBy: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SupplierEvaluationInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        supplierId: { type: string }
+        evaluationDate: { type: string }
+        period: { type: string }
+        qualityScore: { type: string }
+        deliveryScore: { type: string }
+        priceScore: { type: string }
+        serviceScore: { type: string }
+        overallScore: { type: string }
+        evaluatedBy: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    SupplierEvaluationUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        supplierId: { type: string }
+        evaluationDate: { type: string }
+        period: { type: string }
+        qualityScore: { type: string }
+        deliveryScore: { type: string }
+        priceScore: { type: string }
+        serviceScore: { type: string }
+        overallScore: { type: string }
+        evaluatedBy: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    SupplierEvaluationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierEvaluation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseRequest:
+      type: object
+      required: [id, companyId, code, title, titleAr, requestType, priority, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        department: { type: ["string", "null"] }
+        requestType: { type: string }
+        requestDate: { type: ["string", "null"] }
+        requiredDate: { type: ["string", "null"] }
+        priority: { type: string }
+        budgetAmount: { type: ["string", "null"] }
+        estimatedAmount: { type: ["string", "null"] }
+        requestedBy: { type: ["string", "null"] }
+        justification: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseRequestInput:
+      type: object
+      required: [companyId, code, title, titleAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        department: { type: string }
+        requestType: { type: string }
+        requestDate: { type: string }
+        requiredDate: { type: string }
+        priority: { type: string }
+        budgetAmount: { type: string }
+        estimatedAmount: { type: string }
+        requestedBy: { type: string }
+        justification: { type: string }
+        status: { type: string }
+
+    PurchaseRequestUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        department: { type: string }
+        requestType: { type: string }
+        requestDate: { type: string }
+        requiredDate: { type: string }
+        priority: { type: string }
+        budgetAmount: { type: string }
+        estimatedAmount: { type: string }
+        requestedBy: { type: string }
+        justification: { type: string }
+        status: { type: string }
+
+    PurchaseRequestListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseRequest" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseRequestItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        requestId: { type: ["string", "null"] }
+        itemCode: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        estimatedPrice: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseRequestItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        itemCode: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        estimatedPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    PurchaseRequestItemUpdate:
+      type: object
+      properties:
+        requestId: { type: string }
+        itemCode: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        estimatedPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    PurchaseRequestItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseRequestItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Rfq:
+      type: object
+      required: [id, companyId, code, title, titleAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        requestId: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        closeDate: { type: ["string", "null"] }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    RfqInput:
+      type: object
+      required: [companyId, code, title, titleAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        requestId: { type: string }
+        issueDate: { type: string }
+        closeDate: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    RfqUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        requestId: { type: string }
+        issueDate: { type: string }
+        closeDate: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    RfqListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Rfq" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    RfqItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        rfqId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    RfqItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        rfqId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        notes: { type: string }
+
+    RfqItemUpdate:
+      type: object
+      properties:
+        rfqId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        notes: { type: string }
+
+    RfqItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/RfqItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    RfqSupplier:
+      type: object
+      required: [id, companyId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        rfqId: { type: ["string", "null"] }
+        supplierId: { type: ["string", "null"] }
+        invitedDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    RfqSupplierInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        rfqId: { type: string }
+        supplierId: { type: string }
+        invitedDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    RfqSupplierUpdate:
+      type: object
+      properties:
+        rfqId: { type: string }
+        supplierId: { type: string }
+        invitedDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    RfqSupplierListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/RfqSupplier" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    SupplierQuotation:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        rfqId: { type: ["string", "null"] }
+        supplierId: { type: ["string", "null"] }
+        quotationNumber: { type: ["string", "null"] }
+        quotationDate: { type: ["string", "null"] }
+        validUntil: { type: ["string", "null"] }
+        totalAmount: { type: ["string", "null"] }
+        technicalScore: { type: ["string", "null"] }
+        commercialScore: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SupplierQuotationInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        rfqId: { type: string }
+        supplierId: { type: string }
+        quotationNumber: { type: string }
+        quotationDate: { type: string }
+        validUntil: { type: string }
+        totalAmount: { type: string }
+        technicalScore: { type: string }
+        commercialScore: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    SupplierQuotationUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        rfqId: { type: string }
+        supplierId: { type: string }
+        quotationNumber: { type: string }
+        quotationDate: { type: string }
+        validUntil: { type: string }
+        totalAmount: { type: string }
+        technicalScore: { type: string }
+        commercialScore: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    SupplierQuotationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierQuotation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    QuotationItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        quotationId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitPrice: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    QuotationItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        quotationId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    QuotationItemUpdate:
+      type: object
+      properties:
+        quotationId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    QuotationItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/QuotationItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseOrder:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        supplierId: { type: ["string", "null"] }
+        quotationId: { type: ["string", "null"] }
+        requestId: { type: ["string", "null"] }
+        orderDate: { type: ["string", "null"] }
+        expectedDate: { type: ["string", "null"] }
+        totalAmount: { type: ["string", "null"] }
+        deliveryTerms: { type: ["string", "null"] }
+        paymentTerms: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseOrderInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        supplierId: { type: string }
+        quotationId: { type: string }
+        requestId: { type: string }
+        orderDate: { type: string }
+        expectedDate: { type: string }
+        totalAmount: { type: string }
+        deliveryTerms: { type: string }
+        paymentTerms: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    PurchaseOrderUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        supplierId: { type: string }
+        quotationId: { type: string }
+        requestId: { type: string }
+        orderDate: { type: string }
+        expectedDate: { type: string }
+        totalAmount: { type: string }
+        deliveryTerms: { type: string }
+        paymentTerms: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    PurchaseOrderListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseOrder" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseOrderItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        poId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        receivedQuantity: { type: ["string", "null"] }
+        unitPrice: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseOrderItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        poId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        receivedQuantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    PurchaseOrderItemUpdate:
+      type: object
+      properties:
+        poId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        receivedQuantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    PurchaseOrderItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseOrderItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseContract:
+      type: object
+      required: [id, companyId, code, title, titleAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        supplierId: { type: ["string", "null"] }
+        contractValue: { type: ["string", "null"] }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        documentRef: { type: ["string", "null"] }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseContractInput:
+      type: object
+      required: [companyId, code, title, titleAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        supplierId: { type: string }
+        contractValue: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        documentRef: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    PurchaseContractUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        supplierId: { type: string }
+        contractValue: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        documentRef: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    PurchaseContractListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseContract" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseContractAmendment:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        amendmentNumber: { type: ["string", "null"] }
+        amendmentDate: { type: ["string", "null"] }
+        amendmentValue: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseContractAmendmentInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        amendmentNumber: { type: string }
+        amendmentDate: { type: string }
+        amendmentValue: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    PurchaseContractAmendmentUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        amendmentNumber: { type: string }
+        amendmentDate: { type: string }
+        amendmentValue: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    PurchaseContractAmendmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseContractAmendment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    GoodsReceiptNote:
+      type: object
+      required: [id, companyId, code, receiptType, inspectionStatus, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        poId: { type: ["string", "null"] }
+        supplierId: { type: ["string", "null"] }
+        receiptDate: { type: ["string", "null"] }
+        receiptType: { type: string }
+        warehouse: { type: ["string", "null"] }
+        totalAmount: { type: ["string", "null"] }
+        inspectionStatus: { type: string }
+        inspectedBy: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    GoodsReceiptNoteInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        poId: { type: string }
+        supplierId: { type: string }
+        receiptDate: { type: string }
+        receiptType: { type: string }
+        warehouse: { type: string }
+        totalAmount: { type: string }
+        inspectionStatus: { type: string }
+        inspectedBy: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    GoodsReceiptNoteUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        poId: { type: string }
+        supplierId: { type: string }
+        receiptDate: { type: string }
+        receiptType: { type: string }
+        warehouse: { type: string }
+        totalAmount: { type: string }
+        inspectionStatus: { type: string }
+        inspectedBy: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    GoodsReceiptNoteListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GoodsReceiptNote" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    GrnItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        grnId: { type: ["string", "null"] }
+        poItemId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        orderedQuantity: { type: ["string", "null"] }
+        receivedQuantity: { type: ["string", "null"] }
+        acceptedQuantity: { type: ["string", "null"] }
+        rejectedQuantity: { type: ["string", "null"] }
+        unitPrice: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    GrnItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        grnId: { type: string }
+        poItemId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        orderedQuantity: { type: string }
+        receivedQuantity: { type: string }
+        acceptedQuantity: { type: string }
+        rejectedQuantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    GrnItemUpdate:
+      type: object
+      properties:
+        grnId: { type: string }
+        poItemId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        orderedQuantity: { type: string }
+        receivedQuantity: { type: string }
+        acceptedQuantity: { type: string }
+        rejectedQuantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    GrnItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GrnItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseReturn:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        grnId: { type: ["string", "null"] }
+        supplierId: { type: ["string", "null"] }
+        returnDate: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        totalAmount: { type: ["string", "null"] }
+        status: { type: string }
+        approvedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseReturnInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        grnId: { type: string }
+        supplierId: { type: string }
+        returnDate: { type: string }
+        reason: { type: string }
+        totalAmount: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    PurchaseReturnUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        grnId: { type: string }
+        supplierId: { type: string }
+        returnDate: { type: string }
+        reason: { type: string }
+        totalAmount: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    PurchaseReturnListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseReturn" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PurchaseReturnItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        returnId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitPrice: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PurchaseReturnItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        returnId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        reason: { type: string }
+        notes: { type: string }
+
+    PurchaseReturnItemUpdate:
+      type: object
+      properties:
+        returnId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+        reason: { type: string }
+        notes: { type: string }
+
+    PurchaseReturnItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PurchaseReturnItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ProcurementApproval:
+      type: object
+      required: [id, companyId, code, level, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        entityType: { type: ["string", "null"] }
+        entityId: { type: ["string", "null"] }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: ["string", "null"] }
+        approvalDate: { type: ["string", "null"] }
+        comments: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ProcurementApprovalInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: string }
+        approvalDate: { type: string }
+        comments: { type: string }
+
+    ProcurementApprovalUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: string }
+        approvalDate: { type: string }
+        comments: { type: string }
+
+    ProcurementApprovalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ProcurementApproval" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ProcurementDashboard:
+      type: object
+      required: [suppliersCount, activeSuppliers, openRfqs, pendingApprovals, pendingRequests, openPurchaseOrders, purchaseVolume, totalContractValue, pendingReturns]
+      properties:
+        suppliersCount: { type: integer }
+        activeSuppliers: { type: integer }
+        openRfqs: { type: integer }
+        pendingApprovals: { type: integer }
+        pendingRequests: { type: integer }
+        openPurchaseOrders: { type: integer }
+        purchaseVolume: { type: string }
+        totalContractValue: { type: string }
+        pendingReturns: { type: integer }
+        purchaseOrdersByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+        requestsByStatus:
           type: array
           items:
             type: object

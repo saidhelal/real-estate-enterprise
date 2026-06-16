@@ -19,3 +19,4 @@ export * from "./finance";
 export * from "./accounting";
 export * from "./engineering";
 export * from "./construction";
+export * from "./procurement";

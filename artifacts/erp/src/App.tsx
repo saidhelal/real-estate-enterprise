@@ -114,6 +114,28 @@ import AdvancePaymentsPage from "@/pages/advance-payments";
 import AdvanceRecoveriesPage from "@/pages/advance-recoveries";
 import ContractorInvoicesPage from "@/pages/contractor-invoices";
 import ContractApprovalsPage from "@/pages/contract-approvals";
+import ProcurementDashboardPage from "@/pages/procurement-dashboard";
+import ProcurementReportsPage from "@/pages/procurement-reports";
+import SupplierCategorysPage from "@/pages/supplier-categories";
+import SuppliersPage from "@/pages/suppliers";
+import SupplierContactsPage from "@/pages/supplier-contacts";
+import SupplierEvaluationsPage from "@/pages/supplier-evaluations";
+import PurchaseRequestsPage from "@/pages/purchase-requests";
+import PurchaseRequestItemsPage from "@/pages/purchase-request-items";
+import RfqsPage from "@/pages/rfqs";
+import RfqItemsPage from "@/pages/rfq-items";
+import RfqSuppliersPage from "@/pages/rfq-suppliers";
+import SupplierQuotationsPage from "@/pages/supplier-quotations";
+import QuotationItemsPage from "@/pages/quotation-items";
+import PurchaseOrdersPage from "@/pages/purchase-orders";
+import PurchaseOrderItemsPage from "@/pages/purchase-order-items";
+import PurchaseContractsPage from "@/pages/purchase-contracts";
+import PurchaseContractAmendmentsPage from "@/pages/purchase-contract-amendments";
+import GoodsReceiptNotesPage from "@/pages/goods-receipt-notes";
+import GrnItemsPage from "@/pages/grn-items";
+import PurchaseReturnsPage from "@/pages/purchase-returns";
+import PurchaseReturnItemsPage from "@/pages/purchase-return-items";
+import ProcurementApprovalsPage from "@/pages/procurement-approvals";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -236,6 +258,28 @@ function Router() {
             <Route path="/advance-recoveries" component={AdvanceRecoveriesPage} />
             <Route path="/contractor-invoices" component={ContractorInvoicesPage} />
             <Route path="/contract-approvals" component={ContractApprovalsPage} />
+            <Route path="/procurement-dashboard" component={ProcurementDashboardPage} />
+            <Route path="/procurement-reports" component={ProcurementReportsPage} />
+            <Route path="/supplier-categories" component={SupplierCategorysPage} />
+            <Route path="/suppliers" component={SuppliersPage} />
+            <Route path="/supplier-contacts" component={SupplierContactsPage} />
+            <Route path="/supplier-evaluations" component={SupplierEvaluationsPage} />
+            <Route path="/purchase-requests" component={PurchaseRequestsPage} />
+            <Route path="/purchase-request-items" component={PurchaseRequestItemsPage} />
+            <Route path="/rfqs" component={RfqsPage} />
+            <Route path="/rfq-items" component={RfqItemsPage} />
+            <Route path="/rfq-suppliers" component={RfqSuppliersPage} />
+            <Route path="/supplier-quotations" component={SupplierQuotationsPage} />
+            <Route path="/quotation-items" component={QuotationItemsPage} />
+            <Route path="/purchase-orders" component={PurchaseOrdersPage} />
+            <Route path="/purchase-order-items" component={PurchaseOrderItemsPage} />
+            <Route path="/purchase-contracts" component={PurchaseContractsPage} />
+            <Route path="/purchase-contract-amendments" component={PurchaseContractAmendmentsPage} />
+            <Route path="/goods-receipt-notes" component={GoodsReceiptNotesPage} />
+            <Route path="/grn-items" component={GrnItemsPage} />
+            <Route path="/purchase-returns" component={PurchaseReturnsPage} />
+            <Route path="/purchase-return-items" component={PurchaseReturnItemsPage} />
+            <Route path="/procurement-approvals" component={ProcurementApprovalsPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

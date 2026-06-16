@@ -10987,3 +10987,2456 @@ export const GetConstructionDashboardResponse = zod.object({
 })
 
 
+/**
+ * @summary List supplier-categories
+ */
+export const ListSupplierCategorysQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListSupplierCategorysResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SupplierCategory
+ */
+export const CreateSupplierCategoryBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a SupplierCategory
+ */
+export const GetSupplierCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupplierCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a SupplierCategory
+ */
+export const UpdateSupplierCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSupplierCategoryBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateSupplierCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a SupplierCategory
+ */
+export const DeleteSupplierCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSupplierCategoryResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List suppliers
+ */
+export const ListSuppliersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListSuppliersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialReg": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "paymentTerms": zod.string().nullish(),
+  "rating": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Supplier
+ */
+export const CreateSupplierBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "taxNumber": zod.string().optional(),
+  "commercialReg": zod.string().optional(),
+  "address": zod.string().optional(),
+  "paymentTerms": zod.string().optional(),
+  "rating": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Supplier
+ */
+export const GetSupplierParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupplierResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialReg": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "paymentTerms": zod.string().nullish(),
+  "rating": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Supplier
+ */
+export const UpdateSupplierParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSupplierBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "categoryId": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "taxNumber": zod.string().optional(),
+  "commercialReg": zod.string().optional(),
+  "address": zod.string().optional(),
+  "paymentTerms": zod.string().optional(),
+  "rating": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateSupplierResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialReg": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "paymentTerms": zod.string().nullish(),
+  "rating": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Supplier
+ */
+export const DeleteSupplierParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSupplierResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List supplier-contacts
+ */
+export const ListSupplierContactsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListSupplierContactsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "name": zod.string(),
+  "position": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "isPrimary": zod.boolean().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SupplierContact
+ */
+export const CreateSupplierContactBody = zod.object({
+  "companyId": zod.string(),
+  "supplierId": zod.string().optional(),
+  "name": zod.string(),
+  "position": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "isPrimary": zod.boolean().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a SupplierContact
+ */
+export const GetSupplierContactParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupplierContactResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "name": zod.string(),
+  "position": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "isPrimary": zod.boolean().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a SupplierContact
+ */
+export const UpdateSupplierContactParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSupplierContactBody = zod.object({
+  "supplierId": zod.string().optional(),
+  "name": zod.string().optional(),
+  "position": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "isPrimary": zod.boolean().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSupplierContactResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "name": zod.string(),
+  "position": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "isPrimary": zod.boolean().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a SupplierContact
+ */
+export const DeleteSupplierContactParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSupplierContactResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List supplier-evaluations
+ */
+export const ListSupplierEvaluationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListSupplierEvaluationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "evaluationDate": zod.string().nullish(),
+  "period": zod.string().nullish(),
+  "qualityScore": zod.string().nullish(),
+  "deliveryScore": zod.string().nullish(),
+  "priceScore": zod.string().nullish(),
+  "serviceScore": zod.string().nullish(),
+  "overallScore": zod.string().nullish(),
+  "evaluatedBy": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SupplierEvaluation
+ */
+export const CreateSupplierEvaluationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().optional(),
+  "evaluationDate": zod.string().optional(),
+  "period": zod.string().optional(),
+  "qualityScore": zod.string().optional(),
+  "deliveryScore": zod.string().optional(),
+  "priceScore": zod.string().optional(),
+  "serviceScore": zod.string().optional(),
+  "overallScore": zod.string().optional(),
+  "evaluatedBy": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a SupplierEvaluation
+ */
+export const GetSupplierEvaluationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupplierEvaluationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "evaluationDate": zod.string().nullish(),
+  "period": zod.string().nullish(),
+  "qualityScore": zod.string().nullish(),
+  "deliveryScore": zod.string().nullish(),
+  "priceScore": zod.string().nullish(),
+  "serviceScore": zod.string().nullish(),
+  "overallScore": zod.string().nullish(),
+  "evaluatedBy": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a SupplierEvaluation
+ */
+export const UpdateSupplierEvaluationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSupplierEvaluationBody = zod.object({
+  "code": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "evaluationDate": zod.string().optional(),
+  "period": zod.string().optional(),
+  "qualityScore": zod.string().optional(),
+  "deliveryScore": zod.string().optional(),
+  "priceScore": zod.string().optional(),
+  "serviceScore": zod.string().optional(),
+  "overallScore": zod.string().optional(),
+  "evaluatedBy": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSupplierEvaluationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "evaluationDate": zod.string().nullish(),
+  "period": zod.string().nullish(),
+  "qualityScore": zod.string().nullish(),
+  "deliveryScore": zod.string().nullish(),
+  "priceScore": zod.string().nullish(),
+  "serviceScore": zod.string().nullish(),
+  "overallScore": zod.string().nullish(),
+  "evaluatedBy": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a SupplierEvaluation
+ */
+export const DeleteSupplierEvaluationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSupplierEvaluationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-requests
+ */
+export const ListPurchaseRequestsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseRequestsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "department": zod.string().nullish(),
+  "requestType": zod.string(),
+  "requestDate": zod.string().nullish(),
+  "requiredDate": zod.string().nullish(),
+  "priority": zod.string(),
+  "budgetAmount": zod.string().nullish(),
+  "estimatedAmount": zod.string().nullish(),
+  "requestedBy": zod.string().nullish(),
+  "justification": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseRequest
+ */
+export const CreatePurchaseRequestBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "department": zod.string().optional(),
+  "requestType": zod.string().optional(),
+  "requestDate": zod.string().optional(),
+  "requiredDate": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "budgetAmount": zod.string().optional(),
+  "estimatedAmount": zod.string().optional(),
+  "requestedBy": zod.string().optional(),
+  "justification": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseRequest
+ */
+export const GetPurchaseRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "department": zod.string().nullish(),
+  "requestType": zod.string(),
+  "requestDate": zod.string().nullish(),
+  "requiredDate": zod.string().nullish(),
+  "priority": zod.string(),
+  "budgetAmount": zod.string().nullish(),
+  "estimatedAmount": zod.string().nullish(),
+  "requestedBy": zod.string().nullish(),
+  "justification": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseRequest
+ */
+export const UpdatePurchaseRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseRequestBody = zod.object({
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "department": zod.string().optional(),
+  "requestType": zod.string().optional(),
+  "requestDate": zod.string().optional(),
+  "requiredDate": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "budgetAmount": zod.string().optional(),
+  "estimatedAmount": zod.string().optional(),
+  "requestedBy": zod.string().optional(),
+  "justification": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdatePurchaseRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "department": zod.string().nullish(),
+  "requestType": zod.string(),
+  "requestDate": zod.string().nullish(),
+  "requiredDate": zod.string().nullish(),
+  "priority": zod.string(),
+  "budgetAmount": zod.string().nullish(),
+  "estimatedAmount": zod.string().nullish(),
+  "requestedBy": zod.string().nullish(),
+  "justification": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseRequest
+ */
+export const DeletePurchaseRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseRequestResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-request-items
+ */
+export const ListPurchaseRequestItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseRequestItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string().nullish(),
+  "itemCode": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "estimatedPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseRequestItem
+ */
+export const CreatePurchaseRequestItemBody = zod.object({
+  "companyId": zod.string(),
+  "requestId": zod.string().optional(),
+  "itemCode": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "estimatedPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseRequestItem
+ */
+export const GetPurchaseRequestItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseRequestItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string().nullish(),
+  "itemCode": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "estimatedPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseRequestItem
+ */
+export const UpdatePurchaseRequestItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseRequestItemBody = zod.object({
+  "requestId": zod.string().optional(),
+  "itemCode": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "estimatedPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePurchaseRequestItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string().nullish(),
+  "itemCode": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "estimatedPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseRequestItem
+ */
+export const DeletePurchaseRequestItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseRequestItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List rfqs
+ */
+export const ListRfqsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListRfqsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "requestId": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "closeDate": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Rfq
+ */
+export const CreateRfqBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "requestId": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "closeDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Rfq
+ */
+export const GetRfqParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetRfqResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "requestId": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "closeDate": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Rfq
+ */
+export const UpdateRfqParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateRfqBody = zod.object({
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "closeDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateRfqResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "requestId": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "closeDate": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Rfq
+ */
+export const DeleteRfqParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteRfqResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List rfq-items
+ */
+export const ListRfqItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListRfqItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a RfqItem
+ */
+export const CreateRfqItemBody = zod.object({
+  "companyId": zod.string(),
+  "rfqId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a RfqItem
+ */
+export const GetRfqItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetRfqItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a RfqItem
+ */
+export const UpdateRfqItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateRfqItemBody = zod.object({
+  "rfqId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateRfqItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a RfqItem
+ */
+export const DeleteRfqItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteRfqItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List rfq-suppliers
+ */
+export const ListRfqSuppliersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListRfqSuppliersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "invitedDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a RfqSupplier
+ */
+export const CreateRfqSupplierBody = zod.object({
+  "companyId": zod.string(),
+  "rfqId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "invitedDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a RfqSupplier
+ */
+export const GetRfqSupplierParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetRfqSupplierResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "invitedDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a RfqSupplier
+ */
+export const UpdateRfqSupplierParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateRfqSupplierBody = zod.object({
+  "rfqId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "invitedDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateRfqSupplierResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "invitedDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a RfqSupplier
+ */
+export const DeleteRfqSupplierParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteRfqSupplierResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List supplier-quotations
+ */
+export const ListSupplierQuotationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListSupplierQuotationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "quotationNumber": zod.string().nullish(),
+  "quotationDate": zod.string().nullish(),
+  "validUntil": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "technicalScore": zod.string().nullish(),
+  "commercialScore": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SupplierQuotation
+ */
+export const CreateSupplierQuotationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "rfqId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "quotationNumber": zod.string().optional(),
+  "quotationDate": zod.string().optional(),
+  "validUntil": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "technicalScore": zod.string().optional(),
+  "commercialScore": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a SupplierQuotation
+ */
+export const GetSupplierQuotationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupplierQuotationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "quotationNumber": zod.string().nullish(),
+  "quotationDate": zod.string().nullish(),
+  "validUntil": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "technicalScore": zod.string().nullish(),
+  "commercialScore": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a SupplierQuotation
+ */
+export const UpdateSupplierQuotationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSupplierQuotationBody = zod.object({
+  "code": zod.string().optional(),
+  "rfqId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "quotationNumber": zod.string().optional(),
+  "quotationDate": zod.string().optional(),
+  "validUntil": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "technicalScore": zod.string().optional(),
+  "commercialScore": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSupplierQuotationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "rfqId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "quotationNumber": zod.string().nullish(),
+  "quotationDate": zod.string().nullish(),
+  "validUntil": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "technicalScore": zod.string().nullish(),
+  "commercialScore": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a SupplierQuotation
+ */
+export const DeleteSupplierQuotationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSupplierQuotationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List quotation-items
+ */
+export const ListQuotationItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListQuotationItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "quotationId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a QuotationItem
+ */
+export const CreateQuotationItemBody = zod.object({
+  "companyId": zod.string(),
+  "quotationId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a QuotationItem
+ */
+export const GetQuotationItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetQuotationItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "quotationId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a QuotationItem
+ */
+export const UpdateQuotationItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateQuotationItemBody = zod.object({
+  "quotationId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateQuotationItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "quotationId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a QuotationItem
+ */
+export const DeleteQuotationItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteQuotationItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-orders
+ */
+export const ListPurchaseOrdersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseOrdersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "quotationId": zod.string().nullish(),
+  "requestId": zod.string().nullish(),
+  "orderDate": zod.string().nullish(),
+  "expectedDate": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "deliveryTerms": zod.string().nullish(),
+  "paymentTerms": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseOrder
+ */
+export const CreatePurchaseOrderBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().optional(),
+  "quotationId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "orderDate": zod.string().optional(),
+  "expectedDate": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "deliveryTerms": zod.string().optional(),
+  "paymentTerms": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseOrder
+ */
+export const GetPurchaseOrderParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseOrderResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "quotationId": zod.string().nullish(),
+  "requestId": zod.string().nullish(),
+  "orderDate": zod.string().nullish(),
+  "expectedDate": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "deliveryTerms": zod.string().nullish(),
+  "paymentTerms": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseOrder
+ */
+export const UpdatePurchaseOrderParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseOrderBody = zod.object({
+  "code": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "quotationId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "orderDate": zod.string().optional(),
+  "expectedDate": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "deliveryTerms": zod.string().optional(),
+  "paymentTerms": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePurchaseOrderResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "quotationId": zod.string().nullish(),
+  "requestId": zod.string().nullish(),
+  "orderDate": zod.string().nullish(),
+  "expectedDate": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "deliveryTerms": zod.string().nullish(),
+  "paymentTerms": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseOrder
+ */
+export const DeletePurchaseOrderParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseOrderResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-order-items
+ */
+export const ListPurchaseOrderItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseOrderItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "poId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "receivedQuantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseOrderItem
+ */
+export const CreatePurchaseOrderItemBody = zod.object({
+  "companyId": zod.string(),
+  "poId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "receivedQuantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseOrderItem
+ */
+export const GetPurchaseOrderItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseOrderItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "poId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "receivedQuantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseOrderItem
+ */
+export const UpdatePurchaseOrderItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseOrderItemBody = zod.object({
+  "poId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "receivedQuantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePurchaseOrderItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "poId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "receivedQuantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseOrderItem
+ */
+export const DeletePurchaseOrderItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseOrderItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-contracts
+ */
+export const ListPurchaseContractsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseContractsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractValue": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "documentRef": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseContract
+ */
+export const CreatePurchaseContractBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "supplierId": zod.string().optional(),
+  "contractValue": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "documentRef": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseContract
+ */
+export const GetPurchaseContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractValue": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "documentRef": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseContract
+ */
+export const UpdatePurchaseContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseContractBody = zod.object({
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "contractValue": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "documentRef": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdatePurchaseContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractValue": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "documentRef": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseContract
+ */
+export const DeletePurchaseContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseContractResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-contract-amendments
+ */
+export const ListPurchaseContractAmendmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseContractAmendmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string().nullish(),
+  "amendmentNumber": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "amendmentValue": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseContractAmendment
+ */
+export const CreatePurchaseContractAmendmentBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string().optional(),
+  "amendmentNumber": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "amendmentValue": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseContractAmendment
+ */
+export const GetPurchaseContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseContractAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string().nullish(),
+  "amendmentNumber": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "amendmentValue": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseContractAmendment
+ */
+export const UpdatePurchaseContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseContractAmendmentBody = zod.object({
+  "code": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "amendmentNumber": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "amendmentValue": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdatePurchaseContractAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractId": zod.string().nullish(),
+  "amendmentNumber": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "amendmentValue": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseContractAmendment
+ */
+export const DeletePurchaseContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseContractAmendmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List goods-receipt-notes
+ */
+export const ListGoodsReceiptNotesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListGoodsReceiptNotesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "poId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "receiptDate": zod.string().nullish(),
+  "receiptType": zod.string(),
+  "warehouse": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "inspectionStatus": zod.string(),
+  "inspectedBy": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GoodsReceiptNote
+ */
+export const CreateGoodsReceiptNoteBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "poId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "receiptDate": zod.string().optional(),
+  "receiptType": zod.string().optional(),
+  "warehouse": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "inspectionStatus": zod.string().optional(),
+  "inspectedBy": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GoodsReceiptNote
+ */
+export const GetGoodsReceiptNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGoodsReceiptNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "poId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "receiptDate": zod.string().nullish(),
+  "receiptType": zod.string(),
+  "warehouse": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "inspectionStatus": zod.string(),
+  "inspectedBy": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GoodsReceiptNote
+ */
+export const UpdateGoodsReceiptNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGoodsReceiptNoteBody = zod.object({
+  "code": zod.string().optional(),
+  "poId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "receiptDate": zod.string().optional(),
+  "receiptType": zod.string().optional(),
+  "warehouse": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "inspectionStatus": zod.string().optional(),
+  "inspectedBy": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGoodsReceiptNoteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "poId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "receiptDate": zod.string().nullish(),
+  "receiptType": zod.string(),
+  "warehouse": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "inspectionStatus": zod.string(),
+  "inspectedBy": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GoodsReceiptNote
+ */
+export const DeleteGoodsReceiptNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGoodsReceiptNoteResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List grn-items
+ */
+export const ListGrnItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListGrnItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "grnId": zod.string().nullish(),
+  "poItemId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "orderedQuantity": zod.string().nullish(),
+  "receivedQuantity": zod.string().nullish(),
+  "acceptedQuantity": zod.string().nullish(),
+  "rejectedQuantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GrnItem
+ */
+export const CreateGrnItemBody = zod.object({
+  "companyId": zod.string(),
+  "grnId": zod.string().optional(),
+  "poItemId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "orderedQuantity": zod.string().optional(),
+  "receivedQuantity": zod.string().optional(),
+  "acceptedQuantity": zod.string().optional(),
+  "rejectedQuantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GrnItem
+ */
+export const GetGrnItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGrnItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "grnId": zod.string().nullish(),
+  "poItemId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "orderedQuantity": zod.string().nullish(),
+  "receivedQuantity": zod.string().nullish(),
+  "acceptedQuantity": zod.string().nullish(),
+  "rejectedQuantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GrnItem
+ */
+export const UpdateGrnItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGrnItemBody = zod.object({
+  "grnId": zod.string().optional(),
+  "poItemId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "orderedQuantity": zod.string().optional(),
+  "receivedQuantity": zod.string().optional(),
+  "acceptedQuantity": zod.string().optional(),
+  "rejectedQuantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGrnItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "grnId": zod.string().nullish(),
+  "poItemId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "orderedQuantity": zod.string().nullish(),
+  "receivedQuantity": zod.string().nullish(),
+  "acceptedQuantity": zod.string().nullish(),
+  "rejectedQuantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GrnItem
+ */
+export const DeleteGrnItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGrnItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-returns
+ */
+export const ListPurchaseReturnsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseReturnsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "grnId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "returnDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseReturn
+ */
+export const CreatePurchaseReturnBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "grnId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "returnDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseReturn
+ */
+export const GetPurchaseReturnParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseReturnResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "grnId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "returnDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseReturn
+ */
+export const UpdatePurchaseReturnParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseReturnBody = zod.object({
+  "code": zod.string().optional(),
+  "grnId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "returnDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePurchaseReturnResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "grnId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "returnDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "totalAmount": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseReturn
+ */
+export const DeletePurchaseReturnParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseReturnResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List purchase-return-items
+ */
+export const ListPurchaseReturnItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListPurchaseReturnItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "returnId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PurchaseReturnItem
+ */
+export const CreatePurchaseReturnItemBody = zod.object({
+  "companyId": zod.string(),
+  "returnId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a PurchaseReturnItem
+ */
+export const GetPurchaseReturnItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPurchaseReturnItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "returnId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a PurchaseReturnItem
+ */
+export const UpdatePurchaseReturnItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePurchaseReturnItemBody = zod.object({
+  "returnId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePurchaseReturnItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "returnId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a PurchaseReturnItem
+ */
+export const DeletePurchaseReturnItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePurchaseReturnItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List procurement-approvals
+ */
+export const ListProcurementApprovalsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListProcurementApprovalsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "entityType": zod.string().nullish(),
+  "entityId": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approvalDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ProcurementApproval
+ */
+export const CreateProcurementApprovalBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "entityType": zod.string().optional(),
+  "entityId": zod.string().optional(),
+  "level": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approverName": zod.string().optional(),
+  "approvalDate": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ProcurementApproval
+ */
+export const GetProcurementApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetProcurementApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "entityType": zod.string().nullish(),
+  "entityId": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approvalDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ProcurementApproval
+ */
+export const UpdateProcurementApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateProcurementApprovalBody = zod.object({
+  "code": zod.string().optional(),
+  "entityType": zod.string().optional(),
+  "entityId": zod.string().optional(),
+  "level": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approverName": zod.string().optional(),
+  "approvalDate": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+export const UpdateProcurementApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "entityType": zod.string().nullish(),
+  "entityId": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approvalDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ProcurementApproval
+ */
+export const DeleteProcurementApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteProcurementApprovalResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Procurement dashboard KPIs
+ */
+export const GetProcurementDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetProcurementDashboardResponse = zod.object({
+  "suppliersCount": zod.number(),
+  "activeSuppliers": zod.number(),
+  "openRfqs": zod.number(),
+  "pendingApprovals": zod.number(),
+  "pendingRequests": zod.number(),
+  "openPurchaseOrders": zod.number(),
+  "purchaseVolume": zod.string(),
+  "totalContractValue": zod.string(),
+  "pendingReturns": zod.number(),
+  "purchaseOrdersByStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+})).optional(),
+  "requestsByStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+})).optional()
+})
+
+

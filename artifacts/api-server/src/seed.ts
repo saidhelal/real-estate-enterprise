@@ -147,6 +147,35 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "contractorInvoices", label: "Contractor Invoices", extraActions: ["verify"] },
   // Construction Execution — Approval Workflow
   { module: "contractApprovals", label: "Contract Approvals", extraActions: ["approve"] },
+  // Procurement — Supplier Management
+  { module: "supplierCategories", label: "Supplier Categories" },
+  { module: "suppliers", label: "Suppliers", extraActions: ["blacklist"] },
+  { module: "supplierContacts", label: "Supplier Contacts" },
+  { module: "supplierEvaluations", label: "Supplier Evaluations", extraActions: ["approve"] },
+  // Procurement — Purchase Requests
+  { module: "purchaseRequests", label: "Purchase Requests", extraActions: ["approve"] },
+  { module: "purchaseRequestItems", label: "Purchase Request Items" },
+  // Procurement — RFQ
+  { module: "rfqs", label: "Requests for Quotation", extraActions: ["issue", "close"] },
+  { module: "rfqItems", label: "RFQ Items" },
+  { module: "rfqSuppliers", label: "RFQ Suppliers" },
+  // Procurement — Supplier Quotations
+  { module: "supplierQuotations", label: "Supplier Quotations", extraActions: ["award"] },
+  { module: "quotationItems", label: "Quotation Items" },
+  // Procurement — Purchase Orders
+  { module: "purchaseOrders", label: "Purchase Orders", extraActions: ["approve", "issue"] },
+  { module: "purchaseOrderItems", label: "Purchase Order Items" },
+  // Procurement — Purchase Contracts
+  { module: "purchaseContracts", label: "Purchase Contracts", extraActions: ["approve"] },
+  { module: "purchaseContractAmendments", label: "Purchase Contract Amendments", extraActions: ["approve"] },
+  // Procurement — Goods Receipt
+  { module: "goodsReceiptNotes", label: "Goods Receipt Notes", extraActions: ["inspect"] },
+  { module: "grnItems", label: "GRN Items" },
+  // Procurement — Purchase Returns
+  { module: "purchaseReturns", label: "Purchase Returns", extraActions: ["approve"] },
+  { module: "purchaseReturnItems", label: "Purchase Return Items" },
+  // Procurement — Approval Workflow
+  { module: "procurementApprovals", label: "Procurement Approvals", extraActions: ["approve"] },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

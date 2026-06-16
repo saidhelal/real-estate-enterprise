@@ -4697,6 +4697,1133 @@ export interface ConstructionDashboard {
   certificatesByStatus?: ConstructionDashboardCertificatesByStatusItem[];
 }
 
+export interface SupplierCategory {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SupplierCategoryInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  description?: string;
+  status?: string;
+}
+
+export interface SupplierCategoryUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface SupplierCategoryListResponse {
+  data: SupplierCategory[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Supplier {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  categoryId?: string | null;
+  /** @nullable */
+  classification?: string | null;
+  /** @nullable */
+  contactPerson?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  taxNumber?: string | null;
+  /** @nullable */
+  commercialReg?: string | null;
+  /** @nullable */
+  address?: string | null;
+  /** @nullable */
+  paymentTerms?: string | null;
+  /** @nullable */
+  rating?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SupplierInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  categoryId?: string;
+  classification?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  taxNumber?: string;
+  commercialReg?: string;
+  address?: string;
+  paymentTerms?: string;
+  rating?: string;
+  status?: string;
+}
+
+export interface SupplierUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  categoryId?: string;
+  classification?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  taxNumber?: string;
+  commercialReg?: string;
+  address?: string;
+  paymentTerms?: string;
+  rating?: string;
+  status?: string;
+}
+
+export interface SupplierListResponse {
+  data: Supplier[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SupplierContact {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  supplierId?: string | null;
+  name: string;
+  /** @nullable */
+  position?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  isPrimary?: boolean | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SupplierContactInput {
+  companyId: string;
+  supplierId?: string;
+  name: string;
+  position?: string;
+  email?: string;
+  phone?: string;
+  isPrimary?: boolean;
+  notes?: string;
+}
+
+export interface SupplierContactUpdate {
+  supplierId?: string;
+  name?: string;
+  position?: string;
+  email?: string;
+  phone?: string;
+  isPrimary?: boolean;
+  notes?: string;
+}
+
+export interface SupplierContactListResponse {
+  data: SupplierContact[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SupplierEvaluation {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  evaluationDate?: string | null;
+  /** @nullable */
+  period?: string | null;
+  /** @nullable */
+  qualityScore?: string | null;
+  /** @nullable */
+  deliveryScore?: string | null;
+  /** @nullable */
+  priceScore?: string | null;
+  /** @nullable */
+  serviceScore?: string | null;
+  /** @nullable */
+  overallScore?: string | null;
+  /** @nullable */
+  evaluatedBy?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SupplierEvaluationInput {
+  companyId: string;
+  code: string;
+  supplierId?: string;
+  evaluationDate?: string;
+  period?: string;
+  qualityScore?: string;
+  deliveryScore?: string;
+  priceScore?: string;
+  serviceScore?: string;
+  overallScore?: string;
+  evaluatedBy?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SupplierEvaluationUpdate {
+  code?: string;
+  supplierId?: string;
+  evaluationDate?: string;
+  period?: string;
+  qualityScore?: string;
+  deliveryScore?: string;
+  priceScore?: string;
+  serviceScore?: string;
+  overallScore?: string;
+  evaluatedBy?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SupplierEvaluationListResponse {
+  data: SupplierEvaluation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseRequest {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  /** @nullable */
+  department?: string | null;
+  requestType: string;
+  /** @nullable */
+  requestDate?: string | null;
+  /** @nullable */
+  requiredDate?: string | null;
+  priority: string;
+  /** @nullable */
+  budgetAmount?: string | null;
+  /** @nullable */
+  estimatedAmount?: string | null;
+  /** @nullable */
+  requestedBy?: string | null;
+  /** @nullable */
+  justification?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseRequestInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  department?: string;
+  requestType?: string;
+  requestDate?: string;
+  requiredDate?: string;
+  priority?: string;
+  budgetAmount?: string;
+  estimatedAmount?: string;
+  requestedBy?: string;
+  justification?: string;
+  status?: string;
+}
+
+export interface PurchaseRequestUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  department?: string;
+  requestType?: string;
+  requestDate?: string;
+  requiredDate?: string;
+  priority?: string;
+  budgetAmount?: string;
+  estimatedAmount?: string;
+  requestedBy?: string;
+  justification?: string;
+  status?: string;
+}
+
+export interface PurchaseRequestListResponse {
+  data: PurchaseRequest[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseRequestItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  requestId?: string | null;
+  /** @nullable */
+  itemCode?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  estimatedPrice?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseRequestItemInput {
+  companyId: string;
+  requestId?: string;
+  itemCode?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  estimatedPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface PurchaseRequestItemUpdate {
+  requestId?: string;
+  itemCode?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  estimatedPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface PurchaseRequestItemListResponse {
+  data: PurchaseRequestItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Rfq {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  /** @nullable */
+  requestId?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  closeDate?: string | null;
+  status: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface RfqInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  requestId?: string;
+  issueDate?: string;
+  closeDate?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface RfqUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  requestId?: string;
+  issueDate?: string;
+  closeDate?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface RfqListResponse {
+  data: Rfq[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface RfqItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  rfqId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface RfqItemInput {
+  companyId: string;
+  rfqId?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  notes?: string;
+}
+
+export interface RfqItemUpdate {
+  rfqId?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  notes?: string;
+}
+
+export interface RfqItemListResponse {
+  data: RfqItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface RfqSupplier {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  rfqId?: string | null;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  invitedDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface RfqSupplierInput {
+  companyId: string;
+  rfqId?: string;
+  supplierId?: string;
+  invitedDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface RfqSupplierUpdate {
+  rfqId?: string;
+  supplierId?: string;
+  invitedDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface RfqSupplierListResponse {
+  data: RfqSupplier[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SupplierQuotation {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  rfqId?: string | null;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  quotationNumber?: string | null;
+  /** @nullable */
+  quotationDate?: string | null;
+  /** @nullable */
+  validUntil?: string | null;
+  /** @nullable */
+  totalAmount?: string | null;
+  /** @nullable */
+  technicalScore?: string | null;
+  /** @nullable */
+  commercialScore?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SupplierQuotationInput {
+  companyId: string;
+  code: string;
+  rfqId?: string;
+  supplierId?: string;
+  quotationNumber?: string;
+  quotationDate?: string;
+  validUntil?: string;
+  totalAmount?: string;
+  technicalScore?: string;
+  commercialScore?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SupplierQuotationUpdate {
+  code?: string;
+  rfqId?: string;
+  supplierId?: string;
+  quotationNumber?: string;
+  quotationDate?: string;
+  validUntil?: string;
+  totalAmount?: string;
+  technicalScore?: string;
+  commercialScore?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SupplierQuotationListResponse {
+  data: SupplierQuotation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface QuotationItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  quotationId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitPrice?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface QuotationItemInput {
+  companyId: string;
+  quotationId?: string;
+  description?: string;
+  unit?: string;
+  quantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface QuotationItemUpdate {
+  quotationId?: string;
+  description?: string;
+  unit?: string;
+  quantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface QuotationItemListResponse {
+  data: QuotationItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  quotationId?: string | null;
+  /** @nullable */
+  requestId?: string | null;
+  /** @nullable */
+  orderDate?: string | null;
+  /** @nullable */
+  expectedDate?: string | null;
+  /** @nullable */
+  totalAmount?: string | null;
+  /** @nullable */
+  deliveryTerms?: string | null;
+  /** @nullable */
+  paymentTerms?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseOrderInput {
+  companyId: string;
+  code: string;
+  supplierId?: string;
+  quotationId?: string;
+  requestId?: string;
+  orderDate?: string;
+  expectedDate?: string;
+  totalAmount?: string;
+  deliveryTerms?: string;
+  paymentTerms?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface PurchaseOrderUpdate {
+  code?: string;
+  supplierId?: string;
+  quotationId?: string;
+  requestId?: string;
+  orderDate?: string;
+  expectedDate?: string;
+  totalAmount?: string;
+  deliveryTerms?: string;
+  paymentTerms?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface PurchaseOrderListResponse {
+  data: PurchaseOrder[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseOrderItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  poId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  receivedQuantity?: string | null;
+  /** @nullable */
+  unitPrice?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseOrderItemInput {
+  companyId: string;
+  poId?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  receivedQuantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface PurchaseOrderItemUpdate {
+  poId?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  receivedQuantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface PurchaseOrderItemListResponse {
+  data: PurchaseOrderItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseContract {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  contractValue?: string | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  /** @nullable */
+  documentRef?: string | null;
+  status: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseContractInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  supplierId?: string;
+  contractValue?: string;
+  startDate?: string;
+  endDate?: string;
+  documentRef?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface PurchaseContractUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  supplierId?: string;
+  contractValue?: string;
+  startDate?: string;
+  endDate?: string;
+  documentRef?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface PurchaseContractListResponse {
+  data: PurchaseContract[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseContractAmendment {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  amendmentNumber?: string | null;
+  /** @nullable */
+  amendmentDate?: string | null;
+  /** @nullable */
+  amendmentValue?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseContractAmendmentInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  amendmentNumber?: string;
+  amendmentDate?: string;
+  amendmentValue?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface PurchaseContractAmendmentUpdate {
+  code?: string;
+  contractId?: string;
+  amendmentNumber?: string;
+  amendmentDate?: string;
+  amendmentValue?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface PurchaseContractAmendmentListResponse {
+  data: PurchaseContractAmendment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GoodsReceiptNote {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  poId?: string | null;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  receiptDate?: string | null;
+  receiptType: string;
+  /** @nullable */
+  warehouse?: string | null;
+  /** @nullable */
+  totalAmount?: string | null;
+  inspectionStatus: string;
+  /** @nullable */
+  inspectedBy?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GoodsReceiptNoteInput {
+  companyId: string;
+  code: string;
+  poId?: string;
+  supplierId?: string;
+  receiptDate?: string;
+  receiptType?: string;
+  warehouse?: string;
+  totalAmount?: string;
+  inspectionStatus?: string;
+  inspectedBy?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface GoodsReceiptNoteUpdate {
+  code?: string;
+  poId?: string;
+  supplierId?: string;
+  receiptDate?: string;
+  receiptType?: string;
+  warehouse?: string;
+  totalAmount?: string;
+  inspectionStatus?: string;
+  inspectedBy?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface GoodsReceiptNoteListResponse {
+  data: GoodsReceiptNote[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GrnItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  grnId?: string | null;
+  /** @nullable */
+  poItemId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  orderedQuantity?: string | null;
+  /** @nullable */
+  receivedQuantity?: string | null;
+  /** @nullable */
+  acceptedQuantity?: string | null;
+  /** @nullable */
+  rejectedQuantity?: string | null;
+  /** @nullable */
+  unitPrice?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GrnItemInput {
+  companyId: string;
+  grnId?: string;
+  poItemId?: string;
+  description?: string;
+  unit?: string;
+  orderedQuantity?: string;
+  receivedQuantity?: string;
+  acceptedQuantity?: string;
+  rejectedQuantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface GrnItemUpdate {
+  grnId?: string;
+  poItemId?: string;
+  description?: string;
+  unit?: string;
+  orderedQuantity?: string;
+  receivedQuantity?: string;
+  acceptedQuantity?: string;
+  rejectedQuantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  notes?: string;
+}
+
+export interface GrnItemListResponse {
+  data: GrnItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseReturn {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  grnId?: string | null;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  returnDate?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  totalAmount?: string | null;
+  status: string;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseReturnInput {
+  companyId: string;
+  code: string;
+  grnId?: string;
+  supplierId?: string;
+  returnDate?: string;
+  reason?: string;
+  totalAmount?: string;
+  status?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface PurchaseReturnUpdate {
+  code?: string;
+  grnId?: string;
+  supplierId?: string;
+  returnDate?: string;
+  reason?: string;
+  totalAmount?: string;
+  status?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface PurchaseReturnListResponse {
+  data: PurchaseReturn[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PurchaseReturnItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  returnId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitPrice?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PurchaseReturnItemInput {
+  companyId: string;
+  returnId?: string;
+  description?: string;
+  unit?: string;
+  quantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  reason?: string;
+  notes?: string;
+}
+
+export interface PurchaseReturnItemUpdate {
+  returnId?: string;
+  description?: string;
+  unit?: string;
+  quantity?: string;
+  unitPrice?: string;
+  amount?: string;
+  reason?: string;
+  notes?: string;
+}
+
+export interface PurchaseReturnItemListResponse {
+  data: PurchaseReturnItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ProcurementApproval {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  entityType?: string | null;
+  /** @nullable */
+  entityId?: string | null;
+  level: string;
+  status: string;
+  /** @nullable */
+  approverName?: string | null;
+  /** @nullable */
+  approvalDate?: string | null;
+  /** @nullable */
+  comments?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ProcurementApprovalInput {
+  companyId: string;
+  code: string;
+  entityType?: string;
+  entityId?: string;
+  level?: string;
+  status?: string;
+  approverName?: string;
+  approvalDate?: string;
+  comments?: string;
+}
+
+export interface ProcurementApprovalUpdate {
+  code?: string;
+  entityType?: string;
+  entityId?: string;
+  level?: string;
+  status?: string;
+  approverName?: string;
+  approvalDate?: string;
+  comments?: string;
+}
+
+export interface ProcurementApprovalListResponse {
+  data: ProcurementApproval[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export type ProcurementDashboardPurchaseOrdersByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export type ProcurementDashboardRequestsByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export interface ProcurementDashboard {
+  suppliersCount: number;
+  activeSuppliers: number;
+  openRfqs: number;
+  pendingApprovals: number;
+  pendingRequests: number;
+  openPurchaseOrders: number;
+  purchaseVolume: string;
+  totalContractValue: string;
+  pendingReturns: number;
+  purchaseOrdersByStatus?: ProcurementDashboardPurchaseOrdersByStatusItem[];
+  requestsByStatus?: ProcurementDashboardRequestsByStatusItem[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -5445,6 +6572,150 @@ companyId?: string;
 };
 
 export type GetConstructionDashboardParams = {
+companyId?: string;
+};
+
+export type ListSupplierCategorysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListSuppliersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListSupplierContactsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListSupplierEvaluationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseRequestsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseRequestItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListRfqsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListRfqItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListRfqSuppliersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListSupplierQuotationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListQuotationItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseOrdersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseOrderItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseContractsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseContractAmendmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListGoodsReceiptNotesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListGrnItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseReturnsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPurchaseReturnItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListProcurementApprovalsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type GetProcurementDashboardParams = {
 companyId?: string;
 };
 

@@ -17,6 +17,7 @@ import {
   FileCheck, ShieldAlert, Wrench, MessageSquare, FileSearch, Microscope, Gauge,
   Hammer, FileBox, Award, GitPullRequestArrow, MinusCircle, PlusCircle,
   ShieldMinus, Coins, RotateCcw, FileSpreadsheet, CheckSquare, BarChart3,
+  Truck, ShoppingCart, PackageCheck, PackageX, Store, Undo2,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -143,6 +144,30 @@ const NAV_GROUPS = [
     { href: "/contractor-invoices", icon: FileSpreadsheet, labelKey: "nav.contractor_invoices" },
     { href: "/contract-approvals", icon: CheckSquare, labelKey: "nav.contract_approvals" },
     { href: "/construction-reports", icon: BarChart3, labelKey: "nav.construction_reports" },
+  ]},
+  { titleKey: "nav.group.procurement", items: [
+    { href: "/procurement-dashboard", icon: Package, labelKey: "nav.procurement_dashboard" },
+    { href: "/supplier-categories", icon: Layers, labelKey: "nav.supplier_categories" },
+    { href: "/suppliers", icon: Store, labelKey: "nav.suppliers" },
+    { href: "/supplier-contacts", icon: Contact, labelKey: "nav.supplier_contacts" },
+    { href: "/supplier-evaluations", icon: BadgeCheck, labelKey: "nav.supplier_evaluations" },
+    { href: "/purchase-requests", icon: ClipboardList, labelKey: "nav.purchase_requests" },
+    { href: "/purchase-request-items", icon: ListOrdered, labelKey: "nav.purchase_request_items" },
+    { href: "/rfqs", icon: FileSearch, labelKey: "nav.rfqs" },
+    { href: "/rfq-items", icon: ListOrdered, labelKey: "nav.rfq_items" },
+    { href: "/rfq-suppliers", icon: Users, labelKey: "nav.rfq_suppliers" },
+    { href: "/supplier-quotations", icon: FileText, labelKey: "nav.supplier_quotations" },
+    { href: "/quotation-items", icon: ListOrdered, labelKey: "nav.quotation_items" },
+    { href: "/purchase-orders", icon: ShoppingCart, labelKey: "nav.purchase_orders" },
+    { href: "/purchase-order-items", icon: ListOrdered, labelKey: "nav.purchase_order_items" },
+    { href: "/purchase-contracts", icon: FileSignature, labelKey: "nav.purchase_contracts" },
+    { href: "/purchase-contract-amendments", icon: FilePen, labelKey: "nav.purchase_contract_amendments" },
+    { href: "/goods-receipt-notes", icon: PackageCheck, labelKey: "nav.goods_receipt_notes" },
+    { href: "/grn-items", icon: Boxes, labelKey: "nav.grn_items" },
+    { href: "/purchase-returns", icon: Undo2, labelKey: "nav.purchase_returns" },
+    { href: "/purchase-return-items", icon: PackageX, labelKey: "nav.purchase_return_items" },
+    { href: "/procurement-approvals", icon: CheckSquare, labelKey: "nav.procurement_approvals" },
+    { href: "/procurement-reports", icon: BarChart3, labelKey: "nav.procurement_reports" },
   ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },
