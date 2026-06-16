@@ -697,12 +697,14 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["1020", "Bank Accounts", "الحسابات البنكية", "asset", "debit", "11", true],
   ["1030", "Accounts Receivable", "الذمم المدينة", "asset", "debit", "11", true],
   ["1040", "Inventory", "المخزون", "asset", "debit", "11", true],
+  ["1050", "Cheques Under Collection", "شيكات تحت التحصيل", "asset", "debit", "11", true],
   ["12", "Non-Current Assets", "الأصول غير المتداولة", "asset", "debit", "1", false],
   ["1210", "Property & Equipment", "الممتلكات والمعدات", "asset", "debit", "12", true],
   ["2", "Liabilities", "الخصوم", "liability", "credit", null, false],
   ["21", "Current Liabilities", "الخصوم المتداولة", "liability", "credit", "2", false],
   ["2010", "Accounts Payable", "الذمم الدائنة", "liability", "credit", "21", true],
   ["2020", "Customer Advances", "دفعات العملاء المقدمة", "liability", "credit", "21", true],
+  ["2030", "Cheques Payable", "شيكات مستحقة الدفع", "liability", "credit", "21", true],
   ["22", "Non-Current Liabilities", "الخصوم غير المتداولة", "liability", "credit", "2", false],
   ["2210", "Loans Payable", "القروض المستحقة", "liability", "credit", "22", true],
   ["3", "Equity", "حقوق الملكية", "equity", "credit", null, false],
@@ -732,8 +734,10 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["bank.out", "5030", "1020", "Bank outflow"],
   ["contract.created", "1030", "4010", "Property sale recognized"],
   ["penalty.assessed", "1030", "4030", "Late-payment penalty assessed"],
-  ["cheque.incoming.cleared", "1020", "1030", "Incoming cheque cleared"],
-  ["cheque.outgoing.cleared", "2010", "1020", "Outgoing cheque cleared"],
+  ["cheque.incoming.collection", "1050", "1030", "Incoming cheque under collection"],
+  ["cheque.outgoing.collection", "2010", "2030", "Outgoing cheque issued for payment"],
+  ["cheque.incoming.cleared", "1020", "1050", "Incoming cheque cleared"],
+  ["cheque.outgoing.cleared", "2030", "1020", "Outgoing cheque cleared"],
   ["inventory.goods_receipt", "1040", "2010", "Goods received into inventory"],
   ["inventory.goods_issue", "5010", "1040", "Goods issued from inventory"],
   ["inventory.stock_adjustment", "5030", "1040", "Stock adjustment"],
@@ -786,6 +790,23 @@ async function seedAccounting(): Promise<void> {
     const creditAccountId = codeToId.get(creditCode) ?? null;
     await db.insert(accountMappingsTable).values({ companyId, eventKey, debitAccountId, creditAccountId, description });
     createdMappings += 1;
+  }
+
+  // Reconcile the cheque clearing mappings to the two-phase (collection -> clearing)
+  // model. These event keys predate the bridge accounts (1050 / 2030), so existing
+  // rows are skipped by the idempotent insert above and must be re-pointed here.
+  const chequeMappingFixes: Array<[string, string, string]> = [
+    ["cheque.incoming.cleared", "1020", "1050"],
+    ["cheque.outgoing.cleared", "2030", "1020"],
+  ];
+  for (const [eventKey, debitCode, creditCode] of chequeMappingFixes) {
+    const debitAccountId = codeToId.get(debitCode) ?? null;
+    const creditAccountId = codeToId.get(creditCode) ?? null;
+    if (!debitAccountId || !creditAccountId) continue;
+    await db
+      .update(accountMappingsTable)
+      .set({ debitAccountId, creditAccountId })
+      .where(and(eq(accountMappingsTable.companyId, companyId), eq(accountMappingsTable.eventKey, eventKey)));
   }
 
   // Monthly fiscal periods from each fiscal year (idempotent by company + year + periodNumber).

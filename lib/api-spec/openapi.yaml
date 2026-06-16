@@ -20134,15 +20134,19 @@ components:
         customerId: { type: ["string", "null"] }
         supplierId: { type: ["string", "null"] }
         contractId: { type: ["string", "null"] }
+        unitId: { type: ["string", "null"] }
+        scheduleId: { type: ["string", "null"] }
         receiptId: { type: ["string", "null"] }
         payeeName: { type: ["string", "null"] }
         status: { type: string }
+        collectionDate: { type: ["string", "null"] }
         depositDate: { type: ["string", "null"] }
         clearedDate: { type: ["string", "null"] }
         returnedDate: { type: ["string", "null"] }
         returnReason: { type: ["string", "null"] }
         reference: { type: ["string", "null"] }
         notes: { type: ["string", "null"] }
+        attachments: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
 
@@ -20162,15 +20166,19 @@ components:
         customerId: { type: string }
         supplierId: { type: string }
         contractId: { type: string }
+        unitId: { type: string }
+        scheduleId: { type: string }
         receiptId: { type: string }
         payeeName: { type: string }
         status: { type: string }
+        collectionDate: { type: string }
         depositDate: { type: string }
         clearedDate: { type: string }
         returnedDate: { type: string }
         returnReason: { type: string }
         reference: { type: string }
         notes: { type: string }
+        attachments: { type: string }
 
     ChequeUpdate:
       type: object
@@ -20186,15 +20194,19 @@ components:
         customerId: { type: string }
         supplierId: { type: string }
         contractId: { type: string }
+        unitId: { type: string }
+        scheduleId: { type: string }
         receiptId: { type: string }
         payeeName: { type: string }
         status: { type: string }
+        collectionDate: { type: string }
         depositDate: { type: string }
         clearedDate: { type: string }
         returnedDate: { type: string }
         returnReason: { type: string }
         reference: { type: string }
         notes: { type: string }
+        attachments: { type: string }
 
     ChequeListResponse:
       type: object

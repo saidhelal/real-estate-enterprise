@@ -16203,15 +16203,19 @@ export const ListChequesResponse = zod.object({
   "customerId": zod.string().nullish(),
   "supplierId": zod.string().nullish(),
   "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
   "receiptId": zod.string().nullish(),
   "payeeName": zod.string().nullish(),
   "status": zod.string(),
+  "collectionDate": zod.string().nullish(),
   "depositDate": zod.string().nullish(),
   "clearedDate": zod.string().nullish(),
   "returnedDate": zod.string().nullish(),
   "returnReason": zod.string().nullish(),
   "reference": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "attachments": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -16237,15 +16241,19 @@ export const CreateChequeBody = zod.object({
   "customerId": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "contractId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
   "receiptId": zod.string().optional(),
   "payeeName": zod.string().optional(),
   "status": zod.string().optional(),
+  "collectionDate": zod.string().optional(),
   "depositDate": zod.string().optional(),
   "clearedDate": zod.string().optional(),
   "returnedDate": zod.string().optional(),
   "returnReason": zod.string().optional(),
   "reference": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "attachments": zod.string().optional()
 })
 
 
@@ -16270,15 +16278,19 @@ export const GetChequeResponse = zod.object({
   "customerId": zod.string().nullish(),
   "supplierId": zod.string().nullish(),
   "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
   "receiptId": zod.string().nullish(),
   "payeeName": zod.string().nullish(),
   "status": zod.string(),
+  "collectionDate": zod.string().nullish(),
   "depositDate": zod.string().nullish(),
   "clearedDate": zod.string().nullish(),
   "returnedDate": zod.string().nullish(),
   "returnReason": zod.string().nullish(),
   "reference": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "attachments": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -16303,15 +16315,19 @@ export const UpdateChequeBody = zod.object({
   "customerId": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "contractId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
   "receiptId": zod.string().optional(),
   "payeeName": zod.string().optional(),
   "status": zod.string().optional(),
+  "collectionDate": zod.string().optional(),
   "depositDate": zod.string().optional(),
   "clearedDate": zod.string().optional(),
   "returnedDate": zod.string().optional(),
   "returnReason": zod.string().optional(),
   "reference": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "attachments": zod.string().optional()
 })
 
 export const UpdateChequeResponse = zod.object({
@@ -16328,15 +16344,19 @@ export const UpdateChequeResponse = zod.object({
   "customerId": zod.string().nullish(),
   "supplierId": zod.string().nullish(),
   "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
   "receiptId": zod.string().nullish(),
   "payeeName": zod.string().nullish(),
   "status": zod.string(),
+  "collectionDate": zod.string().nullish(),
   "depositDate": zod.string().nullish(),
   "clearedDate": zod.string().nullish(),
   "returnedDate": zod.string().nullish(),
   "returnReason": zod.string().nullish(),
   "reference": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "attachments": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })

@@ -41,14 +41,41 @@ const CHEQUE_STATUSES = new Set([
 ]);
 const CLEARED = "cleared";
 const REVERSING_STATUSES = new Set(["returned", "cancelled"]);
+// Allowed lifecycle transitions, enforced server-side (the UI mirrors this, but
+// direct API callers must not be able to jump to an arbitrary status).
+const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  received: ["under_collection", "deposited", "cancelled"],
+  post_dated: ["under_collection", "deposited", "cancelled"],
+  under_collection: ["cleared", "returned", "cancelled"],
+  deposited: ["cleared", "returned", "cancelled"],
+  cleared: ["returned"],
+  returned: [],
+  cancelled: [],
+};
+// Statuses where a cheque is in the bank's hands pending clearance — the point at
+// which the "collection leg" of the two-phase posting is recognised.
+const COLLECTING_STATUSES = new Set(["under_collection", "deposited"]);
 
-// Direction → account-mapping event key used when the cheque clears.
-//   incoming: debit Bank / credit Accounts Receivable (money collected)
-//   outgoing: debit Accounts Payable / credit Bank (payment honoured)
+// Two-phase ledger model. A cheque posts a "collection" leg when it goes under
+// collection / is deposited, then a "clearing" leg when it clears; together they
+// net to the same Bank↔AR (or AP↔Bank) movement, with a bridge account
+// (Cheques Under Collection / Cheques Payable) carrying the in-between state.
+//   collection (incoming): debit Cheques Under Collection / credit Accounts Receivable
+//   clearing   (incoming): debit Bank / credit Cheques Under Collection
+//   collection (outgoing): debit Accounts Payable / credit Cheques Payable
+//   clearing   (outgoing): debit Cheques Payable / credit Bank
+const COLLECTION_EVENT: Record<string, string> = {
+  incoming: "cheque.incoming.collection",
+  outgoing: "cheque.outgoing.collection",
+};
 const CLEAR_EVENT: Record<string, string> = {
   incoming: "cheque.incoming.cleared",
   outgoing: "cheque.outgoing.cleared",
 };
+// The collection leg posts under its own source type so the engine's
+// per-(sourceType,sourceId) idempotency lets both legs coexist for one cheque.
+const COLLECTION_SOURCE = "chequeCollection";
+const CLEARING_SOURCE = "cheque";
 
 // Financial fields frozen once a cheque has cleared (driven a ledger entry).
 const FROZEN_FIELDS = [
@@ -59,6 +86,8 @@ const FROZEN_FIELDS = [
   "customerId",
   "supplierId",
   "contractId",
+  "unitId",
+  "scheduleId",
   "receiptId",
 ];
 
@@ -178,8 +207,12 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
     if (!existing) return { notFound: true as const };
     const fromStatus = existing.status;
     if (fromStatus === toStatus) return { existing, unchanged: true as const };
+    if (!(ALLOWED_TRANSITIONS[fromStatus] ?? []).includes(toStatus)) {
+      return { invalidTransition: true as const, fromStatus, toStatus };
+    }
 
     const set: Record<string, unknown> = { status: toStatus };
+    if (toStatus === "under_collection" && !existing.collectionDate) set.collectionDate = actionDate;
     if (toStatus === "deposited") set.depositDate = actionDate;
     if (toStatus === CLEARED) set.clearedDate = actionDate;
     if (toStatus === "returned") {
@@ -188,25 +221,55 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
     }
     const [updated] = await tx.update(chequesTable).set(set).where(eq(chequesTable.id, id)).returning();
 
-    // Ledger integration (best-effort; skips cleanly if unconfigured).
+    // Ledger integration (best-effort; skips cleanly if unconfigured). Each leg is
+    // idempotent per (sourceType, sourceId), so re-attempting a leg never double-posts.
+    const userId = req.authUser?.id ?? null;
+    const amountValid = typeof existing.amount === "string" && existing.amount.trim() !== "";
+    const postCollection = async (): Promise<void> => {
+      const eventKey = COLLECTION_EVENT[existing.direction];
+      if (!eventKey || !amountValid) return;
+      await postAutomaticEntry(tx, {
+        companyId: existing.companyId,
+        branchId: existing.branchId,
+        eventKey,
+        amount: existing.amount,
+        entryDate: actionDate,
+        description: `Cheque ${existing.code} under collection`,
+        reference: existing.chequeNumber,
+        sourceType: COLLECTION_SOURCE,
+        sourceId: existing.id,
+        userId,
+      });
+    };
+    const postClearing = async (): Promise<void> => {
+      const eventKey = CLEAR_EVENT[existing.direction];
+      if (!eventKey || !amountValid) return;
+      await postAutomaticEntry(tx, {
+        companyId: existing.companyId,
+        branchId: existing.branchId,
+        eventKey,
+        amount: existing.amount,
+        entryDate: actionDate,
+        description: `Cheque ${existing.code} cleared`,
+        reference: existing.chequeNumber,
+        sourceType: CLEARING_SOURCE,
+        sourceId: existing.id,
+        userId,
+      });
+    };
+
     if (toStatus === CLEARED && fromStatus !== CLEARED) {
-      const eventKey = CLEAR_EVENT[existing.direction] ?? null;
-      if (eventKey && typeof existing.amount === "string" && existing.amount.trim() !== "") {
-        await postAutomaticEntry(tx, {
-          companyId: existing.companyId,
-          branchId: existing.branchId,
-          eventKey,
-          amount: existing.amount,
-          entryDate: actionDate,
-          description: `Cheque ${existing.code} cleared`,
-          reference: existing.chequeNumber,
-          sourceType: "cheque",
-          sourceId: existing.id,
-          userId: req.authUser?.id ?? null,
-        });
-      }
-    } else if (REVERSING_STATUSES.has(toStatus) && fromStatus === CLEARED) {
-      await reverseAutomaticEntriesForSource(tx, "cheque", existing.id, req.authUser?.id ?? null);
+      // Ensure the collection leg exists (covers paths that skip under_collection),
+      // then post the clearing leg that drains the bridge account.
+      await postCollection();
+      await postClearing();
+    } else if (COLLECTING_STATUSES.has(toStatus) && !COLLECTING_STATUSES.has(fromStatus) && fromStatus !== CLEARED) {
+      await postCollection();
+    } else if (REVERSING_STATUSES.has(toStatus)) {
+      // Return/cancel reverses whatever legs were posted (collection and/or
+      // clearing); reversal is a no-op for legs that never posted.
+      await reverseAutomaticEntriesForSource(tx, CLEARING_SOURCE, existing.id, userId);
+      await reverseAutomaticEntriesForSource(tx, COLLECTION_SOURCE, existing.id, userId);
     }
 
     await tx.insert(chequeStatusHistoryTable).values({
@@ -224,6 +287,10 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
   });
 
   if ("notFound" in result) { res.status(404).json({ error: "Cheque not found" }); return; }
+  if ("invalidTransition" in result) {
+    res.status(409).json({ error: `Invalid status transition from ${result.fromStatus} to ${result.toStatus}` });
+    return;
+  }
   if ("unchanged" in result) { res.json(GetChequeResponse.parse(serializeRow(result.existing))); return; }
   await recordAudit(req, {
     action: "update",

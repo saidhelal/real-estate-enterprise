@@ -19,13 +19,17 @@ export interface ChequeInput {
   customerId?: string;
   supplierId?: string;
   contractId?: string;
+  unitId?: string;
+  scheduleId?: string;
   receiptId?: string;
   payeeName?: string;
   status?: string;
+  collectionDate?: string;
   depositDate?: string;
   clearedDate?: string;
   returnedDate?: string;
   returnReason?: string;
   reference?: string;
   notes?: string;
+  attachments?: string;
 }

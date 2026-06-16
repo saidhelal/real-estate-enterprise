@@ -28,10 +28,16 @@ export interface Cheque {
   /** @nullable */
   contractId?: string | null;
   /** @nullable */
+  unitId?: string | null;
+  /** @nullable */
+  scheduleId?: string | null;
+  /** @nullable */
   receiptId?: string | null;
   /** @nullable */
   payeeName?: string | null;
   status: string;
+  /** @nullable */
+  collectionDate?: string | null;
   /** @nullable */
   depositDate?: string | null;
   /** @nullable */
@@ -44,6 +50,8 @@ export interface Cheque {
   reference?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  attachments?: string | null;
   isActive: boolean;
   createdAt: string;
 }

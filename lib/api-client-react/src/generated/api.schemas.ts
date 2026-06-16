@@ -7107,10 +7107,16 @@ export interface Cheque {
   /** @nullable */
   contractId?: string | null;
   /** @nullable */
+  unitId?: string | null;
+  /** @nullable */
+  scheduleId?: string | null;
+  /** @nullable */
   receiptId?: string | null;
   /** @nullable */
   payeeName?: string | null;
   status: string;
+  /** @nullable */
+  collectionDate?: string | null;
   /** @nullable */
   depositDate?: string | null;
   /** @nullable */
@@ -7123,6 +7129,8 @@ export interface Cheque {
   reference?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  attachments?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -7140,15 +7148,19 @@ export interface ChequeInput {
   customerId?: string;
   supplierId?: string;
   contractId?: string;
+  unitId?: string;
+  scheduleId?: string;
   receiptId?: string;
   payeeName?: string;
   status?: string;
+  collectionDate?: string;
   depositDate?: string;
   clearedDate?: string;
   returnedDate?: string;
   returnReason?: string;
   reference?: string;
   notes?: string;
+  attachments?: string;
 }
 
 export interface ChequeUpdate {
@@ -7163,15 +7175,19 @@ export interface ChequeUpdate {
   customerId?: string;
   supplierId?: string;
   contractId?: string;
+  unitId?: string;
+  scheduleId?: string;
   receiptId?: string;
   payeeName?: string;
   status?: string;
+  collectionDate?: string;
   depositDate?: string;
   clearedDate?: string;
   returnedDate?: string;
   returnReason?: string;
   reference?: string;
   notes?: string;
+  attachments?: string;
 }
 
 export interface ChequeListResponse {

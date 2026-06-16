@@ -9,6 +9,10 @@ import {
   useListCompanies,
   useListCustomers,
   useListBankAccounts,
+  useListSuppliers,
+  useListContracts,
+  useListUnits,
+  useListInstallmentSchedules,
   type Cheque,
 } from "@workspace/api-client-react";
 import {
@@ -69,9 +73,17 @@ export default function ChequesPage() {
   const companyId = companies?.[0]?.id;
   const { data: customers } = useListCustomers({ pageSize: 200 });
   const { data: bankAccounts } = useListBankAccounts({ pageSize: 200 });
+  const { data: suppliers } = useListSuppliers({ pageSize: 200 });
+  const { data: contracts } = useListContracts({ pageSize: 200 });
+  const { data: units } = useListUnits({ pageSize: 200 });
+  const { data: schedules } = useListInstallmentSchedules({ pageSize: 200 });
 
   const customerOptions = (customers?.data ?? []).map((c) => ({ value: c.id, label: c.fullName, labelAr: c.nameAr ?? c.fullName }));
   const bankAccountOptions = (bankAccounts?.data ?? []).map((b) => ({ value: b.id, label: `${b.bankName} - ${b.accountNumber}`, labelAr: `${b.bankNameAr} - ${b.accountNumber}` }));
+  const supplierOptions = (suppliers?.data ?? []).map((s) => ({ value: s.id, label: s.name, labelAr: s.nameAr ?? s.name }));
+  const contractOptions = (contracts?.data ?? []).map((c) => ({ value: c.id, label: c.code, labelAr: c.code }));
+  const unitOptions = (units?.data ?? []).map((u) => ({ value: u.id, label: u.code, labelAr: u.code }));
+  const scheduleOptions = (schedules?.data ?? []).map((s) => ({ value: s.id, label: `#${s.installmentNumber} - ${s.dueDate} - ${s.amount ?? ""}`, labelAr: `#${s.installmentNumber} - ${s.dueDate} - ${s.amount ?? ""}` }));
 
   const [target, setTarget] = useState<Cheque | null>(null);
   const [toStatus, setToStatus] = useState("");
@@ -91,10 +103,15 @@ export default function ChequesPage() {
     { name: "bankName", label: t("acc.bank_name") },
     { name: "bankAccountId", label: t("nav.bank_accounts"), type: "select", options: bankAccountOptions },
     { name: "customerId", label: t("nav.customers"), type: "select", options: customerOptions },
+    { name: "supplierId", label: t("nav.suppliers"), type: "select", options: supplierOptions },
+    { name: "contractId", label: t("nav.contracts"), type: "select", options: contractOptions },
+    { name: "unitId", label: t("acc.related_unit"), type: "select", options: unitOptions },
+    { name: "scheduleId", label: t("acc.related_installment"), type: "select", options: scheduleOptions },
     { name: "payeeName", label: t("acc.payee_name") },
     { name: "status", label: t("common.status"), type: "select", options: CREATE_STATUSES },
     { name: "reference", label: t("acc.reference") },
     { name: "notes", label: t("acc.description"), type: "textarea" },
+    { name: "attachments", label: t("acc.attachments"), type: "textarea" },
   ];
 
   const columns: ResourceColumn<Cheque>[] = [
