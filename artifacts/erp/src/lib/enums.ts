@@ -66,6 +66,7 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   // engineering: statuses / types
   in_progress: { en: "In Progress", ar: "قيد التنفيذ" },
   submitted: { en: "Submitted", ar: "مُقدَّم" },
+  reviewed: { en: "Reviewed", ar: "مُراجَع" },
   rejected: { en: "Rejected", ar: "مرفوض" },
   superseded: { en: "Superseded", ar: "مُستبدَل" },
   approved_with_comments: { en: "Approved with Comments", ar: "معتمد مع ملاحظات" },

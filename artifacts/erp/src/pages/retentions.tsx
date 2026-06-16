@@ -30,7 +30,7 @@ export default function RetentionsPage() {
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
-    { name: "certificateId", label: "Certificate", labelAr: "الشهادة", type: "select", options: certificateOptions },
+    { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "retentionPercent", label: "Retention %", labelAr: "نسبة المحتجز", type: "money" },
     { name: "retainedAmount", label: "Retained Amount", labelAr: "المبلغ المحتجز", type: "money" },
     { name: "releasedAmount", label: "Released Amount", labelAr: "المبلغ المُفرَج عنه", type: "money" },

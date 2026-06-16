@@ -30,7 +30,7 @@ export default function ContractorInvoicesPage() {
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
-    { name: "certificateId", label: "Certificate", labelAr: "الشهادة", type: "select", options: certificateOptions },
+    { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "invoiceNumber", label: "Invoice Number", labelAr: "رقم الفاتورة" },
     { name: "invoiceDate", label: "Invoice Date", labelAr: "تاريخ الفاتورة", type: "date" },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },

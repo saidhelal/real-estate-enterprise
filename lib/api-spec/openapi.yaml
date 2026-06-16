@@ -12023,6 +12023,271 @@ paths:
               schema:
                 $ref: "#/components/schemas/InventoryDashboard"
 
+
+  /certificate-statuses:
+    get:
+      operationId: listCertificateStatuss
+      tags: [certificateStatuses]
+      summary: List certificate-statuses
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CertificateStatuss
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateStatusListResponse"
+    post:
+      operationId: createCertificateStatus
+      tags: [certificateStatuses]
+      summary: Create a CertificateStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateStatusInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateStatus"
+
+  /certificate-statuses/{id}:
+    get:
+      operationId: getCertificateStatus
+      tags: [certificateStatuses]
+      summary: Get a CertificateStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CertificateStatus
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateStatus"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCertificateStatus
+      tags: [certificateStatuses]
+      summary: Update a CertificateStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateStatus"
+    delete:
+      operationId: deleteCertificateStatus
+      tags: [certificateStatuses]
+      summary: Soft-delete a CertificateStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /certificate-approvals:
+    get:
+      operationId: listCertificateApprovals
+      tags: [certificateApprovals]
+      summary: List certificate-approvals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CertificateApprovals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApprovalListResponse"
+    post:
+      operationId: createCertificateApproval
+      tags: [certificateApprovals]
+      summary: Create a CertificateApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateApprovalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApproval"
+
+  /certificate-approvals/{id}:
+    get:
+      operationId: getCertificateApproval
+      tags: [certificateApprovals]
+      summary: Get a CertificateApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CertificateApproval
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApproval"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCertificateApproval
+      tags: [certificateApprovals]
+      summary: Update a CertificateApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateApprovalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApproval"
+    delete:
+      operationId: deleteCertificateApproval
+      tags: [certificateApprovals]
+      summary: Soft-delete a CertificateApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /certificate-approval-logs:
+    get:
+      operationId: listCertificateApprovalLogs
+      tags: [certificateApprovalLogs]
+      summary: List certificate-approval-logs
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CertificateApprovalLogs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApprovalLogListResponse"
+    post:
+      operationId: createCertificateApprovalLog
+      tags: [certificateApprovalLogs]
+      summary: Create a CertificateApprovalLog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateApprovalLogInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApprovalLog"
+
+  /certificate-approval-logs/{id}:
+    get:
+      operationId: getCertificateApprovalLog
+      tags: [certificateApprovalLogs]
+      summary: Get a CertificateApprovalLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CertificateApprovalLog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApprovalLog"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCertificateApprovalLog
+      tags: [certificateApprovalLogs]
+      summary: Update a CertificateApprovalLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateApprovalLogUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateApprovalLog"
+    delete:
+      operationId: deleteCertificateApprovalLog
+      tags: [certificateApprovalLogs]
+      summary: Soft-delete a CertificateApprovalLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
 components:
   parameters:
     IdParam:
@@ -16552,6 +16817,12 @@ components:
         companyId: { type: string }
         code: { type: string }
         contractId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        boqItemId: { type: ["string", "null"] }
+        progressUpdateId: { type: ["string", "null"] }
+        variationOrderId: { type: ["string", "null"] }
+        retentionId: { type: ["string", "null"] }
+        advanceRecoveryId: { type: ["string", "null"] }
         certificateNumber: { type: ["string", "null"] }
         periodFrom: { type: ["string", "null"] }
         periodTo: { type: ["string", "null"] }
@@ -16576,6 +16847,12 @@ components:
         companyId: { type: string }
         code: { type: string }
         contractId: { type: string }
+        projectId: { type: string }
+        boqItemId: { type: string }
+        progressUpdateId: { type: string }
+        variationOrderId: { type: string }
+        retentionId: { type: string }
+        advanceRecoveryId: { type: string }
         certificateNumber: { type: string }
         periodFrom: { type: string }
         periodTo: { type: string }
@@ -16596,6 +16873,12 @@ components:
       properties:
         code: { type: string }
         contractId: { type: string }
+        projectId: { type: string }
+        boqItemId: { type: string }
+        progressUpdateId: { type: string }
+        variationOrderId: { type: string }
+        retentionId: { type: string }
+        advanceRecoveryId: { type: string }
         certificateNumber: { type: string }
         periodFrom: { type: string }
         periodTo: { type: string }
@@ -19457,3 +19740,159 @@ components:
             properties:
               status: { type: string }
               count: { type: integer }
+
+    CertificateStatus:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        sequence: { type: ["integer", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CertificateStatusInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        sequence: { type: integer }
+        description: { type: string }
+        status: { type: string }
+
+    CertificateStatusUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        sequence: { type: integer }
+        description: { type: string }
+        status: { type: string }
+
+    CertificateStatusListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CertificateStatus" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CertificateApproval:
+      type: object
+      required: [id, companyId, code, level, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        certificateId: { type: ["string", "null"] }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: ["string", "null"] }
+        approvalDate: { type: ["string", "null"] }
+        comments: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CertificateApprovalInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        certificateId: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: string }
+        approvalDate: { type: string }
+        comments: { type: string }
+
+    CertificateApprovalUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        certificateId: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: string }
+        approvalDate: { type: string }
+        comments: { type: string }
+
+    CertificateApprovalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CertificateApproval" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CertificateApprovalLog:
+      type: object
+      required: [id, companyId, code, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        certificateId: { type: ["string", "null"] }
+        approvalId: { type: ["string", "null"] }
+        action: { type: ["string", "null"] }
+        fromStatus: { type: ["string", "null"] }
+        toStatus: { type: ["string", "null"] }
+        actorName: { type: ["string", "null"] }
+        actionDate: { type: ["string", "null"] }
+        comments: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CertificateApprovalLogInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        certificateId: { type: string }
+        approvalId: { type: string }
+        action: { type: string }
+        fromStatus: { type: string }
+        toStatus: { type: string }
+        actorName: { type: string }
+        actionDate: { type: string }
+        comments: { type: string }
+
+    CertificateApprovalLogUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        certificateId: { type: string }
+        approvalId: { type: string }
+        action: { type: string }
+        fromStatus: { type: string }
+        toStatus: { type: string }
+        actorName: { type: string }
+        actionDate: { type: string }
+        comments: { type: string }
+
+    CertificateApprovalLogListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CertificateApprovalLog" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }

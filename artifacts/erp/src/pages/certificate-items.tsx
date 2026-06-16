@@ -26,7 +26,7 @@ export default function CertificateItemsPage() {
   const boqItemOptions = (boqItemData?.data ?? []).map((o) => ({ value: o.id, label: o.itemCode }));
 
   const fields: ResourceField[] = [
-    { name: "certificateId", label: "Certificate", labelAr: "الشهادة", type: "select", options: certificateOptions },
+    { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "boqItemId", label: "BOQ Item", labelAr: "بند الجدول", type: "select", options: boqItemOptions },
     { name: "description", label: "Description", labelAr: "الوصف", required: true },
     { name: "unit", label: "Unit", labelAr: "الوحدة" },
@@ -46,7 +46,7 @@ export default function CertificateItemsPage() {
   return (
     <ResourceManager
       title="Certificate Items"
-      titleAr="بنود الشهادة"
+      titleAr="بنود المستخلص"
       columns={columns}
       fields={fields}
       useList={useListCertificateItems}

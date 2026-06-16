@@ -106,6 +106,9 @@ import ContractBoqItemsPage from "@/pages/contract-boq-items";
 import WorkProgressUpdatesPage from "@/pages/work-progress-updates";
 import PaymentCertificatesPage from "@/pages/payment-certificates";
 import CertificateItemsPage from "@/pages/certificate-items";
+import CertificateStatusesPage from "@/pages/certificate-statuses";
+import CertificateApprovalsPage from "@/pages/certificate-approvals";
+import CertificateApprovalLogsPage from "@/pages/certificate-approval-logs";
 import VariationOrdersPage from "@/pages/variation-orders";
 import ContractorDeductionsPage from "@/pages/contractor-deductions";
 import ContractorAdditionsPage from "@/pages/contractor-additions";
@@ -271,6 +274,9 @@ function Router() {
             <Route path="/work-progress-updates" component={WorkProgressUpdatesPage} />
             <Route path="/payment-certificates" component={PaymentCertificatesPage} />
             <Route path="/certificate-items" component={CertificateItemsPage} />
+            <Route path="/certificate-statuses" component={CertificateStatusesPage} />
+            <Route path="/certificate-approvals" component={CertificateApprovalsPage} />
+            <Route path="/certificate-approval-logs" component={CertificateApprovalLogsPage} />
             <Route path="/variation-orders" component={VariationOrdersPage} />
             <Route path="/contractor-deductions" component={ContractorDeductionsPage} />
             <Route path="/contractor-additions" component={ContractorAdditionsPage} />

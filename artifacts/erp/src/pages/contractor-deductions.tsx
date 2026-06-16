@@ -30,7 +30,7 @@ export default function ContractorDeductionsPage() {
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
-    { name: "certificateId", label: "Certificate", labelAr: "الشهادة", type: "select", options: certificateOptions },
+    { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "deductionType", label: "Deduction Type", labelAr: "نوع الخصم", type: "select", options: enumOptions(["penalty", "delay_penalty", "quality_penalty", "other"]) },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },

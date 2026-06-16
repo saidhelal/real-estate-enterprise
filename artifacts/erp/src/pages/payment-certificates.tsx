@@ -5,6 +5,12 @@ import {
   useDeletePaymentCertificate,
   getListPaymentCertificatesQueryKey,
   useListContractorContracts,
+  useListProjects,
+  useListBoqItems,
+  useListWorkProgressUpdates,
+  useListVariationOrders,
+  useListRetentions,
+  useListAdvanceRecoverys,
   useListCompanies,
   type PaymentCertificate,
 } from "@workspace/api-client-react";
@@ -23,10 +29,28 @@ export default function PaymentCertificatesPage() {
   const companyId = companies?.[0]?.id;
   const { data: contractData } = useListContractorContracts({ pageSize: 200 });
   const contractOptions = (contractData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
+  const { data: projectData } = useListProjects({ pageSize: 200 });
+  const projectOptions = (projectData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
+  const { data: boqItemData } = useListBoqItems({ pageSize: 200 });
+  const boqItemOptions = (boqItemData?.data ?? []).map((o) => ({ value: o.id, label: o.itemCode }));
+  const { data: progressUpdateData } = useListWorkProgressUpdates({ pageSize: 200 });
+  const progressUpdateOptions = (progressUpdateData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
+  const { data: variationOrderData } = useListVariationOrders({ pageSize: 200 });
+  const variationOrderOptions = (variationOrderData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
+  const { data: retentionData } = useListRetentions({ pageSize: 200 });
+  const retentionOptions = (retentionData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
+  const { data: advanceRecoveryData } = useListAdvanceRecoverys({ pageSize: 200 });
+  const advanceRecoveryOptions = (advanceRecoveryData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
+    { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", options: projectOptions },
+    { name: "boqItemId", label: "BOQ Item", labelAr: "بند الجدول", type: "select", options: boqItemOptions },
+    { name: "progressUpdateId", label: "Progress Update", labelAr: "تحديث التقدم", type: "select", options: progressUpdateOptions },
+    { name: "variationOrderId", label: "Change Order", labelAr: "أمر التغيير", type: "select", options: variationOrderOptions },
+    { name: "retentionId", label: "Retention", labelAr: "المحتجز", type: "select", options: retentionOptions },
+    { name: "advanceRecoveryId", label: "Advance Recovery", labelAr: "استرداد الدفعة المقدمة", type: "select", options: advanceRecoveryOptions },
     { name: "certificateNumber", label: "Certificate Number", labelAr: "رقم الشهادة" },
     { name: "periodFrom", label: "Period From", labelAr: "الفترة من", type: "date" },
     { name: "periodTo", label: "Period To", labelAr: "الفترة إلى", type: "date" },
@@ -38,7 +62,7 @@ export default function PaymentCertificatesPage() {
     { name: "deductionsAmount", label: "Deductions Amount", labelAr: "مبلغ الخصومات", type: "money" },
     { name: "additionsAmount", label: "Additions Amount", labelAr: "مبلغ الإضافات", type: "money" },
     { name: "netAmount", label: "Net Amount", labelAr: "المبلغ الصافي", type: "money" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["draft", "submitted", "verified", "approved", "paid"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["draft", "submitted", "reviewed", "approved", "posted", "paid", "closed"]) },
     { name: "certificateDate", label: "Certificate Date", labelAr: "تاريخ الشهادة", type: "date" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
@@ -52,7 +76,7 @@ export default function PaymentCertificatesPage() {
   return (
     <ResourceManager
       title="Payment Certificates"
-      titleAr="شهادات الدفع"
+      titleAr="مستخلصات المقاولين"
       columns={columns}
       fields={fields}
       useList={useListPaymentCertificates}

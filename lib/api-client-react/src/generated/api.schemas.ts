@@ -4123,6 +4123,18 @@ export interface PaymentCertificate {
   /** @nullable */
   contractId?: string | null;
   /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  boqItemId?: string | null;
+  /** @nullable */
+  progressUpdateId?: string | null;
+  /** @nullable */
+  variationOrderId?: string | null;
+  /** @nullable */
+  retentionId?: string | null;
+  /** @nullable */
+  advanceRecoveryId?: string | null;
+  /** @nullable */
   certificateNumber?: string | null;
   /** @nullable */
   periodFrom?: string | null;
@@ -4157,6 +4169,12 @@ export interface PaymentCertificateInput {
   companyId: string;
   code: string;
   contractId?: string;
+  projectId?: string;
+  boqItemId?: string;
+  progressUpdateId?: string;
+  variationOrderId?: string;
+  retentionId?: string;
+  advanceRecoveryId?: string;
   certificateNumber?: string;
   periodFrom?: string;
   periodTo?: string;
@@ -4176,6 +4194,12 @@ export interface PaymentCertificateInput {
 export interface PaymentCertificateUpdate {
   code?: string;
   contractId?: string;
+  projectId?: string;
+  boqItemId?: string;
+  progressUpdateId?: string;
+  variationOrderId?: string;
+  retentionId?: string;
+  advanceRecoveryId?: string;
   certificateNumber?: string;
   periodFrom?: string;
   periodTo?: string;
@@ -6913,6 +6937,149 @@ export interface InventoryDashboard {
   issuesByStatus?: InventoryDashboardIssuesByStatusItem[];
 }
 
+export interface CertificateStatus {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  sequence?: number | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CertificateStatusInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  sequence?: number;
+  description?: string;
+  status?: string;
+}
+
+export interface CertificateStatusUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  sequence?: number;
+  description?: string;
+  status?: string;
+}
+
+export interface CertificateStatusListResponse {
+  data: CertificateStatus[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CertificateApproval {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  certificateId?: string | null;
+  level: string;
+  status: string;
+  /** @nullable */
+  approverName?: string | null;
+  /** @nullable */
+  approvalDate?: string | null;
+  /** @nullable */
+  comments?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CertificateApprovalInput {
+  companyId: string;
+  code: string;
+  certificateId?: string;
+  level?: string;
+  status?: string;
+  approverName?: string;
+  approvalDate?: string;
+  comments?: string;
+}
+
+export interface CertificateApprovalUpdate {
+  code?: string;
+  certificateId?: string;
+  level?: string;
+  status?: string;
+  approverName?: string;
+  approvalDate?: string;
+  comments?: string;
+}
+
+export interface CertificateApprovalListResponse {
+  data: CertificateApproval[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CertificateApprovalLog {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  certificateId?: string | null;
+  /** @nullable */
+  approvalId?: string | null;
+  /** @nullable */
+  action?: string | null;
+  /** @nullable */
+  fromStatus?: string | null;
+  /** @nullable */
+  toStatus?: string | null;
+  /** @nullable */
+  actorName?: string | null;
+  /** @nullable */
+  actionDate?: string | null;
+  /** @nullable */
+  comments?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CertificateApprovalLogInput {
+  companyId: string;
+  code: string;
+  certificateId?: string;
+  approvalId?: string;
+  action?: string;
+  fromStatus?: string;
+  toStatus?: string;
+  actorName?: string;
+  actionDate?: string;
+  comments?: string;
+}
+
+export interface CertificateApprovalLogUpdate {
+  code?: string;
+  certificateId?: string;
+  approvalId?: string;
+  action?: string;
+  fromStatus?: string;
+  toStatus?: string;
+  actorName?: string;
+  actionDate?: string;
+  comments?: string;
+}
+
+export interface CertificateApprovalLogListResponse {
+  data: CertificateApprovalLog[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -7942,6 +8109,27 @@ companyId?: string;
 };
 
 export type GetInventoryDashboardParams = {
+companyId?: string;
+};
+
+export type ListCertificateStatussParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListCertificateApprovalsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListCertificateApprovalLogsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
 companyId?: string;
 };
 

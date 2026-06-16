@@ -13,6 +13,18 @@ export interface PaymentCertificate {
   /** @nullable */
   contractId?: string | null;
   /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  boqItemId?: string | null;
+  /** @nullable */
+  progressUpdateId?: string | null;
+  /** @nullable */
+  variationOrderId?: string | null;
+  /** @nullable */
+  retentionId?: string | null;
+  /** @nullable */
+  advanceRecoveryId?: string | null;
+  /** @nullable */
   certificateNumber?: string | null;
   /** @nullable */
   periodFrom?: string | null;

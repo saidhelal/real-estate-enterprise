@@ -28,7 +28,7 @@ export default function AdvanceRecoverysPage() {
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "advanceId", label: "Advance Payment", labelAr: "الدفعة المقدمة", type: "select", options: advanceOptions },
-    { name: "certificateId", label: "Certificate", labelAr: "الشهادة", type: "select", options: certificateOptions },
+    { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },
     { name: "recoveryDate", label: "Recovery Date", labelAr: "تاريخ الاسترداد", type: "date" },
   ];

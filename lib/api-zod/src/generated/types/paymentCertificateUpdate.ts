@@ -9,6 +9,12 @@
 export interface PaymentCertificateUpdate {
   code?: string;
   contractId?: string;
+  projectId?: string;
+  boqItemId?: string;
+  progressUpdateId?: string;
+  variationOrderId?: string;
+  retentionId?: string;
+  advanceRecoveryId?: string;
   certificateNumber?: string;
   periodFrom?: string;
   periodTo?: string;

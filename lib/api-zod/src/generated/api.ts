@@ -9754,6 +9754,12 @@ export const ListPaymentCertificatesResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "contractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "boqItemId": zod.string().nullish(),
+  "progressUpdateId": zod.string().nullish(),
+  "variationOrderId": zod.string().nullish(),
+  "retentionId": zod.string().nullish(),
+  "advanceRecoveryId": zod.string().nullish(),
   "certificateNumber": zod.string().nullish(),
   "periodFrom": zod.string().nullish(),
   "periodTo": zod.string().nullish(),
@@ -9784,6 +9790,12 @@ export const CreatePaymentCertificateBody = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "contractId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "boqItemId": zod.string().optional(),
+  "progressUpdateId": zod.string().optional(),
+  "variationOrderId": zod.string().optional(),
+  "retentionId": zod.string().optional(),
+  "advanceRecoveryId": zod.string().optional(),
   "certificateNumber": zod.string().optional(),
   "periodFrom": zod.string().optional(),
   "periodTo": zod.string().optional(),
@@ -9813,6 +9825,12 @@ export const GetPaymentCertificateResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "contractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "boqItemId": zod.string().nullish(),
+  "progressUpdateId": zod.string().nullish(),
+  "variationOrderId": zod.string().nullish(),
+  "retentionId": zod.string().nullish(),
+  "advanceRecoveryId": zod.string().nullish(),
   "certificateNumber": zod.string().nullish(),
   "periodFrom": zod.string().nullish(),
   "periodTo": zod.string().nullish(),
@@ -9842,6 +9860,12 @@ export const UpdatePaymentCertificateParams = zod.object({
 export const UpdatePaymentCertificateBody = zod.object({
   "code": zod.string().optional(),
   "contractId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "boqItemId": zod.string().optional(),
+  "progressUpdateId": zod.string().optional(),
+  "variationOrderId": zod.string().optional(),
+  "retentionId": zod.string().optional(),
+  "advanceRecoveryId": zod.string().optional(),
   "certificateNumber": zod.string().optional(),
   "periodFrom": zod.string().optional(),
   "periodTo": zod.string().optional(),
@@ -9863,6 +9887,12 @@ export const UpdatePaymentCertificateResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "contractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "boqItemId": zod.string().nullish(),
+  "progressUpdateId": zod.string().nullish(),
+  "variationOrderId": zod.string().nullish(),
+  "retentionId": zod.string().nullish(),
+  "advanceRecoveryId": zod.string().nullish(),
   "certificateNumber": zod.string().nullish(),
   "periodFrom": zod.string().nullish(),
   "periodTo": zod.string().nullish(),
@@ -15799,6 +15829,344 @@ export const GetInventoryDashboardResponse = zod.object({
   "status": zod.string(),
   "count": zod.number()
 })).optional()
+})
+
+
+/**
+ * @summary List certificate-statuses
+ */
+export const ListCertificateStatussQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListCertificateStatussResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "sequence": zod.number().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CertificateStatus
+ */
+export const CreateCertificateStatusBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "sequence": zod.number().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CertificateStatus
+ */
+export const GetCertificateStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCertificateStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "sequence": zod.number().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CertificateStatus
+ */
+export const UpdateCertificateStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCertificateStatusBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "sequence": zod.number().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateCertificateStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "sequence": zod.number().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CertificateStatus
+ */
+export const DeleteCertificateStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCertificateStatusResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List certificate-approvals
+ */
+export const ListCertificateApprovalsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListCertificateApprovalsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approvalDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CertificateApproval
+ */
+export const CreateCertificateApprovalBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().optional(),
+  "level": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approverName": zod.string().optional(),
+  "approvalDate": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CertificateApproval
+ */
+export const GetCertificateApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCertificateApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approvalDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CertificateApproval
+ */
+export const UpdateCertificateApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCertificateApprovalBody = zod.object({
+  "code": zod.string().optional(),
+  "certificateId": zod.string().optional(),
+  "level": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approverName": zod.string().optional(),
+  "approvalDate": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+export const UpdateCertificateApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approvalDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CertificateApproval
+ */
+export const DeleteCertificateApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCertificateApprovalResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List certificate-approval-logs
+ */
+export const ListCertificateApprovalLogsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListCertificateApprovalLogsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().nullish(),
+  "approvalId": zod.string().nullish(),
+  "action": zod.string().nullish(),
+  "fromStatus": zod.string().nullish(),
+  "toStatus": zod.string().nullish(),
+  "actorName": zod.string().nullish(),
+  "actionDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CertificateApprovalLog
+ */
+export const CreateCertificateApprovalLogBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().optional(),
+  "approvalId": zod.string().optional(),
+  "action": zod.string().optional(),
+  "fromStatus": zod.string().optional(),
+  "toStatus": zod.string().optional(),
+  "actorName": zod.string().optional(),
+  "actionDate": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CertificateApprovalLog
+ */
+export const GetCertificateApprovalLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCertificateApprovalLogResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().nullish(),
+  "approvalId": zod.string().nullish(),
+  "action": zod.string().nullish(),
+  "fromStatus": zod.string().nullish(),
+  "toStatus": zod.string().nullish(),
+  "actorName": zod.string().nullish(),
+  "actionDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CertificateApprovalLog
+ */
+export const UpdateCertificateApprovalLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCertificateApprovalLogBody = zod.object({
+  "code": zod.string().optional(),
+  "certificateId": zod.string().optional(),
+  "approvalId": zod.string().optional(),
+  "action": zod.string().optional(),
+  "fromStatus": zod.string().optional(),
+  "toStatus": zod.string().optional(),
+  "actorName": zod.string().optional(),
+  "actionDate": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+export const UpdateCertificateApprovalLogResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "certificateId": zod.string().nullish(),
+  "approvalId": zod.string().nullish(),
+  "action": zod.string().nullish(),
+  "fromStatus": zod.string().nullish(),
+  "toStatus": zod.string().nullish(),
+  "actorName": zod.string().nullish(),
+  "actionDate": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CertificateApprovalLog
+ */
+export const DeleteCertificateApprovalLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCertificateApprovalLogResponse = zod.object({
+  "success": zod.boolean()
 })
 
 

@@ -30,7 +30,7 @@ export default function ContractorAdditionsPage() {
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
-    { name: "certificateId", label: "Certificate", labelAr: "الشهادة", type: "select", options: certificateOptions },
+    { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "additionType", label: "Addition Type", labelAr: "نوع الإضافة", type: "select", options: enumOptions(["extra_work", "compensation", "claim", "other"]) },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },

@@ -132,8 +132,11 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   // Construction Execution — Work Progress
   { module: "workProgressUpdates", label: "Work Progress Updates" },
   // Construction Execution — Payment Certificates (IPC)
-  { module: "paymentCertificates", label: "Payment Certificates", extraActions: ["approve", "verify"] },
+  { module: "paymentCertificates", label: "Payment Certificates", extraActions: ["approve", "verify", "submit", "review", "post", "pay", "close"] },
   { module: "certificateItems", label: "Certificate Items" },
+  { module: "certificateStatuses", label: "Certificate Statuses" },
+  { module: "certificateApprovals", label: "Certificate Approvals", extraActions: ["approve", "reject"] },
+  { module: "certificateApprovalLogs", label: "Certificate Approval Logs" },
   // Construction Execution — Variations
   { module: "variationOrders", label: "Variation Orders", extraActions: ["approve"] },
   // Construction Execution — Deductions & Additions

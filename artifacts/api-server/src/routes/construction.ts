@@ -16,6 +16,9 @@ import {
   advanceRecoveriesTable,
   contractorInvoicesTable,
   contractApprovalsTable,
+  certificateStatusesTable,
+  certificateApprovalsTable,
+  certificateApprovalLogsTable,
 } from "@workspace/db";
 import {
   CreateContractorBody, UpdateContractorBody, ListContractorsResponse,
@@ -32,6 +35,9 @@ import {
   CreateAdvanceRecoveryBody, UpdateAdvanceRecoveryBody, ListAdvanceRecoverysResponse,
   CreateContractorInvoiceBody, UpdateContractorInvoiceBody, ListContractorInvoicesResponse,
   CreateContractApprovalBody, UpdateContractApprovalBody, ListContractApprovalsResponse,
+  CreateCertificateStatusBody, UpdateCertificateStatusBody, ListCertificateStatussResponse,
+  CreateCertificateApprovalBody, UpdateCertificateApprovalBody, ListCertificateApprovalsResponse,
+  CreateCertificateApprovalLogBody, UpdateCertificateApprovalLogBody, ListCertificateApprovalLogsResponse,
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
@@ -51,6 +57,23 @@ interface FinancialConfig {
   eventKey: string;
   amountField: string;
   dateField?: string;
+  // When set, the automatic entry is posted only when the row reaches this
+  // status (on create if already at it, or on the patch that transitions into
+  // it) rather than on every create. The amount also stays mutable until the
+  // row is posted, so derived totals can change while the certificate is still
+  // a draft/under review.
+  postOnStatus?: string;
+  // Component columns that feed the derived total. Once the row is posted these
+  // are frozen alongside the amount field so the breakdown can never drift away
+  // from the ledger-backed total.
+  componentFields?: string[];
+}
+
+// A workflow log captures each status transition into a dedicated log table.
+interface WorkflowConfig {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  logTable: any;
+  sourceField: string;
 }
 
 interface CrudConfig {
@@ -67,10 +90,36 @@ interface CrudConfig {
   listResponse: { parse(v: unknown): any };
   search: string[];
   financial?: FinancialConfig;
+  workflow?: WorkflowConfig;
+  // Recompute derived fields (e.g. net payable) from component columns.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  derive?: (row: Record<string, unknown>) => void;
 }
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
+}
+
+// Statuses at/after which a certificate's financial total is frozen because it
+// has driven (or will drive) a ledger entry.
+const POSTED_STATUSES = new Set(["posted", "paid", "closed"]);
+
+function moneyToCents(v: unknown): number {
+  if (typeof v !== "string" || v.trim() === "") return 0;
+  const n = Math.round(parseFloat(v) * 100);
+  return Number.isFinite(n) ? n : 0;
+}
+
+// Net payable = current certified + additions - retention - advance recovery
+// - deductions. Integer-cent math (no float drift), mirrors lib/posting.ts.
+function computeCertificateNet(row: Record<string, unknown>): void {
+  const net =
+    moneyToCents(row.currentAmount) +
+    moneyToCents(row.additionsAmount) -
+    moneyToCents(row.retentionAmount) -
+    moneyToCents(row.advanceRecovery) -
+    moneyToCents(row.deductionsAmount);
+  row.netAmount = (net / 100).toFixed(2);
 }
 
 function registerCrud(cfg: CrudConfig): void {
@@ -112,11 +161,13 @@ function registerCrud(cfg: CrudConfig): void {
       return;
     }
     const data = parsed.data as Record<string, unknown>;
+    if (cfg.derive) cfg.derive(data);
     const fin = cfg.financial;
     const row = await db.transaction(async (tx) => {
       const inserted = (await tx.insert(t).values(data).returning()) as Record<string, unknown>[];
       const created = inserted[0];
-      if (fin) {
+      const shouldPost = fin && (!fin.postOnStatus || created.status === fin.postOnStatus);
+      if (fin && shouldPost) {
         const amount = created[fin.amountField];
         if (typeof amount === "string" && amount.trim() !== "") {
           const entryDate = (fin.dateField && typeof created[fin.dateField] === "string"
@@ -174,14 +225,69 @@ function registerCrud(cfg: CrudConfig): void {
     for (const [k, v] of Object.entries(parsed.data as Record<string, unknown>)) {
       if (v !== undefined) update[k] = v;
     }
-    // Financial resources: the posted amount is immutable once it has driven a
-    // ledger entry, to keep accounting in sync.
-    if (cfg.financial) delete update[cfg.financial.amountField];
-    let row = existing;
-    if (Object.keys(update).length) {
-      const updated = (await db.update(t).set(update).where(eq(t.id, id)).returning()) as Record<string, unknown>[];
-      row = updated[0];
+    const fin = cfg.financial;
+    const alreadyPosted = fin?.postOnStatus
+      ? POSTED_STATUSES.has(existing.status as string)
+      : Boolean(fin);
+    if (fin) {
+      if (cfg.derive && !alreadyPosted) {
+        // Recompute the derived total from the merged components while the row
+        // is still mutable (draft/under review).
+        const merged = { ...existing, ...update };
+        cfg.derive(merged);
+        update[fin.amountField] = merged[fin.amountField];
+      } else {
+        // Once the row has driven (or will drive) a ledger entry, both the
+        // posted amount and the components that derive it are immutable.
+        delete update[fin.amountField];
+        for (const f of fin.componentFields ?? []) delete update[f];
+      }
     }
+    const newStatus = update.status as string | undefined;
+    const statusChanged = newStatus !== undefined && newStatus !== existing.status;
+    const transitionsToPosted =
+      fin?.postOnStatus !== undefined &&
+      newStatus === fin.postOnStatus &&
+      existing.status !== fin.postOnStatus;
+
+    const row = await db.transaction(async (tx) => {
+      let updated = existing;
+      if (Object.keys(update).length) {
+        const rows = (await tx.update(t).set(update).where(eq(t.id, id)).returning()) as Record<string, unknown>[];
+        updated = rows[0];
+      }
+      if (fin && transitionsToPosted) {
+        const amount = updated[fin.amountField];
+        if (typeof amount === "string" && amount.trim() !== "") {
+          const entryDate = (fin.dateField && typeof updated[fin.dateField] === "string"
+            ? (updated[fin.dateField] as string)
+            : null) ?? today();
+          await postAutomaticEntry(tx, {
+            companyId: updated.companyId as string,
+            eventKey: fin.eventKey,
+            amount,
+            entryDate,
+            description: `${cfg.entity} ${updated.code ?? updated.id}`,
+            sourceType: cfg.entity,
+            sourceId: updated.id as string,
+            userId: req.authUser?.id ?? null,
+          });
+        }
+      }
+      if (cfg.workflow && statusChanged) {
+        await tx.insert(cfg.workflow.logTable).values({
+          companyId: updated.companyId as string,
+          code: `CAL-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          [cfg.workflow.sourceField]: id,
+          action: newStatus,
+          fromStatus: (existing.status as string) ?? null,
+          toStatus: newStatus,
+          actorName: req.authUser?.username ?? req.authUser?.id ?? null,
+          actionDate: today(),
+        });
+      }
+      return updated;
+    });
     await recordAudit(req, {
       action: "update",
       entity: cfg.entity,
@@ -232,11 +338,16 @@ const resources: CrudConfig[] = [
   { path: "work-progress-updates", table: workProgressUpdatesTable, module: "workProgressUpdates", entity: "workProgressUpdate",
     createBody: CreateWorkProgressUpdateBody, updateBody: UpdateWorkProgressUpdateBody, listResponse: ListWorkProgressUpdatesResponse,
     search: ["code", "description"] },
-  // IPC
+  // IPC (مستخلصات المقاولين): net payable is derived from its components,
+  // posting is gated on the `posted` status, and each status transition is
+  // logged to certificate_approval_logs.
   { path: "payment-certificates", table: paymentCertificatesTable, module: "paymentCertificates", entity: "paymentCertificate",
     createBody: CreatePaymentCertificateBody, updateBody: UpdatePaymentCertificateBody, listResponse: ListPaymentCertificatesResponse,
     search: ["code", "certificateNumber"],
-    financial: { eventKey: "engineering.payment_certificate", amountField: "netAmount", dateField: "certificateDate" } },
+    financial: { eventKey: "engineering.payment_certificate", amountField: "netAmount", dateField: "certificateDate", postOnStatus: "posted",
+      componentFields: ["currentAmount", "additionsAmount", "retentionAmount", "advanceRecovery", "deductionsAmount"] },
+    derive: computeCertificateNet,
+    workflow: { logTable: certificateApprovalLogsTable, sourceField: "certificateId" } },
   { path: "certificate-items", table: certificateItemsTable, module: "certificateItems", entity: "certificateItem",
     createBody: CreateCertificateItemBody, updateBody: UpdateCertificateItemBody, listResponse: ListCertificateItemsResponse,
     search: ["description", "unit"] },
@@ -271,6 +382,16 @@ const resources: CrudConfig[] = [
   { path: "contract-approvals", table: contractApprovalsTable, module: "contractApprovals", entity: "contractApproval",
     createBody: CreateContractApprovalBody, updateBody: UpdateContractApprovalBody, listResponse: ListContractApprovalsResponse,
     search: ["code", "approverName"] },
+  // Certificate workflow (Module #13): statuses, approvals, transition log
+  { path: "certificate-statuses", table: certificateStatusesTable, module: "certificateStatuses", entity: "certificateStatus",
+    createBody: CreateCertificateStatusBody, updateBody: UpdateCertificateStatusBody, listResponse: ListCertificateStatussResponse,
+    search: ["code", "name", "nameAr"] },
+  { path: "certificate-approvals", table: certificateApprovalsTable, module: "certificateApprovals", entity: "certificateApproval",
+    createBody: CreateCertificateApprovalBody, updateBody: UpdateCertificateApprovalBody, listResponse: ListCertificateApprovalsResponse,
+    search: ["code", "approverName"] },
+  { path: "certificate-approval-logs", table: certificateApprovalLogsTable, module: "certificateApprovalLogs", entity: "certificateApprovalLog",
+    createBody: CreateCertificateApprovalLogBody, updateBody: UpdateCertificateApprovalLogBody, listResponse: ListCertificateApprovalLogsResponse,
+    search: ["code", "action"] },
 ];
 
 for (const cfg of resources) registerCrud(cfg);

@@ -104,6 +104,12 @@ export const paymentCertificatesTable = pgTable("payment_certificates", {
   companyId: uuid("company_id").notNull(),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
+  projectId: uuid("project_id"),
+  boqItemId: uuid("boq_item_id"),
+  progressUpdateId: uuid("progress_update_id"),
+  variationOrderId: uuid("variation_order_id"),
+  retentionId: uuid("retention_id"),
+  advanceRecoveryId: uuid("advance_recovery_id"),
   certificateNumber: text("certificate_number"),
   periodFrom: date("period_from"),
   periodTo: date("period_to"),
@@ -280,3 +286,50 @@ export const contractApprovalsTable = pgTable("contract_approvals", {
   ...audit,
 });
 export type ContractApprovalRow = typeof contractApprovalsTable.$inferSelect;
+
+/* ------------------------------------------------------------------ */
+/* Payment Certificate Workflow (statuses, approvals, approval logs)   */
+/* ------------------------------------------------------------------ */
+
+export const certificateStatusesTable = pgTable("certificate_statuses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  code: text("code").notNull(),
+  name: text("name").notNull(),
+  nameAr: text("name_ar").notNull(),
+  sequence: integer("sequence"),
+  description: text("description"),
+  status: text("status").notNull().default("active"),
+  ...audit,
+});
+export type CertificateStatusRow = typeof certificateStatusesTable.$inferSelect;
+
+export const certificateApprovalsTable = pgTable("certificate_approvals", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  code: text("code").notNull(),
+  certificateId: uuid("certificate_id"),
+  level: text("level").notNull().default("site_engineer"),
+  status: text("status").notNull().default("pending"),
+  approverName: text("approver_name"),
+  approvalDate: date("approval_date"),
+  comments: text("comments"),
+  ...audit,
+});
+export type CertificateApprovalRow = typeof certificateApprovalsTable.$inferSelect;
+
+export const certificateApprovalLogsTable = pgTable("certificate_approval_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  code: text("code").notNull(),
+  certificateId: uuid("certificate_id"),
+  approvalId: uuid("approval_id"),
+  action: text("action"),
+  fromStatus: text("from_status"),
+  toStatus: text("to_status"),
+  actorName: text("actor_name"),
+  actionDate: date("action_date"),
+  comments: text("comments"),
+  ...audit,
+});
+export type CertificateApprovalLogRow = typeof certificateApprovalLogsTable.$inferSelect;
