@@ -8,6 +8,7 @@ import { AuthProvider } from "@/lib/auth-provider";
 import { AppShell } from "@/components/layout/app-shell";
 
 import Login from "@/pages/login";
+import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
 import UsersPage from "@/pages/users";
 import RolesPage from "@/pages/roles";
@@ -264,7 +265,8 @@ function Router() {
       <Route>
         <AppShell>
           <Switch>
-            <Route path="/" component={Dashboard} />
+            <Route path="/" component={Home} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/users" component={UsersPage} />
             <Route path="/roles" component={RolesPage} />
             <Route path="/companies" component={CompaniesPage} />

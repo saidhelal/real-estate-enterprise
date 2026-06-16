@@ -34,7 +34,8 @@ import {
 
 const NAV_GROUPS = [
   { titleKey: "nav.group.general", items: [
-    { href: "/", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+    { href: "/", icon: Home, labelKey: "nav.home" },
+    { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
   ]},
   { titleKey: "nav.group.real_estate", items: [
     { href: "/projects", icon: Building, labelKey: "nav.projects" },
