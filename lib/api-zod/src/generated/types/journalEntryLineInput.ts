@@ -9,6 +9,7 @@
 export interface JournalEntryLineInput {
   accountId: string;
   costCenterId?: string;
+  profitCenterId?: string;
   debit?: string;
   credit?: string;
   description?: string;

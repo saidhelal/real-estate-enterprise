@@ -10,6 +10,7 @@ export type GetGeneralLedgerParams = {
 companyId?: string;
 accountId?: string;
 costCenterId?: string;
+profitCenterId?: string;
 fromDate?: string;
 toDate?: string;
 page?: number;

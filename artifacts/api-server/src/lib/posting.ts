@@ -30,6 +30,7 @@ export class PostingError extends Error {
 export interface EntryLineInput {
   accountId: string;
   costCenterId?: string | null;
+  profitCenterId?: string | null;
   debit?: string | null;
   credit?: string | null;
   description?: string | null;
@@ -55,6 +56,7 @@ export interface CreateEntryParams {
 interface NormalizedLine {
   accountId: string;
   costCenterId: string | null;
+  profitCenterId: string | null;
   debitCents: bigint;
   creditCents: bigint;
   description: string | null;
@@ -92,6 +94,7 @@ function normalizeLines(lines: EntryLineInput[]): {
     normalized.push({
       accountId: line.accountId,
       costCenterId: line.costCenterId ?? null,
+      profitCenterId: line.profitCenterId ?? null,
       debitCents,
       creditCents,
       description: line.description ?? null,
@@ -244,6 +247,7 @@ export async function createEntry(tx: Tx, params: CreateEntryParams): Promise<Jo
       companyId: params.companyId,
       accountId: l.accountId,
       costCenterId: l.costCenterId,
+      profitCenterId: l.profitCenterId,
       lineNumber: i + 1,
       debit: fromCents(l.debitCents),
       credit: fromCents(l.creditCents),
@@ -266,6 +270,7 @@ export async function setEntryLines(tx: Tx, entry: JournalEntryRow, lines: Entry
       companyId: entry.companyId,
       accountId: l.accountId,
       costCenterId: l.costCenterId,
+      profitCenterId: l.profitCenterId,
       lineNumber: i + 1,
       debit: fromCents(l.debitCents),
       credit: fromCents(l.creditCents),
@@ -355,6 +360,7 @@ export async function reverseEntry(
     lines: lines.map((l) => ({
       accountId: l.accountId,
       costCenterId: l.costCenterId,
+      profitCenterId: l.profitCenterId,
       // swap sides
       debit: l.credit,
       credit: l.debit,

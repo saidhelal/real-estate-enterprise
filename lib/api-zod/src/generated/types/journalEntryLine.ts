@@ -13,6 +13,8 @@ export interface JournalEntryLine {
   accountId: string;
   /** @nullable */
   costCenterId?: string | null;
+  /** @nullable */
+  profitCenterId?: string | null;
   lineNumber?: number;
   debit?: string;
   credit?: string;

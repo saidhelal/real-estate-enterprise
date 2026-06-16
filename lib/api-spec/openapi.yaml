@@ -5404,6 +5404,7 @@ paths:
         - { name: companyId, in: query, required: false, schema: { type: string } }
         - { name: accountId, in: query, required: false, schema: { type: string } }
         - { name: costCenterId, in: query, required: false, schema: { type: string } }
+        - { name: profitCenterId, in: query, required: false, schema: { type: string } }
         - { name: fromDate, in: query, required: false, schema: { type: string } }
         - { name: toDate, in: query, required: false, schema: { type: string } }
         - { name: page, in: query, required: false, schema: { type: integer } }
@@ -12394,23 +12395,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ChequeStatusHistoryListResponse"
-    post:
-      operationId: createChequeStatusHistory
-      tags: [chequeStatusHistory]
-      summary: Create a ChequeStatusHistory
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChequeStatusHistoryInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ChequeStatusHistory"
 
   /cheque-status-history/{id}:
     get:
@@ -12432,38 +12416,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-    patch:
-      operationId: updateChequeStatusHistory
-      tags: [chequeStatusHistory]
-      summary: Update a ChequeStatusHistory
-      parameters:
-        - $ref: "#/components/parameters/IdParam"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChequeStatusHistoryUpdate"
-      responses:
-        "200":
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ChequeStatusHistory"
-    delete:
-      operationId: deleteChequeStatusHistory
-      tags: [chequeStatusHistory]
-      summary: Soft-delete a ChequeStatusHistory
-      parameters:
-        - $ref: "#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: Deleted
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OkResponse"
 
   /profit-centers:
     get:
@@ -15485,6 +15437,7 @@ components:
         companyId: { type: string }
         accountId: { type: string }
         costCenterId: { type: ["string", "null"] }
+        profitCenterId: { type: ["string", "null"] }
         lineNumber: { type: integer }
         debit: { type: string }
         credit: { type: string }
@@ -15531,6 +15484,7 @@ components:
       properties:
         accountId: { type: string }
         costCenterId: { type: string }
+        profitCenterId: { type: string }
         debit: { type: string }
         credit: { type: string }
         description: { type: string }
@@ -15589,6 +15543,7 @@ components:
         entryDate: { type: string }
         description: { type: ["string", "null"] }
         costCenterId: { type: ["string", "null"] }
+        profitCenterId: { type: ["string", "null"] }
         debit: { type: string }
         credit: { type: string }
         balance: { type: string }
@@ -20268,32 +20223,6 @@ components:
         notes: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
-
-    ChequeStatusHistoryInput:
-      type: object
-      required: [companyId, code]
-      properties:
-        companyId: { type: string }
-        code: { type: string }
-        chequeId: { type: string }
-        action: { type: string }
-        fromStatus: { type: string }
-        toStatus: { type: string }
-        actorName: { type: string }
-        actionDate: { type: string }
-        notes: { type: string }
-
-    ChequeStatusHistoryUpdate:
-      type: object
-      properties:
-        code: { type: string }
-        chequeId: { type: string }
-        action: { type: string }
-        fromStatus: { type: string }
-        toStatus: { type: string }
-        actorName: { type: string }
-        actionDate: { type: string }
-        notes: { type: string }
 
     ChequeStatusHistoryListResponse:
       type: object

@@ -6323,6 +6323,7 @@ export const CreateJournalEntryBody = zod.object({
   "lines": zod.array(zod.object({
   "accountId": zod.string(),
   "costCenterId": zod.string().optional(),
+  "profitCenterId": zod.string().optional(),
   "debit": zod.string().optional(),
   "credit": zod.string().optional(),
   "description": zod.string().optional()
@@ -6369,6 +6370,7 @@ export const GetJournalEntryResponse = zod.object({
   "companyId": zod.string(),
   "accountId": zod.string(),
   "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish(),
   "lineNumber": zod.number().optional(),
   "debit": zod.string().optional(),
   "credit": zod.string().optional(),
@@ -6396,6 +6398,7 @@ export const UpdateJournalEntryBody = zod.object({
   "lines": zod.array(zod.object({
   "accountId": zod.string(),
   "costCenterId": zod.string().optional(),
+  "profitCenterId": zod.string().optional(),
   "debit": zod.string().optional(),
   "credit": zod.string().optional(),
   "description": zod.string().optional()
@@ -6482,6 +6485,7 @@ export const PostJournalEntryResponse = zod.object({
   "companyId": zod.string(),
   "accountId": zod.string(),
   "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish(),
   "lineNumber": zod.number().optional(),
   "debit": zod.string().optional(),
   "credit": zod.string().optional(),
@@ -6536,6 +6540,7 @@ export const ReverseJournalEntryResponse = zod.object({
   "companyId": zod.string(),
   "accountId": zod.string(),
   "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish(),
   "lineNumber": zod.number().optional(),
   "debit": zod.string().optional(),
   "credit": zod.string().optional(),
@@ -6585,6 +6590,7 @@ export const ApproveJournalEntryResponse = zod.object({
   "companyId": zod.string(),
   "accountId": zod.string(),
   "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish(),
   "lineNumber": zod.number().optional(),
   "debit": zod.string().optional(),
   "credit": zod.string().optional(),
@@ -6650,6 +6656,7 @@ export const GetGeneralLedgerQueryParams = zod.object({
   "companyId": zod.coerce.string().optional(),
   "accountId": zod.coerce.string().optional(),
   "costCenterId": zod.coerce.string().optional(),
+  "profitCenterId": zod.coerce.string().optional(),
   "fromDate": zod.coerce.string().optional(),
   "toDate": zod.coerce.string().optional(),
   "page": zod.coerce.number().optional(),
@@ -6668,6 +6675,7 @@ export const GetGeneralLedgerResponse = zod.object({
   "entryDate": zod.string(),
   "description": zod.string().nullish(),
   "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish(),
   "debit": zod.string(),
   "credit": zod.string(),
   "balance": zod.string()
@@ -16378,22 +16386,6 @@ export const ListChequeStatusHistorysResponse = zod.object({
 
 
 /**
- * @summary Create a ChequeStatusHistory
- */
-export const CreateChequeStatusHistoryBody = zod.object({
-  "companyId": zod.string(),
-  "code": zod.string(),
-  "chequeId": zod.string().optional(),
-  "action": zod.string().optional(),
-  "fromStatus": zod.string().optional(),
-  "toStatus": zod.string().optional(),
-  "actorName": zod.string().optional(),
-  "actionDate": zod.string().optional(),
-  "notes": zod.string().optional()
-})
-
-
-/**
  * @summary Get a ChequeStatusHistory
  */
 export const GetChequeStatusHistoryParams = zod.object({
@@ -16413,52 +16405,6 @@ export const GetChequeStatusHistoryResponse = zod.object({
   "notes": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
-})
-
-
-/**
- * @summary Update a ChequeStatusHistory
- */
-export const UpdateChequeStatusHistoryParams = zod.object({
-  "id": zod.coerce.string()
-})
-
-export const UpdateChequeStatusHistoryBody = zod.object({
-  "code": zod.string().optional(),
-  "chequeId": zod.string().optional(),
-  "action": zod.string().optional(),
-  "fromStatus": zod.string().optional(),
-  "toStatus": zod.string().optional(),
-  "actorName": zod.string().optional(),
-  "actionDate": zod.string().optional(),
-  "notes": zod.string().optional()
-})
-
-export const UpdateChequeStatusHistoryResponse = zod.object({
-  "id": zod.string(),
-  "companyId": zod.string(),
-  "code": zod.string(),
-  "chequeId": zod.string().nullish(),
-  "action": zod.string().nullish(),
-  "fromStatus": zod.string().nullish(),
-  "toStatus": zod.string().nullish(),
-  "actorName": zod.string().nullish(),
-  "actionDate": zod.string().nullish(),
-  "notes": zod.string().nullish(),
-  "isActive": zod.boolean(),
-  "createdAt": zod.string()
-})
-
-
-/**
- * @summary Soft-delete a ChequeStatusHistory
- */
-export const DeleteChequeStatusHistoryParams = zod.object({
-  "id": zod.coerce.string()
-})
-
-export const DeleteChequeStatusHistoryResponse = zod.object({
-  "success": zod.boolean()
 })
 
 

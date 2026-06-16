@@ -14,6 +14,8 @@ export interface GeneralLedgerLine {
   description?: string | null;
   /** @nullable */
   costCenterId?: string | null;
+  /** @nullable */
+  profitCenterId?: string | null;
   debit: string;
   credit: string;
   balance: string;

@@ -597,6 +597,7 @@ router.post("/journal-entries", requirePermission("journalEntries.create"), asyn
         lines: (body.lines ?? []).map((l) => ({
           accountId: l.accountId,
           costCenterId: l.costCenterId ?? null,
+          profitCenterId: l.profitCenterId ?? null,
           debit: l.debit ?? "0",
           credit: l.credit ?? "0",
           description: l.description ?? null,
@@ -642,6 +643,7 @@ router.patch("/journal-entries/:id", requirePermission("journalEntries.update"),
         await setEntryLines(tx, existing, body.lines.map((l) => ({
           accountId: l.accountId,
           costCenterId: l.costCenterId ?? null,
+          profitCenterId: l.profitCenterId ?? null,
           debit: l.debit ?? "0",
           credit: l.credit ?? "0",
           description: l.description ?? null,
@@ -782,6 +784,7 @@ router.get("/reports/general-ledger", requirePermission("accountingReports.view"
   const companyId = qStr(q, "companyId");
   const accountId = qStr(q, "accountId");
   const costCenterId = qStr(q, "costCenterId");
+  const profitCenterId = qStr(q, "profitCenterId");
   const fromDate = qStr(q, "fromDate");
   const toDate = qStr(q, "toDate");
   if (!accountId) {
@@ -796,6 +799,7 @@ router.get("/reports/general-ledger", requirePermission("accountingReports.view"
   ];
   if (companyId) baseFilters.push(eq(journalEntriesTable.companyId, companyId));
   if (costCenterId) baseFilters.push(eq(journalEntryLinesTable.costCenterId, costCenterId));
+  if (profitCenterId) baseFilters.push(eq(journalEntryLinesTable.profitCenterId, profitCenterId));
 
   // Opening balance: everything strictly before fromDate.
   let openingCents = 0n;
@@ -821,6 +825,7 @@ router.get("/reports/general-ledger", requirePermission("accountingReports.view"
       entryDate: journalEntriesTable.entryDate,
       description: journalEntryLinesTable.description,
       costCenterId: journalEntryLinesTable.costCenterId,
+      profitCenterId: journalEntryLinesTable.profitCenterId,
       debit: journalEntryLinesTable.debit,
       credit: journalEntryLinesTable.credit,
     })
@@ -844,6 +849,7 @@ router.get("/reports/general-ledger", requirePermission("accountingReports.view"
       entryDate: l.entryDate,
       description: l.description ?? null,
       costCenterId: l.costCenterId ?? null,
+      profitCenterId: l.profitCenterId ?? null,
       debit: fromCents(d),
       credit: fromCents(c),
       balance: fromCents(running),

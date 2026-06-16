@@ -2666,6 +2666,8 @@ export interface JournalEntryLine {
   accountId: string;
   /** @nullable */
   costCenterId?: string | null;
+  /** @nullable */
+  profitCenterId?: string | null;
   lineNumber?: number;
   debit?: string;
   credit?: string;
@@ -2722,6 +2724,7 @@ export interface JournalEntryDetail {
 export interface JournalEntryLineInput {
   accountId: string;
   costCenterId?: string;
+  profitCenterId?: string;
   debit?: string;
   credit?: string;
   description?: string;
@@ -2768,6 +2771,8 @@ export interface GeneralLedgerLine {
   description?: string | null;
   /** @nullable */
   costCenterId?: string | null;
+  /** @nullable */
+  profitCenterId?: string | null;
   debit: string;
   credit: string;
   balance: string;
@@ -7198,29 +7203,6 @@ export interface ChequeStatusHistory {
   createdAt: string;
 }
 
-export interface ChequeStatusHistoryInput {
-  companyId: string;
-  code: string;
-  chequeId?: string;
-  action?: string;
-  fromStatus?: string;
-  toStatus?: string;
-  actorName?: string;
-  actionDate?: string;
-  notes?: string;
-}
-
-export interface ChequeStatusHistoryUpdate {
-  code?: string;
-  chequeId?: string;
-  action?: string;
-  fromStatus?: string;
-  toStatus?: string;
-  actorName?: string;
-  actionDate?: string;
-  notes?: string;
-}
-
 export interface ChequeStatusHistoryListResponse {
   data: ChequeStatusHistory[];
   total: number;
@@ -7742,6 +7724,7 @@ export type GetGeneralLedgerParams = {
 companyId?: string;
 accountId?: string;
 costCenterId?: string;
+profitCenterId?: string;
 fromDate?: string;
 toDate?: string;
 page?: number;
