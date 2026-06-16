@@ -7,9 +7,7 @@ import {
 import {
   Building,
   Users,
-  Receipt,
   Calculator,
-  Landmark,
   ShoppingCart,
   Compass,
   HardHat,
@@ -27,12 +25,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-type SubModule = { label: string; href: string };
 type ModuleCard = {
   title: string;
   icon: LucideIcon;
   href: string;
-  items: SubModule[];
+  items: string[];
 };
 
 const MODULES: ModuleCard[] = [
@@ -41,16 +38,15 @@ const MODULES: ModuleCard[] = [
     icon: Building,
     href: "/projects",
     items: [
-      { label: "المشروعات", href: "/projects" },
-      { label: "المراحل", href: "/phases" },
-      { label: "المباني", href: "/buildings" },
-      { label: "الأدوار", href: "/floors" },
-      { label: "الوحدات", href: "/units" },
-      { label: "أنواع الوحدات", href: "/unit-types" },
-      { label: "حالات الوحدات", href: "/unit-statuses" },
-      { label: "قوائم الأسعار", href: "/unit-price-lists" },
-      { label: "تسعير الوحدات", href: "/unit-pricing" },
-      { label: "خصومات الوحدات", href: "/unit-discounts" },
+      "المشروعات",
+      "المراحل",
+      "المباني",
+      "الطوابق",
+      "الوحدات",
+      "أنواع الوحدات",
+      "حالات الوحدات",
+      "التسعير",
+      "قوائم الأسعار",
     ],
   },
   {
@@ -58,28 +54,15 @@ const MODULES: ModuleCard[] = [
     icon: Users,
     href: "/customers",
     items: [
-      { label: "العملاء المحتملون", href: "/leads" },
-      { label: "مصادر العملاء", href: "/lead-sources" },
-      { label: "العملاء", href: "/customers" },
-      { label: "جهات اتصال العملاء", href: "/customer-contacts" },
-      { label: "الحجوزات", href: "/reservations" },
-      { label: "دفعات الحجز", href: "/reservation-payments" },
-      { label: "العقود", href: "/contracts" },
-      { label: "تعديلات العقود", href: "/contract-amendments" },
-      { label: "إلغاء العقود", href: "/contract-cancellations" },
-      { label: "تحويلات الوحدات", href: "/unit-transfers" },
-    ],
-  },
-  {
-    title: "الأقساط والتحصيلات",
-    icon: Receipt,
-    href: "/installment-schedules",
-    items: [
-      { label: "سندات القبض", href: "/receipts" },
-      { label: "خطط الأقساط", href: "/installment-plans" },
-      { label: "جداول الأقساط", href: "/installment-schedules" },
-      { label: "تحصيل الأقساط", href: "/installment-collections" },
-      { label: "قواعد الغرامات", href: "/penalty-rules" },
+      "إدارة علاقات العملاء",
+      "العملاء",
+      "جهات الاتصال",
+      "العملاء المحتملون",
+      "الحجوزات",
+      "العقود",
+      "التعديلات",
+      "الإلغاءات",
+      "التحويلات",
     ],
   },
   {
@@ -87,30 +70,26 @@ const MODULES: ModuleCard[] = [
     icon: Calculator,
     href: "/accounting-dashboard",
     items: [
-      { label: "لوحة المحاسبة", href: "/accounting-dashboard" },
-      { label: "دليل الحسابات", href: "/accounts" },
-      { label: "القيود اليومية", href: "/journal-entries" },
-      { label: "الأستاذ العام", href: "/general-ledger" },
-      { label: "ميزان المراجعة", href: "/trial-balance" },
-      { label: "الميزانية العمومية", href: "/balance-sheet" },
-      { label: "قائمة الدخل", href: "/income-statement" },
-      { label: "التدفقات النقدية", href: "/cash-flow" },
-      { label: "الفترات المالية", href: "/fiscal-periods" },
-      { label: "التقارير المالية", href: "/financial-reports" },
-    ],
-  },
-  {
-    title: "الخزينة والبنوك",
-    icon: Landmark,
-    href: "/cashboxes",
-    items: [
-      { label: "الخزائن", href: "/cashboxes" },
-      { label: "حركات الخزينة", href: "/treasury-transactions" },
-      { label: "الحسابات البنكية", href: "/bank-accounts" },
-      { label: "الحركات البنكية", href: "/bank-transactions" },
-      { label: "الشيكات", href: "/cheques" },
-      { label: "تقارير الشيكات", href: "/cheque-reports" },
-      { label: "الغرامات", href: "/penalties" },
+      "دليل الحسابات",
+      "القيود اليومية",
+      "الحسابات العامة",
+      "الذمم المدينة",
+      "الذمم الدائنة",
+      "العملاء",
+      "الموردون",
+      "مراكز التكلفة",
+      "الموازنات",
+      "التقارير المالية",
+      "الأقساط",
+      "جداول الأقساط",
+      "التحصيلات",
+      "إيصالات القبض",
+      "سندات الصرف",
+      "الخزائن",
+      "البنوك",
+      "الشيكات",
+      "التحويلات البنكية",
+      "التسويات البنكية",
     ],
   },
   {
@@ -118,16 +97,15 @@ const MODULES: ModuleCard[] = [
     icon: ShoppingCart,
     href: "/procurement-dashboard",
     items: [
-      { label: "لوحة المشتريات", href: "/procurement-dashboard" },
-      { label: "الموردون", href: "/suppliers" },
-      { label: "طلبات الشراء", href: "/purchase-requests" },
-      { label: "طلبات عروض الأسعار", href: "/rfqs" },
-      { label: "أوامر الشراء", href: "/purchase-orders" },
-      { label: "أوامر التوريد", href: "/goods-receipt-notes" },
-      { label: "المخازن", href: "/warehouses" },
-      { label: "أصناف المخزون", href: "/inventory-items" },
-      { label: "حركة المخزون", href: "/inventory-ledger" },
-      { label: "تقارير المخزون", href: "/inventory-reports" },
+      "الموردون",
+      "طلبات الشراء",
+      "عروض الأسعار",
+      "أوامر الشراء",
+      "العقود",
+      "المستودعات",
+      "الأصناف",
+      "الجرد",
+      "حركات المخزون",
     ],
   },
   {
@@ -135,16 +113,15 @@ const MODULES: ModuleCard[] = [
     icon: Compass,
     href: "/engineering-dashboard",
     items: [
-      { label: "لوحة الهندسة", href: "/engineering-dashboard" },
-      { label: "الاستشاريون", href: "/consultants" },
-      { label: "حزم التصميم", href: "/design-packages" },
-      { label: "الرسومات", href: "/drawings" },
-      { label: "جداول الكميات", href: "/boqs" },
-      { label: "تقديرات التكلفة", href: "/cost-estimates" },
-      { label: "طلبات الفحص", href: "/inspection-requests" },
-      { label: "العيوب", href: "/defects" },
-      { label: "طلبات المعلومات", href: "/rfis" },
-      { label: "تقدم الأعمال", href: "/engineering-progress" },
+      "جداول الكميات",
+      "بنود الكميات",
+      "التقديرات",
+      "طلبات الفحص",
+      "تقارير الفحص",
+      "العيوب",
+      "الإجراءات التصحيحية",
+      "طلبات المعلومات",
+      "التقديمات الفنية",
     ],
   },
   {
@@ -152,15 +129,13 @@ const MODULES: ModuleCard[] = [
     icon: HardHat,
     href: "/construction-dashboard",
     items: [
-      { label: "لوحة التنفيذ", href: "/construction-dashboard" },
-      { label: "المقاولون", href: "/contractors" },
-      { label: "عقود المقاولين", href: "/contractor-contracts" },
-      { label: "تحديثات التقدم", href: "/work-progress-updates" },
-      { label: "شهادات الدفع", href: "/payment-certificates" },
-      { label: "أوامر التغيير", href: "/variation-orders" },
-      { label: "الدفعات المقدمة", href: "/advance-payments" },
-      { label: "فواتير المقاولين", href: "/contractor-invoices" },
-      { label: "تقارير التنفيذ", href: "/construction-reports" },
+      "المقاولون",
+      "عقود المقاولين",
+      "المستخلصات",
+      "أوامر التغيير",
+      "الدفعات المقدمة",
+      "الفواتير",
+      "تقارير التنفيذ",
     ],
   },
   {
@@ -168,16 +143,15 @@ const MODULES: ModuleCard[] = [
     icon: UserCog,
     href: "/hr-dashboard",
     items: [
-      { label: "لوحة الموارد البشرية", href: "/hr-dashboard" },
-      { label: "الأقسام", href: "/departments" },
-      { label: "المسميات الوظيفية", href: "/job-titles" },
-      { label: "الموظفون", href: "/employees" },
-      { label: "الحضور والانصراف", href: "/attendance" },
-      { label: "طلبات الإجازات", href: "/leave-requests" },
-      { label: "مسيرات الرواتب", href: "/payroll-runs" },
-      { label: "قسائم الرواتب", href: "/payslips" },
-      { label: "التقييمات", href: "/employee-evaluations" },
-      { label: "تقارير الموارد البشرية", href: "/hr-reports" },
+      "الإدارات",
+      "الأقسام",
+      "الموظفون",
+      "الحضور",
+      "الإجازات",
+      "الرواتب",
+      "السلف",
+      "القروض",
+      "التقييمات",
     ],
   },
   {
@@ -185,16 +159,13 @@ const MODULES: ModuleCard[] = [
     icon: Scale,
     href: "/legal-dashboard",
     items: [
-      { label: "لوحة الشؤون القانونية", href: "/legal-dashboard" },
-      { label: "العقود القانونية", href: "/legal-contracts" },
-      { label: "قوالب العقود", href: "/contract-templates" },
-      { label: "مكاتب المحاماة", href: "/law-firms" },
-      { label: "المستشارون القانونيون", href: "/legal-advisors" },
-      { label: "القضايا", href: "/legal-cases" },
-      { label: "الجلسات", href: "/legal-hearings" },
-      { label: "المطالبات", href: "/legal-claims" },
-      { label: "الإنذارات", href: "/legal-notices" },
-      { label: "التقارير القانونية", href: "/legal-reports" },
+      "العقود القانونية",
+      "القضايا",
+      "الجلسات",
+      "المطالبات",
+      "الإشعارات",
+      "المستشارون",
+      "مكاتب المحاماة",
     ],
   },
   {
@@ -202,10 +173,11 @@ const MODULES: ModuleCard[] = [
     icon: MessageSquare,
     href: "/customer-service-dashboard",
     items: [
-      { label: "لوحة خدمة العملاء", href: "/customer-service-dashboard" },
-      { label: "سياسات مستوى الخدمة", href: "/sla-policies" },
-      { label: "التصعيدات", href: "/service-escalations" },
-      { label: "تقارير خدمة العملاء", href: "/customer-service-reports" },
+      "الشكاوى",
+      "التذاكر",
+      "الطلبات",
+      "الصيانة",
+      "الدعم الفني",
     ],
   },
   {
@@ -213,14 +185,11 @@ const MODULES: ModuleCard[] = [
     icon: LandPlot,
     href: "/land-bank-dashboard",
     items: [
-      { label: "لوحة بنك الأراضي", href: "/land-bank-dashboard" },
-      { label: "قطع الأراضي", href: "/land-parcels" },
-      { label: "الملكيات", href: "/land-ownerships" },
-      { label: "الأوضاع القانونية", href: "/land-legal-statuses" },
-      { label: "الاستخدامات", href: "/land-utilizations" },
-      { label: "المستندات", href: "/land-documents" },
-      { label: "عمليات الاستحواذ", href: "/land-acquisitions" },
-      { label: "تقارير بنك الأراضي", href: "/land-bank-reports" },
+      "الأراضي",
+      "الملكيات",
+      "الموقف القانوني",
+      "الاستغلال",
+      "المستندات",
     ],
   },
   {
@@ -228,14 +197,11 @@ const MODULES: ModuleCard[] = [
     icon: PackageCheck,
     href: "/handover-dashboard",
     items: [
-      { label: "لوحة التسليم", href: "/handover-dashboard" },
-      { label: "طلبات التسليم", href: "/handover-requests" },
-      { label: "جداول التسليم", href: "/handover-schedules" },
-      { label: "قوائم الفحص", href: "/handover-checklist-items" },
-      { label: "محاضر التسليم", href: "/handover-minutes" },
-      { label: "الملاحظات", href: "/handover-snags" },
-      { label: "اعتمادات التسليم", href: "/handover-approvals" },
-      { label: "تقارير التسليم", href: "/handover-reports" },
+      "طلبات التسليم",
+      "الفحص النهائي",
+      "النواقص",
+      "محاضر التسليم",
+      "إغلاق التسليم",
     ],
   },
   {
@@ -243,15 +209,12 @@ const MODULES: ModuleCard[] = [
     icon: BarChart3,
     href: "/executive-dashboard",
     items: [
-      { label: "اللوحة التنفيذية", href: "/executive-dashboard" },
-      { label: "تحليلات المبيعات", href: "/sales-analytics" },
-      { label: "تحليلات التحصيل", href: "/collection-analytics" },
-      { label: "تحليلات التنفيذ", href: "/construction-analytics" },
-      { label: "تحليلات المشتريات", href: "/procurement-analytics" },
-      { label: "تحليلات المخزون", href: "/inventory-analytics" },
-      { label: "تحليلات الموارد البشرية", href: "/hr-analytics" },
-      { label: "التحليلات المالية", href: "/financial-analytics" },
-      { label: "محرك التقارير", href: "/reports-engine" },
+      "اللوحة التنفيذية",
+      "مؤشرات الأداء",
+      "التحليلات المالية",
+      "تحليلات المبيعات",
+      "تحليلات المشروعات",
+      "تحليلات الموارد البشرية",
     ],
   },
   {
@@ -259,16 +222,13 @@ const MODULES: ModuleCard[] = [
     icon: Settings,
     href: "/settings",
     items: [
-      { label: "المستخدمون", href: "/users" },
-      { label: "الأدوار والصلاحيات", href: "/roles" },
-      { label: "الشركات", href: "/companies" },
-      { label: "الفروع", href: "/branches" },
-      { label: "السنوات المالية", href: "/fiscal-years" },
-      { label: "العملات", href: "/currencies" },
-      { label: "تسلسل الأرقام", href: "/number-sequences" },
-      { label: "سجل التدقيق", href: "/audit-logs" },
-      { label: "سجل الدخول", href: "/login-history" },
-      { label: "الإعدادات", href: "/settings" },
+      "المستخدمون",
+      "الصلاحيات",
+      "الفروع",
+      "الشركات",
+      "العملات",
+      "السنوات المالية",
+      "الإعدادات العامة",
     ],
   },
 ];
@@ -336,38 +296,34 @@ export default function Home() {
                 الأقسام الرئيسية
               </h2>
             </div>
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid auto-rows-fr grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
               {MODULES.map((mod) => (
-                <div
+                <Link
                   key={mod.title}
-                  className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/40 hover:bg-white/[0.06]"
+                  href={mod.href}
+                  className="group flex h-full cursor-pointer flex-col rounded-2xl border border-white/[0.06] bg-[#13203b] p-7 shadow-lg shadow-black/30 transition-all duration-300 hover:scale-[1.02] hover:border-amber-400/25 hover:bg-[#182a4d] hover:shadow-2xl hover:shadow-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1a] md:p-8"
                 >
-                  <Link
-                    href={mod.href}
-                    className="mb-5 flex items-center gap-4"
-                  >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-500/5 text-amber-300 ring-1 ring-amber-400/20 transition-colors group-hover:text-amber-200">
-                      <mod.icon className="h-6 w-6" />
+                  <div className="mb-6 flex flex-col items-center text-center">
+                    <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/15 transition-colors group-hover:text-amber-200">
+                      <mod.icon className="h-7 w-7" />
                     </span>
-                    <h3 className="text-2xl font-extrabold leading-tight text-white transition-colors group-hover:text-amber-200">
+                    <h3 className="text-2xl font-extrabold leading-snug text-white md:text-[26px]">
                       {mod.title}
                     </h3>
-                  </Link>
+                  </div>
 
-                  <ul className="grid grid-cols-1 gap-x-5 gap-y-2.5 sm:grid-cols-2">
-                    {mod.items.map((item) => (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className="flex items-center gap-2 text-[15px] font-bold text-slate-300 transition-colors hover:text-amber-300"
-                        >
-                          <span className="text-amber-400/70">•</span>
-                          <span>{item.label}</span>
-                        </Link>
+                  <ul className="flex flex-1 flex-col gap-2.5 border-t border-white/[0.06] pt-5">
+                    {mod.items.map((label) => (
+                      <li
+                        key={label}
+                        className="flex items-center gap-2.5 text-[17px] font-bold leading-relaxed text-slate-300"
+                      >
+                        <span className="text-amber-400/60">•</span>
+                        <span>{label}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
