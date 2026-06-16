@@ -34,6 +34,8 @@ export interface Cheque {
   /** @nullable */
   receiptId?: string | null;
   /** @nullable */
+  paymentVoucherId?: string | null;
+  /** @nullable */
   payeeName?: string | null;
   status: string;
   /** @nullable */

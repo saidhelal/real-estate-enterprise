@@ -735,7 +735,7 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
 const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["receipt.cash", "1010", "1030", "Cash receipt from customer"],
   ["receipt.bank", "1020", "1030", "Bank receipt from customer"],
-  ["receipt.cheque", "1020", "1030", "Cheque receipt from customer"],
+  ["receipt.cheque", "1050", "1030", "Cheque receipt from customer (into Cheques Under Collection)"],
   ["payment.cash", "2010", "1010", "Cash payment to supplier/contractor"],
   ["payment.bank", "2010", "1020", "Bank payment to supplier/contractor"],
   ["payment.cheque", "2010", "2030", "Cheque payment to supplier/contractor"],
@@ -816,6 +816,12 @@ async function seedAccounting(): Promise<void> {
   const chequeMappingFixes: Array<[string, string, string]> = [
     ["cheque.incoming.cleared", "1020", "1050"],
     ["cheque.outgoing.cleared", "2030", "1020"],
+    // A cheque receipt settles AR into the Cheques Under Collection bridge (1050),
+    // mirroring how payment.cheque settles AP into Cheques Payable (2030). The cheque
+    // record's clearing leg then drains the bridge into Bank. Earlier seeds pointed
+    // the debit at Bank (1020) directly, which double-counted Bank/AR once a linked
+    // cheque also cleared, so re-point existing rows to the bridge here.
+    ["receipt.cheque", "1050", "1030"],
   ];
   for (const [eventKey, debitCode, creditCode] of chequeMappingFixes) {
     const debitAccountId = codeToId.get(debitCode) ?? null;

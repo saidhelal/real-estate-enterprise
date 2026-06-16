@@ -146,6 +146,7 @@ export const chequesTable = pgTable("cheques", {
   unitId: uuid("unit_id"),
   scheduleId: uuid("schedule_id"),
   receiptId: uuid("receipt_id"),
+  paymentVoucherId: uuid("payment_voucher_id"),
   payeeName: text("payee_name"),
   status: text("status").notNull().default("received"),
   collectionDate: date("collection_date"),

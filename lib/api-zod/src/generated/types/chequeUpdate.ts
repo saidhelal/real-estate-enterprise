@@ -21,6 +21,7 @@ export interface ChequeUpdate {
   unitId?: string;
   scheduleId?: string;
   receiptId?: string;
+  paymentVoucherId?: string;
   payeeName?: string;
   status?: string;
   collectionDate?: string;

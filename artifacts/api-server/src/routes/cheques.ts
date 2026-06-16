@@ -89,6 +89,7 @@ const FROZEN_FIELDS = [
   "unitId",
   "scheduleId",
   "receiptId",
+  "paymentVoucherId",
 ];
 
 function historyCode(): string {
@@ -225,7 +226,15 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
     // idempotent per (sourceType, sourceId), so re-attempting a leg never double-posts.
     const userId = req.authUser?.id ?? null;
     const amountValid = typeof existing.amount === "string" && existing.amount.trim() !== "";
+    // A cheque created from a receipt or payment voucher must NOT post its own
+    // collection leg: the originating voucher already moved AR/AP into the bridge
+    // account (Cheques Under Collection / Cheques Payable). Posting it again here
+    // would double-count the settlement (Bank and AR/AP both counted twice). Such
+    // linked cheques only post the clearing leg (bridge -> Bank) when they clear;
+    // standalone cheques (no voucher) still post both legs themselves.
+    const linkedToVoucher = !!(existing.receiptId || existing.paymentVoucherId);
     const postCollection = async (): Promise<void> => {
+      if (linkedToVoucher) return;
       const eventKey = COLLECTION_EVENT[existing.direction];
       if (!eventKey || !amountValid) return;
       await postAutomaticEntry(tx, {

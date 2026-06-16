@@ -20923,6 +20923,7 @@ components:
         unitId: { type: ["string", "null"] }
         scheduleId: { type: ["string", "null"] }
         receiptId: { type: ["string", "null"] }
+        paymentVoucherId: { type: ["string", "null"] }
         payeeName: { type: ["string", "null"] }
         status: { type: string }
         collectionDate: { type: ["string", "null"] }
@@ -20955,6 +20956,7 @@ components:
         unitId: { type: string }
         scheduleId: { type: string }
         receiptId: { type: string }
+        paymentVoucherId: { type: string }
         payeeName: { type: string }
         status: { type: string }
         collectionDate: { type: string }
@@ -20983,6 +20985,7 @@ components:
         unitId: { type: string }
         scheduleId: { type: string }
         receiptId: { type: string }
+        paymentVoucherId: { type: string }
         payeeName: { type: string }
         status: { type: string }
         collectionDate: { type: string }
