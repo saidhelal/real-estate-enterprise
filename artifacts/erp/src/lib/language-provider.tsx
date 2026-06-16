@@ -901,7 +901,7 @@ export function LanguageProvider({
     setLanguageState(lang);
   };
 
-  const t = (key: string) => translations[language]?.[key] || key;
+  const t = (key: string) => translations[language]?.[key] || translations.en[key] || key;
 
   return (
     <LanguageProviderContext.Provider {...props} value={{ language, setLanguage, dir, t }}>
