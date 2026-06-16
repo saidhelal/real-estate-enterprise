@@ -18,6 +18,7 @@ import {
   Hammer, FileBox, Award, GitPullRequestArrow, MinusCircle, PlusCircle,
   ShieldMinus, Coins, RotateCcw, FileSpreadsheet, CheckSquare, BarChart3,
   Truck, ShoppingCart, PackageCheck, PackageX, Store, Undo2,
+  Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -229,6 +230,24 @@ const NAV_GROUPS = [
     { href: "/kpi-templates", icon: GanttChartSquare, labelKey: "nav.kpi_templates" },
     { href: "/employee-evaluations", icon: Award, labelKey: "nav.employee_evaluations" },
     { href: "/hr-reports", icon: BarChart3, labelKey: "nav.hr_reports" },
+  ]},
+  { titleKey: "nav.group.legal", items: [
+    { href: "/legal-dashboard", icon: Gauge, labelKey: "nav.legal_dashboard" },
+    { href: "/legal-contracts", icon: FileSign, labelKey: "nav.legal_contracts" },
+    { href: "/contract-templates", icon: FileStack, labelKey: "nav.contract_templates" },
+    { href: "/contract-versions", icon: FileText, labelKey: "nav.contract_versions" },
+    { href: "/legal-contract-amendments", icon: FilePen, labelKey: "nav.legal_contract_amendments" },
+    { href: "/contract-addendums", icon: FileCheck, labelKey: "nav.contract_addendums" },
+    { href: "/legal-contract-attachments", icon: FileBox, labelKey: "nav.legal_contract_attachments" },
+    { href: "/contract-events", icon: History, labelKey: "nav.contract_events" },
+    { href: "/law-firms", icon: Landmark, labelKey: "nav.law_firms" },
+    { href: "/legal-advisors", icon: UserCog, labelKey: "nav.legal_advisors" },
+    { href: "/legal-cases", icon: Gavel, labelKey: "nav.legal_cases" },
+    { href: "/legal-hearings", icon: CalendarClock, labelKey: "nav.legal_hearings" },
+    { href: "/legal-claims", icon: Scale, labelKey: "nav.legal_claims" },
+    { href: "/legal-notices", icon: Bell, labelKey: "nav.legal_notices" },
+    { href: "/legal-case-links", icon: Link2, labelKey: "nav.legal_case_links" },
+    { href: "/legal-reports", icon: BarChart3, labelKey: "nav.legal_reports" },
   ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },

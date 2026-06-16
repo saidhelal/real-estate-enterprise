@@ -15471,6 +15471,1360 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/HrTurnoverReport" }
 
+  # >>> LEGAL PATHS (generated) >>>
+  /legal-contracts:
+    get:
+      operationId: listLegalContracts
+      tags: [legal]
+      summary: List LegalContracts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractListResponse" }
+    post:
+      operationId: createLegalContract
+      tags: [legal]
+      summary: Create a LegalContract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+  /legal-contracts/{id}:
+    get:
+      operationId: getLegalContract
+      tags: [legal]
+      summary: Get a LegalContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalContract
+      tags: [legal]
+      summary: Update a LegalContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+    delete:
+      operationId: deleteLegalContract
+      tags: [legal]
+      summary: Delete a LegalContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /contract-templates:
+    get:
+      operationId: listContractTemplates
+      tags: [legal]
+      summary: List ContractTemplates
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractTemplateListResponse" }
+    post:
+      operationId: createContractTemplate
+      tags: [legal]
+      summary: Create a ContractTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractTemplateInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractTemplate" }
+  /contract-templates/{id}:
+    get:
+      operationId: getContractTemplate
+      tags: [legal]
+      summary: Get a ContractTemplate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractTemplate" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateContractTemplate
+      tags: [legal]
+      summary: Update a ContractTemplate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractTemplateUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractTemplate" }
+    delete:
+      operationId: deleteContractTemplate
+      tags: [legal]
+      summary: Delete a ContractTemplate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /contract-versions:
+    get:
+      operationId: listContractVersions
+      tags: [legal]
+      summary: List ContractVersions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractVersionListResponse" }
+    post:
+      operationId: createContractVersion
+      tags: [legal]
+      summary: Create a ContractVersion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractVersionInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractVersion" }
+  /contract-versions/{id}:
+    get:
+      operationId: getContractVersion
+      tags: [legal]
+      summary: Get a ContractVersion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractVersion" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateContractVersion
+      tags: [legal]
+      summary: Update a ContractVersion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractVersionUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractVersion" }
+    delete:
+      operationId: deleteContractVersion
+      tags: [legal]
+      summary: Delete a ContractVersion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-contract-amendments:
+    get:
+      operationId: listLegalContractAmendments
+      tags: [legal]
+      summary: List LegalContractAmendments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAmendmentListResponse" }
+    post:
+      operationId: createLegalContractAmendment
+      tags: [legal]
+      summary: Create a LegalContractAmendment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractAmendmentInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAmendment" }
+  /legal-contract-amendments/{id}:
+    get:
+      operationId: getLegalContractAmendment
+      tags: [legal]
+      summary: Get a LegalContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAmendment" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalContractAmendment
+      tags: [legal]
+      summary: Update a LegalContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractAmendmentUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAmendment" }
+    delete:
+      operationId: deleteLegalContractAmendment
+      tags: [legal]
+      summary: Delete a LegalContractAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /contract-addendums:
+    get:
+      operationId: listContractAddendums
+      tags: [legal]
+      summary: List ContractAddendums
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractAddendumListResponse" }
+    post:
+      operationId: createContractAddendum
+      tags: [legal]
+      summary: Create a ContractAddendum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractAddendumInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractAddendum" }
+  /contract-addendums/{id}:
+    get:
+      operationId: getContractAddendum
+      tags: [legal]
+      summary: Get a ContractAddendum
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractAddendum" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateContractAddendum
+      tags: [legal]
+      summary: Update a ContractAddendum
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractAddendumUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractAddendum" }
+    delete:
+      operationId: deleteContractAddendum
+      tags: [legal]
+      summary: Delete a ContractAddendum
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-contract-attachments:
+    get:
+      operationId: listLegalContractAttachments
+      tags: [legal]
+      summary: List LegalContractAttachments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAttachmentListResponse" }
+    post:
+      operationId: createLegalContractAttachment
+      tags: [legal]
+      summary: Create a LegalContractAttachment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractAttachmentInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAttachment" }
+  /legal-contract-attachments/{id}:
+    get:
+      operationId: getLegalContractAttachment
+      tags: [legal]
+      summary: Get a LegalContractAttachment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAttachment" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalContractAttachment
+      tags: [legal]
+      summary: Update a LegalContractAttachment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractAttachmentUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractAttachment" }
+    delete:
+      operationId: deleteLegalContractAttachment
+      tags: [legal]
+      summary: Delete a LegalContractAttachment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /contract-events:
+    get:
+      operationId: listContractEvents
+      tags: [legal]
+      summary: List ContractEvents
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractEventListResponse" }
+    post:
+      operationId: createContractEvent
+      tags: [legal]
+      summary: Create a ContractEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractEventInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractEvent" }
+  /contract-events/{id}:
+    get:
+      operationId: getContractEvent
+      tags: [legal]
+      summary: Get a ContractEvent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractEvent" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateContractEvent
+      tags: [legal]
+      summary: Update a ContractEvent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractEventUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractEvent" }
+    delete:
+      operationId: deleteContractEvent
+      tags: [legal]
+      summary: Delete a ContractEvent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /law-firms:
+    get:
+      operationId: listLawFirms
+      tags: [legal]
+      summary: List LawFirms
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LawFirmListResponse" }
+    post:
+      operationId: createLawFirm
+      tags: [legal]
+      summary: Create a LawFirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LawFirmInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LawFirm" }
+  /law-firms/{id}:
+    get:
+      operationId: getLawFirm
+      tags: [legal]
+      summary: Get a LawFirm
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LawFirm" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLawFirm
+      tags: [legal]
+      summary: Update a LawFirm
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LawFirmUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LawFirm" }
+    delete:
+      operationId: deleteLawFirm
+      tags: [legal]
+      summary: Delete a LawFirm
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-advisors:
+    get:
+      operationId: listLegalAdvisors
+      tags: [legal]
+      summary: List LegalAdvisors
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalAdvisorListResponse" }
+    post:
+      operationId: createLegalAdvisor
+      tags: [legal]
+      summary: Create a LegalAdvisor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalAdvisorInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalAdvisor" }
+  /legal-advisors/{id}:
+    get:
+      operationId: getLegalAdvisor
+      tags: [legal]
+      summary: Get a LegalAdvisor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalAdvisor" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalAdvisor
+      tags: [legal]
+      summary: Update a LegalAdvisor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalAdvisorUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalAdvisor" }
+    delete:
+      operationId: deleteLegalAdvisor
+      tags: [legal]
+      summary: Delete a LegalAdvisor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-cases:
+    get:
+      operationId: listLegalCases
+      tags: [legal]
+      summary: List LegalCases
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCaseListResponse" }
+    post:
+      operationId: createLegalCase
+      tags: [legal]
+      summary: Create a LegalCase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalCaseInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCase" }
+  /legal-cases/{id}:
+    get:
+      operationId: getLegalCase
+      tags: [legal]
+      summary: Get a LegalCase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCase" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalCase
+      tags: [legal]
+      summary: Update a LegalCase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalCaseUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCase" }
+    delete:
+      operationId: deleteLegalCase
+      tags: [legal]
+      summary: Delete a LegalCase
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-hearings:
+    get:
+      operationId: listLegalHearings
+      tags: [legal]
+      summary: List LegalHearings
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalHearingListResponse" }
+    post:
+      operationId: createLegalHearing
+      tags: [legal]
+      summary: Create a LegalHearing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalHearingInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalHearing" }
+  /legal-hearings/{id}:
+    get:
+      operationId: getLegalHearing
+      tags: [legal]
+      summary: Get a LegalHearing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalHearing" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalHearing
+      tags: [legal]
+      summary: Update a LegalHearing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalHearingUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalHearing" }
+    delete:
+      operationId: deleteLegalHearing
+      tags: [legal]
+      summary: Delete a LegalHearing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-claims:
+    get:
+      operationId: listLegalClaims
+      tags: [legal]
+      summary: List LegalClaims
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalClaimListResponse" }
+    post:
+      operationId: createLegalClaim
+      tags: [legal]
+      summary: Create a LegalClaim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalClaimInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalClaim" }
+  /legal-claims/{id}:
+    get:
+      operationId: getLegalClaim
+      tags: [legal]
+      summary: Get a LegalClaim
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalClaim" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalClaim
+      tags: [legal]
+      summary: Update a LegalClaim
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalClaimUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalClaim" }
+    delete:
+      operationId: deleteLegalClaim
+      tags: [legal]
+      summary: Delete a LegalClaim
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-notices:
+    get:
+      operationId: listLegalNotices
+      tags: [legal]
+      summary: List LegalNotices
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalNoticeListResponse" }
+    post:
+      operationId: createLegalNotice
+      tags: [legal]
+      summary: Create a LegalNotice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalNoticeInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalNotice" }
+  /legal-notices/{id}:
+    get:
+      operationId: getLegalNotice
+      tags: [legal]
+      summary: Get a LegalNotice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalNotice" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalNotice
+      tags: [legal]
+      summary: Update a LegalNotice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalNoticeUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalNotice" }
+    delete:
+      operationId: deleteLegalNotice
+      tags: [legal]
+      summary: Delete a LegalNotice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /legal-case-links:
+    get:
+      operationId: listLegalCaseLinks
+      tags: [legal]
+      summary: List LegalCaseLinks
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCaseLinkListResponse" }
+    post:
+      operationId: createLegalCaseLink
+      tags: [legal]
+      summary: Create a LegalCaseLink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalCaseLinkInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCaseLink" }
+  /legal-case-links/{id}:
+    get:
+      operationId: getLegalCaseLink
+      tags: [legal]
+      summary: Get a LegalCaseLink
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCaseLink" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLegalCaseLink
+      tags: [legal]
+      summary: Update a LegalCaseLink
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalCaseLinkUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCaseLink" }
+    delete:
+      operationId: deleteLegalCaseLink
+      tags: [legal]
+      summary: Delete a LegalCaseLink
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+
+  /legal-contracts/{id}/review:
+    post:
+      operationId: reviewLegalContract
+      tags: [legal]
+      summary: Mark a legal contract under review
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/approve:
+    post:
+      operationId: approveLegalContract
+      tags: [legal]
+      summary: Approve a legal contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/activate:
+    post:
+      operationId: activateLegalContract
+      tags: [legal]
+      summary: Activate a legal contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/suspend:
+    post:
+      operationId: suspendLegalContract
+      tags: [legal]
+      summary: Suspend a legal contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractSuspendInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/terminate:
+    post:
+      operationId: terminateLegalContract
+      tags: [legal]
+      summary: Terminate a legal contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractTerminateInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/renew:
+    post:
+      operationId: renewLegalContract
+      tags: [legal]
+      summary: Renew a legal contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalContractRenewInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-cases/{id}/close:
+    post:
+      operationId: closeLegalCase
+      tags: [legal]
+      summary: Close a legal case
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LegalCaseCloseInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCase" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-cases/{id}/reopen:
+    post:
+      operationId: reopenLegalCase
+      tags: [legal]
+      summary: Reopen a legal case
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalCase" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-notices/{id}/send:
+    post:
+      operationId: sendLegalNotice
+      tags: [legal]
+      summary: Mark a legal notice as sent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalNotice" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /legal/dashboard:
+    get:
+      operationId: getLegalDashboard
+      tags: [legal]
+      summary: Legal dashboard KPIs
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalDashboard" }
+  /legal/reports/contracts:
+    get:
+      operationId: getLegalContractReport
+      tags: [legal]
+      summary: Contract status & expiry report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractReport" }
+  /legal/reports/litigation:
+    get:
+      operationId: getLegalLitigationReport
+      tags: [legal]
+      summary: Litigation report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalLitigationReport" }
+  /legal/reports/claims:
+    get:
+      operationId: getLegalClaimReport
+      tags: [legal]
+      summary: Claims report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalClaimReport" }
+  /legal/reports/advisors:
+    get:
+      operationId: getLegalAdvisorReport
+      tags: [legal]
+      summary: Advisor & law-firm workload report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalAdvisorReport" }
+
+  # <<< LEGAL PATHS (generated) <<<
 components:
   parameters:
     IdParam:
@@ -25100,3 +26454,947 @@ components:
       type: object
       properties:
         rejectedReason: { type: string }
+    # >>> LEGAL SCHEMAS (generated) >>>
+    LegalContract:
+      type: object
+      required: [id, companyId, code, title, contractType, sourceModule, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: ["string", "null"] }
+        contractType: { type: string }
+        sourceModule: { type: string }
+        sourceId: { type: ["string", "null"] }
+        templateId: { type: ["string", "null"] }
+        counterpartyType: { type: ["string", "null"] }
+        counterpartyId: { type: ["string", "null"] }
+        counterpartyName: { type: ["string", "null"] }
+        status: { type: string }
+        contractDate: { type: ["string", "null"] }
+        effectiveDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        renewalDate: { type: ["string", "null"] }
+        autoRenew: { type: ["boolean", "null"] }
+        value: { type: ["string", "null"] }
+        currencyId: { type: ["string", "null"] }
+        governingLaw: { type: ["string", "null"] }
+        responsibleEmployeeId: { type: ["string", "null"] }
+        advisorId: { type: ["string", "null"] }
+        currentVersion: { type: ["integer", "null"] }
+        reviewedBy: { type: ["string", "null"] }
+        reviewedAt: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        activatedAt: { type: ["string", "null"] }
+        suspendedAt: { type: ["string", "null"] }
+        terminatedAt: { type: ["string", "null"] }
+        terminationReason: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalContractInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        contractType: { type: string }
+        sourceModule: { type: string }
+        sourceId: { type: string }
+        templateId: { type: string }
+        counterpartyType: { type: string }
+        counterpartyId: { type: string }
+        counterpartyName: { type: string }
+        status: { type: string }
+        contractDate: { type: string }
+        effectiveDate: { type: string }
+        expiryDate: { type: string }
+        renewalDate: { type: string }
+        autoRenew: { type: boolean }
+        value: { type: string }
+        currencyId: { type: string }
+        governingLaw: { type: string }
+        responsibleEmployeeId: { type: string }
+        advisorId: { type: string }
+        currentVersion: { type: integer }
+        reviewedBy: { type: string }
+        reviewedAt: { type: string }
+        approvedBy: { type: string }
+        approvedAt: { type: string }
+        activatedAt: { type: string }
+        suspendedAt: { type: string }
+        terminatedAt: { type: string }
+        terminationReason: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    LegalContractUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        contractType: { type: string }
+        sourceModule: { type: string }
+        sourceId: { type: string }
+        templateId: { type: string }
+        counterpartyType: { type: string }
+        counterpartyId: { type: string }
+        counterpartyName: { type: string }
+        status: { type: string }
+        contractDate: { type: string }
+        effectiveDate: { type: string }
+        expiryDate: { type: string }
+        renewalDate: { type: string }
+        autoRenew: { type: boolean }
+        value: { type: string }
+        currencyId: { type: string }
+        governingLaw: { type: string }
+        responsibleEmployeeId: { type: string }
+        advisorId: { type: string }
+        currentVersion: { type: integer }
+        reviewedBy: { type: string }
+        reviewedAt: { type: string }
+        approvedBy: { type: string }
+        approvedAt: { type: string }
+        activatedAt: { type: string }
+        suspendedAt: { type: string }
+        terminatedAt: { type: string }
+        terminationReason: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    LegalContractListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalContract" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    ContractTemplate:
+      type: object
+      required: [id, companyId, code, name, contractType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        contractType: { type: string }
+        content: { type: ["string", "null"] }
+        contentAr: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ContractTemplateInput:
+      type: object
+      required: [companyId, code, name]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        contractType: { type: string }
+        content: { type: string }
+        contentAr: { type: string }
+        description: { type: string }
+        status: { type: string }
+    ContractTemplateUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        contractType: { type: string }
+        content: { type: string }
+        contentAr: { type: string }
+        description: { type: string }
+        status: { type: string }
+    ContractTemplateListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractTemplate" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    ContractVersion:
+      type: object
+      required: [id, companyId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalContractId: { type: ["string", "null"] }
+        versionNumber: { type: ["integer", "null"] }
+        content: { type: ["string", "null"] }
+        changeSummary: { type: ["string", "null"] }
+        createdByEmployeeId: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ContractVersionInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        legalContractId: { type: string }
+        versionNumber: { type: integer }
+        content: { type: string }
+        changeSummary: { type: string }
+        createdByEmployeeId: { type: string }
+        status: { type: string }
+    ContractVersionUpdate:
+      type: object
+      properties:
+        legalContractId: { type: string }
+        versionNumber: { type: integer }
+        content: { type: string }
+        changeSummary: { type: string }
+        createdByEmployeeId: { type: string }
+        status: { type: string }
+    ContractVersionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractVersion" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalContractAmendment:
+      type: object
+      required: [id, companyId, description, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalContractId: { type: ["string", "null"] }
+        code: { type: ["string", "null"] }
+        amendmentDate: { type: ["string", "null"] }
+        description: { type: string }
+        descriptionAr: { type: ["string", "null"] }
+        oldValue: { type: ["string", "null"] }
+        newValue: { type: ["string", "null"] }
+        valueChange: { type: ["string", "null"] }
+        status: { type: string }
+        approvedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalContractAmendmentInput:
+      type: object
+      required: [companyId, description]
+      properties:
+        companyId: { type: string }
+        legalContractId: { type: string }
+        code: { type: string }
+        amendmentDate: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        oldValue: { type: string }
+        newValue: { type: string }
+        valueChange: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+        approvedAt: { type: string }
+    LegalContractAmendmentUpdate:
+      type: object
+      properties:
+        legalContractId: { type: string }
+        code: { type: string }
+        amendmentDate: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        oldValue: { type: string }
+        newValue: { type: string }
+        valueChange: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+        approvedAt: { type: string }
+    LegalContractAmendmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalContractAmendment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    ContractAddendum:
+      type: object
+      required: [id, companyId, title, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalContractId: { type: ["string", "null"] }
+        code: { type: ["string", "null"] }
+        title: { type: string }
+        addendumDate: { type: ["string", "null"] }
+        content: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ContractAddendumInput:
+      type: object
+      required: [companyId, title]
+      properties:
+        companyId: { type: string }
+        legalContractId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        addendumDate: { type: string }
+        content: { type: string }
+        status: { type: string }
+    ContractAddendumUpdate:
+      type: object
+      properties:
+        legalContractId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        addendumDate: { type: string }
+        content: { type: string }
+        status: { type: string }
+    ContractAddendumListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractAddendum" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalContractAttachment:
+      type: object
+      required: [id, companyId, title, documentType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalContractId: { type: ["string", "null"] }
+        title: { type: string }
+        documentType: { type: string }
+        fileUrl: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalContractAttachmentInput:
+      type: object
+      required: [companyId, title]
+      properties:
+        companyId: { type: string }
+        legalContractId: { type: string }
+        title: { type: string }
+        documentType: { type: string }
+        fileUrl: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    LegalContractAttachmentUpdate:
+      type: object
+      properties:
+        legalContractId: { type: string }
+        title: { type: string }
+        documentType: { type: string }
+        fileUrl: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    LegalContractAttachmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalContractAttachment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    ContractEvent:
+      type: object
+      required: [id, companyId, eventType, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalContractId: { type: ["string", "null"] }
+        eventType: { type: string }
+        description: { type: ["string", "null"] }
+        performedBy: { type: ["string", "null"] }
+        eventDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ContractEventInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        legalContractId: { type: string }
+        eventType: { type: string }
+        description: { type: string }
+        performedBy: { type: string }
+        eventDate: { type: string }
+    ContractEventUpdate:
+      type: object
+      properties:
+        legalContractId: { type: string }
+        eventType: { type: string }
+        description: { type: string }
+        performedBy: { type: string }
+        eventDate: { type: string }
+    ContractEventListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractEvent" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LawFirm:
+      type: object
+      required: [id, companyId, code, name, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        contactPerson: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        specialization: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LawFirmInput:
+      type: object
+      required: [companyId, code, name]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        contactPerson: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        address: { type: string }
+        specialization: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    LawFirmUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        contactPerson: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        address: { type: string }
+        specialization: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    LawFirmListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LawFirm" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalAdvisor:
+      type: object
+      required: [id, companyId, code, name, advisorType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        advisorType: { type: string }
+        lawFirmId: { type: ["string", "null"] }
+        employeeId: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        specialization: { type: ["string", "null"] }
+        barNumber: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalAdvisorInput:
+      type: object
+      required: [companyId, code, name]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        advisorType: { type: string }
+        lawFirmId: { type: string }
+        employeeId: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        specialization: { type: string }
+        barNumber: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    LegalAdvisorUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        advisorType: { type: string }
+        lawFirmId: { type: string }
+        employeeId: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        specialization: { type: string }
+        barNumber: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    LegalAdvisorListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalAdvisor" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalCase:
+      type: object
+      required: [id, companyId, code, title, caseType, role, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: ["string", "null"] }
+        caseType: { type: string }
+        role: { type: string }
+        status: { type: string }
+        courtName: { type: ["string", "null"] }
+        courtCaseNumber: { type: ["string", "null"] }
+        filingDate: { type: ["string", "null"] }
+        opponentName: { type: ["string", "null"] }
+        claimAmount: { type: ["string", "null"] }
+        currencyId: { type: ["string", "null"] }
+        advisorId: { type: ["string", "null"] }
+        lawFirmId: { type: ["string", "null"] }
+        responsibleEmployeeId: { type: ["string", "null"] }
+        counterpartyType: { type: ["string", "null"] }
+        counterpartyId: { type: ["string", "null"] }
+        legalContractId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        outcome: { type: ["string", "null"] }
+        outcomeAmount: { type: ["string", "null"] }
+        closedAt: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalCaseInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        caseType: { type: string }
+        role: { type: string }
+        status: { type: string }
+        courtName: { type: string }
+        courtCaseNumber: { type: string }
+        filingDate: { type: string }
+        opponentName: { type: string }
+        claimAmount: { type: string }
+        currencyId: { type: string }
+        advisorId: { type: string }
+        lawFirmId: { type: string }
+        responsibleEmployeeId: { type: string }
+        counterpartyType: { type: string }
+        counterpartyId: { type: string }
+        legalContractId: { type: string }
+        projectId: { type: string }
+        outcome: { type: string }
+        outcomeAmount: { type: string }
+        closedAt: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    LegalCaseUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        caseType: { type: string }
+        role: { type: string }
+        status: { type: string }
+        courtName: { type: string }
+        courtCaseNumber: { type: string }
+        filingDate: { type: string }
+        opponentName: { type: string }
+        claimAmount: { type: string }
+        currencyId: { type: string }
+        advisorId: { type: string }
+        lawFirmId: { type: string }
+        responsibleEmployeeId: { type: string }
+        counterpartyType: { type: string }
+        counterpartyId: { type: string }
+        legalContractId: { type: string }
+        projectId: { type: string }
+        outcome: { type: string }
+        outcomeAmount: { type: string }
+        closedAt: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    LegalCaseListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalCase" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalHearing:
+      type: object
+      required: [id, companyId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalCaseId: { type: ["string", "null"] }
+        code: { type: ["string", "null"] }
+        hearingDate: { type: ["string", "null"] }
+        hearingTime: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        courtRoom: { type: ["string", "null"] }
+        status: { type: string }
+        summary: { type: ["string", "null"] }
+        decision: { type: ["string", "null"] }
+        nextHearingDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalHearingInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        legalCaseId: { type: string }
+        code: { type: string }
+        hearingDate: { type: string }
+        hearingTime: { type: string }
+        location: { type: string }
+        courtRoom: { type: string }
+        status: { type: string }
+        summary: { type: string }
+        decision: { type: string }
+        nextHearingDate: { type: string }
+    LegalHearingUpdate:
+      type: object
+      properties:
+        legalCaseId: { type: string }
+        code: { type: string }
+        hearingDate: { type: string }
+        hearingTime: { type: string }
+        location: { type: string }
+        courtRoom: { type: string }
+        status: { type: string }
+        summary: { type: string }
+        decision: { type: string }
+        nextHearingDate: { type: string }
+    LegalHearingListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalHearing" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalClaim:
+      type: object
+      required: [id, companyId, code, claimType, direction, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalCaseId: { type: ["string", "null"] }
+        code: { type: string }
+        claimType: { type: string }
+        direction: { type: string }
+        amount: { type: ["string", "null"] }
+        currencyId: { type: ["string", "null"] }
+        status: { type: string }
+        claimDate: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalClaimInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        legalCaseId: { type: string }
+        code: { type: string }
+        claimType: { type: string }
+        direction: { type: string }
+        amount: { type: string }
+        currencyId: { type: string }
+        status: { type: string }
+        claimDate: { type: string }
+        description: { type: string }
+    LegalClaimUpdate:
+      type: object
+      properties:
+        legalCaseId: { type: string }
+        code: { type: string }
+        claimType: { type: string }
+        direction: { type: string }
+        amount: { type: string }
+        currencyId: { type: string }
+        status: { type: string }
+        claimDate: { type: string }
+        description: { type: string }
+    LegalClaimListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalClaim" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalNotice:
+      type: object
+      required: [id, companyId, code, noticeType, subject, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        noticeType: { type: string }
+        legalCaseId: { type: ["string", "null"] }
+        legalContractId: { type: ["string", "null"] }
+        recipientType: { type: ["string", "null"] }
+        recipientId: { type: ["string", "null"] }
+        recipientName: { type: ["string", "null"] }
+        subject: { type: string }
+        body: { type: ["string", "null"] }
+        noticeDate: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        deliveryMethod: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalNoticeInput:
+      type: object
+      required: [companyId, code, subject]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        noticeType: { type: string }
+        legalCaseId: { type: string }
+        legalContractId: { type: string }
+        recipientType: { type: string }
+        recipientId: { type: string }
+        recipientName: { type: string }
+        subject: { type: string }
+        body: { type: string }
+        noticeDate: { type: string }
+        dueDate: { type: string }
+        deliveryMethod: { type: string }
+        status: { type: string }
+    LegalNoticeUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        noticeType: { type: string }
+        legalCaseId: { type: string }
+        legalContractId: { type: string }
+        recipientType: { type: string }
+        recipientId: { type: string }
+        recipientName: { type: string }
+        subject: { type: string }
+        body: { type: string }
+        noticeDate: { type: string }
+        dueDate: { type: string }
+        deliveryMethod: { type: string }
+        status: { type: string }
+    LegalNoticeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalNotice" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LegalCaseLink:
+      type: object
+      required: [id, companyId, linkedModule, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        legalCaseId: { type: ["string", "null"] }
+        linkedModule: { type: string }
+        linkedId: { type: ["string", "null"] }
+        linkedName: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LegalCaseLinkInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        legalCaseId: { type: string }
+        linkedModule: { type: string }
+        linkedId: { type: string }
+        linkedName: { type: string }
+        notes: { type: string }
+    LegalCaseLinkUpdate:
+      type: object
+      properties:
+        legalCaseId: { type: string }
+        linkedModule: { type: string }
+        linkedId: { type: string }
+        linkedName: { type: string }
+        notes: { type: string }
+    LegalCaseLinkListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LegalCaseLink" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LegalContractSuspendInput:
+      type: object
+      properties:
+        reason: { type: string }
+    LegalContractTerminateInput:
+      type: object
+      properties:
+        terminationReason: { type: string }
+    LegalContractRenewInput:
+      type: object
+      properties:
+        renewalDate: { type: string }
+        expiryDate: { type: string }
+    LegalCaseCloseInput:
+      type: object
+      properties:
+        outcome: { type: string }
+        outcomeAmount: { type: string }
+
+    LegalGroupCount:
+      type: object
+      required: [key, count]
+      properties:
+        key: { type: ["string", "null"] }
+        count: { type: integer }
+    LegalDashboard:
+      type: object
+      required: [contractsCount, activeContracts, expiringSoon, casesCount, openCases, pendingNotices, totalClaimAmount]
+      properties:
+        contractsCount: { type: integer }
+        activeContracts: { type: integer }
+        expiringSoon: { type: integer }
+        casesCount: { type: integer }
+        openCases: { type: integer }
+        pendingNotices: { type: integer }
+        totalClaimAmount: { type: string }
+        contractsByStatus:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        contractsByType:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        contractsBySource:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        casesByStatus:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+    LegalContractReport:
+      type: object
+      required: [total, expiringSoon, expired]
+      properties:
+        total: { type: integer }
+        expiringSoon: { type: integer }
+        expired: { type: integer }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        byType:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        bySource:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+    LegalLitigationReport:
+      type: object
+      required: [total, totalClaimAmount]
+      properties:
+        total: { type: integer }
+        totalClaimAmount: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        byType:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+    LegalClaimReport:
+      type: object
+      required: [total, totalAmount]
+      properties:
+        total: { type: integer }
+        totalAmount: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        byType:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+    LegalAdvisorReport:
+      type: object
+      required: [totalCases]
+      properties:
+        totalCases: { type: integer }
+        byAdvisor:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+        byLawFirm:
+          type: array
+          items: { $ref: "#/components/schemas/LegalGroupCount" }
+
+    # <<< LEGAL SCHEMAS (generated) <<<

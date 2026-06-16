@@ -1,0 +1,617 @@
+import { Router, type IRouter } from "express";
+import { and, eq, ilike, or, sql, desc, gte, lte, type SQL } from "drizzle-orm";
+import {
+  db,
+  legalContractsTable,
+  contractTemplatesTable,
+  contractVersionsTable,
+  legalContractAmendmentsTable,
+  contractAddendumsTable,
+  legalContractAttachmentsTable,
+  contractEventsTable,
+  lawFirmsTable,
+  legalAdvisorsTable,
+  legalCasesTable,
+  legalHearingsTable,
+  legalClaimsTable,
+  legalNoticesTable,
+  legalCaseLinksTable,
+} from "@workspace/db";
+import {
+  CreateLegalContractBody, UpdateLegalContractBody, ListLegalContractsResponse,
+  CreateContractTemplateBody, UpdateContractTemplateBody, ListContractTemplatesResponse,
+  CreateContractVersionBody, UpdateContractVersionBody, ListContractVersionsResponse,
+  CreateLegalContractAmendmentBody, UpdateLegalContractAmendmentBody, ListLegalContractAmendmentsResponse,
+  CreateContractAddendumBody, UpdateContractAddendumBody, ListContractAddendumsResponse,
+  CreateLegalContractAttachmentBody, UpdateLegalContractAttachmentBody, ListLegalContractAttachmentsResponse,
+  CreateContractEventBody, UpdateContractEventBody, ListContractEventsResponse,
+  CreateLawFirmBody, UpdateLawFirmBody, ListLawFirmsResponse,
+  CreateLegalAdvisorBody, UpdateLegalAdvisorBody, ListLegalAdvisorsResponse,
+  CreateLegalCaseBody, UpdateLegalCaseBody, ListLegalCasesResponse,
+  CreateLegalHearingBody, UpdateLegalHearingBody, ListLegalHearingsResponse,
+  CreateLegalClaimBody, UpdateLegalClaimBody, ListLegalClaimsResponse,
+  CreateLegalNoticeBody, UpdateLegalNoticeBody, ListLegalNoticesResponse,
+  CreateLegalCaseLinkBody, UpdateLegalCaseLinkBody, ListLegalCaseLinksResponse,
+  SuspendLegalContractBody, TerminateLegalContractBody, RenewLegalContractBody, CloseLegalCaseBody,
+} from "@workspace/api-zod";
+import { serializeRow, pageParams, qStr } from "../lib/serialize";
+import { recordAudit } from "../lib/audit";
+import { requireAuth, requirePermission } from "../middleware/auth";
+import { PostingError, type Tx } from "../lib/posting";
+
+const router: IRouter = Router();
+router.use(requireAuth);
+
+interface CrudConfig {
+  path: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  table: any;
+  module: string;
+  entity: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  createBody: { safeParse(v: unknown): any };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateBody: { safeParse(v: unknown): any };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  listResponse: { parse(v: unknown): any };
+  search: string[];
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function registerCrud(cfg: CrudConfig): void {
+  const t = cfg.table;
+
+  router.get(`/${cfg.path}`, requirePermission(`${cfg.module}.view`), async (req, res): Promise<void> => {
+    const query = req.query as Record<string, unknown>;
+    const { page, pageSize, offset } = pageParams(query);
+    const search = qStr(query, "search");
+    const companyId = qStr(query, "companyId");
+    const conds: SQL[] = [eq(t.isDeleted, false)];
+    if (companyId) conds.push(eq(t.companyId, companyId));
+    if (search && cfg.search.length) {
+      const like = `%${search}%`;
+      const ors = cfg.search.map((c) => ilike(t[c], like));
+      const combined = or(...ors);
+      if (combined) conds.push(combined);
+    }
+    const where = and(...conds);
+    const rows = (await db
+      .select()
+      .from(t)
+      .where(where)
+      .orderBy(desc(t.createdAt))
+      .limit(pageSize)
+      .offset(offset)) as Record<string, unknown>[];
+    const countRows = (await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(t)
+      .where(where)) as { count: number }[];
+    const count = countRows[0].count;
+    res.json(cfg.listResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+  });
+
+  router.post(`/${cfg.path}`, requirePermission(`${cfg.module}.create`), async (req, res): Promise<void> => {
+    const parsed = cfg.createBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
+    const data = parsed.data as Record<string, unknown>;
+    const inserted = (await db.insert(t).values(data).returning()) as Record<string, unknown>[];
+    const row = inserted[0];
+    await recordAudit(req, { action: "create", entity: cfg.entity, entityId: row.id as string, newValue: row });
+    res.status(201).json(serializeRow(row));
+  });
+
+  router.get(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.view`), async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const rows = (await db
+      .select()
+      .from(t)
+      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
+    const row = rows[0];
+    if (!row) {
+      res.status(404).json({ error: `${cfg.entity} not found` });
+      return;
+    }
+    res.json(serializeRow(row));
+  });
+
+  router.patch(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.update`), async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = cfg.updateBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
+    const existingRows = (await db
+      .select()
+      .from(t)
+      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
+    const existing = existingRows[0];
+    if (!existing) {
+      res.status(404).json({ error: `${cfg.entity} not found` });
+      return;
+    }
+    const update: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(parsed.data as Record<string, unknown>)) {
+      if (v !== undefined) update[k] = v;
+    }
+    let row = existing;
+    if (Object.keys(update).length) {
+      const updated = (await db.update(t).set(update).where(eq(t.id, id)).returning()) as Record<string, unknown>[];
+      row = updated[0];
+    }
+    await recordAudit(req, { action: "update", entity: cfg.entity, entityId: id, oldValue: existing, newValue: row });
+    res.json(serializeRow(row));
+  });
+
+  router.delete(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.delete`), async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const existingRows = (await db
+      .select()
+      .from(t)
+      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
+    const existing = existingRows[0];
+    if (!existing) {
+      res.status(404).json({ error: `${cfg.entity} not found` });
+      return;
+    }
+    await db.update(t).set({ isDeleted: true, isActive: false }).where(eq(t.id, id));
+    await recordAudit(req, { action: "delete", entity: cfg.entity, entityId: id, oldValue: existing });
+    res.json({ success: true });
+  });
+}
+
+const resources: CrudConfig[] = [
+  { path: "legal-contracts", table: legalContractsTable, module: "legalContracts", entity: "legalContract",
+    createBody: CreateLegalContractBody, updateBody: UpdateLegalContractBody, listResponse: ListLegalContractsResponse,
+    search: ["code", "title", "titleAr", "counterpartyName"] },
+  { path: "contract-templates", table: contractTemplatesTable, module: "contractTemplates", entity: "contractTemplate",
+    createBody: CreateContractTemplateBody, updateBody: UpdateContractTemplateBody, listResponse: ListContractTemplatesResponse,
+    search: ["code", "name", "nameAr"] },
+  { path: "contract-versions", table: contractVersionsTable, module: "contractVersions", entity: "contractVersion",
+    createBody: CreateContractVersionBody, updateBody: UpdateContractVersionBody, listResponse: ListContractVersionsResponse,
+    search: ["changeSummary"] },
+  { path: "legal-contract-amendments", table: legalContractAmendmentsTable, module: "legalContractAmendments", entity: "legalContractAmendment",
+    createBody: CreateLegalContractAmendmentBody, updateBody: UpdateLegalContractAmendmentBody, listResponse: ListLegalContractAmendmentsResponse,
+    search: ["code", "description", "descriptionAr"] },
+  { path: "contract-addendums", table: contractAddendumsTable, module: "contractAddendums", entity: "contractAddendum",
+    createBody: CreateContractAddendumBody, updateBody: UpdateContractAddendumBody, listResponse: ListContractAddendumsResponse,
+    search: ["code", "title"] },
+  { path: "legal-contract-attachments", table: legalContractAttachmentsTable, module: "legalContractAttachments", entity: "legalContractAttachment",
+    createBody: CreateLegalContractAttachmentBody, updateBody: UpdateLegalContractAttachmentBody, listResponse: ListLegalContractAttachmentsResponse,
+    search: ["title", "documentType"] },
+  { path: "contract-events", table: contractEventsTable, module: "contractEvents", entity: "contractEvent",
+    createBody: CreateContractEventBody, updateBody: UpdateContractEventBody, listResponse: ListContractEventsResponse,
+    search: ["eventType", "description"] },
+  { path: "law-firms", table: lawFirmsTable, module: "lawFirms", entity: "lawFirm",
+    createBody: CreateLawFirmBody, updateBody: UpdateLawFirmBody, listResponse: ListLawFirmsResponse,
+    search: ["code", "name", "nameAr", "contactPerson"] },
+  { path: "legal-advisors", table: legalAdvisorsTable, module: "legalAdvisors", entity: "legalAdvisor",
+    createBody: CreateLegalAdvisorBody, updateBody: UpdateLegalAdvisorBody, listResponse: ListLegalAdvisorsResponse,
+    search: ["code", "name", "nameAr", "specialization"] },
+  { path: "legal-cases", table: legalCasesTable, module: "legalCases", entity: "legalCase",
+    createBody: CreateLegalCaseBody, updateBody: UpdateLegalCaseBody, listResponse: ListLegalCasesResponse,
+    search: ["code", "title", "titleAr", "courtCaseNumber", "opponentName"] },
+  { path: "legal-hearings", table: legalHearingsTable, module: "legalHearings", entity: "legalHearing",
+    createBody: CreateLegalHearingBody, updateBody: UpdateLegalHearingBody, listResponse: ListLegalHearingsResponse,
+    search: ["code", "location", "summary"] },
+  { path: "legal-claims", table: legalClaimsTable, module: "legalClaims", entity: "legalClaim",
+    createBody: CreateLegalClaimBody, updateBody: UpdateLegalClaimBody, listResponse: ListLegalClaimsResponse,
+    search: ["code", "description"] },
+  { path: "legal-notices", table: legalNoticesTable, module: "legalNotices", entity: "legalNotice",
+    createBody: CreateLegalNoticeBody, updateBody: UpdateLegalNoticeBody, listResponse: ListLegalNoticesResponse,
+    search: ["code", "subject", "recipientName"] },
+  { path: "legal-case-links", table: legalCaseLinksTable, module: "legalCaseLinks", entity: "legalCaseLink",
+    createBody: CreateLegalCaseLinkBody, updateBody: UpdateLegalCaseLinkBody, listResponse: ListLegalCaseLinksResponse,
+    search: ["linkedName", "notes"] },
+];
+
+for (const cfg of resources) registerCrud(cfg);
+
+/* ------------------------------------------------------------------ */
+/* Lifecycle action helpers                                            */
+/* ------------------------------------------------------------------ */
+
+function mapPostingError(res: import("express").Response, err: unknown): boolean {
+  if (err instanceof PostingError) {
+    res.status(err.status).json({ error: err.message });
+    return true;
+  }
+  return false;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function loadForUpdate(tx: Tx, table: any, id: string): Promise<Record<string, unknown> | null> {
+  const rows = (await tx
+    .select()
+    .from(table)
+    .where(and(eq(table.id, id), eq(table.isDeleted, false)))
+    .for("update")) as Record<string, unknown>[];
+  return rows[0] ?? null;
+}
+
+async function logContractEvent(
+  tx: Tx,
+  args: { companyId: string; legalContractId: string; eventType: string; description: string; performedBy: string | null },
+): Promise<void> {
+  await tx.insert(contractEventsTable).values({
+    companyId: args.companyId,
+    legalContractId: args.legalContractId,
+    eventType: args.eventType,
+    description: args.description,
+    performedBy: args.performedBy,
+  });
+}
+
+/* ----------------------------- Legal contracts ------------------------- */
+
+router.post("/legal-contracts/:id/review", requirePermission("legalContracts.review"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status !== "draft") throw new PostingError(409, "Only a draft contract can be moved to review");
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set({ status: "under_review", reviewedBy: userId, reviewedAt: new Date() })
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "review", description: "Contract moved to review", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "review", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.post("/legal-contracts/:id/approve", requirePermission("legalContracts.approve"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status !== "draft" && c.status !== "under_review") throw new PostingError(409, "Only a draft or under-review contract can be approved");
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set({ status: "approved", approvedBy: userId, approvedAt: new Date() })
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "approve", description: "Contract approved", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "approve", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.post("/legal-contracts/:id/activate", requirePermission("legalContracts.activate"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status !== "approved" && c.status !== "suspended") throw new PostingError(409, "Only an approved or suspended contract can be activated");
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set({ status: "active", activatedAt: new Date() })
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "activate", description: "Contract activated", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "activate", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.post("/legal-contracts/:id/suspend", requirePermission("legalContracts.suspend"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  const parsed = SuspendLegalContractBody.safeParse(req.body ?? {});
+  const reason = parsed.success ? (parsed.data.reason ?? null) : null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status !== "active") throw new PostingError(409, "Only an active contract can be suspended");
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set({ status: "suspended", suspendedAt: new Date() })
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "suspend", description: reason ? `Contract suspended: ${reason}` : "Contract suspended", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "suspend", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.post("/legal-contracts/:id/terminate", requirePermission("legalContracts.terminate"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  const parsed = TerminateLegalContractBody.safeParse(req.body ?? {});
+  const reason = parsed.success ? (parsed.data.terminationReason ?? null) : null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status === "terminated" || c.status === "cancelled") throw new PostingError(409, "Contract is already terminated or cancelled");
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set({ status: "terminated", terminatedAt: new Date(), terminationReason: reason })
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "terminate", description: reason ? `Contract terminated: ${reason}` : "Contract terminated", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "terminate", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.post("/legal-contracts/:id/renew", requirePermission("legalContracts.renew"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  const parsed = RenewLegalContractBody.safeParse(req.body ?? {});
+  const renewalDate = parsed.success ? (parsed.data.renewalDate ?? today()) : today();
+  const expiryDate = parsed.success ? (parsed.data.expiryDate ?? null) : null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status !== "active" && c.status !== "expired") throw new PostingError(409, "Only an active or expired contract can be renewed");
+      const set: Record<string, unknown> = { status: "active", renewalDate };
+      if (expiryDate) set.expiryDate = expiryDate;
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set(set)
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "renew", description: "Contract renewed", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "renew", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+/* ----------------------------- Legal cases ----------------------------- */
+
+router.post("/legal-cases/:id/close", requirePermission("legalCases.close"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  const parsed = CloseLegalCaseBody.safeParse(req.body ?? {});
+  const outcome = parsed.success ? (parsed.data.outcome ?? null) : null;
+  const outcomeAmount = parsed.success ? (parsed.data.outcomeAmount ?? null) : null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalCasesTable, id);
+      if (!c) return null;
+      if (c.status === "closed") throw new PostingError(409, "Case is already closed");
+      const set: Record<string, unknown> = { status: "closed", closedAt: new Date() };
+      if (outcome) set.outcome = outcome;
+      if (outcomeAmount) set.outcomeAmount = outcomeAmount;
+      const [updated] = await tx
+        .update(legalCasesTable)
+        .set(set)
+        .where(eq(legalCasesTable.id, id))
+        .returning();
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalCase not found" }); return; }
+    await recordAudit(req, { action: "close", entity: "legalCase", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.post("/legal-cases/:id/reopen", requirePermission("legalCases.reopen"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalCasesTable, id);
+      if (!c) return null;
+      if (c.status !== "closed") throw new PostingError(409, "Only a closed case can be reopened");
+      const [updated] = await tx
+        .update(legalCasesTable)
+        .set({ status: "in_progress", closedAt: null })
+        .where(eq(legalCasesTable.id, id))
+        .returning();
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalCase not found" }); return; }
+    await recordAudit(req, { action: "reopen", entity: "legalCase", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+/* ----------------------------- Legal notices --------------------------- */
+
+router.post("/legal-notices/:id/send", requirePermission("legalNotices.send"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const n = await loadForUpdate(tx, legalNoticesTable, id);
+      if (!n) return null;
+      if (n.status !== "draft") throw new PostingError(409, "Only a draft notice can be sent");
+      const [updated] = await tx
+        .update(legalNoticesTable)
+        .set({ status: "sent" })
+        .where(eq(legalNoticesTable.id, id))
+        .returning();
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalNotice not found" }); return; }
+    await recordAudit(req, { action: "send", entity: "legalNotice", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+/* ------------------------------------------------------------------ */
+/* Legal dashboard + reports                                          */
+/* ------------------------------------------------------------------ */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function companyCond(t: any, companyId: string | undefined): SQL | undefined {
+  return companyId ? eq(t.companyId, companyId) : undefined;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function countWhere(t: any, companyId: string | undefined, extra?: SQL): Promise<number> {
+  const conds: SQL[] = [eq(t.isDeleted, false)];
+  const c = companyCond(t, companyId);
+  if (c) conds.push(c);
+  if (extra) conds.push(extra);
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(t).where(and(...conds));
+  return count;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function sumWhere(t: any, col: any, companyId: string | undefined, extra?: SQL): Promise<string> {
+  const conds: SQL[] = [eq(t.isDeleted, false)];
+  const c = companyCond(t, companyId);
+  if (c) conds.push(c);
+  if (extra) conds.push(extra);
+  const [{ total }] = await db.select({ total: sql<string>`coalesce(sum(${col}), 0)::text` }).from(t).where(and(...conds));
+  return total;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function groupCount(t: any, col: any, companyId: string | undefined): Promise<{ key: string | null; count: number }[]> {
+  const conds: SQL[] = [eq(t.isDeleted, false)];
+  const c = companyCond(t, companyId);
+  if (c) conds.push(c);
+  const rows = await db
+    .select({ key: col, count: sql<number>`count(*)::int` })
+    .from(t)
+    .where(and(...conds))
+    .groupBy(col);
+  return rows as { key: string | null; count: number }[];
+}
+
+const expiringSoonCond = sql`${legalContractsTable.expiryDate} is not null and ${legalContractsTable.expiryDate} >= current_date and ${legalContractsTable.expiryDate} <= current_date + interval '30 days'` as SQL;
+const expiredCond = sql`(${legalContractsTable.status} = 'expired') or (${legalContractsTable.expiryDate} is not null and ${legalContractsTable.expiryDate} < current_date)` as SQL;
+const openCaseCond = sql`${legalCasesTable.status} not in ('closed', 'won', 'lost', 'settled')` as SQL;
+
+router.get("/legal/dashboard", async (req, res): Promise<void> => {
+  const companyId = qStr(req.query as Record<string, unknown>, "companyId");
+  const [contractsCount, activeContracts, expiringSoon, casesCount, openCases, pendingNotices] = await Promise.all([
+    countWhere(legalContractsTable, companyId),
+    countWhere(legalContractsTable, companyId, eq(legalContractsTable.status, "active")),
+    countWhere(legalContractsTable, companyId, expiringSoonCond),
+    countWhere(legalCasesTable, companyId),
+    countWhere(legalCasesTable, companyId, openCaseCond),
+    countWhere(legalNoticesTable, companyId, eq(legalNoticesTable.status, "draft")),
+  ]);
+  const totalClaimAmount = await sumWhere(legalClaimsTable, legalClaimsTable.amount, companyId);
+  const [contractsByStatus, contractsByType, contractsBySource, casesByStatus] = await Promise.all([
+    groupCount(legalContractsTable, legalContractsTable.status, companyId),
+    groupCount(legalContractsTable, legalContractsTable.contractType, companyId),
+    groupCount(legalContractsTable, legalContractsTable.sourceModule, companyId),
+    groupCount(legalCasesTable, legalCasesTable.status, companyId),
+  ]);
+  res.json({
+    contractsCount,
+    activeContracts,
+    expiringSoon,
+    casesCount,
+    openCases,
+    pendingNotices,
+    totalClaimAmount,
+    contractsByStatus,
+    contractsByType,
+    contractsBySource,
+    casesByStatus,
+  });
+});
+
+router.get("/legal/reports/contracts", async (req, res): Promise<void> => {
+  const companyId = qStr(req.query as Record<string, unknown>, "companyId");
+  const [total, expiringSoon, expired, byStatus, byType, bySource] = await Promise.all([
+    countWhere(legalContractsTable, companyId),
+    countWhere(legalContractsTable, companyId, expiringSoonCond),
+    countWhere(legalContractsTable, companyId, expiredCond),
+    groupCount(legalContractsTable, legalContractsTable.status, companyId),
+    groupCount(legalContractsTable, legalContractsTable.contractType, companyId),
+    groupCount(legalContractsTable, legalContractsTable.sourceModule, companyId),
+  ]);
+  res.json({ total, expiringSoon, expired, byStatus, byType, bySource });
+});
+
+router.get("/legal/reports/litigation", async (req, res): Promise<void> => {
+  const companyId = qStr(req.query as Record<string, unknown>, "companyId");
+  const [total, totalClaimAmount, byStatus, byType] = await Promise.all([
+    countWhere(legalCasesTable, companyId),
+    sumWhere(legalCasesTable, legalCasesTable.claimAmount, companyId),
+    groupCount(legalCasesTable, legalCasesTable.status, companyId),
+    groupCount(legalCasesTable, legalCasesTable.caseType, companyId),
+  ]);
+  res.json({ total, totalClaimAmount, byStatus, byType });
+});
+
+router.get("/legal/reports/claims", async (req, res): Promise<void> => {
+  const companyId = qStr(req.query as Record<string, unknown>, "companyId");
+  const [total, totalAmount, byStatus, byType] = await Promise.all([
+    countWhere(legalClaimsTable, companyId),
+    sumWhere(legalClaimsTable, legalClaimsTable.amount, companyId),
+    groupCount(legalClaimsTable, legalClaimsTable.status, companyId),
+    groupCount(legalClaimsTable, legalClaimsTable.claimType, companyId),
+  ]);
+  res.json({ total, totalAmount, byStatus, byType });
+});
+
+router.get("/legal/reports/advisors", async (req, res): Promise<void> => {
+  const companyId = qStr(req.query as Record<string, unknown>, "companyId");
+  const [totalCases, byAdvisor, byLawFirm] = await Promise.all([
+    countWhere(legalCasesTable, companyId),
+    groupCount(legalCasesTable, legalCasesTable.advisorId, companyId),
+    groupCount(legalCasesTable, legalCasesTable.lawFirmId, companyId),
+  ]);
+  res.json({ totalCases, byAdvisor, byLawFirm });
+});
+
+export default router;

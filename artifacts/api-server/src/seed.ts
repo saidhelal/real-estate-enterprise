@@ -49,6 +49,16 @@ import {
   leaveBalancesTable,
   salaryComponentsTable,
   payrollPeriodsTable,
+  contractorContractsTable,
+  purchaseContractsTable,
+  legalContractsTable,
+  contractTemplatesTable,
+  lawFirmsTable,
+  legalAdvisorsTable,
+  legalCasesTable,
+  legalHearingsTable,
+  legalClaimsTable,
+  legalNoticesTable,
 } from "@workspace/db";
 import { hashPassword } from "./lib/auth";
 
@@ -246,6 +256,22 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "kpiTemplates", label: "KPI Templates" },
   { module: "employeeEvaluations", label: "Employee Evaluations" },
   { module: "employeeEvaluationLines", label: "Employee Evaluation Lines" },
+  // Legal Affairs — Contract Governance
+  { module: "legalContracts", label: "Legal Contracts", extraActions: ["review", "approve", "activate", "suspend", "terminate", "renew"] },
+  { module: "contractTemplates", label: "Contract Templates" },
+  { module: "contractVersions", label: "Contract Versions" },
+  { module: "legalContractAmendments", label: "Legal Contract Amendments" },
+  { module: "contractAddendums", label: "Contract Addendums" },
+  { module: "legalContractAttachments", label: "Contract Attachments" },
+  { module: "contractEvents", label: "Contract Events" },
+  // Legal Affairs — Litigation & Advisory
+  { module: "lawFirms", label: "Law Firms" },
+  { module: "legalAdvisors", label: "Legal Advisors" },
+  { module: "legalCases", label: "Legal Cases", extraActions: ["close", "reopen"] },
+  { module: "legalHearings", label: "Legal Hearings" },
+  { module: "legalClaims", label: "Legal Claims" },
+  { module: "legalNotices", label: "Legal Notices", extraActions: ["send"] },
+  { module: "legalCaseLinks", label: "Legal Case Links" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 
@@ -407,6 +433,11 @@ async function seedNumberSequences(): Promise<void> {
       { documentType: "Leave Request", prefix: "LV", padding: 5, resetYearly: true },
       { documentType: "Employee Loan", prefix: "LOAN", padding: 5, resetYearly: false },
       { documentType: "Employee Advance", prefix: "ADV", padding: 5, resetYearly: false },
+      { documentType: "Legal Contract", prefix: "LGC", padding: 5, resetYearly: false },
+      { documentType: "Legal Case", prefix: "CASE", padding: 5, resetYearly: true },
+      { documentType: "Legal Claim", prefix: "CLM", padding: 5, resetYearly: true },
+      { documentType: "Legal Notice", prefix: "NOT", padding: 5, resetYearly: true },
+      { documentType: "Legal Hearing", prefix: "HRG", padding: 5, resetYearly: true },
     ])
     .onConflictDoNothing();
   console.log("Seeded document number sequences");
@@ -810,6 +841,7 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["payroll.deductions", "5020", "2060", "Payroll: employee deductions payable"],
   ["loan.disbursement", "1070", "1020", "Employee loan disbursed from bank"],
   ["advance.payment", "1080", "1010", "Employee advance paid in cash"],
+  ["legal.fees", "5030", "1010", "Legal fees expense paid in cash"],
 ];
 
 const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -1069,6 +1101,199 @@ async function seedHr(): Promise<void> {
   console.log(`Seeded HR: ${deptDefs.length} departments, ${empDefs.length} employees, ${leaveTypeDefs.length} leave types, ${componentDefs.length} salary components`);
 }
 
+function mapLegalStatus(s: string | null | undefined): string {
+  const v = (s ?? "").toLowerCase();
+  if (["cancelled", "canceled"].includes(v)) return "cancelled";
+  if (["terminated"].includes(v)) return "terminated";
+  if (["draft", "pending"].includes(v)) return "draft";
+  return "active";
+}
+
+// Idempotently registers every existing sales/construction/procurement contract
+// into the legal_contracts master registry (keyed by sourceModule + sourceId)
+// and sets the nullable back-link on the source row. Never mutates financial
+// fields or FKs on the source contracts, so accounting/installments/AR-AP are
+// untouched. Returns per-module counts for the validation report.
+async function backfillLegalContracts(): Promise<Record<string, { total: number; created: number }>> {
+  const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
+  if (!company) {
+    console.log("No sample company found, skipping legal contract backfill");
+    return {};
+  }
+  const result: Record<string, { total: number; created: number }> = {};
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function run(module: string, sourceTable: any, map: (row: any) => Record<string, unknown>): Promise<void> {
+    const rows = (await db.select().from(sourceTable).where(eq(sourceTable.isDeleted, false))) as Record<string, unknown>[];
+    const existing = (await db
+      .select({ sourceId: legalContractsTable.sourceId })
+      .from(legalContractsTable)
+      .where(and(eq(legalContractsTable.sourceModule, module), eq(legalContractsTable.isDeleted, false)))) as { sourceId: string | null }[];
+    const registered = new Set(existing.map((e) => e.sourceId).filter(Boolean) as string[]);
+    let created = 0;
+    for (const row of rows) {
+      const sourceId = row.id as string;
+      if (registered.has(sourceId)) continue;
+      const [inserted] = await db.insert(legalContractsTable).values(map(row) as typeof legalContractsTable.$inferInsert).returning();
+      // Set the back-link only when still null (preserve any existing reference).
+      if (row.legalContractId == null) {
+        await db.update(sourceTable).set({ legalContractId: inserted.id }).where(eq(sourceTable.id, sourceId));
+      }
+      created += 1;
+    }
+    result[module] = { total: rows.length, created };
+  }
+
+  await run("sales", contractsTable, (row) => ({
+    companyId: row.companyId,
+    branchId: row.branchId ?? null,
+    code: `SLC-${row.code}`,
+    title: String(row.code),
+    contractType: "sales",
+    sourceModule: "sales",
+    sourceId: row.id,
+    counterpartyType: "customer",
+    counterpartyId: row.customerId ?? null,
+    status: mapLegalStatus(row.status as string),
+    contractDate: row.contractDate ?? null,
+    value: String(row.totalPrice ?? "0"),
+  }));
+
+  await run("construction", contractorContractsTable, (row) => ({
+    companyId: row.companyId,
+    code: `CTC-${row.code}`,
+    title: String(row.title ?? row.code),
+    titleAr: row.titleAr ?? null,
+    contractType: "construction",
+    sourceModule: "construction",
+    sourceId: row.id,
+    counterpartyType: "contractor",
+    counterpartyId: row.contractorId ?? null,
+    status: mapLegalStatus(row.status as string),
+    contractDate: row.startDate ?? null,
+    effectiveDate: row.startDate ?? null,
+    expiryDate: row.endDate ?? null,
+    value: String(row.contractValue ?? "0"),
+    description: row.description ?? null,
+  }));
+
+  await run("procurement", purchaseContractsTable, (row) => ({
+    companyId: row.companyId,
+    code: `PRC-${row.code}`,
+    title: String(row.title ?? row.code),
+    titleAr: row.titleAr ?? null,
+    contractType: "procurement",
+    sourceModule: "procurement",
+    sourceId: row.id,
+    counterpartyType: "supplier",
+    counterpartyId: row.supplierId ?? null,
+    status: mapLegalStatus(row.status as string),
+    contractDate: row.startDate ?? null,
+    effectiveDate: row.startDate ?? null,
+    expiryDate: row.endDate ?? null,
+    value: String(row.contractValue ?? "0"),
+    description: row.description ?? null,
+  }));
+
+  const summary = Object.entries(result)
+    .map(([m, c]) => `${m}: ${c.created}/${c.total} registered`)
+    .join(", ");
+  console.log(`Legal backfill — ${summary || "nothing to register"}`);
+  return result;
+}
+
+async function seedLegal(): Promise<void> {
+  const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
+  if (!company) {
+    console.log("No sample company found, skipping legal demo data");
+    return;
+  }
+  const companyId = company.id;
+
+  const [existingFirm] = await db.select().from(lawFirmsTable).where(eq(lawFirmsTable.code, "LF001"));
+  if (existingFirm) {
+    console.log("Legal demo data already exists, skipping");
+    return;
+  }
+
+  await db.insert(contractTemplatesTable).values([
+    { companyId, code: "TPL-NDA", name: "Non-Disclosure Agreement", nameAr: "اتفاقية عدم الإفصاح", contractType: "legal", description: "Standard NDA template" },
+    { companyId, code: "TPL-SVC", name: "Service Agreement", nameAr: "اتفاقية خدمات", contractType: "legal", description: "Standard service agreement template" },
+  ]);
+
+  const [firm] = await db
+    .insert(lawFirmsTable)
+    .values({ companyId, code: "LF001", name: "Al Adala Law Firm", nameAr: "مكتب العدالة للمحاماة", contactPerson: "Khalid Al Otaibi", phone: "+966500001111", email: "info@aladala.local", specialization: "Commercial & Real Estate" })
+    .returning();
+
+  const [advisor] = await db
+    .insert(legalAdvisorsTable)
+    .values({ companyId, code: "ADV001", name: "Sara Al Harbi", nameAr: "سارة الحربي", advisorType: "external", lawFirmId: firm.id, phone: "+966500002222", email: "sara@aladala.local", specialization: "Litigation", barNumber: "BAR-2099" })
+    .returning();
+
+  const [legalCase] = await db
+    .insert(legalCasesTable)
+    .values({
+      companyId,
+      code: "CASE-00001",
+      title: "Contract dispute — Tower A supplier",
+      titleAr: "نزاع تعاقدي — مورد البرج أ",
+      caseType: "commercial",
+      role: "plaintiff",
+      status: "in_progress",
+      courtName: "Riyadh Commercial Court",
+      courtCaseNumber: "RC-2026-1456",
+      filingDate: `${new Date().getUTCFullYear()}-02-10`,
+      opponentName: "Falcon Supplies Co.",
+      claimAmount: "250000",
+      advisorId: advisor.id,
+      lawFirmId: firm.id,
+      description: "Dispute over undelivered materials under purchase contract.",
+    })
+    .returning();
+
+  await db.insert(legalHearingsTable).values({
+    companyId,
+    legalCaseId: legalCase.id,
+    code: "HRG-00001",
+    hearingDate: `${new Date().getUTCFullYear()}-03-15`,
+    hearingTime: "10:00",
+    location: "Riyadh Commercial Court",
+    courtRoom: "Room 3",
+    status: "scheduled",
+    summary: "First hearing — submission of evidence.",
+  });
+
+  await db.insert(legalClaimsTable).values({
+    companyId,
+    legalCaseId: legalCase.id,
+    code: "CLM-00001",
+    claimType: "financial",
+    direction: "by_company",
+    amount: "250000",
+    status: "submitted",
+    claimDate: `${new Date().getUTCFullYear()}-02-10`,
+    description: "Recovery of advance payment for undelivered materials.",
+  });
+
+  await db.insert(legalNoticesTable).values({
+    companyId,
+    code: "NOT-00001",
+    noticeType: "demand",
+    legalCaseId: legalCase.id,
+    recipientType: "supplier",
+    recipientName: "Falcon Supplies Co.",
+    subject: "Demand for delivery or refund",
+    body: "Formal demand to deliver outstanding materials within 15 days or refund the advance.",
+    noticeDate: `${new Date().getUTCFullYear()}-01-20`,
+    dueDate: `${new Date().getUTCFullYear()}-02-04`,
+    deliveryMethod: "registered_mail",
+    status: "sent",
+  });
+
+  console.log("Seeded legal demo data: 2 templates, 1 law firm, 1 advisor, 1 case (+hearing, claim, notice)");
+}
+
 async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
@@ -1082,6 +1307,8 @@ async function main(): Promise<void> {
   await seedReservations();
   await seedAccounting();
   await seedHr();
+  await backfillLegalContracts();
+  await seedLegal();
   console.log("Seed complete.");
 }
 

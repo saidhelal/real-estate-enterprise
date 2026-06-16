@@ -61,6 +61,8 @@ export const contractorContractsTable = pgTable("contractor_contracts", {
   advancePercent: numeric("advance_percent"),
   status: text("status").notNull().default("draft"),
   description: text("description"),
+  // Non-breaking back-link to the Legal Affairs master contract registry.
+  legalContractId: uuid("legal_contract_id"),
   ...audit,
 });
 export type ContractorContractRow = typeof contractorContractsTable.$inferSelect;

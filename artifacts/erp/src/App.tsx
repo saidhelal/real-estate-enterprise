@@ -193,6 +193,22 @@ import EmployeeLoansPage from "@/pages/employee-loans";
 import EmployeeAdvancesPage from "@/pages/employee-advances";
 import KpiTemplatesPage from "@/pages/kpi-templates";
 import EmployeeEvaluationsPage from "@/pages/employee-evaluations";
+import LegalDashboardPage from "@/pages/legal-dashboard";
+import LegalContractsPage from "@/pages/legal-contracts";
+import ContractTemplatesPage from "@/pages/contract-templates";
+import ContractVersionsPage from "@/pages/contract-versions";
+import LegalContractAmendmentsPage from "@/pages/legal-contract-amendments";
+import ContractAddendumsPage from "@/pages/contract-addendums";
+import LegalContractAttachmentsPage from "@/pages/legal-contract-attachments";
+import ContractEventsPage from "@/pages/contract-events";
+import LawFirmsPage from "@/pages/law-firms";
+import LegalAdvisorsPage from "@/pages/legal-advisors";
+import LegalCasesPage from "@/pages/legal-cases";
+import LegalHearingsPage from "@/pages/legal-hearings";
+import LegalClaimsPage from "@/pages/legal-claims";
+import LegalNoticesPage from "@/pages/legal-notices";
+import LegalCaseLinksPage from "@/pages/legal-case-links";
+import LegalReportsPage from "@/pages/legal-reports";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -394,6 +410,22 @@ function Router() {
             <Route path="/kpi-templates" component={KpiTemplatesPage} />
             <Route path="/employee-evaluations" component={EmployeeEvaluationsPage} />
             <Route path="/hr-reports" component={HrReportsPage} />
+            <Route path="/legal-dashboard" component={LegalDashboardPage} />
+            <Route path="/legal-contracts" component={LegalContractsPage} />
+            <Route path="/contract-templates" component={ContractTemplatesPage} />
+            <Route path="/contract-versions" component={ContractVersionsPage} />
+            <Route path="/legal-contract-amendments" component={LegalContractAmendmentsPage} />
+            <Route path="/contract-addendums" component={ContractAddendumsPage} />
+            <Route path="/legal-contract-attachments" component={LegalContractAttachmentsPage} />
+            <Route path="/contract-events" component={ContractEventsPage} />
+            <Route path="/law-firms" component={LawFirmsPage} />
+            <Route path="/legal-advisors" component={LegalAdvisorsPage} />
+            <Route path="/legal-cases" component={LegalCasesPage} />
+            <Route path="/legal-hearings" component={LegalHearingsPage} />
+            <Route path="/legal-claims" component={LegalClaimsPage} />
+            <Route path="/legal-notices" component={LegalNoticesPage} />
+            <Route path="/legal-case-links" component={LegalCaseLinksPage} />
+            <Route path="/legal-reports" component={LegalReportsPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

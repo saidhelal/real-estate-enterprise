@@ -9062,6 +9062,963 @@ export interface LeaveRejectInput {
   rejectedReason?: string;
 }
 
+export interface LegalContract {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  title: string;
+  /** @nullable */
+  titleAr?: string | null;
+  contractType: string;
+  sourceModule: string;
+  /** @nullable */
+  sourceId?: string | null;
+  /** @nullable */
+  templateId?: string | null;
+  /** @nullable */
+  counterpartyType?: string | null;
+  /** @nullable */
+  counterpartyId?: string | null;
+  /** @nullable */
+  counterpartyName?: string | null;
+  status: string;
+  /** @nullable */
+  contractDate?: string | null;
+  /** @nullable */
+  effectiveDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  renewalDate?: string | null;
+  /** @nullable */
+  autoRenew?: boolean | null;
+  /** @nullable */
+  value?: string | null;
+  /** @nullable */
+  currencyId?: string | null;
+  /** @nullable */
+  governingLaw?: string | null;
+  /** @nullable */
+  responsibleEmployeeId?: string | null;
+  /** @nullable */
+  advisorId?: string | null;
+  /** @nullable */
+  currentVersion?: number | null;
+  /** @nullable */
+  reviewedBy?: string | null;
+  /** @nullable */
+  reviewedAt?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  activatedAt?: string | null;
+  /** @nullable */
+  suspendedAt?: string | null;
+  /** @nullable */
+  terminatedAt?: string | null;
+  /** @nullable */
+  terminationReason?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalContractInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  title: string;
+  titleAr?: string;
+  contractType?: string;
+  sourceModule?: string;
+  sourceId?: string;
+  templateId?: string;
+  counterpartyType?: string;
+  counterpartyId?: string;
+  counterpartyName?: string;
+  status?: string;
+  contractDate?: string;
+  effectiveDate?: string;
+  expiryDate?: string;
+  renewalDate?: string;
+  autoRenew?: boolean;
+  value?: string;
+  currencyId?: string;
+  governingLaw?: string;
+  responsibleEmployeeId?: string;
+  advisorId?: string;
+  currentVersion?: number;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  activatedAt?: string;
+  suspendedAt?: string;
+  terminatedAt?: string;
+  terminationReason?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface LegalContractUpdate {
+  branchId?: string;
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  contractType?: string;
+  sourceModule?: string;
+  sourceId?: string;
+  templateId?: string;
+  counterpartyType?: string;
+  counterpartyId?: string;
+  counterpartyName?: string;
+  status?: string;
+  contractDate?: string;
+  effectiveDate?: string;
+  expiryDate?: string;
+  renewalDate?: string;
+  autoRenew?: boolean;
+  value?: string;
+  currencyId?: string;
+  governingLaw?: string;
+  responsibleEmployeeId?: string;
+  advisorId?: string;
+  currentVersion?: number;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  activatedAt?: string;
+  suspendedAt?: string;
+  terminatedAt?: string;
+  terminationReason?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface LegalContractListResponse {
+  data: LegalContract[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractTemplate {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  contractType: string;
+  /** @nullable */
+  content?: string | null;
+  /** @nullable */
+  contentAr?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractTemplateInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  contractType?: string;
+  content?: string;
+  contentAr?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ContractTemplateUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  contractType?: string;
+  content?: string;
+  contentAr?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ContractTemplateListResponse {
+  data: ContractTemplate[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractVersion {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  versionNumber?: number | null;
+  /** @nullable */
+  content?: string | null;
+  /** @nullable */
+  changeSummary?: string | null;
+  /** @nullable */
+  createdByEmployeeId?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractVersionInput {
+  companyId: string;
+  legalContractId?: string;
+  versionNumber?: number;
+  content?: string;
+  changeSummary?: string;
+  createdByEmployeeId?: string;
+  status?: string;
+}
+
+export interface ContractVersionUpdate {
+  legalContractId?: string;
+  versionNumber?: number;
+  content?: string;
+  changeSummary?: string;
+  createdByEmployeeId?: string;
+  status?: string;
+}
+
+export interface ContractVersionListResponse {
+  data: ContractVersion[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalContractAmendment {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  code?: string | null;
+  /** @nullable */
+  amendmentDate?: string | null;
+  description: string;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  oldValue?: string | null;
+  /** @nullable */
+  newValue?: string | null;
+  /** @nullable */
+  valueChange?: string | null;
+  status: string;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalContractAmendmentInput {
+  companyId: string;
+  legalContractId?: string;
+  code?: string;
+  amendmentDate?: string;
+  description: string;
+  descriptionAr?: string;
+  oldValue?: string;
+  newValue?: string;
+  valueChange?: string;
+  status?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+}
+
+export interface LegalContractAmendmentUpdate {
+  legalContractId?: string;
+  code?: string;
+  amendmentDate?: string;
+  description?: string;
+  descriptionAr?: string;
+  oldValue?: string;
+  newValue?: string;
+  valueChange?: string;
+  status?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+}
+
+export interface LegalContractAmendmentListResponse {
+  data: LegalContractAmendment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractAddendum {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  code?: string | null;
+  title: string;
+  /** @nullable */
+  addendumDate?: string | null;
+  /** @nullable */
+  content?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractAddendumInput {
+  companyId: string;
+  legalContractId?: string;
+  code?: string;
+  title: string;
+  addendumDate?: string;
+  content?: string;
+  status?: string;
+}
+
+export interface ContractAddendumUpdate {
+  legalContractId?: string;
+  code?: string;
+  title?: string;
+  addendumDate?: string;
+  content?: string;
+  status?: string;
+}
+
+export interface ContractAddendumListResponse {
+  data: ContractAddendum[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalContractAttachment {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalContractId?: string | null;
+  title: string;
+  documentType: string;
+  /** @nullable */
+  fileUrl?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalContractAttachmentInput {
+  companyId: string;
+  legalContractId?: string;
+  title: string;
+  documentType?: string;
+  fileUrl?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface LegalContractAttachmentUpdate {
+  legalContractId?: string;
+  title?: string;
+  documentType?: string;
+  fileUrl?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface LegalContractAttachmentListResponse {
+  data: LegalContractAttachment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractEvent {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalContractId?: string | null;
+  eventType: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  performedBy?: string | null;
+  /** @nullable */
+  eventDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractEventInput {
+  companyId: string;
+  legalContractId?: string;
+  eventType?: string;
+  description?: string;
+  performedBy?: string;
+  eventDate?: string;
+}
+
+export interface ContractEventUpdate {
+  legalContractId?: string;
+  eventType?: string;
+  description?: string;
+  performedBy?: string;
+  eventDate?: string;
+}
+
+export interface ContractEventListResponse {
+  data: ContractEvent[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LawFirm {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  /** @nullable */
+  contactPerson?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  address?: string | null;
+  /** @nullable */
+  specialization?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LawFirmInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  contactPerson?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  specialization?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface LawFirmUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  contactPerson?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  specialization?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface LawFirmListResponse {
+  data: LawFirm[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalAdvisor {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  advisorType: string;
+  /** @nullable */
+  lawFirmId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  specialization?: string | null;
+  /** @nullable */
+  barNumber?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalAdvisorInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  advisorType?: string;
+  lawFirmId?: string;
+  employeeId?: string;
+  phone?: string;
+  email?: string;
+  specialization?: string;
+  barNumber?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface LegalAdvisorUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  advisorType?: string;
+  lawFirmId?: string;
+  employeeId?: string;
+  phone?: string;
+  email?: string;
+  specialization?: string;
+  barNumber?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface LegalAdvisorListResponse {
+  data: LegalAdvisor[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalCase {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  title: string;
+  /** @nullable */
+  titleAr?: string | null;
+  caseType: string;
+  role: string;
+  status: string;
+  /** @nullable */
+  courtName?: string | null;
+  /** @nullable */
+  courtCaseNumber?: string | null;
+  /** @nullable */
+  filingDate?: string | null;
+  /** @nullable */
+  opponentName?: string | null;
+  /** @nullable */
+  claimAmount?: string | null;
+  /** @nullable */
+  currencyId?: string | null;
+  /** @nullable */
+  advisorId?: string | null;
+  /** @nullable */
+  lawFirmId?: string | null;
+  /** @nullable */
+  responsibleEmployeeId?: string | null;
+  /** @nullable */
+  counterpartyType?: string | null;
+  /** @nullable */
+  counterpartyId?: string | null;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  outcome?: string | null;
+  /** @nullable */
+  outcomeAmount?: string | null;
+  /** @nullable */
+  closedAt?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalCaseInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  title: string;
+  titleAr?: string;
+  caseType?: string;
+  role?: string;
+  status?: string;
+  courtName?: string;
+  courtCaseNumber?: string;
+  filingDate?: string;
+  opponentName?: string;
+  claimAmount?: string;
+  currencyId?: string;
+  advisorId?: string;
+  lawFirmId?: string;
+  responsibleEmployeeId?: string;
+  counterpartyType?: string;
+  counterpartyId?: string;
+  legalContractId?: string;
+  projectId?: string;
+  outcome?: string;
+  outcomeAmount?: string;
+  closedAt?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface LegalCaseUpdate {
+  branchId?: string;
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  caseType?: string;
+  role?: string;
+  status?: string;
+  courtName?: string;
+  courtCaseNumber?: string;
+  filingDate?: string;
+  opponentName?: string;
+  claimAmount?: string;
+  currencyId?: string;
+  advisorId?: string;
+  lawFirmId?: string;
+  responsibleEmployeeId?: string;
+  counterpartyType?: string;
+  counterpartyId?: string;
+  legalContractId?: string;
+  projectId?: string;
+  outcome?: string;
+  outcomeAmount?: string;
+  closedAt?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface LegalCaseListResponse {
+  data: LegalCase[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalHearing {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalCaseId?: string | null;
+  /** @nullable */
+  code?: string | null;
+  /** @nullable */
+  hearingDate?: string | null;
+  /** @nullable */
+  hearingTime?: string | null;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  courtRoom?: string | null;
+  status: string;
+  /** @nullable */
+  summary?: string | null;
+  /** @nullable */
+  decision?: string | null;
+  /** @nullable */
+  nextHearingDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalHearingInput {
+  companyId: string;
+  legalCaseId?: string;
+  code?: string;
+  hearingDate?: string;
+  hearingTime?: string;
+  location?: string;
+  courtRoom?: string;
+  status?: string;
+  summary?: string;
+  decision?: string;
+  nextHearingDate?: string;
+}
+
+export interface LegalHearingUpdate {
+  legalCaseId?: string;
+  code?: string;
+  hearingDate?: string;
+  hearingTime?: string;
+  location?: string;
+  courtRoom?: string;
+  status?: string;
+  summary?: string;
+  decision?: string;
+  nextHearingDate?: string;
+}
+
+export interface LegalHearingListResponse {
+  data: LegalHearing[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalClaim {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalCaseId?: string | null;
+  code: string;
+  claimType: string;
+  direction: string;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  currencyId?: string | null;
+  status: string;
+  /** @nullable */
+  claimDate?: string | null;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalClaimInput {
+  companyId: string;
+  legalCaseId?: string;
+  code: string;
+  claimType?: string;
+  direction?: string;
+  amount?: string;
+  currencyId?: string;
+  status?: string;
+  claimDate?: string;
+  description?: string;
+}
+
+export interface LegalClaimUpdate {
+  legalCaseId?: string;
+  code?: string;
+  claimType?: string;
+  direction?: string;
+  amount?: string;
+  currencyId?: string;
+  status?: string;
+  claimDate?: string;
+  description?: string;
+}
+
+export interface LegalClaimListResponse {
+  data: LegalClaim[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalNotice {
+  id: string;
+  companyId: string;
+  code: string;
+  noticeType: string;
+  /** @nullable */
+  legalCaseId?: string | null;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  recipientType?: string | null;
+  /** @nullable */
+  recipientId?: string | null;
+  /** @nullable */
+  recipientName?: string | null;
+  subject: string;
+  /** @nullable */
+  body?: string | null;
+  /** @nullable */
+  noticeDate?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  deliveryMethod?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalNoticeInput {
+  companyId: string;
+  code: string;
+  noticeType?: string;
+  legalCaseId?: string;
+  legalContractId?: string;
+  recipientType?: string;
+  recipientId?: string;
+  recipientName?: string;
+  subject: string;
+  body?: string;
+  noticeDate?: string;
+  dueDate?: string;
+  deliveryMethod?: string;
+  status?: string;
+}
+
+export interface LegalNoticeUpdate {
+  code?: string;
+  noticeType?: string;
+  legalCaseId?: string;
+  legalContractId?: string;
+  recipientType?: string;
+  recipientId?: string;
+  recipientName?: string;
+  subject?: string;
+  body?: string;
+  noticeDate?: string;
+  dueDate?: string;
+  deliveryMethod?: string;
+  status?: string;
+}
+
+export interface LegalNoticeListResponse {
+  data: LegalNotice[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalCaseLink {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  legalCaseId?: string | null;
+  linkedModule: string;
+  /** @nullable */
+  linkedId?: string | null;
+  /** @nullable */
+  linkedName?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LegalCaseLinkInput {
+  companyId: string;
+  legalCaseId?: string;
+  linkedModule?: string;
+  linkedId?: string;
+  linkedName?: string;
+  notes?: string;
+}
+
+export interface LegalCaseLinkUpdate {
+  legalCaseId?: string;
+  linkedModule?: string;
+  linkedId?: string;
+  linkedName?: string;
+  notes?: string;
+}
+
+export interface LegalCaseLinkListResponse {
+  data: LegalCaseLink[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LegalContractSuspendInput {
+  reason?: string;
+}
+
+export interface LegalContractTerminateInput {
+  terminationReason?: string;
+}
+
+export interface LegalContractRenewInput {
+  renewalDate?: string;
+  expiryDate?: string;
+}
+
+export interface LegalCaseCloseInput {
+  outcome?: string;
+  outcomeAmount?: string;
+}
+
+export interface LegalGroupCount {
+  /** @nullable */
+  key: string | null;
+  count: number;
+}
+
+export interface LegalDashboard {
+  contractsCount: number;
+  activeContracts: number;
+  expiringSoon: number;
+  casesCount: number;
+  openCases: number;
+  pendingNotices: number;
+  totalClaimAmount: string;
+  contractsByStatus?: LegalGroupCount[];
+  contractsByType?: LegalGroupCount[];
+  contractsBySource?: LegalGroupCount[];
+  casesByStatus?: LegalGroupCount[];
+}
+
+export interface LegalContractReport {
+  total: number;
+  expiringSoon: number;
+  expired: number;
+  byStatus?: LegalGroupCount[];
+  byType?: LegalGroupCount[];
+  bySource?: LegalGroupCount[];
+}
+
+export interface LegalLitigationReport {
+  total: number;
+  totalClaimAmount: string;
+  byStatus?: LegalGroupCount[];
+  byType?: LegalGroupCount[];
+}
+
+export interface LegalClaimReport {
+  total: number;
+  totalAmount: string;
+  byStatus?: LegalGroupCount[];
+  byType?: LegalGroupCount[];
+}
+
+export interface LegalAdvisorReport {
+  totalCases: number;
+  byAdvisor?: LegalGroupCount[];
+  byLawFirm?: LegalGroupCount[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -10395,5 +11352,133 @@ from?: string;
 to?: string;
 year?: number;
 payrollRunId?: string;
+};
+
+export type ListLegalContractsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractTemplatesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractVersionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalContractAmendmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractAddendumsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalContractAttachmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractEventsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLawFirmsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalAdvisorsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalCasesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalHearingsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalClaimsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalNoticesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLegalCaseLinksParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type GetLegalDashboardParams = {
+companyId?: string;
+from?: string;
+to?: string;
+};
+
+export type GetLegalContractReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+};
+
+export type GetLegalLitigationReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+};
+
+export type GetLegalClaimReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+};
+
+export type GetLegalAdvisorReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
 };
 

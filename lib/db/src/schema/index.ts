@@ -23,3 +23,4 @@ export * from "./construction";
 export * from "./procurement";
 export * from "./inventory";
 export * from "./hr";
+export * from "./legal";

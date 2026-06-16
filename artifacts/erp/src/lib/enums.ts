@@ -225,6 +225,49 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   visa: { en: "Visa", ar: "تأشيرة" },
   certificate: { en: "Certificate", ar: "شهادة" },
   work_permit: { en: "Work Permit", ar: "تصريح عمل" },
+  // Legal: source/contract type, counterparty
+  legal: { en: "Legal", ar: "قانوني" },
+  sales: { en: "Sales", ar: "مبيعات" },
+  construction: { en: "Construction", ar: "إنشاءات" },
+  procurement: { en: "Procurement", ar: "مشتريات" },
+  employee: { en: "Employee", ar: "موظف" },
+  customer: { en: "Customer", ar: "عميل" },
+  reservation: { en: "Reservation", ar: "حجز" },
+  // Legal: contract lifecycle status
+  renewed: { en: "Renewed", ar: "مُجدَّد" },
+  // Legal: case type
+  civil: { en: "Civil", ar: "مدني" },
+  commercial: { en: "Commercial", ar: "تجاري" },
+  labor: { en: "Labor", ar: "عمالي" },
+  criminal: { en: "Criminal", ar: "جنائي" },
+  administrative: { en: "Administrative", ar: "إداري" },
+  arbitration: { en: "Arbitration", ar: "تحكيم" },
+  // Legal: case role
+  plaintiff: { en: "Plaintiff", ar: "مدّعٍ" },
+  defendant: { en: "Defendant", ar: "مدّعى عليه" },
+  third_party: { en: "Third Party", ar: "طرف ثالث" },
+  // Legal: case status
+  settled: { en: "Settled", ar: "تمت التسوية" },
+  appealed: { en: "Appealed", ar: "مُستأنف" },
+  // Legal: hearing status
+  scheduled: { en: "Scheduled", ar: "مجدول" },
+  adjourned: { en: "Adjourned", ar: "مؤجّل" },
+  // Legal: claim type/direction/status
+  financial: { en: "Financial", ar: "مالي" },
+  contractual: { en: "Contractual", ar: "تعاقدي" },
+  damages: { en: "Damages", ar: "تعويضات" },
+  by_company: { en: "By Company", ar: "من الشركة" },
+  against_company: { en: "Against Company", ar: "ضد الشركة" },
+  accepted: { en: "Accepted", ar: "مقبول" },
+  // Legal: notice type/status
+  warning: { en: "Warning", ar: "إنذار" },
+  demand: { en: "Demand", ar: "مطالبة" },
+  termination: { en: "Termination", ar: "إنهاء" },
+  sent: { en: "Sent", ar: "مُرسل" },
+  acknowledged: { en: "Acknowledged", ar: "تم الاستلام" },
+  // Legal: advisor type
+  internal: { en: "Internal", ar: "داخلي" },
+  external: { en: "External", ar: "خارجي" },
 };
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {

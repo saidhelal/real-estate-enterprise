@@ -59,6 +59,8 @@ export const contractsTable = pgTable("contracts", {
   totalPrice: numeric("total_price", { precision: 14, scale: 2 }).notNull().default("0"),
   downPayment: numeric("down_payment", { precision: 14, scale: 2 }),
   status: text("status").notNull().default("draft"),
+  // Non-breaking back-link to the Legal Affairs master contract registry.
+  legalContractId: uuid("legal_contract_id"),
   notes: text("notes"),
   ...audit,
 });

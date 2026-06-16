@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "pkrC1XU8l-qZPVeLHSzWc"
+uri = "file://LEGAL_MIGRATION_REPORT.md"
+type = "text"
+title = "Legal Affairs — Migration & Validation Report"

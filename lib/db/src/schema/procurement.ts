@@ -267,6 +267,8 @@ export const purchaseContractsTable = pgTable("purchase_contracts", {
   documentRef: text("document_ref"),
   status: text("status").notNull().default("draft"),
   description: text("description"),
+  // Non-breaking back-link to the Legal Affairs master contract registry.
+  legalContractId: uuid("legal_contract_id"),
   ...audit,
 });
 export type PurchaseContractRow = typeof purchaseContractsTable.$inferSelect;

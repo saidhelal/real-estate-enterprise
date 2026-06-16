@@ -21418,3 +21418,2408 @@ export const GetHrTurnoverReportResponse = zod.object({
 })
 
 
+/**
+ * @summary List LegalContracts
+ */
+export const ListLegalContractsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalContractsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalContract
+ */
+export const CreateLegalContractBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().optional(),
+  "contractType": zod.string().optional(),
+  "sourceModule": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "templateId": zod.string().optional(),
+  "counterpartyType": zod.string().optional(),
+  "counterpartyId": zod.string().optional(),
+  "counterpartyName": zod.string().optional(),
+  "status": zod.string().optional(),
+  "contractDate": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "renewalDate": zod.string().optional(),
+  "autoRenew": zod.boolean().optional(),
+  "value": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "governingLaw": zod.string().optional(),
+  "responsibleEmployeeId": zod.string().optional(),
+  "advisorId": zod.string().optional(),
+  "currentVersion": zod.number().optional(),
+  "reviewedBy": zod.string().optional(),
+  "reviewedAt": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "approvedAt": zod.string().optional(),
+  "activatedAt": zod.string().optional(),
+  "suspendedAt": zod.string().optional(),
+  "terminatedAt": zod.string().optional(),
+  "terminationReason": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalContract
+ */
+export const GetLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalContract
+ */
+export const UpdateLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalContractBody = zod.object({
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "contractType": zod.string().optional(),
+  "sourceModule": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "templateId": zod.string().optional(),
+  "counterpartyType": zod.string().optional(),
+  "counterpartyId": zod.string().optional(),
+  "counterpartyName": zod.string().optional(),
+  "status": zod.string().optional(),
+  "contractDate": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "renewalDate": zod.string().optional(),
+  "autoRenew": zod.boolean().optional(),
+  "value": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "governingLaw": zod.string().optional(),
+  "responsibleEmployeeId": zod.string().optional(),
+  "advisorId": zod.string().optional(),
+  "currentVersion": zod.number().optional(),
+  "reviewedBy": zod.string().optional(),
+  "reviewedAt": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "approvedAt": zod.string().optional(),
+  "activatedAt": zod.string().optional(),
+  "suspendedAt": zod.string().optional(),
+  "terminatedAt": zod.string().optional(),
+  "terminationReason": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalContract
+ */
+export const DeleteLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalContractResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List ContractTemplates
+ */
+export const ListContractTemplatesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListContractTemplatesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractTemplate
+ */
+export const CreateContractTemplateBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "contractType": zod.string().optional(),
+  "content": zod.string().optional(),
+  "contentAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractTemplate
+ */
+export const GetContractTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractTemplateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractTemplate
+ */
+export const UpdateContractTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractTemplateBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "contractType": zod.string().optional(),
+  "content": zod.string().optional(),
+  "contentAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateContractTemplateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a ContractTemplate
+ */
+export const DeleteContractTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractTemplateResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List ContractVersions
+ */
+export const ListContractVersionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListContractVersionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "versionNumber": zod.number().nullish(),
+  "content": zod.string().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "createdByEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractVersion
+ */
+export const CreateContractVersionBody = zod.object({
+  "companyId": zod.string(),
+  "legalContractId": zod.string().optional(),
+  "versionNumber": zod.number().optional(),
+  "content": zod.string().optional(),
+  "changeSummary": zod.string().optional(),
+  "createdByEmployeeId": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractVersion
+ */
+export const GetContractVersionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "versionNumber": zod.number().nullish(),
+  "content": zod.string().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "createdByEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractVersion
+ */
+export const UpdateContractVersionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractVersionBody = zod.object({
+  "legalContractId": zod.string().optional(),
+  "versionNumber": zod.number().optional(),
+  "content": zod.string().optional(),
+  "changeSummary": zod.string().optional(),
+  "createdByEmployeeId": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateContractVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "versionNumber": zod.number().nullish(),
+  "content": zod.string().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "createdByEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a ContractVersion
+ */
+export const DeleteContractVersionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractVersionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalContractAmendments
+ */
+export const ListLegalContractAmendmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalContractAmendmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "valueChange": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalContractAmendment
+ */
+export const CreateLegalContractAmendmentBody = zod.object({
+  "companyId": zod.string(),
+  "legalContractId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().optional(),
+  "oldValue": zod.string().optional(),
+  "newValue": zod.string().optional(),
+  "valueChange": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "approvedAt": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalContractAmendment
+ */
+export const GetLegalContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalContractAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "valueChange": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalContractAmendment
+ */
+export const UpdateLegalContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalContractAmendmentBody = zod.object({
+  "legalContractId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "oldValue": zod.string().optional(),
+  "newValue": zod.string().optional(),
+  "valueChange": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvedBy": zod.string().optional(),
+  "approvedAt": zod.string().optional()
+})
+
+export const UpdateLegalContractAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "valueChange": zod.string().nullish(),
+  "status": zod.string(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalContractAmendment
+ */
+export const DeleteLegalContractAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalContractAmendmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List ContractAddendums
+ */
+export const ListContractAddendumsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListContractAddendumsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "title": zod.string(),
+  "addendumDate": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractAddendum
+ */
+export const CreateContractAddendumBody = zod.object({
+  "companyId": zod.string(),
+  "legalContractId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string(),
+  "addendumDate": zod.string().optional(),
+  "content": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractAddendum
+ */
+export const GetContractAddendumParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractAddendumResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "title": zod.string(),
+  "addendumDate": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractAddendum
+ */
+export const UpdateContractAddendumParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractAddendumBody = zod.object({
+  "legalContractId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "addendumDate": zod.string().optional(),
+  "content": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateContractAddendumResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "title": zod.string(),
+  "addendumDate": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a ContractAddendum
+ */
+export const DeleteContractAddendumParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractAddendumResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalContractAttachments
+ */
+export const ListLegalContractAttachmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalContractAttachmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "title": zod.string(),
+  "documentType": zod.string(),
+  "fileUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalContractAttachment
+ */
+export const CreateLegalContractAttachmentBody = zod.object({
+  "companyId": zod.string(),
+  "legalContractId": zod.string().optional(),
+  "title": zod.string(),
+  "documentType": zod.string().optional(),
+  "fileUrl": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalContractAttachment
+ */
+export const GetLegalContractAttachmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalContractAttachmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "title": zod.string(),
+  "documentType": zod.string(),
+  "fileUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalContractAttachment
+ */
+export const UpdateLegalContractAttachmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalContractAttachmentBody = zod.object({
+  "legalContractId": zod.string().optional(),
+  "title": zod.string().optional(),
+  "documentType": zod.string().optional(),
+  "fileUrl": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateLegalContractAttachmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "title": zod.string(),
+  "documentType": zod.string(),
+  "fileUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalContractAttachment
+ */
+export const DeleteLegalContractAttachmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalContractAttachmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List ContractEvents
+ */
+export const ListContractEventsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListContractEventsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "eventType": zod.string(),
+  "description": zod.string().nullish(),
+  "performedBy": zod.string().nullish(),
+  "eventDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ContractEvent
+ */
+export const CreateContractEventBody = zod.object({
+  "companyId": zod.string(),
+  "legalContractId": zod.string().optional(),
+  "eventType": zod.string().optional(),
+  "description": zod.string().optional(),
+  "performedBy": zod.string().optional(),
+  "eventDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ContractEvent
+ */
+export const GetContractEventParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractEventResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "eventType": zod.string(),
+  "description": zod.string().nullish(),
+  "performedBy": zod.string().nullish(),
+  "eventDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ContractEvent
+ */
+export const UpdateContractEventParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractEventBody = zod.object({
+  "legalContractId": zod.string().optional(),
+  "eventType": zod.string().optional(),
+  "description": zod.string().optional(),
+  "performedBy": zod.string().optional(),
+  "eventDate": zod.string().optional()
+})
+
+export const UpdateContractEventResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalContractId": zod.string().nullish(),
+  "eventType": zod.string(),
+  "description": zod.string().nullish(),
+  "performedBy": zod.string().nullish(),
+  "eventDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a ContractEvent
+ */
+export const DeleteContractEventParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractEventResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LawFirms
+ */
+export const ListLawFirmsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLawFirmsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "specialization": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LawFirm
+ */
+export const CreateLawFirmBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "address": zod.string().optional(),
+  "specialization": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LawFirm
+ */
+export const GetLawFirmParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLawFirmResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "specialization": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LawFirm
+ */
+export const UpdateLawFirmParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLawFirmBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "address": zod.string().optional(),
+  "specialization": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateLawFirmResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "specialization": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LawFirm
+ */
+export const DeleteLawFirmParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLawFirmResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalAdvisors
+ */
+export const ListLegalAdvisorsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalAdvisorsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "advisorType": zod.string(),
+  "lawFirmId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "specialization": zod.string().nullish(),
+  "barNumber": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalAdvisor
+ */
+export const CreateLegalAdvisorBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "advisorType": zod.string().optional(),
+  "lawFirmId": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "specialization": zod.string().optional(),
+  "barNumber": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalAdvisor
+ */
+export const GetLegalAdvisorParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalAdvisorResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "advisorType": zod.string(),
+  "lawFirmId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "specialization": zod.string().nullish(),
+  "barNumber": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalAdvisor
+ */
+export const UpdateLegalAdvisorParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalAdvisorBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "advisorType": zod.string().optional(),
+  "lawFirmId": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "specialization": zod.string().optional(),
+  "barNumber": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateLegalAdvisorResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "advisorType": zod.string(),
+  "lawFirmId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "specialization": zod.string().nullish(),
+  "barNumber": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalAdvisor
+ */
+export const DeleteLegalAdvisorParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalAdvisorResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalCases
+ */
+export const ListLegalCasesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalCasesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "caseType": zod.string(),
+  "role": zod.string(),
+  "status": zod.string(),
+  "courtName": zod.string().nullish(),
+  "courtCaseNumber": zod.string().nullish(),
+  "filingDate": zod.string().nullish(),
+  "opponentName": zod.string().nullish(),
+  "claimAmount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "lawFirmId": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "outcomeAmount": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalCase
+ */
+export const CreateLegalCaseBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().optional(),
+  "caseType": zod.string().optional(),
+  "role": zod.string().optional(),
+  "status": zod.string().optional(),
+  "courtName": zod.string().optional(),
+  "courtCaseNumber": zod.string().optional(),
+  "filingDate": zod.string().optional(),
+  "opponentName": zod.string().optional(),
+  "claimAmount": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "advisorId": zod.string().optional(),
+  "lawFirmId": zod.string().optional(),
+  "responsibleEmployeeId": zod.string().optional(),
+  "counterpartyType": zod.string().optional(),
+  "counterpartyId": zod.string().optional(),
+  "legalContractId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "outcome": zod.string().optional(),
+  "outcomeAmount": zod.string().optional(),
+  "closedAt": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalCase
+ */
+export const GetLegalCaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalCaseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "caseType": zod.string(),
+  "role": zod.string(),
+  "status": zod.string(),
+  "courtName": zod.string().nullish(),
+  "courtCaseNumber": zod.string().nullish(),
+  "filingDate": zod.string().nullish(),
+  "opponentName": zod.string().nullish(),
+  "claimAmount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "lawFirmId": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "outcomeAmount": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalCase
+ */
+export const UpdateLegalCaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalCaseBody = zod.object({
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "caseType": zod.string().optional(),
+  "role": zod.string().optional(),
+  "status": zod.string().optional(),
+  "courtName": zod.string().optional(),
+  "courtCaseNumber": zod.string().optional(),
+  "filingDate": zod.string().optional(),
+  "opponentName": zod.string().optional(),
+  "claimAmount": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "advisorId": zod.string().optional(),
+  "lawFirmId": zod.string().optional(),
+  "responsibleEmployeeId": zod.string().optional(),
+  "counterpartyType": zod.string().optional(),
+  "counterpartyId": zod.string().optional(),
+  "legalContractId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "outcome": zod.string().optional(),
+  "outcomeAmount": zod.string().optional(),
+  "closedAt": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLegalCaseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "caseType": zod.string(),
+  "role": zod.string(),
+  "status": zod.string(),
+  "courtName": zod.string().nullish(),
+  "courtCaseNumber": zod.string().nullish(),
+  "filingDate": zod.string().nullish(),
+  "opponentName": zod.string().nullish(),
+  "claimAmount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "lawFirmId": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "outcomeAmount": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalCase
+ */
+export const DeleteLegalCaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalCaseResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalHearings
+ */
+export const ListLegalHearingsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalHearingsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "hearingDate": zod.string().nullish(),
+  "hearingTime": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "courtRoom": zod.string().nullish(),
+  "status": zod.string(),
+  "summary": zod.string().nullish(),
+  "decision": zod.string().nullish(),
+  "nextHearingDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalHearing
+ */
+export const CreateLegalHearingBody = zod.object({
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "hearingDate": zod.string().optional(),
+  "hearingTime": zod.string().optional(),
+  "location": zod.string().optional(),
+  "courtRoom": zod.string().optional(),
+  "status": zod.string().optional(),
+  "summary": zod.string().optional(),
+  "decision": zod.string().optional(),
+  "nextHearingDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalHearing
+ */
+export const GetLegalHearingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalHearingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "hearingDate": zod.string().nullish(),
+  "hearingTime": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "courtRoom": zod.string().nullish(),
+  "status": zod.string(),
+  "summary": zod.string().nullish(),
+  "decision": zod.string().nullish(),
+  "nextHearingDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalHearing
+ */
+export const UpdateLegalHearingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalHearingBody = zod.object({
+  "legalCaseId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "hearingDate": zod.string().optional(),
+  "hearingTime": zod.string().optional(),
+  "location": zod.string().optional(),
+  "courtRoom": zod.string().optional(),
+  "status": zod.string().optional(),
+  "summary": zod.string().optional(),
+  "decision": zod.string().optional(),
+  "nextHearingDate": zod.string().optional()
+})
+
+export const UpdateLegalHearingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "code": zod.string().nullish(),
+  "hearingDate": zod.string().nullish(),
+  "hearingTime": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "courtRoom": zod.string().nullish(),
+  "status": zod.string(),
+  "summary": zod.string().nullish(),
+  "decision": zod.string().nullish(),
+  "nextHearingDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalHearing
+ */
+export const DeleteLegalHearingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalHearingResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalClaims
+ */
+export const ListLegalClaimsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalClaimsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "code": zod.string(),
+  "claimType": zod.string(),
+  "direction": zod.string(),
+  "amount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "status": zod.string(),
+  "claimDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalClaim
+ */
+export const CreateLegalClaimBody = zod.object({
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().optional(),
+  "code": zod.string(),
+  "claimType": zod.string().optional(),
+  "direction": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "claimDate": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalClaim
+ */
+export const GetLegalClaimParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalClaimResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "code": zod.string(),
+  "claimType": zod.string(),
+  "direction": zod.string(),
+  "amount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "status": zod.string(),
+  "claimDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalClaim
+ */
+export const UpdateLegalClaimParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalClaimBody = zod.object({
+  "legalCaseId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "claimType": zod.string().optional(),
+  "direction": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "claimDate": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateLegalClaimResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "code": zod.string(),
+  "claimType": zod.string(),
+  "direction": zod.string(),
+  "amount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "status": zod.string(),
+  "claimDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalClaim
+ */
+export const DeleteLegalClaimParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalClaimResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalNotices
+ */
+export const ListLegalNoticesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalNoticesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeType": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "recipientType": zod.string().nullish(),
+  "recipientId": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "subject": zod.string(),
+  "body": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "deliveryMethod": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalNotice
+ */
+export const CreateLegalNoticeBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeType": zod.string().optional(),
+  "legalCaseId": zod.string().optional(),
+  "legalContractId": zod.string().optional(),
+  "recipientType": zod.string().optional(),
+  "recipientId": zod.string().optional(),
+  "recipientName": zod.string().optional(),
+  "subject": zod.string(),
+  "body": zod.string().optional(),
+  "noticeDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "deliveryMethod": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalNotice
+ */
+export const GetLegalNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalNoticeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeType": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "recipientType": zod.string().nullish(),
+  "recipientId": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "subject": zod.string(),
+  "body": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "deliveryMethod": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalNotice
+ */
+export const UpdateLegalNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalNoticeBody = zod.object({
+  "code": zod.string().optional(),
+  "noticeType": zod.string().optional(),
+  "legalCaseId": zod.string().optional(),
+  "legalContractId": zod.string().optional(),
+  "recipientType": zod.string().optional(),
+  "recipientId": zod.string().optional(),
+  "recipientName": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "body": zod.string().optional(),
+  "noticeDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "deliveryMethod": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateLegalNoticeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeType": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "recipientType": zod.string().nullish(),
+  "recipientId": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "subject": zod.string(),
+  "body": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "deliveryMethod": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalNotice
+ */
+export const DeleteLegalNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalNoticeResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List LegalCaseLinks
+ */
+export const ListLegalCaseLinksQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListLegalCaseLinksResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "linkedModule": zod.string(),
+  "linkedId": zod.string().nullish(),
+  "linkedName": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LegalCaseLink
+ */
+export const CreateLegalCaseLinkBody = zod.object({
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().optional(),
+  "linkedModule": zod.string().optional(),
+  "linkedId": zod.string().optional(),
+  "linkedName": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LegalCaseLink
+ */
+export const GetLegalCaseLinkParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalCaseLinkResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "linkedModule": zod.string(),
+  "linkedId": zod.string().nullish(),
+  "linkedName": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LegalCaseLink
+ */
+export const UpdateLegalCaseLinkParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLegalCaseLinkBody = zod.object({
+  "legalCaseId": zod.string().optional(),
+  "linkedModule": zod.string().optional(),
+  "linkedId": zod.string().optional(),
+  "linkedName": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLegalCaseLinkResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "linkedModule": zod.string(),
+  "linkedId": zod.string().nullish(),
+  "linkedName": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a LegalCaseLink
+ */
+export const DeleteLegalCaseLinkParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLegalCaseLinkResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Mark a legal contract under review
+ */
+export const ReviewLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReviewLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Approve a legal contract
+ */
+export const ApproveLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Activate a legal contract
+ */
+export const ActivateLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ActivateLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Suspend a legal contract
+ */
+export const SuspendLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SuspendLegalContractBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const SuspendLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Terminate a legal contract
+ */
+export const TerminateLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const TerminateLegalContractBody = zod.object({
+  "terminationReason": zod.string().optional()
+})
+
+export const TerminateLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Renew a legal contract
+ */
+export const RenewLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RenewLegalContractBody = zod.object({
+  "renewalDate": zod.string().optional(),
+  "expiryDate": zod.string().optional()
+})
+
+export const RenewLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Close a legal case
+ */
+export const CloseLegalCaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const CloseLegalCaseBody = zod.object({
+  "outcome": zod.string().optional(),
+  "outcomeAmount": zod.string().optional()
+})
+
+export const CloseLegalCaseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "caseType": zod.string(),
+  "role": zod.string(),
+  "status": zod.string(),
+  "courtName": zod.string().nullish(),
+  "courtCaseNumber": zod.string().nullish(),
+  "filingDate": zod.string().nullish(),
+  "opponentName": zod.string().nullish(),
+  "claimAmount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "lawFirmId": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "outcomeAmount": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Reopen a legal case
+ */
+export const ReopenLegalCaseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReopenLegalCaseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "caseType": zod.string(),
+  "role": zod.string(),
+  "status": zod.string(),
+  "courtName": zod.string().nullish(),
+  "courtCaseNumber": zod.string().nullish(),
+  "filingDate": zod.string().nullish(),
+  "opponentName": zod.string().nullish(),
+  "claimAmount": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "lawFirmId": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "outcomeAmount": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Mark a legal notice as sent
+ */
+export const SendLegalNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SendLegalNoticeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeType": zod.string(),
+  "legalCaseId": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "recipientType": zod.string().nullish(),
+  "recipientId": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "subject": zod.string(),
+  "body": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "deliveryMethod": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Legal dashboard KPIs
+ */
+export const GetLegalDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const GetLegalDashboardResponse = zod.object({
+  "contractsCount": zod.number(),
+  "activeContracts": zod.number(),
+  "expiringSoon": zod.number(),
+  "casesCount": zod.number(),
+  "openCases": zod.number(),
+  "pendingNotices": zod.number(),
+  "totalClaimAmount": zod.string(),
+  "contractsByStatus": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "contractsByType": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "contractsBySource": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "casesByStatus": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional()
+})
+
+
+/**
+ * @summary Contract status & expiry report
+ */
+export const GetLegalContractReportQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const GetLegalContractReportResponse = zod.object({
+  "total": zod.number(),
+  "expiringSoon": zod.number(),
+  "expired": zod.number(),
+  "byStatus": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "byType": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "bySource": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional()
+})
+
+
+/**
+ * @summary Litigation report
+ */
+export const GetLegalLitigationReportQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const GetLegalLitigationReportResponse = zod.object({
+  "total": zod.number(),
+  "totalClaimAmount": zod.string(),
+  "byStatus": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "byType": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional()
+})
+
+
+/**
+ * @summary Claims report
+ */
+export const GetLegalClaimReportQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const GetLegalClaimReportResponse = zod.object({
+  "total": zod.number(),
+  "totalAmount": zod.string(),
+  "byStatus": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "byType": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional()
+})
+
+
+/**
+ * @summary Advisor & law-firm workload report
+ */
+export const GetLegalAdvisorReportQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const GetLegalAdvisorReportResponse = zod.object({
+  "totalCases": zod.number(),
+  "byAdvisor": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional(),
+  "byLawFirm": zod.array(zod.object({
+  "key": zod.string().nullable(),
+  "count": zod.number()
+})).optional()
+})
+
+
