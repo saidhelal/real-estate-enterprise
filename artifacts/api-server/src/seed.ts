@@ -99,6 +99,32 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "accountMappings", label: "Account Mappings" },
   { module: "budgets", label: "Budgets" },
   { module: "accountingReports", label: "Accounting Reports", extraActions: ["export"] },
+  // Engineering — Master Data
+  { module: "engineeringDisciplines", label: "Engineering Disciplines" },
+  { module: "consultants", label: "Consultants" },
+  { module: "designPackages", label: "Design Packages" },
+  { module: "drawingCategories", label: "Drawing Categories" },
+  { module: "technicalSpecifications", label: "Technical Specifications" },
+  // Engineering — Drawings
+  { module: "drawings", label: "Drawings", extraActions: ["approve"] },
+  { module: "drawingRevisions", label: "Drawing Revisions" },
+  // Engineering — BOQ
+  { module: "boqs", label: "Bills of Quantities" },
+  { module: "boqItems", label: "BOQ Items" },
+  { module: "boqQuantityRevisions", label: "BOQ Quantity Revisions" },
+  { module: "costEstimates", label: "Cost Estimates", extraActions: ["approve"] },
+  // Engineering — Site Inspection
+  { module: "inspectionRequests", label: "Inspection Requests" },
+  { module: "inspectionReports", label: "Inspection Reports" },
+  { module: "defects", label: "Defects" },
+  { module: "correctiveActions", label: "Corrective Actions", extraActions: ["close"] },
+  // Engineering — Technical Requests
+  { module: "rfis", label: "RFIs", extraActions: ["respond", "close"] },
+  { module: "technicalSubmittals", label: "Technical Submittals", extraActions: ["approve"] },
+  { module: "materialSubmittals", label: "Material Submittals", extraActions: ["approve"] },
+  { module: "consultantResponses", label: "Consultant Responses" },
+  // Engineering — Project Integration
+  { module: "engineeringProgress", label: "Engineering Progress" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

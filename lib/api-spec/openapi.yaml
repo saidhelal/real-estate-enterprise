@@ -5535,6 +5535,1782 @@ paths:
                 $ref: "#/components/schemas/OkResponse"
 
 
+
+  /engineering-disciplines:
+    get:
+      operationId: listEngineeringDisciplines
+      tags: [engineeringDisciplines]
+      summary: List engineering-disciplines
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EngineeringDisciplines
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringDisciplineListResponse"
+    post:
+      operationId: createEngineeringDiscipline
+      tags: [engineeringDisciplines]
+      summary: Create a EngineeringDiscipline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EngineeringDisciplineInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringDiscipline"
+
+  /engineering-disciplines/{id}:
+    get:
+      operationId: getEngineeringDiscipline
+      tags: [engineeringDisciplines]
+      summary: Get a EngineeringDiscipline
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EngineeringDiscipline
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringDiscipline"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEngineeringDiscipline
+      tags: [engineeringDisciplines]
+      summary: Update a EngineeringDiscipline
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EngineeringDisciplineUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringDiscipline"
+    delete:
+      operationId: deleteEngineeringDiscipline
+      tags: [engineeringDisciplines]
+      summary: Soft-delete a EngineeringDiscipline
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /consultants:
+    get:
+      operationId: listConsultants
+      tags: [consultants]
+      summary: List consultants
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Consultants
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsultantListResponse"
+    post:
+      operationId: createConsultant
+      tags: [consultants]
+      summary: Create a Consultant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsultantInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Consultant"
+
+  /consultants/{id}:
+    get:
+      operationId: getConsultant
+      tags: [consultants]
+      summary: Get a Consultant
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Consultant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Consultant"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateConsultant
+      tags: [consultants]
+      summary: Update a Consultant
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsultantUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Consultant"
+    delete:
+      operationId: deleteConsultant
+      tags: [consultants]
+      summary: Soft-delete a Consultant
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /design-packages:
+    get:
+      operationId: listDesignPackages
+      tags: [designPackages]
+      summary: List design-packages
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: DesignPackages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DesignPackageListResponse"
+    post:
+      operationId: createDesignPackage
+      tags: [designPackages]
+      summary: Create a DesignPackage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DesignPackageInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DesignPackage"
+
+  /design-packages/{id}:
+    get:
+      operationId: getDesignPackage
+      tags: [designPackages]
+      summary: Get a DesignPackage
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: DesignPackage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DesignPackage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDesignPackage
+      tags: [designPackages]
+      summary: Update a DesignPackage
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DesignPackageUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DesignPackage"
+    delete:
+      operationId: deleteDesignPackage
+      tags: [designPackages]
+      summary: Soft-delete a DesignPackage
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /drawing-categories:
+    get:
+      operationId: listDrawingCategorys
+      tags: [drawingCategories]
+      summary: List drawing-categories
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: DrawingCategorys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingCategoryListResponse"
+    post:
+      operationId: createDrawingCategory
+      tags: [drawingCategories]
+      summary: Create a DrawingCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DrawingCategoryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingCategory"
+
+  /drawing-categories/{id}:
+    get:
+      operationId: getDrawingCategory
+      tags: [drawingCategories]
+      summary: Get a DrawingCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: DrawingCategory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingCategory"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDrawingCategory
+      tags: [drawingCategories]
+      summary: Update a DrawingCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DrawingCategoryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingCategory"
+    delete:
+      operationId: deleteDrawingCategory
+      tags: [drawingCategories]
+      summary: Soft-delete a DrawingCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /technical-specifications:
+    get:
+      operationId: listTechnicalSpecifications
+      tags: [technicalSpecifications]
+      summary: List technical-specifications
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: TechnicalSpecifications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSpecificationListResponse"
+    post:
+      operationId: createTechnicalSpecification
+      tags: [technicalSpecifications]
+      summary: Create a TechnicalSpecification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TechnicalSpecificationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSpecification"
+
+  /technical-specifications/{id}:
+    get:
+      operationId: getTechnicalSpecification
+      tags: [technicalSpecifications]
+      summary: Get a TechnicalSpecification
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: TechnicalSpecification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSpecification"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateTechnicalSpecification
+      tags: [technicalSpecifications]
+      summary: Update a TechnicalSpecification
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TechnicalSpecificationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSpecification"
+    delete:
+      operationId: deleteTechnicalSpecification
+      tags: [technicalSpecifications]
+      summary: Soft-delete a TechnicalSpecification
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /drawings:
+    get:
+      operationId: listDrawings
+      tags: [drawings]
+      summary: List drawings
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Drawings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingListResponse"
+    post:
+      operationId: createDrawing
+      tags: [drawings]
+      summary: Create a Drawing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DrawingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Drawing"
+
+  /drawings/{id}:
+    get:
+      operationId: getDrawing
+      tags: [drawings]
+      summary: Get a Drawing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Drawing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Drawing"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDrawing
+      tags: [drawings]
+      summary: Update a Drawing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DrawingUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Drawing"
+    delete:
+      operationId: deleteDrawing
+      tags: [drawings]
+      summary: Soft-delete a Drawing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /drawing-revisions:
+    get:
+      operationId: listDrawingRevisions
+      tags: [drawingRevisions]
+      summary: List drawing-revisions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: DrawingRevisions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingRevisionListResponse"
+    post:
+      operationId: createDrawingRevision
+      tags: [drawingRevisions]
+      summary: Create a DrawingRevision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DrawingRevisionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingRevision"
+
+  /drawing-revisions/{id}:
+    get:
+      operationId: getDrawingRevision
+      tags: [drawingRevisions]
+      summary: Get a DrawingRevision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: DrawingRevision
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingRevision"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDrawingRevision
+      tags: [drawingRevisions]
+      summary: Update a DrawingRevision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DrawingRevisionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DrawingRevision"
+    delete:
+      operationId: deleteDrawingRevision
+      tags: [drawingRevisions]
+      summary: Soft-delete a DrawingRevision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /boqs:
+    get:
+      operationId: listBoqs
+      tags: [boqs]
+      summary: List boqs
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Boqs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqListResponse"
+    post:
+      operationId: createBoq
+      tags: [boqs]
+      summary: Create a Boq
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoqInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boq"
+
+  /boqs/{id}:
+    get:
+      operationId: getBoq
+      tags: [boqs]
+      summary: Get a Boq
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Boq
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boq"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBoq
+      tags: [boqs]
+      summary: Update a Boq
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoqUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boq"
+    delete:
+      operationId: deleteBoq
+      tags: [boqs]
+      summary: Soft-delete a Boq
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /boq-items:
+    get:
+      operationId: listBoqItems
+      tags: [boqItems]
+      summary: List boq-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: BoqItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqItemListResponse"
+    post:
+      operationId: createBoqItem
+      tags: [boqItems]
+      summary: Create a BoqItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoqItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqItem"
+
+  /boq-items/{id}:
+    get:
+      operationId: getBoqItem
+      tags: [boqItems]
+      summary: Get a BoqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: BoqItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBoqItem
+      tags: [boqItems]
+      summary: Update a BoqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoqItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqItem"
+    delete:
+      operationId: deleteBoqItem
+      tags: [boqItems]
+      summary: Soft-delete a BoqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /boq-quantity-revisions:
+    get:
+      operationId: listBoqQuantityRevisions
+      tags: [boqQuantityRevisions]
+      summary: List boq-quantity-revisions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: BoqQuantityRevisions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqQuantityRevisionListResponse"
+    post:
+      operationId: createBoqQuantityRevision
+      tags: [boqQuantityRevisions]
+      summary: Create a BoqQuantityRevision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoqQuantityRevisionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqQuantityRevision"
+
+  /boq-quantity-revisions/{id}:
+    get:
+      operationId: getBoqQuantityRevision
+      tags: [boqQuantityRevisions]
+      summary: Get a BoqQuantityRevision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: BoqQuantityRevision
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqQuantityRevision"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateBoqQuantityRevision
+      tags: [boqQuantityRevisions]
+      summary: Update a BoqQuantityRevision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BoqQuantityRevisionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoqQuantityRevision"
+    delete:
+      operationId: deleteBoqQuantityRevision
+      tags: [boqQuantityRevisions]
+      summary: Soft-delete a BoqQuantityRevision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /cost-estimates:
+    get:
+      operationId: listCostEstimates
+      tags: [costEstimates]
+      summary: List cost-estimates
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CostEstimates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostEstimateListResponse"
+    post:
+      operationId: createCostEstimate
+      tags: [costEstimates]
+      summary: Create a CostEstimate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostEstimateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostEstimate"
+
+  /cost-estimates/{id}:
+    get:
+      operationId: getCostEstimate
+      tags: [costEstimates]
+      summary: Get a CostEstimate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CostEstimate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostEstimate"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCostEstimate
+      tags: [costEstimates]
+      summary: Update a CostEstimate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostEstimateUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CostEstimate"
+    delete:
+      operationId: deleteCostEstimate
+      tags: [costEstimates]
+      summary: Soft-delete a CostEstimate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inspection-requests:
+    get:
+      operationId: listInspectionRequests
+      tags: [inspectionRequests]
+      summary: List inspection-requests
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InspectionRequests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionRequestListResponse"
+    post:
+      operationId: createInspectionRequest
+      tags: [inspectionRequests]
+      summary: Create a InspectionRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InspectionRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionRequest"
+
+  /inspection-requests/{id}:
+    get:
+      operationId: getInspectionRequest
+      tags: [inspectionRequests]
+      summary: Get a InspectionRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InspectionRequest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInspectionRequest
+      tags: [inspectionRequests]
+      summary: Update a InspectionRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InspectionRequestUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionRequest"
+    delete:
+      operationId: deleteInspectionRequest
+      tags: [inspectionRequests]
+      summary: Soft-delete a InspectionRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /inspection-reports:
+    get:
+      operationId: listInspectionReports
+      tags: [inspectionReports]
+      summary: List inspection-reports
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InspectionReports
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionReportListResponse"
+    post:
+      operationId: createInspectionReport
+      tags: [inspectionReports]
+      summary: Create a InspectionReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InspectionReportInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionReport"
+
+  /inspection-reports/{id}:
+    get:
+      operationId: getInspectionReport
+      tags: [inspectionReports]
+      summary: Get a InspectionReport
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InspectionReport
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionReport"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInspectionReport
+      tags: [inspectionReports]
+      summary: Update a InspectionReport
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InspectionReportUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InspectionReport"
+    delete:
+      operationId: deleteInspectionReport
+      tags: [inspectionReports]
+      summary: Soft-delete a InspectionReport
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /defects:
+    get:
+      operationId: listDefects
+      tags: [defects]
+      summary: List defects
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Defects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefectListResponse"
+    post:
+      operationId: createDefect
+      tags: [defects]
+      summary: Create a Defect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DefectInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Defect"
+
+  /defects/{id}:
+    get:
+      operationId: getDefect
+      tags: [defects]
+      summary: Get a Defect
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Defect
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Defect"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDefect
+      tags: [defects]
+      summary: Update a Defect
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DefectUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Defect"
+    delete:
+      operationId: deleteDefect
+      tags: [defects]
+      summary: Soft-delete a Defect
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /corrective-actions:
+    get:
+      operationId: listCorrectiveActions
+      tags: [correctiveActions]
+      summary: List corrective-actions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CorrectiveActions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrectiveActionListResponse"
+    post:
+      operationId: createCorrectiveAction
+      tags: [correctiveActions]
+      summary: Create a CorrectiveAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CorrectiveActionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrectiveAction"
+
+  /corrective-actions/{id}:
+    get:
+      operationId: getCorrectiveAction
+      tags: [correctiveActions]
+      summary: Get a CorrectiveAction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CorrectiveAction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrectiveAction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCorrectiveAction
+      tags: [correctiveActions]
+      summary: Update a CorrectiveAction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CorrectiveActionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrectiveAction"
+    delete:
+      operationId: deleteCorrectiveAction
+      tags: [correctiveActions]
+      summary: Soft-delete a CorrectiveAction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /rfis:
+    get:
+      operationId: listRfis
+      tags: [rfis]
+      summary: List rfis
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Rfis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RfiListResponse"
+    post:
+      operationId: createRfi
+      tags: [rfis]
+      summary: Create a Rfi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfiInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rfi"
+
+  /rfis/{id}:
+    get:
+      operationId: getRfi
+      tags: [rfis]
+      summary: Get a Rfi
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Rfi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rfi"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateRfi
+      tags: [rfis]
+      summary: Update a Rfi
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RfiUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rfi"
+    delete:
+      operationId: deleteRfi
+      tags: [rfis]
+      summary: Soft-delete a Rfi
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /technical-submittals:
+    get:
+      operationId: listTechnicalSubmittals
+      tags: [technicalSubmittals]
+      summary: List technical-submittals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: TechnicalSubmittals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSubmittalListResponse"
+    post:
+      operationId: createTechnicalSubmittal
+      tags: [technicalSubmittals]
+      summary: Create a TechnicalSubmittal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TechnicalSubmittalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSubmittal"
+
+  /technical-submittals/{id}:
+    get:
+      operationId: getTechnicalSubmittal
+      tags: [technicalSubmittals]
+      summary: Get a TechnicalSubmittal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: TechnicalSubmittal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSubmittal"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateTechnicalSubmittal
+      tags: [technicalSubmittals]
+      summary: Update a TechnicalSubmittal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TechnicalSubmittalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TechnicalSubmittal"
+    delete:
+      operationId: deleteTechnicalSubmittal
+      tags: [technicalSubmittals]
+      summary: Soft-delete a TechnicalSubmittal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /material-submittals:
+    get:
+      operationId: listMaterialSubmittals
+      tags: [materialSubmittals]
+      summary: List material-submittals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: MaterialSubmittals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaterialSubmittalListResponse"
+    post:
+      operationId: createMaterialSubmittal
+      tags: [materialSubmittals]
+      summary: Create a MaterialSubmittal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaterialSubmittalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaterialSubmittal"
+
+  /material-submittals/{id}:
+    get:
+      operationId: getMaterialSubmittal
+      tags: [materialSubmittals]
+      summary: Get a MaterialSubmittal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: MaterialSubmittal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaterialSubmittal"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateMaterialSubmittal
+      tags: [materialSubmittals]
+      summary: Update a MaterialSubmittal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaterialSubmittalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaterialSubmittal"
+    delete:
+      operationId: deleteMaterialSubmittal
+      tags: [materialSubmittals]
+      summary: Soft-delete a MaterialSubmittal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /consultant-responses:
+    get:
+      operationId: listConsultantResponses
+      tags: [consultantResponses]
+      summary: List consultant-responses
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ConsultantResponses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsultantResponseListResponse"
+    post:
+      operationId: createConsultantResponse
+      tags: [consultantResponses]
+      summary: Create a ConsultantResponse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsultantResponseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsultantResponse"
+
+  /consultant-responses/{id}:
+    get:
+      operationId: getConsultantResponse
+      tags: [consultantResponses]
+      summary: Get a ConsultantResponse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ConsultantResponse
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsultantResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateConsultantResponse
+      tags: [consultantResponses]
+      summary: Update a ConsultantResponse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsultantResponseUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsultantResponse"
+    delete:
+      operationId: deleteConsultantResponse
+      tags: [consultantResponses]
+      summary: Soft-delete a ConsultantResponse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /engineering-progress:
+    get:
+      operationId: listEngineeringProgresss
+      tags: [engineeringProgress]
+      summary: List engineering-progress
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EngineeringProgresss
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringProgressListResponse"
+    post:
+      operationId: createEngineeringProgress
+      tags: [engineeringProgress]
+      summary: Create a EngineeringProgress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EngineeringProgressInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringProgress"
+
+  /engineering-progress/{id}:
+    get:
+      operationId: getEngineeringProgress
+      tags: [engineeringProgress]
+      summary: Get a EngineeringProgress
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EngineeringProgress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringProgress"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEngineeringProgress
+      tags: [engineeringProgress]
+      summary: Update a EngineeringProgress
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EngineeringProgressUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringProgress"
+    delete:
+      operationId: deleteEngineeringProgress
+      tags: [engineeringProgress]
+      summary: Soft-delete a EngineeringProgress
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /engineering/dashboard:
+    get:
+      operationId: getEngineeringDashboard
+      tags: [engineeringDashboard]
+      summary: Engineering dashboard KPIs
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Engineering dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EngineeringDashboard"
+
 components:
   parameters:
     IdParam:
@@ -8712,3 +10488,1106 @@ components:
         recentEntries:
           type: array
           items: { $ref: "#/components/schemas/JournalEntry" }
+
+    EngineeringDiscipline:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    EngineeringDisciplineInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+
+    EngineeringDisciplineUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+
+    EngineeringDisciplineListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringDiscipline" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Consultant:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: ["string", "null"] }
+        contactPerson: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        licenseNumber: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ConsultantInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        licenseNumber: { type: string }
+        address: { type: string }
+
+    ConsultantUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        licenseNumber: { type: string }
+        address: { type: string }
+
+    ConsultantListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Consultant" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    DesignPackage:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: ["string", "null"] }
+        disciplineId: { type: ["string", "null"] }
+        consultantId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DesignPackageInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: string }
+        disciplineId: { type: string }
+        consultantId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    DesignPackageUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: string }
+        disciplineId: { type: string }
+        consultantId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    DesignPackageListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DesignPackage" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    DrawingCategory:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DrawingCategoryInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: string }
+        description: { type: string }
+
+    DrawingCategoryUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: string }
+        description: { type: string }
+
+    DrawingCategoryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DrawingCategory" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    TechnicalSpecification:
+      type: object
+      required: [id, companyId, code, name, nameAr, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: ["string", "null"] }
+        section: { type: ["string", "null"] }
+        content: { type: ["string", "null"] }
+        version: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    TechnicalSpecificationInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: string }
+        section: { type: string }
+        content: { type: string }
+        version: { type: string }
+
+    TechnicalSpecificationUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        disciplineId: { type: string }
+        section: { type: string }
+        content: { type: string }
+        version: { type: string }
+
+    TechnicalSpecificationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/TechnicalSpecification" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Drawing:
+      type: object
+      required: [id, companyId, code, title, titleAr, drawingType, currentVersion, approvalStatus, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        drawingType: { type: string }
+        disciplineId: { type: ["string", "null"] }
+        categoryId: { type: ["string", "null"] }
+        consultantId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        phaseId: { type: ["string", "null"] }
+        buildingId: { type: ["string", "null"] }
+        floorId: { type: ["string", "null"] }
+        currentVersion: { type: string }
+        approvalStatus: { type: string }
+        drawingDate: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DrawingInput:
+      type: object
+      required: [companyId, code, title, titleAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        drawingType: { type: string }
+        disciplineId: { type: string }
+        categoryId: { type: string }
+        consultantId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        currentVersion: { type: string }
+        approvalStatus: { type: string }
+        drawingDate: { type: string }
+        description: { type: string }
+
+    DrawingUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        drawingType: { type: string }
+        disciplineId: { type: string }
+        categoryId: { type: string }
+        consultantId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        currentVersion: { type: string }
+        approvalStatus: { type: string }
+        drawingDate: { type: string }
+        description: { type: string }
+
+    DrawingListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Drawing" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    DrawingRevision:
+      type: object
+      required: [id, companyId, drawingId, versionNumber, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        drawingId: { type: string }
+        versionNumber: { type: string }
+        revisionDate: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        revisedBy: { type: ["string", "null"] }
+        fileReference: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DrawingRevisionInput:
+      type: object
+      required: [companyId, drawingId, versionNumber]
+      properties:
+        companyId: { type: string }
+        drawingId: { type: string }
+        versionNumber: { type: string }
+        revisionDate: { type: string }
+        description: { type: string }
+        status: { type: string }
+        revisedBy: { type: string }
+        fileReference: { type: string }
+
+    DrawingRevisionUpdate:
+      type: object
+      properties:
+        drawingId: { type: string }
+        versionNumber: { type: string }
+        revisionDate: { type: string }
+        description: { type: string }
+        status: { type: string }
+        revisedBy: { type: string }
+        fileReference: { type: string }
+
+    DrawingRevisionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DrawingRevision" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Boq:
+      type: object
+      required: [id, companyId, code, title, titleAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        projectId: { type: ["string", "null"] }
+        phaseId: { type: ["string", "null"] }
+        status: { type: string }
+        totalAmount: { type: ["string", "null"] }
+        boqDate: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BoqInput:
+      type: object
+      required: [companyId, code, title, titleAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        status: { type: string }
+        totalAmount: { type: string }
+        boqDate: { type: string }
+        description: { type: string }
+
+    BoqUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        status: { type: string }
+        totalAmount: { type: string }
+        boqDate: { type: string }
+        description: { type: string }
+
+    BoqListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Boq" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    BoqItem:
+      type: object
+      required: [id, companyId, boqId, itemCode, description, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        boqId: { type: string }
+        itemCode: { type: string }
+        description: { type: string }
+        descriptionAr: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        quantity: { type: ["string", "null"] }
+        unitPrice: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BoqItemInput:
+      type: object
+      required: [companyId, boqId, itemCode, description]
+      properties:
+        companyId: { type: string }
+        boqId: { type: string }
+        itemCode: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+
+    BoqItemUpdate:
+      type: object
+      properties:
+        boqId: { type: string }
+        itemCode: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        amount: { type: string }
+
+    BoqItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/BoqItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    BoqQuantityRevision:
+      type: object
+      required: [id, companyId, boqItemId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        boqItemId: { type: string }
+        previousQuantity: { type: ["string", "null"] }
+        newQuantity: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        revisionDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    BoqQuantityRevisionInput:
+      type: object
+      required: [companyId, boqItemId]
+      properties:
+        companyId: { type: string }
+        boqItemId: { type: string }
+        previousQuantity: { type: string }
+        newQuantity: { type: string }
+        reason: { type: string }
+        revisionDate: { type: string }
+
+    BoqQuantityRevisionUpdate:
+      type: object
+      properties:
+        boqItemId: { type: string }
+        previousQuantity: { type: string }
+        newQuantity: { type: string }
+        reason: { type: string }
+        revisionDate: { type: string }
+
+    BoqQuantityRevisionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/BoqQuantityRevision" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CostEstimate:
+      type: object
+      required: [id, companyId, code, title, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        boqId: { type: ["string", "null"] }
+        estimatedCost: { type: ["string", "null"] }
+        estimateDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CostEstimateInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        projectId: { type: string }
+        boqId: { type: string }
+        estimatedCost: { type: string }
+        estimateDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    CostEstimateUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        projectId: { type: string }
+        boqId: { type: string }
+        estimatedCost: { type: string }
+        estimateDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    CostEstimateListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CostEstimate" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InspectionRequest:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: ["string", "null"] }
+        phaseId: { type: ["string", "null"] }
+        buildingId: { type: ["string", "null"] }
+        inspectionType: { type: ["string", "null"] }
+        requestedBy: { type: ["string", "null"] }
+        requestDate: { type: ["string", "null"] }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InspectionRequestInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        buildingId: { type: string }
+        inspectionType: { type: string }
+        requestedBy: { type: string }
+        requestDate: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    InspectionRequestUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        buildingId: { type: string }
+        inspectionType: { type: string }
+        requestedBy: { type: string }
+        requestDate: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    InspectionRequestListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InspectionRequest" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    InspectionReport:
+      type: object
+      required: [id, companyId, code, result, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        inspectionRequestId: { type: ["string", "null"] }
+        reportDate: { type: ["string", "null"] }
+        inspector: { type: ["string", "null"] }
+        result: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    InspectionReportInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        inspectionRequestId: { type: string }
+        reportDate: { type: string }
+        inspector: { type: string }
+        result: { type: string }
+        notes: { type: string }
+
+    InspectionReportUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        inspectionRequestId: { type: string }
+        reportDate: { type: string }
+        inspector: { type: string }
+        result: { type: string }
+        notes: { type: string }
+
+    InspectionReportListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InspectionReport" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Defect:
+      type: object
+      required: [id, companyId, code, description, severity, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        inspectionReportId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        description: { type: string }
+        severity: { type: string }
+        status: { type: string }
+        reportedDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DefectInput:
+      type: object
+      required: [companyId, code, description]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        inspectionReportId: { type: string }
+        projectId: { type: string }
+        description: { type: string }
+        severity: { type: string }
+        status: { type: string }
+        reportedDate: { type: string }
+
+    DefectUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        inspectionReportId: { type: string }
+        projectId: { type: string }
+        description: { type: string }
+        severity: { type: string }
+        status: { type: string }
+        reportedDate: { type: string }
+
+    DefectListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Defect" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CorrectiveAction:
+      type: object
+      required: [id, companyId, code, action, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        defectId: { type: ["string", "null"] }
+        action: { type: string }
+        assignedTo: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        completedDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CorrectiveActionInput:
+      type: object
+      required: [companyId, code, action]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        defectId: { type: string }
+        action: { type: string }
+        assignedTo: { type: string }
+        dueDate: { type: string }
+        completedDate: { type: string }
+        status: { type: string }
+
+    CorrectiveActionUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        defectId: { type: string }
+        action: { type: string }
+        assignedTo: { type: string }
+        dueDate: { type: string }
+        completedDate: { type: string }
+        status: { type: string }
+
+    CorrectiveActionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CorrectiveAction" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Rfi:
+      type: object
+      required: [id, companyId, code, subject, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: ["string", "null"] }
+        subject: { type: string }
+        question: { type: ["string", "null"] }
+        raisedBy: { type: ["string", "null"] }
+        consultantId: { type: ["string", "null"] }
+        status: { type: string }
+        submittedDate: { type: ["string", "null"] }
+        responseDate: { type: ["string", "null"] }
+        response: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    RfiInput:
+      type: object
+      required: [companyId, code, subject]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: string }
+        subject: { type: string }
+        question: { type: string }
+        raisedBy: { type: string }
+        consultantId: { type: string }
+        status: { type: string }
+        submittedDate: { type: string }
+        responseDate: { type: string }
+        response: { type: string }
+
+    RfiUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        projectId: { type: string }
+        subject: { type: string }
+        question: { type: string }
+        raisedBy: { type: string }
+        consultantId: { type: string }
+        status: { type: string }
+        submittedDate: { type: string }
+        responseDate: { type: string }
+        response: { type: string }
+
+    RfiListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Rfi" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    TechnicalSubmittal:
+      type: object
+      required: [id, companyId, code, title, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: ["string", "null"] }
+        title: { type: string }
+        submittalType: { type: ["string", "null"] }
+        submittedBy: { type: ["string", "null"] }
+        consultantId: { type: ["string", "null"] }
+        status: { type: string }
+        submittedDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    TechnicalSubmittalInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: string }
+        title: { type: string }
+        submittalType: { type: string }
+        submittedBy: { type: string }
+        consultantId: { type: string }
+        status: { type: string }
+        submittedDate: { type: string }
+        notes: { type: string }
+
+    TechnicalSubmittalUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        projectId: { type: string }
+        title: { type: string }
+        submittalType: { type: string }
+        submittedBy: { type: string }
+        consultantId: { type: string }
+        status: { type: string }
+        submittedDate: { type: string }
+        notes: { type: string }
+
+    TechnicalSubmittalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/TechnicalSubmittal" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    MaterialSubmittal:
+      type: object
+      required: [id, companyId, code, materialName, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: ["string", "null"] }
+        materialName: { type: string }
+        manufacturer: { type: ["string", "null"] }
+        consultantId: { type: ["string", "null"] }
+        status: { type: string }
+        submittedDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    MaterialSubmittalInput:
+      type: object
+      required: [companyId, code, materialName]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: string }
+        materialName: { type: string }
+        manufacturer: { type: string }
+        consultantId: { type: string }
+        status: { type: string }
+        submittedDate: { type: string }
+        notes: { type: string }
+
+    MaterialSubmittalUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        projectId: { type: string }
+        materialName: { type: string }
+        manufacturer: { type: string }
+        consultantId: { type: string }
+        status: { type: string }
+        submittedDate: { type: string }
+        notes: { type: string }
+
+    MaterialSubmittalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MaterialSubmittal" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ConsultantResponse:
+      type: object
+      required: [id, companyId, code, referenceType, decision, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        referenceType: { type: string }
+        referenceId: { type: ["string", "null"] }
+        consultantId: { type: ["string", "null"] }
+        response: { type: ["string", "null"] }
+        decision: { type: string }
+        responseDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ConsultantResponseInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        referenceType: { type: string }
+        referenceId: { type: string }
+        consultantId: { type: string }
+        response: { type: string }
+        decision: { type: string }
+        responseDate: { type: string }
+
+    ConsultantResponseUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        referenceType: { type: string }
+        referenceId: { type: string }
+        consultantId: { type: string }
+        response: { type: string }
+        decision: { type: string }
+        responseDate: { type: string }
+
+    ConsultantResponseListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ConsultantResponse" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    EngineeringProgress:
+      type: object
+      required: [id, companyId, code, progressPercent, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: ["string", "null"] }
+        phaseId: { type: ["string", "null"] }
+        buildingId: { type: ["string", "null"] }
+        floorId: { type: ["string", "null"] }
+        designPackageId: { type: ["string", "null"] }
+        progressPercent: { type: integer }
+        asOfDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    EngineeringProgressInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        designPackageId: { type: string }
+        progressPercent: { type: integer }
+        asOfDate: { type: string }
+        notes: { type: string }
+
+    EngineeringProgressUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        buildingId: { type: string }
+        floorId: { type: string }
+        designPackageId: { type: string }
+        progressPercent: { type: integer }
+        asOfDate: { type: string }
+        notes: { type: string }
+
+    EngineeringProgressListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EngineeringProgress" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    EngineeringDashboard:
+      type: object
+      required: [drawingsCount, pendingDrawingApprovals, boqCount, totalBoqValue, openRfis, openDefects, openInspections, consultantsCount]
+      properties:
+        drawingsCount: { type: integer }
+        pendingDrawingApprovals: { type: integer }
+        boqCount: { type: integer }
+        totalBoqValue: { type: string }
+        openRfis: { type: integer }
+        openDefects: { type: integer }
+        openInspections: { type: integer }
+        consultantsCount: { type: integer }
+        drawingsByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+        defectsBySeverity:
+          type: array
+          items:
+            type: object
+            required: [severity, count]
+            properties:
+              severity: { type: string }
+              count: { type: integer }

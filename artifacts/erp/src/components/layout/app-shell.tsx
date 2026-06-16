@@ -13,6 +13,8 @@ import {
   ArrowLeftRight, CalendarRange, Receipt, AlertTriangle,
   BookOpen, Network, BookText, Scale, Library, TrendingUp, LineChart,
   PiggyBank, Link2, GanttChartSquare, Calculator,
+  Compass, Ruler, HardHat, Package, PencilRuler, FileStack, ClipboardCheck,
+  FileCheck, ShieldAlert, Wrench, MessageSquare, FileSearch, Microscope, Gauge,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -98,6 +100,29 @@ const NAV_GROUPS = [
     { href: "/budget-lines", icon: ListOrdered, labelKey: "nav.budget_lines" },
     { href: "/budget-vs-actual", icon: Scale, labelKey: "nav.budget_vs_actual" },
     { href: "/account-mappings", icon: Link2, labelKey: "nav.account_mappings" },
+  ]},
+  { titleKey: "nav.group.engineering", items: [
+    { href: "/engineering-dashboard", icon: Compass, labelKey: "nav.engineering_dashboard" },
+    { href: "/engineering-disciplines", icon: Ruler, labelKey: "nav.engineering_disciplines" },
+    { href: "/consultants", icon: HardHat, labelKey: "nav.consultants" },
+    { href: "/design-packages", icon: Package, labelKey: "nav.design_packages" },
+    { href: "/drawing-categories", icon: Boxes, labelKey: "nav.drawing_categories" },
+    { href: "/technical-specifications", icon: FileText, labelKey: "nav.technical_specifications" },
+    { href: "/drawings", icon: PencilRuler, labelKey: "nav.drawings" },
+    { href: "/drawing-revisions", icon: FileStack, labelKey: "nav.drawing_revisions" },
+    { href: "/boqs", icon: ClipboardList, labelKey: "nav.boqs" },
+    { href: "/boq-items", icon: ListOrdered, labelKey: "nav.boq_items" },
+    { href: "/boq-quantity-revisions", icon: FilePen, labelKey: "nav.boq_quantity_revisions" },
+    { href: "/cost-estimates", icon: DollarSign, labelKey: "nav.cost_estimates" },
+    { href: "/inspection-requests", icon: ClipboardCheck, labelKey: "nav.inspection_requests" },
+    { href: "/inspection-reports", icon: FileCheck, labelKey: "nav.inspection_reports" },
+    { href: "/defects", icon: ShieldAlert, labelKey: "nav.defects" },
+    { href: "/corrective-actions", icon: Wrench, labelKey: "nav.corrective_actions" },
+    { href: "/rfis", icon: MessageSquare, labelKey: "nav.rfis" },
+    { href: "/technical-submittals", icon: FileSearch, labelKey: "nav.technical_submittals" },
+    { href: "/material-submittals", icon: Microscope, labelKey: "nav.material_submittals" },
+    { href: "/consultant-responses", icon: MessageSquare, labelKey: "nav.consultant_responses" },
+    { href: "/engineering-progress", icon: Gauge, labelKey: "nav.engineering_progress" },
   ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },

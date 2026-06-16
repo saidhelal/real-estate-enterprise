@@ -6897,3 +6897,2340 @@ export const RecordReportExportResponse = zod.object({
 })
 
 
+/**
+ * @summary List engineering-disciplines
+ */
+export const ListEngineeringDisciplinesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListEngineeringDisciplinesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a EngineeringDiscipline
+ */
+export const CreateEngineeringDisciplineBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a EngineeringDiscipline
+ */
+export const GetEngineeringDisciplineParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetEngineeringDisciplineResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a EngineeringDiscipline
+ */
+export const UpdateEngineeringDisciplineParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateEngineeringDisciplineBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateEngineeringDisciplineResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a EngineeringDiscipline
+ */
+export const DeleteEngineeringDisciplineParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteEngineeringDisciplineResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List consultants
+ */
+export const ListConsultantsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListConsultantsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "licenseNumber": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Consultant
+ */
+export const CreateConsultantBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "licenseNumber": zod.string().optional(),
+  "address": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Consultant
+ */
+export const GetConsultantParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetConsultantResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "licenseNumber": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Consultant
+ */
+export const UpdateConsultantParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateConsultantBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "licenseNumber": zod.string().optional(),
+  "address": zod.string().optional()
+})
+
+export const UpdateConsultantResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "licenseNumber": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Consultant
+ */
+export const DeleteConsultantParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteConsultantResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List design-packages
+ */
+export const ListDesignPackagesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListDesignPackagesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "disciplineId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a DesignPackage
+ */
+export const CreateDesignPackageBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a DesignPackage
+ */
+export const GetDesignPackageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDesignPackageResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "disciplineId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a DesignPackage
+ */
+export const UpdateDesignPackageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDesignPackageBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateDesignPackageResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "disciplineId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a DesignPackage
+ */
+export const DeleteDesignPackageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDesignPackageResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List drawing-categories
+ */
+export const ListDrawingCategorysQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListDrawingCategorysResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a DrawingCategory
+ */
+export const CreateDrawingCategoryBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a DrawingCategory
+ */
+export const GetDrawingCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDrawingCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a DrawingCategory
+ */
+export const UpdateDrawingCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDrawingCategoryBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateDrawingCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a DrawingCategory
+ */
+export const DeleteDrawingCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDrawingCategoryResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List technical-specifications
+ */
+export const ListTechnicalSpecificationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListTechnicalSpecificationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "section": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "version": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a TechnicalSpecification
+ */
+export const CreateTechnicalSpecificationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().optional(),
+  "section": zod.string().optional(),
+  "content": zod.string().optional(),
+  "version": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a TechnicalSpecification
+ */
+export const GetTechnicalSpecificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetTechnicalSpecificationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "section": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "version": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a TechnicalSpecification
+ */
+export const UpdateTechnicalSpecificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateTechnicalSpecificationBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "section": zod.string().optional(),
+  "content": zod.string().optional(),
+  "version": zod.string().optional()
+})
+
+export const UpdateTechnicalSpecificationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "section": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "version": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a TechnicalSpecification
+ */
+export const DeleteTechnicalSpecificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteTechnicalSpecificationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List drawings
+ */
+export const ListDrawingsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListDrawingsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "drawingType": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "categoryId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "floorId": zod.string().nullish(),
+  "currentVersion": zod.string(),
+  "approvalStatus": zod.string(),
+  "drawingDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Drawing
+ */
+export const CreateDrawingBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "drawingType": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "categoryId": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "floorId": zod.string().optional(),
+  "currentVersion": zod.string().optional(),
+  "approvalStatus": zod.string().optional(),
+  "drawingDate": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Drawing
+ */
+export const GetDrawingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDrawingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "drawingType": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "categoryId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "floorId": zod.string().nullish(),
+  "currentVersion": zod.string(),
+  "approvalStatus": zod.string(),
+  "drawingDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Drawing
+ */
+export const UpdateDrawingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDrawingBody = zod.object({
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "drawingType": zod.string().optional(),
+  "disciplineId": zod.string().optional(),
+  "categoryId": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "floorId": zod.string().optional(),
+  "currentVersion": zod.string().optional(),
+  "approvalStatus": zod.string().optional(),
+  "drawingDate": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateDrawingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "drawingType": zod.string(),
+  "disciplineId": zod.string().nullish(),
+  "categoryId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "floorId": zod.string().nullish(),
+  "currentVersion": zod.string(),
+  "approvalStatus": zod.string(),
+  "drawingDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Drawing
+ */
+export const DeleteDrawingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDrawingResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List drawing-revisions
+ */
+export const ListDrawingRevisionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListDrawingRevisionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "drawingId": zod.string(),
+  "versionNumber": zod.string(),
+  "revisionDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "revisedBy": zod.string().nullish(),
+  "fileReference": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a DrawingRevision
+ */
+export const CreateDrawingRevisionBody = zod.object({
+  "companyId": zod.string(),
+  "drawingId": zod.string(),
+  "versionNumber": zod.string(),
+  "revisionDate": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "revisedBy": zod.string().optional(),
+  "fileReference": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a DrawingRevision
+ */
+export const GetDrawingRevisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDrawingRevisionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "drawingId": zod.string(),
+  "versionNumber": zod.string(),
+  "revisionDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "revisedBy": zod.string().nullish(),
+  "fileReference": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a DrawingRevision
+ */
+export const UpdateDrawingRevisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDrawingRevisionBody = zod.object({
+  "drawingId": zod.string().optional(),
+  "versionNumber": zod.string().optional(),
+  "revisionDate": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "revisedBy": zod.string().optional(),
+  "fileReference": zod.string().optional()
+})
+
+export const UpdateDrawingRevisionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "drawingId": zod.string(),
+  "versionNumber": zod.string(),
+  "revisionDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "revisedBy": zod.string().nullish(),
+  "fileReference": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a DrawingRevision
+ */
+export const DeleteDrawingRevisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDrawingRevisionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List boqs
+ */
+export const ListBoqsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListBoqsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "status": zod.string(),
+  "totalAmount": zod.string().nullish(),
+  "boqDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Boq
+ */
+export const CreateBoqBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "boqDate": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Boq
+ */
+export const GetBoqParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBoqResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "status": zod.string(),
+  "totalAmount": zod.string().nullish(),
+  "boqDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Boq
+ */
+export const UpdateBoqParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateBoqBody = zod.object({
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "boqDate": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateBoqResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "status": zod.string(),
+  "totalAmount": zod.string().nullish(),
+  "boqDate": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Boq
+ */
+export const DeleteBoqParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteBoqResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List boq-items
+ */
+export const ListBoqItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListBoqItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "boqId": zod.string(),
+  "itemCode": zod.string(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a BoqItem
+ */
+export const CreateBoqItemBody = zod.object({
+  "companyId": zod.string(),
+  "boqId": zod.string(),
+  "itemCode": zod.string(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a BoqItem
+ */
+export const GetBoqItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBoqItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "boqId": zod.string(),
+  "itemCode": zod.string(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a BoqItem
+ */
+export const UpdateBoqItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateBoqItemBody = zod.object({
+  "boqId": zod.string().optional(),
+  "itemCode": zod.string().optional(),
+  "description": zod.string().optional(),
+  "descriptionAr": zod.string().optional(),
+  "unit": zod.string().optional(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "amount": zod.string().optional()
+})
+
+export const UpdateBoqItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "boqId": zod.string(),
+  "itemCode": zod.string(),
+  "description": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "unit": zod.string().nullish(),
+  "quantity": zod.string().nullish(),
+  "unitPrice": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a BoqItem
+ */
+export const DeleteBoqItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteBoqItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List boq-quantity-revisions
+ */
+export const ListBoqQuantityRevisionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListBoqQuantityRevisionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "boqItemId": zod.string(),
+  "previousQuantity": zod.string().nullish(),
+  "newQuantity": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "revisionDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a BoqQuantityRevision
+ */
+export const CreateBoqQuantityRevisionBody = zod.object({
+  "companyId": zod.string(),
+  "boqItemId": zod.string(),
+  "previousQuantity": zod.string().optional(),
+  "newQuantity": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "revisionDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a BoqQuantityRevision
+ */
+export const GetBoqQuantityRevisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBoqQuantityRevisionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "boqItemId": zod.string(),
+  "previousQuantity": zod.string().nullish(),
+  "newQuantity": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "revisionDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a BoqQuantityRevision
+ */
+export const UpdateBoqQuantityRevisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateBoqQuantityRevisionBody = zod.object({
+  "boqItemId": zod.string().optional(),
+  "previousQuantity": zod.string().optional(),
+  "newQuantity": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "revisionDate": zod.string().optional()
+})
+
+export const UpdateBoqQuantityRevisionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "boqItemId": zod.string(),
+  "previousQuantity": zod.string().nullish(),
+  "newQuantity": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "revisionDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a BoqQuantityRevision
+ */
+export const DeleteBoqQuantityRevisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteBoqQuantityRevisionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List cost-estimates
+ */
+export const ListCostEstimatesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListCostEstimatesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "boqId": zod.string().nullish(),
+  "estimatedCost": zod.string().nullish(),
+  "estimateDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CostEstimate
+ */
+export const CreateCostEstimateBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "boqId": zod.string().optional(),
+  "estimatedCost": zod.string().optional(),
+  "estimateDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CostEstimate
+ */
+export const GetCostEstimateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCostEstimateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "boqId": zod.string().nullish(),
+  "estimatedCost": zod.string().nullish(),
+  "estimateDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CostEstimate
+ */
+export const UpdateCostEstimateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCostEstimateBody = zod.object({
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "boqId": zod.string().optional(),
+  "estimatedCost": zod.string().optional(),
+  "estimateDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateCostEstimateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "boqId": zod.string().nullish(),
+  "estimatedCost": zod.string().nullish(),
+  "estimateDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CostEstimate
+ */
+export const DeleteCostEstimateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCostEstimateResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List inspection-requests
+ */
+export const ListInspectionRequestsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListInspectionRequestsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "inspectionType": zod.string().nullish(),
+  "requestedBy": zod.string().nullish(),
+  "requestDate": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InspectionRequest
+ */
+export const CreateInspectionRequestBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "inspectionType": zod.string().optional(),
+  "requestedBy": zod.string().optional(),
+  "requestDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InspectionRequest
+ */
+export const GetInspectionRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInspectionRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "inspectionType": zod.string().nullish(),
+  "requestedBy": zod.string().nullish(),
+  "requestDate": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InspectionRequest
+ */
+export const UpdateInspectionRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInspectionRequestBody = zod.object({
+  "code": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "inspectionType": zod.string().optional(),
+  "requestedBy": zod.string().optional(),
+  "requestDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateInspectionRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "inspectionType": zod.string().nullish(),
+  "requestedBy": zod.string().nullish(),
+  "requestDate": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InspectionRequest
+ */
+export const DeleteInspectionRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInspectionRequestResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List inspection-reports
+ */
+export const ListInspectionReportsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListInspectionReportsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionRequestId": zod.string().nullish(),
+  "reportDate": zod.string().nullish(),
+  "inspector": zod.string().nullish(),
+  "result": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InspectionReport
+ */
+export const CreateInspectionReportBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionRequestId": zod.string().optional(),
+  "reportDate": zod.string().optional(),
+  "inspector": zod.string().optional(),
+  "result": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InspectionReport
+ */
+export const GetInspectionReportParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInspectionReportResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionRequestId": zod.string().nullish(),
+  "reportDate": zod.string().nullish(),
+  "inspector": zod.string().nullish(),
+  "result": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InspectionReport
+ */
+export const UpdateInspectionReportParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInspectionReportBody = zod.object({
+  "code": zod.string().optional(),
+  "inspectionRequestId": zod.string().optional(),
+  "reportDate": zod.string().optional(),
+  "inspector": zod.string().optional(),
+  "result": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInspectionReportResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionRequestId": zod.string().nullish(),
+  "reportDate": zod.string().nullish(),
+  "inspector": zod.string().nullish(),
+  "result": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InspectionReport
+ */
+export const DeleteInspectionReportParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInspectionReportResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List defects
+ */
+export const ListDefectsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListDefectsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionReportId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "description": zod.string(),
+  "severity": zod.string(),
+  "status": zod.string(),
+  "reportedDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Defect
+ */
+export const CreateDefectBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionReportId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "description": zod.string(),
+  "severity": zod.string().optional(),
+  "status": zod.string().optional(),
+  "reportedDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Defect
+ */
+export const GetDefectParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDefectResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionReportId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "description": zod.string(),
+  "severity": zod.string(),
+  "status": zod.string(),
+  "reportedDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Defect
+ */
+export const UpdateDefectParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDefectBody = zod.object({
+  "code": zod.string().optional(),
+  "inspectionReportId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "status": zod.string().optional(),
+  "reportedDate": zod.string().optional()
+})
+
+export const UpdateDefectResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "inspectionReportId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "description": zod.string(),
+  "severity": zod.string(),
+  "status": zod.string(),
+  "reportedDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Defect
+ */
+export const DeleteDefectParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDefectResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List corrective-actions
+ */
+export const ListCorrectiveActionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListCorrectiveActionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "defectId": zod.string().nullish(),
+  "action": zod.string(),
+  "assignedTo": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CorrectiveAction
+ */
+export const CreateCorrectiveActionBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "defectId": zod.string().optional(),
+  "action": zod.string(),
+  "assignedTo": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "completedDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CorrectiveAction
+ */
+export const GetCorrectiveActionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCorrectiveActionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "defectId": zod.string().nullish(),
+  "action": zod.string(),
+  "assignedTo": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CorrectiveAction
+ */
+export const UpdateCorrectiveActionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCorrectiveActionBody = zod.object({
+  "code": zod.string().optional(),
+  "defectId": zod.string().optional(),
+  "action": zod.string().optional(),
+  "assignedTo": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "completedDate": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateCorrectiveActionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "defectId": zod.string().nullish(),
+  "action": zod.string(),
+  "assignedTo": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CorrectiveAction
+ */
+export const DeleteCorrectiveActionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCorrectiveActionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List rfis
+ */
+export const ListRfisQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListRfisResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "subject": zod.string(),
+  "question": zod.string().nullish(),
+  "raisedBy": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "responseDate": zod.string().nullish(),
+  "response": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Rfi
+ */
+export const CreateRfiBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().optional(),
+  "subject": zod.string(),
+  "question": zod.string().optional(),
+  "raisedBy": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "submittedDate": zod.string().optional(),
+  "responseDate": zod.string().optional(),
+  "response": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Rfi
+ */
+export const GetRfiParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetRfiResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "subject": zod.string(),
+  "question": zod.string().nullish(),
+  "raisedBy": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "responseDate": zod.string().nullish(),
+  "response": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Rfi
+ */
+export const UpdateRfiParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateRfiBody = zod.object({
+  "code": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "question": zod.string().optional(),
+  "raisedBy": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "submittedDate": zod.string().optional(),
+  "responseDate": zod.string().optional(),
+  "response": zod.string().optional()
+})
+
+export const UpdateRfiResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "subject": zod.string(),
+  "question": zod.string().nullish(),
+  "raisedBy": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "responseDate": zod.string().nullish(),
+  "response": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Rfi
+ */
+export const DeleteRfiParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteRfiResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List technical-submittals
+ */
+export const ListTechnicalSubmittalsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListTechnicalSubmittalsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "title": zod.string(),
+  "submittalType": zod.string().nullish(),
+  "submittedBy": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a TechnicalSubmittal
+ */
+export const CreateTechnicalSubmittalBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().optional(),
+  "title": zod.string(),
+  "submittalType": zod.string().optional(),
+  "submittedBy": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "submittedDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a TechnicalSubmittal
+ */
+export const GetTechnicalSubmittalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetTechnicalSubmittalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "title": zod.string(),
+  "submittalType": zod.string().nullish(),
+  "submittedBy": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a TechnicalSubmittal
+ */
+export const UpdateTechnicalSubmittalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateTechnicalSubmittalBody = zod.object({
+  "code": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "title": zod.string().optional(),
+  "submittalType": zod.string().optional(),
+  "submittedBy": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "submittedDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateTechnicalSubmittalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "title": zod.string(),
+  "submittalType": zod.string().nullish(),
+  "submittedBy": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a TechnicalSubmittal
+ */
+export const DeleteTechnicalSubmittalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteTechnicalSubmittalResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List material-submittals
+ */
+export const ListMaterialSubmittalsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListMaterialSubmittalsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "materialName": zod.string(),
+  "manufacturer": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a MaterialSubmittal
+ */
+export const CreateMaterialSubmittalBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().optional(),
+  "materialName": zod.string(),
+  "manufacturer": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "submittedDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a MaterialSubmittal
+ */
+export const GetMaterialSubmittalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetMaterialSubmittalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "materialName": zod.string(),
+  "manufacturer": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a MaterialSubmittal
+ */
+export const UpdateMaterialSubmittalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateMaterialSubmittalBody = zod.object({
+  "code": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "materialName": zod.string().optional(),
+  "manufacturer": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "submittedDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateMaterialSubmittalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "materialName": zod.string(),
+  "manufacturer": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "status": zod.string(),
+  "submittedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a MaterialSubmittal
+ */
+export const DeleteMaterialSubmittalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteMaterialSubmittalResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List consultant-responses
+ */
+export const ListConsultantResponsesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListConsultantResponsesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "referenceType": zod.string(),
+  "referenceId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "response": zod.string().nullish(),
+  "decision": zod.string(),
+  "responseDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ConsultantResponse
+ */
+export const CreateConsultantResponseBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "referenceType": zod.string().optional(),
+  "referenceId": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "response": zod.string().optional(),
+  "decision": zod.string().optional(),
+  "responseDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ConsultantResponse
+ */
+export const GetConsultantResponseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetConsultantResponseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "referenceType": zod.string(),
+  "referenceId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "response": zod.string().nullish(),
+  "decision": zod.string(),
+  "responseDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ConsultantResponse
+ */
+export const UpdateConsultantResponseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateConsultantResponseBody = zod.object({
+  "code": zod.string().optional(),
+  "referenceType": zod.string().optional(),
+  "referenceId": zod.string().optional(),
+  "consultantId": zod.string().optional(),
+  "response": zod.string().optional(),
+  "decision": zod.string().optional(),
+  "responseDate": zod.string().optional()
+})
+
+export const UpdateConsultantResponseResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "referenceType": zod.string(),
+  "referenceId": zod.string().nullish(),
+  "consultantId": zod.string().nullish(),
+  "response": zod.string().nullish(),
+  "decision": zod.string(),
+  "responseDate": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ConsultantResponse
+ */
+export const DeleteConsultantResponseParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteConsultantResponseResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List engineering-progress
+ */
+export const ListEngineeringProgresssQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListEngineeringProgresssResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "floorId": zod.string().nullish(),
+  "designPackageId": zod.string().nullish(),
+  "progressPercent": zod.number(),
+  "asOfDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a EngineeringProgress
+ */
+export const CreateEngineeringProgressBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "floorId": zod.string().optional(),
+  "designPackageId": zod.string().optional(),
+  "progressPercent": zod.number().optional(),
+  "asOfDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a EngineeringProgress
+ */
+export const GetEngineeringProgressParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetEngineeringProgressResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "floorId": zod.string().nullish(),
+  "designPackageId": zod.string().nullish(),
+  "progressPercent": zod.number(),
+  "asOfDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a EngineeringProgress
+ */
+export const UpdateEngineeringProgressParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateEngineeringProgressBody = zod.object({
+  "code": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
+  "buildingId": zod.string().optional(),
+  "floorId": zod.string().optional(),
+  "designPackageId": zod.string().optional(),
+  "progressPercent": zod.number().optional(),
+  "asOfDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateEngineeringProgressResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "floorId": zod.string().nullish(),
+  "designPackageId": zod.string().nullish(),
+  "progressPercent": zod.number(),
+  "asOfDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a EngineeringProgress
+ */
+export const DeleteEngineeringProgressParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteEngineeringProgressResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Engineering dashboard KPIs
+ */
+export const GetEngineeringDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetEngineeringDashboardResponse = zod.object({
+  "drawingsCount": zod.number(),
+  "pendingDrawingApprovals": zod.number(),
+  "boqCount": zod.number(),
+  "totalBoqValue": zod.string(),
+  "openRfis": zod.number(),
+  "openDefects": zod.number(),
+  "openInspections": zod.number(),
+  "consultantsCount": zod.number(),
+  "drawingsByStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+})).optional(),
+  "defectsBySeverity": zod.array(zod.object({
+  "severity": zod.string(),
+  "count": zod.number()
+})).optional()
+})
+
+

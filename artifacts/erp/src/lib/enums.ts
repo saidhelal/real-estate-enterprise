@@ -63,6 +63,27 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   branch: { en: "Branch", ar: "فرع" },
   // accounting: fiscal period / budget status
   open: { en: "Open", ar: "مفتوح" },
+  // engineering: statuses / types
+  in_progress: { en: "In Progress", ar: "قيد التنفيذ" },
+  submitted: { en: "Submitted", ar: "مُقدَّم" },
+  rejected: { en: "Rejected", ar: "مرفوض" },
+  superseded: { en: "Superseded", ar: "مُستبدَل" },
+  approved_with_comments: { en: "Approved with Comments", ar: "معتمد مع ملاحظات" },
+  answered: { en: "Answered", ar: "تمت الإجابة" },
+  under_review: { en: "Under Review", ar: "قيد المراجعة" },
+  pass: { en: "Pass", ar: "ناجح" },
+  fail: { en: "Fail", ar: "راسب" },
+  conditional: { en: "Conditional", ar: "مشروط" },
+  low: { en: "Low", ar: "منخفض" },
+  medium: { en: "Medium", ar: "متوسط" },
+  high: { en: "High", ar: "مرتفع" },
+  critical: { en: "Critical", ar: "حرج" },
+  architectural: { en: "Architectural", ar: "معماري" },
+  structural: { en: "Structural", ar: "إنشائي" },
+  mep: { en: "MEP", ar: "كهروميكانيكي" },
+  rfi: { en: "RFI", ar: "طلب معلومات" },
+  technical_submittal: { en: "Technical Submittal", ar: "تقديم فني" },
+  material_submittal: { en: "Material Submittal", ar: "تقديم مواد" },
 };
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {

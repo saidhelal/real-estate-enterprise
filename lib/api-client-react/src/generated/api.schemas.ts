@@ -2868,6 +2868,1020 @@ export interface AccountingDashboardResponse {
   recentEntries?: JournalEntry[];
 }
 
+export interface EngineeringDiscipline {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EngineeringDisciplineInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  description?: string;
+}
+
+export interface EngineeringDisciplineUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  description?: string;
+}
+
+export interface EngineeringDisciplineListResponse {
+  data: EngineeringDiscipline[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Consultant {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  disciplineId?: string | null;
+  /** @nullable */
+  contactPerson?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  licenseNumber?: string | null;
+  /** @nullable */
+  address?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ConsultantInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  disciplineId?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  licenseNumber?: string;
+  address?: string;
+}
+
+export interface ConsultantUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  disciplineId?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  licenseNumber?: string;
+  address?: string;
+}
+
+export interface ConsultantListResponse {
+  data: Consultant[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DesignPackage {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  disciplineId?: string | null;
+  /** @nullable */
+  consultantId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DesignPackageInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  projectId?: string;
+  disciplineId?: string;
+  consultantId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface DesignPackageUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  projectId?: string;
+  disciplineId?: string;
+  consultantId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface DesignPackageListResponse {
+  data: DesignPackage[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DrawingCategory {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  disciplineId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DrawingCategoryInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  disciplineId?: string;
+  description?: string;
+}
+
+export interface DrawingCategoryUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  disciplineId?: string;
+  description?: string;
+}
+
+export interface DrawingCategoryListResponse {
+  data: DrawingCategory[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface TechnicalSpecification {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  disciplineId?: string | null;
+  /** @nullable */
+  section?: string | null;
+  /** @nullable */
+  content?: string | null;
+  /** @nullable */
+  version?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface TechnicalSpecificationInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  disciplineId?: string;
+  section?: string;
+  content?: string;
+  version?: string;
+}
+
+export interface TechnicalSpecificationUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  disciplineId?: string;
+  section?: string;
+  content?: string;
+  version?: string;
+}
+
+export interface TechnicalSpecificationListResponse {
+  data: TechnicalSpecification[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Drawing {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  drawingType: string;
+  /** @nullable */
+  disciplineId?: string | null;
+  /** @nullable */
+  categoryId?: string | null;
+  /** @nullable */
+  consultantId?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
+  /** @nullable */
+  buildingId?: string | null;
+  /** @nullable */
+  floorId?: string | null;
+  currentVersion: string;
+  approvalStatus: string;
+  /** @nullable */
+  drawingDate?: string | null;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DrawingInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  drawingType?: string;
+  disciplineId?: string;
+  categoryId?: string;
+  consultantId?: string;
+  projectId?: string;
+  phaseId?: string;
+  buildingId?: string;
+  floorId?: string;
+  currentVersion?: string;
+  approvalStatus?: string;
+  drawingDate?: string;
+  description?: string;
+}
+
+export interface DrawingUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  drawingType?: string;
+  disciplineId?: string;
+  categoryId?: string;
+  consultantId?: string;
+  projectId?: string;
+  phaseId?: string;
+  buildingId?: string;
+  floorId?: string;
+  currentVersion?: string;
+  approvalStatus?: string;
+  drawingDate?: string;
+  description?: string;
+}
+
+export interface DrawingListResponse {
+  data: Drawing[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DrawingRevision {
+  id: string;
+  companyId: string;
+  drawingId: string;
+  versionNumber: string;
+  /** @nullable */
+  revisionDate?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  revisedBy?: string | null;
+  /** @nullable */
+  fileReference?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DrawingRevisionInput {
+  companyId: string;
+  drawingId: string;
+  versionNumber: string;
+  revisionDate?: string;
+  description?: string;
+  status?: string;
+  revisedBy?: string;
+  fileReference?: string;
+}
+
+export interface DrawingRevisionUpdate {
+  drawingId?: string;
+  versionNumber?: string;
+  revisionDate?: string;
+  description?: string;
+  status?: string;
+  revisedBy?: string;
+  fileReference?: string;
+}
+
+export interface DrawingRevisionListResponse {
+  data: DrawingRevision[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Boq {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
+  status: string;
+  /** @nullable */
+  totalAmount?: string | null;
+  /** @nullable */
+  boqDate?: string | null;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface BoqInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  projectId?: string;
+  phaseId?: string;
+  status?: string;
+  totalAmount?: string;
+  boqDate?: string;
+  description?: string;
+}
+
+export interface BoqUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  projectId?: string;
+  phaseId?: string;
+  status?: string;
+  totalAmount?: string;
+  boqDate?: string;
+  description?: string;
+}
+
+export interface BoqListResponse {
+  data: Boq[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface BoqItem {
+  id: string;
+  companyId: string;
+  boqId: string;
+  itemCode: string;
+  description: string;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  quantity?: string | null;
+  /** @nullable */
+  unitPrice?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface BoqItemInput {
+  companyId: string;
+  boqId: string;
+  itemCode: string;
+  description: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  unitPrice?: string;
+  amount?: string;
+}
+
+export interface BoqItemUpdate {
+  boqId?: string;
+  itemCode?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  quantity?: string;
+  unitPrice?: string;
+  amount?: string;
+}
+
+export interface BoqItemListResponse {
+  data: BoqItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface BoqQuantityRevision {
+  id: string;
+  companyId: string;
+  boqItemId: string;
+  /** @nullable */
+  previousQuantity?: string | null;
+  /** @nullable */
+  newQuantity?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  revisionDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface BoqQuantityRevisionInput {
+  companyId: string;
+  boqItemId: string;
+  previousQuantity?: string;
+  newQuantity?: string;
+  reason?: string;
+  revisionDate?: string;
+}
+
+export interface BoqQuantityRevisionUpdate {
+  boqItemId?: string;
+  previousQuantity?: string;
+  newQuantity?: string;
+  reason?: string;
+  revisionDate?: string;
+}
+
+export interface BoqQuantityRevisionListResponse {
+  data: BoqQuantityRevision[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CostEstimate {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  /** @nullable */
+  titleAr?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  boqId?: string | null;
+  /** @nullable */
+  estimatedCost?: string | null;
+  /** @nullable */
+  estimateDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CostEstimateInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr?: string;
+  projectId?: string;
+  boqId?: string;
+  estimatedCost?: string;
+  estimateDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface CostEstimateUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  projectId?: string;
+  boqId?: string;
+  estimatedCost?: string;
+  estimateDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface CostEstimateListResponse {
+  data: CostEstimate[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InspectionRequest {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
+  /** @nullable */
+  buildingId?: string | null;
+  /** @nullable */
+  inspectionType?: string | null;
+  /** @nullable */
+  requestedBy?: string | null;
+  /** @nullable */
+  requestDate?: string | null;
+  status: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InspectionRequestInput {
+  companyId: string;
+  code: string;
+  projectId?: string;
+  phaseId?: string;
+  buildingId?: string;
+  inspectionType?: string;
+  requestedBy?: string;
+  requestDate?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface InspectionRequestUpdate {
+  code?: string;
+  projectId?: string;
+  phaseId?: string;
+  buildingId?: string;
+  inspectionType?: string;
+  requestedBy?: string;
+  requestDate?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface InspectionRequestListResponse {
+  data: InspectionRequest[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InspectionReport {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  inspectionRequestId?: string | null;
+  /** @nullable */
+  reportDate?: string | null;
+  /** @nullable */
+  inspector?: string | null;
+  result: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InspectionReportInput {
+  companyId: string;
+  code: string;
+  inspectionRequestId?: string;
+  reportDate?: string;
+  inspector?: string;
+  result?: string;
+  notes?: string;
+}
+
+export interface InspectionReportUpdate {
+  code?: string;
+  inspectionRequestId?: string;
+  reportDate?: string;
+  inspector?: string;
+  result?: string;
+  notes?: string;
+}
+
+export interface InspectionReportListResponse {
+  data: InspectionReport[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Defect {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  inspectionReportId?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  description: string;
+  severity: string;
+  status: string;
+  /** @nullable */
+  reportedDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DefectInput {
+  companyId: string;
+  code: string;
+  inspectionReportId?: string;
+  projectId?: string;
+  description: string;
+  severity?: string;
+  status?: string;
+  reportedDate?: string;
+}
+
+export interface DefectUpdate {
+  code?: string;
+  inspectionReportId?: string;
+  projectId?: string;
+  description?: string;
+  severity?: string;
+  status?: string;
+  reportedDate?: string;
+}
+
+export interface DefectListResponse {
+  data: Defect[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CorrectiveAction {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  defectId?: string | null;
+  action: string;
+  /** @nullable */
+  assignedTo?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  completedDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CorrectiveActionInput {
+  companyId: string;
+  code: string;
+  defectId?: string;
+  action: string;
+  assignedTo?: string;
+  dueDate?: string;
+  completedDate?: string;
+  status?: string;
+}
+
+export interface CorrectiveActionUpdate {
+  code?: string;
+  defectId?: string;
+  action?: string;
+  assignedTo?: string;
+  dueDate?: string;
+  completedDate?: string;
+  status?: string;
+}
+
+export interface CorrectiveActionListResponse {
+  data: CorrectiveAction[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Rfi {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  projectId?: string | null;
+  subject: string;
+  /** @nullable */
+  question?: string | null;
+  /** @nullable */
+  raisedBy?: string | null;
+  /** @nullable */
+  consultantId?: string | null;
+  status: string;
+  /** @nullable */
+  submittedDate?: string | null;
+  /** @nullable */
+  responseDate?: string | null;
+  /** @nullable */
+  response?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface RfiInput {
+  companyId: string;
+  code: string;
+  projectId?: string;
+  subject: string;
+  question?: string;
+  raisedBy?: string;
+  consultantId?: string;
+  status?: string;
+  submittedDate?: string;
+  responseDate?: string;
+  response?: string;
+}
+
+export interface RfiUpdate {
+  code?: string;
+  projectId?: string;
+  subject?: string;
+  question?: string;
+  raisedBy?: string;
+  consultantId?: string;
+  status?: string;
+  submittedDate?: string;
+  responseDate?: string;
+  response?: string;
+}
+
+export interface RfiListResponse {
+  data: Rfi[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface TechnicalSubmittal {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  projectId?: string | null;
+  title: string;
+  /** @nullable */
+  submittalType?: string | null;
+  /** @nullable */
+  submittedBy?: string | null;
+  /** @nullable */
+  consultantId?: string | null;
+  status: string;
+  /** @nullable */
+  submittedDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface TechnicalSubmittalInput {
+  companyId: string;
+  code: string;
+  projectId?: string;
+  title: string;
+  submittalType?: string;
+  submittedBy?: string;
+  consultantId?: string;
+  status?: string;
+  submittedDate?: string;
+  notes?: string;
+}
+
+export interface TechnicalSubmittalUpdate {
+  code?: string;
+  projectId?: string;
+  title?: string;
+  submittalType?: string;
+  submittedBy?: string;
+  consultantId?: string;
+  status?: string;
+  submittedDate?: string;
+  notes?: string;
+}
+
+export interface TechnicalSubmittalListResponse {
+  data: TechnicalSubmittal[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface MaterialSubmittal {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  projectId?: string | null;
+  materialName: string;
+  /** @nullable */
+  manufacturer?: string | null;
+  /** @nullable */
+  consultantId?: string | null;
+  status: string;
+  /** @nullable */
+  submittedDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MaterialSubmittalInput {
+  companyId: string;
+  code: string;
+  projectId?: string;
+  materialName: string;
+  manufacturer?: string;
+  consultantId?: string;
+  status?: string;
+  submittedDate?: string;
+  notes?: string;
+}
+
+export interface MaterialSubmittalUpdate {
+  code?: string;
+  projectId?: string;
+  materialName?: string;
+  manufacturer?: string;
+  consultantId?: string;
+  status?: string;
+  submittedDate?: string;
+  notes?: string;
+}
+
+export interface MaterialSubmittalListResponse {
+  data: MaterialSubmittal[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ConsultantResponse {
+  id: string;
+  companyId: string;
+  code: string;
+  referenceType: string;
+  /** @nullable */
+  referenceId?: string | null;
+  /** @nullable */
+  consultantId?: string | null;
+  /** @nullable */
+  response?: string | null;
+  decision: string;
+  /** @nullable */
+  responseDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ConsultantResponseInput {
+  companyId: string;
+  code: string;
+  referenceType?: string;
+  referenceId?: string;
+  consultantId?: string;
+  response?: string;
+  decision?: string;
+  responseDate?: string;
+}
+
+export interface ConsultantResponseUpdate {
+  code?: string;
+  referenceType?: string;
+  referenceId?: string;
+  consultantId?: string;
+  response?: string;
+  decision?: string;
+  responseDate?: string;
+}
+
+export interface ConsultantResponseListResponse {
+  data: ConsultantResponse[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EngineeringProgress {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
+  /** @nullable */
+  buildingId?: string | null;
+  /** @nullable */
+  floorId?: string | null;
+  /** @nullable */
+  designPackageId?: string | null;
+  progressPercent: number;
+  /** @nullable */
+  asOfDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EngineeringProgressInput {
+  companyId: string;
+  code: string;
+  projectId?: string;
+  phaseId?: string;
+  buildingId?: string;
+  floorId?: string;
+  designPackageId?: string;
+  progressPercent?: number;
+  asOfDate?: string;
+  notes?: string;
+}
+
+export interface EngineeringProgressUpdate {
+  code?: string;
+  projectId?: string;
+  phaseId?: string;
+  buildingId?: string;
+  floorId?: string;
+  designPackageId?: string;
+  progressPercent?: number;
+  asOfDate?: string;
+  notes?: string;
+}
+
+export interface EngineeringProgressListResponse {
+  data: EngineeringProgress[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export type EngineeringDashboardDrawingsByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export type EngineeringDashboardDefectsBySeverityItem = {
+  severity: string;
+  count: number;
+};
+
+export interface EngineeringDashboard {
+  drawingsCount: number;
+  pendingDrawingApprovals: number;
+  boqCount: number;
+  totalBoqValue: string;
+  openRfis: number;
+  openDefects: number;
+  openInspections: number;
+  consultantsCount: number;
+  drawingsByStatus?: EngineeringDashboardDrawingsByStatusItem[];
+  defectsBySeverity?: EngineeringDashboardDefectsBySeverityItem[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -3370,6 +4384,150 @@ budgetId?: string;
 };
 
 export type GetAccountingDashboardParams = {
+companyId?: string;
+};
+
+export type ListEngineeringDisciplinesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListConsultantsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListDesignPackagesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListDrawingCategorysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListTechnicalSpecificationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListDrawingsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListDrawingRevisionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListBoqsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListBoqItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListBoqQuantityRevisionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListCostEstimatesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListInspectionRequestsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListInspectionReportsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListDefectsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListCorrectiveActionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListRfisParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListTechnicalSubmittalsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListMaterialSubmittalsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListConsultantResponsesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEngineeringProgresssParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type GetEngineeringDashboardParams = {
 companyId?: string;
 };
 

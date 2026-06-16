@@ -77,6 +77,28 @@ import BudgetVsActualPage from "@/pages/budget-vs-actual";
 import AccountMappingsPage from "@/pages/account-mappings";
 import AccountingDashboardPage from "@/pages/accounting-dashboard";
 
+import EngineeringDashboardPage from "@/pages/engineering-dashboard";
+import EngineeringDisciplinesPage from "@/pages/engineering-disciplines";
+import ConsultantsPage from "@/pages/consultants";
+import DesignPackagesPage from "@/pages/design-packages";
+import DrawingCategoriesPage from "@/pages/drawing-categories";
+import TechnicalSpecificationsPage from "@/pages/technical-specifications";
+import DrawingsPage from "@/pages/drawings";
+import DrawingRevisionsPage from "@/pages/drawing-revisions";
+import BoqsPage from "@/pages/boqs";
+import BoqItemsPage from "@/pages/boq-items";
+import BoqQuantityRevisionsPage from "@/pages/boq-quantity-revisions";
+import CostEstimatesPage from "@/pages/cost-estimates";
+import InspectionRequestsPage from "@/pages/inspection-requests";
+import InspectionReportsPage from "@/pages/inspection-reports";
+import DefectsPage from "@/pages/defects";
+import CorrectiveActionsPage from "@/pages/corrective-actions";
+import RfisPage from "@/pages/rfis";
+import TechnicalSubmittalsPage from "@/pages/technical-submittals";
+import MaterialSubmittalsPage from "@/pages/material-submittals";
+import ConsultantResponsesPage from "@/pages/consultant-responses";
+import EngineeringProgressPage from "@/pages/engineering-progress";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -161,6 +183,27 @@ function Router() {
             <Route path="/budget-lines" component={BudgetLinesPage} />
             <Route path="/budget-vs-actual" component={BudgetVsActualPage} />
             <Route path="/account-mappings" component={AccountMappingsPage} />
+            <Route path="/engineering-dashboard" component={EngineeringDashboardPage} />
+            <Route path="/engineering-disciplines" component={EngineeringDisciplinesPage} />
+            <Route path="/consultants" component={ConsultantsPage} />
+            <Route path="/design-packages" component={DesignPackagesPage} />
+            <Route path="/drawing-categories" component={DrawingCategoriesPage} />
+            <Route path="/technical-specifications" component={TechnicalSpecificationsPage} />
+            <Route path="/drawings" component={DrawingsPage} />
+            <Route path="/drawing-revisions" component={DrawingRevisionsPage} />
+            <Route path="/boqs" component={BoqsPage} />
+            <Route path="/boq-items" component={BoqItemsPage} />
+            <Route path="/boq-quantity-revisions" component={BoqQuantityRevisionsPage} />
+            <Route path="/cost-estimates" component={CostEstimatesPage} />
+            <Route path="/inspection-requests" component={InspectionRequestsPage} />
+            <Route path="/inspection-reports" component={InspectionReportsPage} />
+            <Route path="/defects" component={DefectsPage} />
+            <Route path="/corrective-actions" component={CorrectiveActionsPage} />
+            <Route path="/rfis" component={RfisPage} />
+            <Route path="/technical-submittals" component={TechnicalSubmittalsPage} />
+            <Route path="/material-submittals" component={MaterialSubmittalsPage} />
+            <Route path="/consultant-responses" component={ConsultantResponsesPage} />
+            <Route path="/engineering-progress" component={EngineeringProgressPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>
