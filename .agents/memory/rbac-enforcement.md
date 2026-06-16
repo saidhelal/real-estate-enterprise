@@ -41,3 +41,19 @@ codes, but the route still guards with a broader sibling (e.g. submit checked
 permission is then dead — silently bypassed for anyone holding the broader one.
 When adding a lifecycle route, confirm its `requirePermission(...)` string equals
 the `${module}.${action}` you registered, not a near neighbor.
+
+**Lifecycle status must be unsettable through generic create/update paths.**
+Registering `extraActions` and dedicated action routes is still bypassable if the
+generic POST/PATCH mass-assigns `status` from the request body (`...parsed.data`)
+and the input schema exposes `status` as writable. Two leaks to close together:
+- PATCH: reject (403) any body that sets a privileged status (e.g. approved/
+  rejected/resolved/posted/reversed) — force callers to the action endpoint.
+- POST (create): overwrite `status` server-side to the initial state (pending/
+  open/draft) regardless of payload, and null out lifecycle timestamps
+  (approvalDate/resolvedAt). Otherwise a user with only `*.create` can create a
+  record already in a privileged state.
+**Why:** mass-assignment escalates state without the extraAction permission. The
+PATCH guard alone is insufficient — the create path is the quieter hole.
+**How to apply:** also strip privileged options from the UI status `select` so the
+form cannot submit a value the server will 403; lifecycle transitions belong on
+dedicated action buttons/endpoints, not the edit form.

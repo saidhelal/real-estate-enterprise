@@ -10440,6 +10440,1131 @@ export interface LegalAdvisorReport {
   byLawFirm?: LegalGroupCount[];
 }
 
+export interface LandParcel {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  locationAr?: string | null;
+  area: string;
+  areaUnit: string;
+  /** @nullable */
+  zoning?: string | null;
+  /** @nullable */
+  classification?: string | null;
+  marketValue: string;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LandParcelInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  projectId?: string;
+  location?: string;
+  locationAr?: string;
+  area?: string;
+  areaUnit?: string;
+  zoning?: string;
+  classification?: string;
+  marketValue?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface LandParcelUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  projectId?: string;
+  location?: string;
+  locationAr?: string;
+  area?: string;
+  areaUnit?: string;
+  zoning?: string;
+  classification?: string;
+  marketValue?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface LandParcelListResponse {
+  data: LandParcel[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LandOwnership {
+  id: string;
+  companyId: string;
+  parcelId: string;
+  ownerName: string;
+  /** @nullable */
+  ownerNameAr?: string | null;
+  ownershipType: string;
+  sharePercentage: string;
+  /** @nullable */
+  titleDeedNo?: string | null;
+  /** @nullable */
+  registrationDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LandOwnershipInput {
+  companyId: string;
+  parcelId: string;
+  ownerName: string;
+  ownerNameAr?: string;
+  ownershipType?: string;
+  sharePercentage?: string;
+  titleDeedNo?: string;
+  registrationDate?: string;
+  notes?: string;
+}
+
+export interface LandOwnershipUpdate {
+  companyId?: string;
+  parcelId?: string;
+  ownerName?: string;
+  ownerNameAr?: string;
+  ownershipType?: string;
+  sharePercentage?: string;
+  titleDeedNo?: string;
+  registrationDate?: string;
+  notes?: string;
+}
+
+export interface LandOwnershipListResponse {
+  data: LandOwnership[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LandLegalStatus {
+  id: string;
+  companyId: string;
+  parcelId: string;
+  status: string;
+  /** @nullable */
+  authority?: string | null;
+  /** @nullable */
+  referenceNo?: string | null;
+  /** @nullable */
+  effectiveDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LandLegalStatusInput {
+  companyId: string;
+  parcelId: string;
+  status?: string;
+  authority?: string;
+  referenceNo?: string;
+  effectiveDate?: string;
+  notes?: string;
+}
+
+export interface LandLegalStatusUpdate {
+  companyId?: string;
+  parcelId?: string;
+  status?: string;
+  authority?: string;
+  referenceNo?: string;
+  effectiveDate?: string;
+  notes?: string;
+}
+
+export interface LandLegalStatusListResponse {
+  data: LandLegalStatus[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LandUtilization {
+  id: string;
+  companyId: string;
+  parcelId: string;
+  utilizationType: string;
+  allocatedArea: string;
+  /** @nullable */
+  projectId?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LandUtilizationInput {
+  companyId: string;
+  parcelId: string;
+  utilizationType?: string;
+  allocatedArea?: string;
+  projectId?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface LandUtilizationUpdate {
+  companyId?: string;
+  parcelId?: string;
+  utilizationType?: string;
+  allocatedArea?: string;
+  projectId?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface LandUtilizationListResponse {
+  data: LandUtilization[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LandDocument {
+  id: string;
+  companyId: string;
+  parcelId: string;
+  docType: string;
+  title: string;
+  /** @nullable */
+  titleAr?: string | null;
+  /** @nullable */
+  fileUrl?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LandDocumentInput {
+  companyId: string;
+  parcelId: string;
+  docType?: string;
+  title: string;
+  titleAr?: string;
+  fileUrl?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface LandDocumentUpdate {
+  companyId?: string;
+  parcelId?: string;
+  docType?: string;
+  title?: string;
+  titleAr?: string;
+  fileUrl?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  notes?: string;
+}
+
+export interface LandDocumentListResponse {
+  data: LandDocument[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LandAcquisition {
+  id: string;
+  companyId: string;
+  parcelId: string;
+  acquisitionType: string;
+  /** @nullable */
+  sellerName?: string | null;
+  /** @nullable */
+  acquisitionDate?: string | null;
+  cost: string;
+  paymentStatus: string;
+  /** @nullable */
+  referenceNo?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LandAcquisitionInput {
+  companyId: string;
+  parcelId: string;
+  acquisitionType?: string;
+  sellerName?: string;
+  acquisitionDate?: string;
+  cost?: string;
+  paymentStatus?: string;
+  referenceNo?: string;
+  notes?: string;
+}
+
+export interface LandAcquisitionUpdate {
+  companyId?: string;
+  parcelId?: string;
+  acquisitionType?: string;
+  sellerName?: string;
+  acquisitionDate?: string;
+  cost?: string;
+  paymentStatus?: string;
+  referenceNo?: string;
+  notes?: string;
+}
+
+export interface LandAcquisitionListResponse {
+  data: LandAcquisition[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LandBankStatusCount {
+  status: string;
+  count: number;
+}
+
+export interface LandBankDashboard {
+  totalParcels: number;
+  totalArea: string;
+  totalMarketValue: string;
+  totalAcquisitionCost: string;
+  byStatus: LandBankStatusCount[];
+}
+
+export interface HandoverRequest {
+  id: string;
+  companyId: string;
+  code: string;
+  unitId: string;
+  /** @nullable */
+  customerId?: string | null;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  reservationId?: string | null;
+  handoverType: string;
+  /** @nullable */
+  requestDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface HandoverRequestInput {
+  companyId: string;
+  code: string;
+  unitId: string;
+  customerId?: string;
+  contractId?: string;
+  reservationId?: string;
+  handoverType?: string;
+  requestDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface HandoverRequestUpdate {
+  companyId?: string;
+  code?: string;
+  unitId?: string;
+  customerId?: string;
+  contractId?: string;
+  reservationId?: string;
+  handoverType?: string;
+  requestDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface HandoverRequestListResponse {
+  data: HandoverRequest[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HandoverSchedule {
+  id: string;
+  companyId: string;
+  requestId: string;
+  /** @nullable */
+  scheduledDate?: string | null;
+  /** @nullable */
+  scheduledTime?: string | null;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  locationAr?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface HandoverScheduleInput {
+  companyId: string;
+  requestId: string;
+  scheduledDate?: string;
+  scheduledTime?: string;
+  location?: string;
+  locationAr?: string;
+  assignedToUserId?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface HandoverScheduleUpdate {
+  companyId?: string;
+  requestId?: string;
+  scheduledDate?: string;
+  scheduledTime?: string;
+  location?: string;
+  locationAr?: string;
+  assignedToUserId?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface HandoverScheduleListResponse {
+  data: HandoverSchedule[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HandoverChecklistItem {
+  id: string;
+  companyId: string;
+  requestId: string;
+  item: string;
+  /** @nullable */
+  itemAr?: string | null;
+  /** @nullable */
+  category?: string | null;
+  status: string;
+  /** @nullable */
+  remarks?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface HandoverChecklistItemInput {
+  companyId: string;
+  requestId: string;
+  item: string;
+  itemAr?: string;
+  category?: string;
+  status?: string;
+  remarks?: string;
+  notes?: string;
+}
+
+export interface HandoverChecklistItemUpdate {
+  companyId?: string;
+  requestId?: string;
+  item?: string;
+  itemAr?: string;
+  category?: string;
+  status?: string;
+  remarks?: string;
+  notes?: string;
+}
+
+export interface HandoverChecklistItemListResponse {
+  data: HandoverChecklistItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HandoverMinute {
+  id: string;
+  companyId: string;
+  requestId: string;
+  /** @nullable */
+  minuteDate?: string | null;
+  summary: string;
+  /** @nullable */
+  summaryAr?: string | null;
+  /** @nullable */
+  attendees?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface HandoverMinuteInput {
+  companyId: string;
+  requestId: string;
+  minuteDate?: string;
+  summary: string;
+  summaryAr?: string;
+  attendees?: string;
+  notes?: string;
+}
+
+export interface HandoverMinuteUpdate {
+  companyId?: string;
+  requestId?: string;
+  minuteDate?: string;
+  summary?: string;
+  summaryAr?: string;
+  attendees?: string;
+  notes?: string;
+}
+
+export interface HandoverMinuteListResponse {
+  data: HandoverMinute[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HandoverSnag {
+  id: string;
+  companyId: string;
+  requestId: string;
+  title: string;
+  /** @nullable */
+  titleAr?: string | null;
+  severity: string;
+  status: string;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface HandoverSnagInput {
+  companyId: string;
+  requestId: string;
+  title: string;
+  titleAr?: string;
+  severity?: string;
+  status?: string;
+  location?: string;
+  assignedToUserId?: string;
+  dueDate?: string;
+  notes?: string;
+}
+
+export interface HandoverSnagUpdate {
+  companyId?: string;
+  requestId?: string;
+  title?: string;
+  titleAr?: string;
+  severity?: string;
+  status?: string;
+  location?: string;
+  assignedToUserId?: string;
+  dueDate?: string;
+  notes?: string;
+}
+
+export interface HandoverSnagListResponse {
+  data: HandoverSnag[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HandoverApproval {
+  id: string;
+  companyId: string;
+  requestId: string;
+  /** @nullable */
+  approverName?: string | null;
+  /** @nullable */
+  approverNameAr?: string | null;
+  level: string;
+  status: string;
+  /** @nullable */
+  approvalDate?: string | null;
+  /** @nullable */
+  remarks?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface HandoverApprovalInput {
+  companyId: string;
+  requestId: string;
+  approverName?: string;
+  approverNameAr?: string;
+  level?: string;
+  status?: string;
+  approvalDate?: string;
+  remarks?: string;
+  notes?: string;
+}
+
+export interface HandoverApprovalUpdate {
+  companyId?: string;
+  requestId?: string;
+  approverName?: string;
+  approverNameAr?: string;
+  level?: string;
+  status?: string;
+  approvalDate?: string;
+  remarks?: string;
+  notes?: string;
+}
+
+export interface HandoverApprovalListResponse {
+  data: HandoverApproval[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HandoverStatusCount {
+  status: string;
+  count: number;
+}
+
+export interface HandoverDashboard {
+  totalRequests: number;
+  scheduledCount: number;
+  completedCount: number;
+  openSnags: number;
+  byStatus: HandoverStatusCount[];
+}
+
+export interface SlaPolicy {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  channel: string;
+  priority: string;
+  firstResponseHours: string;
+  resolutionHours: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SlaPolicyInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  channel?: string;
+  priority?: string;
+  firstResponseHours?: string;
+  resolutionHours?: string;
+  notes?: string;
+}
+
+export interface SlaPolicyUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  channel?: string;
+  priority?: string;
+  firstResponseHours?: string;
+  resolutionHours?: string;
+  notes?: string;
+}
+
+export interface SlaPolicyListResponse {
+  data: SlaPolicy[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ServiceEscalation {
+  id: string;
+  companyId: string;
+  code: string;
+  sourceType: string;
+  sourceId: string;
+  level: string;
+  /** @nullable */
+  escalatedToUserId?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  reasonAr?: string | null;
+  status: string;
+  escalatedAt: string;
+  /** @nullable */
+  resolvedAt?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ServiceEscalationInput {
+  companyId: string;
+  code: string;
+  sourceType: string;
+  sourceId: string;
+  level?: string;
+  escalatedToUserId?: string;
+  reason?: string;
+  reasonAr?: string;
+  status?: string;
+  escalatedAt?: string;
+  resolvedAt?: string;
+  notes?: string;
+}
+
+export interface ServiceEscalationUpdate {
+  companyId?: string;
+  code?: string;
+  sourceType?: string;
+  sourceId?: string;
+  level?: string;
+  escalatedToUserId?: string;
+  reason?: string;
+  reasonAr?: string;
+  status?: string;
+  escalatedAt?: string;
+  resolvedAt?: string;
+  notes?: string;
+}
+
+export interface ServiceEscalationListResponse {
+  data: ServiceEscalation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomerServiceStatusCount {
+  status: string;
+  count: number;
+}
+
+export interface CustomerServiceDashboard {
+  totalEscalations: number;
+  openEscalations: number;
+  slaPolicies: number;
+  byStatus: CustomerServiceStatusCount[];
+}
+
+export interface AssetCategory {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  usefulLifeYears: string;
+  depreciationMethod: string;
+  depreciationRate: string;
+  /** @nullable */
+  assetAccountId?: string | null;
+  /** @nullable */
+  depreciationAccountId?: string | null;
+  /** @nullable */
+  expenseAccountId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AssetCategoryInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  usefulLifeYears?: string;
+  depreciationMethod?: string;
+  depreciationRate?: string;
+  assetAccountId?: string;
+  depreciationAccountId?: string;
+  expenseAccountId?: string;
+  notes?: string;
+}
+
+export interface AssetCategoryUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  usefulLifeYears?: string;
+  depreciationMethod?: string;
+  depreciationRate?: string;
+  assetAccountId?: string;
+  depreciationAccountId?: string;
+  expenseAccountId?: string;
+  notes?: string;
+}
+
+export interface AssetCategoryListResponse {
+  data: AssetCategory[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface FixedAsset {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  categoryId: string;
+  /** @nullable */
+  branchId?: string | null;
+  /** @nullable */
+  costCenterId?: string | null;
+  /** @nullable */
+  acquisitionDate?: string | null;
+  acquisitionCost: string;
+  salvageValue: string;
+  usefulLifeYears: string;
+  depreciationMethod: string;
+  accumulatedDepreciation: string;
+  bookValue: string;
+  status: string;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  locationAr?: string | null;
+  /** @nullable */
+  serialNo?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface FixedAssetInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  categoryId: string;
+  branchId?: string;
+  costCenterId?: string;
+  acquisitionDate?: string;
+  acquisitionCost?: string;
+  salvageValue?: string;
+  usefulLifeYears?: string;
+  depreciationMethod?: string;
+  accumulatedDepreciation?: string;
+  bookValue?: string;
+  status?: string;
+  location?: string;
+  locationAr?: string;
+  serialNo?: string;
+  notes?: string;
+}
+
+export interface FixedAssetUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  categoryId?: string;
+  branchId?: string;
+  costCenterId?: string;
+  acquisitionDate?: string;
+  acquisitionCost?: string;
+  salvageValue?: string;
+  usefulLifeYears?: string;
+  depreciationMethod?: string;
+  accumulatedDepreciation?: string;
+  bookValue?: string;
+  status?: string;
+  location?: string;
+  locationAr?: string;
+  serialNo?: string;
+  notes?: string;
+}
+
+export interface FixedAssetListResponse {
+  data: FixedAsset[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AssetTransfer {
+  id: string;
+  companyId: string;
+  code: string;
+  assetId: string;
+  /** @nullable */
+  fromBranchId?: string | null;
+  /** @nullable */
+  toBranchId?: string | null;
+  /** @nullable */
+  fromCostCenterId?: string | null;
+  /** @nullable */
+  toCostCenterId?: string | null;
+  /** @nullable */
+  transferDate?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  reasonAr?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AssetTransferInput {
+  companyId: string;
+  code: string;
+  assetId: string;
+  fromBranchId?: string;
+  toBranchId?: string;
+  fromCostCenterId?: string;
+  toCostCenterId?: string;
+  transferDate?: string;
+  reason?: string;
+  reasonAr?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AssetTransferUpdate {
+  companyId?: string;
+  code?: string;
+  assetId?: string;
+  fromBranchId?: string;
+  toBranchId?: string;
+  fromCostCenterId?: string;
+  toCostCenterId?: string;
+  transferDate?: string;
+  reason?: string;
+  reasonAr?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AssetTransferListResponse {
+  data: AssetTransfer[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AssetDepreciation {
+  id: string;
+  companyId: string;
+  code: string;
+  assetId: string;
+  /** @nullable */
+  periodDate?: string | null;
+  amount: string;
+  /** @nullable */
+  method?: string | null;
+  accumulatedAfter: string;
+  bookValueAfter: string;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AssetDepreciationInput {
+  companyId: string;
+  code: string;
+  assetId: string;
+  periodDate?: string;
+  amount?: string;
+  method?: string;
+  accumulatedAfter?: string;
+  bookValueAfter?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AssetDepreciationUpdate {
+  companyId?: string;
+  code?: string;
+  assetId?: string;
+  periodDate?: string;
+  amount?: string;
+  method?: string;
+  accumulatedAfter?: string;
+  bookValueAfter?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AssetDepreciationListResponse {
+  data: AssetDepreciation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AssetInventoryCount {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  assetId?: string | null;
+  /** @nullable */
+  branchId?: string | null;
+  /** @nullable */
+  countDate?: string | null;
+  status: string;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  countedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AssetInventoryCountInput {
+  companyId: string;
+  code: string;
+  assetId?: string;
+  branchId?: string;
+  countDate?: string;
+  status?: string;
+  location?: string;
+  countedBy?: string;
+  notes?: string;
+}
+
+export interface AssetInventoryCountUpdate {
+  companyId?: string;
+  code?: string;
+  assetId?: string;
+  branchId?: string;
+  countDate?: string;
+  status?: string;
+  location?: string;
+  countedBy?: string;
+  notes?: string;
+}
+
+export interface AssetInventoryCountListResponse {
+  data: AssetInventoryCount[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AssetDisposal {
+  id: string;
+  companyId: string;
+  code: string;
+  assetId: string;
+  /** @nullable */
+  disposalDate?: string | null;
+  disposalType: string;
+  proceeds: string;
+  bookValueAtDisposal: string;
+  gainLoss: string;
+  /** @nullable */
+  buyerName?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AssetDisposalInput {
+  companyId: string;
+  code: string;
+  assetId: string;
+  disposalDate?: string;
+  disposalType?: string;
+  proceeds?: string;
+  bookValueAtDisposal?: string;
+  gainLoss?: string;
+  buyerName?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AssetDisposalUpdate {
+  companyId?: string;
+  code?: string;
+  assetId?: string;
+  disposalDate?: string;
+  disposalType?: string;
+  proceeds?: string;
+  bookValueAtDisposal?: string;
+  gainLoss?: string;
+  buyerName?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AssetDisposalListResponse {
+  data: AssetDisposal[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface FixedAssetsStatusCount {
+  status: string;
+  count: number;
+}
+
+export interface FixedAssetsDashboard {
+  totalAssets: number;
+  totalAcquisitionCost: string;
+  totalBookValue: string;
+  totalAccumulatedDepreciation: string;
+  byStatus: FixedAssetsStatusCount[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -11965,5 +13090,203 @@ export type GetLegalAdvisorReportParams = {
 companyId?: string;
 from?: string;
 to?: string;
+};
+
+export type ListLandParcelsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+projectId?: string;
+status?: string;
+};
+
+export type ListLandOwnershipsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+parcelId?: string;
+};
+
+export type ListLandLegalStatusesParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+parcelId?: string;
+status?: string;
+};
+
+export type ListLandUtilizationsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+parcelId?: string;
+projectId?: string;
+status?: string;
+};
+
+export type ListLandDocumentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+parcelId?: string;
+};
+
+export type ListLandAcquisitionsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+parcelId?: string;
+paymentStatus?: string;
+};
+
+export type GetLandBankDashboardParams = {
+companyId?: string;
+};
+
+export type ListHandoverRequestsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+unitId?: string;
+customerId?: string;
+handoverType?: string;
+status?: string;
+};
+
+export type ListHandoverSchedulesParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+requestId?: string;
+assignedToUserId?: string;
+status?: string;
+};
+
+export type ListHandoverChecklistItemsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+requestId?: string;
+status?: string;
+};
+
+export type ListHandoverMinutesParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+requestId?: string;
+};
+
+export type ListHandoverSnagsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+requestId?: string;
+severity?: string;
+status?: string;
+assignedToUserId?: string;
+};
+
+export type ListHandoverApprovalsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+requestId?: string;
+status?: string;
+};
+
+export type GetHandoverDashboardParams = {
+companyId?: string;
+};
+
+export type ListSlaPoliciesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+channel?: string;
+priority?: string;
+};
+
+export type ListServiceEscalationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+sourceType?: string;
+sourceId?: string;
+escalatedToUserId?: string;
+status?: string;
+};
+
+export type GetCustomerServiceDashboardParams = {
+companyId?: string;
+};
+
+export type ListAssetCategoriesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+depreciationMethod?: string;
+};
+
+export type ListFixedAssetsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+categoryId?: string;
+branchId?: string;
+costCenterId?: string;
+depreciationMethod?: string;
+status?: string;
+};
+
+export type ListAssetTransfersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+assetId?: string;
+status?: string;
+};
+
+export type ListAssetDepreciationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+assetId?: string;
+status?: string;
+};
+
+export type ListAssetInventoryCountsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+assetId?: string;
+branchId?: string;
+status?: string;
+};
+
+export type ListAssetDisposalsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+assetId?: string;
+disposalType?: string;
+status?: string;
+};
+
+export type GetFixedAssetsDashboardParams = {
+companyId?: string;
 };
 

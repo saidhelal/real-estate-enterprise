@@ -5907,6 +5907,195 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /handover-approvals/{id}/approve:
+    post:
+      operationId: approveHandoverApproval
+      tags: [handoverApprovals]
+      summary: Approve a handover approval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverApproval"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /handover-approvals/{id}/reject:
+    post:
+      operationId: rejectHandoverApproval
+      tags: [handoverApprovals]
+      summary: Reject a handover approval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverApproval"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /service-escalations/{id}/resolve:
+    post:
+      operationId: resolveServiceEscalation
+      tags: [serviceEscalations]
+      summary: Resolve a service escalation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceEscalation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /asset-transfers/{id}/approve:
+    post:
+      operationId: approveAssetTransfer
+      tags: [assetTransfers]
+      summary: Approve an asset transfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetTransfer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /asset-depreciations/{id}/post:
+    post:
+      operationId: postAssetDepreciation
+      tags: [assetDepreciations]
+      summary: Post an asset depreciation entry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDepreciation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /asset-depreciations/{id}/reverse:
+    post:
+      operationId: reverseAssetDepreciation
+      tags: [assetDepreciations]
+      summary: Reverse a posted asset depreciation entry
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDepreciation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /asset-disposals/{id}/approve:
+    post:
+      operationId: approveAssetDisposal
+      tags: [assetDisposals]
+      summary: Approve an asset disposal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDisposal"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /fiscal-periods/{id}/close:
     post:
       operationId: closeFiscalPeriod
@@ -17391,6 +17580,1868 @@ paths:
               schema: { $ref: "#/components/schemas/LegalAdvisorReport" }
 
   # <<< LEGAL PATHS (generated) <<<
+  /land-parcels:
+    get:
+      operationId: listLandParcels
+      tags: [landParcels]
+      summary: List land-parcels
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LandParcels
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandParcelListResponse"
+    post:
+      operationId: createLandParcel
+      tags: [landParcels]
+      summary: Create a LandParcel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandParcelInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandParcel"
+
+  /land-parcels/{id}:
+    get:
+      operationId: getLandParcel
+      tags: [landParcels]
+      summary: Get a LandParcel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LandParcel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandParcel"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLandParcel
+      tags: [landParcels]
+      summary: Update a LandParcel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandParcelUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandParcel"
+    delete:
+      operationId: deleteLandParcel
+      tags: [landParcels]
+      summary: Soft-delete a LandParcel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /land-ownerships:
+    get:
+      operationId: listLandOwnerships
+      tags: [landOwnerships]
+      summary: List land-ownerships
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: parcelId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LandOwnerships
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandOwnershipListResponse"
+    post:
+      operationId: createLandOwnership
+      tags: [landOwnerships]
+      summary: Create a LandOwnership
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandOwnershipInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandOwnership"
+
+  /land-ownerships/{id}:
+    get:
+      operationId: getLandOwnership
+      tags: [landOwnerships]
+      summary: Get a LandOwnership
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LandOwnership
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandOwnership"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLandOwnership
+      tags: [landOwnerships]
+      summary: Update a LandOwnership
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandOwnershipUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandOwnership"
+    delete:
+      operationId: deleteLandOwnership
+      tags: [landOwnerships]
+      summary: Soft-delete a LandOwnership
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /land-legal-statuses:
+    get:
+      operationId: listLandLegalStatuses
+      tags: [landLegalStatuses]
+      summary: List land-legal-statuses
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: parcelId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LandLegalStatuses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandLegalStatusListResponse"
+    post:
+      operationId: createLandLegalStatus
+      tags: [landLegalStatuses]
+      summary: Create a LandLegalStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandLegalStatusInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandLegalStatus"
+
+  /land-legal-statuses/{id}:
+    get:
+      operationId: getLandLegalStatus
+      tags: [landLegalStatuses]
+      summary: Get a LandLegalStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LandLegalStatus
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandLegalStatus"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLandLegalStatus
+      tags: [landLegalStatuses]
+      summary: Update a LandLegalStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandLegalStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandLegalStatus"
+    delete:
+      operationId: deleteLandLegalStatus
+      tags: [landLegalStatuses]
+      summary: Soft-delete a LandLegalStatus
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /land-utilizations:
+    get:
+      operationId: listLandUtilizations
+      tags: [landUtilizations]
+      summary: List land-utilizations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: parcelId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LandUtilizations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandUtilizationListResponse"
+    post:
+      operationId: createLandUtilization
+      tags: [landUtilizations]
+      summary: Create a LandUtilization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandUtilizationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandUtilization"
+
+  /land-utilizations/{id}:
+    get:
+      operationId: getLandUtilization
+      tags: [landUtilizations]
+      summary: Get a LandUtilization
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LandUtilization
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandUtilization"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLandUtilization
+      tags: [landUtilizations]
+      summary: Update a LandUtilization
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandUtilizationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandUtilization"
+    delete:
+      operationId: deleteLandUtilization
+      tags: [landUtilizations]
+      summary: Soft-delete a LandUtilization
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /land-documents:
+    get:
+      operationId: listLandDocuments
+      tags: [landDocuments]
+      summary: List land-documents
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: parcelId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LandDocuments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandDocumentListResponse"
+    post:
+      operationId: createLandDocument
+      tags: [landDocuments]
+      summary: Create a LandDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandDocumentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandDocument"
+
+  /land-documents/{id}:
+    get:
+      operationId: getLandDocument
+      tags: [landDocuments]
+      summary: Get a LandDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LandDocument
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandDocument"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLandDocument
+      tags: [landDocuments]
+      summary: Update a LandDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandDocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandDocument"
+    delete:
+      operationId: deleteLandDocument
+      tags: [landDocuments]
+      summary: Soft-delete a LandDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /land-acquisitions:
+    get:
+      operationId: listLandAcquisitions
+      tags: [landAcquisitions]
+      summary: List land-acquisitions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: parcelId, in: query, required: false, schema: { type: string } }
+        - { name: paymentStatus, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LandAcquisitions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandAcquisitionListResponse"
+    post:
+      operationId: createLandAcquisition
+      tags: [landAcquisitions]
+      summary: Create a LandAcquisition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandAcquisitionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandAcquisition"
+
+  /land-acquisitions/{id}:
+    get:
+      operationId: getLandAcquisition
+      tags: [landAcquisitions]
+      summary: Get a LandAcquisition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LandAcquisition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandAcquisition"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLandAcquisition
+      tags: [landAcquisitions]
+      summary: Update a LandAcquisition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandAcquisitionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandAcquisition"
+    delete:
+      operationId: deleteLandAcquisition
+      tags: [landAcquisitions]
+      summary: Soft-delete a LandAcquisition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /land-bank-dashboard:
+    get:
+      operationId: getLandBankDashboard
+      tags: [landParcels]
+      summary: Land bank dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandBankDashboard"
+
+  /handover-requests:
+    get:
+      operationId: listHandoverRequests
+      tags: [handoverRequests]
+      summary: List handover-requests
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: handoverType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HandoverRequests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverRequestListResponse"
+    post:
+      operationId: createHandoverRequest
+      tags: [handoverRequests]
+      summary: Create a HandoverRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverRequest"
+
+  /handover-requests/{id}:
+    get:
+      operationId: getHandoverRequest
+      tags: [handoverRequests]
+      summary: Get a HandoverRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: HandoverRequest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateHandoverRequest
+      tags: [handoverRequests]
+      summary: Update a HandoverRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverRequestUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverRequest"
+    delete:
+      operationId: deleteHandoverRequest
+      tags: [handoverRequests]
+      summary: Soft-delete a HandoverRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /handover-schedules:
+    get:
+      operationId: listHandoverSchedules
+      tags: [handoverSchedules]
+      summary: List handover-schedules
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: requestId, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HandoverSchedules
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverScheduleListResponse"
+    post:
+      operationId: createHandoverSchedule
+      tags: [handoverSchedules]
+      summary: Create a HandoverSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverScheduleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSchedule"
+
+  /handover-schedules/{id}:
+    get:
+      operationId: getHandoverSchedule
+      tags: [handoverSchedules]
+      summary: Get a HandoverSchedule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: HandoverSchedule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSchedule"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateHandoverSchedule
+      tags: [handoverSchedules]
+      summary: Update a HandoverSchedule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverScheduleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSchedule"
+    delete:
+      operationId: deleteHandoverSchedule
+      tags: [handoverSchedules]
+      summary: Soft-delete a HandoverSchedule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /handover-checklist-items:
+    get:
+      operationId: listHandoverChecklistItems
+      tags: [handoverChecklistItems]
+      summary: List handover-checklist-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: requestId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HandoverChecklistItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverChecklistItemListResponse"
+    post:
+      operationId: createHandoverChecklistItem
+      tags: [handoverChecklistItems]
+      summary: Create a HandoverChecklistItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverChecklistItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverChecklistItem"
+
+  /handover-checklist-items/{id}:
+    get:
+      operationId: getHandoverChecklistItem
+      tags: [handoverChecklistItems]
+      summary: Get a HandoverChecklistItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: HandoverChecklistItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverChecklistItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateHandoverChecklistItem
+      tags: [handoverChecklistItems]
+      summary: Update a HandoverChecklistItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverChecklistItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverChecklistItem"
+    delete:
+      operationId: deleteHandoverChecklistItem
+      tags: [handoverChecklistItems]
+      summary: Soft-delete a HandoverChecklistItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /handover-minutes:
+    get:
+      operationId: listHandoverMinutes
+      tags: [handoverMinutes]
+      summary: List handover-minutes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: requestId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HandoverMinutes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverMinuteListResponse"
+    post:
+      operationId: createHandoverMinute
+      tags: [handoverMinutes]
+      summary: Create a HandoverMinute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverMinuteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverMinute"
+
+  /handover-minutes/{id}:
+    get:
+      operationId: getHandoverMinute
+      tags: [handoverMinutes]
+      summary: Get a HandoverMinute
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: HandoverMinute
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverMinute"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateHandoverMinute
+      tags: [handoverMinutes]
+      summary: Update a HandoverMinute
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverMinuteUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverMinute"
+    delete:
+      operationId: deleteHandoverMinute
+      tags: [handoverMinutes]
+      summary: Soft-delete a HandoverMinute
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /handover-snags:
+    get:
+      operationId: listHandoverSnags
+      tags: [handoverSnags]
+      summary: List handover-snags
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: requestId, in: query, required: false, schema: { type: string } }
+        - { name: severity, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HandoverSnags
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSnagListResponse"
+    post:
+      operationId: createHandoverSnag
+      tags: [handoverSnags]
+      summary: Create a HandoverSnag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverSnagInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSnag"
+
+  /handover-snags/{id}:
+    get:
+      operationId: getHandoverSnag
+      tags: [handoverSnags]
+      summary: Get a HandoverSnag
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: HandoverSnag
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSnag"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateHandoverSnag
+      tags: [handoverSnags]
+      summary: Update a HandoverSnag
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverSnagUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverSnag"
+    delete:
+      operationId: deleteHandoverSnag
+      tags: [handoverSnags]
+      summary: Soft-delete a HandoverSnag
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /handover-approvals:
+    get:
+      operationId: listHandoverApprovals
+      tags: [handoverApprovals]
+      summary: List handover-approvals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: requestId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HandoverApprovals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverApprovalListResponse"
+    post:
+      operationId: createHandoverApproval
+      tags: [handoverApprovals]
+      summary: Create a HandoverApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverApprovalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverApproval"
+
+  /handover-approvals/{id}:
+    get:
+      operationId: getHandoverApproval
+      tags: [handoverApprovals]
+      summary: Get a HandoverApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: HandoverApproval
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverApproval"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateHandoverApproval
+      tags: [handoverApprovals]
+      summary: Update a HandoverApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverApprovalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverApproval"
+    delete:
+      operationId: deleteHandoverApproval
+      tags: [handoverApprovals]
+      summary: Soft-delete a HandoverApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /handover-dashboard:
+    get:
+      operationId: getHandoverDashboard
+      tags: [handoverRequests]
+      summary: Unit handover dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HandoverDashboard"
+
+  /sla-policies:
+    get:
+      operationId: listSlaPolicies
+      tags: [slaPolicies]
+      summary: List sla-policies
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: channel, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SlaPolicies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SlaPolicyListResponse"
+    post:
+      operationId: createSlaPolicy
+      tags: [slaPolicies]
+      summary: Create a SlaPolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SlaPolicyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SlaPolicy"
+
+  /sla-policies/{id}:
+    get:
+      operationId: getSlaPolicy
+      tags: [slaPolicies]
+      summary: Get a SlaPolicy
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SlaPolicy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SlaPolicy"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSlaPolicy
+      tags: [slaPolicies]
+      summary: Update a SlaPolicy
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SlaPolicyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SlaPolicy"
+    delete:
+      operationId: deleteSlaPolicy
+      tags: [slaPolicies]
+      summary: Soft-delete a SlaPolicy
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /service-escalations:
+    get:
+      operationId: listServiceEscalations
+      tags: [serviceEscalations]
+      summary: List service-escalations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: sourceType, in: query, required: false, schema: { type: string } }
+        - { name: sourceId, in: query, required: false, schema: { type: string } }
+        - { name: escalatedToUserId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ServiceEscalations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceEscalationListResponse"
+    post:
+      operationId: createServiceEscalation
+      tags: [serviceEscalations]
+      summary: Create a ServiceEscalation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceEscalationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceEscalation"
+
+  /service-escalations/{id}:
+    get:
+      operationId: getServiceEscalation
+      tags: [serviceEscalations]
+      summary: Get a ServiceEscalation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ServiceEscalation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceEscalation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateServiceEscalation
+      tags: [serviceEscalations]
+      summary: Update a ServiceEscalation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceEscalationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceEscalation"
+    delete:
+      operationId: deleteServiceEscalation
+      tags: [serviceEscalations]
+      summary: Soft-delete a ServiceEscalation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customer-service-dashboard:
+    get:
+      operationId: getCustomerServiceDashboard
+      tags: [serviceEscalations]
+      summary: Customer service dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerServiceDashboard"
+
+  /asset-categories:
+    get:
+      operationId: listAssetCategories
+      tags: [assetCategories]
+      summary: List asset-categories
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: depreciationMethod, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AssetCategories
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategoryListResponse"
+    post:
+      operationId: createAssetCategory
+      tags: [assetCategories]
+      summary: Create a AssetCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetCategoryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategory"
+
+  /asset-categories/{id}:
+    get:
+      operationId: getAssetCategory
+      tags: [assetCategories]
+      summary: Get a AssetCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AssetCategory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategory"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAssetCategory
+      tags: [assetCategories]
+      summary: Update a AssetCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetCategoryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategory"
+    delete:
+      operationId: deleteAssetCategory
+      tags: [assetCategories]
+      summary: Soft-delete a AssetCategory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /fixed-assets:
+    get:
+      operationId: listFixedAssets
+      tags: [fixedAssets]
+      summary: List fixed-assets
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: categoryId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: costCenterId, in: query, required: false, schema: { type: string } }
+        - { name: depreciationMethod, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: FixedAssets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FixedAssetListResponse"
+    post:
+      operationId: createFixedAsset
+      tags: [fixedAssets]
+      summary: Create a FixedAsset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FixedAssetInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FixedAsset"
+
+  /fixed-assets/{id}:
+    get:
+      operationId: getFixedAsset
+      tags: [fixedAssets]
+      summary: Get a FixedAsset
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: FixedAsset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FixedAsset"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateFixedAsset
+      tags: [fixedAssets]
+      summary: Update a FixedAsset
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FixedAssetUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FixedAsset"
+    delete:
+      operationId: deleteFixedAsset
+      tags: [fixedAssets]
+      summary: Soft-delete a FixedAsset
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /asset-transfers:
+    get:
+      operationId: listAssetTransfers
+      tags: [assetTransfers]
+      summary: List asset-transfers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: assetId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AssetTransfers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetTransferListResponse"
+    post:
+      operationId: createAssetTransfer
+      tags: [assetTransfers]
+      summary: Create a AssetTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetTransferInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetTransfer"
+
+  /asset-transfers/{id}:
+    get:
+      operationId: getAssetTransfer
+      tags: [assetTransfers]
+      summary: Get a AssetTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AssetTransfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetTransfer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAssetTransfer
+      tags: [assetTransfers]
+      summary: Update a AssetTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetTransferUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetTransfer"
+    delete:
+      operationId: deleteAssetTransfer
+      tags: [assetTransfers]
+      summary: Soft-delete a AssetTransfer
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /asset-depreciations:
+    get:
+      operationId: listAssetDepreciations
+      tags: [assetDepreciations]
+      summary: List asset-depreciations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: assetId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AssetDepreciations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDepreciationListResponse"
+    post:
+      operationId: createAssetDepreciation
+      tags: [assetDepreciations]
+      summary: Create a AssetDepreciation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetDepreciationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDepreciation"
+
+  /asset-depreciations/{id}:
+    get:
+      operationId: getAssetDepreciation
+      tags: [assetDepreciations]
+      summary: Get a AssetDepreciation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AssetDepreciation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDepreciation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAssetDepreciation
+      tags: [assetDepreciations]
+      summary: Update a AssetDepreciation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetDepreciationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDepreciation"
+    delete:
+      operationId: deleteAssetDepreciation
+      tags: [assetDepreciations]
+      summary: Soft-delete a AssetDepreciation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /asset-inventory-counts:
+    get:
+      operationId: listAssetInventoryCounts
+      tags: [assetInventoryCounts]
+      summary: List asset-inventory-counts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: assetId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AssetInventoryCounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetInventoryCountListResponse"
+    post:
+      operationId: createAssetInventoryCount
+      tags: [assetInventoryCounts]
+      summary: Create a AssetInventoryCount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetInventoryCountInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetInventoryCount"
+
+  /asset-inventory-counts/{id}:
+    get:
+      operationId: getAssetInventoryCount
+      tags: [assetInventoryCounts]
+      summary: Get a AssetInventoryCount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AssetInventoryCount
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetInventoryCount"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAssetInventoryCount
+      tags: [assetInventoryCounts]
+      summary: Update a AssetInventoryCount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetInventoryCountUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetInventoryCount"
+    delete:
+      operationId: deleteAssetInventoryCount
+      tags: [assetInventoryCounts]
+      summary: Soft-delete a AssetInventoryCount
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /asset-disposals:
+    get:
+      operationId: listAssetDisposals
+      tags: [assetDisposals]
+      summary: List asset-disposals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: assetId, in: query, required: false, schema: { type: string } }
+        - { name: disposalType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AssetDisposals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDisposalListResponse"
+    post:
+      operationId: createAssetDisposal
+      tags: [assetDisposals]
+      summary: Create a AssetDisposal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetDisposalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDisposal"
+
+  /asset-disposals/{id}:
+    get:
+      operationId: getAssetDisposal
+      tags: [assetDisposals]
+      summary: Get a AssetDisposal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AssetDisposal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDisposal"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAssetDisposal
+      tags: [assetDisposals]
+      summary: Update a AssetDisposal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetDisposalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetDisposal"
+    delete:
+      operationId: deleteAssetDisposal
+      tags: [assetDisposals]
+      summary: Soft-delete a AssetDisposal
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /fixed-assets-dashboard:
+    get:
+      operationId: getFixedAssetsDashboard
+      tags: [fixedAssets]
+      summary: Fixed assets dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FixedAssetsDashboard"
+
 components:
   parameters:
     IdParam:
@@ -28414,3 +30465,1241 @@ components:
           items: { $ref: "#/components/schemas/LegalGroupCount" }
 
     # <<< LEGAL SCHEMAS (generated) <<<
+
+    LandParcel:
+      type: object
+      required: [id, companyId, code, name, nameAr, area, areaUnit, marketValue, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        locationAr: { type: ["string", "null"] }
+        area: { type: string }
+        areaUnit: { type: string }
+        zoning: { type: ["string", "null"] }
+        classification: { type: ["string", "null"] }
+        marketValue: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LandParcelInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: string }
+        location: { type: string }
+        locationAr: { type: string }
+        area: { type: string }
+        areaUnit: { type: string }
+        zoning: { type: string }
+        classification: { type: string }
+        marketValue: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    LandParcelUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        projectId: { type: string }
+        location: { type: string }
+        locationAr: { type: string }
+        area: { type: string }
+        areaUnit: { type: string }
+        zoning: { type: string }
+        classification: { type: string }
+        marketValue: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    LandParcelListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LandParcel" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LandOwnership:
+      type: object
+      required: [id, companyId, parcelId, ownerName, ownershipType, sharePercentage, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parcelId: { type: string }
+        ownerName: { type: string }
+        ownerNameAr: { type: ["string", "null"] }
+        ownershipType: { type: string }
+        sharePercentage: { type: string }
+        titleDeedNo: { type: ["string", "null"] }
+        registrationDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LandOwnershipInput:
+      type: object
+      required: [companyId, parcelId, ownerName]
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        ownerName: { type: string }
+        ownerNameAr: { type: string }
+        ownershipType: { type: string }
+        sharePercentage: { type: string }
+        titleDeedNo: { type: string }
+        registrationDate: { type: string }
+        notes: { type: string }
+
+    LandOwnershipUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        ownerName: { type: string }
+        ownerNameAr: { type: string }
+        ownershipType: { type: string }
+        sharePercentage: { type: string }
+        titleDeedNo: { type: string }
+        registrationDate: { type: string }
+        notes: { type: string }
+
+    LandOwnershipListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LandOwnership" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LandLegalStatus:
+      type: object
+      required: [id, companyId, parcelId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parcelId: { type: string }
+        status: { type: string }
+        authority: { type: ["string", "null"] }
+        referenceNo: { type: ["string", "null"] }
+        effectiveDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LandLegalStatusInput:
+      type: object
+      required: [companyId, parcelId]
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        status: { type: string }
+        authority: { type: string }
+        referenceNo: { type: string }
+        effectiveDate: { type: string }
+        notes: { type: string }
+
+    LandLegalStatusUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        status: { type: string }
+        authority: { type: string }
+        referenceNo: { type: string }
+        effectiveDate: { type: string }
+        notes: { type: string }
+
+    LandLegalStatusListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LandLegalStatus" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LandUtilization:
+      type: object
+      required: [id, companyId, parcelId, utilizationType, allocatedArea, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parcelId: { type: string }
+        utilizationType: { type: string }
+        allocatedArea: { type: string }
+        projectId: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LandUtilizationInput:
+      type: object
+      required: [companyId, parcelId]
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        utilizationType: { type: string }
+        allocatedArea: { type: string }
+        projectId: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    LandUtilizationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        utilizationType: { type: string }
+        allocatedArea: { type: string }
+        projectId: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    LandUtilizationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LandUtilization" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LandDocument:
+      type: object
+      required: [id, companyId, parcelId, docType, title, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parcelId: { type: string }
+        docType: { type: string }
+        title: { type: string }
+        titleAr: { type: ["string", "null"] }
+        fileUrl: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LandDocumentInput:
+      type: object
+      required: [companyId, parcelId, title]
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        docType: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        fileUrl: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    LandDocumentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        docType: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        fileUrl: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        notes: { type: string }
+
+    LandDocumentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LandDocument" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LandAcquisition:
+      type: object
+      required: [id, companyId, parcelId, acquisitionType, cost, paymentStatus, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        parcelId: { type: string }
+        acquisitionType: { type: string }
+        sellerName: { type: ["string", "null"] }
+        acquisitionDate: { type: ["string", "null"] }
+        cost: { type: string }
+        paymentStatus: { type: string }
+        referenceNo: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LandAcquisitionInput:
+      type: object
+      required: [companyId, parcelId]
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        acquisitionType: { type: string }
+        sellerName: { type: string }
+        acquisitionDate: { type: string }
+        cost: { type: string }
+        paymentStatus: { type: string }
+        referenceNo: { type: string }
+        notes: { type: string }
+
+    LandAcquisitionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        parcelId: { type: string }
+        acquisitionType: { type: string }
+        sellerName: { type: string }
+        acquisitionDate: { type: string }
+        cost: { type: string }
+        paymentStatus: { type: string }
+        referenceNo: { type: string }
+        notes: { type: string }
+
+    LandAcquisitionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LandAcquisition" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LandBankStatusCount:
+      type: object
+      required: [status, count]
+      properties:
+        status: { type: string }
+        count: { type: integer }
+
+    LandBankDashboard:
+      type: object
+      required: [totalParcels, totalArea, totalMarketValue, totalAcquisitionCost, byStatus]
+      properties:
+        totalParcels: { type: integer }
+        totalArea: { type: string }
+        totalMarketValue: { type: string }
+        totalAcquisitionCost: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/LandBankStatusCount" }
+
+    HandoverRequest:
+      type: object
+      required: [id, companyId, code, unitId, handoverType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        customerId: { type: ["string", "null"] }
+        contractId: { type: ["string", "null"] }
+        reservationId: { type: ["string", "null"] }
+        handoverType: { type: string }
+        requestDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    HandoverRequestInput:
+      type: object
+      required: [companyId, code, unitId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        contractId: { type: string }
+        reservationId: { type: string }
+        handoverType: { type: string }
+        requestDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    HandoverRequestUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        customerId: { type: string }
+        contractId: { type: string }
+        reservationId: { type: string }
+        handoverType: { type: string }
+        requestDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    HandoverRequestListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverRequest" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    HandoverSchedule:
+      type: object
+      required: [id, companyId, requestId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        requestId: { type: string }
+        scheduledDate: { type: ["string", "null"] }
+        scheduledTime: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        locationAr: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    HandoverScheduleInput:
+      type: object
+      required: [companyId, requestId]
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        scheduledDate: { type: string }
+        scheduledTime: { type: string }
+        location: { type: string }
+        locationAr: { type: string }
+        assignedToUserId: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    HandoverScheduleUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        scheduledDate: { type: string }
+        scheduledTime: { type: string }
+        location: { type: string }
+        locationAr: { type: string }
+        assignedToUserId: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    HandoverScheduleListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverSchedule" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    HandoverChecklistItem:
+      type: object
+      required: [id, companyId, requestId, item, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        requestId: { type: string }
+        item: { type: string }
+        itemAr: { type: ["string", "null"] }
+        category: { type: ["string", "null"] }
+        status: { type: string }
+        remarks: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    HandoverChecklistItemInput:
+      type: object
+      required: [companyId, requestId, item]
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        item: { type: string }
+        itemAr: { type: string }
+        category: { type: string }
+        status: { type: string }
+        remarks: { type: string }
+        notes: { type: string }
+
+    HandoverChecklistItemUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        item: { type: string }
+        itemAr: { type: string }
+        category: { type: string }
+        status: { type: string }
+        remarks: { type: string }
+        notes: { type: string }
+
+    HandoverChecklistItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverChecklistItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    HandoverMinute:
+      type: object
+      required: [id, companyId, requestId, summary, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        requestId: { type: string }
+        minuteDate: { type: ["string", "null"] }
+        summary: { type: string }
+        summaryAr: { type: ["string", "null"] }
+        attendees: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    HandoverMinuteInput:
+      type: object
+      required: [companyId, requestId, summary]
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        minuteDate: { type: string }
+        summary: { type: string }
+        summaryAr: { type: string }
+        attendees: { type: string }
+        notes: { type: string }
+
+    HandoverMinuteUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        minuteDate: { type: string }
+        summary: { type: string }
+        summaryAr: { type: string }
+        attendees: { type: string }
+        notes: { type: string }
+
+    HandoverMinuteListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverMinute" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    HandoverSnag:
+      type: object
+      required: [id, companyId, requestId, title, severity, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        requestId: { type: string }
+        title: { type: string }
+        titleAr: { type: ["string", "null"] }
+        severity: { type: string }
+        status: { type: string }
+        location: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    HandoverSnagInput:
+      type: object
+      required: [companyId, requestId, title]
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        severity: { type: string }
+        status: { type: string }
+        location: { type: string }
+        assignedToUserId: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+
+    HandoverSnagUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        severity: { type: string }
+        status: { type: string }
+        location: { type: string }
+        assignedToUserId: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+
+    HandoverSnagListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverSnag" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    HandoverApproval:
+      type: object
+      required: [id, companyId, requestId, level, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        requestId: { type: string }
+        approverName: { type: ["string", "null"] }
+        approverNameAr: { type: ["string", "null"] }
+        level: { type: string }
+        status: { type: string }
+        approvalDate: { type: ["string", "null"] }
+        remarks: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    HandoverApprovalInput:
+      type: object
+      required: [companyId, requestId]
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        approverName: { type: string }
+        approverNameAr: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approvalDate: { type: string }
+        remarks: { type: string }
+        notes: { type: string }
+
+    HandoverApprovalUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        requestId: { type: string }
+        approverName: { type: string }
+        approverNameAr: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approvalDate: { type: string }
+        remarks: { type: string }
+        notes: { type: string }
+
+    HandoverApprovalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverApproval" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    HandoverStatusCount:
+      type: object
+      required: [status, count]
+      properties:
+        status: { type: string }
+        count: { type: integer }
+
+    HandoverDashboard:
+      type: object
+      required: [totalRequests, scheduledCount, completedCount, openSnags, byStatus]
+      properties:
+        totalRequests: { type: integer }
+        scheduledCount: { type: integer }
+        completedCount: { type: integer }
+        openSnags: { type: integer }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/HandoverStatusCount" }
+
+    SlaPolicy:
+      type: object
+      required: [id, companyId, code, name, nameAr, channel, priority, firstResponseHours, resolutionHours, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        channel: { type: string }
+        priority: { type: string }
+        firstResponseHours: { type: string }
+        resolutionHours: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SlaPolicyInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        channel: { type: string }
+        priority: { type: string }
+        firstResponseHours: { type: string }
+        resolutionHours: { type: string }
+        notes: { type: string }
+
+    SlaPolicyUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        channel: { type: string }
+        priority: { type: string }
+        firstResponseHours: { type: string }
+        resolutionHours: { type: string }
+        notes: { type: string }
+
+    SlaPolicyListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SlaPolicy" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ServiceEscalation:
+      type: object
+      required: [id, companyId, code, sourceType, sourceId, level, status, escalatedAt, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        level: { type: string }
+        escalatedToUserId: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        reasonAr: { type: ["string", "null"] }
+        status: { type: string }
+        escalatedAt: { type: string }
+        resolvedAt: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ServiceEscalationInput:
+      type: object
+      required: [companyId, code, sourceType, sourceId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        level: { type: string }
+        escalatedToUserId: { type: string }
+        reason: { type: string }
+        reasonAr: { type: string }
+        status: { type: string }
+        escalatedAt: { type: string }
+        resolvedAt: { type: string }
+        notes: { type: string }
+
+    ServiceEscalationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        level: { type: string }
+        escalatedToUserId: { type: string }
+        reason: { type: string }
+        reasonAr: { type: string }
+        status: { type: string }
+        escalatedAt: { type: string }
+        resolvedAt: { type: string }
+        notes: { type: string }
+
+    ServiceEscalationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ServiceEscalation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CustomerServiceStatusCount:
+      type: object
+      required: [status, count]
+      properties:
+        status: { type: string }
+        count: { type: integer }
+
+    CustomerServiceDashboard:
+      type: object
+      required: [totalEscalations, openEscalations, slaPolicies, byStatus]
+      properties:
+        totalEscalations: { type: integer }
+        openEscalations: { type: integer }
+        slaPolicies: { type: integer }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerServiceStatusCount" }
+
+    AssetCategory:
+      type: object
+      required: [id, companyId, code, name, nameAr, usefulLifeYears, depreciationMethod, depreciationRate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        usefulLifeYears: { type: string }
+        depreciationMethod: { type: string }
+        depreciationRate: { type: string }
+        assetAccountId: { type: ["string", "null"] }
+        depreciationAccountId: { type: ["string", "null"] }
+        expenseAccountId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AssetCategoryInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        usefulLifeYears: { type: string }
+        depreciationMethod: { type: string }
+        depreciationRate: { type: string }
+        assetAccountId: { type: string }
+        depreciationAccountId: { type: string }
+        expenseAccountId: { type: string }
+        notes: { type: string }
+
+    AssetCategoryUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        usefulLifeYears: { type: string }
+        depreciationMethod: { type: string }
+        depreciationRate: { type: string }
+        assetAccountId: { type: string }
+        depreciationAccountId: { type: string }
+        expenseAccountId: { type: string }
+        notes: { type: string }
+
+    AssetCategoryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AssetCategory" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    FixedAsset:
+      type: object
+      required: [id, companyId, code, name, nameAr, categoryId, acquisitionCost, salvageValue, usefulLifeYears, depreciationMethod, accumulatedDepreciation, bookValue, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        branchId: { type: ["string", "null"] }
+        costCenterId: { type: ["string", "null"] }
+        acquisitionDate: { type: ["string", "null"] }
+        acquisitionCost: { type: string }
+        salvageValue: { type: string }
+        usefulLifeYears: { type: string }
+        depreciationMethod: { type: string }
+        accumulatedDepreciation: { type: string }
+        bookValue: { type: string }
+        status: { type: string }
+        location: { type: ["string", "null"] }
+        locationAr: { type: ["string", "null"] }
+        serialNo: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    FixedAssetInput:
+      type: object
+      required: [companyId, code, name, nameAr, categoryId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        branchId: { type: string }
+        costCenterId: { type: string }
+        acquisitionDate: { type: string }
+        acquisitionCost: { type: string }
+        salvageValue: { type: string }
+        usefulLifeYears: { type: string }
+        depreciationMethod: { type: string }
+        accumulatedDepreciation: { type: string }
+        bookValue: { type: string }
+        status: { type: string }
+        location: { type: string }
+        locationAr: { type: string }
+        serialNo: { type: string }
+        notes: { type: string }
+
+    FixedAssetUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        categoryId: { type: string }
+        branchId: { type: string }
+        costCenterId: { type: string }
+        acquisitionDate: { type: string }
+        acquisitionCost: { type: string }
+        salvageValue: { type: string }
+        usefulLifeYears: { type: string }
+        depreciationMethod: { type: string }
+        accumulatedDepreciation: { type: string }
+        bookValue: { type: string }
+        status: { type: string }
+        location: { type: string }
+        locationAr: { type: string }
+        serialNo: { type: string }
+        notes: { type: string }
+
+    FixedAssetListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/FixedAsset" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AssetTransfer:
+      type: object
+      required: [id, companyId, code, assetId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        fromBranchId: { type: ["string", "null"] }
+        toBranchId: { type: ["string", "null"] }
+        fromCostCenterId: { type: ["string", "null"] }
+        toCostCenterId: { type: ["string", "null"] }
+        transferDate: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        reasonAr: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AssetTransferInput:
+      type: object
+      required: [companyId, code, assetId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        fromBranchId: { type: string }
+        toBranchId: { type: string }
+        fromCostCenterId: { type: string }
+        toCostCenterId: { type: string }
+        transferDate: { type: string }
+        reason: { type: string }
+        reasonAr: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AssetTransferUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        fromBranchId: { type: string }
+        toBranchId: { type: string }
+        fromCostCenterId: { type: string }
+        toCostCenterId: { type: string }
+        transferDate: { type: string }
+        reason: { type: string }
+        reasonAr: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AssetTransferListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AssetTransfer" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AssetDepreciation:
+      type: object
+      required: [id, companyId, code, assetId, amount, accumulatedAfter, bookValueAfter, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        periodDate: { type: ["string", "null"] }
+        amount: { type: string }
+        method: { type: ["string", "null"] }
+        accumulatedAfter: { type: string }
+        bookValueAfter: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AssetDepreciationInput:
+      type: object
+      required: [companyId, code, assetId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        periodDate: { type: string }
+        amount: { type: string }
+        method: { type: string }
+        accumulatedAfter: { type: string }
+        bookValueAfter: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AssetDepreciationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        periodDate: { type: string }
+        amount: { type: string }
+        method: { type: string }
+        accumulatedAfter: { type: string }
+        bookValueAfter: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AssetDepreciationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AssetDepreciation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AssetInventoryCount:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: ["string", "null"] }
+        branchId: { type: ["string", "null"] }
+        countDate: { type: ["string", "null"] }
+        status: { type: string }
+        location: { type: ["string", "null"] }
+        countedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AssetInventoryCountInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        branchId: { type: string }
+        countDate: { type: string }
+        status: { type: string }
+        location: { type: string }
+        countedBy: { type: string }
+        notes: { type: string }
+
+    AssetInventoryCountUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        branchId: { type: string }
+        countDate: { type: string }
+        status: { type: string }
+        location: { type: string }
+        countedBy: { type: string }
+        notes: { type: string }
+
+    AssetInventoryCountListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AssetInventoryCount" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AssetDisposal:
+      type: object
+      required: [id, companyId, code, assetId, disposalType, proceeds, bookValueAtDisposal, gainLoss, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        disposalDate: { type: ["string", "null"] }
+        disposalType: { type: string }
+        proceeds: { type: string }
+        bookValueAtDisposal: { type: string }
+        gainLoss: { type: string }
+        buyerName: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AssetDisposalInput:
+      type: object
+      required: [companyId, code, assetId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        disposalDate: { type: string }
+        disposalType: { type: string }
+        proceeds: { type: string }
+        bookValueAtDisposal: { type: string }
+        gainLoss: { type: string }
+        buyerName: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AssetDisposalUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        assetId: { type: string }
+        disposalDate: { type: string }
+        disposalType: { type: string }
+        proceeds: { type: string }
+        bookValueAtDisposal: { type: string }
+        gainLoss: { type: string }
+        buyerName: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AssetDisposalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AssetDisposal" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    FixedAssetsStatusCount:
+      type: object
+      required: [status, count]
+      properties:
+        status: { type: string }
+        count: { type: integer }
+
+    FixedAssetsDashboard:
+      type: object
+      required: [totalAssets, totalAcquisitionCost, totalBookValue, totalAccumulatedDepreciation, byStatus]
+      properties:
+        totalAssets: { type: integer }
+        totalAcquisitionCost: { type: string }
+        totalBookValue: { type: string }
+        totalAccumulatedDepreciation: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/FixedAssetsStatusCount" }

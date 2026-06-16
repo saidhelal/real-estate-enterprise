@@ -1,6 +1,31 @@
 export type Lang = "en" | "ar";
 
 export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
+  // land bank
+  available: { en: "Available", ar: "متاحة" },
+  acquired: { en: "Acquired", ar: "مُكتسبة" },
+  under_development: { en: "Under Development", ar: "قيد التطوير" },
+  developed: { en: "Developed", ar: "مطوّرة" },
+  sold: { en: "Sold", ar: "مباعة" },
+  freehold: { en: "Freehold", ar: "ملكية تامة" },
+  leasehold: { en: "Leasehold", ar: "حق انتفاع طويل" },
+  usufruct: { en: "Usufruct", ar: "حق انتفاع" },
+  joint: { en: "Joint", ar: "ملكية مشتركة" },
+  clear: { en: "Clear", ar: "خالية" },
+  disputed: { en: "Disputed", ar: "متنازع عليها" },
+  mortgaged: { en: "Mortgaged", ar: "مرهونة" },
+  restricted: { en: "Restricted", ar: "مقيّدة" },
+  development: { en: "Development", ar: "تطوير" },
+  lease: { en: "Lease", ar: "إيجار" },
+  reserve: { en: "Reserve", ar: "احتياطي" },
+  planned: { en: "Planned", ar: "مخطط" },
+  deed: { en: "Title Deed", ar: "صك ملكية" },
+  survey: { en: "Survey", ar: "مساحة" },
+  permit: { en: "Permit", ar: "تصريح" },
+  valuation: { en: "Valuation", ar: "تقييم" },
+  inheritance: { en: "Inheritance", ar: "ميراث" },
+  grant: { en: "Grant", ar: "منحة" },
+  exchange: { en: "Exchange", ar: "مبادلة" },
   cash: { en: "Cash", ar: "نقدي" },
   bank_transfer: { en: "Bank Transfer", ar: "تحويل بنكي" },
   cheque: { en: "Cheque", ar: "شيك" },
@@ -268,6 +293,30 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   // Legal: advisor type
   internal: { en: "Internal", ar: "داخلي" },
   external: { en: "External", ar: "خارجي" },
+  // Unit Handover
+  initial: { en: "Initial", ar: "مبدئي" },
+  final: { en: "Final", ar: "نهائي" },
+  requested: { en: "Requested", ar: "مطلوب" },
+  rescheduled: { en: "Rescheduled", ar: "أعيدت جدولته" },
+  na: { en: "N/A", ar: "لا ينطبق" },
+  resolved: { en: "Resolved", ar: "تم الحل" },
+  // Customer Service: channels
+  complaint: { en: "Complaint", ar: "شكوى" },
+  maintenance: { en: "Maintenance", ar: "صيانة" },
+  support: { en: "Support", ar: "دعم" },
+  all: { en: "All", ar: "الكل" },
+  // Fixed Assets: depreciation methods, statuses, count, disposal types
+  straight_line: { en: "Straight Line", ar: "القسط الثابت" },
+  declining_balance: { en: "Declining Balance", ar: "القسط المتناقص" },
+  under_maintenance: { en: "Under Maintenance", ar: "تحت الصيانة" },
+  disposed: { en: "Disposed", ar: "مُستبعد" },
+  written_off: { en: "Written Off", ar: "مشطوب" },
+  found: { en: "Found", ar: "موجود" },
+  missing: { en: "Missing", ar: "مفقود" },
+  damaged: { en: "Damaged", ar: "تالف" },
+  scrap: { en: "Scrap", ar: "خردة" },
+  donation: { en: "Donation", ar: "تبرع" },
+  write_off: { en: "Write-off", ar: "شطب" },
 };
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {

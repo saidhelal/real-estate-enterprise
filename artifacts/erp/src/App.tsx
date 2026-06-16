@@ -123,6 +123,34 @@ import ConsultantResponsesPage from "@/pages/consultant-responses";
 import EngineeringProgressPage from "@/pages/engineering-progress";
 import ConstructionDashboardPage from "@/pages/construction-dashboard";
 import ConstructionReportsPage from "@/pages/construction-reports";
+import LandBankDashboardPage from "@/pages/land-bank-dashboard";
+import LandBankReportsPage from "@/pages/land-bank-reports";
+import LandParcelsPage from "@/pages/land-parcels";
+import LandOwnershipsPage from "@/pages/land-ownerships";
+import LandLegalStatusesPage from "@/pages/land-legal-statuses";
+import LandUtilizationsPage from "@/pages/land-utilizations";
+import LandDocumentsPage from "@/pages/land-documents";
+import LandAcquisitionsPage from "@/pages/land-acquisitions";
+import HandoverDashboardPage from "@/pages/handover-dashboard";
+import HandoverReportsPage from "@/pages/handover-reports";
+import HandoverRequestsPage from "@/pages/handover-requests";
+import HandoverSchedulesPage from "@/pages/handover-schedules";
+import HandoverChecklistItemsPage from "@/pages/handover-checklist-items";
+import HandoverMinutesPage from "@/pages/handover-minutes";
+import HandoverSnagsPage from "@/pages/handover-snags";
+import HandoverApprovalsPage from "@/pages/handover-approvals";
+import CustomerServiceDashboardPage from "@/pages/customer-service-dashboard";
+import CustomerServiceReportsPage from "@/pages/customer-service-reports";
+import SlaPoliciesPage from "@/pages/sla-policies";
+import ServiceEscalationsPage from "@/pages/service-escalations";
+import FixedAssetsDashboardPage from "@/pages/fixed-assets-dashboard";
+import FixedAssetsReportsPage from "@/pages/fixed-assets-reports";
+import AssetCategoriesPage from "@/pages/asset-categories";
+import FixedAssetsPage from "@/pages/fixed-assets";
+import AssetTransfersPage from "@/pages/asset-transfers";
+import AssetDepreciationsPage from "@/pages/asset-depreciations";
+import AssetInventoryCountsPage from "@/pages/asset-inventory-counts";
+import AssetDisposalsPage from "@/pages/asset-disposals";
 import ContractorsPage from "@/pages/contractors";
 import ContractorContractsPage from "@/pages/contractor-contracts";
 import ContractBoqItemsPage from "@/pages/contract-boq-items";
@@ -340,6 +368,34 @@ function Router() {
             <Route path="/engineering-progress" component={EngineeringProgressPage} />
             <Route path="/construction-dashboard" component={ConstructionDashboardPage} />
             <Route path="/construction-reports" component={ConstructionReportsPage} />
+            <Route path="/land-bank-dashboard" component={LandBankDashboardPage} />
+            <Route path="/land-parcels" component={LandParcelsPage} />
+            <Route path="/land-ownerships" component={LandOwnershipsPage} />
+            <Route path="/land-legal-statuses" component={LandLegalStatusesPage} />
+            <Route path="/land-utilizations" component={LandUtilizationsPage} />
+            <Route path="/land-documents" component={LandDocumentsPage} />
+            <Route path="/land-acquisitions" component={LandAcquisitionsPage} />
+            <Route path="/land-bank-reports" component={LandBankReportsPage} />
+            <Route path="/handover-dashboard" component={HandoverDashboardPage} />
+            <Route path="/handover-requests" component={HandoverRequestsPage} />
+            <Route path="/handover-schedules" component={HandoverSchedulesPage} />
+            <Route path="/handover-checklist-items" component={HandoverChecklistItemsPage} />
+            <Route path="/handover-minutes" component={HandoverMinutesPage} />
+            <Route path="/handover-snags" component={HandoverSnagsPage} />
+            <Route path="/handover-approvals" component={HandoverApprovalsPage} />
+            <Route path="/handover-reports" component={HandoverReportsPage} />
+            <Route path="/customer-service-dashboard" component={CustomerServiceDashboardPage} />
+            <Route path="/sla-policies" component={SlaPoliciesPage} />
+            <Route path="/service-escalations" component={ServiceEscalationsPage} />
+            <Route path="/customer-service-reports" component={CustomerServiceReportsPage} />
+            <Route path="/fixed-assets-dashboard" component={FixedAssetsDashboardPage} />
+            <Route path="/asset-categories" component={AssetCategoriesPage} />
+            <Route path="/fixed-assets" component={FixedAssetsPage} />
+            <Route path="/asset-transfers" component={AssetTransfersPage} />
+            <Route path="/asset-depreciations" component={AssetDepreciationsPage} />
+            <Route path="/asset-inventory-counts" component={AssetInventoryCountsPage} />
+            <Route path="/asset-disposals" component={AssetDisposalsPage} />
+            <Route path="/fixed-assets-reports" component={FixedAssetsReportsPage} />
             <Route path="/contractors" component={ContractorsPage} />
             <Route path="/contractor-contracts" component={ContractorContractsPage} />
             <Route path="/contract-boq-items" component={ContractBoqItemsPage} />

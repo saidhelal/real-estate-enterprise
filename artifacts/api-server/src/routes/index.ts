@@ -28,6 +28,10 @@ import inventoryRouter from "./inventory";
 import hrRouter from "./hr";
 import legalRouter from "./legal";
 import biRouter from "./bi";
+import landBankRouter from "./land-bank";
+import handoverRouter from "./handover";
+import customerServiceRouter from "./customer-service";
+import fixedAssetsRouter from "./fixed-assets";
 import portalRouter from "./portal";
 
 const router: IRouter = Router();
@@ -65,5 +69,9 @@ router.use(inventoryRouter);
 router.use(hrRouter);
 router.use(legalRouter);
 router.use(biRouter);
+router.use(landBankRouter);
+router.use(handoverRouter);
+router.use(customerServiceRouter);
+router.use(fixedAssetsRouter);
 
 export default router;

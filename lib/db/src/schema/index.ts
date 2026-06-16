@@ -25,3 +25,7 @@ export * from "./inventory";
 export * from "./hr";
 export * from "./legal";
 export * from "./portal";
+export * from "./land-bank";
+export * from "./handover";
+export * from "./customer-service";
+export * from "./fixed-assets";

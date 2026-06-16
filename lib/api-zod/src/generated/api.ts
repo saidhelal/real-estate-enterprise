@@ -7337,6 +7337,177 @@ export const ApproveJournalEntryResponse = zod.object({
 
 
 /**
+ * @summary Approve a handover approval
+ */
+export const ApproveHandoverApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveHandoverApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approverNameAr": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approvalDate": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Reject a handover approval
+ */
+export const RejectHandoverApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RejectHandoverApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approverNameAr": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approvalDate": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Resolve a service escalation
+ */
+export const ResolveServiceEscalationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ResolveServiceEscalationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string(),
+  "level": zod.string(),
+  "escalatedToUserId": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "escalatedAt": zod.string(),
+  "resolvedAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Approve an asset transfer
+ */
+export const ApproveAssetTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveAssetTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "fromBranchId": zod.string().nullish(),
+  "toBranchId": zod.string().nullish(),
+  "fromCostCenterId": zod.string().nullish(),
+  "toCostCenterId": zod.string().nullish(),
+  "transferDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Post an asset depreciation entry
+ */
+export const PostAssetDepreciationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostAssetDepreciationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "periodDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "method": zod.string().nullish(),
+  "accumulatedAfter": zod.string(),
+  "bookValueAfter": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Reverse a posted asset depreciation entry
+ */
+export const ReverseAssetDepreciationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReverseAssetDepreciationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "periodDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "method": zod.string().nullish(),
+  "accumulatedAfter": zod.string(),
+  "bookValueAfter": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Approve an asset disposal
+ */
+export const ApproveAssetDisposalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveAssetDisposalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "disposalDate": zod.string().nullish(),
+  "disposalType": zod.string(),
+  "proceeds": zod.string(),
+  "bookValueAtDisposal": zod.string(),
+  "gainLoss": zod.string(),
+  "buyerName": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
  * @summary Close a fiscal period
  */
 export const CloseFiscalPeriodParams = zod.object({
@@ -24526,6 +24697,2568 @@ export const GetLegalAdvisorReportResponse = zod.object({
   "key": zod.string().nullable(),
   "count": zod.number()
 })).optional()
+})
+
+
+/**
+ * @summary List land-parcels
+ */
+export const ListLandParcelsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListLandParcelsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "area": zod.string(),
+  "areaUnit": zod.string(),
+  "zoning": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "marketValue": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LandParcel
+ */
+export const CreateLandParcelBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().optional(),
+  "location": zod.string().optional(),
+  "locationAr": zod.string().optional(),
+  "area": zod.string().optional(),
+  "areaUnit": zod.string().optional(),
+  "zoning": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "marketValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LandParcel
+ */
+export const GetLandParcelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLandParcelResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "area": zod.string(),
+  "areaUnit": zod.string(),
+  "zoning": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "marketValue": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LandParcel
+ */
+export const UpdateLandParcelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLandParcelBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "location": zod.string().optional(),
+  "locationAr": zod.string().optional(),
+  "area": zod.string().optional(),
+  "areaUnit": zod.string().optional(),
+  "zoning": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "marketValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLandParcelResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "projectId": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "area": zod.string(),
+  "areaUnit": zod.string(),
+  "zoning": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "marketValue": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LandParcel
+ */
+export const DeleteLandParcelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLandParcelResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List land-ownerships
+ */
+export const ListLandOwnershipsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "parcelId": zod.coerce.string().optional()
+})
+
+export const ListLandOwnershipsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "ownerName": zod.string(),
+  "ownerNameAr": zod.string().nullish(),
+  "ownershipType": zod.string(),
+  "sharePercentage": zod.string(),
+  "titleDeedNo": zod.string().nullish(),
+  "registrationDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LandOwnership
+ */
+export const CreateLandOwnershipBody = zod.object({
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "ownerName": zod.string(),
+  "ownerNameAr": zod.string().optional(),
+  "ownershipType": zod.string().optional(),
+  "sharePercentage": zod.string().optional(),
+  "titleDeedNo": zod.string().optional(),
+  "registrationDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LandOwnership
+ */
+export const GetLandOwnershipParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLandOwnershipResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "ownerName": zod.string(),
+  "ownerNameAr": zod.string().nullish(),
+  "ownershipType": zod.string(),
+  "sharePercentage": zod.string(),
+  "titleDeedNo": zod.string().nullish(),
+  "registrationDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LandOwnership
+ */
+export const UpdateLandOwnershipParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLandOwnershipBody = zod.object({
+  "companyId": zod.string().optional(),
+  "parcelId": zod.string().optional(),
+  "ownerName": zod.string().optional(),
+  "ownerNameAr": zod.string().optional(),
+  "ownershipType": zod.string().optional(),
+  "sharePercentage": zod.string().optional(),
+  "titleDeedNo": zod.string().optional(),
+  "registrationDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLandOwnershipResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "ownerName": zod.string(),
+  "ownerNameAr": zod.string().nullish(),
+  "ownershipType": zod.string(),
+  "sharePercentage": zod.string(),
+  "titleDeedNo": zod.string().nullish(),
+  "registrationDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LandOwnership
+ */
+export const DeleteLandOwnershipParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLandOwnershipResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List land-legal-statuses
+ */
+export const ListLandLegalStatusesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "parcelId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListLandLegalStatusesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "status": zod.string(),
+  "authority": zod.string().nullish(),
+  "referenceNo": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LandLegalStatus
+ */
+export const CreateLandLegalStatusBody = zod.object({
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "status": zod.string().optional(),
+  "authority": zod.string().optional(),
+  "referenceNo": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LandLegalStatus
+ */
+export const GetLandLegalStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLandLegalStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "status": zod.string(),
+  "authority": zod.string().nullish(),
+  "referenceNo": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LandLegalStatus
+ */
+export const UpdateLandLegalStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLandLegalStatusBody = zod.object({
+  "companyId": zod.string().optional(),
+  "parcelId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "authority": zod.string().optional(),
+  "referenceNo": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLandLegalStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "status": zod.string(),
+  "authority": zod.string().nullish(),
+  "referenceNo": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LandLegalStatus
+ */
+export const DeleteLandLegalStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLandLegalStatusResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List land-utilizations
+ */
+export const ListLandUtilizationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "parcelId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListLandUtilizationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "utilizationType": zod.string(),
+  "allocatedArea": zod.string(),
+  "projectId": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LandUtilization
+ */
+export const CreateLandUtilizationBody = zod.object({
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "utilizationType": zod.string().optional(),
+  "allocatedArea": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LandUtilization
+ */
+export const GetLandUtilizationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLandUtilizationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "utilizationType": zod.string(),
+  "allocatedArea": zod.string(),
+  "projectId": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LandUtilization
+ */
+export const UpdateLandUtilizationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLandUtilizationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "parcelId": zod.string().optional(),
+  "utilizationType": zod.string().optional(),
+  "allocatedArea": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLandUtilizationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "utilizationType": zod.string(),
+  "allocatedArea": zod.string(),
+  "projectId": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LandUtilization
+ */
+export const DeleteLandUtilizationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLandUtilizationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List land-documents
+ */
+export const ListLandDocumentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "parcelId": zod.coerce.string().optional()
+})
+
+export const ListLandDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "docType": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "fileUrl": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LandDocument
+ */
+export const CreateLandDocumentBody = zod.object({
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "docType": zod.string().optional(),
+  "title": zod.string(),
+  "titleAr": zod.string().optional(),
+  "fileUrl": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LandDocument
+ */
+export const GetLandDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLandDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "docType": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "fileUrl": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LandDocument
+ */
+export const UpdateLandDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLandDocumentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "parcelId": zod.string().optional(),
+  "docType": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "fileUrl": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLandDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "docType": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "fileUrl": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LandDocument
+ */
+export const DeleteLandDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLandDocumentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List land-acquisitions
+ */
+export const ListLandAcquisitionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "parcelId": zod.coerce.string().optional(),
+  "paymentStatus": zod.coerce.string().optional()
+})
+
+export const ListLandAcquisitionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "acquisitionType": zod.string(),
+  "sellerName": zod.string().nullish(),
+  "acquisitionDate": zod.string().nullish(),
+  "cost": zod.string(),
+  "paymentStatus": zod.string(),
+  "referenceNo": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a LandAcquisition
+ */
+export const CreateLandAcquisitionBody = zod.object({
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "acquisitionType": zod.string().optional(),
+  "sellerName": zod.string().optional(),
+  "acquisitionDate": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "paymentStatus": zod.string().optional(),
+  "referenceNo": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a LandAcquisition
+ */
+export const GetLandAcquisitionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLandAcquisitionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "acquisitionType": zod.string(),
+  "sellerName": zod.string().nullish(),
+  "acquisitionDate": zod.string().nullish(),
+  "cost": zod.string(),
+  "paymentStatus": zod.string(),
+  "referenceNo": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a LandAcquisition
+ */
+export const UpdateLandAcquisitionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateLandAcquisitionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "parcelId": zod.string().optional(),
+  "acquisitionType": zod.string().optional(),
+  "sellerName": zod.string().optional(),
+  "acquisitionDate": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "paymentStatus": zod.string().optional(),
+  "referenceNo": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateLandAcquisitionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "parcelId": zod.string(),
+  "acquisitionType": zod.string(),
+  "sellerName": zod.string().nullish(),
+  "acquisitionDate": zod.string().nullish(),
+  "cost": zod.string(),
+  "paymentStatus": zod.string(),
+  "referenceNo": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a LandAcquisition
+ */
+export const DeleteLandAcquisitionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLandAcquisitionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Land bank dashboard summary
+ */
+export const GetLandBankDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetLandBankDashboardResponse = zod.object({
+  "totalParcels": zod.number(),
+  "totalArea": zod.string(),
+  "totalMarketValue": zod.string(),
+  "totalAcquisitionCost": zod.string(),
+  "byStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary List handover-requests
+ */
+export const ListHandoverRequestsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "handoverType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListHandoverRequestsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "reservationId": zod.string().nullish(),
+  "handoverType": zod.string(),
+  "requestDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a HandoverRequest
+ */
+export const CreateHandoverRequestBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "reservationId": zod.string().optional(),
+  "handoverType": zod.string().optional(),
+  "requestDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a HandoverRequest
+ */
+export const GetHandoverRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetHandoverRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "reservationId": zod.string().nullish(),
+  "handoverType": zod.string(),
+  "requestDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a HandoverRequest
+ */
+export const UpdateHandoverRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateHandoverRequestBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "reservationId": zod.string().optional(),
+  "handoverType": zod.string().optional(),
+  "requestDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateHandoverRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "customerId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "reservationId": zod.string().nullish(),
+  "handoverType": zod.string(),
+  "requestDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a HandoverRequest
+ */
+export const DeleteHandoverRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteHandoverRequestResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List handover-schedules
+ */
+export const ListHandoverSchedulesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "requestId": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListHandoverSchedulesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "scheduledDate": zod.string().nullish(),
+  "scheduledTime": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a HandoverSchedule
+ */
+export const CreateHandoverScheduleBody = zod.object({
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "scheduledDate": zod.string().optional(),
+  "scheduledTime": zod.string().optional(),
+  "location": zod.string().optional(),
+  "locationAr": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a HandoverSchedule
+ */
+export const GetHandoverScheduleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetHandoverScheduleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "scheduledDate": zod.string().nullish(),
+  "scheduledTime": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a HandoverSchedule
+ */
+export const UpdateHandoverScheduleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateHandoverScheduleBody = zod.object({
+  "companyId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "scheduledDate": zod.string().optional(),
+  "scheduledTime": zod.string().optional(),
+  "location": zod.string().optional(),
+  "locationAr": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateHandoverScheduleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "scheduledDate": zod.string().nullish(),
+  "scheduledTime": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a HandoverSchedule
+ */
+export const DeleteHandoverScheduleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteHandoverScheduleResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List handover-checklist-items
+ */
+export const ListHandoverChecklistItemsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "requestId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListHandoverChecklistItemsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "item": zod.string(),
+  "itemAr": zod.string().nullish(),
+  "category": zod.string().nullish(),
+  "status": zod.string(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a HandoverChecklistItem
+ */
+export const CreateHandoverChecklistItemBody = zod.object({
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "item": zod.string(),
+  "itemAr": zod.string().optional(),
+  "category": zod.string().optional(),
+  "status": zod.string().optional(),
+  "remarks": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a HandoverChecklistItem
+ */
+export const GetHandoverChecklistItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetHandoverChecklistItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "item": zod.string(),
+  "itemAr": zod.string().nullish(),
+  "category": zod.string().nullish(),
+  "status": zod.string(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a HandoverChecklistItem
+ */
+export const UpdateHandoverChecklistItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateHandoverChecklistItemBody = zod.object({
+  "companyId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "item": zod.string().optional(),
+  "itemAr": zod.string().optional(),
+  "category": zod.string().optional(),
+  "status": zod.string().optional(),
+  "remarks": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateHandoverChecklistItemResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "item": zod.string(),
+  "itemAr": zod.string().nullish(),
+  "category": zod.string().nullish(),
+  "status": zod.string(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a HandoverChecklistItem
+ */
+export const DeleteHandoverChecklistItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteHandoverChecklistItemResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List handover-minutes
+ */
+export const ListHandoverMinutesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "requestId": zod.coerce.string().optional()
+})
+
+export const ListHandoverMinutesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "minuteDate": zod.string().nullish(),
+  "summary": zod.string(),
+  "summaryAr": zod.string().nullish(),
+  "attendees": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a HandoverMinute
+ */
+export const CreateHandoverMinuteBody = zod.object({
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "minuteDate": zod.string().optional(),
+  "summary": zod.string(),
+  "summaryAr": zod.string().optional(),
+  "attendees": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a HandoverMinute
+ */
+export const GetHandoverMinuteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetHandoverMinuteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "minuteDate": zod.string().nullish(),
+  "summary": zod.string(),
+  "summaryAr": zod.string().nullish(),
+  "attendees": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a HandoverMinute
+ */
+export const UpdateHandoverMinuteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateHandoverMinuteBody = zod.object({
+  "companyId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "minuteDate": zod.string().optional(),
+  "summary": zod.string().optional(),
+  "summaryAr": zod.string().optional(),
+  "attendees": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateHandoverMinuteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "minuteDate": zod.string().nullish(),
+  "summary": zod.string(),
+  "summaryAr": zod.string().nullish(),
+  "attendees": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a HandoverMinute
+ */
+export const DeleteHandoverMinuteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteHandoverMinuteResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List handover-snags
+ */
+export const ListHandoverSnagsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "requestId": zod.coerce.string().optional(),
+  "severity": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional()
+})
+
+export const ListHandoverSnagsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "severity": zod.string(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a HandoverSnag
+ */
+export const CreateHandoverSnagBody = zod.object({
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "status": zod.string().optional(),
+  "location": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a HandoverSnag
+ */
+export const GetHandoverSnagParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetHandoverSnagResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "severity": zod.string(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a HandoverSnag
+ */
+export const UpdateHandoverSnagParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateHandoverSnagBody = zod.object({
+  "companyId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "title": zod.string().optional(),
+  "titleAr": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "status": zod.string().optional(),
+  "location": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateHandoverSnagResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "severity": zod.string(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a HandoverSnag
+ */
+export const DeleteHandoverSnagParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteHandoverSnagResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List handover-approvals
+ */
+export const ListHandoverApprovalsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "requestId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListHandoverApprovalsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approverNameAr": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approvalDate": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a HandoverApproval
+ */
+export const CreateHandoverApprovalBody = zod.object({
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "approverName": zod.string().optional(),
+  "approverNameAr": zod.string().optional(),
+  "level": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvalDate": zod.string().optional(),
+  "remarks": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a HandoverApproval
+ */
+export const GetHandoverApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetHandoverApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approverNameAr": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approvalDate": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a HandoverApproval
+ */
+export const UpdateHandoverApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateHandoverApprovalBody = zod.object({
+  "companyId": zod.string().optional(),
+  "requestId": zod.string().optional(),
+  "approverName": zod.string().optional(),
+  "approverNameAr": zod.string().optional(),
+  "level": zod.string().optional(),
+  "status": zod.string().optional(),
+  "approvalDate": zod.string().optional(),
+  "remarks": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateHandoverApprovalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "requestId": zod.string(),
+  "approverName": zod.string().nullish(),
+  "approverNameAr": zod.string().nullish(),
+  "level": zod.string(),
+  "status": zod.string(),
+  "approvalDate": zod.string().nullish(),
+  "remarks": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a HandoverApproval
+ */
+export const DeleteHandoverApprovalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteHandoverApprovalResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Unit handover dashboard summary
+ */
+export const GetHandoverDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetHandoverDashboardResponse = zod.object({
+  "totalRequests": zod.number(),
+  "scheduledCount": zod.number(),
+  "completedCount": zod.number(),
+  "openSnags": zod.number(),
+  "byStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary List sla-policies
+ */
+export const ListSlaPoliciesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "channel": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional()
+})
+
+export const ListSlaPoliciesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "channel": zod.string(),
+  "priority": zod.string(),
+  "firstResponseHours": zod.string(),
+  "resolutionHours": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SlaPolicy
+ */
+export const CreateSlaPolicyBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "channel": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "firstResponseHours": zod.string().optional(),
+  "resolutionHours": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a SlaPolicy
+ */
+export const GetSlaPolicyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSlaPolicyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "channel": zod.string(),
+  "priority": zod.string(),
+  "firstResponseHours": zod.string(),
+  "resolutionHours": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a SlaPolicy
+ */
+export const UpdateSlaPolicyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSlaPolicyBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "channel": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "firstResponseHours": zod.string().optional(),
+  "resolutionHours": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSlaPolicyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "channel": zod.string(),
+  "priority": zod.string(),
+  "firstResponseHours": zod.string(),
+  "resolutionHours": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a SlaPolicy
+ */
+export const DeleteSlaPolicyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSlaPolicyResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List service-escalations
+ */
+export const ListServiceEscalationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "sourceType": zod.coerce.string().optional(),
+  "sourceId": zod.coerce.string().optional(),
+  "escalatedToUserId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListServiceEscalationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string(),
+  "level": zod.string(),
+  "escalatedToUserId": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "escalatedAt": zod.string(),
+  "resolvedAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ServiceEscalation
+ */
+export const CreateServiceEscalationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string(),
+  "level": zod.string().optional(),
+  "escalatedToUserId": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "reasonAr": zod.string().optional(),
+  "status": zod.string().optional(),
+  "escalatedAt": zod.string().optional(),
+  "resolvedAt": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ServiceEscalation
+ */
+export const GetServiceEscalationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetServiceEscalationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string(),
+  "level": zod.string(),
+  "escalatedToUserId": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "escalatedAt": zod.string(),
+  "resolvedAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ServiceEscalation
+ */
+export const UpdateServiceEscalationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateServiceEscalationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "level": zod.string().optional(),
+  "escalatedToUserId": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "reasonAr": zod.string().optional(),
+  "status": zod.string().optional(),
+  "escalatedAt": zod.string().optional(),
+  "resolvedAt": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateServiceEscalationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string(),
+  "level": zod.string(),
+  "escalatedToUserId": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "escalatedAt": zod.string(),
+  "resolvedAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ServiceEscalation
+ */
+export const DeleteServiceEscalationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteServiceEscalationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Customer service dashboard summary
+ */
+export const GetCustomerServiceDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetCustomerServiceDashboardResponse = zod.object({
+  "totalEscalations": zod.number(),
+  "openEscalations": zod.number(),
+  "slaPolicies": zod.number(),
+  "byStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary List asset-categories
+ */
+export const ListAssetCategoriesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "depreciationMethod": zod.coerce.string().optional()
+})
+
+export const ListAssetCategoriesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "usefulLifeYears": zod.string(),
+  "depreciationMethod": zod.string(),
+  "depreciationRate": zod.string(),
+  "assetAccountId": zod.string().nullish(),
+  "depreciationAccountId": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AssetCategory
+ */
+export const CreateAssetCategoryBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "usefulLifeYears": zod.string().optional(),
+  "depreciationMethod": zod.string().optional(),
+  "depreciationRate": zod.string().optional(),
+  "assetAccountId": zod.string().optional(),
+  "depreciationAccountId": zod.string().optional(),
+  "expenseAccountId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AssetCategory
+ */
+export const GetAssetCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAssetCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "usefulLifeYears": zod.string(),
+  "depreciationMethod": zod.string(),
+  "depreciationRate": zod.string(),
+  "assetAccountId": zod.string().nullish(),
+  "depreciationAccountId": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AssetCategory
+ */
+export const UpdateAssetCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAssetCategoryBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "usefulLifeYears": zod.string().optional(),
+  "depreciationMethod": zod.string().optional(),
+  "depreciationRate": zod.string().optional(),
+  "assetAccountId": zod.string().optional(),
+  "depreciationAccountId": zod.string().optional(),
+  "expenseAccountId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAssetCategoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "usefulLifeYears": zod.string(),
+  "depreciationMethod": zod.string(),
+  "depreciationRate": zod.string(),
+  "assetAccountId": zod.string().nullish(),
+  "depreciationAccountId": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AssetCategory
+ */
+export const DeleteAssetCategoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAssetCategoryResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List fixed-assets
+ */
+export const ListFixedAssetsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "categoryId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "costCenterId": zod.coerce.string().optional(),
+  "depreciationMethod": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListFixedAssetsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "acquisitionDate": zod.string().nullish(),
+  "acquisitionCost": zod.string(),
+  "salvageValue": zod.string(),
+  "usefulLifeYears": zod.string(),
+  "depreciationMethod": zod.string(),
+  "accumulatedDepreciation": zod.string(),
+  "bookValue": zod.string(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "serialNo": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a FixedAsset
+ */
+export const CreateFixedAssetBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string(),
+  "branchId": zod.string().optional(),
+  "costCenterId": zod.string().optional(),
+  "acquisitionDate": zod.string().optional(),
+  "acquisitionCost": zod.string().optional(),
+  "salvageValue": zod.string().optional(),
+  "usefulLifeYears": zod.string().optional(),
+  "depreciationMethod": zod.string().optional(),
+  "accumulatedDepreciation": zod.string().optional(),
+  "bookValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "location": zod.string().optional(),
+  "locationAr": zod.string().optional(),
+  "serialNo": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a FixedAsset
+ */
+export const GetFixedAssetParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetFixedAssetResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "acquisitionDate": zod.string().nullish(),
+  "acquisitionCost": zod.string(),
+  "salvageValue": zod.string(),
+  "usefulLifeYears": zod.string(),
+  "depreciationMethod": zod.string(),
+  "accumulatedDepreciation": zod.string(),
+  "bookValue": zod.string(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "serialNo": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a FixedAsset
+ */
+export const UpdateFixedAssetParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateFixedAssetBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "categoryId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "costCenterId": zod.string().optional(),
+  "acquisitionDate": zod.string().optional(),
+  "acquisitionCost": zod.string().optional(),
+  "salvageValue": zod.string().optional(),
+  "usefulLifeYears": zod.string().optional(),
+  "depreciationMethod": zod.string().optional(),
+  "accumulatedDepreciation": zod.string().optional(),
+  "bookValue": zod.string().optional(),
+  "status": zod.string().optional(),
+  "location": zod.string().optional(),
+  "locationAr": zod.string().optional(),
+  "serialNo": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateFixedAssetResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "categoryId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "acquisitionDate": zod.string().nullish(),
+  "acquisitionCost": zod.string(),
+  "salvageValue": zod.string(),
+  "usefulLifeYears": zod.string(),
+  "depreciationMethod": zod.string(),
+  "accumulatedDepreciation": zod.string(),
+  "bookValue": zod.string(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "locationAr": zod.string().nullish(),
+  "serialNo": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a FixedAsset
+ */
+export const DeleteFixedAssetParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteFixedAssetResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List asset-transfers
+ */
+export const ListAssetTransfersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "assetId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListAssetTransfersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "fromBranchId": zod.string().nullish(),
+  "toBranchId": zod.string().nullish(),
+  "fromCostCenterId": zod.string().nullish(),
+  "toCostCenterId": zod.string().nullish(),
+  "transferDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AssetTransfer
+ */
+export const CreateAssetTransferBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "fromBranchId": zod.string().optional(),
+  "toBranchId": zod.string().optional(),
+  "fromCostCenterId": zod.string().optional(),
+  "toCostCenterId": zod.string().optional(),
+  "transferDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "reasonAr": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AssetTransfer
+ */
+export const GetAssetTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAssetTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "fromBranchId": zod.string().nullish(),
+  "toBranchId": zod.string().nullish(),
+  "fromCostCenterId": zod.string().nullish(),
+  "toCostCenterId": zod.string().nullish(),
+  "transferDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AssetTransfer
+ */
+export const UpdateAssetTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAssetTransferBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "assetId": zod.string().optional(),
+  "fromBranchId": zod.string().optional(),
+  "toBranchId": zod.string().optional(),
+  "fromCostCenterId": zod.string().optional(),
+  "toCostCenterId": zod.string().optional(),
+  "transferDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "reasonAr": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAssetTransferResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "fromBranchId": zod.string().nullish(),
+  "toBranchId": zod.string().nullish(),
+  "fromCostCenterId": zod.string().nullish(),
+  "toCostCenterId": zod.string().nullish(),
+  "transferDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "reasonAr": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AssetTransfer
+ */
+export const DeleteAssetTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAssetTransferResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List asset-depreciations
+ */
+export const ListAssetDepreciationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "assetId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListAssetDepreciationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "periodDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "method": zod.string().nullish(),
+  "accumulatedAfter": zod.string(),
+  "bookValueAfter": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AssetDepreciation
+ */
+export const CreateAssetDepreciationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "periodDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "method": zod.string().optional(),
+  "accumulatedAfter": zod.string().optional(),
+  "bookValueAfter": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AssetDepreciation
+ */
+export const GetAssetDepreciationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAssetDepreciationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "periodDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "method": zod.string().nullish(),
+  "accumulatedAfter": zod.string(),
+  "bookValueAfter": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AssetDepreciation
+ */
+export const UpdateAssetDepreciationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAssetDepreciationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "assetId": zod.string().optional(),
+  "periodDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "method": zod.string().optional(),
+  "accumulatedAfter": zod.string().optional(),
+  "bookValueAfter": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAssetDepreciationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "periodDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "method": zod.string().nullish(),
+  "accumulatedAfter": zod.string(),
+  "bookValueAfter": zod.string(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AssetDepreciation
+ */
+export const DeleteAssetDepreciationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAssetDepreciationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List asset-inventory-counts
+ */
+export const ListAssetInventoryCountsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "assetId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListAssetInventoryCountsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "countDate": zod.string().nullish(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "countedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AssetInventoryCount
+ */
+export const CreateAssetInventoryCountBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "countDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "location": zod.string().optional(),
+  "countedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AssetInventoryCount
+ */
+export const GetAssetInventoryCountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAssetInventoryCountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "countDate": zod.string().nullish(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "countedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AssetInventoryCount
+ */
+export const UpdateAssetInventoryCountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAssetInventoryCountBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "assetId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "countDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "location": zod.string().optional(),
+  "countedBy": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAssetInventoryCountResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "countDate": zod.string().nullish(),
+  "status": zod.string(),
+  "location": zod.string().nullish(),
+  "countedBy": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AssetInventoryCount
+ */
+export const DeleteAssetInventoryCountParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAssetInventoryCountResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List asset-disposals
+ */
+export const ListAssetDisposalsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "assetId": zod.coerce.string().optional(),
+  "disposalType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListAssetDisposalsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "disposalDate": zod.string().nullish(),
+  "disposalType": zod.string(),
+  "proceeds": zod.string(),
+  "bookValueAtDisposal": zod.string(),
+  "gainLoss": zod.string(),
+  "buyerName": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AssetDisposal
+ */
+export const CreateAssetDisposalBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "disposalDate": zod.string().optional(),
+  "disposalType": zod.string().optional(),
+  "proceeds": zod.string().optional(),
+  "bookValueAtDisposal": zod.string().optional(),
+  "gainLoss": zod.string().optional(),
+  "buyerName": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AssetDisposal
+ */
+export const GetAssetDisposalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAssetDisposalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "disposalDate": zod.string().nullish(),
+  "disposalType": zod.string(),
+  "proceeds": zod.string(),
+  "bookValueAtDisposal": zod.string(),
+  "gainLoss": zod.string(),
+  "buyerName": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AssetDisposal
+ */
+export const UpdateAssetDisposalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAssetDisposalBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "assetId": zod.string().optional(),
+  "disposalDate": zod.string().optional(),
+  "disposalType": zod.string().optional(),
+  "proceeds": zod.string().optional(),
+  "bookValueAtDisposal": zod.string().optional(),
+  "gainLoss": zod.string().optional(),
+  "buyerName": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAssetDisposalResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "assetId": zod.string(),
+  "disposalDate": zod.string().nullish(),
+  "disposalType": zod.string(),
+  "proceeds": zod.string(),
+  "bookValueAtDisposal": zod.string(),
+  "gainLoss": zod.string(),
+  "buyerName": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AssetDisposal
+ */
+export const DeleteAssetDisposalParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAssetDisposalResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Fixed assets dashboard summary
+ */
+export const GetFixedAssetsDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetFixedAssetsDashboardResponse = zod.object({
+  "totalAssets": zod.number(),
+  "totalAcquisitionCost": zod.string(),
+  "totalBookValue": zod.string(),
+  "totalAccumulatedDepreciation": zod.string(),
+  "byStatus": zod.array(zod.object({
+  "status": zod.string(),
+  "count": zod.number()
+}))
 })
 
 

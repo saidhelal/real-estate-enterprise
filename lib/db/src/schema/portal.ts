@@ -81,6 +81,12 @@ export const maintenanceRequestsTable = pgTable("maintenance_requests", {
   status: text("status").notNull().default("open"),
   attachmentUrl: text("attachment_url"),
   resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  // Customer Service (staff-side) SLA / assignment fields.
+  assignedToUserId: uuid("assigned_to_user_id"),
+  slaPolicyId: uuid("sla_policy_id"),
+  dueAt: timestamp("due_at", { withTimezone: true }),
+  firstResponseAt: timestamp("first_response_at", { withTimezone: true }),
+  escalationLevel: numeric("escalation_level", { precision: 4, scale: 0 }),
   ...audit,
 });
 export type MaintenanceRequestRow = typeof maintenanceRequestsTable.$inferSelect;
@@ -98,6 +104,12 @@ export const complaintsTable = pgTable("complaints", {
   status: text("status").notNull().default("open"),
   attachmentUrl: text("attachment_url"),
   resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  // Customer Service (staff-side) SLA / assignment fields.
+  assignedToUserId: uuid("assigned_to_user_id"),
+  slaPolicyId: uuid("sla_policy_id"),
+  dueAt: timestamp("due_at", { withTimezone: true }),
+  firstResponseAt: timestamp("first_response_at", { withTimezone: true }),
+  escalationLevel: numeric("escalation_level", { precision: 4, scale: 0 }),
   ...audit,
 });
 export type ComplaintRow = typeof complaintsTable.$inferSelect;
@@ -130,6 +142,12 @@ export const supportTicketsTable = pgTable("support_tickets", {
   priority: text("priority").notNull().default("medium"),
   status: text("status").notNull().default("open"),
   closedAt: timestamp("closed_at", { withTimezone: true }),
+  // Customer Service (staff-side) SLA / assignment fields.
+  assignedToUserId: uuid("assigned_to_user_id"),
+  slaPolicyId: uuid("sla_policy_id"),
+  dueAt: timestamp("due_at", { withTimezone: true }),
+  firstResponseAt: timestamp("first_response_at", { withTimezone: true }),
+  escalationLevel: numeric("escalation_level", { precision: 4, scale: 0 }),
   ...audit,
 });
 export type SupportTicketRow = typeof supportTicketsTable.$inferSelect;

@@ -279,6 +279,30 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "legalNotices", label: "Legal Notices", extraActions: ["send"] },
   { module: "legalCaseLinks", label: "Legal Case Links" },
   { module: "bi", label: "Business Intelligence" },
+  // Land Bank Management
+  { module: "landParcels", label: "Land Parcels" },
+  { module: "landOwnerships", label: "Land Ownership Records" },
+  { module: "landLegalStatuses", label: "Land Legal Status" },
+  { module: "landUtilizations", label: "Land Utilization" },
+  { module: "landDocuments", label: "Land Documents" },
+  { module: "landAcquisitions", label: "Land Acquisition Records" },
+  // Unit Handover
+  { module: "handoverRequests", label: "Handover Requests" },
+  { module: "handoverSchedules", label: "Handover Schedules" },
+  { module: "handoverChecklistItems", label: "Handover Checklist Items" },
+  { module: "handoverMinutes", label: "Handover Minutes" },
+  { module: "handoverSnags", label: "Handover Snags" },
+  { module: "handoverApprovals", label: "Handover Approvals", extraActions: ["approve", "reject"] },
+  // Customer Service
+  { module: "slaPolicies", label: "SLA Policies" },
+  { module: "serviceEscalations", label: "Service Escalations", extraActions: ["resolve"] },
+  // Fixed Assets
+  { module: "assetCategories", label: "Asset Categories" },
+  { module: "fixedAssets", label: "Fixed Assets" },
+  { module: "assetTransfers", label: "Asset Transfers", extraActions: ["approve"] },
+  { module: "assetDepreciations", label: "Asset Depreciation", extraActions: ["post", "reverse"] },
+  { module: "assetInventoryCounts", label: "Asset Inventory Counts" },
+  { module: "assetDisposals", label: "Asset Disposals", extraActions: ["approve"] },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

@@ -19,6 +19,7 @@ import {
   ShieldMinus, Coins, RotateCcw, FileSpreadsheet, CheckSquare, BarChart3,
   Truck, ShoppingCart, PackageCheck, PackageX, Store, Undo2,
   Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
+  LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -248,6 +249,42 @@ const NAV_GROUPS = [
     { href: "/legal-notices", icon: Bell, labelKey: "nav.legal_notices" },
     { href: "/legal-case-links", icon: Link2, labelKey: "nav.legal_case_links" },
     { href: "/legal-reports", icon: BarChart3, labelKey: "nav.legal_reports" },
+  ]},
+  { titleKey: "nav.group.land_bank", items: [
+    { href: "/land-bank-dashboard", icon: LandPlot, labelKey: "nav.land_bank_dashboard" },
+    { href: "/land-parcels", icon: MapIcon, labelKey: "nav.land_parcels" },
+    { href: "/land-ownerships", icon: Handshake, labelKey: "nav.land_ownerships" },
+    { href: "/land-legal-statuses", icon: ScrollText, labelKey: "nav.land_legal_statuses" },
+    { href: "/land-utilizations", icon: Trees, labelKey: "nav.land_utilizations" },
+    { href: "/land-documents", icon: FolderArchive, labelKey: "nav.land_documents" },
+    { href: "/land-acquisitions", icon: Landmark, labelKey: "nav.land_acquisitions" },
+    { href: "/land-bank-reports", icon: BarChart3, labelKey: "nav.land_bank_reports" },
+  ]},
+  { titleKey: "nav.group.handover", items: [
+    { href: "/handover-dashboard", icon: ClipboardCheck, labelKey: "nav.handover_dashboard" },
+    { href: "/handover-requests", icon: FileCheck, labelKey: "nav.handover_requests" },
+    { href: "/handover-schedules", icon: CalendarClock, labelKey: "nav.handover_schedules" },
+    { href: "/handover-checklist-items", icon: CheckSquare, labelKey: "nav.handover_checklist_items" },
+    { href: "/handover-minutes", icon: FileText, labelKey: "nav.handover_minutes" },
+    { href: "/handover-snags", icon: AlertTriangle, labelKey: "nav.handover_snags" },
+    { href: "/handover-approvals", icon: ShieldCheck, labelKey: "nav.handover_approvals" },
+    { href: "/handover-reports", icon: BarChart3, labelKey: "nav.handover_reports" },
+  ]},
+  { titleKey: "nav.group.customer_service", items: [
+    { href: "/customer-service-dashboard", icon: MessageSquare, labelKey: "nav.customer_service_dashboard" },
+    { href: "/sla-policies", icon: ClipboardList, labelKey: "nav.sla_policies" },
+    { href: "/service-escalations", icon: Bell, labelKey: "nav.service_escalations" },
+    { href: "/customer-service-reports", icon: BarChart3, labelKey: "nav.customer_service_reports" },
+  ]},
+  { titleKey: "nav.group.fixed_assets", items: [
+    { href: "/fixed-assets-dashboard", icon: Package, labelKey: "nav.fixed_assets_dashboard" },
+    { href: "/asset-categories", icon: Boxes, labelKey: "nav.asset_categories" },
+    { href: "/fixed-assets", icon: FileBox, labelKey: "nav.fixed_assets" },
+    { href: "/asset-transfers", icon: Truck, labelKey: "nav.asset_transfers" },
+    { href: "/asset-depreciations", icon: Coins, labelKey: "nav.asset_depreciations" },
+    { href: "/asset-inventory-counts", icon: ClipboardCheck, labelKey: "nav.asset_inventory_counts" },
+    { href: "/asset-disposals", icon: PackageX, labelKey: "nav.asset_disposals" },
+    { href: "/fixed-assets-reports", icon: BarChart3, labelKey: "nav.fixed_assets_reports" },
   ]},
   { titleKey: "nav.group.business_intelligence", items: [
     { href: "/executive-dashboard", icon: Gauge, labelKey: "nav.executive_dashboard" },
