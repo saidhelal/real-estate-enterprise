@@ -480,6 +480,7 @@ export async function reverseAutomaticEntriesForSource(
       and(
         eq(journalEntriesTable.sourceType, sourceType),
         eq(journalEntriesTable.sourceId, sourceId),
+        eq(journalEntriesTable.isAutomatic, true),
         eq(journalEntriesTable.isDeleted, false),
       ),
     )

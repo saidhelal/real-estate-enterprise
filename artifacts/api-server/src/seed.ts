@@ -125,6 +125,28 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "consultantResponses", label: "Consultant Responses" },
   // Engineering — Project Integration
   { module: "engineeringProgress", label: "Engineering Progress" },
+  // Construction Execution — Contractors & Contracts
+  { module: "contractors", label: "Contractors" },
+  { module: "contractorContracts", label: "Contractor Contracts" },
+  { module: "contractBoqItems", label: "Contract BOQ Items" },
+  // Construction Execution — Work Progress
+  { module: "workProgressUpdates", label: "Work Progress Updates" },
+  // Construction Execution — Payment Certificates (IPC)
+  { module: "paymentCertificates", label: "Payment Certificates", extraActions: ["approve", "verify"] },
+  { module: "certificateItems", label: "Certificate Items" },
+  // Construction Execution — Variations
+  { module: "variationOrders", label: "Variation Orders", extraActions: ["approve"] },
+  // Construction Execution — Deductions & Additions
+  { module: "contractorDeductions", label: "Contractor Deductions" },
+  { module: "contractorAdditions", label: "Contractor Additions" },
+  // Construction Execution — Retention & Advance
+  { module: "retentions", label: "Retentions", extraActions: ["release"] },
+  { module: "advancePayments", label: "Advance Payments" },
+  { module: "advanceRecoveries", label: "Advance Recoveries", extraActions: ["recover"] },
+  // Construction Execution — Invoices
+  { module: "contractorInvoices", label: "Contractor Invoices", extraActions: ["verify"] },
+  // Construction Execution — Approval Workflow
+  { module: "contractApprovals", label: "Contract Approvals", extraActions: ["approve"] },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

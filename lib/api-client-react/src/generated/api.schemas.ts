@@ -3882,6 +3882,821 @@ export interface EngineeringDashboard {
   defectsBySeverity?: EngineeringDashboardDefectsBySeverityItem[];
 }
 
+export interface Contractor {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  classification?: string | null;
+  /** @nullable */
+  contactPerson?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  licenseNumber?: string | null;
+  /** @nullable */
+  address?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractorInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  classification?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  licenseNumber?: string;
+  address?: string;
+  status?: string;
+}
+
+export interface ContractorUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  classification?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  licenseNumber?: string;
+  address?: string;
+  status?: string;
+}
+
+export interface ContractorListResponse {
+  data: Contractor[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractorContract {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  /** @nullable */
+  contractorId?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
+  /** @nullable */
+  boqId?: string | null;
+  /** @nullable */
+  contractValue?: string | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  /** @nullable */
+  durationDays?: number | null;
+  /** @nullable */
+  retentionPercent?: string | null;
+  /** @nullable */
+  advancePercent?: string | null;
+  status: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractorContractInput {
+  companyId: string;
+  code: string;
+  title: string;
+  titleAr: string;
+  contractorId?: string;
+  projectId?: string;
+  phaseId?: string;
+  boqId?: string;
+  contractValue?: string;
+  startDate?: string;
+  endDate?: string;
+  durationDays?: number;
+  retentionPercent?: string;
+  advancePercent?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface ContractorContractUpdate {
+  code?: string;
+  title?: string;
+  titleAr?: string;
+  contractorId?: string;
+  projectId?: string;
+  phaseId?: string;
+  boqId?: string;
+  contractValue?: string;
+  startDate?: string;
+  endDate?: string;
+  durationDays?: number;
+  retentionPercent?: string;
+  advancePercent?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface ContractorContractListResponse {
+  data: ContractorContract[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractBoqItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  boqItemId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  contractQuantity?: string | null;
+  /** @nullable */
+  contractRate?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractBoqItemInput {
+  companyId: string;
+  contractId?: string;
+  boqItemId?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  contractQuantity?: string;
+  contractRate?: string;
+  amount?: string;
+}
+
+export interface ContractBoqItemUpdate {
+  contractId?: string;
+  boqItemId?: string;
+  description?: string;
+  descriptionAr?: string;
+  unit?: string;
+  contractQuantity?: string;
+  contractRate?: string;
+  amount?: string;
+}
+
+export interface ContractBoqItemListResponse {
+  data: ContractBoqItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface WorkProgressUpdate {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  asOfDate?: string | null;
+  /** @nullable */
+  progressPercent?: number | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  approvedBy?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface WorkProgressUpdateInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  asOfDate?: string;
+  progressPercent?: number;
+  description?: string;
+  status?: string;
+  approvedBy?: string;
+}
+
+export interface WorkProgressUpdateUpdate {
+  code?: string;
+  contractId?: string;
+  asOfDate?: string;
+  progressPercent?: number;
+  description?: string;
+  status?: string;
+  approvedBy?: string;
+}
+
+export interface WorkProgressUpdateListResponse {
+  data: WorkProgressUpdate[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PaymentCertificate {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  certificateNumber?: string | null;
+  /** @nullable */
+  periodFrom?: string | null;
+  /** @nullable */
+  periodTo?: string | null;
+  /** @nullable */
+  grossAmount?: string | null;
+  /** @nullable */
+  previousAmount?: string | null;
+  /** @nullable */
+  currentAmount?: string | null;
+  /** @nullable */
+  retentionAmount?: string | null;
+  /** @nullable */
+  advanceRecovery?: string | null;
+  /** @nullable */
+  deductionsAmount?: string | null;
+  /** @nullable */
+  additionsAmount?: string | null;
+  /** @nullable */
+  netAmount?: string | null;
+  status: string;
+  /** @nullable */
+  certificateDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PaymentCertificateInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  certificateNumber?: string;
+  periodFrom?: string;
+  periodTo?: string;
+  grossAmount?: string;
+  previousAmount?: string;
+  currentAmount?: string;
+  retentionAmount?: string;
+  advanceRecovery?: string;
+  deductionsAmount?: string;
+  additionsAmount?: string;
+  netAmount?: string;
+  status?: string;
+  certificateDate?: string;
+  notes?: string;
+}
+
+export interface PaymentCertificateUpdate {
+  code?: string;
+  contractId?: string;
+  certificateNumber?: string;
+  periodFrom?: string;
+  periodTo?: string;
+  grossAmount?: string;
+  previousAmount?: string;
+  currentAmount?: string;
+  retentionAmount?: string;
+  advanceRecovery?: string;
+  deductionsAmount?: string;
+  additionsAmount?: string;
+  netAmount?: string;
+  status?: string;
+  certificateDate?: string;
+  notes?: string;
+}
+
+export interface PaymentCertificateListResponse {
+  data: PaymentCertificate[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CertificateItem {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  certificateId?: string | null;
+  /** @nullable */
+  boqItemId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  unit?: string | null;
+  /** @nullable */
+  contractQuantity?: string | null;
+  /** @nullable */
+  previousQuantity?: string | null;
+  /** @nullable */
+  currentQuantity?: string | null;
+  /** @nullable */
+  cumulativeQuantity?: string | null;
+  /** @nullable */
+  rate?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CertificateItemInput {
+  companyId: string;
+  certificateId?: string;
+  boqItemId?: string;
+  description?: string;
+  unit?: string;
+  contractQuantity?: string;
+  previousQuantity?: string;
+  currentQuantity?: string;
+  cumulativeQuantity?: string;
+  rate?: string;
+  amount?: string;
+}
+
+export interface CertificateItemUpdate {
+  certificateId?: string;
+  boqItemId?: string;
+  description?: string;
+  unit?: string;
+  contractQuantity?: string;
+  previousQuantity?: string;
+  currentQuantity?: string;
+  cumulativeQuantity?: string;
+  rate?: string;
+  amount?: string;
+}
+
+export interface CertificateItemListResponse {
+  data: CertificateItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface VariationOrder {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  title: string;
+  /** @nullable */
+  titleAr?: string | null;
+  variationType: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  status: string;
+  /** @nullable */
+  requestDate?: string | null;
+  /** @nullable */
+  approvedDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface VariationOrderInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  title: string;
+  titleAr?: string;
+  variationType?: string;
+  description?: string;
+  amount?: string;
+  status?: string;
+  requestDate?: string;
+  approvedDate?: string;
+}
+
+export interface VariationOrderUpdate {
+  code?: string;
+  contractId?: string;
+  title?: string;
+  titleAr?: string;
+  variationType?: string;
+  description?: string;
+  amount?: string;
+  status?: string;
+  requestDate?: string;
+  approvedDate?: string;
+}
+
+export interface VariationOrderListResponse {
+  data: VariationOrder[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractorDeduction {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  certificateId?: string | null;
+  deductionType: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  deductionDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractorDeductionInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  certificateId?: string;
+  deductionType?: string;
+  description?: string;
+  amount?: string;
+  deductionDate?: string;
+  status?: string;
+}
+
+export interface ContractorDeductionUpdate {
+  code?: string;
+  contractId?: string;
+  certificateId?: string;
+  deductionType?: string;
+  description?: string;
+  amount?: string;
+  deductionDate?: string;
+  status?: string;
+}
+
+export interface ContractorDeductionListResponse {
+  data: ContractorDeduction[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractorAddition {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  certificateId?: string | null;
+  additionType: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  additionDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractorAdditionInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  certificateId?: string;
+  additionType?: string;
+  description?: string;
+  amount?: string;
+  additionDate?: string;
+  status?: string;
+}
+
+export interface ContractorAdditionUpdate {
+  code?: string;
+  contractId?: string;
+  certificateId?: string;
+  additionType?: string;
+  description?: string;
+  amount?: string;
+  additionDate?: string;
+  status?: string;
+}
+
+export interface ContractorAdditionListResponse {
+  data: ContractorAddition[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Retention {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  certificateId?: string | null;
+  /** @nullable */
+  retentionPercent?: string | null;
+  /** @nullable */
+  retainedAmount?: string | null;
+  /** @nullable */
+  releasedAmount?: string | null;
+  /** @nullable */
+  releaseDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface RetentionInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  certificateId?: string;
+  retentionPercent?: string;
+  retainedAmount?: string;
+  releasedAmount?: string;
+  releaseDate?: string;
+  status?: string;
+}
+
+export interface RetentionUpdate {
+  code?: string;
+  contractId?: string;
+  certificateId?: string;
+  retentionPercent?: string;
+  retainedAmount?: string;
+  releasedAmount?: string;
+  releaseDate?: string;
+  status?: string;
+}
+
+export interface RetentionListResponse {
+  data: Retention[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AdvancePayment {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  paymentDate?: string | null;
+  /** @nullable */
+  recoveryPercent?: string | null;
+  /** @nullable */
+  recoveredAmount?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AdvancePaymentInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  amount?: string;
+  paymentDate?: string;
+  recoveryPercent?: string;
+  recoveredAmount?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AdvancePaymentUpdate {
+  code?: string;
+  contractId?: string;
+  amount?: string;
+  paymentDate?: string;
+  recoveryPercent?: string;
+  recoveredAmount?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface AdvancePaymentListResponse {
+  data: AdvancePayment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AdvanceRecovery {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  advanceId?: string | null;
+  /** @nullable */
+  certificateId?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  recoveryDate?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AdvanceRecoveryInput {
+  companyId: string;
+  code: string;
+  advanceId?: string;
+  certificateId?: string;
+  amount?: string;
+  recoveryDate?: string;
+}
+
+export interface AdvanceRecoveryUpdate {
+  code?: string;
+  advanceId?: string;
+  certificateId?: string;
+  amount?: string;
+  recoveryDate?: string;
+}
+
+export interface AdvanceRecoveryListResponse {
+  data: AdvanceRecovery[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractorInvoice {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  certificateId?: string | null;
+  /** @nullable */
+  invoiceNumber?: string | null;
+  /** @nullable */
+  invoiceDate?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  status: string;
+  /** @nullable */
+  verifiedBy?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractorInvoiceInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  certificateId?: string;
+  invoiceNumber?: string;
+  invoiceDate?: string;
+  amount?: string;
+  status?: string;
+  verifiedBy?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface ContractorInvoiceUpdate {
+  code?: string;
+  contractId?: string;
+  certificateId?: string;
+  invoiceNumber?: string;
+  invoiceDate?: string;
+  amount?: string;
+  status?: string;
+  verifiedBy?: string;
+  approvedBy?: string;
+  notes?: string;
+}
+
+export interface ContractorInvoiceListResponse {
+  data: ContractorInvoice[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ContractApproval {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  entityType?: string | null;
+  /** @nullable */
+  entityId?: string | null;
+  level: string;
+  status: string;
+  /** @nullable */
+  approverName?: string | null;
+  /** @nullable */
+  approvalDate?: string | null;
+  /** @nullable */
+  comments?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ContractApprovalInput {
+  companyId: string;
+  code: string;
+  contractId?: string;
+  entityType?: string;
+  entityId?: string;
+  level?: string;
+  status?: string;
+  approverName?: string;
+  approvalDate?: string;
+  comments?: string;
+}
+
+export interface ContractApprovalUpdate {
+  code?: string;
+  contractId?: string;
+  entityType?: string;
+  entityId?: string;
+  level?: string;
+  status?: string;
+  approverName?: string;
+  approvalDate?: string;
+  comments?: string;
+}
+
+export interface ContractApprovalListResponse {
+  data: ContractApproval[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export type ConstructionDashboardContractsByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export type ConstructionDashboardCertificatesByStatusItem = {
+  status: string;
+  count: number;
+};
+
+export interface ConstructionDashboard {
+  contractsCount: number;
+  activeContracts: number;
+  totalContractValue: string;
+  totalCertified: string;
+  totalDeductions: string;
+  totalAdditions: string;
+  retentionHeld: string;
+  openVariations: number;
+  pendingApprovals: number;
+  pendingInvoices: number;
+  contractsByStatus?: ConstructionDashboardContractsByStatusItem[];
+  certificatesByStatus?: ConstructionDashboardCertificatesByStatusItem[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -4528,6 +5343,108 @@ companyId?: string;
 };
 
 export type GetEngineeringDashboardParams = {
+companyId?: string;
+};
+
+export type ListContractorsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractorContractsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractBoqItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListWorkProgressUpdatesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPaymentCertificatesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListCertificateItemsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListVariationOrdersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractorDeductionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractorAdditionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListRetentionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListAdvancePaymentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListAdvanceRecoverysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractorInvoicesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListContractApprovalsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type GetConstructionDashboardParams = {
 companyId?: string;
 };
 

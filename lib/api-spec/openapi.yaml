@@ -7311,6 +7311,1254 @@ paths:
               schema:
                 $ref: "#/components/schemas/EngineeringDashboard"
 
+
+  /contractors:
+    get:
+      operationId: listContractors
+      tags: [contractors]
+      summary: List contractors
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Contractors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorListResponse"
+    post:
+      operationId: createContractor
+      tags: [contractors]
+      summary: Create a Contractor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contractor"
+
+  /contractors/{id}:
+    get:
+      operationId: getContractor
+      tags: [contractors]
+      summary: Get a Contractor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Contractor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contractor"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractor
+      tags: [contractors]
+      summary: Update a Contractor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contractor"
+    delete:
+      operationId: deleteContractor
+      tags: [contractors]
+      summary: Soft-delete a Contractor
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contractor-contracts:
+    get:
+      operationId: listContractorContracts
+      tags: [contractorContracts]
+      summary: List contractor-contracts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractorContracts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorContractListResponse"
+    post:
+      operationId: createContractorContract
+      tags: [contractorContracts]
+      summary: Create a ContractorContract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorContractInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorContract"
+
+  /contractor-contracts/{id}:
+    get:
+      operationId: getContractorContract
+      tags: [contractorContracts]
+      summary: Get a ContractorContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractorContract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorContract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractorContract
+      tags: [contractorContracts]
+      summary: Update a ContractorContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorContractUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorContract"
+    delete:
+      operationId: deleteContractorContract
+      tags: [contractorContracts]
+      summary: Soft-delete a ContractorContract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contract-boq-items:
+    get:
+      operationId: listContractBoqItems
+      tags: [contractBoqItems]
+      summary: List contract-boq-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractBoqItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractBoqItemListResponse"
+    post:
+      operationId: createContractBoqItem
+      tags: [contractBoqItems]
+      summary: Create a ContractBoqItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractBoqItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractBoqItem"
+
+  /contract-boq-items/{id}:
+    get:
+      operationId: getContractBoqItem
+      tags: [contractBoqItems]
+      summary: Get a ContractBoqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractBoqItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractBoqItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractBoqItem
+      tags: [contractBoqItems]
+      summary: Update a ContractBoqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractBoqItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractBoqItem"
+    delete:
+      operationId: deleteContractBoqItem
+      tags: [contractBoqItems]
+      summary: Soft-delete a ContractBoqItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /work-progress-updates:
+    get:
+      operationId: listWorkProgressUpdates
+      tags: [workProgressUpdates]
+      summary: List work-progress-updates
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: WorkProgressUpdates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkProgressUpdateListResponse"
+    post:
+      operationId: createWorkProgressUpdate
+      tags: [workProgressUpdates]
+      summary: Create a WorkProgressUpdate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkProgressUpdateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkProgressUpdate"
+
+  /work-progress-updates/{id}:
+    get:
+      operationId: getWorkProgressUpdate
+      tags: [workProgressUpdates]
+      summary: Get a WorkProgressUpdate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: WorkProgressUpdate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkProgressUpdate"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateWorkProgressUpdate
+      tags: [workProgressUpdates]
+      summary: Update a WorkProgressUpdate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkProgressUpdateUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkProgressUpdate"
+    delete:
+      operationId: deleteWorkProgressUpdate
+      tags: [workProgressUpdates]
+      summary: Soft-delete a WorkProgressUpdate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /payment-certificates:
+    get:
+      operationId: listPaymentCertificates
+      tags: [paymentCertificates]
+      summary: List payment-certificates
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PaymentCertificates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCertificateListResponse"
+    post:
+      operationId: createPaymentCertificate
+      tags: [paymentCertificates]
+      summary: Create a PaymentCertificate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentCertificateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCertificate"
+
+  /payment-certificates/{id}:
+    get:
+      operationId: getPaymentCertificate
+      tags: [paymentCertificates]
+      summary: Get a PaymentCertificate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PaymentCertificate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCertificate"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePaymentCertificate
+      tags: [paymentCertificates]
+      summary: Update a PaymentCertificate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentCertificateUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCertificate"
+    delete:
+      operationId: deletePaymentCertificate
+      tags: [paymentCertificates]
+      summary: Soft-delete a PaymentCertificate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /certificate-items:
+    get:
+      operationId: listCertificateItems
+      tags: [certificateItems]
+      summary: List certificate-items
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CertificateItems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateItemListResponse"
+    post:
+      operationId: createCertificateItem
+      tags: [certificateItems]
+      summary: Create a CertificateItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateItem"
+
+  /certificate-items/{id}:
+    get:
+      operationId: getCertificateItem
+      tags: [certificateItems]
+      summary: Get a CertificateItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CertificateItem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCertificateItem
+      tags: [certificateItems]
+      summary: Update a CertificateItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateItem"
+    delete:
+      operationId: deleteCertificateItem
+      tags: [certificateItems]
+      summary: Soft-delete a CertificateItem
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /variation-orders:
+    get:
+      operationId: listVariationOrders
+      tags: [variationOrders]
+      summary: List variation-orders
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: VariationOrders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VariationOrderListResponse"
+    post:
+      operationId: createVariationOrder
+      tags: [variationOrders]
+      summary: Create a VariationOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VariationOrderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VariationOrder"
+
+  /variation-orders/{id}:
+    get:
+      operationId: getVariationOrder
+      tags: [variationOrders]
+      summary: Get a VariationOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: VariationOrder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VariationOrder"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateVariationOrder
+      tags: [variationOrders]
+      summary: Update a VariationOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VariationOrderUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VariationOrder"
+    delete:
+      operationId: deleteVariationOrder
+      tags: [variationOrders]
+      summary: Soft-delete a VariationOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contractor-deductions:
+    get:
+      operationId: listContractorDeductions
+      tags: [contractorDeductions]
+      summary: List contractor-deductions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractorDeductions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorDeductionListResponse"
+    post:
+      operationId: createContractorDeduction
+      tags: [contractorDeductions]
+      summary: Create a ContractorDeduction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorDeductionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorDeduction"
+
+  /contractor-deductions/{id}:
+    get:
+      operationId: getContractorDeduction
+      tags: [contractorDeductions]
+      summary: Get a ContractorDeduction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractorDeduction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorDeduction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractorDeduction
+      tags: [contractorDeductions]
+      summary: Update a ContractorDeduction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorDeductionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorDeduction"
+    delete:
+      operationId: deleteContractorDeduction
+      tags: [contractorDeductions]
+      summary: Soft-delete a ContractorDeduction
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contractor-additions:
+    get:
+      operationId: listContractorAdditions
+      tags: [contractorAdditions]
+      summary: List contractor-additions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractorAdditions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorAdditionListResponse"
+    post:
+      operationId: createContractorAddition
+      tags: [contractorAdditions]
+      summary: Create a ContractorAddition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorAdditionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorAddition"
+
+  /contractor-additions/{id}:
+    get:
+      operationId: getContractorAddition
+      tags: [contractorAdditions]
+      summary: Get a ContractorAddition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractorAddition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorAddition"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractorAddition
+      tags: [contractorAdditions]
+      summary: Update a ContractorAddition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorAdditionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorAddition"
+    delete:
+      operationId: deleteContractorAddition
+      tags: [contractorAdditions]
+      summary: Soft-delete a ContractorAddition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /retentions:
+    get:
+      operationId: listRetentions
+      tags: [retentions]
+      summary: List retentions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Retentions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RetentionListResponse"
+    post:
+      operationId: createRetention
+      tags: [retentions]
+      summary: Create a Retention
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetentionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Retention"
+
+  /retentions/{id}:
+    get:
+      operationId: getRetention
+      tags: [retentions]
+      summary: Get a Retention
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Retention
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Retention"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateRetention
+      tags: [retentions]
+      summary: Update a Retention
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetentionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Retention"
+    delete:
+      operationId: deleteRetention
+      tags: [retentions]
+      summary: Soft-delete a Retention
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /advance-payments:
+    get:
+      operationId: listAdvancePayments
+      tags: [advancePayments]
+      summary: List advance-payments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AdvancePayments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvancePaymentListResponse"
+    post:
+      operationId: createAdvancePayment
+      tags: [advancePayments]
+      summary: Create a AdvancePayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvancePaymentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvancePayment"
+
+  /advance-payments/{id}:
+    get:
+      operationId: getAdvancePayment
+      tags: [advancePayments]
+      summary: Get a AdvancePayment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AdvancePayment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvancePayment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAdvancePayment
+      tags: [advancePayments]
+      summary: Update a AdvancePayment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvancePaymentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvancePayment"
+    delete:
+      operationId: deleteAdvancePayment
+      tags: [advancePayments]
+      summary: Soft-delete a AdvancePayment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /advance-recoveries:
+    get:
+      operationId: listAdvanceRecoverys
+      tags: [advanceRecoveries]
+      summary: List advance-recoveries
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AdvanceRecoverys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvanceRecoveryListResponse"
+    post:
+      operationId: createAdvanceRecovery
+      tags: [advanceRecoveries]
+      summary: Create a AdvanceRecovery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvanceRecoveryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvanceRecovery"
+
+  /advance-recoveries/{id}:
+    get:
+      operationId: getAdvanceRecovery
+      tags: [advanceRecoveries]
+      summary: Get a AdvanceRecovery
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AdvanceRecovery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvanceRecovery"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAdvanceRecovery
+      tags: [advanceRecoveries]
+      summary: Update a AdvanceRecovery
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvanceRecoveryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvanceRecovery"
+    delete:
+      operationId: deleteAdvanceRecovery
+      tags: [advanceRecoveries]
+      summary: Soft-delete a AdvanceRecovery
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contractor-invoices:
+    get:
+      operationId: listContractorInvoices
+      tags: [contractorInvoices]
+      summary: List contractor-invoices
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractorInvoices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorInvoiceListResponse"
+    post:
+      operationId: createContractorInvoice
+      tags: [contractorInvoices]
+      summary: Create a ContractorInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorInvoiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorInvoice"
+
+  /contractor-invoices/{id}:
+    get:
+      operationId: getContractorInvoice
+      tags: [contractorInvoices]
+      summary: Get a ContractorInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractorInvoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorInvoice"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractorInvoice
+      tags: [contractorInvoices]
+      summary: Update a ContractorInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractorInvoiceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractorInvoice"
+    delete:
+      operationId: deleteContractorInvoice
+      tags: [contractorInvoices]
+      summary: Soft-delete a ContractorInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /contract-approvals:
+    get:
+      operationId: listContractApprovals
+      tags: [contractApprovals]
+      summary: List contract-approvals
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ContractApprovals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractApprovalListResponse"
+    post:
+      operationId: createContractApproval
+      tags: [contractApprovals]
+      summary: Create a ContractApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractApprovalInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractApproval"
+
+  /contract-approvals/{id}:
+    get:
+      operationId: getContractApproval
+      tags: [contractApprovals]
+      summary: Get a ContractApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ContractApproval
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractApproval"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateContractApproval
+      tags: [contractApprovals]
+      summary: Update a ContractApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractApprovalUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractApproval"
+    delete:
+      operationId: deleteContractApproval
+      tags: [contractApprovals]
+      summary: Soft-delete a ContractApproval
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /construction/dashboard:
+    get:
+      operationId: getConstructionDashboard
+      tags: [constructionDashboard]
+      summary: Construction execution dashboard KPIs
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Construction dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionDashboard"
+
 components:
   parameters:
     IdParam:
@@ -11590,4 +12838,851 @@ components:
             required: [severity, count]
             properties:
               severity: { type: string }
+              count: { type: integer }
+
+    Contractor:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        classification: { type: ["string", "null"] }
+        contactPerson: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        licenseNumber: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractorInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        classification: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        licenseNumber: { type: string }
+        address: { type: string }
+        status: { type: string }
+
+    ContractorUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        classification: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        licenseNumber: { type: string }
+        address: { type: string }
+        status: { type: string }
+
+    ContractorListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Contractor" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractorContract:
+      type: object
+      required: [id, companyId, code, title, titleAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        contractorId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        phaseId: { type: ["string", "null"] }
+        boqId: { type: ["string", "null"] }
+        contractValue: { type: ["string", "null"] }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        durationDays: { type: ["integer", "null"] }
+        retentionPercent: { type: ["string", "null"] }
+        advancePercent: { type: ["string", "null"] }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractorContractInput:
+      type: object
+      required: [companyId, code, title, titleAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        contractorId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        boqId: { type: string }
+        contractValue: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        durationDays: { type: integer }
+        retentionPercent: { type: string }
+        advancePercent: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    ContractorContractUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        contractorId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
+        boqId: { type: string }
+        contractValue: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        durationDays: { type: integer }
+        retentionPercent: { type: string }
+        advancePercent: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    ContractorContractListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractorContract" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractBoqItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        contractId: { type: ["string", "null"] }
+        boqItemId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        contractQuantity: { type: ["string", "null"] }
+        contractRate: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractBoqItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        contractId: { type: string }
+        boqItemId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        contractQuantity: { type: string }
+        contractRate: { type: string }
+        amount: { type: string }
+
+    ContractBoqItemUpdate:
+      type: object
+      properties:
+        contractId: { type: string }
+        boqItemId: { type: string }
+        description: { type: string }
+        descriptionAr: { type: string }
+        unit: { type: string }
+        contractQuantity: { type: string }
+        contractRate: { type: string }
+        amount: { type: string }
+
+    ContractBoqItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractBoqItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    WorkProgressUpdate:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        asOfDate: { type: ["string", "null"] }
+        progressPercent: { type: ["integer", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        approvedBy: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    WorkProgressUpdateInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        asOfDate: { type: string }
+        progressPercent: { type: integer }
+        description: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+
+    WorkProgressUpdateUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        asOfDate: { type: string }
+        progressPercent: { type: integer }
+        description: { type: string }
+        status: { type: string }
+        approvedBy: { type: string }
+
+    WorkProgressUpdateListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/WorkProgressUpdate" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PaymentCertificate:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        certificateNumber: { type: ["string", "null"] }
+        periodFrom: { type: ["string", "null"] }
+        periodTo: { type: ["string", "null"] }
+        grossAmount: { type: ["string", "null"] }
+        previousAmount: { type: ["string", "null"] }
+        currentAmount: { type: ["string", "null"] }
+        retentionAmount: { type: ["string", "null"] }
+        advanceRecovery: { type: ["string", "null"] }
+        deductionsAmount: { type: ["string", "null"] }
+        additionsAmount: { type: ["string", "null"] }
+        netAmount: { type: ["string", "null"] }
+        status: { type: string }
+        certificateDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PaymentCertificateInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        certificateNumber: { type: string }
+        periodFrom: { type: string }
+        periodTo: { type: string }
+        grossAmount: { type: string }
+        previousAmount: { type: string }
+        currentAmount: { type: string }
+        retentionAmount: { type: string }
+        advanceRecovery: { type: string }
+        deductionsAmount: { type: string }
+        additionsAmount: { type: string }
+        netAmount: { type: string }
+        status: { type: string }
+        certificateDate: { type: string }
+        notes: { type: string }
+
+    PaymentCertificateUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        certificateNumber: { type: string }
+        periodFrom: { type: string }
+        periodTo: { type: string }
+        grossAmount: { type: string }
+        previousAmount: { type: string }
+        currentAmount: { type: string }
+        retentionAmount: { type: string }
+        advanceRecovery: { type: string }
+        deductionsAmount: { type: string }
+        additionsAmount: { type: string }
+        netAmount: { type: string }
+        status: { type: string }
+        certificateDate: { type: string }
+        notes: { type: string }
+
+    PaymentCertificateListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PaymentCertificate" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CertificateItem:
+      type: object
+      required: [id, companyId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        certificateId: { type: ["string", "null"] }
+        boqItemId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        unit: { type: ["string", "null"] }
+        contractQuantity: { type: ["string", "null"] }
+        previousQuantity: { type: ["string", "null"] }
+        currentQuantity: { type: ["string", "null"] }
+        cumulativeQuantity: { type: ["string", "null"] }
+        rate: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CertificateItemInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        certificateId: { type: string }
+        boqItemId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        contractQuantity: { type: string }
+        previousQuantity: { type: string }
+        currentQuantity: { type: string }
+        cumulativeQuantity: { type: string }
+        rate: { type: string }
+        amount: { type: string }
+
+    CertificateItemUpdate:
+      type: object
+      properties:
+        certificateId: { type: string }
+        boqItemId: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        contractQuantity: { type: string }
+        previousQuantity: { type: string }
+        currentQuantity: { type: string }
+        cumulativeQuantity: { type: string }
+        rate: { type: string }
+        amount: { type: string }
+
+    CertificateItemListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CertificateItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    VariationOrder:
+      type: object
+      required: [id, companyId, code, title, variationType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        title: { type: string }
+        titleAr: { type: ["string", "null"] }
+        variationType: { type: string }
+        description: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        status: { type: string }
+        requestDate: { type: ["string", "null"] }
+        approvedDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    VariationOrderInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        variationType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        requestDate: { type: string }
+        approvedDate: { type: string }
+
+    VariationOrderUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        title: { type: string }
+        titleAr: { type: string }
+        variationType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        requestDate: { type: string }
+        approvedDate: { type: string }
+
+    VariationOrderListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/VariationOrder" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractorDeduction:
+      type: object
+      required: [id, companyId, code, deductionType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        certificateId: { type: ["string", "null"] }
+        deductionType: { type: string }
+        description: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        deductionDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractorDeductionInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        deductionType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+        deductionDate: { type: string }
+        status: { type: string }
+
+    ContractorDeductionUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        deductionType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+        deductionDate: { type: string }
+        status: { type: string }
+
+    ContractorDeductionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractorDeduction" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractorAddition:
+      type: object
+      required: [id, companyId, code, additionType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        certificateId: { type: ["string", "null"] }
+        additionType: { type: string }
+        description: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        additionDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractorAdditionInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        additionType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+        additionDate: { type: string }
+        status: { type: string }
+
+    ContractorAdditionUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        additionType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+        additionDate: { type: string }
+        status: { type: string }
+
+    ContractorAdditionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractorAddition" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Retention:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        certificateId: { type: ["string", "null"] }
+        retentionPercent: { type: ["string", "null"] }
+        retainedAmount: { type: ["string", "null"] }
+        releasedAmount: { type: ["string", "null"] }
+        releaseDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    RetentionInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        retentionPercent: { type: string }
+        retainedAmount: { type: string }
+        releasedAmount: { type: string }
+        releaseDate: { type: string }
+        status: { type: string }
+
+    RetentionUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        retentionPercent: { type: string }
+        retainedAmount: { type: string }
+        releasedAmount: { type: string }
+        releaseDate: { type: string }
+        status: { type: string }
+
+    RetentionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Retention" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AdvancePayment:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        paymentDate: { type: ["string", "null"] }
+        recoveryPercent: { type: ["string", "null"] }
+        recoveredAmount: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AdvancePaymentInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        recoveryPercent: { type: string }
+        recoveredAmount: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AdvancePaymentUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        recoveryPercent: { type: string }
+        recoveredAmount: { type: string }
+        status: { type: string }
+        notes: { type: string }
+
+    AdvancePaymentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AdvancePayment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    AdvanceRecovery:
+      type: object
+      required: [id, companyId, code, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        advanceId: { type: ["string", "null"] }
+        certificateId: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        recoveryDate: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    AdvanceRecoveryInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        advanceId: { type: string }
+        certificateId: { type: string }
+        amount: { type: string }
+        recoveryDate: { type: string }
+
+    AdvanceRecoveryUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        advanceId: { type: string }
+        certificateId: { type: string }
+        amount: { type: string }
+        recoveryDate: { type: string }
+
+    AdvanceRecoveryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AdvanceRecovery" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractorInvoice:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        certificateId: { type: ["string", "null"] }
+        invoiceNumber: { type: ["string", "null"] }
+        invoiceDate: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        status: { type: string }
+        verifiedBy: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractorInvoiceInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        invoiceNumber: { type: string }
+        invoiceDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        verifiedBy: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    ContractorInvoiceUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        certificateId: { type: string }
+        invoiceNumber: { type: string }
+        invoiceDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        verifiedBy: { type: string }
+        approvedBy: { type: string }
+        notes: { type: string }
+
+    ContractorInvoiceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractorInvoice" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ContractApproval:
+      type: object
+      required: [id, companyId, code, level, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: ["string", "null"] }
+        entityType: { type: ["string", "null"] }
+        entityId: { type: ["string", "null"] }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: ["string", "null"] }
+        approvalDate: { type: ["string", "null"] }
+        comments: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ContractApprovalInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractId: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: string }
+        approvalDate: { type: string }
+        comments: { type: string }
+
+    ContractApprovalUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        contractId: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        level: { type: string }
+        status: { type: string }
+        approverName: { type: string }
+        approvalDate: { type: string }
+        comments: { type: string }
+
+    ContractApprovalListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ContractApproval" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ConstructionDashboard:
+      type: object
+      required: [contractsCount, activeContracts, totalContractValue, totalCertified, totalDeductions, totalAdditions, retentionHeld, openVariations, pendingApprovals, pendingInvoices]
+      properties:
+        contractsCount: { type: integer }
+        activeContracts: { type: integer }
+        totalContractValue: { type: string }
+        totalCertified: { type: string }
+        totalDeductions: { type: string }
+        totalAdditions: { type: string }
+        retentionHeld: { type: string }
+        openVariations: { type: integer }
+        pendingApprovals: { type: integer }
+        pendingInvoices: { type: integer }
+        contractsByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+        certificatesByStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
               count: { type: integer }

@@ -15,6 +15,8 @@ import {
   PiggyBank, Link2, GanttChartSquare, Calculator,
   Compass, Ruler, HardHat, Package, PencilRuler, FileStack, ClipboardCheck,
   FileCheck, ShieldAlert, Wrench, MessageSquare, FileSearch, Microscope, Gauge,
+  Hammer, FileBox, Award, GitPullRequestArrow, MinusCircle, PlusCircle,
+  ShieldMinus, Coins, RotateCcw, FileSpreadsheet, CheckSquare, BarChart3,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -123,6 +125,24 @@ const NAV_GROUPS = [
     { href: "/material-submittals", icon: Microscope, labelKey: "nav.material_submittals" },
     { href: "/consultant-responses", icon: MessageSquare, labelKey: "nav.consultant_responses" },
     { href: "/engineering-progress", icon: Gauge, labelKey: "nav.engineering_progress" },
+  ]},
+  { titleKey: "nav.group.construction", items: [
+    { href: "/construction-dashboard", icon: Hammer, labelKey: "nav.construction_dashboard" },
+    { href: "/contractors", icon: HardHat, labelKey: "nav.contractors" },
+    { href: "/contractor-contracts", icon: FileSignature, labelKey: "nav.contractor_contracts" },
+    { href: "/contract-boq-items", icon: FileBox, labelKey: "nav.contract_boq_items" },
+    { href: "/work-progress-updates", icon: Gauge, labelKey: "nav.work_progress_updates" },
+    { href: "/payment-certificates", icon: Award, labelKey: "nav.payment_certificates" },
+    { href: "/certificate-items", icon: ListOrdered, labelKey: "nav.certificate_items" },
+    { href: "/variation-orders", icon: GitPullRequestArrow, labelKey: "nav.variation_orders" },
+    { href: "/contractor-deductions", icon: MinusCircle, labelKey: "nav.contractor_deductions" },
+    { href: "/contractor-additions", icon: PlusCircle, labelKey: "nav.contractor_additions" },
+    { href: "/retentions", icon: ShieldMinus, labelKey: "nav.retentions" },
+    { href: "/advance-payments", icon: Coins, labelKey: "nav.advance_payments" },
+    { href: "/advance-recoveries", icon: RotateCcw, labelKey: "nav.advance_recoveries" },
+    { href: "/contractor-invoices", icon: FileSpreadsheet, labelKey: "nav.contractor_invoices" },
+    { href: "/contract-approvals", icon: CheckSquare, labelKey: "nav.contract_approvals" },
+    { href: "/construction-reports", icon: BarChart3, labelKey: "nav.construction_reports" },
   ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },

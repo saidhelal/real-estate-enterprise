@@ -98,6 +98,22 @@ import TechnicalSubmittalsPage from "@/pages/technical-submittals";
 import MaterialSubmittalsPage from "@/pages/material-submittals";
 import ConsultantResponsesPage from "@/pages/consultant-responses";
 import EngineeringProgressPage from "@/pages/engineering-progress";
+import ConstructionDashboardPage from "@/pages/construction-dashboard";
+import ConstructionReportsPage from "@/pages/construction-reports";
+import ContractorsPage from "@/pages/contractors";
+import ContractorContractsPage from "@/pages/contractor-contracts";
+import ContractBoqItemsPage from "@/pages/contract-boq-items";
+import WorkProgressUpdatesPage from "@/pages/work-progress-updates";
+import PaymentCertificatesPage from "@/pages/payment-certificates";
+import CertificateItemsPage from "@/pages/certificate-items";
+import VariationOrdersPage from "@/pages/variation-orders";
+import ContractorDeductionsPage from "@/pages/contractor-deductions";
+import ContractorAdditionsPage from "@/pages/contractor-additions";
+import RetentionsPage from "@/pages/retentions";
+import AdvancePaymentsPage from "@/pages/advance-payments";
+import AdvanceRecoveriesPage from "@/pages/advance-recoveries";
+import ContractorInvoicesPage from "@/pages/contractor-invoices";
+import ContractApprovalsPage from "@/pages/contract-approvals";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -204,6 +220,22 @@ function Router() {
             <Route path="/material-submittals" component={MaterialSubmittalsPage} />
             <Route path="/consultant-responses" component={ConsultantResponsesPage} />
             <Route path="/engineering-progress" component={EngineeringProgressPage} />
+            <Route path="/construction-dashboard" component={ConstructionDashboardPage} />
+            <Route path="/construction-reports" component={ConstructionReportsPage} />
+            <Route path="/contractors" component={ContractorsPage} />
+            <Route path="/contractor-contracts" component={ContractorContractsPage} />
+            <Route path="/contract-boq-items" component={ContractBoqItemsPage} />
+            <Route path="/work-progress-updates" component={WorkProgressUpdatesPage} />
+            <Route path="/payment-certificates" component={PaymentCertificatesPage} />
+            <Route path="/certificate-items" component={CertificateItemsPage} />
+            <Route path="/variation-orders" component={VariationOrdersPage} />
+            <Route path="/contractor-deductions" component={ContractorDeductionsPage} />
+            <Route path="/contractor-additions" component={ContractorAdditionsPage} />
+            <Route path="/retentions" component={RetentionsPage} />
+            <Route path="/advance-payments" component={AdvancePaymentsPage} />
+            <Route path="/advance-recoveries" component={AdvanceRecoveriesPage} />
+            <Route path="/contractor-invoices" component={ContractorInvoicesPage} />
+            <Route path="/contract-approvals" component={ContractApprovalsPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>
