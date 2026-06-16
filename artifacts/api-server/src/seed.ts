@@ -1122,11 +1122,11 @@ function mapLegalStatus(s: string | null | undefined): string {
 // fields or FKs on the source contracts, so accounting/installments/AR-AP are
 // untouched. Returns per-module counts for the validation report.
 async function backfillLegalContracts(): Promise<Record<string, { total: number; created: number }>> {
-  const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
-  if (!company) {
-    console.log("No sample company found, skipping legal contract backfill");
-    return {};
-  }
+  // Always run across ALL companies — the per-module `run` below iterates every
+  // non-deleted source contract regardless of company, so the registry stays the
+  // master record of every contract even in non-demo environments. (Previously
+  // this was gated on a demo company code, which silently skipped backfill when
+  // that company was absent, leaving the registry empty.)
   const result: Record<string, { total: number; created: number }> = {};
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
