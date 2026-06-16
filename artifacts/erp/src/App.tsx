@@ -78,6 +78,7 @@ import AccountMappingsPage from "@/pages/account-mappings";
 import AccountingDashboardPage from "@/pages/accounting-dashboard";
 import ChequesPage from "@/pages/cheques";
 import ChequeStatusHistorysPage from "@/pages/cheque-status-history";
+import ChequeReportsPage from "@/pages/cheque-reports";
 import ProfitCentersPage from "@/pages/profit-centers";
 import YearEndClosingPage from "@/pages/year-end-closing";
 import FinancialReportsPage from "@/pages/financial-reports";
@@ -252,6 +253,7 @@ function Router() {
             <Route path="/account-mappings" component={AccountMappingsPage} />
             <Route path="/cheques" component={ChequesPage} />
             <Route path="/cheque-status-history" component={ChequeStatusHistorysPage} />
+            <Route path="/cheque-reports" component={ChequeReportsPage} />
             <Route path="/profit-centers" component={ProfitCentersPage} />
             <Route path="/year-end-closing" component={YearEndClosingPage} />
             <Route path="/financial-reports" component={FinancialReportsPage} />

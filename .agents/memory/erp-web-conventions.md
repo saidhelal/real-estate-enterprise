@@ -30,3 +30,10 @@ status transition, fiscal-year year-end-close/reopen) with plain
 options arg to a generated `useList*` hook (e.g. to set `enabled`), you must also
 pass `queryKey: getList<Entity>QueryKey(params)` or typecheck fails (the option
 type requires it).
+
+**List endpoints hard-cap `pageSize` at 200** (`pageParams` in api-server
+`lib/serialize.ts` uses `Math.min(rawSize, 200)`). A single `useList*` call can
+never return more than 200 rows regardless of the requested `pageSize`, so any
+report/screen that aggregates totals across all rows MUST page through results
+(loop `page` until `accumulated >= json.total`), not request one big page. See
+cheque-reports.tsx for the plain-fetch aggregation pattern.
