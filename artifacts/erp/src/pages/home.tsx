@@ -328,64 +328,80 @@ export default function Home() {
             </p>
           </header>
 
-          {/* KPI strip */}
-          <section className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-            {kpis.map((kpi) => (
-              <div
-                key={kpi.label}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:border-amber-400/40"
-              >
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-sm font-bold text-slate-400">{kpi.label}</span>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300">
-                    <kpi.icon className="h-5 w-5" />
-                  </span>
+          {/* Main ERP module cards (primary focus) */}
+          <section className="mb-14">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-7 w-1.5 rounded-full bg-amber-400" />
+              <h2 className="text-2xl font-extrabold text-white md:text-3xl">
+                الأقسام الرئيسية
+              </h2>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {MODULES.map((mod) => (
+                <div
+                  key={mod.title}
+                  className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/40 hover:bg-white/[0.06]"
+                >
+                  <Link
+                    href={mod.href}
+                    className="mb-5 flex items-center gap-4"
+                  >
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-500/5 text-amber-300 ring-1 ring-amber-400/20 transition-colors group-hover:text-amber-200">
+                      <mod.icon className="h-6 w-6" />
+                    </span>
+                    <h3 className="text-2xl font-extrabold leading-tight text-white transition-colors group-hover:text-amber-200">
+                      {mod.title}
+                    </h3>
+                  </Link>
+
+                  <ul className="grid grid-cols-1 gap-x-5 gap-y-2.5 sm:grid-cols-2">
+                    {mod.items.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className="flex items-center gap-2 text-[15px] font-bold text-slate-300 transition-colors hover:text-amber-300"
+                        >
+                          <span className="text-amber-400/70">•</span>
+                          <span>{item.label}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="text-3xl font-extrabold tracking-tight text-white">
-                  {kpi.loading ? (
-                    <span className="inline-block h-8 w-20 animate-pulse rounded-md bg-white/10" />
-                  ) : (
-                    kpi.value
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
 
-          {/* Module cards */}
-          <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {MODULES.map((mod) => (
-              <div
-                key={mod.title}
-                className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/40 hover:bg-white/[0.06]"
-              >
-                <Link
-                  href={mod.href}
-                  className="mb-5 flex items-center gap-4"
+          {/* KPI section (secondary, below modules) */}
+          <section>
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-7 w-1.5 rounded-full bg-amber-400" />
+              <h2 className="text-2xl font-extrabold text-white md:text-3xl">
+                مؤشرات الأداء الرئيسية
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+              {kpis.map((kpi) => (
+                <div
+                  key={kpi.label}
+                  className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-colors hover:border-amber-400/40"
                 >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-500/5 text-amber-300 ring-1 ring-amber-400/20 transition-colors group-hover:text-amber-200">
-                    <mod.icon className="h-6 w-6" />
-                  </span>
-                  <h2 className="text-2xl font-extrabold leading-tight text-white transition-colors group-hover:text-amber-200">
-                    {mod.title}
-                  </h2>
-                </Link>
-
-                <ul className="grid grid-cols-1 gap-x-5 gap-y-2.5 sm:grid-cols-2">
-                  {mod.items.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className="flex items-center gap-2 text-[15px] font-bold text-slate-300 transition-colors hover:text-amber-300"
-                      >
-                        <span className="text-amber-400/70">•</span>
-                        <span>{item.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-400">{kpi.label}</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300">
+                      <kpi.icon className="h-5 w-5" />
+                    </span>
+                  </div>
+                  <div className="text-3xl font-extrabold tracking-tight text-white">
+                    {kpi.loading ? (
+                      <span className="inline-block h-8 w-20 animate-pulse rounded-md bg-white/10" />
+                    ) : (
+                      kpi.value
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
         </div>
       </div>
