@@ -7080,6 +7080,202 @@ export interface CertificateApprovalLogListResponse {
   pageSize: number;
 }
 
+export interface Cheque {
+  id: string;
+  companyId: string;
+  code: string;
+  direction: string;
+  chequeNumber: string;
+  /** @nullable */
+  chequeDate?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  amount: string;
+  /** @nullable */
+  bankName?: string | null;
+  /** @nullable */
+  bankAccountId?: string | null;
+  /** @nullable */
+  customerId?: string | null;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  receiptId?: string | null;
+  /** @nullable */
+  payeeName?: string | null;
+  status: string;
+  /** @nullable */
+  depositDate?: string | null;
+  /** @nullable */
+  clearedDate?: string | null;
+  /** @nullable */
+  returnedDate?: string | null;
+  /** @nullable */
+  returnReason?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ChequeInput {
+  companyId: string;
+  code: string;
+  direction: string;
+  chequeNumber: string;
+  chequeDate?: string;
+  dueDate?: string;
+  amount?: string;
+  bankName?: string;
+  bankAccountId?: string;
+  customerId?: string;
+  supplierId?: string;
+  contractId?: string;
+  receiptId?: string;
+  payeeName?: string;
+  status?: string;
+  depositDate?: string;
+  clearedDate?: string;
+  returnedDate?: string;
+  returnReason?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface ChequeUpdate {
+  code?: string;
+  direction?: string;
+  chequeNumber?: string;
+  chequeDate?: string;
+  dueDate?: string;
+  amount?: string;
+  bankName?: string;
+  bankAccountId?: string;
+  customerId?: string;
+  supplierId?: string;
+  contractId?: string;
+  receiptId?: string;
+  payeeName?: string;
+  status?: string;
+  depositDate?: string;
+  clearedDate?: string;
+  returnedDate?: string;
+  returnReason?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface ChequeListResponse {
+  data: Cheque[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ChequeStatusHistory {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  chequeId?: string | null;
+  /** @nullable */
+  action?: string | null;
+  /** @nullable */
+  fromStatus?: string | null;
+  /** @nullable */
+  toStatus?: string | null;
+  /** @nullable */
+  actorName?: string | null;
+  /** @nullable */
+  actionDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ChequeStatusHistoryInput {
+  companyId: string;
+  code: string;
+  chequeId?: string;
+  action?: string;
+  fromStatus?: string;
+  toStatus?: string;
+  actorName?: string;
+  actionDate?: string;
+  notes?: string;
+}
+
+export interface ChequeStatusHistoryUpdate {
+  code?: string;
+  chequeId?: string;
+  action?: string;
+  fromStatus?: string;
+  toStatus?: string;
+  actorName?: string;
+  actionDate?: string;
+  notes?: string;
+}
+
+export interface ChequeStatusHistoryListResponse {
+  data: ChequeStatusHistory[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ProfitCenter {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  kind: string;
+  /** @nullable */
+  parentId?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ProfitCenterInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  kind?: string;
+  parentId?: string;
+  projectId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ProfitCenterUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  kind?: string;
+  parentId?: string;
+  projectId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ProfitCenterListResponse {
+  data: ProfitCenter[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -8127,6 +8323,27 @@ companyId?: string;
 };
 
 export type ListCertificateApprovalLogsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListChequesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListChequeStatusHistorysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListProfitCentersParams = {
 page?: number;
 pageSize?: number;
 search?: string;

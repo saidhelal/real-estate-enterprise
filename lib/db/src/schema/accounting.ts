@@ -60,6 +60,26 @@ export const costCentersTable = pgTable("cost_centers", {
 });
 export type CostCenterRow = typeof costCentersTable.$inferSelect;
 
+// ===================== profit centers =====================
+// Hierarchical profit centers (revenue-generating segments: projects, product
+// lines, regions). Mirrors cost centers but tracks profitability rather than
+// cost allocation. Addable at any time; tagging a new center never alters
+// historical journal lines.
+export const profitCentersTable = pgTable("profit_centers", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  parentId: uuid("parent_id"),
+  code: text("code").notNull(),
+  name: text("name").notNull(),
+  nameAr: text("name_ar").notNull(),
+  kind: text("kind").notNull().default("segment"),
+  projectId: uuid("project_id"),
+  description: text("description"),
+  status: text("status").notNull().default("active"),
+  ...audit,
+});
+export type ProfitCenterRow = typeof profitCentersTable.$inferSelect;
+
 // ===================== fiscal periods =====================
 // Accounting periods inside a fiscal year. Posting is blocked once a period is
 // `closed`. Reopening flips it back to `open`.
@@ -121,6 +141,7 @@ export const journalEntryLinesTable = pgTable("journal_entry_lines", {
   companyId: uuid("company_id").notNull(),
   accountId: uuid("account_id").notNull(),
   costCenterId: uuid("cost_center_id"),
+  profitCenterId: uuid("profit_center_id"),
   lineNumber: integer("line_number").notNull().default(1),
   debit: numeric("debit", { precision: 14, scale: 2 }).notNull().default("0"),
   credit: numeric("credit", { precision: 14, scale: 2 }).notNull().default("0"),
@@ -165,6 +186,7 @@ export const budgetLinesTable = pgTable("budget_lines", {
   companyId: uuid("company_id").notNull(),
   accountId: uuid("account_id").notNull(),
   costCenterId: uuid("cost_center_id"),
+  profitCenterId: uuid("profit_center_id"),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
   notes: text("notes"),
   ...audit,

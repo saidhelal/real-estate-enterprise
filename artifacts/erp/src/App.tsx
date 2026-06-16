@@ -76,6 +76,11 @@ import BudgetLinesPage from "@/pages/budget-lines";
 import BudgetVsActualPage from "@/pages/budget-vs-actual";
 import AccountMappingsPage from "@/pages/account-mappings";
 import AccountingDashboardPage from "@/pages/accounting-dashboard";
+import ChequesPage from "@/pages/cheques";
+import ChequeStatusHistorysPage from "@/pages/cheque-status-history";
+import ProfitCentersPage from "@/pages/profit-centers";
+import YearEndClosingPage from "@/pages/year-end-closing";
+import FinancialReportsPage from "@/pages/financial-reports";
 
 import EngineeringDashboardPage from "@/pages/engineering-dashboard";
 import EngineeringDisciplinesPage from "@/pages/engineering-disciplines";
@@ -245,6 +250,11 @@ function Router() {
             <Route path="/budget-lines" component={BudgetLinesPage} />
             <Route path="/budget-vs-actual" component={BudgetVsActualPage} />
             <Route path="/account-mappings" component={AccountMappingsPage} />
+            <Route path="/cheques" component={ChequesPage} />
+            <Route path="/cheque-status-history" component={ChequeStatusHistorysPage} />
+            <Route path="/profit-centers" component={ProfitCentersPage} />
+            <Route path="/year-end-closing" component={YearEndClosingPage} />
+            <Route path="/financial-reports" component={FinancialReportsPage} />
             <Route path="/engineering-dashboard" component={EngineeringDashboardPage} />
             <Route path="/engineering-disciplines" component={EngineeringDisciplinesPage} />
             <Route path="/consultants" component={ConsultantsPage} />

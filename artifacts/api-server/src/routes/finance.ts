@@ -579,10 +579,25 @@ router.post("/penalties/calculate", requirePermission("penalties.create"), async
       if (exists) continue;
       const isPercent = rule.penaltyType === "percent" || rule.penaltyType === "percentage";
       const amount = isPercent ? (remaining * Number(rule.penaltyValue)) / 100 : Number(rule.penaltyValue);
-      const [row] = await db.insert(assessedPenaltiesTable).values({
-        companyId: s.companyId, scheduleId: s.id, ruleId: rule.id,
-        amount: amount.toFixed(2), daysOverdue, assessedDate: today, status: "pending",
-      }).returning();
+      const row = await db.transaction(async (tx) => {
+        const [inserted] = await tx.insert(assessedPenaltiesTable).values({
+          companyId: s.companyId, scheduleId: s.id, ruleId: rule.id,
+          amount: amount.toFixed(2), daysOverdue, assessedDate: today, status: "pending",
+        }).returning();
+        // Auto-post penalty income (debit Accounts Receivable / credit Penalty
+        // Income). Best-effort + idempotent per (assessedPenalty, id).
+        await postAutomaticEntry(tx, {
+          companyId: s.companyId,
+          eventKey: "penalty.assessed",
+          amount: inserted.amount,
+          entryDate: today,
+          description: `Penalty assessed for overdue installment`,
+          sourceType: "assessedPenalty",
+          sourceId: inserted.id,
+          userId: req.authUser?.id ?? null,
+        });
+        return inserted;
+      });
       created += 1;
       totalAmount += amount;
       await recordAudit(req, { action: "create", entity: "assessedPenalty", entityId: row.id, newValue: row });
@@ -612,7 +627,20 @@ router.get("/penalties", requirePermission("penalties.view"), async (req, res): 
 router.post("/penalties", requirePermission("penalties.create"), async (req, res): Promise<void> => {
   const parsed = CreatePenaltyBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(assessedPenaltiesTable).values({ ...parsed.data }).returning();
+  const row = await db.transaction(async (tx) => {
+    const [inserted] = await tx.insert(assessedPenaltiesTable).values({ ...parsed.data }).returning();
+    await postAutomaticEntry(tx, {
+      companyId: inserted.companyId,
+      eventKey: "penalty.assessed",
+      amount: inserted.amount,
+      entryDate: inserted.assessedDate ?? new Date().toISOString().slice(0, 10),
+      description: `Penalty assessed`,
+      sourceType: "assessedPenalty",
+      sourceId: inserted.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return inserted;
+  });
   await recordAudit(req, { action: "create", entity: "assessedPenalty", entityId: row.id, newValue: row });
   res.status(201).json(GetPenaltyResponse.parse(serializeRow(row)));
 });
@@ -640,7 +668,12 @@ router.patch("/penalties/:id", requirePermission("penalties.update"), async (req
 
 router.delete("/penalties/:id", requirePermission("penalties.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(assessedPenaltiesTable).set({ isDeleted: true, isActive: false }).where(and(eq(assessedPenaltiesTable.id, id), eq(assessedPenaltiesTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [deleted] = await tx.update(assessedPenaltiesTable).set({ isDeleted: true, isActive: false }).where(and(eq(assessedPenaltiesTable.id, id), eq(assessedPenaltiesTable.isDeleted, false))).returning();
+    if (!deleted) return null;
+    await reverseAutomaticEntriesForSource(tx, "assessedPenalty", id, req.authUser?.id ?? null);
+    return deleted;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "assessedPenalty", entityId: id });
   res.json({ success: true });

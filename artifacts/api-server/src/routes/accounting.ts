@@ -4,6 +4,7 @@ import {
   db,
   accountsTable,
   costCentersTable,
+  profitCentersTable,
   fiscalPeriodsTable,
   fiscalYearsTable,
   journalEntriesTable,
@@ -21,6 +22,10 @@ import {
   CreateCostCenterBody,
   GetCostCenterResponse,
   UpdateCostCenterBody,
+  ListProfitCentersResponse,
+  CreateProfitCenterBody,
+  GetProfitCenterResponse,
+  UpdateProfitCenterBody,
   ListFiscalPeriodsResponse,
   CreateFiscalPeriodBody,
   GetFiscalPeriodResponse,
@@ -227,6 +232,70 @@ router.delete("/cost-centers/:id", requirePermission("costCenters.delete"), asyn
   const [row] = await db.update(costCentersTable).set({ isDeleted: true, isActive: false }).where(and(eq(costCentersTable.id, id), eq(costCentersTable.isDeleted, false))).returning();
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "costCenter", entityId: id });
+  res.json({ success: true });
+});
+
+// =====================================================================
+// Profit centers (revenue/profitability segments; mirrors cost centers)
+// =====================================================================
+router.get("/profit-centers", requirePermission("profitCenters.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const filters: SQL[] = [eq(profitCentersTable.isDeleted, false)];
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(profitCentersTable.companyId, companyId));
+  const kind = qStr(q, "kind");
+  if (kind) filters.push(eq(profitCentersTable.kind, kind));
+  const parentId = qStr(q, "parentId");
+  if (parentId) filters.push(eq(profitCentersTable.parentId, parentId));
+  const status = qStr(q, "status");
+  if (status) filters.push(eq(profitCentersTable.status, status));
+  const search = qStr(q, "search");
+  if (search) {
+    const term = `%${search}%`;
+    const m = or(ilike(profitCentersTable.code, term), ilike(profitCentersTable.name, term), ilike(profitCentersTable.nameAr, term));
+    if (m) filters.push(m);
+  }
+  const where = and(...filters);
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(profitCentersTable).where(where);
+  const rows = await db.select().from(profitCentersTable).where(where).orderBy(profitCentersTable.code).limit(pageSize).offset(offset);
+  res.json(ListProfitCentersResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/profit-centers", requirePermission("profitCenters.create"), async (req, res): Promise<void> => {
+  const parsed = CreateProfitCenterBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(profitCentersTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "profitCenter", entityId: row.id, newValue: row });
+  res.status(201).json(GetProfitCenterResponse.parse(serializeRow(row)));
+});
+
+router.get("/profit-centers/:id", requirePermission("profitCenters.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(profitCentersTable).where(and(eq(profitCentersTable.id, id), eq(profitCentersTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetProfitCenterResponse.parse(serializeRow(row)));
+});
+
+router.patch("/profit-centers/:id", requirePermission("profitCenters.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateProfitCenterBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(profitCentersTable).where(and(eq(profitCentersTable.id, id), eq(profitCentersTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(profitCentersTable).set(update).where(eq(profitCentersTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "profitCenter", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetProfitCenterResponse.parse(serializeRow(row)));
+});
+
+router.delete("/profit-centers/:id", requirePermission("profitCenters.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(profitCentersTable).set({ isDeleted: true, isActive: false }).where(and(eq(profitCentersTable.id, id), eq(profitCentersTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "profitCenter", entityId: id });
   res.json({ success: true });
 });
 

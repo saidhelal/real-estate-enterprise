@@ -2,6 +2,8 @@ import {
   useGetAccountingDashboard,
   getGetAccountingDashboardQueryKey,
   useListCompanies,
+  useListCheques,
+  getListChequesQueryKey,
 } from "@workspace/api-client-react";
 import {
   Table,
@@ -39,6 +41,19 @@ export default function AccountingDashboardPage() {
     query: { enabled: !!companyId, queryKey: getGetAccountingDashboardQueryKey(params) },
   });
 
+  const chequeParams = { companyId, pageSize: 500 };
+  const { data: chequesData } = useListCheques(chequeParams, {
+    query: { enabled: !!companyId, queryKey: getListChequesQueryKey(chequeParams) },
+  });
+  const cheques = chequesData?.data ?? [];
+  const PENDING_STATUSES = new Set(["received", "post_dated", "under_collection", "deposited"]);
+  const pendingCheques = cheques.filter((c) => PENDING_STATUSES.has(c.status));
+  const chequesPendingCount = pendingCheques.length;
+  const chequesClearedCount = cheques.filter((c) => c.status === "cleared").length;
+  const chequesDueAmount = pendingCheques
+    .reduce((sum, c) => sum + (Number(c.amount) || 0), 0)
+    .toFixed(2);
+
   if (isLoading) {
     return <p className="text-muted-foreground">{t("common.loading")}</p>;
   }
@@ -66,6 +81,12 @@ export default function AccountingDashboardPage() {
         <Stat label={t("acc.draft_entries")} value={data.draftCount ?? 0} />
         <Stat label={t("acc.posted_entries")} value={data.postedCount ?? 0} />
         <Stat label={t("acc.open_periods")} value={data.openPeriodCount ?? 0} />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Stat label={t("acc.cheques_pending")} value={chequesPendingCount} />
+        <Stat label={t("acc.cheques_cleared")} value={chequesClearedCount} />
+        <Stat label={t("acc.cheques_due")} value={chequesDueAmount} />
       </div>
 
       <Card>

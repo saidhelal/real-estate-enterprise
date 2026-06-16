@@ -105,6 +105,58 @@ export const receiptsTable = pgTable("receipts", {
 });
 export type ReceiptRow = typeof receiptsTable.$inferSelect;
 
+// ===================== cheques =====================
+// Standalone cheque lifecycle (incoming from customers / outgoing to suppliers
+// & contractors). Distinct from the cheque attributes stored inline on a
+// receipt: a cheque here moves through a status lifecycle and posts to the
+// ledger on clearing (reversed on return/cancel). `direction` is incoming or
+// outgoing. `status` is received / post_dated / under_collection / deposited /
+// cleared / returned / cancelled.
+export const chequesTable = pgTable("cheques", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  branchId: uuid("branch_id"),
+  code: text("code").notNull(),
+  direction: text("direction").notNull().default("incoming"),
+  chequeNumber: text("cheque_number").notNull(),
+  chequeDate: date("cheque_date"),
+  dueDate: date("due_date"),
+  amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
+  bankName: text("bank_name"),
+  bankAccountId: uuid("bank_account_id"),
+  customerId: uuid("customer_id"),
+  supplierId: uuid("supplier_id"),
+  contractId: uuid("contract_id"),
+  receiptId: uuid("receipt_id"),
+  payeeName: text("payee_name"),
+  status: text("status").notNull().default("received"),
+  depositDate: date("deposit_date"),
+  clearedDate: date("cleared_date"),
+  returnedDate: date("returned_date"),
+  returnReason: text("return_reason"),
+  reference: text("reference"),
+  notes: text("notes"),
+  userId: uuid("user_id"),
+  ...audit,
+});
+export type ChequeRow = typeof chequesTable.$inferSelect;
+
+// Append-only history of every cheque status transition.
+export const chequeStatusHistoryTable = pgTable("cheque_status_history", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  code: text("code").notNull(),
+  chequeId: uuid("cheque_id"),
+  action: text("action"),
+  fromStatus: text("from_status"),
+  toStatus: text("to_status"),
+  actorName: text("actor_name"),
+  actionDate: date("action_date"),
+  notes: text("notes"),
+  ...audit,
+});
+export type ChequeStatusHistoryRow = typeof chequeStatusHistoryTable.$inferSelect;
+
 export const assessedPenaltiesTable = pgTable("assessed_penalties", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyId: uuid("company_id").notNull(),

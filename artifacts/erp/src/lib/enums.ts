@@ -61,6 +61,17 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   department: { en: "Department", ar: "قسم" },
   project: { en: "Project", ar: "مشروع" },
   branch: { en: "Branch", ar: "فرع" },
+  // accounting: profit center kind
+  segment: { en: "Segment", ar: "قطاع" },
+  // cheques: direction
+  incoming: { en: "Incoming", ar: "وارد" },
+  outgoing: { en: "Outgoing", ar: "صادر" },
+  // cheques: status lifecycle
+  post_dated: { en: "Post-dated", ar: "مؤجل الدفع" },
+  under_collection: { en: "Under Collection", ar: "قيد التحصيل" },
+  deposited: { en: "Deposited", ar: "مودع" },
+  cleared: { en: "Cleared", ar: "محصّل" },
+  returned: { en: "Returned", ar: "مرتجع" },
   // accounting: fiscal period / budget status
   open: { en: "Open", ar: "مفتوح" },
   // engineering: statuses / types

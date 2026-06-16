@@ -16170,3 +16170,411 @@ export const DeleteCertificateApprovalLogResponse = zod.object({
 })
 
 
+/**
+ * @summary List cheques
+ */
+export const ListChequesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListChequesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "chequeNumber": zod.string(),
+  "chequeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "bankName": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "status": zod.string(),
+  "depositDate": zod.string().nullish(),
+  "clearedDate": zod.string().nullish(),
+  "returnedDate": zod.string().nullish(),
+  "returnReason": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Cheque
+ */
+export const CreateChequeBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "chequeNumber": zod.string(),
+  "chequeDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "receiptId": zod.string().optional(),
+  "payeeName": zod.string().optional(),
+  "status": zod.string().optional(),
+  "depositDate": zod.string().optional(),
+  "clearedDate": zod.string().optional(),
+  "returnedDate": zod.string().optional(),
+  "returnReason": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Cheque
+ */
+export const GetChequeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetChequeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "chequeNumber": zod.string(),
+  "chequeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "bankName": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "status": zod.string(),
+  "depositDate": zod.string().nullish(),
+  "clearedDate": zod.string().nullish(),
+  "returnedDate": zod.string().nullish(),
+  "returnReason": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Cheque
+ */
+export const UpdateChequeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateChequeBody = zod.object({
+  "code": zod.string().optional(),
+  "direction": zod.string().optional(),
+  "chequeNumber": zod.string().optional(),
+  "chequeDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "receiptId": zod.string().optional(),
+  "payeeName": zod.string().optional(),
+  "status": zod.string().optional(),
+  "depositDate": zod.string().optional(),
+  "clearedDate": zod.string().optional(),
+  "returnedDate": zod.string().optional(),
+  "returnReason": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateChequeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "chequeNumber": zod.string(),
+  "chequeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "amount": zod.string(),
+  "bankName": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "supplierId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "receiptId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "status": zod.string(),
+  "depositDate": zod.string().nullish(),
+  "clearedDate": zod.string().nullish(),
+  "returnedDate": zod.string().nullish(),
+  "returnReason": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Cheque
+ */
+export const DeleteChequeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteChequeResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List cheque-status-history
+ */
+export const ListChequeStatusHistorysQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListChequeStatusHistorysResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "chequeId": zod.string().nullish(),
+  "action": zod.string().nullish(),
+  "fromStatus": zod.string().nullish(),
+  "toStatus": zod.string().nullish(),
+  "actorName": zod.string().nullish(),
+  "actionDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ChequeStatusHistory
+ */
+export const CreateChequeStatusHistoryBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "chequeId": zod.string().optional(),
+  "action": zod.string().optional(),
+  "fromStatus": zod.string().optional(),
+  "toStatus": zod.string().optional(),
+  "actorName": zod.string().optional(),
+  "actionDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ChequeStatusHistory
+ */
+export const GetChequeStatusHistoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetChequeStatusHistoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "chequeId": zod.string().nullish(),
+  "action": zod.string().nullish(),
+  "fromStatus": zod.string().nullish(),
+  "toStatus": zod.string().nullish(),
+  "actorName": zod.string().nullish(),
+  "actionDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ChequeStatusHistory
+ */
+export const UpdateChequeStatusHistoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateChequeStatusHistoryBody = zod.object({
+  "code": zod.string().optional(),
+  "chequeId": zod.string().optional(),
+  "action": zod.string().optional(),
+  "fromStatus": zod.string().optional(),
+  "toStatus": zod.string().optional(),
+  "actorName": zod.string().optional(),
+  "actionDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateChequeStatusHistoryResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "chequeId": zod.string().nullish(),
+  "action": zod.string().nullish(),
+  "fromStatus": zod.string().nullish(),
+  "toStatus": zod.string().nullish(),
+  "actorName": zod.string().nullish(),
+  "actionDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ChequeStatusHistory
+ */
+export const DeleteChequeStatusHistoryParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteChequeStatusHistoryResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List profit-centers
+ */
+export const ListProfitCentersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListProfitCentersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "kind": zod.string(),
+  "parentId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ProfitCenter
+ */
+export const CreateProfitCenterBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "kind": zod.string().optional(),
+  "parentId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ProfitCenter
+ */
+export const GetProfitCenterParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetProfitCenterResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "kind": zod.string(),
+  "parentId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ProfitCenter
+ */
+export const UpdateProfitCenterParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateProfitCenterBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "kind": zod.string().optional(),
+  "parentId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional()
+})
+
+export const UpdateProfitCenterResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "kind": zod.string(),
+  "parentId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ProfitCenter
+ */
+export const DeleteProfitCenterParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteProfitCenterResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

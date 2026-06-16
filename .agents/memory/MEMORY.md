@@ -9,6 +9,7 @@
 - [Generic JSX breaks dev plugin](generic-jsx-cartographer.md) — `<Comp<T>>` typechecks but 500s in Vite; drop the type arg, infer from props.
 - [Route path casing](route-path-casing.md) — Express path strings must match OpenAPI kebab-case keys or the generated client 404s despite green typecheck.
 - [ERP i18n / enum localization](erp-i18n.md) — UI chrome uses t() (provider, EN/AR parity); enum options/badges use central lib/enums.ts ENUM_LABELS — new enum values must go there.
+- [ERP web conventions](erp-web-conventions.md) — UI doesn't gate CRUD by permission (backend 403 is authoritative); non-CRUD actions use plain fetch credentials:include; useList options need explicit queryKey.
 - [Module dashboard RBAC](module-dashboard-rbac.md) — per-module /xxx/dashboard endpoints are auth-only by convention (no requirePermission); mirror procurement, don't "fix" it.
 - [Report aggregation pagination](report-aggregation-pagination.md) — list endpoints cap pageSize (200); client report totals must loop all pages, not request one big page.
 - [Architect codegen diff false positives](architect-codegen-diff-falsepositive.md) — code-review may flag scope violations from regenerated all-module codegen context; verify against git status, not the diff.

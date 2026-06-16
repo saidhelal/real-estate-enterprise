@@ -12288,6 +12288,271 @@ paths:
               schema:
                 $ref: "#/components/schemas/OkResponse"
 
+
+  /cheques:
+    get:
+      operationId: listCheques
+      tags: [cheques]
+      summary: List cheques
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Cheques
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChequeListResponse"
+    post:
+      operationId: createCheque
+      tags: [cheques]
+      summary: Create a Cheque
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChequeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cheque"
+
+  /cheques/{id}:
+    get:
+      operationId: getCheque
+      tags: [cheques]
+      summary: Get a Cheque
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Cheque
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cheque"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCheque
+      tags: [cheques]
+      summary: Update a Cheque
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChequeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cheque"
+    delete:
+      operationId: deleteCheque
+      tags: [cheques]
+      summary: Soft-delete a Cheque
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /cheque-status-history:
+    get:
+      operationId: listChequeStatusHistorys
+      tags: [chequeStatusHistory]
+      summary: List cheque-status-history
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ChequeStatusHistorys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChequeStatusHistoryListResponse"
+    post:
+      operationId: createChequeStatusHistory
+      tags: [chequeStatusHistory]
+      summary: Create a ChequeStatusHistory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChequeStatusHistoryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChequeStatusHistory"
+
+  /cheque-status-history/{id}:
+    get:
+      operationId: getChequeStatusHistory
+      tags: [chequeStatusHistory]
+      summary: Get a ChequeStatusHistory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ChequeStatusHistory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChequeStatusHistory"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateChequeStatusHistory
+      tags: [chequeStatusHistory]
+      summary: Update a ChequeStatusHistory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChequeStatusHistoryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChequeStatusHistory"
+    delete:
+      operationId: deleteChequeStatusHistory
+      tags: [chequeStatusHistory]
+      summary: Soft-delete a ChequeStatusHistory
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /profit-centers:
+    get:
+      operationId: listProfitCenters
+      tags: [profitCenters]
+      summary: List profit-centers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ProfitCenters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfitCenterListResponse"
+    post:
+      operationId: createProfitCenter
+      tags: [profitCenters]
+      summary: Create a ProfitCenter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfitCenterInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfitCenter"
+
+  /profit-centers/{id}:
+    get:
+      operationId: getProfitCenter
+      tags: [profitCenters]
+      summary: Get a ProfitCenter
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ProfitCenter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfitCenter"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateProfitCenter
+      tags: [profitCenters]
+      summary: Update a ProfitCenter
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfitCenterUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfitCenter"
+    delete:
+      operationId: deleteProfitCenter
+      tags: [profitCenters]
+      summary: Soft-delete a ProfitCenter
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
 components:
   parameters:
     IdParam:
@@ -19893,6 +20158,204 @@ components:
         data:
           type: array
           items: { $ref: "#/components/schemas/CertificateApprovalLog" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Cheque:
+      type: object
+      required: [id, companyId, code, direction, chequeNumber, amount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        direction: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        amount: { type: string }
+        bankName: { type: ["string", "null"] }
+        bankAccountId: { type: ["string", "null"] }
+        customerId: { type: ["string", "null"] }
+        supplierId: { type: ["string", "null"] }
+        contractId: { type: ["string", "null"] }
+        receiptId: { type: ["string", "null"] }
+        payeeName: { type: ["string", "null"] }
+        status: { type: string }
+        depositDate: { type: ["string", "null"] }
+        clearedDate: { type: ["string", "null"] }
+        returnedDate: { type: ["string", "null"] }
+        returnReason: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ChequeInput:
+      type: object
+      required: [companyId, code, direction, chequeNumber]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        direction: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: string }
+        dueDate: { type: string }
+        amount: { type: string }
+        bankName: { type: string }
+        bankAccountId: { type: string }
+        customerId: { type: string }
+        supplierId: { type: string }
+        contractId: { type: string }
+        receiptId: { type: string }
+        payeeName: { type: string }
+        status: { type: string }
+        depositDate: { type: string }
+        clearedDate: { type: string }
+        returnedDate: { type: string }
+        returnReason: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+
+    ChequeUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        direction: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: string }
+        dueDate: { type: string }
+        amount: { type: string }
+        bankName: { type: string }
+        bankAccountId: { type: string }
+        customerId: { type: string }
+        supplierId: { type: string }
+        contractId: { type: string }
+        receiptId: { type: string }
+        payeeName: { type: string }
+        status: { type: string }
+        depositDate: { type: string }
+        clearedDate: { type: string }
+        returnedDate: { type: string }
+        returnReason: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+
+    ChequeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Cheque" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ChequeStatusHistory:
+      type: object
+      required: [id, companyId, code, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        chequeId: { type: ["string", "null"] }
+        action: { type: ["string", "null"] }
+        fromStatus: { type: ["string", "null"] }
+        toStatus: { type: ["string", "null"] }
+        actorName: { type: ["string", "null"] }
+        actionDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ChequeStatusHistoryInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        chequeId: { type: string }
+        action: { type: string }
+        fromStatus: { type: string }
+        toStatus: { type: string }
+        actorName: { type: string }
+        actionDate: { type: string }
+        notes: { type: string }
+
+    ChequeStatusHistoryUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        chequeId: { type: string }
+        action: { type: string }
+        fromStatus: { type: string }
+        toStatus: { type: string }
+        actorName: { type: string }
+        actionDate: { type: string }
+        notes: { type: string }
+
+    ChequeStatusHistoryListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ChequeStatusHistory" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ProfitCenter:
+      type: object
+      required: [id, companyId, code, name, nameAr, kind, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        kind: { type: string }
+        parentId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    ProfitCenterInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        kind: { type: string }
+        parentId: { type: string }
+        projectId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    ProfitCenterUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        kind: { type: string }
+        parentId: { type: string }
+        projectId: { type: string }
+        description: { type: string }
+        status: { type: string }
+
+    ProfitCenterListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ProfitCenter" }
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }
