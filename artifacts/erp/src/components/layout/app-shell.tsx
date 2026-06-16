@@ -100,6 +100,15 @@ const NAV_GROUPS = [
     { href: "/budget-lines", icon: ListOrdered, labelKey: "nav.budget_lines" },
     { href: "/budget-vs-actual", icon: Scale, labelKey: "nav.budget_vs_actual" },
     { href: "/account-mappings", icon: Link2, labelKey: "nav.account_mappings" },
+    { href: "/tax-codes", icon: Percent, labelKey: "nav.tax_codes" },
+  ]},
+  { titleKey: "nav.group.invoicing", items: [
+    { href: "/customer-invoices", icon: FileText, labelKey: "nav.customer_invoices" },
+    { href: "/supplier-invoices", icon: FileBox, labelKey: "nav.supplier_invoices" },
+    { href: "/payment-vouchers", icon: Wallet, labelKey: "nav.payment_vouchers" },
+    { href: "/ar-aging", icon: ClipboardList, labelKey: "nav.ar_aging" },
+    { href: "/ap-aging", icon: ClipboardList, labelKey: "nav.ap_aging" },
+    { href: "/tax-report", icon: FileSpreadsheet, labelKey: "nav.tax_report" },
   ]},
   { titleKey: "nav.group.collections_installments", items: [
     { href: "/receipts", icon: Receipt, labelKey: "nav.receipts" },

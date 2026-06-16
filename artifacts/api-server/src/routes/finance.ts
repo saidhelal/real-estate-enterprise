@@ -7,6 +7,9 @@ import {
   bankAccountsTable,
   bankTransactionsTable,
   receiptsTable,
+  receiptAllocationsTable,
+  customerInvoicesTable,
+  customersTable,
   assessedPenaltiesTable,
   installmentSchedulesTable,
   penaltyRulesTable,
@@ -33,6 +36,10 @@ import {
   CreateReceiptBody,
   GetReceiptResponse,
   UpdateReceiptBody,
+  ApproveReceiptResponse,
+  PostReceiptResponse,
+  ReverseReceiptResponse,
+  CancelReceiptResponse,
   ListPenaltiesResponse,
   CreatePenaltyBody,
   GetPenaltyResponse,
@@ -44,7 +51,14 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
-import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
+import {
+  postAutomaticEntry,
+  postAutomaticLines,
+  reverseAutomaticEntriesForSource,
+  getCompanyMapping,
+  PostingError,
+  type Tx,
+} from "../lib/posting";
 
 // Map a receipt payment method to the account-mapping event key.
 const RECEIPT_EVENT: Record<string, string> = {
@@ -420,68 +434,160 @@ router.get("/receipts", requirePermission("receipts.view"), async (req, res): Pr
   res.json(ListReceiptsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
 });
 
+// Load a receipt voucher with its allocation rows.
+async function loadReceipt(tx: Tx, id: string) {
+  const [receipt] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false)));
+  if (!receipt) return null;
+  const allocations = await tx.select().from(receiptAllocationsTable)
+    .where(and(eq(receiptAllocationsTable.receiptId, id), eq(receiptAllocationsTable.isDeleted, false)));
+  return { receipt, allocations };
+}
+
+function receiptDetail(receipt: Record<string, unknown>, allocations: Record<string, unknown>[]) {
+  return { ...serializeRow(receipt), allocations: allocations.map(serializeRow) };
+}
+
+// Apply the financial effects of posting a receipt voucher (called by /post). Updates the
+// allocated invoices/schedules (or the legacy single schedule), the cash/bank balance, and
+// posts the ledger entry. Throws PostingError(409) when no receivable account can be resolved.
+async function applyReceiptPosting(tx: Tx, receipt: typeof receiptsTable.$inferSelect, allocations: (typeof receiptAllocationsTable.$inferSelect)[], userId: string | null): Promise<string> {
+  const amount = amountOrThrow(receipt.amount);
+
+  // Settle allocations (preferred) or fall back to the legacy single-schedule field.
+  if (allocations.length) {
+    for (const a of allocations) {
+      const aAmt = amountOrThrow(a.amount);
+      if (a.customerInvoiceId) {
+        await tx.update(customerInvoicesTable).set({
+          paidAmount: sql`${customerInvoicesTable.paidAmount} + ${aAmt}::numeric`,
+          status: sql`CASE
+            WHEN ${customerInvoicesTable.paidAmount} + ${aAmt}::numeric >= ${customerInvoicesTable.total} THEN 'paid'
+            WHEN ${customerInvoicesTable.paidAmount} + ${aAmt}::numeric > 0 THEN 'partially_paid'
+            ELSE ${customerInvoicesTable.status} END`,
+        }).where(and(eq(customerInvoicesTable.id, a.customerInvoiceId), eq(customerInvoicesTable.isDeleted, false)));
+      }
+      if (a.scheduleId) {
+        await tx.update(installmentSchedulesTable).set({
+          paidAmount: sql`${installmentSchedulesTable.paidAmount} + ${aAmt}::numeric`,
+          status: sql`CASE
+            WHEN ${installmentSchedulesTable.paidAmount} + ${aAmt}::numeric >= ${installmentSchedulesTable.amount} THEN 'paid'
+            WHEN ${installmentSchedulesTable.paidAmount} + ${aAmt}::numeric > 0 THEN 'partial'
+            ELSE ${installmentSchedulesTable.status} END`,
+        }).where(and(eq(installmentSchedulesTable.id, a.scheduleId), eq(installmentSchedulesTable.isDeleted, false)));
+      }
+    }
+  } else if (receipt.scheduleId) {
+    await tx.update(installmentSchedulesTable).set({
+      paidAmount: sql`${installmentSchedulesTable.paidAmount} + ${amount}::numeric`,
+      status: sql`CASE
+        WHEN ${installmentSchedulesTable.paidAmount} + ${amount}::numeric >= ${installmentSchedulesTable.amount} THEN 'paid'
+        WHEN ${installmentSchedulesTable.paidAmount} + ${amount}::numeric > 0 THEN 'partial'
+        ELSE ${installmentSchedulesTable.status} END`,
+    }).where(and(eq(installmentSchedulesTable.id, receipt.scheduleId), eq(installmentSchedulesTable.isDeleted, false)));
+  }
+
+  if (receipt.paymentMethod === "cash" && receipt.cashboxId) {
+    await tx.insert(treasuryTransactionsTable).values({
+      companyId: receipt.companyId, cashboxId: receipt.cashboxId, type: "in", amount,
+      transactionDate: receipt.receiptDate, reference: receipt.code, description: "Receipt collection",
+      receiptId: receipt.id, userId,
+    });
+    await tx.update(cashboxesTable).set({ currentBalance: sql`${cashboxesTable.currentBalance} + ${amount}::numeric` }).where(eq(cashboxesTable.id, receipt.cashboxId));
+  } else if (receipt.paymentMethod === "bank_transfer" && receipt.bankAccountId) {
+    await tx.insert(bankTransactionsTable).values({
+      companyId: receipt.companyId, bankAccountId: receipt.bankAccountId, type: "in", amount,
+      transactionDate: receipt.receiptDate, reference: receipt.code, description: "Receipt collection",
+      receiptId: receipt.id, userId,
+    });
+    await tx.update(bankAccountsTable).set({ currentBalance: sql`${bankAccountsTable.currentBalance} + ${amount}::numeric` }).where(eq(bankAccountsTable.id, receipt.bankAccountId));
+  }
+
+  // Ledger: Dr cash/bank (mapping debit), Cr receivable (per-entity override → customer → mapping credit).
+  const eventKey = (receipt.paymentMethod ? RECEIPT_EVENT[receipt.paymentMethod] : undefined) ?? "receipt.bank";
+  const map = await getCompanyMapping(tx, receipt.companyId, eventKey);
+  const debitId = map?.debitAccountId ?? null;
+  if (!debitId) throw new PostingError(409, "No cash/bank account configured for this receipt method");
+  const [cust] = await tx.select({ recv: customersTable.receivableAccountId }).from(customersTable).where(eq(customersTable.id, receipt.customerId));
+  const creditId = receipt.receivableAccountId ?? cust?.recv ?? map?.creditAccountId ?? null;
+  if (!creditId) throw new PostingError(409, "No receivable account configured for this receipt");
+  const je = await postAutomaticLines(tx, {
+    companyId: receipt.companyId, branchId: receipt.branchId, entryDate: receipt.receiptDate,
+    description: `Receipt ${receipt.code}`, reference: receipt.code,
+    sourceType: "receipt", sourceId: receipt.id, userId,
+    lines: [
+      { accountId: debitId, debit: amount, credit: "0", description: `Receipt ${receipt.code}` },
+      { accountId: creditId, debit: "0", credit: amount, description: `Receipt ${receipt.code}` },
+    ],
+  });
+  return je.id;
+}
+
+// Reverse the financial effects of a posted receipt voucher (called by /reverse).
+async function reverseReceiptPosting(tx: Tx, receipt: typeof receiptsTable.$inferSelect, allocations: (typeof receiptAllocationsTable.$inferSelect)[], userId: string | null): Promise<void> {
+  const amount = amountOrThrow(receipt.amount);
+  if (allocations.length) {
+    for (const a of allocations) {
+      const aAmt = amountOrThrow(a.amount);
+      if (a.customerInvoiceId) {
+        await tx.update(customerInvoicesTable).set({
+          paidAmount: sql`GREATEST(${customerInvoicesTable.paidAmount} - ${aAmt}::numeric, 0)`,
+          status: sql`CASE
+            WHEN ${customerInvoicesTable.paidAmount} - ${aAmt}::numeric >= ${customerInvoicesTable.total} THEN 'paid'
+            WHEN ${customerInvoicesTable.paidAmount} - ${aAmt}::numeric > 0 THEN 'partially_paid'
+            ELSE 'posted' END`,
+        }).where(and(eq(customerInvoicesTable.id, a.customerInvoiceId), eq(customerInvoicesTable.isDeleted, false)));
+      }
+      if (a.scheduleId) {
+        await tx.update(installmentSchedulesTable).set({
+          paidAmount: sql`GREATEST(${installmentSchedulesTable.paidAmount} - ${aAmt}::numeric, 0)`,
+          status: sql`CASE
+            WHEN ${installmentSchedulesTable.paidAmount} - ${aAmt}::numeric >= ${installmentSchedulesTable.amount} THEN 'paid'
+            WHEN ${installmentSchedulesTable.paidAmount} - ${aAmt}::numeric > 0 THEN 'partial'
+            ELSE 'pending' END`,
+        }).where(and(eq(installmentSchedulesTable.id, a.scheduleId), eq(installmentSchedulesTable.isDeleted, false)));
+      }
+    }
+  } else if (receipt.scheduleId) {
+    await tx.update(installmentSchedulesTable).set({
+      paidAmount: sql`GREATEST(${installmentSchedulesTable.paidAmount} - ${amount}::numeric, 0)`,
+      status: sql`CASE
+        WHEN ${installmentSchedulesTable.paidAmount} - ${amount}::numeric >= ${installmentSchedulesTable.amount} THEN 'paid'
+        WHEN ${installmentSchedulesTable.paidAmount} - ${amount}::numeric > 0 THEN 'partial'
+        ELSE 'pending' END`,
+    }).where(and(eq(installmentSchedulesTable.id, receipt.scheduleId), eq(installmentSchedulesTable.isDeleted, false)));
+  }
+
+  if (receipt.paymentMethod === "cash" && receipt.cashboxId) {
+    await tx.update(cashboxesTable).set({ currentBalance: sql`${cashboxesTable.currentBalance} - ${amount}::numeric` }).where(eq(cashboxesTable.id, receipt.cashboxId));
+    await tx.update(treasuryTransactionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(treasuryTransactionsTable.receiptId, receipt.id), eq(treasuryTransactionsTable.isDeleted, false)));
+  } else if (receipt.paymentMethod === "bank_transfer" && receipt.bankAccountId) {
+    await tx.update(bankAccountsTable).set({ currentBalance: sql`${bankAccountsTable.currentBalance} - ${amount}::numeric` }).where(eq(bankAccountsTable.id, receipt.bankAccountId));
+    await tx.update(bankTransactionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(bankTransactionsTable.receiptId, receipt.id), eq(bankTransactionsTable.isDeleted, false)));
+  }
+  await reverseAutomaticEntriesForSource(tx, "receipt", receipt.id, userId);
+}
+
+// Create a receipt voucher. It is always created as a draft — no financial effects happen until
+// it is posted via /receipts/:id/post. Allocation rows (invoice / schedule splits) are stored now.
 router.post("/receipts", requirePermission("receipts.create"), async (req, res): Promise<void> => {
   const parsed = CreateReceiptBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const data = parsed.data;
   const amount = validAmount(data.amount);
   if (amount === null) { res.status(400).json({ error: "Invalid amount" }); return; }
-  const row = await db.transaction(async (tx) => {
-    const [created] = await tx.insert(receiptsTable).values({ ...data, userId: req.authUser?.id ?? null }).returning();
-
-    // Only a confirmed receipt posts to the ledger/schedule. Non-confirmed (e.g. draft/cancelled)
-    // receipts record nothing financial — keeping POST and DELETE symmetric on `status === "confirmed"`.
-    if (created.status === "confirmed") {
-      if (data.scheduleId) {
-        // Atomic increment + status recompute in a single UPDATE to avoid lost updates under concurrency.
-        await tx.update(installmentSchedulesTable).set({
-          paidAmount: sql`${installmentSchedulesTable.paidAmount} + ${amount}::numeric`,
-          status: sql`CASE
-            WHEN ${installmentSchedulesTable.paidAmount} + ${amount}::numeric >= ${installmentSchedulesTable.amount} THEN 'paid'
-            WHEN ${installmentSchedulesTable.paidAmount} + ${amount}::numeric > 0 THEN 'partial'
-            ELSE ${installmentSchedulesTable.status} END`,
-        }).where(and(eq(installmentSchedulesTable.id, data.scheduleId), eq(installmentSchedulesTable.isDeleted, false)));
-      }
-
-      if (data.paymentMethod === "cash" && data.cashboxId) {
-        await tx.insert(treasuryTransactionsTable).values({
-          companyId: data.companyId, cashboxId: data.cashboxId, type: "in", amount,
-          transactionDate: data.receiptDate, reference: created.code, description: "Receipt collection",
-          receiptId: created.id, userId: req.authUser?.id ?? null,
-        });
-        await tx.update(cashboxesTable)
-          .set({ currentBalance: sql`${cashboxesTable.currentBalance} + ${amount}::numeric` })
-          .where(eq(cashboxesTable.id, data.cashboxId));
-      } else if (data.paymentMethod === "bank_transfer" && data.bankAccountId) {
-        await tx.insert(bankTransactionsTable).values({
-          companyId: data.companyId, bankAccountId: data.bankAccountId, type: "in", amount,
-          transactionDate: data.receiptDate, reference: created.code, description: "Receipt collection",
-          receiptId: created.id, userId: req.authUser?.id ?? null,
-        });
-        await tx.update(bankAccountsTable)
-          .set({ currentBalance: sql`${bankAccountsTable.currentBalance} + ${amount}::numeric` })
-          .where(eq(bankAccountsTable.id, data.bankAccountId));
-      }
-
-      // Automatic ledger posting (best-effort; skipped if accounting is unconfigured).
-      const eventKey = (data.paymentMethod ? RECEIPT_EVENT[data.paymentMethod] : undefined) ?? "receipt.bank";
-      await postAutomaticEntry(tx, {
-        companyId: data.companyId,
-        branchId: data.branchId ?? null,
-        eventKey,
-        amount,
-        entryDate: data.receiptDate,
-        description: `Receipt ${created.code}`,
-        reference: created.code,
-        sourceType: "receipt",
-        sourceId: created.id,
-        userId: req.authUser?.id ?? null,
-      });
-    }
-    return created;
+  const { allocations: allocInput, status: _ignoredStatus, ...receiptFields } = data;
+  const result = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(receiptsTable).values({ ...receiptFields, status: "draft", userId: req.authUser?.id ?? null }).returning();
+    const allocations = allocInput?.length
+      ? await tx.insert(receiptAllocationsTable).values(allocInput.map((a) => ({
+          companyId: data.companyId, receiptId: created.id, customerInvoiceId: a.customerInvoiceId ?? null,
+          scheduleId: a.scheduleId ?? null, amount: a.amount, notes: a.notes ?? null,
+        }))).returning()
+      : [];
+    return { receipt: created, allocations };
   });
-  await recordAudit(req, { action: "create", entity: "receipt", entityId: row.id, newValue: row });
-  res.status(201).json(GetReceiptResponse.parse(serializeRow(row)));
+  await recordAudit(req, { action: "create", entity: "receipt", entityId: result.receipt.id, newValue: result.receipt });
+  res.status(201).json(GetReceiptResponse.parse(serializeRow(result.receipt)));
 });
 
 router.get("/receipts/:id", requirePermission("receipts.view"), async (req, res): Promise<void> => {
@@ -497,9 +603,9 @@ router.patch("/receipts/:id", requirePermission("receipts.update"), async (req, 
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [existing] = await db.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  // A posted receipt's financial fields are immutable (they drive ledger + schedule); only descriptive
-  // fields may change. To reverse a receipt's financial effect, delete it (which compensates the ledger).
-  const update = omit(parsed.data, ["amount", "companyId", "customerId", "contractId", "scheduleId", "paymentMethod", "cashboxId", "bankAccountId", "status"]);
+  // Governance: only a draft voucher can be edited; once posted it is immutable.
+  if (existing.status !== "draft") { res.status(409).json({ error: "Only a draft receipt can be edited" }); return; }
+  const update = omit(parsed.data, ["companyId", "status"]);
   const [row] = Object.keys(update).length
     ? await db.update(receiptsTable).set(update).where(eq(receiptsTable.id, id)).returning()
     : [existing];
@@ -509,38 +615,109 @@ router.patch("/receipts/:id", requirePermission("receipts.update"), async (req, 
 
 router.delete("/receipts/:id", requirePermission("receipts.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const row = await db.transaction(async (tx) => {
-    const [existing] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false)));
-    if (!existing) return null;
+  const result = await db.transaction(async (tx) => {
+    const [existing] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false))).for("update");
+    if (!existing) return { notFound: true as const };
+    // Governance: a posted/reversed voucher cannot be deleted (it has ledger effects). Reverse it instead.
+    if (existing.status !== "draft" && existing.status !== "cancelled") return { conflict: "Only a draft receipt can be deleted; reverse a posted receipt instead" as const };
     await tx.update(receiptsTable).set({ isDeleted: true, isActive: false }).where(eq(receiptsTable.id, id));
-    // Only confirmed receipts ever posted to the ledger/schedule, so only those need compensating.
-    // `status` is immutable via PATCH, so this matches exactly what was posted at create time.
-    if (existing.status === "confirmed") {
-      const amount = amountOrThrow(existing.amount);
-      if (existing.scheduleId) {
-        await tx.update(installmentSchedulesTable).set({
-          paidAmount: sql`GREATEST(${installmentSchedulesTable.paidAmount} - ${amount}::numeric, 0)`,
-          status: sql`CASE
-            WHEN ${installmentSchedulesTable.paidAmount} - ${amount}::numeric >= ${installmentSchedulesTable.amount} THEN 'paid'
-            WHEN ${installmentSchedulesTable.paidAmount} - ${amount}::numeric > 0 THEN 'partial'
-            ELSE 'pending' END`,
-        }).where(and(eq(installmentSchedulesTable.id, existing.scheduleId), eq(installmentSchedulesTable.isDeleted, false)));
-      }
-      if (existing.paymentMethod === "cash" && existing.cashboxId) {
-        await tx.update(cashboxesTable).set({ currentBalance: sql`${cashboxesTable.currentBalance} - ${amount}::numeric` }).where(eq(cashboxesTable.id, existing.cashboxId));
-        await tx.update(treasuryTransactionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(treasuryTransactionsTable.receiptId, existing.id), eq(treasuryTransactionsTable.isDeleted, false)));
-      } else if (existing.paymentMethod === "bank_transfer" && existing.bankAccountId) {
-        await tx.update(bankAccountsTable).set({ currentBalance: sql`${bankAccountsTable.currentBalance} - ${amount}::numeric` }).where(eq(bankAccountsTable.id, existing.bankAccountId));
-        await tx.update(bankTransactionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(bankTransactionsTable.receiptId, existing.id), eq(bankTransactionsTable.isDeleted, false)));
-      }
-      // Reverse any automatic ledger entries posted for this receipt.
-      await reverseAutomaticEntriesForSource(tx, "receipt", existing.id, req.authUser?.id ?? null);
-    }
-    return existing;
+    await tx.update(receiptAllocationsTable).set({ isDeleted: true, isActive: false }).where(eq(receiptAllocationsTable.receiptId, id));
+    return { existing };
   });
-  if (!row) { res.status(404).json({ error: "Not found" }); return; }
-  await recordAudit(req, { action: "delete", entity: "receipt", entityId: id, oldValue: row });
+  if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+  if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+  await recordAudit(req, { action: "delete", entity: "receipt", entityId: id, oldValue: result.existing });
   res.json({ success: true });
+});
+
+// Approve a draft receipt voucher (draft → approved). No ledger effects yet.
+router.post("/receipts/:id/approve", requirePermission("receipts.approve"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const result = await db.transaction(async (tx) => {
+    const [receipt] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false))).for("update");
+    if (!receipt) return { notFound: true as const };
+    if (receipt.status !== "draft") return { conflict: "Only a draft receipt can be approved" as const };
+    await tx.update(receiptsTable).set({ status: "approved", approvedAt: new Date(), approvedBy: req.authUser?.id ?? null }).where(eq(receiptsTable.id, id));
+    const got = await loadReceipt(tx, id);
+    return { got: got! };
+  });
+  if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+  if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+  await recordAudit(req, { action: "approve", entity: "receipt", entityId: id, newValue: result.got.receipt });
+  res.json(ApproveReceiptResponse.parse(receiptDetail(result.got.receipt, result.got.allocations)));
+});
+
+// Post an approved receipt voucher (approved → posted): settle invoices/schedules, move cash/bank, post the ledger.
+router.post("/receipts/:id/post", requirePermission("receipts.post"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  try {
+    const result = await db.transaction(async (tx) => {
+      const got = await (async () => {
+        const [receipt] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false))).for("update");
+        if (!receipt) return null;
+        const allocations = await tx.select().from(receiptAllocationsTable).where(and(eq(receiptAllocationsTable.receiptId, id), eq(receiptAllocationsTable.isDeleted, false)));
+        return { receipt, allocations };
+      })();
+      if (!got) return { notFound: true as const };
+      if (got.receipt.status !== "approved") return { conflict: "Only an approved receipt can be posted" as const };
+      const journalEntryId = await applyReceiptPosting(tx, got.receipt, got.allocations, req.authUser?.id ?? null);
+      await tx.update(receiptsTable).set({ status: "posted", postedAt: new Date(), postedBy: req.authUser?.id ?? null, journalEntryId }).where(eq(receiptsTable.id, id));
+      const after = await loadReceipt(tx, id);
+      return { got: after! };
+    });
+    if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+    if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+    await recordAudit(req, { action: "post", entity: "receipt", entityId: id, newValue: result.got.receipt });
+    res.json(PostReceiptResponse.parse(receiptDetail(result.got.receipt, result.got.allocations)));
+  } catch (e) {
+    if (e instanceof PostingError) { res.status(e.status).json({ error: e.message }); return; }
+    throw e;
+  }
+});
+
+// Reverse a posted receipt voucher (posted → reversed): undo settlements + cash/bank, post a mirror entry.
+router.post("/receipts/:id/reverse", requirePermission("receipts.reverse"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  try {
+    const result = await db.transaction(async (tx) => {
+      const got = await (async () => {
+        const [receipt] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false))).for("update");
+        if (!receipt) return null;
+        const allocations = await tx.select().from(receiptAllocationsTable).where(and(eq(receiptAllocationsTable.receiptId, id), eq(receiptAllocationsTable.isDeleted, false)));
+        return { receipt, allocations };
+      })();
+      if (!got) return { notFound: true as const };
+      if (got.receipt.status !== "posted") return { conflict: "Only a posted receipt can be reversed" as const };
+      await reverseReceiptPosting(tx, got.receipt, got.allocations, req.authUser?.id ?? null);
+      await tx.update(receiptsTable).set({ status: "reversed", reversedAt: new Date(), reversedBy: req.authUser?.id ?? null }).where(eq(receiptsTable.id, id));
+      const after = await loadReceipt(tx, id);
+      return { got: after! };
+    });
+    if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+    if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+    await recordAudit(req, { action: "reverse", entity: "receipt", entityId: id, newValue: result.got.receipt });
+    res.json(ReverseReceiptResponse.parse(receiptDetail(result.got.receipt, result.got.allocations)));
+  } catch (e) {
+    if (e instanceof PostingError) { res.status(e.status).json({ error: e.message }); return; }
+    throw e;
+  }
+});
+
+// Cancel a draft/approved receipt voucher (→ cancelled). No ledger effects to undo.
+router.post("/receipts/:id/cancel", requirePermission("receipts.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const result = await db.transaction(async (tx) => {
+    const [receipt] = await tx.select().from(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.isDeleted, false))).for("update");
+    if (!receipt) return { notFound: true as const };
+    if (receipt.status !== "draft" && receipt.status !== "approved") return { conflict: "Only a draft or approved receipt can be cancelled" as const };
+    await tx.update(receiptsTable).set({ status: "cancelled", cancelledAt: new Date(), cancelledBy: req.authUser?.id ?? null }).where(eq(receiptsTable.id, id));
+    const got = await loadReceipt(tx, id);
+    return { got: got! };
+  });
+  if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+  if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+  await recordAudit(req, { action: "cancel", entity: "receipt", entityId: id, newValue: result.got.receipt });
+  res.json(CancelReceiptResponse.parse(receiptDetail(result.got.receipt, result.got.allocations)));
 });
 
 // ===================== penalties (assessed) =====================

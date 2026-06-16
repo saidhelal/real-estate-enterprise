@@ -9,6 +9,8 @@
 - [Generic JSX breaks dev plugin](generic-jsx-cartographer.md) — `<Comp<T>>` typechecks but 500s in Vite; drop the type arg, infer from props.
 - [Route path casing](route-path-casing.md) — Express path strings must match OpenAPI kebab-case keys or the generated client 404s despite green typecheck.
 - [ERP i18n / enum localization](erp-i18n.md) — UI chrome uses t() (provider, EN/AR parity); enum options/badges use central lib/enums.ts ENUM_LABELS — new enum values must go there.
+- [Reversal row linkage](reversal-row-linkage.md) — reverse side-effect rows (treasury/bank) by a stable source FK, never by reference=code free text, or unrelated rows get wiped.
+- [Drizzle array binding](drizzle-array-binding.md) — raw sql `col = any(${arr})` mis-binds & 500s at runtime (typechecks fine); use inArray(); test the non-empty path.
 - [ERP web conventions](erp-web-conventions.md) — UI doesn't gate CRUD by permission (backend 403 is authoritative); non-CRUD actions use plain fetch credentials:include; useList options need explicit queryKey.
 - [Module dashboard RBAC](module-dashboard-rbac.md) — per-module /xxx/dashboard endpoints are auth-only by convention (no requirePermission); mirror procurement, don't "fix" it.
 - [Report aggregation pagination](report-aggregation-pagination.md) — list endpoints cap pageSize (200); client report totals must loop all pages, not request one big page.

@@ -36,6 +36,9 @@ export const contractorsTable = pgTable("contractors", {
   licenseNumber: text("license_number"),
   address: text("address"),
   status: text("status").notNull().default("active"),
+  // Per-entity GL control accounts (override the mapping-engine default).
+  payableAccountId: uuid("payable_account_id"),
+  advanceAccountId: uuid("advance_account_id"),
   ...audit,
 });
 export type ContractorRow = typeof contractorsTable.$inferSelect;

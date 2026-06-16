@@ -44,6 +44,7 @@ export const treasuryTransactionsTable = pgTable("treasury_transactions", {
   reference: text("reference"),
   description: text("description"),
   receiptId: uuid("receipt_id"),
+  paymentVoucherId: uuid("payment_voucher_id"),
   userId: uuid("user_id"),
   ...audit,
 });
@@ -76,6 +77,7 @@ export const bankTransactionsTable = pgTable("bank_transactions", {
   reference: text("reference"),
   description: text("description"),
   receiptId: uuid("receipt_id"),
+  paymentVoucherId: uuid("payment_voucher_id"),
   userId: uuid("user_id"),
   ...audit,
 });
@@ -97,8 +99,22 @@ export const receiptsTable = pgTable("receipts", {
   chequeNumber: text("cheque_number"),
   chequeDate: date("cheque_date"),
   bankName: text("bank_name"),
+  chequeId: uuid("cheque_id"),
   reference: text("reference"),
-  status: text("status").notNull().default("confirmed"),
+  // Receipt-voucher lifecycle: draft -> approved -> posted -> reversed / cancelled.
+  // (Legacy rows may carry "confirmed"; new vouchers default to "draft" and only
+  // post to the ledger on approval+posting.)
+  status: text("status").notNull().default("draft"),
+  receivableAccountId: uuid("receivable_account_id"),
+  journalEntryId: uuid("journal_entry_id"),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  approvedBy: uuid("approved_by"),
+  postedAt: timestamp("posted_at", { withTimezone: true }),
+  postedBy: uuid("posted_by"),
+  reversedAt: timestamp("reversed_at", { withTimezone: true }),
+  reversedBy: uuid("reversed_by"),
+  cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+  cancelledBy: uuid("cancelled_by"),
   notes: text("notes"),
   userId: uuid("user_id"),
   ...audit,

@@ -5294,8 +5294,15 @@ export const ListReceiptsResponse = zod.object({
   "chequeNumber": zod.string().nullish(),
   "chequeDate": zod.string().nullish(),
   "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
   "reference": zod.string().nullish(),
   "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
   "notes": zod.string().nullish(),
   "userId": zod.string().nullish(),
   "isActive": zod.boolean(),
@@ -5325,10 +5332,18 @@ export const CreateReceiptBody = zod.object({
   "chequeNumber": zod.string().optional(),
   "chequeDate": zod.string().optional(),
   "bankName": zod.string().optional(),
+  "chequeId": zod.string().optional(),
+  "receivableAccountId": zod.string().optional(),
   "reference": zod.string().optional(),
   "status": zod.string().optional(),
   "notes": zod.string().optional(),
-  "userId": zod.string().optional()
+  "userId": zod.string().optional(),
+  "allocations": zod.array(zod.object({
+  "customerInvoiceId": zod.string().optional(),
+  "scheduleId": zod.string().optional(),
+  "amount": zod.string(),
+  "notes": zod.string().optional()
+})).optional()
 })
 
 
@@ -5355,8 +5370,15 @@ export const GetReceiptResponse = zod.object({
   "chequeNumber": zod.string().nullish(),
   "chequeDate": zod.string().nullish(),
   "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
   "reference": zod.string().nullish(),
   "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
   "notes": zod.string().nullish(),
   "userId": zod.string().nullish(),
   "isActive": zod.boolean(),
@@ -5408,8 +5430,15 @@ export const UpdateReceiptResponse = zod.object({
   "chequeNumber": zod.string().nullish(),
   "chequeDate": zod.string().nullish(),
   "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
   "reference": zod.string().nullish(),
   "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
   "notes": zod.string().nullish(),
   "userId": zod.string().nullish(),
   "isActive": zod.boolean(),
@@ -6891,7 +6920,7 @@ export const GetAccountingDashboardResponse = zod.object({
  * @summary Record an audit log entry for an accounting report export (Excel/PDF)
  */
 export const RecordReportExportBody = zod.object({
-  "reportType": zod.enum(['trial-balance', 'general-ledger', 'balance-sheet', 'income-statement', 'cash-flow']),
+  "reportType": zod.enum(['trial-balance', 'general-ledger', 'balance-sheet', 'income-statement', 'cash-flow', 'ar-aging', 'ap-aging', 'tax']),
   "format": zod.enum(['excel', 'pdf']),
   "companyId": zod.string().nullish(),
   "fromDate": zod.string().nullish(),
@@ -16541,6 +16570,1609 @@ export const DeleteProfitCenterParams = zod.object({
 
 export const DeleteProfitCenterResponse = zod.object({
   "success": zod.boolean()
+})
+
+
+/**
+ * @summary List tax-codes
+ */
+export const ListTaxCodesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "taxType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListTaxCodesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "taxType": zod.string(),
+  "rate": zod.string(),
+  "taxAccountId": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a TaxCode
+ */
+export const CreateTaxCodeBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "taxType": zod.string(),
+  "rate": zod.string(),
+  "taxAccountId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a TaxCode
+ */
+export const GetTaxCodeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetTaxCodeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "taxType": zod.string(),
+  "rate": zod.string(),
+  "taxAccountId": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a TaxCode
+ */
+export const UpdateTaxCodeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateTaxCodeBody = zod.object({
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "taxType": zod.string().optional(),
+  "rate": zod.string().optional(),
+  "taxAccountId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "description": zod.string().optional()
+})
+
+export const UpdateTaxCodeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "taxType": zod.string(),
+  "rate": zod.string(),
+  "taxAccountId": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "description": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a TaxCode
+ */
+export const DeleteTaxCodeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteTaxCodeResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customer-invoices
+ */
+export const ListCustomerInvoicesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "contractId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListCustomerInvoicesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "receivableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CustomerInvoice
+ */
+export const CreateCustomerInvoiceBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "number": zod.string().optional(),
+  "customerId": zod.string(),
+  "contractId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "receivableAccountId": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "lines": zod.array(zod.object({
+  "description": zod.string(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "taxCodeId": zod.string().optional(),
+  "revenueAccountId": zod.string().optional(),
+  "costCenterId": zod.string().optional(),
+  "profitCenterId": zod.string().optional()
+}))
+})
+
+
+/**
+ * @summary Get a CustomerInvoice
+ */
+export const GetCustomerInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCustomerInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "receivableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "revenueAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Update a draft CustomerInvoice
+ */
+export const UpdateCustomerInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCustomerInvoiceBody = zod.object({
+  "branchId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "invoiceDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "receivableAccountId": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "lines": zod.array(zod.object({
+  "description": zod.string(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "taxCodeId": zod.string().optional(),
+  "revenueAccountId": zod.string().optional(),
+  "costCenterId": zod.string().optional(),
+  "profitCenterId": zod.string().optional()
+})).optional()
+})
+
+export const UpdateCustomerInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "receivableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "revenueAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Soft-delete a draft CustomerInvoice
+ */
+export const DeleteCustomerInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCustomerInvoiceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Post a customer invoice to the ledger
+ */
+export const PostCustomerInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostCustomerInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "receivableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "revenueAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Reverse a posted customer invoice
+ */
+export const ReverseCustomerInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReverseCustomerInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "receivableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "revenueAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Cancel a draft customer invoice
+ */
+export const CancelCustomerInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const CancelCustomerInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "receivableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "revenueAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary List supplier-invoices
+ */
+export const ListSupplierInvoicesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "supplierId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListSupplierInvoicesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "supplierInvoiceNumber": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SupplierInvoice
+ */
+export const CreateSupplierInvoiceBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "number": zod.string().optional(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().optional(),
+  "supplierInvoiceNumber": zod.string().optional(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "payableAccountId": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "lines": zod.array(zod.object({
+  "description": zod.string(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "taxCodeId": zod.string().optional(),
+  "expenseAccountId": zod.string().optional(),
+  "costCenterId": zod.string().optional(),
+  "profitCenterId": zod.string().optional()
+}))
+})
+
+
+/**
+ * @summary Get a SupplierInvoice
+ */
+export const GetSupplierInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupplierInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "supplierInvoiceNumber": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "expenseAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Update a draft SupplierInvoice
+ */
+export const UpdateSupplierInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSupplierInvoiceBody = zod.object({
+  "branchId": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "supplierInvoiceNumber": zod.string().optional(),
+  "invoiceDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "currencyId": zod.string().optional(),
+  "payableAccountId": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "lines": zod.array(zod.object({
+  "description": zod.string(),
+  "quantity": zod.string().optional(),
+  "unitPrice": zod.string().optional(),
+  "taxCodeId": zod.string().optional(),
+  "expenseAccountId": zod.string().optional(),
+  "costCenterId": zod.string().optional(),
+  "profitCenterId": zod.string().optional()
+})).optional()
+})
+
+export const UpdateSupplierInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "supplierInvoiceNumber": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "expenseAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Soft-delete a draft SupplierInvoice
+ */
+export const DeleteSupplierInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSupplierInvoiceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Post a supplier invoice to the ledger
+ */
+export const PostSupplierInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostSupplierInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "supplierInvoiceNumber": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "expenseAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Reverse a posted supplier invoice
+ */
+export const ReverseSupplierInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReverseSupplierInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "supplierInvoiceNumber": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "expenseAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Cancel a draft supplier invoice
+ */
+export const CancelSupplierInvoiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const CancelSupplierInvoiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "number": zod.string(),
+  "supplierId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "supplierInvoiceNumber": zod.string().nullish(),
+  "invoiceDate": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "currencyId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "subtotal": zod.string(),
+  "taxTotal": zod.string(),
+  "total": zod.string(),
+  "paidAmount": zod.string(),
+  "reference": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "invoiceId": zod.string(),
+  "lineNumber": zod.number().optional(),
+  "description": zod.string(),
+  "quantity": zod.string(),
+  "unitPrice": zod.string(),
+  "lineSubtotal": zod.string(),
+  "taxCodeId": zod.string().nullish(),
+  "taxRate": zod.string().optional(),
+  "taxAmount": zod.string(),
+  "lineTotal": zod.string(),
+  "expenseAccountId": zod.string().nullish(),
+  "costCenterId": zod.string().nullish(),
+  "profitCenterId": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary List payment-vouchers
+ */
+export const ListPaymentVouchersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "supplierId": zod.coerce.string().optional(),
+  "contractorId": zod.coerce.string().optional(),
+  "payeeType": zod.coerce.string().optional(),
+  "paymentMethod": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListPaymentVouchersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a PaymentVoucher
+ */
+export const CreatePaymentVoucherBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().optional(),
+  "contractorId": zod.string().optional(),
+  "payeeName": zod.string().optional(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "chequeId": zod.string().optional(),
+  "chequeNumber": zod.string().optional(),
+  "chequeDate": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "expenseAccountId": zod.string().optional(),
+  "payableAccountId": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "allocations": zod.array(zod.object({
+  "supplierInvoiceId": zod.string().optional(),
+  "amount": zod.string(),
+  "notes": zod.string().optional()
+})).optional()
+})
+
+
+/**
+ * @summary Get a PaymentVoucher
+ */
+export const GetPaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPaymentVoucherResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "paymentVoucherId": zod.string(),
+  "supplierInvoiceId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Update a draft PaymentVoucher
+ */
+export const UpdatePaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePaymentVoucherBody = zod.object({
+  "branchId": zod.string().optional(),
+  "payeeType": zod.string().optional(),
+  "supplierId": zod.string().optional(),
+  "contractorId": zod.string().optional(),
+  "payeeName": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "paymentDate": zod.string().optional(),
+  "paymentMethod": zod.string().optional(),
+  "cashboxId": zod.string().optional(),
+  "bankAccountId": zod.string().optional(),
+  "chequeId": zod.string().optional(),
+  "chequeNumber": zod.string().optional(),
+  "chequeDate": zod.string().optional(),
+  "bankName": zod.string().optional(),
+  "expenseAccountId": zod.string().optional(),
+  "payableAccountId": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "allocations": zod.array(zod.object({
+  "supplierInvoiceId": zod.string().optional(),
+  "amount": zod.string(),
+  "notes": zod.string().optional()
+})).optional()
+})
+
+export const UpdatePaymentVoucherResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "paymentVoucherId": zod.string(),
+  "supplierInvoiceId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Soft-delete a draft PaymentVoucher
+ */
+export const DeletePaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePaymentVoucherResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Approve a payment voucher
+ */
+export const ApprovePaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApprovePaymentVoucherResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "paymentVoucherId": zod.string(),
+  "supplierInvoiceId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Post a payment voucher to the ledger
+ */
+export const PostPaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostPaymentVoucherResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "paymentVoucherId": zod.string(),
+  "supplierInvoiceId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Reverse a posted payment voucher
+ */
+export const ReversePaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReversePaymentVoucherResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "paymentVoucherId": zod.string(),
+  "supplierInvoiceId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Cancel a draft payment voucher
+ */
+export const CancelPaymentVoucherParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const CancelPaymentVoucherResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "payeeType": zod.string(),
+  "supplierId": zod.string().nullish(),
+  "contractorId": zod.string().nullish(),
+  "payeeName": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "expenseAccountId": zod.string().nullish(),
+  "payableAccountId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "paymentVoucherId": zod.string(),
+  "supplierInvoiceId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Approve a receipt voucher
+ */
+export const ApproveReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "receiptId": zod.string(),
+  "customerInvoiceId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Post a receipt voucher to the ledger
+ */
+export const PostReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "receiptId": zod.string(),
+  "customerInvoiceId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Reverse a posted receipt voucher
+ */
+export const ReverseReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReverseReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "receiptId": zod.string(),
+  "customerInvoiceId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Cancel a draft receipt voucher
+ */
+export const CancelReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const CancelReceiptResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "customerId": zod.string(),
+  "contractId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string().optional(),
+  "receiptDate": zod.string(),
+  "paymentMethod": zod.string(),
+  "cashboxId": zod.string().nullish(),
+  "bankAccountId": zod.string().nullish(),
+  "chequeNumber": zod.string().nullish(),
+  "chequeDate": zod.string().nullish(),
+  "bankName": zod.string().nullish(),
+  "chequeId": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "status": zod.string().optional(),
+  "receivableAccountId": zod.string().nullish(),
+  "journalEntryId": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "postedAt": zod.string().nullish(),
+  "reversedAt": zod.string().nullish(),
+  "cancelledAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "allocations": zod.array(zod.object({
+  "id": zod.string(),
+  "receiptId": zod.string(),
+  "customerInvoiceId": zod.string().nullish(),
+  "scheduleId": zod.string().nullish(),
+  "amount": zod.string(),
+  "notes": zod.string().nullish()
+})).optional()
+}))
+
+
+/**
+ * @summary Accounts receivable aging
+ */
+export const GetArAgingQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "asOfDate": zod.coerce.string().optional()
+})
+
+export const GetArAgingResponse = zod.object({
+  "rows": zod.array(zod.object({
+  "partyId": zod.string(),
+  "partyName": zod.string(),
+  "current": zod.string(),
+  "days30": zod.string(),
+  "days60": zod.string(),
+  "days90": zod.string(),
+  "days120plus": zod.string(),
+  "total": zod.string()
+})),
+  "totals": zod.object({
+  "partyId": zod.string(),
+  "partyName": zod.string(),
+  "current": zod.string(),
+  "days30": zod.string(),
+  "days60": zod.string(),
+  "days90": zod.string(),
+  "days120plus": zod.string(),
+  "total": zod.string()
+})
+})
+
+
+/**
+ * @summary Accounts payable aging
+ */
+export const GetApAgingQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "supplierId": zod.coerce.string().optional(),
+  "asOfDate": zod.coerce.string().optional()
+})
+
+export const GetApAgingResponse = zod.object({
+  "rows": zod.array(zod.object({
+  "partyId": zod.string(),
+  "partyName": zod.string(),
+  "current": zod.string(),
+  "days30": zod.string(),
+  "days60": zod.string(),
+  "days90": zod.string(),
+  "days120plus": zod.string(),
+  "total": zod.string()
+})),
+  "totals": zod.object({
+  "partyId": zod.string(),
+  "partyName": zod.string(),
+  "current": zod.string(),
+  "days30": zod.string(),
+  "days60": zod.string(),
+  "days90": zod.string(),
+  "days120plus": zod.string(),
+  "total": zod.string()
+})
+})
+
+
+/**
+ * @summary VAT / tax report (output vs input)
+ */
+export const GetTaxReportQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "fromDate": zod.coerce.string().optional(),
+  "toDate": zod.coerce.string().optional()
+})
+
+export const GetTaxReportResponse = zod.object({
+  "rows": zod.array(zod.object({
+  "taxCodeId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "taxType": zod.string(),
+  "rate": zod.string(),
+  "base": zod.string(),
+  "tax": zod.string()
+})),
+  "outputTax": zod.string(),
+  "inputTax": zod.string(),
+  "netTax": zod.string()
 })
 
 

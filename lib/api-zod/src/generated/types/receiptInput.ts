@@ -5,6 +5,7 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+import type { ReceiptAllocationInput } from './receiptAllocationInput';
 
 export interface ReceiptInput {
   companyId: string;
@@ -21,8 +22,11 @@ export interface ReceiptInput {
   chequeNumber?: string;
   chequeDate?: string;
   bankName?: string;
+  chequeId?: string;
+  receivableAccountId?: string;
   reference?: string;
   status?: string;
   notes?: string;
   userId?: string;
+  allocations?: ReceiptAllocationInput[];
 }

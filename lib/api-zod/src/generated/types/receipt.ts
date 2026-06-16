@@ -31,8 +31,22 @@ export interface Receipt {
   /** @nullable */
   bankName?: string | null;
   /** @nullable */
+  chequeId?: string | null;
+  /** @nullable */
   reference?: string | null;
   status?: string;
+  /** @nullable */
+  receivableAccountId?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  cancelledAt?: string | null;
   /** @nullable */
   notes?: string | null;
   /** @nullable */

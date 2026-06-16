@@ -12505,6 +12505,780 @@ paths:
               schema:
                 $ref: "#/components/schemas/OkResponse"
 
+  /tax-codes:
+    get:
+      operationId: listTaxCodes
+      tags: [taxCodes]
+      summary: List tax-codes
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: taxType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: TaxCodes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxCodeListResponse"
+    post:
+      operationId: createTaxCode
+      tags: [taxCodes]
+      summary: Create a TaxCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaxCodeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxCode"
+  /tax-codes/{id}:
+    get:
+      operationId: getTaxCode
+      tags: [taxCodes]
+      summary: Get a TaxCode
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: TaxCode
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxCode"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateTaxCode
+      tags: [taxCodes]
+      summary: Update a TaxCode
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaxCodeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxCode"
+    delete:
+      operationId: deleteTaxCode
+      tags: [taxCodes]
+      summary: Soft-delete a TaxCode
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customer-invoices:
+    get:
+      operationId: listCustomerInvoices
+      tags: [customerInvoices]
+      summary: List customer-invoices
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: contractId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CustomerInvoices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceListResponse"
+    post:
+      operationId: createCustomerInvoice
+      tags: [customerInvoices]
+      summary: Create a CustomerInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerInvoiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceDetail"
+  /customer-invoices/{id}:
+    get:
+      operationId: getCustomerInvoice
+      tags: [customerInvoices]
+      summary: Get a CustomerInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CustomerInvoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCustomerInvoice
+      tags: [customerInvoices]
+      summary: Update a draft CustomerInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerInvoiceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteCustomerInvoice
+      tags: [customerInvoices]
+      summary: Soft-delete a draft CustomerInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /customer-invoices/{id}/post:
+    post:
+      operationId: postCustomerInvoice
+      tags: [customerInvoices]
+      summary: Post a customer invoice to the ledger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /customer-invoices/{id}/reverse:
+    post:
+      operationId: reverseCustomerInvoice
+      tags: [customerInvoices]
+      summary: Reverse a posted customer invoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /customer-invoices/{id}/cancel:
+    post:
+      operationId: cancelCustomerInvoice
+      tags: [customerInvoices]
+      summary: Cancel a draft customer invoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoiceDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /supplier-invoices:
+    get:
+      operationId: listSupplierInvoices
+      tags: [supplierInvoices]
+      summary: List supplier-invoices
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: supplierId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SupplierInvoices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceListResponse"
+    post:
+      operationId: createSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Create a SupplierInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierInvoiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceDetail"
+  /supplier-invoices/{id}:
+    get:
+      operationId: getSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Get a SupplierInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SupplierInvoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Update a draft SupplierInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierInvoiceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Soft-delete a draft SupplierInvoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /supplier-invoices/{id}/post:
+    post:
+      operationId: postSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Post a supplier invoice to the ledger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /supplier-invoices/{id}/reverse:
+    post:
+      operationId: reverseSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Reverse a posted supplier invoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /supplier-invoices/{id}/cancel:
+    post:
+      operationId: cancelSupplierInvoice
+      tags: [supplierInvoices]
+      summary: Cancel a draft supplier invoice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierInvoiceDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /payment-vouchers:
+    get:
+      operationId: listPaymentVouchers
+      tags: [paymentVouchers]
+      summary: List payment-vouchers
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: supplierId, in: query, required: false, schema: { type: string } }
+        - { name: contractorId, in: query, required: false, schema: { type: string } }
+        - { name: payeeType, in: query, required: false, schema: { type: string } }
+        - { name: paymentMethod, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PaymentVouchers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherListResponse"
+    post:
+      operationId: createPaymentVoucher
+      tags: [paymentVouchers]
+      summary: Create a PaymentVoucher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentVoucherInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+  /payment-vouchers/{id}:
+    get:
+      operationId: getPaymentVoucher
+      tags: [paymentVouchers]
+      summary: Get a PaymentVoucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PaymentVoucher
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePaymentVoucher
+      tags: [paymentVouchers]
+      summary: Update a draft PaymentVoucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentVoucherUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deletePaymentVoucher
+      tags: [paymentVouchers]
+      summary: Soft-delete a draft PaymentVoucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /payment-vouchers/{id}/approve:
+    post:
+      operationId: approvePaymentVoucher
+      tags: [paymentVouchers]
+      summary: Approve a payment voucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /payment-vouchers/{id}/post:
+    post:
+      operationId: postPaymentVoucher
+      tags: [paymentVouchers]
+      summary: Post a payment voucher to the ledger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /payment-vouchers/{id}/reverse:
+    post:
+      operationId: reversePaymentVoucher
+      tags: [paymentVouchers]
+      summary: Reverse a posted payment voucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /payment-vouchers/{id}/cancel:
+    post:
+      operationId: cancelPaymentVoucher
+      tags: [paymentVouchers]
+      summary: Cancel a draft payment voucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentVoucherDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /receipts/{id}/approve:
+    post:
+      operationId: approveReceipt
+      tags: [receipts]
+      summary: Approve a receipt voucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /receipts/{id}/post:
+    post:
+      operationId: postReceipt
+      tags: [receipts]
+      summary: Post a receipt voucher to the ledger
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /receipts/{id}/reverse:
+    post:
+      operationId: reverseReceipt
+      tags: [receipts]
+      summary: Reverse a posted receipt voucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /receipts/{id}/cancel:
+    post:
+      operationId: cancelReceipt
+      tags: [receipts]
+      summary: Cancel a draft receipt voucher
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceiptDetail"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /reports/ar-aging:
+    get:
+      operationId: getArAging
+      tags: [accountingReports]
+      summary: Accounts receivable aging
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: asOfDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgingResponse"
+  /reports/ap-aging:
+    get:
+      operationId: getApAging
+      tags: [accountingReports]
+      summary: Accounts payable aging
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: supplierId, in: query, required: false, schema: { type: string } }
+        - { name: asOfDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgingResponse"
+  /reports/tax-report:
+    get:
+      operationId: getTaxReport
+      tags: [accountingReports]
+      summary: VAT / tax report (output vs input)
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: fromDate, in: query, required: false, schema: { type: string } }
+        - { name: toDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaxReportResponse"
+
 components:
   parameters:
     IdParam:
@@ -12539,7 +13313,7 @@ components:
       properties:
         reportType:
           type: string
-          enum: [trial-balance, general-ledger, balance-sheet, income-statement, cash-flow]
+          enum: [trial-balance, general-ledger, balance-sheet, income-statement, cash-flow, ar-aging, ap-aging, tax]
         format:
           type: string
           enum: [excel, pdf]
@@ -14729,8 +15503,15 @@ components:
         chequeNumber: { type: ["string", "null"] }
         chequeDate: { type: ["string", "null"] }
         bankName: { type: ["string", "null"] }
+        chequeId: { type: ["string", "null"] }
         reference: { type: ["string", "null"] }
         status: { type: string }
+        receivableAccountId: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        postedAt: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        cancelledAt: { type: ["string", "null"] }
         notes: { type: ["string", "null"] }
         userId: { type: ["string", "null"] }
         isActive: { type: boolean }
@@ -14754,10 +15535,15 @@ components:
         chequeNumber: { type: string }
         chequeDate: { type: string }
         bankName: { type: string }
+        chequeId: { type: string }
+        receivableAccountId: { type: string }
         reference: { type: string }
         status: { type: string }
         notes: { type: string }
         userId: { type: string }
+        allocations:
+          type: array
+          items: { $ref: "#/components/schemas/ReceiptAllocationInput" }
 
     ReceiptUpdate:
       type: object
@@ -20300,3 +21086,504 @@ components:
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }
+
+    TaxCode:
+      type: object
+      required: [id, companyId, code, name, nameAr, taxType, rate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        taxType: { type: string }
+        rate: { type: string }
+        taxAccountId: { type: ["string", "null"] }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    TaxCodeInput:
+      type: object
+      required: [companyId, code, name, nameAr, taxType, rate]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        taxType: { type: string }
+        rate: { type: string }
+        taxAccountId: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    TaxCodeUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        taxType: { type: string }
+        rate: { type: string }
+        taxAccountId: { type: string }
+        status: { type: string }
+        description: { type: string }
+
+    TaxCodeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/TaxCode" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CustomerInvoiceLine:
+      type: object
+      required: [id, invoiceId, description, quantity, unitPrice, lineSubtotal, taxAmount, lineTotal]
+      properties:
+        id: { type: string }
+        invoiceId: { type: string }
+        lineNumber: { type: integer }
+        description: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        lineSubtotal: { type: string }
+        taxCodeId: { type: ["string", "null"] }
+        taxRate: { type: string }
+        taxAmount: { type: string }
+        lineTotal: { type: string }
+        revenueAccountId: { type: ["string", "null"] }
+        costCenterId: { type: ["string", "null"] }
+        profitCenterId: { type: ["string", "null"] }
+
+    CustomerInvoiceLineInput:
+      type: object
+      required: [description]
+      properties:
+        description: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        taxCodeId: { type: string }
+        revenueAccountId: { type: string }
+        costCenterId: { type: string }
+        profitCenterId: { type: string }
+
+    CustomerInvoice:
+      type: object
+      required: [id, companyId, number, customerId, invoiceDate, status, subtotal, taxTotal, total, paidAmount, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        number: { type: string }
+        customerId: { type: string }
+        contractId: { type: ["string", "null"] }
+        unitId: { type: ["string", "null"] }
+        invoiceDate: { type: string }
+        dueDate: { type: ["string", "null"] }
+        status: { type: string }
+        currencyId: { type: ["string", "null"] }
+        receivableAccountId: { type: ["string", "null"] }
+        subtotal: { type: string }
+        taxTotal: { type: string }
+        total: { type: string }
+        paidAmount: { type: string }
+        reference: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        postedAt: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        cancelledAt: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CustomerInvoiceDetail:
+      allOf:
+        - $ref: "#/components/schemas/CustomerInvoice"
+        - type: object
+          properties:
+            lines:
+              type: array
+              items: { $ref: "#/components/schemas/CustomerInvoiceLine" }
+
+    CustomerInvoiceInput:
+      type: object
+      required: [companyId, customerId, invoiceDate, lines]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        number: { type: string }
+        customerId: { type: string }
+        contractId: { type: string }
+        unitId: { type: string }
+        invoiceDate: { type: string }
+        dueDate: { type: string }
+        currencyId: { type: string }
+        receivableAccountId: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        notes: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerInvoiceLineInput" }
+
+    CustomerInvoiceUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        customerId: { type: string }
+        contractId: { type: string }
+        unitId: { type: string }
+        invoiceDate: { type: string }
+        dueDate: { type: string }
+        currencyId: { type: string }
+        receivableAccountId: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        notes: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerInvoiceLineInput" }
+
+    CustomerInvoiceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerInvoice" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    SupplierInvoiceLine:
+      type: object
+      required: [id, invoiceId, description, quantity, unitPrice, lineSubtotal, taxAmount, lineTotal]
+      properties:
+        id: { type: string }
+        invoiceId: { type: string }
+        lineNumber: { type: integer }
+        description: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        lineSubtotal: { type: string }
+        taxCodeId: { type: ["string", "null"] }
+        taxRate: { type: string }
+        taxAmount: { type: string }
+        lineTotal: { type: string }
+        expenseAccountId: { type: ["string", "null"] }
+        costCenterId: { type: ["string", "null"] }
+        profitCenterId: { type: ["string", "null"] }
+
+    SupplierInvoiceLineInput:
+      type: object
+      required: [description]
+      properties:
+        description: { type: string }
+        quantity: { type: string }
+        unitPrice: { type: string }
+        taxCodeId: { type: string }
+        expenseAccountId: { type: string }
+        costCenterId: { type: string }
+        profitCenterId: { type: string }
+
+    SupplierInvoice:
+      type: object
+      required: [id, companyId, number, supplierId, invoiceDate, status, subtotal, taxTotal, total, paidAmount, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        number: { type: string }
+        supplierId: { type: string }
+        contractId: { type: ["string", "null"] }
+        supplierInvoiceNumber: { type: ["string", "null"] }
+        invoiceDate: { type: string }
+        dueDate: { type: ["string", "null"] }
+        status: { type: string }
+        currencyId: { type: ["string", "null"] }
+        payableAccountId: { type: ["string", "null"] }
+        subtotal: { type: string }
+        taxTotal: { type: string }
+        total: { type: string }
+        paidAmount: { type: string }
+        reference: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        postedAt: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        cancelledAt: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    SupplierInvoiceDetail:
+      allOf:
+        - $ref: "#/components/schemas/SupplierInvoice"
+        - type: object
+          properties:
+            lines:
+              type: array
+              items: { $ref: "#/components/schemas/SupplierInvoiceLine" }
+
+    SupplierInvoiceInput:
+      type: object
+      required: [companyId, supplierId, invoiceDate, lines]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        number: { type: string }
+        supplierId: { type: string }
+        contractId: { type: string }
+        supplierInvoiceNumber: { type: string }
+        invoiceDate: { type: string }
+        dueDate: { type: string }
+        currencyId: { type: string }
+        payableAccountId: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        notes: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierInvoiceLineInput" }
+
+    SupplierInvoiceUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        supplierId: { type: string }
+        contractId: { type: string }
+        supplierInvoiceNumber: { type: string }
+        invoiceDate: { type: string }
+        dueDate: { type: string }
+        currencyId: { type: string }
+        payableAccountId: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        notes: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierInvoiceLineInput" }
+
+    SupplierInvoiceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SupplierInvoice" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PaymentAllocation:
+      type: object
+      required: [id, paymentVoucherId, amount]
+      properties:
+        id: { type: string }
+        paymentVoucherId: { type: string }
+        supplierInvoiceId: { type: ["string", "null"] }
+        amount: { type: string }
+        notes: { type: ["string", "null"] }
+
+    PaymentAllocationInput:
+      type: object
+      required: [amount]
+      properties:
+        supplierInvoiceId: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    PaymentVoucher:
+      type: object
+      required: [id, companyId, code, payeeType, amount, paymentDate, paymentMethod, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        payeeType: { type: string }
+        supplierId: { type: ["string", "null"] }
+        contractorId: { type: ["string", "null"] }
+        payeeName: { type: ["string", "null"] }
+        amount: { type: string }
+        paymentDate: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: ["string", "null"] }
+        bankAccountId: { type: ["string", "null"] }
+        chequeId: { type: ["string", "null"] }
+        chequeNumber: { type: ["string", "null"] }
+        chequeDate: { type: ["string", "null"] }
+        bankName: { type: ["string", "null"] }
+        expenseAccountId: { type: ["string", "null"] }
+        payableAccountId: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        status: { type: string }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        postedAt: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        cancelledAt: { type: ["string", "null"] }
+        userId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    PaymentVoucherDetail:
+      allOf:
+        - $ref: "#/components/schemas/PaymentVoucher"
+        - type: object
+          properties:
+            allocations:
+              type: array
+              items: { $ref: "#/components/schemas/PaymentAllocation" }
+
+    PaymentVoucherInput:
+      type: object
+      required: [companyId, payeeType, amount, paymentDate, paymentMethod]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        payeeType: { type: string }
+        supplierId: { type: string }
+        contractorId: { type: string }
+        payeeName: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        chequeId: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: string }
+        bankName: { type: string }
+        expenseAccountId: { type: string }
+        payableAccountId: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        notes: { type: string }
+        allocations:
+          type: array
+          items: { $ref: "#/components/schemas/PaymentAllocationInput" }
+
+    PaymentVoucherUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        payeeType: { type: string }
+        supplierId: { type: string }
+        contractorId: { type: string }
+        payeeName: { type: string }
+        amount: { type: string }
+        paymentDate: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        chequeId: { type: string }
+        chequeNumber: { type: string }
+        chequeDate: { type: string }
+        bankName: { type: string }
+        expenseAccountId: { type: string }
+        payableAccountId: { type: string }
+        reference: { type: string }
+        description: { type: string }
+        notes: { type: string }
+        allocations:
+          type: array
+          items: { $ref: "#/components/schemas/PaymentAllocationInput" }
+
+    PaymentVoucherListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PaymentVoucher" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    ReceiptAllocation:
+      type: object
+      required: [id, receiptId, amount]
+      properties:
+        id: { type: string }
+        receiptId: { type: string }
+        customerInvoiceId: { type: ["string", "null"] }
+        scheduleId: { type: ["string", "null"] }
+        amount: { type: string }
+        notes: { type: ["string", "null"] }
+
+    ReceiptAllocationInput:
+      type: object
+      required: [amount]
+      properties:
+        customerInvoiceId: { type: string }
+        scheduleId: { type: string }
+        amount: { type: string }
+        notes: { type: string }
+
+    ReceiptDetail:
+      allOf:
+        - $ref: "#/components/schemas/Receipt"
+        - type: object
+          properties:
+            allocations:
+              type: array
+              items: { $ref: "#/components/schemas/ReceiptAllocation" }
+
+    AgingBucketRow:
+      type: object
+      required: [partyId, partyName, current, days30, days60, days90, days120plus, total]
+      properties:
+        partyId: { type: string }
+        partyName: { type: string }
+        current: { type: string }
+        days30: { type: string }
+        days60: { type: string }
+        days90: { type: string }
+        days120plus: { type: string }
+        total: { type: string }
+
+    AgingResponse:
+      type: object
+      required: [rows, totals]
+      properties:
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/AgingBucketRow" }
+        totals: { $ref: "#/components/schemas/AgingBucketRow" }
+
+    TaxReportRow:
+      type: object
+      required: [taxCodeId, code, name, taxType, rate, base, tax]
+      properties:
+        taxCodeId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        taxType: { type: string }
+        rate: { type: string }
+        base: { type: string }
+        tax: { type: string }
+
+    TaxReportResponse:
+      type: object
+      required: [rows, outputTax, inputTax, netTax]
+      properties:
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/TaxReportRow" }
+        outputTax: { type: string }
+        inputTax: { type: string }
+        netTax: { type: string }

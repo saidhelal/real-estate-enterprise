@@ -39,6 +39,7 @@ import {
   costCentersTable,
   fiscalPeriodsTable,
   accountMappingsTable,
+  taxCodesTable,
 } from "@workspace/db";
 import { hashPassword } from "./lib/auth";
 
@@ -90,7 +91,11 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "treasuryTransactions", label: "Treasury Transactions" },
   { module: "bankAccounts", label: "Bank Accounts" },
   { module: "bankTransactions", label: "Bank Transactions" },
-  { module: "receipts", label: "Receipts" },
+  { module: "receipts", label: "Receipt Vouchers", extraActions: ["approve", "post", "reverse", "cancel"] },
+  { module: "paymentVouchers", label: "Payment Vouchers", extraActions: ["approve", "post", "reverse", "cancel"] },
+  { module: "customerInvoices", label: "Customer Invoices", extraActions: ["post", "reverse", "cancel"] },
+  { module: "supplierInvoices", label: "Supplier Invoices", extraActions: ["post", "reverse", "cancel"] },
+  { module: "taxCodes", label: "Tax Codes" },
   { module: "cheques", label: "Cheques" },
   { module: "penalties", label: "Penalties" },
   { module: "accounts", label: "Chart of Accounts" },
@@ -354,6 +359,9 @@ async function seedNumberSequences(): Promise<void> {
     .values([
       { documentType: "Invoice", prefix: "INV", padding: 5, resetYearly: true },
       { documentType: "Receipt", prefix: "RCV", padding: 5, resetYearly: true },
+      { documentType: "Payment Voucher", prefix: "PV", padding: 5, resetYearly: true },
+      { documentType: "Customer Invoice", prefix: "CINV", padding: 5, resetYearly: true },
+      { documentType: "Supplier Invoice", prefix: "SINV", padding: 5, resetYearly: true },
       { documentType: "Contract", prefix: "CON", padding: 4, resetYearly: false },
       { documentType: "Journal Entry", prefix: "JE", padding: 6, resetYearly: true },
     ])
@@ -698,6 +706,7 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["1030", "Accounts Receivable", "الذمم المدينة", "asset", "debit", "11", true],
   ["1040", "Inventory", "المخزون", "asset", "debit", "11", true],
   ["1050", "Cheques Under Collection", "شيكات تحت التحصيل", "asset", "debit", "11", true],
+  ["1060", "Input VAT Receivable", "ضريبة القيمة المضافة على المشتريات", "asset", "debit", "11", true],
   ["12", "Non-Current Assets", "الأصول غير المتداولة", "asset", "debit", "1", false],
   ["1210", "Property & Equipment", "الممتلكات والمعدات", "asset", "debit", "12", true],
   ["2", "Liabilities", "الخصوم", "liability", "credit", null, false],
@@ -705,6 +714,7 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["2010", "Accounts Payable", "الذمم الدائنة", "liability", "credit", "21", true],
   ["2020", "Customer Advances", "دفعات العملاء المقدمة", "liability", "credit", "21", true],
   ["2030", "Cheques Payable", "شيكات مستحقة الدفع", "liability", "credit", "21", true],
+  ["2040", "Output VAT Payable", "ضريبة القيمة المضافة على المبيعات", "liability", "credit", "21", true],
   ["22", "Non-Current Liabilities", "الخصوم غير المتداولة", "liability", "credit", "2", false],
   ["2210", "Loans Payable", "القروض المستحقة", "liability", "credit", "22", true],
   ["3", "Equity", "حقوق الملكية", "equity", "credit", null, false],
@@ -726,6 +736,14 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["receipt.cash", "1010", "1030", "Cash receipt from customer"],
   ["receipt.bank", "1020", "1030", "Bank receipt from customer"],
   ["receipt.cheque", "1020", "1030", "Cheque receipt from customer"],
+  ["payment.cash", "2010", "1010", "Cash payment to supplier/contractor"],
+  ["payment.bank", "2010", "1020", "Bank payment to supplier/contractor"],
+  ["payment.cheque", "2010", "2030", "Cheque payment to supplier/contractor"],
+  ["invoice.customer.revenue", "1030", "4010", "Customer invoice revenue"],
+  ["invoice.customer.tax", "1030", "2040", "Customer invoice output VAT"],
+  ["invoice.supplier.expense", "5030", "2010", "Supplier invoice expense"],
+  ["invoice.supplier.tax", "1060", "2010", "Supplier invoice input VAT"],
+  ["cheque.incoming.returned", "1030", "1050", "Incoming cheque returned/bounced"],
   ["reservation.payment", "1010", "2020", "Reservation deposit"],
   ["installment.collection", "1010", "1030", "Installment collection"],
   ["treasury.in", "1010", "2020", "Cash inflow"],
@@ -808,6 +826,25 @@ async function seedAccounting(): Promise<void> {
       .set({ debitAccountId, creditAccountId })
       .where(and(eq(accountMappingsTable.companyId, companyId), eq(accountMappingsTable.eventKey, eventKey)));
   }
+
+  // Sample VAT tax codes (idempotent by company + code).
+  const existingTaxCodes = await db.select().from(taxCodesTable).where(eq(taxCodesTable.companyId, companyId));
+  const taxCodeKeys = new Set(existingTaxCodes.map((t) => t.code));
+  const outputVatId = codeToId.get("2040") ?? null;
+  const inputVatId = codeToId.get("1060") ?? null;
+  const sampleTaxCodes: Array<{ code: string; name: string; nameAr: string; taxType: string; rate: string; taxAccountId: string | null }> = [
+    { code: "VAT15", name: "Output VAT 15%", nameAr: "ضريبة القيمة المضافة 15%", taxType: "output", rate: "15", taxAccountId: outputVatId },
+    { code: "VAT15-IN", name: "Input VAT 15%", nameAr: "ضريبة المدخلات 15%", taxType: "input", rate: "15", taxAccountId: inputVatId },
+    { code: "VAT0", name: "Zero-rated 0%", nameAr: "معفاة بنسبة صفر", taxType: "output", rate: "0", taxAccountId: outputVatId },
+    { code: "EXEMPT", name: "Exempt", nameAr: "معفاة", taxType: "exempt", rate: "0", taxAccountId: null },
+  ];
+  let createdTaxCodes = 0;
+  for (const tc of sampleTaxCodes) {
+    if (taxCodeKeys.has(tc.code)) continue;
+    await db.insert(taxCodesTable).values({ companyId, ...tc, status: "active" });
+    createdTaxCodes += 1;
+  }
+  console.log(`Seeded ${createdTaxCodes} tax codes`);
 
   // Monthly fiscal periods from each fiscal year (idempotent by company + year + periodNumber).
   const fiscalYears = await db.select().from(fiscalYearsTable).where(eq(fiscalYearsTable.companyId, companyId));

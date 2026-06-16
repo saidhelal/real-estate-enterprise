@@ -76,6 +76,13 @@ import BudgetLinesPage from "@/pages/budget-lines";
 import BudgetVsActualPage from "@/pages/budget-vs-actual";
 import AccountMappingsPage from "@/pages/account-mappings";
 import AccountingDashboardPage from "@/pages/accounting-dashboard";
+import TaxCodesPage from "@/pages/tax-codes";
+import CustomerInvoicesPage from "@/pages/customer-invoices";
+import SupplierInvoicesPage from "@/pages/supplier-invoices";
+import PaymentVouchersPage from "@/pages/payment-vouchers";
+import ArAgingPage from "@/pages/ar-aging";
+import ApAgingPage from "@/pages/ap-aging";
+import TaxReportPage from "@/pages/tax-report";
 import ChequesPage from "@/pages/cheques";
 import ChequeStatusHistorysPage from "@/pages/cheque-status-history";
 import ChequeReportsPage from "@/pages/cheque-reports";
@@ -251,6 +258,13 @@ function Router() {
             <Route path="/budget-lines" component={BudgetLinesPage} />
             <Route path="/budget-vs-actual" component={BudgetVsActualPage} />
             <Route path="/account-mappings" component={AccountMappingsPage} />
+            <Route path="/tax-codes" component={TaxCodesPage} />
+            <Route path="/customer-invoices" component={CustomerInvoicesPage} />
+            <Route path="/supplier-invoices" component={SupplierInvoicesPage} />
+            <Route path="/payment-vouchers" component={PaymentVouchersPage} />
+            <Route path="/ar-aging" component={ArAgingPage} />
+            <Route path="/ap-aging" component={ApAgingPage} />
+            <Route path="/tax-report" component={TaxReportPage} />
             <Route path="/cheques" component={ChequesPage} />
             <Route path="/cheque-status-history" component={ChequeStatusHistorysPage} />
             <Route path="/cheque-reports" component={ChequeReportsPage} />

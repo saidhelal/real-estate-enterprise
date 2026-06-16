@@ -85,10 +85,10 @@ export interface ResourceManagerProps<T extends { id: string }> {
   searchable?: boolean;
   /** Hide the create action (e.g. system-generated records). Defaults to true. */
   canCreate?: boolean;
-  /** Hide the edit action. Defaults to true. */
-  canEdit?: boolean;
-  /** Hide the delete action. Defaults to true. */
-  canDelete?: boolean;
+  /** Show the edit action. Boolean or per-row predicate. Defaults to true. */
+  canEdit?: boolean | ((row: T) => boolean);
+  /** Show the delete action. Boolean or per-row predicate. Defaults to true. */
+  canDelete?: boolean | ((row: T) => boolean);
   /** Extra per-row action buttons rendered before edit/delete. */
   rowActions?: (row: T) => React.ReactNode;
   pageSize?: number;
@@ -230,12 +230,12 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                   ))}
                   <TableCell className="text-right space-x-2 whitespace-nowrap">
                     {rowActions?.(row)}
-                    {canEdit && (
+                    {(typeof canEdit === "function" ? canEdit(row) : canEdit) && (
                       <Button variant="ghost" size="icon" onClick={() => setEditing(row)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
                     )}
-                    {canDelete && (
+                    {(typeof canDelete === "function" ? canDelete(row) : canDelete) && (
                       <Button
                         variant="ghost"
                         size="icon"

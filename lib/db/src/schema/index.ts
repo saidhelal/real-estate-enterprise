@@ -16,6 +16,7 @@ export * from "./sales";
 export * from "./installments";
 export * from "./unit-management";
 export * from "./finance";
+export * from "./ar-ap";
 export * from "./accounting";
 export * from "./engineering";
 export * from "./construction";

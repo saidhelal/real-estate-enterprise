@@ -469,6 +469,80 @@ export async function postAutomaticEntry(tx: Tx, params: AutoPostParams): Promis
   });
 }
 
+/** Fetch the active account mapping (default debit/credit accounts) for an event key, or null. */
+export async function getCompanyMapping(
+  tx: Tx,
+  companyId: string,
+  eventKey: string,
+): Promise<{ debitAccountId: string | null; creditAccountId: string | null } | null> {
+  const [mapping] = await tx
+    .select({
+      debitAccountId: accountMappingsTable.debitAccountId,
+      creditAccountId: accountMappingsTable.creditAccountId,
+    })
+    .from(accountMappingsTable)
+    .where(
+      and(
+        eq(accountMappingsTable.companyId, companyId),
+        eq(accountMappingsTable.eventKey, eventKey),
+        eq(accountMappingsTable.isDeleted, false),
+        eq(accountMappingsTable.isActive, true),
+      ),
+    );
+  return mapping ?? null;
+}
+
+export interface AutoPostLinesParams {
+  companyId: string;
+  branchId?: string | null;
+  entryDate: string;
+  description?: string | null;
+  descriptionAr?: string | null;
+  reference?: string | null;
+  sourceType: string;
+  sourceId: string;
+  userId?: string | null;
+  lines: EntryLineInput[];
+}
+
+/**
+ * Post a multi-line automatic entry idempotently for a source record. Unlike
+ * postAutomaticEntry this backs explicit "post" actions (invoices / vouchers),
+ * so it throws (via createEntry) when the entry is unbalanced or an account is
+ * unusable — the caller has already resolved every account and wants posting to
+ * succeed or fail loudly. Idempotent per (sourceType, sourceId): a second call
+ * returns the existing non-reversed entry instead of double-posting.
+ */
+export async function postAutomaticLines(tx: Tx, params: AutoPostLinesParams): Promise<JournalEntryRow> {
+  const [existing] = await tx
+    .select()
+    .from(journalEntriesTable)
+    .where(
+      and(
+        eq(journalEntriesTable.sourceType, params.sourceType),
+        eq(journalEntriesTable.sourceId, params.sourceId),
+        eq(journalEntriesTable.isAutomatic, true),
+        eq(journalEntriesTable.isDeleted, false),
+      ),
+    );
+  if (existing && existing.status !== "reversed") return existing;
+
+  return createEntry(tx, {
+    companyId: params.companyId,
+    branchId: params.branchId ?? null,
+    entryDate: params.entryDate,
+    description: params.description ?? null,
+    descriptionAr: params.descriptionAr ?? null,
+    reference: params.reference ?? null,
+    sourceType: params.sourceType,
+    sourceId: params.sourceId,
+    isAutomatic: true,
+    userId: params.userId ?? null,
+    autoPost: true,
+    lines: params.lines,
+  });
+}
+
 /**
  * Reverse the automatic entries previously posted for a source record (used when
  * a receipt/transaction is deleted). Best-effort; skips entries already reversed.

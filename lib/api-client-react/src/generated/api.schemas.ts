@@ -26,6 +26,9 @@ export const ReportExportInputReportType = {
   'balance-sheet': 'balance-sheet',
   'income-statement': 'income-statement',
   'cash-flow': 'cash-flow',
+  'ar-aging': 'ar-aging',
+  'ap-aging': 'ap-aging',
+  tax: 'tax',
 } as const;
 
 export type ReportExportInputFormat = typeof ReportExportInputFormat[keyof typeof ReportExportInputFormat];
@@ -2037,14 +2040,35 @@ export interface Receipt {
   /** @nullable */
   bankName?: string | null;
   /** @nullable */
+  chequeId?: string | null;
+  /** @nullable */
   reference?: string | null;
   status?: string;
+  /** @nullable */
+  receivableAccountId?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  cancelledAt?: string | null;
   /** @nullable */
   notes?: string | null;
   /** @nullable */
   userId?: string | null;
   isActive: boolean;
   createdAt: string;
+}
+
+export interface ReceiptAllocationInput {
+  customerInvoiceId?: string;
+  scheduleId?: string;
+  amount: string;
+  notes?: string;
 }
 
 export interface ReceiptInput {
@@ -2062,10 +2086,13 @@ export interface ReceiptInput {
   chequeNumber?: string;
   chequeDate?: string;
   bankName?: string;
+  chequeId?: string;
+  receivableAccountId?: string;
   reference?: string;
   status?: string;
   notes?: string;
   userId?: string;
+  allocations?: ReceiptAllocationInput[];
 }
 
 export interface ReceiptUpdate {
@@ -7274,6 +7301,470 @@ export interface ProfitCenterListResponse {
   pageSize: number;
 }
 
+export interface TaxCode {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  taxType: string;
+  rate: string;
+  /** @nullable */
+  taxAccountId?: string | null;
+  status?: string;
+  /** @nullable */
+  description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface TaxCodeInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  taxType: string;
+  rate: string;
+  taxAccountId?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface TaxCodeUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  taxType?: string;
+  rate?: string;
+  taxAccountId?: string;
+  status?: string;
+  description?: string;
+}
+
+export interface TaxCodeListResponse {
+  data: TaxCode[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomerInvoiceLine {
+  id: string;
+  invoiceId: string;
+  lineNumber?: number;
+  description: string;
+  quantity: string;
+  unitPrice: string;
+  lineSubtotal: string;
+  /** @nullable */
+  taxCodeId?: string | null;
+  taxRate?: string;
+  taxAmount: string;
+  lineTotal: string;
+  /** @nullable */
+  revenueAccountId?: string | null;
+  /** @nullable */
+  costCenterId?: string | null;
+  /** @nullable */
+  profitCenterId?: string | null;
+}
+
+export interface CustomerInvoiceLineInput {
+  description: string;
+  quantity?: string;
+  unitPrice?: string;
+  taxCodeId?: string;
+  revenueAccountId?: string;
+  costCenterId?: string;
+  profitCenterId?: string;
+}
+
+export interface CustomerInvoice {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  number: string;
+  customerId: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  unitId?: string | null;
+  invoiceDate: string;
+  /** @nullable */
+  dueDate?: string | null;
+  status: string;
+  /** @nullable */
+  currencyId?: string | null;
+  /** @nullable */
+  receivableAccountId?: string | null;
+  subtotal: string;
+  taxTotal: string;
+  total: string;
+  paidAmount: string;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  cancelledAt?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type CustomerInvoiceDetail = CustomerInvoice & {
+  lines?: CustomerInvoiceLine[];
+};
+
+export interface CustomerInvoiceInput {
+  companyId: string;
+  branchId?: string;
+  number?: string;
+  customerId: string;
+  contractId?: string;
+  unitId?: string;
+  invoiceDate: string;
+  dueDate?: string;
+  currencyId?: string;
+  receivableAccountId?: string;
+  reference?: string;
+  description?: string;
+  notes?: string;
+  lines: CustomerInvoiceLineInput[];
+}
+
+export interface CustomerInvoiceUpdate {
+  branchId?: string;
+  customerId?: string;
+  contractId?: string;
+  unitId?: string;
+  invoiceDate?: string;
+  dueDate?: string;
+  currencyId?: string;
+  receivableAccountId?: string;
+  reference?: string;
+  description?: string;
+  notes?: string;
+  lines?: CustomerInvoiceLineInput[];
+}
+
+export interface CustomerInvoiceListResponse {
+  data: CustomerInvoice[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SupplierInvoiceLine {
+  id: string;
+  invoiceId: string;
+  lineNumber?: number;
+  description: string;
+  quantity: string;
+  unitPrice: string;
+  lineSubtotal: string;
+  /** @nullable */
+  taxCodeId?: string | null;
+  taxRate?: string;
+  taxAmount: string;
+  lineTotal: string;
+  /** @nullable */
+  expenseAccountId?: string | null;
+  /** @nullable */
+  costCenterId?: string | null;
+  /** @nullable */
+  profitCenterId?: string | null;
+}
+
+export interface SupplierInvoiceLineInput {
+  description: string;
+  quantity?: string;
+  unitPrice?: string;
+  taxCodeId?: string;
+  expenseAccountId?: string;
+  costCenterId?: string;
+  profitCenterId?: string;
+}
+
+export interface SupplierInvoice {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  number: string;
+  supplierId: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  supplierInvoiceNumber?: string | null;
+  invoiceDate: string;
+  /** @nullable */
+  dueDate?: string | null;
+  status: string;
+  /** @nullable */
+  currencyId?: string | null;
+  /** @nullable */
+  payableAccountId?: string | null;
+  subtotal: string;
+  taxTotal: string;
+  total: string;
+  paidAmount: string;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  cancelledAt?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type SupplierInvoiceDetail = SupplierInvoice & {
+  lines?: SupplierInvoiceLine[];
+};
+
+export interface SupplierInvoiceInput {
+  companyId: string;
+  branchId?: string;
+  number?: string;
+  supplierId: string;
+  contractId?: string;
+  supplierInvoiceNumber?: string;
+  invoiceDate: string;
+  dueDate?: string;
+  currencyId?: string;
+  payableAccountId?: string;
+  reference?: string;
+  description?: string;
+  notes?: string;
+  lines: SupplierInvoiceLineInput[];
+}
+
+export interface SupplierInvoiceUpdate {
+  branchId?: string;
+  supplierId?: string;
+  contractId?: string;
+  supplierInvoiceNumber?: string;
+  invoiceDate?: string;
+  dueDate?: string;
+  currencyId?: string;
+  payableAccountId?: string;
+  reference?: string;
+  description?: string;
+  notes?: string;
+  lines?: SupplierInvoiceLineInput[];
+}
+
+export interface SupplierInvoiceListResponse {
+  data: SupplierInvoice[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PaymentAllocation {
+  id: string;
+  paymentVoucherId: string;
+  /** @nullable */
+  supplierInvoiceId?: string | null;
+  amount: string;
+  /** @nullable */
+  notes?: string | null;
+}
+
+export interface PaymentAllocationInput {
+  supplierInvoiceId?: string;
+  amount: string;
+  notes?: string;
+}
+
+export interface PaymentVoucher {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  payeeType: string;
+  /** @nullable */
+  supplierId?: string | null;
+  /** @nullable */
+  contractorId?: string | null;
+  /** @nullable */
+  payeeName?: string | null;
+  amount: string;
+  paymentDate: string;
+  paymentMethod: string;
+  /** @nullable */
+  cashboxId?: string | null;
+  /** @nullable */
+  bankAccountId?: string | null;
+  /** @nullable */
+  chequeId?: string | null;
+  /** @nullable */
+  chequeNumber?: string | null;
+  /** @nullable */
+  chequeDate?: string | null;
+  /** @nullable */
+  bankName?: string | null;
+  /** @nullable */
+  expenseAccountId?: string | null;
+  /** @nullable */
+  payableAccountId?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  status: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  cancelledAt?: string | null;
+  /** @nullable */
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type PaymentVoucherDetail = PaymentVoucher & {
+  allocations?: PaymentAllocation[];
+};
+
+export interface PaymentVoucherInput {
+  companyId: string;
+  branchId?: string;
+  code?: string;
+  payeeType: string;
+  supplierId?: string;
+  contractorId?: string;
+  payeeName?: string;
+  amount: string;
+  paymentDate: string;
+  paymentMethod: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  chequeId?: string;
+  chequeNumber?: string;
+  chequeDate?: string;
+  bankName?: string;
+  expenseAccountId?: string;
+  payableAccountId?: string;
+  reference?: string;
+  description?: string;
+  notes?: string;
+  allocations?: PaymentAllocationInput[];
+}
+
+export interface PaymentVoucherUpdate {
+  branchId?: string;
+  payeeType?: string;
+  supplierId?: string;
+  contractorId?: string;
+  payeeName?: string;
+  amount?: string;
+  paymentDate?: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  chequeId?: string;
+  chequeNumber?: string;
+  chequeDate?: string;
+  bankName?: string;
+  expenseAccountId?: string;
+  payableAccountId?: string;
+  reference?: string;
+  description?: string;
+  notes?: string;
+  allocations?: PaymentAllocationInput[];
+}
+
+export interface PaymentVoucherListResponse {
+  data: PaymentVoucher[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ReceiptAllocation {
+  id: string;
+  receiptId: string;
+  /** @nullable */
+  customerInvoiceId?: string | null;
+  /** @nullable */
+  scheduleId?: string | null;
+  amount: string;
+  /** @nullable */
+  notes?: string | null;
+}
+
+export type ReceiptDetail = Receipt & {
+  allocations?: ReceiptAllocation[];
+};
+
+export interface AgingBucketRow {
+  partyId: string;
+  partyName: string;
+  current: string;
+  days30: string;
+  days60: string;
+  days90: string;
+  days120plus: string;
+  total: string;
+}
+
+export interface AgingResponse {
+  rows: AgingBucketRow[];
+  totals: AgingBucketRow;
+}
+
+export interface TaxReportRow {
+  taxCodeId: string;
+  code: string;
+  name: string;
+  taxType: string;
+  rate: string;
+  base: string;
+  tax: string;
+}
+
+export interface TaxReportResponse {
+  rows: TaxReportRow[];
+  outputTax: string;
+  inputTax: string;
+  netTax: string;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -8347,5 +8838,63 @@ page?: number;
 pageSize?: number;
 search?: string;
 companyId?: string;
+};
+
+export type ListTaxCodesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+taxType?: string;
+status?: string;
+};
+
+export type ListCustomerInvoicesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+contractId?: string;
+status?: string;
+};
+
+export type ListSupplierInvoicesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+supplierId?: string;
+status?: string;
+};
+
+export type ListPaymentVouchersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+supplierId?: string;
+contractorId?: string;
+payeeType?: string;
+paymentMethod?: string;
+status?: string;
+};
+
+export type GetArAgingParams = {
+companyId?: string;
+customerId?: string;
+asOfDate?: string;
+};
+
+export type GetApAgingParams = {
+companyId?: string;
+supplierId?: string;
+asOfDate?: string;
+};
+
+export type GetTaxReportParams = {
+companyId?: string;
+fromDate?: string;
+toDate?: string;
 };
 

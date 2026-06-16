@@ -1,8 +1,13 @@
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useListReceipts,
   useCreateReceipt,
   useUpdateReceipt,
   useDeleteReceipt,
+  useApproveReceipt,
+  usePostReceipt,
+  useReverseReceipt,
+  useCancelReceipt,
   getListReceiptsQueryKey,
   useListCustomers,
   useListContracts,
@@ -21,13 +26,21 @@ import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
+import { useToast } from "@/hooks/use-toast";
 
 const PAYMENT_METHODS = enumOptions(["cash", "bank_transfer", "cheque"]);
 
-const STATUS = enumOptions(["confirmed", "pending", "cancelled"]);
+function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
+  if (status === "posted") return "default";
+  if (status === "reversed" || status === "cancelled") return "destructive";
+  if (status === "approved") return "secondary";
+  return "outline";
+}
 
 export default function ReceiptsPage() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { data: companies } = useListCompanies();
   const { data: customers } = useListCustomers({ pageSize: 200 });
   const { data: contracts } = useListContracts({ pageSize: 200 });
@@ -56,7 +69,6 @@ export default function ReceiptsPage() {
     { name: "chequeDate", label: "Cheque Date", labelAr: "تاريخ الشيك", type: "date" },
     { name: "bankName", label: "Cheque Bank", labelAr: "بنك الشيك" },
     { name: "reference", label: "Reference", labelAr: "المرجع" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", required: true, options: STATUS },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 
@@ -65,8 +77,29 @@ export default function ReceiptsPage() {
     { header: "Date", headerAr: "التاريخ", render: (r) => r.receiptDate },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount },
     { header: "Method", headerAr: "الطريقة", render: (r) => <Badge variant="outline">{enumLabel(r.paymentMethod, language)}</Badge> },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant={statusVariant(r.status ?? "")}>{enumLabel(r.status ?? "", language)}</Badge> },
   ];
+
+  const approveMutation = useApproveReceipt();
+  const postMutation = usePostReceipt();
+  const reverseMutation = useReverseReceipt();
+  const cancelMutation = useCancelReceipt();
+
+  const invalidate = () =>
+    queryClient.invalidateQueries({ queryKey: getListReceiptsQueryKey() });
+
+  const runAction = (
+    mutation: { mutate: (v: { id: string }, o?: { onSuccess?: () => void; onError?: () => void }) => void },
+    id: string,
+    label: string,
+  ) =>
+    mutation.mutate(
+      { id },
+      {
+        onSuccess: () => { toast({ title: label }); invalidate(); },
+        onError: () => toast({ title: t("common.error"), variant: "destructive" }),
+      },
+    );
 
   const printVoucher = (r: Receipt) => {
     const ar = language === "ar";
@@ -146,16 +179,35 @@ export default function ReceiptsPage() {
       useDelete={useDeleteReceipt}
       getListQueryKey={getListReceiptsQueryKey}
       companyId={companyId}
+      canEdit={(r) => r.status === "draft"}
+      canDelete={(r) => r.status === "draft"}
       rowActions={(r) => (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => printVoucher(r)}
-          title={language === "ar" ? "طباعة السند" : "Print voucher"}
-        >
-          <Printer className="h-4 w-4 mr-1" />
-          {language === "ar" ? "طباعة" : "Print"}
-        </Button>
+        <>
+          {r.status === "draft" && (
+            <>
+              <Button variant="outline" size="sm" disabled={approveMutation.isPending} onClick={() => runAction(approveMutation, r.id, t("acc.approve"))}>{t("acc.approve")}</Button>
+              <Button variant="ghost" size="sm" disabled={cancelMutation.isPending} onClick={() => runAction(cancelMutation, r.id, t("acc.cancel"))}>{t("acc.cancel")}</Button>
+            </>
+          )}
+          {r.status === "approved" && (
+            <>
+              <Button variant="outline" size="sm" disabled={postMutation.isPending} onClick={() => runAction(postMutation, r.id, t("acc.post"))}>{t("acc.post")}</Button>
+              <Button variant="ghost" size="sm" disabled={cancelMutation.isPending} onClick={() => runAction(cancelMutation, r.id, t("acc.cancel"))}>{t("acc.cancel")}</Button>
+            </>
+          )}
+          {r.status === "posted" && (
+            <Button variant="ghost" size="sm" className="text-destructive" disabled={reverseMutation.isPending} onClick={() => runAction(reverseMutation, r.id, t("acc.reverse"))}>{t("acc.reverse")}</Button>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => printVoucher(r)}
+            title={language === "ar" ? "طباعة السند" : "Print voucher"}
+          >
+            <Printer className="h-4 w-4 mr-1" />
+            {language === "ar" ? "طباعة" : "Print"}
+          </Button>
+        </>
       )}
     />
   );

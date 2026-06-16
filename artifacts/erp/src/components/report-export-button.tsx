@@ -20,7 +20,10 @@ export type ReportType =
   | "general-ledger"
   | "balance-sheet"
   | "income-statement"
-  | "cash-flow";
+  | "cash-flow"
+  | "ar-aging"
+  | "ap-aging"
+  | "tax";
 
 export interface ReportExportAudit {
   reportType: ReportType;

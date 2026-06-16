@@ -33,6 +33,9 @@ export const customersTable = pgTable("customers", {
   phone: text("phone"),
   email: text("email"),
   address: text("address"),
+  // Per-entity GL control accounts (override the mapping-engine default).
+  receivableAccountId: uuid("receivable_account_id"),
+  advanceAccountId: uuid("advance_account_id"),
   ...audit,
 });
 export type CustomerRow = typeof customersTable.$inferSelect;

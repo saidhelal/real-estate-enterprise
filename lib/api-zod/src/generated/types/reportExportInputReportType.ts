@@ -15,4 +15,7 @@ export const ReportExportInputReportType = {
   'balance-sheet': 'balance-sheet',
   'income-statement': 'income-statement',
   'cash-flow': 'cash-flow',
+  'ar-aging': 'ar-aging',
+  'ap-aging': 'ap-aging',
+  tax: 'tax',
 } as const;

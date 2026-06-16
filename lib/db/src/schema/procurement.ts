@@ -52,6 +52,9 @@ export const suppliersTable = pgTable("suppliers", {
   paymentTerms: text("payment_terms"),
   rating: numeric("rating"),
   status: text("status").notNull().default("active"),
+  // Per-entity GL control accounts (override the mapping-engine default).
+  payableAccountId: uuid("payable_account_id"),
+  advanceAccountId: uuid("advance_account_id"),
   ...audit,
 });
 export type SupplierRow = typeof suppliersTable.$inferSelect;
