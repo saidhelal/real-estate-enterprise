@@ -1126,20 +1126,35 @@ async function backfillLegalContracts(): Promise<Record<string, { total: number;
   async function run(module: string, sourceTable: any, map: (row: any) => Record<string, unknown>): Promise<void> {
     const rows = (await db.select().from(sourceTable).where(eq(sourceTable.isDeleted, false))) as Record<string, unknown>[];
     const existing = (await db
-      .select({ sourceId: legalContractsTable.sourceId })
+      .select({ id: legalContractsTable.id, sourceId: legalContractsTable.sourceId })
       .from(legalContractsTable)
-      .where(and(eq(legalContractsTable.sourceModule, module), eq(legalContractsTable.isDeleted, false)))) as { sourceId: string | null }[];
-    const registered = new Set(existing.map((e) => e.sourceId).filter(Boolean) as string[]);
+      .where(and(eq(legalContractsTable.sourceModule, module), eq(legalContractsTable.isDeleted, false)))) as { id: string; sourceId: string | null }[];
+    // Map each already-registered sourceId -> its legal_contracts id, so reruns can heal back-links.
+    const registered = new Map<string, string>();
+    for (const e of existing) {
+      if (e.sourceId) registered.set(e.sourceId, e.id);
+    }
     let created = 0;
     for (const row of rows) {
       const sourceId = row.id as string;
-      if (registered.has(sourceId)) continue;
-      const [inserted] = await db.insert(legalContractsTable).values(map(row) as typeof legalContractsTable.$inferInsert).returning();
-      // Set the back-link only when still null (preserve any existing reference).
-      if (row.legalContractId == null) {
-        await db.update(sourceTable).set({ legalContractId: inserted.id }).where(eq(sourceTable.id, sourceId));
+      // Resolve (or create) the registry row for this source contract.
+      let legalId = registered.get(sourceId);
+      if (!legalId) {
+        const [inserted] = await db.insert(legalContractsTable).values(map(row) as typeof legalContractsTable.$inferInsert).returning();
+        legalId = inserted.id;
+        registered.set(sourceId, legalId);
+        created += 1;
       }
-      created += 1;
+      // Heal the back-link whenever it is still null — idempotent across partial/interrupted runs.
+      // Only ever fill a null reference; never overwrite an existing one.
+      if (row.legalContractId == null) {
+        await db.update(sourceTable).set({ legalContractId: legalId }).where(eq(sourceTable.id, sourceId));
+      }
+    }
+    // Post-backfill validation: every non-deleted source row must now be both registered and back-linked.
+    const linked = rows.filter((r) => r.legalContractId != null || registered.has(r.id as string)).length;
+    if (linked !== rows.length) {
+      console.warn(`Legal backfill WARNING — ${module}: ${linked}/${rows.length} source rows linked (mismatch)`);
     }
     result[module] = { total: rows.length, created };
   }

@@ -38,8 +38,15 @@ registers every existing contract and sets the back-links.
 | **Total**      | **2**              | **2**                          | **2**       |
 
 - `legal_contracts` total rows: **2** (all `source_module = sales`).
-- Re-running the seed is idempotent: rows already registered are skipped (keyed on
-  `sourceModule`/`sourceId`), so counts do not grow on repeated runs.
+- Re-running the seed is idempotent: registry rows are keyed on
+  `sourceModule`/`sourceId`, so counts do not grow on repeated runs.
+- Back-link healing: the backfill resolves the existing registry id for an
+  already-registered contract and fills a **null** `legalContractId` back-link on
+  rerun (it never overwrites an existing reference). This was verified by nulling a
+  back-link and re-running the seed — the link was repaired with no duplicate
+  registry row (legal_contracts stayed at 2). This makes partial/interrupted runs
+  safely recoverable. A post-backfill check logs a warning if any non-deleted
+  source row is left unlinked.
 
 ## 4. Accounting / integrations integrity
 
