@@ -86,6 +86,315 @@ export interface ChangePasswordInput {
   newPassword: string;
 }
 
+export interface PortalLoginInput {
+  /** @minLength 1 */
+  username: string;
+  /** @minLength 1 */
+  password: string;
+}
+
+export interface PortalCurrentUser {
+  id: string;
+  username: string;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  customerId: string;
+  customerName: string;
+  /** @nullable */
+  customerNameAr?: string | null;
+  companyId?: string;
+}
+
+export interface PortalAuthSession {
+  accessToken: string;
+  refreshToken: string;
+  user: PortalCurrentUser;
+}
+
+export interface PortalAccessToken {
+  accessToken: string;
+}
+
+export interface PortalForgotPasswordInput {
+  /** @minLength 1 */
+  identifier: string;
+}
+
+export interface PortalForgotPasswordResult {
+  success: boolean;
+  /** @nullable */
+  devCode?: string | null;
+}
+
+export interface PortalVerifyOtpInput {
+  /** @minLength 1 */
+  identifier: string;
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 8 */
+  newPassword: string;
+}
+
+export interface BiTrendPoint {
+  period: string;
+  value: string;
+  count?: number;
+}
+
+export interface PortalDashboard {
+  unitsCount: number;
+  contractsCount: number;
+  totalContractValue: string;
+  totalPaid: string;
+  totalOutstanding: string;
+  overdueCount: number;
+  overdueAmount: string;
+  openRequests: number;
+  unreadNotifications: number;
+  /** @nullable */
+  nextDueDate?: string | null;
+  /** @nullable */
+  nextDueAmount?: string | null;
+  paymentTrend?: BiTrendPoint[];
+}
+
+export interface PortalUnit {
+  id: string;
+  code: string;
+  /** @nullable */
+  projectName?: string | null;
+  /** @nullable */
+  buildingName?: string | null;
+  /** @nullable */
+  unitType?: string | null;
+  /** @nullable */
+  area?: string | null;
+  /** @nullable */
+  price?: string | null;
+  status: string;
+}
+
+export interface PortalContract {
+  id: string;
+  code: string;
+  /** @nullable */
+  unitId?: string | null;
+  /** @nullable */
+  unitCode?: string | null;
+  contractDate: string;
+  totalPrice: string;
+  /** @nullable */
+  downPayment?: string | null;
+  status: string;
+}
+
+export interface PortalInstallment {
+  id: string;
+  /** @nullable */
+  contractId?: string | null;
+  /** @nullable */
+  contractCode?: string | null;
+  /** @nullable */
+  installmentNo?: number | null;
+  dueDate: string;
+  amount: string;
+  paidAmount?: string;
+  status: string;
+}
+
+export interface PortalCollection {
+  id: string;
+  /** @nullable */
+  code?: string | null;
+  amount: string;
+  paymentDate: string;
+  /** @nullable */
+  method?: string | null;
+  /** @nullable */
+  reference?: string | null;
+}
+
+export interface PortalDocument {
+  id: string;
+  docType: string;
+  /** @nullable */
+  docNumber?: string | null;
+  /** @nullable */
+  fileUrl?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+}
+
+export interface MaintenanceRequest {
+  id: string;
+  code: string;
+  /** @nullable */
+  unitId?: string | null;
+  /** @nullable */
+  contractId?: string | null;
+  category: string;
+  priority: string;
+  subject: string;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  attachmentUrl?: string | null;
+  /** @nullable */
+  resolvedAt?: string | null;
+  createdAt: string;
+  /** @nullable */
+  updatedAt?: string | null;
+}
+
+export type MaintenanceRequestInputPriority = typeof MaintenanceRequestInputPriority[keyof typeof MaintenanceRequestInputPriority];
+
+
+export const MaintenanceRequestInputPriority = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  urgent: 'urgent',
+} as const;
+
+export interface MaintenanceRequestInput {
+  unitId?: string;
+  contractId?: string;
+  category?: string;
+  priority?: MaintenanceRequestInputPriority;
+  /** @minLength 1 */
+  subject: string;
+  description?: string;
+  attachmentUrl?: string;
+}
+
+export interface Complaint {
+  id: string;
+  code: string;
+  category: string;
+  subject: string;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  attachmentUrl?: string | null;
+  /** @nullable */
+  resolvedAt?: string | null;
+  createdAt: string;
+  /** @nullable */
+  updatedAt?: string | null;
+}
+
+export interface ComplaintInput {
+  category?: string;
+  /** @minLength 1 */
+  subject: string;
+  description?: string;
+  attachmentUrl?: string;
+}
+
+export interface CustomerNotification {
+  id: string;
+  title: string;
+  /** @nullable */
+  body?: string | null;
+  category?: string;
+  /** @nullable */
+  link?: string | null;
+  isRead: boolean;
+  /** @nullable */
+  readAt?: string | null;
+  createdAt: string;
+}
+
+export interface SupportTicket {
+  id: string;
+  code: string;
+  subject: string;
+  category?: string;
+  priority: string;
+  status: string;
+  /** @nullable */
+  closedAt?: string | null;
+  createdAt: string;
+  /** @nullable */
+  updatedAt?: string | null;
+}
+
+export type SupportTicketInputPriority = typeof SupportTicketInputPriority[keyof typeof SupportTicketInputPriority];
+
+
+export const SupportTicketInputPriority = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  urgent: 'urgent',
+} as const;
+
+export interface SupportTicketInput {
+  /** @minLength 1 */
+  subject: string;
+  category?: string;
+  priority?: SupportTicketInputPriority;
+  /** @minLength 1 */
+  body: string;
+}
+
+export interface SupportTicketMessage {
+  id: string;
+  ticketId: string;
+  authorType: string;
+  /** @nullable */
+  authorName?: string | null;
+  body: string;
+  /** @nullable */
+  attachmentUrl?: string | null;
+  createdAt: string;
+}
+
+export interface SupportTicketMessageInput {
+  /** @minLength 1 */
+  body: string;
+  attachmentUrl?: string;
+}
+
+export interface SupportTicketDetail {
+  ticket: SupportTicket;
+  messages: SupportTicketMessage[];
+}
+
+export type DeviceTokenInputPlatform = typeof DeviceTokenInputPlatform[keyof typeof DeviceTokenInputPlatform];
+
+
+export const DeviceTokenInputPlatform = {
+  web: 'web',
+  ios: 'ios',
+  android: 'android',
+} as const;
+
+export interface DeviceTokenInput {
+  /** @minLength 1 */
+  token: string;
+  platform?: DeviceTokenInputPlatform;
+  deviceName?: string;
+}
+
+export interface PortalUploadInput {
+  /** @minLength 1 */
+  fileName: string;
+  /** @minLength 1 */
+  contentType: string;
+}
+
+export interface PortalUploadResult {
+  uploadUrl: string;
+  fileUrl: string;
+}
+
 export type UserStatus = typeof UserStatus[keyof typeof UserStatus];
 
 
@@ -1810,6 +2119,118 @@ export interface RealEstateDashboard {
   contracts: number;
   overdueInstallments: number;
   totalContractValue: string;
+}
+
+export interface BiGroupPoint {
+  key: string;
+  /** @nullable */
+  label?: string | null;
+  value: string;
+  count?: number;
+}
+
+export interface BiDualTrendPoint {
+  period: string;
+  primary: string;
+  secondary: string;
+}
+
+export interface ExecutiveDashboard {
+  totalSalesValue: string;
+  totalCollected: string;
+  totalOutstanding: string;
+  unitsSold: number;
+  unitsAvailable: number;
+  unitsReserved: number;
+  activeProjects: number;
+  activeContracts: number;
+  overdueInstallments: number;
+  cashOnHand: string;
+  bankBalance: string;
+  arOutstanding: string;
+  apOutstanding: string;
+  employeeCount: number;
+  salesTrend: BiTrendPoint[];
+  collectionTrend: BiTrendPoint[];
+  unitStatusBreakdown: BiGroupPoint[];
+}
+
+export interface SalesAnalytics {
+  totalContracts: number;
+  totalContractValue: string;
+  totalDownPayments: string;
+  avgContractValue: string;
+  reservationsCount: number;
+  reservationsValue: string;
+  leadsCount: number;
+  salesByMonth: BiTrendPoint[];
+  salesByProject: BiGroupPoint[];
+  salesByStatus: BiGroupPoint[];
+}
+
+export interface CollectionAnalytics {
+  totalDue: string;
+  totalPaid: string;
+  totalOutstanding: string;
+  overdueAmount: string;
+  overdueCount: number;
+  collectionRate: string;
+  collectionByMonth: BiDualTrendPoint[];
+  installmentsByStatus: BiGroupPoint[];
+  receiptsByMonth: BiTrendPoint[];
+}
+
+export interface ConstructionAnalytics {
+  contractorContracts: number;
+  totalContractValue: string;
+  avgProgress: string;
+  paymentCertificatesValue: string;
+  progressByProject: BiGroupPoint[];
+  certificatesByStatus: BiGroupPoint[];
+  contractsByStatus: BiGroupPoint[];
+}
+
+export interface ProcurementAnalytics {
+  purchaseOrders: number;
+  totalPoValue: string;
+  suppliersCount: number;
+  avgSupplierRating: string;
+  poByStatus: BiGroupPoint[];
+  poByMonth: BiTrendPoint[];
+  topSuppliers: BiGroupPoint[];
+}
+
+export interface InventoryAnalytics {
+  totalItems: number;
+  totalStockValue: string;
+  lowStockCount: number;
+  outOfStockCount: number;
+  valueByItem: BiGroupPoint[];
+  lowStockItems: BiGroupPoint[];
+}
+
+export interface HrAnalytics {
+  employeeCount: number;
+  activeEmployees: number;
+  totalPayroll: string;
+  avgSalary: string;
+  departmentsCount: number;
+  headcountByDepartment: BiGroupPoint[];
+  payrollByMonth: BiTrendPoint[];
+  attendanceBreakdown: BiGroupPoint[];
+}
+
+export interface FinancialAnalytics {
+  cashBalance: string;
+  bankBalance: string;
+  totalRevenue: string;
+  totalExpenses: string;
+  netIncome: string;
+  arOutstanding: string;
+  apOutstanding: string;
+  revenueVsExpense: BiDualTrendPoint[];
+  accountTypeBreakdown: BiGroupPoint[];
+  cashFlowTrend: BiDualTrendPoint[];
 }
 
 export interface Cashbox {
@@ -10354,6 +10775,70 @@ planId?: string;
 
 export type GetRealEstateDashboardParams = {
 companyId?: string;
+};
+
+export type GetExecutiveDashboardParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetSalesAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetCollectionAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetConstructionAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetProcurementAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetInventoryAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetHrAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
+};
+
+export type GetFinancialAnalyticsParams = {
+companyId?: string;
+from?: string;
+to?: string;
+projectId?: string;
+branchId?: string;
 };
 
 export type ListCashboxesParams = {

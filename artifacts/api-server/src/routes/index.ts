@@ -27,11 +27,17 @@ import procurementRouter from "./procurement";
 import inventoryRouter from "./inventory";
 import hrRouter from "./hr";
 import legalRouter from "./legal";
+import biRouter from "./bi";
+import portalRouter from "./portal";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(authRouter);
+// Portal routes manage their own auth per-route (public auth endpoints +
+// requireCustomerAuth). Mount BEFORE the ERP routers, each of which applies a
+// router-level requireAuth that would otherwise intercept /portal/* requests.
+router.use(portalRouter);
 router.use(usersRouter);
 router.use(rolesRouter);
 router.use(companiesRouter);
@@ -58,5 +64,6 @@ router.use(procurementRouter);
 router.use(inventoryRouter);
 router.use(hrRouter);
 router.use(legalRouter);
+router.use(biRouter);
 
 export default router;

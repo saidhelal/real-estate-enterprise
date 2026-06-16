@@ -249,6 +249,17 @@ const NAV_GROUPS = [
     { href: "/legal-case-links", icon: Link2, labelKey: "nav.legal_case_links" },
     { href: "/legal-reports", icon: BarChart3, labelKey: "nav.legal_reports" },
   ]},
+  { titleKey: "nav.group.business_intelligence", items: [
+    { href: "/executive-dashboard", icon: Gauge, labelKey: "nav.executive_dashboard" },
+    { href: "/sales-analytics", icon: TrendingUp, labelKey: "nav.sales_analytics" },
+    { href: "/collection-analytics", icon: LineChart, labelKey: "nav.collection_analytics" },
+    { href: "/construction-analytics", icon: BarChart3, labelKey: "nav.construction_analytics" },
+    { href: "/procurement-analytics", icon: ShoppingCart, labelKey: "nav.procurement_analytics" },
+    { href: "/inventory-analytics", icon: Package, labelKey: "nav.inventory_analytics" },
+    { href: "/hr-analytics", icon: Users, labelKey: "nav.hr_analytics" },
+    { href: "/financial-analytics", icon: Calculator, labelKey: "nav.financial_analytics" },
+    { href: "/reports-engine", icon: FileSpreadsheet, labelKey: "nav.reports_engine" },
+  ]},
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },
     { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles" },

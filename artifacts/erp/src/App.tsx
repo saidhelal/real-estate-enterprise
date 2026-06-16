@@ -90,6 +90,16 @@ import ProfitCentersPage from "@/pages/profit-centers";
 import YearEndClosingPage from "@/pages/year-end-closing";
 import FinancialReportsPage from "@/pages/financial-reports";
 
+import ExecutiveDashboardPage from "@/pages/executive-dashboard";
+import SalesAnalyticsPage from "@/pages/sales-analytics";
+import CollectionAnalyticsPage from "@/pages/collection-analytics";
+import ConstructionAnalyticsPage from "@/pages/construction-analytics";
+import ProcurementAnalyticsPage from "@/pages/procurement-analytics";
+import InventoryAnalyticsPage from "@/pages/inventory-analytics";
+import HrAnalyticsPage from "@/pages/hr-analytics";
+import FinancialAnalyticsPage from "@/pages/financial-analytics";
+import ReportsEnginePage from "@/pages/reports-engine";
+
 import EngineeringDashboardPage from "@/pages/engineering-dashboard";
 import EngineeringDisciplinesPage from "@/pages/engineering-disciplines";
 import ConsultantsPage from "@/pages/consultants";
@@ -426,6 +436,15 @@ function Router() {
             <Route path="/legal-notices" component={LegalNoticesPage} />
             <Route path="/legal-case-links" component={LegalCaseLinksPage} />
             <Route path="/legal-reports" component={LegalReportsPage} />
+            <Route path="/executive-dashboard" component={ExecutiveDashboardPage} />
+            <Route path="/sales-analytics" component={SalesAnalyticsPage} />
+            <Route path="/collection-analytics" component={CollectionAnalyticsPage} />
+            <Route path="/construction-analytics" component={ConstructionAnalyticsPage} />
+            <Route path="/procurement-analytics" component={ProcurementAnalyticsPage} />
+            <Route path="/inventory-analytics" component={InventoryAnalyticsPage} />
+            <Route path="/hr-analytics" component={HrAnalyticsPage} />
+            <Route path="/financial-analytics" component={FinancialAnalyticsPage} />
+            <Route path="/reports-engine" component={ReportsEnginePage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

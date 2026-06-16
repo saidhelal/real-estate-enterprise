@@ -166,6 +166,420 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /portal/auth/login:
+    post:
+      operationId: portalLogin
+      tags: [portal]
+      summary: Authenticate a customer portal user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalLoginInput"
+      responses:
+        "200":
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalAuthSession"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /portal/auth/forgot-password:
+    post:
+      operationId: portalForgotPassword
+      tags: [portal]
+      summary: Request a password-reset OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalForgotPasswordInput"
+      responses:
+        "200":
+          description: OTP issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalForgotPasswordResult"
+
+  /portal/auth/verify-otp:
+    post:
+      operationId: portalVerifyOtp
+      tags: [portal]
+      summary: Verify an OTP and set a new password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalVerifyOtpInput"
+      responses:
+        "200":
+          description: Password reset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "400":
+          description: Invalid or expired code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /portal/auth/refresh:
+    post:
+      operationId: portalRefresh
+      tags: [portal]
+      summary: Refresh portal access token
+      responses:
+        "200":
+          description: New access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalAccessToken"
+        "401":
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /portal/auth/logout:
+    post:
+      operationId: portalLogout
+      tags: [portal]
+      summary: End the current portal session
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /portal/me:
+    get:
+      operationId: getPortalMe
+      tags: [portal]
+      summary: Get the authenticated customer portal user
+      responses:
+        "200":
+          description: Current portal user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalCurrentUser"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /portal/dashboard:
+    get:
+      operationId: getPortalDashboard
+      tags: [portal]
+      summary: Customer portal dashboard summary
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalDashboard"
+
+  /portal/units:
+    get:
+      operationId: getPortalUnits
+      tags: [portal]
+      summary: Units owned/reserved by the customer
+      responses:
+        "200":
+          description: Units
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PortalUnit"
+
+  /portal/contracts:
+    get:
+      operationId: getPortalContracts
+      tags: [portal]
+      summary: Customer contracts
+      responses:
+        "200":
+          description: Contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PortalContract"
+
+  /portal/installments:
+    get:
+      operationId: getPortalInstallments
+      tags: [portal]
+      summary: Customer installment schedule
+      responses:
+        "200":
+          description: Installments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PortalInstallment"
+
+  /portal/collections:
+    get:
+      operationId: getPortalCollections
+      tags: [portal]
+      summary: Customer payment receipts/collections
+      responses:
+        "200":
+          description: Collections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PortalCollection"
+
+  /portal/documents:
+    get:
+      operationId: getPortalDocuments
+      tags: [portal]
+      summary: Customer documents
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PortalDocument"
+
+  /portal/maintenance-requests:
+    get:
+      operationId: listMaintenanceRequests
+      tags: [portal]
+      summary: List customer maintenance requests
+      responses:
+        "200":
+          description: Maintenance requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MaintenanceRequest"
+    post:
+      operationId: createMaintenanceRequest
+      tags: [portal]
+      summary: Create a maintenance request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaintenanceRequest"
+
+  /portal/complaints:
+    get:
+      operationId: listComplaints
+      tags: [portal]
+      summary: List customer complaints
+      responses:
+        "200":
+          description: Complaints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Complaint"
+    post:
+      operationId: createComplaint
+      tags: [portal]
+      summary: Create a complaint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComplaintInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Complaint"
+
+  /portal/notifications:
+    get:
+      operationId: getPortalNotifications
+      tags: [portal]
+      summary: Customer notifications
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerNotification"
+
+  /portal/notifications/{id}/read:
+    post:
+      operationId: markNotificationRead
+      tags: [portal]
+      summary: Mark a notification as read
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Marked read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /portal/support-tickets:
+    get:
+      operationId: listSupportTickets
+      tags: [portal]
+      summary: List customer support tickets
+      responses:
+        "200":
+          description: Support tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportTicket"
+    post:
+      operationId: createSupportTicket
+      tags: [portal]
+      summary: Open a support ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportTicketInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicket"
+
+  /portal/support-tickets/{id}:
+    get:
+      operationId: getSupportTicket
+      tags: [portal]
+      summary: Get a support ticket with its messages
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Support ticket
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicketDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /portal/support-tickets/{id}/messages:
+    post:
+      operationId: createSupportTicketMessage
+      tags: [portal]
+      summary: Post a message to a support ticket
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportTicketMessageInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicketMessage"
+
+  /portal/device-tokens:
+    post:
+      operationId: registerDeviceToken
+      tags: [portal]
+      summary: Register a push notification device token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceTokenInput"
+      responses:
+        "200":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /portal/uploads:
+    post:
+      operationId: uploadPortalFile
+      tags: [portal]
+      summary: Get a presigned URL for uploading a portal file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalUploadInput"
+      responses:
+        "200":
+          description: Upload target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalUploadResult"
+
   /users:
     get:
       operationId: listUsers
@@ -4043,6 +4457,158 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RealEstateDashboard"
+
+  /bi/executive-dashboard:
+    get:
+      operationId: getExecutiveDashboard
+      tags: [bi]
+      summary: Executive business-intelligence dashboard
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Executive KPIs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecutiveDashboard"
+
+  /bi/sales-analytics:
+    get:
+      operationId: getSalesAnalytics
+      tags: [bi]
+      summary: Sales analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Sales analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalesAnalytics"
+
+  /bi/collection-analytics:
+    get:
+      operationId: getCollectionAnalytics
+      tags: [bi]
+      summary: Collection analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Collection analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionAnalytics"
+
+  /bi/construction-analytics:
+    get:
+      operationId: getConstructionAnalytics
+      tags: [bi]
+      summary: Construction analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Construction analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionAnalytics"
+
+  /bi/procurement-analytics:
+    get:
+      operationId: getProcurementAnalytics
+      tags: [bi]
+      summary: Procurement analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Procurement analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcurementAnalytics"
+
+  /bi/inventory-analytics:
+    get:
+      operationId: getInventoryAnalytics
+      tags: [bi]
+      summary: Inventory analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Inventory analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryAnalytics"
+
+  /bi/hr-analytics:
+    get:
+      operationId: getHrAnalytics
+      tags: [bi]
+      summary: HR analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: HR analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HrAnalytics"
+
+  /bi/financial-analytics:
+    get:
+      operationId: getFinancialAnalytics
+      tags: [bi]
+      summary: Financial analytics
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Financial analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialAnalytics"
 
   /cashboxes:
     get:
@@ -16911,6 +17477,282 @@ components:
           type: array
           items: { type: string }
 
+    PortalLoginInput:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string, minLength: 1 }
+        password: { type: string, minLength: 1 }
+
+    PortalCurrentUser:
+      type: object
+      required: [id, username, customerId, customerName]
+      properties:
+        id: { type: string }
+        username: { type: string }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        customerId: { type: string }
+        customerName: { type: string }
+        customerNameAr: { type: ["string", "null"] }
+        companyId: { type: string }
+
+    PortalAuthSession:
+      type: object
+      required: [accessToken, refreshToken, user]
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        user: { $ref: "#/components/schemas/PortalCurrentUser" }
+
+    PortalAccessToken:
+      type: object
+      required: [accessToken]
+      properties:
+        accessToken: { type: string }
+
+    PortalForgotPasswordInput:
+      type: object
+      required: [identifier]
+      properties:
+        identifier: { type: string, minLength: 1 }
+
+    PortalForgotPasswordResult:
+      type: object
+      required: [success]
+      properties:
+        success: { type: boolean }
+        devCode: { type: ["string", "null"] }
+
+    PortalVerifyOtpInput:
+      type: object
+      required: [identifier, code, newPassword]
+      properties:
+        identifier: { type: string, minLength: 1 }
+        code: { type: string, minLength: 1 }
+        newPassword: { type: string, minLength: 8 }
+
+    PortalDashboard:
+      type: object
+      required:
+        [unitsCount, contractsCount, totalContractValue, totalPaid, totalOutstanding, overdueCount, overdueAmount, openRequests, unreadNotifications]
+      properties:
+        unitsCount: { type: integer }
+        contractsCount: { type: integer }
+        totalContractValue: { type: string }
+        totalPaid: { type: string }
+        totalOutstanding: { type: string }
+        overdueCount: { type: integer }
+        overdueAmount: { type: string }
+        openRequests: { type: integer }
+        unreadNotifications: { type: integer }
+        nextDueDate: { type: ["string", "null"] }
+        nextDueAmount: { type: ["string", "null"] }
+        paymentTrend:
+          type: array
+          items: { $ref: "#/components/schemas/BiTrendPoint" }
+
+    PortalUnit:
+      type: object
+      required: [id, code, status]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        projectName: { type: ["string", "null"] }
+        buildingName: { type: ["string", "null"] }
+        unitType: { type: ["string", "null"] }
+        area: { type: ["string", "null"] }
+        price: { type: ["string", "null"] }
+        status: { type: string }
+
+    PortalContract:
+      type: object
+      required: [id, code, contractDate, totalPrice, status]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        unitId: { type: ["string", "null"] }
+        unitCode: { type: ["string", "null"] }
+        contractDate: { type: string }
+        totalPrice: { type: string }
+        downPayment: { type: ["string", "null"] }
+        status: { type: string }
+
+    PortalInstallment:
+      type: object
+      required: [id, dueDate, amount, status]
+      properties:
+        id: { type: string }
+        contractId: { type: ["string", "null"] }
+        contractCode: { type: ["string", "null"] }
+        installmentNo: { type: ["integer", "null"] }
+        dueDate: { type: string }
+        amount: { type: string }
+        paidAmount: { type: string }
+        status: { type: string }
+
+    PortalCollection:
+      type: object
+      required: [id, amount, paymentDate]
+      properties:
+        id: { type: string }
+        code: { type: ["string", "null"] }
+        amount: { type: string }
+        paymentDate: { type: string }
+        method: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+
+    PortalDocument:
+      type: object
+      required: [id, docType]
+      properties:
+        id: { type: string }
+        docType: { type: string }
+        docNumber: { type: ["string", "null"] }
+        fileUrl: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+
+    MaintenanceRequest:
+      type: object
+      required: [id, code, subject, category, priority, status, createdAt]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        unitId: { type: ["string", "null"] }
+        contractId: { type: ["string", "null"] }
+        category: { type: string }
+        priority: { type: string }
+        subject: { type: string }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        attachmentUrl: { type: ["string", "null"] }
+        resolvedAt: { type: ["string", "null"] }
+        createdAt: { type: string }
+        updatedAt: { type: ["string", "null"] }
+
+    MaintenanceRequestInput:
+      type: object
+      required: [subject]
+      properties:
+        unitId: { type: string }
+        contractId: { type: string }
+        category: { type: string }
+        priority: { type: string, enum: [low, medium, high, urgent] }
+        subject: { type: string, minLength: 1 }
+        description: { type: string }
+        attachmentUrl: { type: string }
+
+    Complaint:
+      type: object
+      required: [id, code, subject, category, status, createdAt]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        category: { type: string }
+        subject: { type: string }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        attachmentUrl: { type: ["string", "null"] }
+        resolvedAt: { type: ["string", "null"] }
+        createdAt: { type: string }
+        updatedAt: { type: ["string", "null"] }
+
+    ComplaintInput:
+      type: object
+      required: [subject]
+      properties:
+        category: { type: string }
+        subject: { type: string, minLength: 1 }
+        description: { type: string }
+        attachmentUrl: { type: string }
+
+    CustomerNotification:
+      type: object
+      required: [id, title, isRead, createdAt]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        body: { type: ["string", "null"] }
+        category: { type: string }
+        link: { type: ["string", "null"] }
+        isRead: { type: boolean }
+        readAt: { type: ["string", "null"] }
+        createdAt: { type: string }
+
+    SupportTicket:
+      type: object
+      required: [id, code, subject, status, priority, createdAt]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        subject: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        closedAt: { type: ["string", "null"] }
+        createdAt: { type: string }
+        updatedAt: { type: ["string", "null"] }
+
+    SupportTicketInput:
+      type: object
+      required: [subject, body]
+      properties:
+        subject: { type: string, minLength: 1 }
+        category: { type: string }
+        priority: { type: string, enum: [low, medium, high, urgent] }
+        body: { type: string, minLength: 1 }
+
+    SupportTicketMessage:
+      type: object
+      required: [id, ticketId, authorType, body, createdAt]
+      properties:
+        id: { type: string }
+        ticketId: { type: string }
+        authorType: { type: string }
+        authorName: { type: ["string", "null"] }
+        body: { type: string }
+        attachmentUrl: { type: ["string", "null"] }
+        createdAt: { type: string }
+
+    SupportTicketMessageInput:
+      type: object
+      required: [body]
+      properties:
+        body: { type: string, minLength: 1 }
+        attachmentUrl: { type: string }
+
+    SupportTicketDetail:
+      type: object
+      required: [ticket, messages]
+      properties:
+        ticket: { $ref: "#/components/schemas/SupportTicket" }
+        messages:
+          type: array
+          items: { $ref: "#/components/schemas/SupportTicketMessage" }
+
+    DeviceTokenInput:
+      type: object
+      required: [token]
+      properties:
+        token: { type: string, minLength: 1 }
+        platform: { type: string, enum: [web, ios, android] }
+        deviceName: { type: string }
+
+    PortalUploadInput:
+      type: object
+      required: [fileName, contentType]
+      properties:
+        fileName: { type: string, minLength: 1 }
+        contentType: { type: string, minLength: 1 }
+
+    PortalUploadResult:
+      type: object
+      required: [uploadUrl, fileUrl]
+      properties:
+        uploadUrl: { type: string }
+        fileUrl: { type: string }
+
     User:
       type: object
       required: [id, username, fullName, email, status, isActive, createdAt]
@@ -18803,6 +19645,180 @@ components:
         contracts: { type: integer }
         overdueInstallments: { type: integer }
         totalContractValue: { type: string }
+
+    BiGroupPoint:
+      type: object
+      required: [key, value]
+      properties:
+        key: { type: string }
+        label: { type: ["string", "null"] }
+        value: { type: string }
+        count: { type: integer }
+
+    BiTrendPoint:
+      type: object
+      required: [period, value]
+      properties:
+        period: { type: string }
+        value: { type: string }
+        count: { type: integer }
+
+    BiDualTrendPoint:
+      type: object
+      required: [period, primary, secondary]
+      properties:
+        period: { type: string }
+        primary: { type: string }
+        secondary: { type: string }
+
+    ExecutiveDashboard:
+      type: object
+      required:
+        [
+          totalSalesValue, totalCollected, totalOutstanding, unitsSold, unitsAvailable,
+          unitsReserved, activeProjects, activeContracts, overdueInstallments, cashOnHand,
+          bankBalance, arOutstanding, apOutstanding, employeeCount, salesTrend,
+          collectionTrend, unitStatusBreakdown,
+        ]
+      properties:
+        totalSalesValue: { type: string }
+        totalCollected: { type: string }
+        totalOutstanding: { type: string }
+        unitsSold: { type: integer }
+        unitsAvailable: { type: integer }
+        unitsReserved: { type: integer }
+        activeProjects: { type: integer }
+        activeContracts: { type: integer }
+        overdueInstallments: { type: integer }
+        cashOnHand: { type: string }
+        bankBalance: { type: string }
+        arOutstanding: { type: string }
+        apOutstanding: { type: string }
+        employeeCount: { type: integer }
+        salesTrend: { type: array, items: { $ref: "#/components/schemas/BiTrendPoint" } }
+        collectionTrend: { type: array, items: { $ref: "#/components/schemas/BiTrendPoint" } }
+        unitStatusBreakdown: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+
+    SalesAnalytics:
+      type: object
+      required:
+        [
+          totalContracts, totalContractValue, totalDownPayments, avgContractValue,
+          reservationsCount, reservationsValue, leadsCount, salesByMonth, salesByProject,
+          salesByStatus,
+        ]
+      properties:
+        totalContracts: { type: integer }
+        totalContractValue: { type: string }
+        totalDownPayments: { type: string }
+        avgContractValue: { type: string }
+        reservationsCount: { type: integer }
+        reservationsValue: { type: string }
+        leadsCount: { type: integer }
+        salesByMonth: { type: array, items: { $ref: "#/components/schemas/BiTrendPoint" } }
+        salesByProject: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        salesByStatus: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+
+    CollectionAnalytics:
+      type: object
+      required:
+        [
+          totalDue, totalPaid, totalOutstanding, overdueAmount, overdueCount, collectionRate,
+          collectionByMonth, installmentsByStatus, receiptsByMonth,
+        ]
+      properties:
+        totalDue: { type: string }
+        totalPaid: { type: string }
+        totalOutstanding: { type: string }
+        overdueAmount: { type: string }
+        overdueCount: { type: integer }
+        collectionRate: { type: string }
+        collectionByMonth: { type: array, items: { $ref: "#/components/schemas/BiDualTrendPoint" } }
+        installmentsByStatus: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        receiptsByMonth: { type: array, items: { $ref: "#/components/schemas/BiTrendPoint" } }
+
+    ConstructionAnalytics:
+      type: object
+      required:
+        [
+          contractorContracts, totalContractValue, avgProgress, paymentCertificatesValue,
+          progressByProject, certificatesByStatus, contractsByStatus,
+        ]
+      properties:
+        contractorContracts: { type: integer }
+        totalContractValue: { type: string }
+        avgProgress: { type: string }
+        paymentCertificatesValue: { type: string }
+        progressByProject: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        certificatesByStatus: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        contractsByStatus: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+
+    ProcurementAnalytics:
+      type: object
+      required:
+        [
+          purchaseOrders, totalPoValue, suppliersCount, avgSupplierRating, poByStatus,
+          poByMonth, topSuppliers,
+        ]
+      properties:
+        purchaseOrders: { type: integer }
+        totalPoValue: { type: string }
+        suppliersCount: { type: integer }
+        avgSupplierRating: { type: string }
+        poByStatus: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        poByMonth: { type: array, items: { $ref: "#/components/schemas/BiTrendPoint" } }
+        topSuppliers: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+
+    InventoryAnalytics:
+      type: object
+      required:
+        [
+          totalItems, totalStockValue, lowStockCount, outOfStockCount, valueByItem,
+          lowStockItems,
+        ]
+      properties:
+        totalItems: { type: integer }
+        totalStockValue: { type: string }
+        lowStockCount: { type: integer }
+        outOfStockCount: { type: integer }
+        valueByItem: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        lowStockItems: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+
+    HrAnalytics:
+      type: object
+      required:
+        [
+          employeeCount, activeEmployees, totalPayroll, avgSalary, departmentsCount,
+          headcountByDepartment, payrollByMonth, attendanceBreakdown,
+        ]
+      properties:
+        employeeCount: { type: integer }
+        activeEmployees: { type: integer }
+        totalPayroll: { type: string }
+        avgSalary: { type: string }
+        departmentsCount: { type: integer }
+        headcountByDepartment: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        payrollByMonth: { type: array, items: { $ref: "#/components/schemas/BiTrendPoint" } }
+        attendanceBreakdown: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+
+    FinancialAnalytics:
+      type: object
+      required:
+        [
+          cashBalance, bankBalance, totalRevenue, totalExpenses, netIncome, arOutstanding,
+          apOutstanding, revenueVsExpense, accountTypeBreakdown, cashFlowTrend,
+        ]
+      properties:
+        cashBalance: { type: string }
+        bankBalance: { type: string }
+        totalRevenue: { type: string }
+        totalExpenses: { type: string }
+        netIncome: { type: string }
+        arOutstanding: { type: string }
+        apOutstanding: { type: string }
+        revenueVsExpense: { type: array, items: { $ref: "#/components/schemas/BiDualTrendPoint" } }
+        accountTypeBreakdown: { type: array, items: { $ref: "#/components/schemas/BiGroupPoint" } }
+        cashFlowTrend: { type: array, items: { $ref: "#/components/schemas/BiDualTrendPoint" } }
 
     Cashbox:
       type: object

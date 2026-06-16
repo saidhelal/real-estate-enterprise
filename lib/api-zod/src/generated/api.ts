@@ -90,6 +90,412 @@ export const ChangePasswordResponse = zod.object({
 
 
 /**
+ * @summary Authenticate a customer portal user
+ */
+
+
+
+
+export const PortalLoginBody = zod.object({
+  "username": zod.string().min(1),
+  "password": zod.string().min(1)
+})
+
+export const PortalLoginResponse = zod.object({
+  "accessToken": zod.string(),
+  "refreshToken": zod.string(),
+  "user": zod.object({
+  "id": zod.string(),
+  "username": zod.string(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "customerId": zod.string(),
+  "customerName": zod.string(),
+  "customerNameAr": zod.string().nullish(),
+  "companyId": zod.string().optional()
+})
+})
+
+
+/**
+ * @summary Request a password-reset OTP
+ */
+
+
+
+export const PortalForgotPasswordBody = zod.object({
+  "identifier": zod.string().min(1)
+})
+
+export const PortalForgotPasswordResponse = zod.object({
+  "success": zod.boolean(),
+  "devCode": zod.string().nullish()
+})
+
+
+/**
+ * @summary Verify an OTP and set a new password
+ */
+
+
+export const portalVerifyOtpBodyNewPasswordMin = 8;
+
+
+
+export const PortalVerifyOtpBody = zod.object({
+  "identifier": zod.string().min(1),
+  "code": zod.string().min(1),
+  "newPassword": zod.string().min(portalVerifyOtpBodyNewPasswordMin)
+})
+
+export const PortalVerifyOtpResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Refresh portal access token
+ */
+export const PortalRefreshResponse = zod.object({
+  "accessToken": zod.string()
+})
+
+
+/**
+ * @summary End the current portal session
+ */
+export const PortalLogoutResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Get the authenticated customer portal user
+ */
+export const GetPortalMeResponse = zod.object({
+  "id": zod.string(),
+  "username": zod.string(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "customerId": zod.string(),
+  "customerName": zod.string(),
+  "customerNameAr": zod.string().nullish(),
+  "companyId": zod.string().optional()
+})
+
+
+/**
+ * @summary Customer portal dashboard summary
+ */
+export const GetPortalDashboardResponse = zod.object({
+  "unitsCount": zod.number(),
+  "contractsCount": zod.number(),
+  "totalContractValue": zod.string(),
+  "totalPaid": zod.string(),
+  "totalOutstanding": zod.string(),
+  "overdueCount": zod.number(),
+  "overdueAmount": zod.string(),
+  "openRequests": zod.number(),
+  "unreadNotifications": zod.number(),
+  "nextDueDate": zod.string().nullish(),
+  "nextDueAmount": zod.string().nullish(),
+  "paymentTrend": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})).optional()
+})
+
+
+/**
+ * @summary Units owned/reserved by the customer
+ */
+export const GetPortalUnitsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "projectName": zod.string().nullish(),
+  "buildingName": zod.string().nullish(),
+  "unitType": zod.string().nullish(),
+  "area": zod.string().nullish(),
+  "price": zod.string().nullish(),
+  "status": zod.string()
+})
+export const GetPortalUnitsResponse = zod.array(GetPortalUnitsResponseItem)
+
+
+/**
+ * @summary Customer contracts
+ */
+export const GetPortalContractsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string().nullish(),
+  "unitCode": zod.string().nullish(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string()
+})
+export const GetPortalContractsResponse = zod.array(GetPortalContractsResponseItem)
+
+
+/**
+ * @summary Customer installment schedule
+ */
+export const GetPortalInstallmentsResponseItem = zod.object({
+  "id": zod.string(),
+  "contractId": zod.string().nullish(),
+  "contractCode": zod.string().nullish(),
+  "installmentNo": zod.number().nullish(),
+  "dueDate": zod.string(),
+  "amount": zod.string(),
+  "paidAmount": zod.string().optional(),
+  "status": zod.string()
+})
+export const GetPortalInstallmentsResponse = zod.array(GetPortalInstallmentsResponseItem)
+
+
+/**
+ * @summary Customer payment receipts/collections
+ */
+export const GetPortalCollectionsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string().nullish(),
+  "amount": zod.string(),
+  "paymentDate": zod.string(),
+  "method": zod.string().nullish(),
+  "reference": zod.string().nullish()
+})
+export const GetPortalCollectionsResponse = zod.array(GetPortalCollectionsResponseItem)
+
+
+/**
+ * @summary Customer documents
+ */
+export const GetPortalDocumentsResponseItem = zod.object({
+  "id": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileUrl": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish()
+})
+export const GetPortalDocumentsResponse = zod.array(GetPortalDocumentsResponseItem)
+
+
+/**
+ * @summary List customer maintenance requests
+ */
+export const ListMaintenanceRequestsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+export const ListMaintenanceRequestsResponse = zod.array(ListMaintenanceRequestsResponseItem)
+
+
+/**
+ * @summary Create a maintenance request
+ */
+
+
+
+export const CreateMaintenanceRequestBody = zod.object({
+  "unitId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "category": zod.string().optional(),
+  "priority": zod.enum(['low', 'medium', 'high', 'urgent']).optional(),
+  "subject": zod.string().min(1),
+  "description": zod.string().optional(),
+  "attachmentUrl": zod.string().optional()
+})
+
+
+/**
+ * @summary List customer complaints
+ */
+export const ListComplaintsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "category": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+export const ListComplaintsResponse = zod.array(ListComplaintsResponseItem)
+
+
+/**
+ * @summary Create a complaint
+ */
+
+
+
+export const CreateComplaintBody = zod.object({
+  "category": zod.string().optional(),
+  "subject": zod.string().min(1),
+  "description": zod.string().optional(),
+  "attachmentUrl": zod.string().optional()
+})
+
+
+/**
+ * @summary Customer notifications
+ */
+export const GetPortalNotificationsResponseItem = zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "body": zod.string().nullish(),
+  "category": zod.string().optional(),
+  "link": zod.string().nullish(),
+  "isRead": zod.boolean(),
+  "readAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const GetPortalNotificationsResponse = zod.array(GetPortalNotificationsResponseItem)
+
+
+/**
+ * @summary Mark a notification as read
+ */
+export const MarkNotificationReadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const MarkNotificationReadResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customer support tickets
+ */
+export const ListSupportTicketsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "subject": zod.string(),
+  "category": zod.string().optional(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "closedAt": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+export const ListSupportTicketsResponse = zod.array(ListSupportTicketsResponseItem)
+
+
+/**
+ * @summary Open a support ticket
+ */
+
+
+
+
+export const CreateSupportTicketBody = zod.object({
+  "subject": zod.string().min(1),
+  "category": zod.string().optional(),
+  "priority": zod.enum(['low', 'medium', 'high', 'urgent']).optional(),
+  "body": zod.string().min(1)
+})
+
+
+/**
+ * @summary Get a support ticket with its messages
+ */
+export const GetSupportTicketParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSupportTicketResponse = zod.object({
+  "ticket": zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "subject": zod.string(),
+  "category": zod.string().optional(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "closedAt": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+}),
+  "messages": zod.array(zod.object({
+  "id": zod.string(),
+  "ticketId": zod.string(),
+  "authorType": zod.string(),
+  "authorName": zod.string().nullish(),
+  "body": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Post a message to a support ticket
+ */
+export const CreateSupportTicketMessageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const CreateSupportTicketMessageBody = zod.object({
+  "body": zod.string().min(1),
+  "attachmentUrl": zod.string().optional()
+})
+
+
+/**
+ * @summary Register a push notification device token
+ */
+
+
+
+export const RegisterDeviceTokenBody = zod.object({
+  "token": zod.string().min(1),
+  "platform": zod.enum(['web', 'ios', 'android']).optional(),
+  "deviceName": zod.string().optional()
+})
+
+export const RegisterDeviceTokenResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Get a presigned URL for uploading a portal file
+ */
+
+
+
+
+export const UploadPortalFileBody = zod.object({
+  "fileName": zod.string().min(1),
+  "contentType": zod.string().min(1)
+})
+
+export const UploadPortalFileResponse = zod.object({
+  "uploadUrl": zod.string(),
+  "fileUrl": zod.string()
+})
+
+
+/**
  * @summary List users
  */
 export const ListUsersQueryParams = zod.object({
@@ -4775,6 +5181,306 @@ export const GetRealEstateDashboardResponse = zod.object({
   "contracts": zod.number(),
   "overdueInstallments": zod.number(),
   "totalContractValue": zod.string()
+})
+
+
+/**
+ * @summary Executive business-intelligence dashboard
+ */
+export const GetExecutiveDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetExecutiveDashboardResponse = zod.object({
+  "totalSalesValue": zod.string(),
+  "totalCollected": zod.string(),
+  "totalOutstanding": zod.string(),
+  "unitsSold": zod.number(),
+  "unitsAvailable": zod.number(),
+  "unitsReserved": zod.number(),
+  "activeProjects": zod.number(),
+  "activeContracts": zod.number(),
+  "overdueInstallments": zod.number(),
+  "cashOnHand": zod.string(),
+  "bankBalance": zod.string(),
+  "arOutstanding": zod.string(),
+  "apOutstanding": zod.string(),
+  "employeeCount": zod.number(),
+  "salesTrend": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "collectionTrend": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "unitStatusBreakdown": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Sales analytics
+ */
+export const GetSalesAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetSalesAnalyticsResponse = zod.object({
+  "totalContracts": zod.number(),
+  "totalContractValue": zod.string(),
+  "totalDownPayments": zod.string(),
+  "avgContractValue": zod.string(),
+  "reservationsCount": zod.number(),
+  "reservationsValue": zod.string(),
+  "leadsCount": zod.number(),
+  "salesByMonth": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "salesByProject": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "salesByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Collection analytics
+ */
+export const GetCollectionAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetCollectionAnalyticsResponse = zod.object({
+  "totalDue": zod.string(),
+  "totalPaid": zod.string(),
+  "totalOutstanding": zod.string(),
+  "overdueAmount": zod.string(),
+  "overdueCount": zod.number(),
+  "collectionRate": zod.string(),
+  "collectionByMonth": zod.array(zod.object({
+  "period": zod.string(),
+  "primary": zod.string(),
+  "secondary": zod.string()
+})),
+  "installmentsByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "receiptsByMonth": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Construction analytics
+ */
+export const GetConstructionAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetConstructionAnalyticsResponse = zod.object({
+  "contractorContracts": zod.number(),
+  "totalContractValue": zod.string(),
+  "avgProgress": zod.string(),
+  "paymentCertificatesValue": zod.string(),
+  "progressByProject": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "certificatesByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "contractsByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Procurement analytics
+ */
+export const GetProcurementAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetProcurementAnalyticsResponse = zod.object({
+  "purchaseOrders": zod.number(),
+  "totalPoValue": zod.string(),
+  "suppliersCount": zod.number(),
+  "avgSupplierRating": zod.string(),
+  "poByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "poByMonth": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "topSuppliers": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Inventory analytics
+ */
+export const GetInventoryAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetInventoryAnalyticsResponse = zod.object({
+  "totalItems": zod.number(),
+  "totalStockValue": zod.string(),
+  "lowStockCount": zod.number(),
+  "outOfStockCount": zod.number(),
+  "valueByItem": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "lowStockItems": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary HR analytics
+ */
+export const GetHrAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetHrAnalyticsResponse = zod.object({
+  "employeeCount": zod.number(),
+  "activeEmployees": zod.number(),
+  "totalPayroll": zod.string(),
+  "avgSalary": zod.string(),
+  "departmentsCount": zod.number(),
+  "headcountByDepartment": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "payrollByMonth": zod.array(zod.object({
+  "period": zod.string(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "attendanceBreakdown": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Financial analytics
+ */
+export const GetFinancialAnalyticsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const GetFinancialAnalyticsResponse = zod.object({
+  "cashBalance": zod.string(),
+  "bankBalance": zod.string(),
+  "totalRevenue": zod.string(),
+  "totalExpenses": zod.string(),
+  "netIncome": zod.string(),
+  "arOutstanding": zod.string(),
+  "apOutstanding": zod.string(),
+  "revenueVsExpense": zod.array(zod.object({
+  "period": zod.string(),
+  "primary": zod.string(),
+  "secondary": zod.string()
+})),
+  "accountTypeBreakdown": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "value": zod.string(),
+  "count": zod.number().optional()
+})),
+  "cashFlowTrend": zod.array(zod.object({
+  "period": zod.string(),
+  "primary": zod.string(),
+  "secondary": zod.string()
+}))
 })
 
 
