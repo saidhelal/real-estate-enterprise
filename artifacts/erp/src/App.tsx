@@ -173,6 +173,26 @@ import StockAdjustmentItemsPage from "@/pages/stock-adjustment-items";
 import StockCountsPage from "@/pages/stock-counts";
 import StockCountItemsPage from "@/pages/stock-count-items";
 import InventoryLedgersPage from "@/pages/inventory-ledger";
+import HrDashboardPage from "@/pages/hr-dashboard";
+import HrReportsPage from "@/pages/hr-reports";
+import DepartmentsPage from "@/pages/departments";
+import SectionsPage from "@/pages/sections";
+import JobTitlesPage from "@/pages/job-titles";
+import EmployeesPage from "@/pages/employees";
+import EmployeeDocumentsPage from "@/pages/employee-documents";
+import ShiftsPage from "@/pages/shifts";
+import AttendancePage from "@/pages/attendance";
+import LeaveTypesPage from "@/pages/leave-types";
+import LeaveBalancesPage from "@/pages/leave-balances";
+import LeaveRequestsPage from "@/pages/leave-requests";
+import SalaryComponentsPage from "@/pages/salary-components";
+import PayrollPeriodsPage from "@/pages/payroll-periods";
+import PayrollRunsPage from "@/pages/payroll-runs";
+import PayslipsPage from "@/pages/payslips";
+import EmployeeLoansPage from "@/pages/employee-loans";
+import EmployeeAdvancesPage from "@/pages/employee-advances";
+import KpiTemplatesPage from "@/pages/kpi-templates";
+import EmployeeEvaluationsPage from "@/pages/employee-evaluations";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -354,6 +374,26 @@ function Router() {
             <Route path="/stock-counts" component={StockCountsPage} />
             <Route path="/stock-count-items" component={StockCountItemsPage} />
             <Route path="/inventory-ledger" component={InventoryLedgersPage} />
+            <Route path="/hr-dashboard" component={HrDashboardPage} />
+            <Route path="/departments" component={DepartmentsPage} />
+            <Route path="/sections" component={SectionsPage} />
+            <Route path="/job-titles" component={JobTitlesPage} />
+            <Route path="/employees" component={EmployeesPage} />
+            <Route path="/employee-documents" component={EmployeeDocumentsPage} />
+            <Route path="/shifts" component={ShiftsPage} />
+            <Route path="/attendance" component={AttendancePage} />
+            <Route path="/leave-types" component={LeaveTypesPage} />
+            <Route path="/leave-balances" component={LeaveBalancesPage} />
+            <Route path="/leave-requests" component={LeaveRequestsPage} />
+            <Route path="/salary-components" component={SalaryComponentsPage} />
+            <Route path="/payroll-periods" component={PayrollPeriodsPage} />
+            <Route path="/payroll-runs" component={PayrollRunsPage} />
+            <Route path="/payslips" component={PayslipsPage} />
+            <Route path="/employee-loans" component={EmployeeLoansPage} />
+            <Route path="/employee-advances" component={EmployeeAdvancesPage} />
+            <Route path="/kpi-templates" component={KpiTemplatesPage} />
+            <Route path="/employee-evaluations" component={EmployeeEvaluationsPage} />
+            <Route path="/hr-reports" component={HrReportsPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

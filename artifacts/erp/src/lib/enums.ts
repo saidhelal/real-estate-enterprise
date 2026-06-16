@@ -184,6 +184,47 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   transfer_out: { en: "Transfer Out", ar: "تحويل صادر" },
   adjustment: { en: "Adjustment", ar: "تسوية" },
   count: { en: "Count", ar: "جرد" },
+  // HR: employment types
+  full_time: { en: "Full Time", ar: "دوام كامل" },
+  part_time: { en: "Part Time", ar: "دوام جزئي" },
+  contract: { en: "Contract", ar: "عقد" },
+  temporary: { en: "Temporary", ar: "مؤقت" },
+  intern: { en: "Intern", ar: "متدرب" },
+  // HR: gender / marital status
+  male: { en: "Male", ar: "ذكر" },
+  female: { en: "Female", ar: "أنثى" },
+  single: { en: "Single", ar: "أعزب" },
+  married: { en: "Married", ar: "متزوج" },
+  divorced: { en: "Divorced", ar: "مطلّق" },
+  widowed: { en: "Widowed", ar: "أرمل" },
+  // HR: employee / leave statuses
+  on_leave: { en: "On Leave", ar: "في إجازة" },
+  resigned: { en: "Resigned", ar: "مستقيل" },
+  // HR: attendance statuses
+  present: { en: "Present", ar: "حاضر" },
+  absent: { en: "Absent", ar: "غائب" },
+  late: { en: "Late", ar: "متأخر" },
+  holiday: { en: "Holiday", ar: "عطلة" },
+  weekend: { en: "Weekend", ar: "نهاية الأسبوع" },
+  // HR: salary component / payroll
+  earning: { en: "Earning", ar: "استحقاق" },
+  processing: { en: "Processing", ar: "قيد المعالجة" },
+  // HR: loan types / status
+  personal: { en: "Personal", ar: "شخصي" },
+  housing: { en: "Housing", ar: "سكن" },
+  car: { en: "Car", ar: "سيارة" },
+  emergency: { en: "Emergency", ar: "طارئ" },
+  disbursed: { en: "Disbursed", ar: "مصروف" },
+  // HR: evaluation ratings
+  excellent: { en: "Excellent", ar: "ممتاز" },
+  good: { en: "Good", ar: "جيد" },
+  poor: { en: "Poor", ar: "ضعيف" },
+  // HR: document types
+  id_card: { en: "ID Card", ar: "بطاقة هوية" },
+  passport: { en: "Passport", ar: "جواز سفر" },
+  visa: { en: "Visa", ar: "تأشيرة" },
+  certificate: { en: "Certificate", ar: "شهادة" },
+  work_permit: { en: "Work Permit", ar: "تصريح عمل" },
 };
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {

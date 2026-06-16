@@ -33,3 +33,11 @@ these codes are registered alongside the standard view/create/update/delete set.
 **Why:** gating a financially irreversible action behind a broad `update` lets
 any role that can merely edit a draft also post or reverse it. The super-admin
 `"*"` path masks this — only a non-`*` role test exposes it.
+
+**Registering a dedicated code is not enough — the handler must reference it.**
+A common mistake: seed `extraActions: ["submit","approve","reject"]` registers the
+codes, but the route still guards with a broader sibling (e.g. submit checked
+`leaveRequests.update`, reject checked `leaveRequests.approve`). The dedicated
+permission is then dead — silently bypassed for anyone holding the broader one.
+When adding a lifecycle route, confirm its `requirePermission(...)` string equals
+the `${module}.${action}` you registered, not a near neighbor.

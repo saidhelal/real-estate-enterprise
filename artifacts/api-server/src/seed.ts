@@ -40,6 +40,15 @@ import {
   fiscalPeriodsTable,
   accountMappingsTable,
   taxCodesTable,
+  departmentsTable,
+  sectionsTable,
+  jobTitlesTable,
+  employeesTable,
+  shiftsTable,
+  leaveTypesTable,
+  leaveBalancesTable,
+  salaryComponentsTable,
+  payrollPeriodsTable,
 } from "@workspace/db";
 import { hashPassword } from "./lib/auth";
 
@@ -208,6 +217,35 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "stockCountItems", label: "Stock Count Items" },
   // Inventory — Ledger
   { module: "inventoryLedger", label: "Inventory Ledger" },
+  // Human Resources — Organization
+  { module: "departments", label: "Departments" },
+  { module: "sections", label: "Sections" },
+  { module: "jobTitles", label: "Job Titles" },
+  // Human Resources — Employees
+  { module: "employees", label: "Employees" },
+  { module: "employeeDocuments", label: "Employee Documents" },
+  { module: "employeeEmergencyContacts", label: "Employee Emergency Contacts" },
+  // Human Resources — Attendance
+  { module: "shifts", label: "Shifts" },
+  { module: "attendanceRecords", label: "Attendance Records" },
+  // Human Resources — Leave
+  { module: "leaveTypes", label: "Leave Types" },
+  { module: "leaveBalances", label: "Leave Balances" },
+  { module: "leaveRequests", label: "Leave Requests", extraActions: ["submit", "approve", "reject"] },
+  // Human Resources — Payroll
+  { module: "salaryComponents", label: "Salary Components" },
+  { module: "payrollPeriods", label: "Payroll Periods" },
+  { module: "payrollRuns", label: "Payroll Runs", extraActions: ["approve", "post", "reverse"] },
+  { module: "payslips", label: "Payslips" },
+  { module: "payslipLines", label: "Payslip Lines" },
+  // Human Resources — Loans & Advances
+  { module: "employeeLoans", label: "Employee Loans", extraActions: ["approve", "disburse"] },
+  { module: "loanInstallments", label: "Loan Installments" },
+  { module: "employeeAdvances", label: "Employee Advances", extraActions: ["approve", "pay"] },
+  // Human Resources — Performance
+  { module: "kpiTemplates", label: "KPI Templates" },
+  { module: "employeeEvaluations", label: "Employee Evaluations" },
+  { module: "employeeEvaluationLines", label: "Employee Evaluation Lines" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 
@@ -364,6 +402,11 @@ async function seedNumberSequences(): Promise<void> {
       { documentType: "Supplier Invoice", prefix: "SINV", padding: 5, resetYearly: true },
       { documentType: "Contract", prefix: "CON", padding: 4, resetYearly: false },
       { documentType: "Journal Entry", prefix: "JE", padding: 6, resetYearly: true },
+      { documentType: "Employee", prefix: "EMP", padding: 5, resetYearly: false },
+      { documentType: "Payroll Run", prefix: "PR", padding: 5, resetYearly: true },
+      { documentType: "Leave Request", prefix: "LV", padding: 5, resetYearly: true },
+      { documentType: "Employee Loan", prefix: "LOAN", padding: 5, resetYearly: false },
+      { documentType: "Employee Advance", prefix: "ADV", padding: 5, resetYearly: false },
     ])
     .onConflictDoNothing();
   console.log("Seeded document number sequences");
@@ -707,6 +750,8 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["1040", "Inventory", "المخزون", "asset", "debit", "11", true],
   ["1050", "Cheques Under Collection", "شيكات تحت التحصيل", "asset", "debit", "11", true],
   ["1060", "Input VAT Receivable", "ضريبة القيمة المضافة على المشتريات", "asset", "debit", "11", true],
+  ["1070", "Employee Loans Receivable", "قروض الموظفين", "asset", "debit", "11", true],
+  ["1080", "Employee Advances", "سلف الموظفين", "asset", "debit", "11", true],
   ["12", "Non-Current Assets", "الأصول غير المتداولة", "asset", "debit", "1", false],
   ["1210", "Property & Equipment", "الممتلكات والمعدات", "asset", "debit", "12", true],
   ["2", "Liabilities", "الخصوم", "liability", "credit", null, false],
@@ -715,6 +760,8 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["2020", "Customer Advances", "دفعات العملاء المقدمة", "liability", "credit", "21", true],
   ["2030", "Cheques Payable", "شيكات مستحقة الدفع", "liability", "credit", "21", true],
   ["2040", "Output VAT Payable", "ضريبة القيمة المضافة على المبيعات", "liability", "credit", "21", true],
+  ["2050", "Salaries Payable", "رواتب مستحقة الدفع", "liability", "credit", "21", true],
+  ["2060", "Employee Deductions Payable", "استقطاعات الموظفين", "liability", "credit", "21", true],
   ["22", "Non-Current Liabilities", "الخصوم غير المتداولة", "liability", "credit", "2", false],
   ["2210", "Loans Payable", "القروض المستحقة", "liability", "credit", "22", true],
   ["3", "Equity", "حقوق الملكية", "equity", "credit", null, false],
@@ -759,6 +806,10 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["inventory.goods_receipt", "1040", "2010", "Goods received into inventory"],
   ["inventory.goods_issue", "5010", "1040", "Goods issued from inventory"],
   ["inventory.stock_adjustment", "5030", "1040", "Stock adjustment"],
+  ["payroll.salaries", "5020", "2050", "Payroll: salary expense vs salaries payable"],
+  ["payroll.deductions", "5020", "2060", "Payroll: employee deductions payable"],
+  ["loan.disbursement", "1070", "1020", "Employee loan disbursed from bank"],
+  ["advance.payment", "1080", "1010", "Employee advance paid in cash"],
 ];
 
 const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -884,6 +935,140 @@ async function seedAccounting(): Promise<void> {
   );
 }
 
+async function seedHr(): Promise<void> {
+  const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
+  if (!company) {
+    console.log("No sample company found, skipping HR seed");
+    return;
+  }
+  const companyId = company.id;
+  const [branch] = await db.select().from(branchesTable).where(eq(branchesTable.companyId, companyId));
+  const branchId = branch?.id ?? null;
+
+  const existingDepts = await db.select().from(departmentsTable).where(eq(departmentsTable.companyId, companyId));
+  if (existingDepts.length) {
+    console.log("HR demo data already present, skipping");
+    return;
+  }
+
+  const deptDefs: Array<{ code: string; name: string; nameAr: string }> = [
+    { code: "HR", name: "Human Resources", nameAr: "الموارد البشرية" },
+    { code: "FIN", name: "Finance", nameAr: "المالية" },
+    { code: "OPS", name: "Operations", nameAr: "العمليات" },
+  ];
+  const deptIds = new Map<string, string>();
+  for (const d of deptDefs) {
+    const [row] = await db.insert(departmentsTable).values({ companyId, ...d, status: "active" }).returning();
+    deptIds.set(d.code, row.id);
+  }
+
+  const [hrSection] = await db
+    .insert(sectionsTable)
+    .values({ companyId, code: "HR-REC", name: "Recruitment", nameAr: "التوظيف", departmentId: deptIds.get("HR"), status: "active" })
+    .returning();
+
+  const jobDefs: Array<{ code: string; name: string; nameAr: string; dept: string; grade: string }> = [
+    { code: "MGR", name: "Manager", nameAr: "مدير", dept: "HR", grade: "A" },
+    { code: "ACC", name: "Accountant", nameAr: "محاسب", dept: "FIN", grade: "B" },
+    { code: "ENG", name: "Engineer", nameAr: "مهندس", dept: "OPS", grade: "B" },
+  ];
+  const jobIds = new Map<string, string>();
+  for (const j of jobDefs) {
+    const [row] = await db
+      .insert(jobTitlesTable)
+      .values({ companyId, code: j.code, name: j.name, nameAr: j.nameAr, departmentId: deptIds.get(j.dept), grade: j.grade, status: "active" })
+      .returning();
+    jobIds.set(j.code, row.id);
+  }
+
+  const empDefs: Array<{ code: string; firstName: string; lastName: string; firstNameAr: string; lastNameAr: string; dept: string; job: string; salary: string; hireDate: string }> = [
+    { code: "EMP00001", firstName: "Ahmed", lastName: "Ali", firstNameAr: "أحمد", lastNameAr: "علي", dept: "HR", job: "MGR", salary: "15000", hireDate: "2022-01-15" },
+    { code: "EMP00002", firstName: "Sara", lastName: "Hassan", firstNameAr: "سارة", lastNameAr: "حسن", dept: "FIN", job: "ACC", salary: "9000", hireDate: "2023-03-01" },
+    { code: "EMP00003", firstName: "Omar", lastName: "Khalid", firstNameAr: "عمر", lastNameAr: "خالد", dept: "OPS", job: "ENG", salary: "11000", hireDate: "2021-06-20" },
+  ];
+  const empIds: string[] = [];
+  for (const e of empDefs) {
+    const [row] = await db
+      .insert(employeesTable)
+      .values({
+        companyId,
+        branchId,
+        code: e.code,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        firstNameAr: e.firstNameAr,
+        lastNameAr: e.lastNameAr,
+        departmentId: deptIds.get(e.dept),
+        sectionId: e.dept === "HR" ? hrSection.id : null,
+        jobTitleId: jobIds.get(e.job),
+        employmentType: "full_time",
+        hireDate: e.hireDate,
+        basicSalary: e.salary,
+        status: "active",
+      })
+      .returning();
+    empIds.push(row.id);
+  }
+
+  await db.insert(shiftsTable).values({
+    companyId, code: "DAY", name: "Day Shift", nameAr: "الوردية الصباحية",
+    startTime: "08:00", endTime: "17:00", breakMinutes: 60, workHours: "8", status: "active",
+  });
+
+  const leaveTypeDefs: Array<{ code: string; name: string; nameAr: string; days: string; paid: boolean }> = [
+    { code: "ANNUAL", name: "Annual Leave", nameAr: "إجازة سنوية", days: "21", paid: true },
+    { code: "SICK", name: "Sick Leave", nameAr: "إجازة مرضية", days: "14", paid: true },
+  ];
+  const leaveTypeIds = new Map<string, string>();
+  for (const lt of leaveTypeDefs) {
+    const [row] = await db
+      .insert(leaveTypesTable)
+      .values({ companyId, code: lt.code, name: lt.name, nameAr: lt.nameAr, daysPerYear: lt.days, isPaid: lt.paid, carryForward: lt.code === "ANNUAL", status: "active" })
+      .returning();
+    leaveTypeIds.set(lt.code, row.id);
+  }
+
+  const year = new Date().getUTCFullYear();
+  for (const empId of empIds) {
+    for (const [code, ltId] of leaveTypeIds) {
+      const entitled = code === "ANNUAL" ? "21" : "14";
+      await db.insert(leaveBalancesTable).values({
+        companyId, employeeId: empId, leaveTypeId: ltId, year, entitled, used: "0", remaining: entitled,
+      });
+    }
+  }
+
+  const componentDefs: Array<{ code: string; name: string; nameAr: string; type: string; amount: string }> = [
+    { code: "BASIC", name: "Basic Salary", nameAr: "الراتب الأساسي", type: "earning", amount: "0" },
+    { code: "HOUSING", name: "Housing Allowance", nameAr: "بدل سكن", type: "earning", amount: "2000" },
+    { code: "TRANSPORT", name: "Transport Allowance", nameAr: "بدل مواصلات", type: "earning", amount: "800" },
+    { code: "GOSI", name: "Social Insurance", nameAr: "التأمينات الاجتماعية", type: "deduction", amount: "500" },
+  ];
+  for (const c of componentDefs) {
+    await db.insert(salaryComponentsTable).values({
+      companyId, code: c.code, name: c.name, nameAr: c.nameAr, componentType: c.type,
+      calculationType: "fixed", amount: c.amount, status: "active",
+    });
+  }
+
+  const month = new Date().getUTCMonth();
+  const periodStart = new Date(Date.UTC(year, month, 1)).toISOString().slice(0, 10);
+  const periodEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().slice(0, 10);
+  await db.insert(payrollPeriodsTable).values({
+    companyId,
+    code: `PP-${year}-${String(month + 1).padStart(2, "0")}`,
+    name: `${MONTH_NAMES_EN[month]} ${year}`,
+    year,
+    month: month + 1,
+    startDate: periodStart,
+    endDate: periodEnd,
+    payDate: periodEnd,
+    status: "open",
+  });
+
+  console.log(`Seeded HR: ${deptDefs.length} departments, ${empDefs.length} employees, ${leaveTypeDefs.length} leave types, ${componentDefs.length} salary components`);
+}
+
 async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
@@ -896,6 +1081,7 @@ async function main(): Promise<void> {
   await seedFinance();
   await seedReservations();
   await seedAccounting();
+  await seedHr();
   console.log("Seed complete.");
 }
 

@@ -5880,6 +5880,60 @@ export interface ProcurementDashboard {
   requestsByStatus?: ProcurementDashboardRequestsByStatusItem[];
 }
 
+export interface HrGroupCount {
+  /** @nullable */
+  key: string | null;
+  count: number;
+}
+
+export interface HrDashboard {
+  employeesCount: number;
+  activeEmployees: number;
+  departmentsCount: number;
+  pendingLeaveRequests: number;
+  openLoans: number;
+  pendingPayrollRuns: number;
+  payrollPosted: string;
+  loanOutstanding: string;
+  employeesByStatus?: HrGroupCount[];
+  employeesByDepartment?: HrGroupCount[];
+  employeesByType?: HrGroupCount[];
+}
+
+export interface HrAttendanceReport {
+  total: number;
+  lateMinutes: string;
+  overtimeHours: string;
+  workedHours: string;
+  byStatus?: HrGroupCount[];
+}
+
+export interface HrLeaveReport {
+  approvedDays: string;
+  byStatus?: HrGroupCount[];
+  byType?: HrGroupCount[];
+}
+
+export interface HrPayrollReport {
+  totalEarnings: string;
+  totalDeductions: string;
+  totalNet: string;
+  byStatus?: HrGroupCount[];
+}
+
+export interface HrEmployeeReport {
+  headcount: number;
+  byStatus?: HrGroupCount[];
+  byDepartment?: HrGroupCount[];
+  byType?: HrGroupCount[];
+}
+
+export interface HrTurnoverReport {
+  hires: number;
+  terminations: number;
+  active: number;
+}
+
 export interface Warehouse {
   id: string;
   companyId: string;
@@ -7769,6 +7823,1245 @@ export interface TaxReportResponse {
   netTax: string;
 }
 
+export interface Department {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  parentId?: string | null;
+  /** @nullable */
+  managerEmployeeId?: string | null;
+  /** @nullable */
+  costCenterId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DepartmentInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  parentId?: string;
+  managerEmployeeId?: string;
+  costCenterId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface DepartmentUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  parentId?: string;
+  managerEmployeeId?: string;
+  costCenterId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface DepartmentListResponse {
+  data: Department[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Section {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  managerEmployeeId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SectionInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  departmentId?: string;
+  managerEmployeeId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface SectionUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  departmentId?: string;
+  managerEmployeeId?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface SectionListResponse {
+  data: Section[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface JobTitle {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  grade?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface JobTitleInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  departmentId?: string;
+  grade?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface JobTitleUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  departmentId?: string;
+  grade?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface JobTitleListResponse {
+  data: JobTitle[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Employee {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  firstName: string;
+  lastName: string;
+  /** @nullable */
+  firstNameAr?: string | null;
+  /** @nullable */
+  lastNameAr?: string | null;
+  /** @nullable */
+  gender?: string | null;
+  /** @nullable */
+  dateOfBirth?: string | null;
+  /** @nullable */
+  nationality?: string | null;
+  /** @nullable */
+  nationalId?: string | null;
+  /** @nullable */
+  passportNumber?: string | null;
+  /** @nullable */
+  maritalStatus?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  address?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  sectionId?: string | null;
+  /** @nullable */
+  jobTitleId?: string | null;
+  /** @nullable */
+  managerEmployeeId?: string | null;
+  employmentType: string;
+  /** @nullable */
+  hireDate?: string | null;
+  /** @nullable */
+  contractStartDate?: string | null;
+  /** @nullable */
+  contractEndDate?: string | null;
+  basicSalary: string;
+  /** @nullable */
+  bankName?: string | null;
+  /** @nullable */
+  bankAccountNumber?: string | null;
+  /** @nullable */
+  iban?: string | null;
+  status: string;
+  /** @nullable */
+  terminationDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  firstName: string;
+  lastName: string;
+  firstNameAr?: string;
+  lastNameAr?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  nationality?: string;
+  nationalId?: string;
+  passportNumber?: string;
+  maritalStatus?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  photoUrl?: string;
+  departmentId?: string;
+  sectionId?: string;
+  jobTitleId?: string;
+  managerEmployeeId?: string;
+  employmentType?: string;
+  hireDate?: string;
+  contractStartDate?: string;
+  contractEndDate?: string;
+  basicSalary?: string;
+  bankName?: string;
+  bankAccountNumber?: string;
+  iban?: string;
+  status?: string;
+  terminationDate?: string;
+  notes?: string;
+}
+
+export interface EmployeeUpdate {
+  branchId?: string;
+  code?: string;
+  firstName?: string;
+  lastName?: string;
+  firstNameAr?: string;
+  lastNameAr?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  nationality?: string;
+  nationalId?: string;
+  passportNumber?: string;
+  maritalStatus?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  photoUrl?: string;
+  departmentId?: string;
+  sectionId?: string;
+  jobTitleId?: string;
+  managerEmployeeId?: string;
+  employmentType?: string;
+  hireDate?: string;
+  contractStartDate?: string;
+  contractEndDate?: string;
+  basicSalary?: string;
+  bankName?: string;
+  bankAccountNumber?: string;
+  iban?: string;
+  status?: string;
+  terminationDate?: string;
+  notes?: string;
+}
+
+export interface EmployeeListResponse {
+  data: Employee[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EmployeeDocument {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  code?: string | null;
+  documentType: string;
+  title: string;
+  /** @nullable */
+  documentNumber?: string | null;
+  /** @nullable */
+  issueDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  fileUrl?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeDocumentInput {
+  companyId: string;
+  employeeId?: string;
+  code?: string;
+  documentType?: string;
+  title: string;
+  documentNumber?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  fileUrl?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface EmployeeDocumentUpdate {
+  employeeId?: string;
+  code?: string;
+  documentType?: string;
+  title?: string;
+  documentNumber?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  fileUrl?: string;
+  notes?: string;
+  status?: string;
+}
+
+export interface EmployeeDocumentListResponse {
+  data: EmployeeDocument[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EmployeeEmergencyContact {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  employeeId?: string | null;
+  name: string;
+  /** @nullable */
+  relationship?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  altPhone?: string | null;
+  /** @nullable */
+  address?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeEmergencyContactInput {
+  companyId: string;
+  employeeId?: string;
+  name: string;
+  relationship?: string;
+  phone?: string;
+  altPhone?: string;
+  address?: string;
+}
+
+export interface EmployeeEmergencyContactUpdate {
+  employeeId?: string;
+  name?: string;
+  relationship?: string;
+  phone?: string;
+  altPhone?: string;
+  address?: string;
+}
+
+export interface EmployeeEmergencyContactListResponse {
+  data: EmployeeEmergencyContact[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Shift {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  startTime?: string | null;
+  /** @nullable */
+  endTime?: string | null;
+  breakMinutes: number;
+  workHours: string;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ShiftInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  startTime?: string;
+  endTime?: string;
+  breakMinutes?: number;
+  workHours?: string;
+  status?: string;
+}
+
+export interface ShiftUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  startTime?: string;
+  endTime?: string;
+  breakMinutes?: number;
+  workHours?: string;
+  status?: string;
+}
+
+export interface ShiftListResponse {
+  data: Shift[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AttendanceRecord {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  shiftId?: string | null;
+  attendanceDate: string;
+  /** @nullable */
+  checkIn?: string | null;
+  /** @nullable */
+  checkOut?: string | null;
+  status: string;
+  lateMinutes: number;
+  overtimeHours: string;
+  workedHours: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AttendanceRecordInput {
+  companyId: string;
+  employeeId?: string;
+  shiftId?: string;
+  attendanceDate: string;
+  checkIn?: string;
+  checkOut?: string;
+  status?: string;
+  lateMinutes?: number;
+  overtimeHours?: string;
+  workedHours?: string;
+  notes?: string;
+}
+
+export interface AttendanceRecordUpdate {
+  employeeId?: string;
+  shiftId?: string;
+  attendanceDate?: string;
+  checkIn?: string;
+  checkOut?: string;
+  status?: string;
+  lateMinutes?: number;
+  overtimeHours?: string;
+  workedHours?: string;
+  notes?: string;
+}
+
+export interface AttendanceRecordListResponse {
+  data: AttendanceRecord[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeaveType {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  daysPerYear: string;
+  isPaid: boolean;
+  carryForward: boolean;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeaveTypeInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  daysPerYear?: string;
+  isPaid?: boolean;
+  carryForward?: boolean;
+  description?: string;
+  status?: string;
+}
+
+export interface LeaveTypeUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  daysPerYear?: string;
+  isPaid?: boolean;
+  carryForward?: boolean;
+  description?: string;
+  status?: string;
+}
+
+export interface LeaveTypeListResponse {
+  data: LeaveType[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeaveBalance {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  leaveTypeId?: string | null;
+  year: number;
+  entitled: string;
+  used: string;
+  remaining: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeaveBalanceInput {
+  companyId: string;
+  employeeId?: string;
+  leaveTypeId?: string;
+  year: number;
+  entitled?: string;
+  used?: string;
+  remaining?: string;
+}
+
+export interface LeaveBalanceUpdate {
+  employeeId?: string;
+  leaveTypeId?: string;
+  year?: number;
+  entitled?: string;
+  used?: string;
+  remaining?: string;
+}
+
+export interface LeaveBalanceListResponse {
+  data: LeaveBalance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeaveRequest {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  leaveTypeId?: string | null;
+  startDate: string;
+  endDate: string;
+  days: string;
+  /** @nullable */
+  reason?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  rejectedReason?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LeaveRequestInput {
+  companyId: string;
+  code: string;
+  employeeId?: string;
+  leaveTypeId?: string;
+  startDate: string;
+  endDate: string;
+  days?: string;
+  reason?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface LeaveRequestUpdate {
+  code?: string;
+  employeeId?: string;
+  leaveTypeId?: string;
+  startDate?: string;
+  endDate?: string;
+  days?: string;
+  reason?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface LeaveRequestListResponse {
+  data: LeaveRequest[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SalaryComponent {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  componentType: string;
+  calculationType: string;
+  amount: string;
+  percentage: string;
+  taxable: boolean;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SalaryComponentInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  componentType?: string;
+  calculationType?: string;
+  amount?: string;
+  percentage?: string;
+  taxable?: boolean;
+  description?: string;
+  status?: string;
+}
+
+export interface SalaryComponentUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  componentType?: string;
+  calculationType?: string;
+  amount?: string;
+  percentage?: string;
+  taxable?: boolean;
+  description?: string;
+  status?: string;
+}
+
+export interface SalaryComponentListResponse {
+  data: SalaryComponent[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PayrollPeriod {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  year: number;
+  month: number;
+  startDate: string;
+  endDate: string;
+  /** @nullable */
+  payDate?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PayrollPeriodInput {
+  companyId: string;
+  code: string;
+  name: string;
+  year: number;
+  month?: number;
+  startDate: string;
+  endDate: string;
+  payDate?: string;
+  status?: string;
+}
+
+export interface PayrollPeriodUpdate {
+  code?: string;
+  name?: string;
+  year?: number;
+  month?: number;
+  startDate?: string;
+  endDate?: string;
+  payDate?: string;
+  status?: string;
+}
+
+export interface PayrollPeriodListResponse {
+  data: PayrollPeriod[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PayrollRun {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  code: string;
+  /** @nullable */
+  payrollPeriodId?: string | null;
+  runDate: string;
+  /** @nullable */
+  description?: string | null;
+  totalEarnings: string;
+  totalDeductions: string;
+  totalNet: string;
+  employeeCount: number;
+  status: string;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  postedBy?: string | null;
+  /** @nullable */
+  postedAt?: string | null;
+  /** @nullable */
+  reversedAt?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PayrollRunInput {
+  companyId: string;
+  branchId?: string;
+  code: string;
+  payrollPeriodId?: string;
+  runDate: string;
+  description?: string;
+  totalEarnings?: string;
+  totalDeductions?: string;
+  totalNet?: string;
+  employeeCount?: number;
+  status?: string;
+}
+
+export interface PayrollRunUpdate {
+  branchId?: string;
+  code?: string;
+  payrollPeriodId?: string;
+  runDate?: string;
+  description?: string;
+  totalEarnings?: string;
+  totalDeductions?: string;
+  totalNet?: string;
+  employeeCount?: number;
+  status?: string;
+}
+
+export interface PayrollRunListResponse {
+  data: PayrollRun[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Payslip {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  payrollRunId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
+  basicSalary: string;
+  totalEarnings: string;
+  totalDeductions: string;
+  netPay: string;
+  status: string;
+  paid: boolean;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PayslipInput {
+  companyId: string;
+  code: string;
+  payrollRunId?: string;
+  employeeId?: string;
+  basicSalary?: string;
+  totalEarnings?: string;
+  totalDeductions?: string;
+  netPay?: string;
+  status?: string;
+  paid?: boolean;
+  notes?: string;
+}
+
+export interface PayslipUpdate {
+  code?: string;
+  payrollRunId?: string;
+  employeeId?: string;
+  basicSalary?: string;
+  totalEarnings?: string;
+  totalDeductions?: string;
+  netPay?: string;
+  status?: string;
+  paid?: boolean;
+  notes?: string;
+}
+
+export interface PayslipListResponse {
+  data: Payslip[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PayslipLine {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  payslipId?: string | null;
+  /** @nullable */
+  salaryComponentId?: string | null;
+  componentType: string;
+  /** @nullable */
+  description?: string | null;
+  amount: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PayslipLineInput {
+  companyId: string;
+  payslipId?: string;
+  salaryComponentId?: string;
+  componentType?: string;
+  description?: string;
+  amount?: string;
+}
+
+export interface PayslipLineUpdate {
+  payslipId?: string;
+  salaryComponentId?: string;
+  componentType?: string;
+  description?: string;
+  amount?: string;
+}
+
+export interface PayslipLineListResponse {
+  data: PayslipLine[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EmployeeLoan {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  employeeId?: string | null;
+  loanType: string;
+  amount: string;
+  installmentAmount: string;
+  installmentsCount: number;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  status: string;
+  outstandingAmount: string;
+  paymentMethod: string;
+  /** @nullable */
+  cashboxId?: string | null;
+  /** @nullable */
+  bankAccountId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  disbursedAt?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeLoanInput {
+  companyId: string;
+  code: string;
+  employeeId?: string;
+  loanType?: string;
+  amount?: string;
+  installmentAmount?: string;
+  installmentsCount?: number;
+  startDate?: string;
+  reason?: string;
+  status?: string;
+  outstandingAmount?: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  notes?: string;
+}
+
+export interface EmployeeLoanUpdate {
+  code?: string;
+  employeeId?: string;
+  loanType?: string;
+  amount?: string;
+  installmentAmount?: string;
+  installmentsCount?: number;
+  startDate?: string;
+  reason?: string;
+  status?: string;
+  outstandingAmount?: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  notes?: string;
+}
+
+export interface EmployeeLoanListResponse {
+  data: EmployeeLoan[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LoanInstallment {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  employeeLoanId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
+  installmentNumber: number;
+  /** @nullable */
+  dueDate?: string | null;
+  amount: string;
+  status: string;
+  /** @nullable */
+  paidDate?: string | null;
+  /** @nullable */
+  payrollRunId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LoanInstallmentInput {
+  companyId: string;
+  employeeLoanId?: string;
+  employeeId?: string;
+  installmentNumber?: number;
+  dueDate?: string;
+  amount?: string;
+  status?: string;
+  paidDate?: string;
+  payrollRunId?: string;
+}
+
+export interface LoanInstallmentUpdate {
+  employeeLoanId?: string;
+  employeeId?: string;
+  installmentNumber?: number;
+  dueDate?: string;
+  amount?: string;
+  status?: string;
+  paidDate?: string;
+  payrollRunId?: string;
+}
+
+export interface LoanInstallmentListResponse {
+  data: LoanInstallment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EmployeeAdvance {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  employeeId?: string | null;
+  amount: string;
+  /** @nullable */
+  requestDate?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  status: string;
+  recoveredAmount: string;
+  paymentMethod: string;
+  /** @nullable */
+  cashboxId?: string | null;
+  /** @nullable */
+  bankAccountId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  approvedBy?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  paidAt?: string | null;
+  /** @nullable */
+  journalEntryId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeAdvanceInput {
+  companyId: string;
+  code: string;
+  employeeId?: string;
+  amount?: string;
+  requestDate?: string;
+  reason?: string;
+  status?: string;
+  recoveredAmount?: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  notes?: string;
+}
+
+export interface EmployeeAdvanceUpdate {
+  code?: string;
+  employeeId?: string;
+  amount?: string;
+  requestDate?: string;
+  reason?: string;
+  status?: string;
+  recoveredAmount?: string;
+  paymentMethod?: string;
+  cashboxId?: string;
+  bankAccountId?: string;
+  notes?: string;
+}
+
+export interface EmployeeAdvanceListResponse {
+  data: EmployeeAdvance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface KpiTemplate {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  /** @nullable */
+  category?: string | null;
+  weight: string;
+  maxScore: string;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface KpiTemplateInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  category?: string;
+  weight?: string;
+  maxScore?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface KpiTemplateUpdate {
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  category?: string;
+  weight?: string;
+  maxScore?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface KpiTemplateListResponse {
+  data: KpiTemplate[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EmployeeEvaluation {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  evaluatorEmployeeId?: string | null;
+  /** @nullable */
+  evaluationPeriod?: string | null;
+  /** @nullable */
+  evaluationDate?: string | null;
+  totalScore: string;
+  /** @nullable */
+  rating?: string | null;
+  /** @nullable */
+  strengths?: string | null;
+  /** @nullable */
+  weaknesses?: string | null;
+  /** @nullable */
+  recommendations?: string | null;
+  status: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeEvaluationInput {
+  companyId: string;
+  code: string;
+  employeeId?: string;
+  evaluatorEmployeeId?: string;
+  evaluationPeriod?: string;
+  evaluationDate?: string;
+  totalScore?: string;
+  rating?: string;
+  strengths?: string;
+  weaknesses?: string;
+  recommendations?: string;
+  status?: string;
+}
+
+export interface EmployeeEvaluationUpdate {
+  code?: string;
+  employeeId?: string;
+  evaluatorEmployeeId?: string;
+  evaluationPeriod?: string;
+  evaluationDate?: string;
+  totalScore?: string;
+  rating?: string;
+  strengths?: string;
+  weaknesses?: string;
+  recommendations?: string;
+  status?: string;
+}
+
+export interface EmployeeEvaluationListResponse {
+  data: EmployeeEvaluation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface EmployeeEvaluationLine {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  evaluationId?: string | null;
+  /** @nullable */
+  kpiTemplateId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  weight: string;
+  score: string;
+  weightedScore: string;
+  /** @nullable */
+  comments?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeEvaluationLineInput {
+  companyId: string;
+  evaluationId?: string;
+  kpiTemplateId?: string;
+  description?: string;
+  weight?: string;
+  score?: string;
+  weightedScore?: string;
+  comments?: string;
+}
+
+export interface EmployeeEvaluationLineUpdate {
+  evaluationId?: string;
+  kpiTemplateId?: string;
+  description?: string;
+  weight?: string;
+  score?: string;
+  weightedScore?: string;
+  comments?: string;
+}
+
+export interface EmployeeEvaluationLineListResponse {
+  data: EmployeeEvaluationLine[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface LeaveRejectInput {
+  rejectedReason?: string;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -8900,5 +10193,207 @@ export type GetTaxReportParams = {
 companyId?: string;
 fromDate?: string;
 toDate?: string;
+};
+
+export type ListDepartmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListSectionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListJobTitlesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeeDocumentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeeEmergencyContactsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListShiftsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListAttendanceRecordsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLeaveTypesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLeaveBalancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLeaveRequestsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListSalaryComponentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPayrollPeriodsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPayrollRunsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPayslipsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListPayslipLinesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeeLoansParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListLoanInstallmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeeAdvancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListKpiTemplatesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeeEvaluationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type ListEmployeeEvaluationLinesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+};
+
+export type GetHrDashboardParams = {
+companyId?: string;
+from?: string;
+to?: string;
+year?: number;
+payrollRunId?: string;
+};
+
+export type GetHrAttendanceReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+year?: number;
+payrollRunId?: string;
+};
+
+export type GetHrLeaveReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+year?: number;
+payrollRunId?: string;
+};
+
+export type GetHrPayrollReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+year?: number;
+payrollRunId?: string;
+};
+
+export type GetHrEmployeeReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+year?: number;
+payrollRunId?: string;
+};
+
+export type GetHrTurnoverReportParams = {
+companyId?: string;
+from?: string;
+to?: string;
+year?: number;
+payrollRunId?: string;
 };
 

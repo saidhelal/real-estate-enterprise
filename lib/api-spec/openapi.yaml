@@ -13279,6 +13279,2198 @@ paths:
               schema:
                 $ref: "#/components/schemas/TaxReportResponse"
 
+  # ===== HR MODULE PATHS (generated) =====
+  /departments:
+    get:
+      operationId: listDepartments
+      tags: [departments]
+      summary: List departments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Departments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepartmentListResponse"
+    post:
+      operationId: createDepartment
+      tags: [departments]
+      summary: Create a Department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepartmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+  /departments/{id}:
+    get:
+      operationId: getDepartment
+      tags: [departments]
+      summary: Get a Department
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Department
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDepartment
+      tags: [departments]
+      summary: Update a Department
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepartmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+    delete:
+      operationId: deleteDepartment
+      tags: [departments]
+      summary: Delete a Department
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /sections:
+    get:
+      operationId: listSections
+      tags: [sections]
+      summary: List sections
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Sections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SectionListResponse"
+    post:
+      operationId: createSection
+      tags: [sections]
+      summary: Create a Section
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SectionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Section"
+  /sections/{id}:
+    get:
+      operationId: getSection
+      tags: [sections]
+      summary: Get a Section
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Section
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Section"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSection
+      tags: [sections]
+      summary: Update a Section
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SectionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Section"
+    delete:
+      operationId: deleteSection
+      tags: [sections]
+      summary: Delete a Section
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /job-titles:
+    get:
+      operationId: listJobTitles
+      tags: [jobTitles]
+      summary: List job-titles
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: JobTitles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobTitleListResponse"
+    post:
+      operationId: createJobTitle
+      tags: [jobTitles]
+      summary: Create a JobTitle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobTitleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobTitle"
+  /job-titles/{id}:
+    get:
+      operationId: getJobTitle
+      tags: [jobTitles]
+      summary: Get a JobTitle
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: JobTitle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobTitle"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateJobTitle
+      tags: [jobTitles]
+      summary: Update a JobTitle
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobTitleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobTitle"
+    delete:
+      operationId: deleteJobTitle
+      tags: [jobTitles]
+      summary: Delete a JobTitle
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employees:
+    get:
+      operationId: listEmployees
+      tags: [employees]
+      summary: List employees
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Employees
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeListResponse"
+    post:
+      operationId: createEmployee
+      tags: [employees]
+      summary: Create a Employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+  /employees/{id}:
+    get:
+      operationId: getEmployee
+      tags: [employees]
+      summary: Get a Employee
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Employee
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployee
+      tags: [employees]
+      summary: Update a Employee
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+    delete:
+      operationId: deleteEmployee
+      tags: [employees]
+      summary: Delete a Employee
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employee-documents:
+    get:
+      operationId: listEmployeeDocuments
+      tags: [employeeDocuments]
+      summary: List employee-documents
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeDocuments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeDocumentListResponse"
+    post:
+      operationId: createEmployeeDocument
+      tags: [employeeDocuments]
+      summary: Create a EmployeeDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeDocumentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeDocument"
+  /employee-documents/{id}:
+    get:
+      operationId: getEmployeeDocument
+      tags: [employeeDocuments]
+      summary: Get a EmployeeDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeDocument
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeDocument"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeDocument
+      tags: [employeeDocuments]
+      summary: Update a EmployeeDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeDocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeDocument"
+    delete:
+      operationId: deleteEmployeeDocument
+      tags: [employeeDocuments]
+      summary: Delete a EmployeeDocument
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employee-emergency-contacts:
+    get:
+      operationId: listEmployeeEmergencyContacts
+      tags: [employeeEmergencyContacts]
+      summary: List employee-emergency-contacts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeEmergencyContacts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEmergencyContactListResponse"
+    post:
+      operationId: createEmployeeEmergencyContact
+      tags: [employeeEmergencyContacts]
+      summary: Create a EmployeeEmergencyContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeEmergencyContactInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEmergencyContact"
+  /employee-emergency-contacts/{id}:
+    get:
+      operationId: getEmployeeEmergencyContact
+      tags: [employeeEmergencyContacts]
+      summary: Get a EmployeeEmergencyContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeEmergencyContact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEmergencyContact"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeEmergencyContact
+      tags: [employeeEmergencyContacts]
+      summary: Update a EmployeeEmergencyContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeEmergencyContactUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEmergencyContact"
+    delete:
+      operationId: deleteEmployeeEmergencyContact
+      tags: [employeeEmergencyContacts]
+      summary: Delete a EmployeeEmergencyContact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /shifts:
+    get:
+      operationId: listShifts
+      tags: [shifts]
+      summary: List shifts
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Shifts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShiftListResponse"
+    post:
+      operationId: createShift
+      tags: [shifts]
+      summary: Create a Shift
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShiftInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shift"
+  /shifts/{id}:
+    get:
+      operationId: getShift
+      tags: [shifts]
+      summary: Get a Shift
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Shift
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shift"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateShift
+      tags: [shifts]
+      summary: Update a Shift
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShiftUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shift"
+    delete:
+      operationId: deleteShift
+      tags: [shifts]
+      summary: Delete a Shift
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /attendance-records:
+    get:
+      operationId: listAttendanceRecords
+      tags: [attendanceRecords]
+      summary: List attendance-records
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AttendanceRecords
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceRecordListResponse"
+    post:
+      operationId: createAttendanceRecord
+      tags: [attendanceRecords]
+      summary: Create a AttendanceRecord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttendanceRecordInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceRecord"
+  /attendance-records/{id}:
+    get:
+      operationId: getAttendanceRecord
+      tags: [attendanceRecords]
+      summary: Get a AttendanceRecord
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AttendanceRecord
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceRecord"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAttendanceRecord
+      tags: [attendanceRecords]
+      summary: Update a AttendanceRecord
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttendanceRecordUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceRecord"
+    delete:
+      operationId: deleteAttendanceRecord
+      tags: [attendanceRecords]
+      summary: Delete a AttendanceRecord
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /leave-types:
+    get:
+      operationId: listLeaveTypes
+      tags: [leaveTypes]
+      summary: List leave-types
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeaveTypes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveTypeListResponse"
+    post:
+      operationId: createLeaveType
+      tags: [leaveTypes]
+      summary: Create a LeaveType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveTypeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveType"
+  /leave-types/{id}:
+    get:
+      operationId: getLeaveType
+      tags: [leaveTypes]
+      summary: Get a LeaveType
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeaveType
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveType"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeaveType
+      tags: [leaveTypes]
+      summary: Update a LeaveType
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveTypeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveType"
+    delete:
+      operationId: deleteLeaveType
+      tags: [leaveTypes]
+      summary: Delete a LeaveType
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /leave-balances:
+    get:
+      operationId: listLeaveBalances
+      tags: [leaveBalances]
+      summary: List leave-balances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeaveBalances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveBalanceListResponse"
+    post:
+      operationId: createLeaveBalance
+      tags: [leaveBalances]
+      summary: Create a LeaveBalance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveBalanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveBalance"
+  /leave-balances/{id}:
+    get:
+      operationId: getLeaveBalance
+      tags: [leaveBalances]
+      summary: Get a LeaveBalance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeaveBalance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveBalance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeaveBalance
+      tags: [leaveBalances]
+      summary: Update a LeaveBalance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveBalanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveBalance"
+    delete:
+      operationId: deleteLeaveBalance
+      tags: [leaveBalances]
+      summary: Delete a LeaveBalance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /leave-requests:
+    get:
+      operationId: listLeaveRequests
+      tags: [leaveRequests]
+      summary: List leave-requests
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LeaveRequests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequestListResponse"
+    post:
+      operationId: createLeaveRequest
+      tags: [leaveRequests]
+      summary: Create a LeaveRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+  /leave-requests/{id}:
+    get:
+      operationId: getLeaveRequest
+      tags: [leaveRequests]
+      summary: Get a LeaveRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LeaveRequest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLeaveRequest
+      tags: [leaveRequests]
+      summary: Update a LeaveRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveRequestUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+    delete:
+      operationId: deleteLeaveRequest
+      tags: [leaveRequests]
+      summary: Delete a LeaveRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /salary-components:
+    get:
+      operationId: listSalaryComponents
+      tags: [salaryComponents]
+      summary: List salary-components
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SalaryComponents
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalaryComponentListResponse"
+    post:
+      operationId: createSalaryComponent
+      tags: [salaryComponents]
+      summary: Create a SalaryComponent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalaryComponentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalaryComponent"
+  /salary-components/{id}:
+    get:
+      operationId: getSalaryComponent
+      tags: [salaryComponents]
+      summary: Get a SalaryComponent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SalaryComponent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalaryComponent"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSalaryComponent
+      tags: [salaryComponents]
+      summary: Update a SalaryComponent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalaryComponentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalaryComponent"
+    delete:
+      operationId: deleteSalaryComponent
+      tags: [salaryComponents]
+      summary: Delete a SalaryComponent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /payroll-periods:
+    get:
+      operationId: listPayrollPeriods
+      tags: [payrollPeriods]
+      summary: List payroll-periods
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PayrollPeriods
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollPeriodListResponse"
+    post:
+      operationId: createPayrollPeriod
+      tags: [payrollPeriods]
+      summary: Create a PayrollPeriod
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayrollPeriodInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollPeriod"
+  /payroll-periods/{id}:
+    get:
+      operationId: getPayrollPeriod
+      tags: [payrollPeriods]
+      summary: Get a PayrollPeriod
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PayrollPeriod
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollPeriod"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePayrollPeriod
+      tags: [payrollPeriods]
+      summary: Update a PayrollPeriod
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayrollPeriodUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollPeriod"
+    delete:
+      operationId: deletePayrollPeriod
+      tags: [payrollPeriods]
+      summary: Delete a PayrollPeriod
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /payroll-runs:
+    get:
+      operationId: listPayrollRuns
+      tags: [payrollRuns]
+      summary: List payroll-runs
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PayrollRuns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRunListResponse"
+    post:
+      operationId: createPayrollRun
+      tags: [payrollRuns]
+      summary: Create a PayrollRun
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayrollRunInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRun"
+  /payroll-runs/{id}:
+    get:
+      operationId: getPayrollRun
+      tags: [payrollRuns]
+      summary: Get a PayrollRun
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PayrollRun
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRun"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePayrollRun
+      tags: [payrollRuns]
+      summary: Update a PayrollRun
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayrollRunUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRun"
+    delete:
+      operationId: deletePayrollRun
+      tags: [payrollRuns]
+      summary: Delete a PayrollRun
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /payslips:
+    get:
+      operationId: listPayslips
+      tags: [payslips]
+      summary: List payslips
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Payslips
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayslipListResponse"
+    post:
+      operationId: createPayslip
+      tags: [payslips]
+      summary: Create a Payslip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayslipInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payslip"
+  /payslips/{id}:
+    get:
+      operationId: getPayslip
+      tags: [payslips]
+      summary: Get a Payslip
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Payslip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payslip"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePayslip
+      tags: [payslips]
+      summary: Update a Payslip
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayslipUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payslip"
+    delete:
+      operationId: deletePayslip
+      tags: [payslips]
+      summary: Delete a Payslip
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /payslip-lines:
+    get:
+      operationId: listPayslipLines
+      tags: [payslipLines]
+      summary: List payslip-lines
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: PayslipLines
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayslipLineListResponse"
+    post:
+      operationId: createPayslipLine
+      tags: [payslipLines]
+      summary: Create a PayslipLine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayslipLineInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayslipLine"
+  /payslip-lines/{id}:
+    get:
+      operationId: getPayslipLine
+      tags: [payslipLines]
+      summary: Get a PayslipLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: PayslipLine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayslipLine"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePayslipLine
+      tags: [payslipLines]
+      summary: Update a PayslipLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayslipLineUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayslipLine"
+    delete:
+      operationId: deletePayslipLine
+      tags: [payslipLines]
+      summary: Delete a PayslipLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employee-loans:
+    get:
+      operationId: listEmployeeLoans
+      tags: [employeeLoans]
+      summary: List employee-loans
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeLoans
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeLoanListResponse"
+    post:
+      operationId: createEmployeeLoan
+      tags: [employeeLoans]
+      summary: Create a EmployeeLoan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeLoanInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeLoan"
+  /employee-loans/{id}:
+    get:
+      operationId: getEmployeeLoan
+      tags: [employeeLoans]
+      summary: Get a EmployeeLoan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeLoan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeLoan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeLoan
+      tags: [employeeLoans]
+      summary: Update a EmployeeLoan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeLoanUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeLoan"
+    delete:
+      operationId: deleteEmployeeLoan
+      tags: [employeeLoans]
+      summary: Delete a EmployeeLoan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /loan-installments:
+    get:
+      operationId: listLoanInstallments
+      tags: [loanInstallments]
+      summary: List loan-installments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: LoanInstallments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanInstallmentListResponse"
+    post:
+      operationId: createLoanInstallment
+      tags: [loanInstallments]
+      summary: Create a LoanInstallment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoanInstallmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanInstallment"
+  /loan-installments/{id}:
+    get:
+      operationId: getLoanInstallment
+      tags: [loanInstallments]
+      summary: Get a LoanInstallment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: LoanInstallment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanInstallment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateLoanInstallment
+      tags: [loanInstallments]
+      summary: Update a LoanInstallment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoanInstallmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanInstallment"
+    delete:
+      operationId: deleteLoanInstallment
+      tags: [loanInstallments]
+      summary: Delete a LoanInstallment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employee-advances:
+    get:
+      operationId: listEmployeeAdvances
+      tags: [employeeAdvances]
+      summary: List employee-advances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeAdvances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeAdvanceListResponse"
+    post:
+      operationId: createEmployeeAdvance
+      tags: [employeeAdvances]
+      summary: Create a EmployeeAdvance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeAdvanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeAdvance"
+  /employee-advances/{id}:
+    get:
+      operationId: getEmployeeAdvance
+      tags: [employeeAdvances]
+      summary: Get a EmployeeAdvance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeAdvance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeAdvance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeAdvance
+      tags: [employeeAdvances]
+      summary: Update a EmployeeAdvance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeAdvanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeAdvance"
+    delete:
+      operationId: deleteEmployeeAdvance
+      tags: [employeeAdvances]
+      summary: Delete a EmployeeAdvance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /kpi-templates:
+    get:
+      operationId: listKpiTemplates
+      tags: [kpiTemplates]
+      summary: List kpi-templates
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: KpiTemplates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KpiTemplateListResponse"
+    post:
+      operationId: createKpiTemplate
+      tags: [kpiTemplates]
+      summary: Create a KpiTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KpiTemplateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KpiTemplate"
+  /kpi-templates/{id}:
+    get:
+      operationId: getKpiTemplate
+      tags: [kpiTemplates]
+      summary: Get a KpiTemplate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: KpiTemplate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KpiTemplate"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateKpiTemplate
+      tags: [kpiTemplates]
+      summary: Update a KpiTemplate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KpiTemplateUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KpiTemplate"
+    delete:
+      operationId: deleteKpiTemplate
+      tags: [kpiTemplates]
+      summary: Delete a KpiTemplate
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employee-evaluations:
+    get:
+      operationId: listEmployeeEvaluations
+      tags: [employeeEvaluations]
+      summary: List employee-evaluations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeEvaluations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluationListResponse"
+    post:
+      operationId: createEmployeeEvaluation
+      tags: [employeeEvaluations]
+      summary: Create a EmployeeEvaluation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeEvaluationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluation"
+  /employee-evaluations/{id}:
+    get:
+      operationId: getEmployeeEvaluation
+      tags: [employeeEvaluations]
+      summary: Get a EmployeeEvaluation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeEvaluation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeEvaluation
+      tags: [employeeEvaluations]
+      summary: Update a EmployeeEvaluation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeEvaluationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluation"
+    delete:
+      operationId: deleteEmployeeEvaluation
+      tags: [employeeEvaluations]
+      summary: Delete a EmployeeEvaluation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /employee-evaluation-lines:
+    get:
+      operationId: listEmployeeEvaluationLines
+      tags: [employeeEvaluationLines]
+      summary: List employee-evaluation-lines
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeEvaluationLines
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluationLineListResponse"
+    post:
+      operationId: createEmployeeEvaluationLine
+      tags: [employeeEvaluationLines]
+      summary: Create a EmployeeEvaluationLine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeEvaluationLineInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluationLine"
+  /employee-evaluation-lines/{id}:
+    get:
+      operationId: getEmployeeEvaluationLine
+      tags: [employeeEvaluationLines]
+      summary: Get a EmployeeEvaluationLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeEvaluationLine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluationLine"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeEvaluationLine
+      tags: [employeeEvaluationLines]
+      summary: Update a EmployeeEvaluationLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeEvaluationLineUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeEvaluationLine"
+    delete:
+      operationId: deleteEmployeeEvaluationLine
+      tags: [employeeEvaluationLines]
+      summary: Delete a EmployeeEvaluationLine
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /leave-requests/{id}/submit:
+    post:
+      operationId: submitLeaveRequest
+      tags: [leaveRequests]
+      summary: Submit leave request
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /leave-requests/{id}/approve:
+    post:
+      operationId: approveLeaveRequest
+      tags: [leaveRequests]
+      summary: Approve leave request
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /leave-requests/{id}/reject:
+    post:
+      operationId: rejectLeaveRequest
+      tags: [leaveRequests]
+      summary: Reject leave request
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveRejectInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /payroll-runs/{id}/approve:
+    post:
+      operationId: approvePayrollRun
+      tags: [payrollRuns]
+      summary: Approve payroll run
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRun"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /payroll-runs/{id}/post:
+    post:
+      operationId: postPayrollRun
+      tags: [payrollRuns]
+      summary: Post payroll run to GL
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRun"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /payroll-runs/{id}/reverse:
+    post:
+      operationId: reversePayrollRun
+      tags: [payrollRuns]
+      summary: Reverse posted payroll run
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PayrollRun"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /employee-loans/{id}/approve:
+    post:
+      operationId: approveEmployeeLoan
+      tags: [employeeLoans]
+      summary: Approve employee loan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeLoan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /employee-loans/{id}/disburse:
+    post:
+      operationId: disburseEmployeeLoan
+      tags: [employeeLoans]
+      summary: Disburse employee loan
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeLoan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /employee-advances/{id}/approve:
+    post:
+      operationId: approveEmployeeAdvance
+      tags: [employeeAdvances]
+      summary: Approve employee advance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeAdvance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /employee-advances/{id}/pay:
+    post:
+      operationId: payEmployeeAdvance
+      tags: [employeeAdvances]
+      summary: Pay employee advance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeAdvance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /hr/dashboard:
+    get:
+      operationId: getHrDashboard
+      tags: [hr]
+      summary: HR dashboard KPIs
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+        - { name: payrollRunId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HrDashboard" }
+  /hr/reports/attendance:
+    get:
+      operationId: getHrAttendanceReport
+      tags: [hr]
+      summary: Attendance report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+        - { name: payrollRunId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HrAttendanceReport" }
+  /hr/reports/leave:
+    get:
+      operationId: getHrLeaveReport
+      tags: [hr]
+      summary: Leave report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+        - { name: payrollRunId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HrLeaveReport" }
+  /hr/reports/payroll:
+    get:
+      operationId: getHrPayrollReport
+      tags: [hr]
+      summary: Payroll report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+        - { name: payrollRunId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HrPayrollReport" }
+  /hr/reports/employees:
+    get:
+      operationId: getHrEmployeeReport
+      tags: [hr]
+      summary: Employee report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+        - { name: payrollRunId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HrEmployeeReport" }
+  /hr/reports/turnover:
+    get:
+      operationId: getHrTurnoverReport
+      tags: [hr]
+      summary: Turnover report
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+        - { name: payrollRunId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HrTurnoverReport" }
+
 components:
   parameters:
     IdParam:
@@ -19613,6 +21805,93 @@ components:
               status: { type: string }
               count: { type: integer }
 
+    HrGroupCount:
+      type: object
+      required: [key, count]
+      properties:
+        key: { type: ["string", "null"] }
+        count: { type: integer }
+
+    HrDashboard:
+      type: object
+      required: [employeesCount, activeEmployees, departmentsCount, pendingLeaveRequests, openLoans, pendingPayrollRuns, payrollPosted, loanOutstanding]
+      properties:
+        employeesCount: { type: integer }
+        activeEmployees: { type: integer }
+        departmentsCount: { type: integer }
+        pendingLeaveRequests: { type: integer }
+        openLoans: { type: integer }
+        pendingPayrollRuns: { type: integer }
+        payrollPosted: { type: string }
+        loanOutstanding: { type: string }
+        employeesByStatus:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+        employeesByDepartment:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+        employeesByType:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+
+    HrAttendanceReport:
+      type: object
+      required: [total, lateMinutes, overtimeHours, workedHours]
+      properties:
+        total: { type: integer }
+        lateMinutes: { type: string }
+        overtimeHours: { type: string }
+        workedHours: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+
+    HrLeaveReport:
+      type: object
+      required: [approvedDays]
+      properties:
+        approvedDays: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+        byType:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+
+    HrPayrollReport:
+      type: object
+      required: [totalEarnings, totalDeductions, totalNet]
+      properties:
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        totalNet: { type: string }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+
+    HrEmployeeReport:
+      type: object
+      required: [headcount]
+      properties:
+        headcount: { type: integer }
+        byStatus:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+        byDepartment:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+        byType:
+          type: array
+          items: { $ref: "#/components/schemas/HrGroupCount" }
+
+    HrTurnoverReport:
+      type: object
+      required: [hires, terminations, active]
+      properties:
+        hires: { type: integer }
+        terminations: { type: integer }
+        active: { type: integer }
+
     Warehouse:
       type: object
       required: [id, companyId, code, name, nameAr, warehouseType, status, isActive, createdAt]
@@ -21590,3 +23869,1234 @@ components:
         outputTax: { type: string }
         inputTax: { type: string }
         netTax: { type: string }
+
+    # ===== HR MODULE SCHEMAS (generated) =====
+    Department:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        parentId: { type: ["string", "null"] }
+        managerEmployeeId: { type: ["string", "null"] }
+        costCenterId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    DepartmentInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        parentId: { type: string }
+        managerEmployeeId: { type: string }
+        costCenterId: { type: string }
+        description: { type: string }
+        status: { type: string }
+    DepartmentUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        parentId: { type: string }
+        managerEmployeeId: { type: string }
+        costCenterId: { type: string }
+        description: { type: string }
+        status: { type: string }
+    DepartmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Department" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Section:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        departmentId: { type: ["string", "null"] }
+        managerEmployeeId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    SectionInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        departmentId: { type: string }
+        managerEmployeeId: { type: string }
+        description: { type: string }
+        status: { type: string }
+    SectionUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        departmentId: { type: string }
+        managerEmployeeId: { type: string }
+        description: { type: string }
+        status: { type: string }
+    SectionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Section" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    JobTitle:
+      type: object
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        departmentId: { type: ["string", "null"] }
+        grade: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    JobTitleInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        departmentId: { type: string }
+        grade: { type: string }
+        description: { type: string }
+        status: { type: string }
+    JobTitleUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        departmentId: { type: string }
+        grade: { type: string }
+        description: { type: string }
+        status: { type: string }
+    JobTitleListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/JobTitle" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Employee:
+      type: object
+      required: [id, companyId, code, firstName, lastName, employmentType, basicSalary, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        firstNameAr: { type: ["string", "null"] }
+        lastNameAr: { type: ["string", "null"] }
+        gender: { type: ["string", "null"] }
+        dateOfBirth: { type: ["string", "null"] }
+        nationality: { type: ["string", "null"] }
+        nationalId: { type: ["string", "null"] }
+        passportNumber: { type: ["string", "null"] }
+        maritalStatus: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        photoUrl: { type: ["string", "null"] }
+        departmentId: { type: ["string", "null"] }
+        sectionId: { type: ["string", "null"] }
+        jobTitleId: { type: ["string", "null"] }
+        managerEmployeeId: { type: ["string", "null"] }
+        employmentType: { type: string }
+        hireDate: { type: ["string", "null"] }
+        contractStartDate: { type: ["string", "null"] }
+        contractEndDate: { type: ["string", "null"] }
+        basicSalary: { type: string }
+        bankName: { type: ["string", "null"] }
+        bankAccountNumber: { type: ["string", "null"] }
+        iban: { type: ["string", "null"] }
+        status: { type: string }
+        terminationDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeInput:
+      type: object
+      required: [companyId, code, firstName, lastName]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        firstNameAr: { type: string }
+        lastNameAr: { type: string }
+        gender: { type: string }
+        dateOfBirth: { type: string }
+        nationality: { type: string }
+        nationalId: { type: string }
+        passportNumber: { type: string }
+        maritalStatus: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        photoUrl: { type: string }
+        departmentId: { type: string }
+        sectionId: { type: string }
+        jobTitleId: { type: string }
+        managerEmployeeId: { type: string }
+        employmentType: { type: string }
+        hireDate: { type: string }
+        contractStartDate: { type: string }
+        contractEndDate: { type: string }
+        basicSalary: { type: string }
+        bankName: { type: string }
+        bankAccountNumber: { type: string }
+        iban: { type: string }
+        status: { type: string }
+        terminationDate: { type: string }
+        notes: { type: string }
+    EmployeeUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        code: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        firstNameAr: { type: string }
+        lastNameAr: { type: string }
+        gender: { type: string }
+        dateOfBirth: { type: string }
+        nationality: { type: string }
+        nationalId: { type: string }
+        passportNumber: { type: string }
+        maritalStatus: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        photoUrl: { type: string }
+        departmentId: { type: string }
+        sectionId: { type: string }
+        jobTitleId: { type: string }
+        managerEmployeeId: { type: string }
+        employmentType: { type: string }
+        hireDate: { type: string }
+        contractStartDate: { type: string }
+        contractEndDate: { type: string }
+        basicSalary: { type: string }
+        bankName: { type: string }
+        bankAccountNumber: { type: string }
+        iban: { type: string }
+        status: { type: string }
+        terminationDate: { type: string }
+        notes: { type: string }
+    EmployeeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Employee" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    EmployeeDocument:
+      type: object
+      required: [id, companyId, documentType, title, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        employeeId: { type: ["string", "null"] }
+        code: { type: ["string", "null"] }
+        documentType: { type: string }
+        title: { type: string }
+        documentNumber: { type: ["string", "null"] }
+        issueDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        fileUrl: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeDocumentInput:
+      type: object
+      required: [companyId, title]
+      properties:
+        companyId: { type: string }
+        employeeId: { type: string }
+        code: { type: string }
+        documentType: { type: string }
+        title: { type: string }
+        documentNumber: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        fileUrl: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    EmployeeDocumentUpdate:
+      type: object
+      properties:
+        employeeId: { type: string }
+        code: { type: string }
+        documentType: { type: string }
+        title: { type: string }
+        documentNumber: { type: string }
+        issueDate: { type: string }
+        expiryDate: { type: string }
+        fileUrl: { type: string }
+        notes: { type: string }
+        status: { type: string }
+    EmployeeDocumentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeDocument" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    EmployeeEmergencyContact:
+      type: object
+      required: [id, companyId, name, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        employeeId: { type: ["string", "null"] }
+        name: { type: string }
+        relationship: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        altPhone: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeEmergencyContactInput:
+      type: object
+      required: [companyId, name]
+      properties:
+        companyId: { type: string }
+        employeeId: { type: string }
+        name: { type: string }
+        relationship: { type: string }
+        phone: { type: string }
+        altPhone: { type: string }
+        address: { type: string }
+    EmployeeEmergencyContactUpdate:
+      type: object
+      properties:
+        employeeId: { type: string }
+        name: { type: string }
+        relationship: { type: string }
+        phone: { type: string }
+        altPhone: { type: string }
+        address: { type: string }
+    EmployeeEmergencyContactListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeEmergencyContact" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Shift:
+      type: object
+      required: [id, companyId, code, name, nameAr, breakMinutes, workHours, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        startTime: { type: ["string", "null"] }
+        endTime: { type: ["string", "null"] }
+        breakMinutes: { type: integer }
+        workHours: { type: string }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ShiftInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        startTime: { type: string }
+        endTime: { type: string }
+        breakMinutes: { type: integer }
+        workHours: { type: string }
+        status: { type: string }
+    ShiftUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        startTime: { type: string }
+        endTime: { type: string }
+        breakMinutes: { type: integer }
+        workHours: { type: string }
+        status: { type: string }
+    ShiftListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Shift" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    AttendanceRecord:
+      type: object
+      required: [id, companyId, attendanceDate, status, lateMinutes, overtimeHours, workedHours, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        employeeId: { type: ["string", "null"] }
+        shiftId: { type: ["string", "null"] }
+        attendanceDate: { type: string }
+        checkIn: { type: ["string", "null"] }
+        checkOut: { type: ["string", "null"] }
+        status: { type: string }
+        lateMinutes: { type: integer }
+        overtimeHours: { type: string }
+        workedHours: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    AttendanceRecordInput:
+      type: object
+      required: [companyId, attendanceDate]
+      properties:
+        companyId: { type: string }
+        employeeId: { type: string }
+        shiftId: { type: string }
+        attendanceDate: { type: string }
+        checkIn: { type: string }
+        checkOut: { type: string }
+        status: { type: string }
+        lateMinutes: { type: integer }
+        overtimeHours: { type: string }
+        workedHours: { type: string }
+        notes: { type: string }
+    AttendanceRecordUpdate:
+      type: object
+      properties:
+        employeeId: { type: string }
+        shiftId: { type: string }
+        attendanceDate: { type: string }
+        checkIn: { type: string }
+        checkOut: { type: string }
+        status: { type: string }
+        lateMinutes: { type: integer }
+        overtimeHours: { type: string }
+        workedHours: { type: string }
+        notes: { type: string }
+    AttendanceRecordListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AttendanceRecord" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LeaveType:
+      type: object
+      required: [id, companyId, code, name, nameAr, daysPerYear, isPaid, carryForward, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        daysPerYear: { type: string }
+        isPaid: { type: boolean }
+        carryForward: { type: boolean }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LeaveTypeInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        daysPerYear: { type: string }
+        isPaid: { type: boolean }
+        carryForward: { type: boolean }
+        description: { type: string }
+        status: { type: string }
+    LeaveTypeUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        daysPerYear: { type: string }
+        isPaid: { type: boolean }
+        carryForward: { type: boolean }
+        description: { type: string }
+        status: { type: string }
+    LeaveTypeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeaveType" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LeaveBalance:
+      type: object
+      required: [id, companyId, year, entitled, used, remaining, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        employeeId: { type: ["string", "null"] }
+        leaveTypeId: { type: ["string", "null"] }
+        year: { type: integer }
+        entitled: { type: string }
+        used: { type: string }
+        remaining: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LeaveBalanceInput:
+      type: object
+      required: [companyId, year]
+      properties:
+        companyId: { type: string }
+        employeeId: { type: string }
+        leaveTypeId: { type: string }
+        year: { type: integer }
+        entitled: { type: string }
+        used: { type: string }
+        remaining: { type: string }
+    LeaveBalanceUpdate:
+      type: object
+      properties:
+        employeeId: { type: string }
+        leaveTypeId: { type: string }
+        year: { type: integer }
+        entitled: { type: string }
+        used: { type: string }
+        remaining: { type: string }
+    LeaveBalanceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeaveBalance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LeaveRequest:
+      type: object
+      required: [id, companyId, code, startDate, endDate, days, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: ["string", "null"] }
+        leaveTypeId: { type: ["string", "null"] }
+        startDate: { type: string }
+        endDate: { type: string }
+        days: { type: string }
+        reason: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        rejectedReason: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LeaveRequestInput:
+      type: object
+      required: [companyId, code, startDate, endDate]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        leaveTypeId: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        days: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    LeaveRequestUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        employeeId: { type: string }
+        leaveTypeId: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        days: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    LeaveRequestListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LeaveRequest" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    SalaryComponent:
+      type: object
+      required: [id, companyId, code, name, nameAr, componentType, calculationType, amount, percentage, taxable, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        componentType: { type: string }
+        calculationType: { type: string }
+        amount: { type: string }
+        percentage: { type: string }
+        taxable: { type: boolean }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    SalaryComponentInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        componentType: { type: string }
+        calculationType: { type: string }
+        amount: { type: string }
+        percentage: { type: string }
+        taxable: { type: boolean }
+        description: { type: string }
+        status: { type: string }
+    SalaryComponentUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        componentType: { type: string }
+        calculationType: { type: string }
+        amount: { type: string }
+        percentage: { type: string }
+        taxable: { type: boolean }
+        description: { type: string }
+        status: { type: string }
+    SalaryComponentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SalaryComponent" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    PayrollPeriod:
+      type: object
+      required: [id, companyId, code, name, year, month, startDate, endDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        year: { type: integer }
+        month: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        payDate: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PayrollPeriodInput:
+      type: object
+      required: [companyId, code, name, year, startDate, endDate]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        year: { type: integer }
+        month: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        payDate: { type: string }
+        status: { type: string }
+    PayrollPeriodUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        year: { type: integer }
+        month: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        payDate: { type: string }
+        status: { type: string }
+    PayrollPeriodListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PayrollPeriod" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    PayrollRun:
+      type: object
+      required: [id, companyId, code, runDate, totalEarnings, totalDeductions, totalNet, employeeCount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        code: { type: string }
+        payrollPeriodId: { type: ["string", "null"] }
+        runDate: { type: string }
+        description: { type: ["string", "null"] }
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        totalNet: { type: string }
+        employeeCount: { type: integer }
+        status: { type: string }
+        approvedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        postedBy: { type: ["string", "null"] }
+        postedAt: { type: ["string", "null"] }
+        reversedAt: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PayrollRunInput:
+      type: object
+      required: [companyId, code, runDate]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        code: { type: string }
+        payrollPeriodId: { type: string }
+        runDate: { type: string }
+        description: { type: string }
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        totalNet: { type: string }
+        employeeCount: { type: integer }
+        status: { type: string }
+    PayrollRunUpdate:
+      type: object
+      properties:
+        branchId: { type: string }
+        code: { type: string }
+        payrollPeriodId: { type: string }
+        runDate: { type: string }
+        description: { type: string }
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        totalNet: { type: string }
+        employeeCount: { type: integer }
+        status: { type: string }
+    PayrollRunListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PayrollRun" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Payslip:
+      type: object
+      required: [id, companyId, code, basicSalary, totalEarnings, totalDeductions, netPay, status, paid, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        payrollRunId: { type: ["string", "null"] }
+        employeeId: { type: ["string", "null"] }
+        basicSalary: { type: string }
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        netPay: { type: string }
+        status: { type: string }
+        paid: { type: boolean }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PayslipInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        payrollRunId: { type: string }
+        employeeId: { type: string }
+        basicSalary: { type: string }
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        netPay: { type: string }
+        status: { type: string }
+        paid: { type: boolean }
+        notes: { type: string }
+    PayslipUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        payrollRunId: { type: string }
+        employeeId: { type: string }
+        basicSalary: { type: string }
+        totalEarnings: { type: string }
+        totalDeductions: { type: string }
+        netPay: { type: string }
+        status: { type: string }
+        paid: { type: boolean }
+        notes: { type: string }
+    PayslipListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Payslip" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    PayslipLine:
+      type: object
+      required: [id, companyId, componentType, amount, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        payslipId: { type: ["string", "null"] }
+        salaryComponentId: { type: ["string", "null"] }
+        componentType: { type: string }
+        description: { type: ["string", "null"] }
+        amount: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PayslipLineInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        payslipId: { type: string }
+        salaryComponentId: { type: string }
+        componentType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+    PayslipLineUpdate:
+      type: object
+      properties:
+        payslipId: { type: string }
+        salaryComponentId: { type: string }
+        componentType: { type: string }
+        description: { type: string }
+        amount: { type: string }
+    PayslipLineListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PayslipLine" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    EmployeeLoan:
+      type: object
+      required: [id, companyId, code, loanType, amount, installmentAmount, installmentsCount, status, outstandingAmount, paymentMethod, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: ["string", "null"] }
+        loanType: { type: string }
+        amount: { type: string }
+        installmentAmount: { type: string }
+        installmentsCount: { type: integer }
+        startDate: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        status: { type: string }
+        outstandingAmount: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: ["string", "null"] }
+        bankAccountId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        disbursedAt: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeLoanInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        loanType: { type: string }
+        amount: { type: string }
+        installmentAmount: { type: string }
+        installmentsCount: { type: integer }
+        startDate: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        outstandingAmount: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        notes: { type: string }
+    EmployeeLoanUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        employeeId: { type: string }
+        loanType: { type: string }
+        amount: { type: string }
+        installmentAmount: { type: string }
+        installmentsCount: { type: integer }
+        startDate: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        outstandingAmount: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        notes: { type: string }
+    EmployeeLoanListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeLoan" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LoanInstallment:
+      type: object
+      required: [id, companyId, installmentNumber, amount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        employeeLoanId: { type: ["string", "null"] }
+        employeeId: { type: ["string", "null"] }
+        installmentNumber: { type: integer }
+        dueDate: { type: ["string", "null"] }
+        amount: { type: string }
+        status: { type: string }
+        paidDate: { type: ["string", "null"] }
+        payrollRunId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    LoanInstallmentInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        employeeLoanId: { type: string }
+        employeeId: { type: string }
+        installmentNumber: { type: integer }
+        dueDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        paidDate: { type: string }
+        payrollRunId: { type: string }
+    LoanInstallmentUpdate:
+      type: object
+      properties:
+        employeeLoanId: { type: string }
+        employeeId: { type: string }
+        installmentNumber: { type: integer }
+        dueDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        paidDate: { type: string }
+        payrollRunId: { type: string }
+    LoanInstallmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LoanInstallment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    EmployeeAdvance:
+      type: object
+      required: [id, companyId, code, amount, status, recoveredAmount, paymentMethod, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: ["string", "null"] }
+        amount: { type: string }
+        requestDate: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        status: { type: string }
+        recoveredAmount: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: ["string", "null"] }
+        bankAccountId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        approvedBy: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        paidAt: { type: ["string", "null"] }
+        journalEntryId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeAdvanceInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        amount: { type: string }
+        requestDate: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        recoveredAmount: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        notes: { type: string }
+    EmployeeAdvanceUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        employeeId: { type: string }
+        amount: { type: string }
+        requestDate: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        recoveredAmount: { type: string }
+        paymentMethod: { type: string }
+        cashboxId: { type: string }
+        bankAccountId: { type: string }
+        notes: { type: string }
+    EmployeeAdvanceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeAdvance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    KpiTemplate:
+      type: object
+      required: [id, companyId, code, name, nameAr, weight, maxScore, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        category: { type: ["string", "null"] }
+        weight: { type: string }
+        maxScore: { type: string }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    KpiTemplateInput:
+      type: object
+      required: [companyId, code, name, nameAr]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        category: { type: string }
+        weight: { type: string }
+        maxScore: { type: string }
+        description: { type: string }
+        status: { type: string }
+    KpiTemplateUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        category: { type: string }
+        weight: { type: string }
+        maxScore: { type: string }
+        description: { type: string }
+        status: { type: string }
+    KpiTemplateListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/KpiTemplate" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    EmployeeEvaluation:
+      type: object
+      required: [id, companyId, code, totalScore, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: ["string", "null"] }
+        evaluatorEmployeeId: { type: ["string", "null"] }
+        evaluationPeriod: { type: ["string", "null"] }
+        evaluationDate: { type: ["string", "null"] }
+        totalScore: { type: string }
+        rating: { type: ["string", "null"] }
+        strengths: { type: ["string", "null"] }
+        weaknesses: { type: ["string", "null"] }
+        recommendations: { type: ["string", "null"] }
+        status: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeEvaluationInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        evaluatorEmployeeId: { type: string }
+        evaluationPeriod: { type: string }
+        evaluationDate: { type: string }
+        totalScore: { type: string }
+        rating: { type: string }
+        strengths: { type: string }
+        weaknesses: { type: string }
+        recommendations: { type: string }
+        status: { type: string }
+    EmployeeEvaluationUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        employeeId: { type: string }
+        evaluatorEmployeeId: { type: string }
+        evaluationPeriod: { type: string }
+        evaluationDate: { type: string }
+        totalScore: { type: string }
+        rating: { type: string }
+        strengths: { type: string }
+        weaknesses: { type: string }
+        recommendations: { type: string }
+        status: { type: string }
+    EmployeeEvaluationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeEvaluation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    EmployeeEvaluationLine:
+      type: object
+      required: [id, companyId, weight, score, weightedScore, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        evaluationId: { type: ["string", "null"] }
+        kpiTemplateId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        weight: { type: string }
+        score: { type: string }
+        weightedScore: { type: string }
+        comments: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeEvaluationLineInput:
+      type: object
+      required: [companyId]
+      properties:
+        companyId: { type: string }
+        evaluationId: { type: string }
+        kpiTemplateId: { type: string }
+        description: { type: string }
+        weight: { type: string }
+        score: { type: string }
+        weightedScore: { type: string }
+        comments: { type: string }
+    EmployeeEvaluationLineUpdate:
+      type: object
+      properties:
+        evaluationId: { type: string }
+        kpiTemplateId: { type: string }
+        description: { type: string }
+        weight: { type: string }
+        score: { type: string }
+        weightedScore: { type: string }
+        comments: { type: string }
+    EmployeeEvaluationLineListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeEvaluationLine" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    LeaveRejectInput:
+      type: object
+      properties:
+        rejectedReason: { type: string }
