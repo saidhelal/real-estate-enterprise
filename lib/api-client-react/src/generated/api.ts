@@ -738,6 +738,8 @@ import type {
   ListLegalHearingsParams,
   ListLegalNoticesParams,
   ListLoanInstallmentsParams,
+  ListLookupTypesParams,
+  ListLookupValuesParams,
   ListMaterialSubmittalsParams,
   ListOverdueInstallmentsParams,
   ListPaymentCertificatesParams,
@@ -811,6 +813,15 @@ import type {
   LoanInstallmentUpdate,
   LoginHistoryEntry,
   LoginInput,
+  LookupType,
+  LookupTypeInput,
+  LookupTypeListResponse,
+  LookupTypeUpdate,
+  LookupValue,
+  LookupValueInput,
+  LookupValueListResponse,
+  LookupValueReorderInput,
+  LookupValueUpdate,
   MaintenanceRequest,
   MaintenanceRequestInput,
   MaterialSubmittal,
@@ -83100,4 +83111,1103 @@ export function useGetFixedAssetsDashboard<TData = Awaited<ReturnType<typeof get
 
 
 
+
+export const getListLookupTypesUrl = (params?: ListLookupTypesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/lookup-types?${stringifiedParams}` : `/api/lookup-types`
+}
+
+/**
+ * @summary List lookup types
+ */
+export const listLookupTypes = async (params?: ListLookupTypesParams, options?: RequestInit): Promise<LookupTypeListResponse> => {
+
+  return customFetch<LookupTypeListResponse>(getListLookupTypesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListLookupTypesQueryKey = (params?: ListLookupTypesParams,) => {
+    return [
+    `/api/lookup-types`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListLookupTypesQueryOptions = <TData = Awaited<ReturnType<typeof listLookupTypes>>, TError = ErrorType<unknown>>(params?: ListLookupTypesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLookupTypes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListLookupTypesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLookupTypes>>> = ({ signal }) => listLookupTypes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listLookupTypes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListLookupTypesQueryResult = NonNullable<Awaited<ReturnType<typeof listLookupTypes>>>
+export type ListLookupTypesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List lookup types
+ */
+
+export function useListLookupTypes<TData = Awaited<ReturnType<typeof listLookupTypes>>, TError = ErrorType<unknown>>(
+ params?: ListLookupTypesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLookupTypes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListLookupTypesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateLookupTypeUrl = () => {
+
+
+
+
+  return `/api/lookup-types`
+}
+
+/**
+ * @summary Create a lookup type
+ */
+export const createLookupType = async (lookupTypeInput: LookupTypeInput, options?: RequestInit): Promise<LookupType> => {
+
+  return customFetch<LookupType>(getCreateLookupTypeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      lookupTypeInput,)
+  }
+);}
+
+
+
+
+export const getCreateLookupTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLookupType>>, TError,{data: BodyType<LookupTypeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createLookupType>>, TError,{data: BodyType<LookupTypeInput>}, TContext> => {
+
+const mutationKey = ['createLookupType'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createLookupType>>, {data: BodyType<LookupTypeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createLookupType(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateLookupTypeMutationResult = NonNullable<Awaited<ReturnType<typeof createLookupType>>>
+    export type CreateLookupTypeMutationBody = BodyType<LookupTypeInput>
+    export type CreateLookupTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a lookup type
+ */
+export const useCreateLookupType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLookupType>>, TError,{data: BodyType<LookupTypeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createLookupType>>,
+        TError,
+        {data: BodyType<LookupTypeInput>},
+        TContext
+      > => {
+      return useMutation(getCreateLookupTypeMutationOptions(options));
+    }
+
+export const getGetLookupTypeUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-types/${id}`
+}
+
+/**
+ * @summary Get a lookup type
+ */
+export const getLookupType = async (id: string, options?: RequestInit): Promise<LookupType> => {
+
+  return customFetch<LookupType>(getGetLookupTypeUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLookupTypeQueryKey = (id: string,) => {
+    return [
+    `/api/lookup-types/${id}`
+    ] as const;
+    }
+
+
+export const getGetLookupTypeQueryOptions = <TData = Awaited<ReturnType<typeof getLookupType>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLookupType>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLookupTypeQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLookupType>>> = ({ signal }) => getLookupType(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLookupType>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetLookupTypeQueryResult = NonNullable<Awaited<ReturnType<typeof getLookupType>>>
+export type GetLookupTypeQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a lookup type
+ */
+
+export function useGetLookupType<TData = Awaited<ReturnType<typeof getLookupType>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLookupType>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetLookupTypeQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateLookupTypeUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-types/${id}`
+}
+
+/**
+ * @summary Update a lookup type
+ */
+export const updateLookupType = async (id: string,
+    lookupTypeUpdate: LookupTypeUpdate, options?: RequestInit): Promise<LookupType> => {
+
+  return customFetch<LookupType>(getUpdateLookupTypeUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      lookupTypeUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateLookupTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLookupType>>, TError,{id: string;data: BodyType<LookupTypeUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateLookupType>>, TError,{id: string;data: BodyType<LookupTypeUpdate>}, TContext> => {
+
+const mutationKey = ['updateLookupType'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateLookupType>>, {id: string;data: BodyType<LookupTypeUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateLookupType(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateLookupTypeMutationResult = NonNullable<Awaited<ReturnType<typeof updateLookupType>>>
+    export type UpdateLookupTypeMutationBody = BodyType<LookupTypeUpdate>
+    export type UpdateLookupTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a lookup type
+ */
+export const useUpdateLookupType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLookupType>>, TError,{id: string;data: BodyType<LookupTypeUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateLookupType>>,
+        TError,
+        {id: string;data: BodyType<LookupTypeUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateLookupTypeMutationOptions(options));
+    }
+
+export const getDeleteLookupTypeUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-types/${id}`
+}
+
+/**
+ * @summary Delete a lookup type
+ */
+export const deleteLookupType = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getDeleteLookupTypeUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteLookupTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLookupType>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteLookupType>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteLookupType'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteLookupType>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteLookupType(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteLookupTypeMutationResult = NonNullable<Awaited<ReturnType<typeof deleteLookupType>>>
+
+    export type DeleteLookupTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a lookup type
+ */
+export const useDeleteLookupType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLookupType>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteLookupType>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeleteLookupTypeMutationOptions(options));
+    }
+
+export const getListLookupValuesUrl = (params?: ListLookupValuesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/lookup-values?${stringifiedParams}` : `/api/lookup-values`
+}
+
+/**
+ * @summary List lookup values
+ */
+export const listLookupValues = async (params?: ListLookupValuesParams, options?: RequestInit): Promise<LookupValueListResponse> => {
+
+  return customFetch<LookupValueListResponse>(getListLookupValuesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListLookupValuesQueryKey = (params?: ListLookupValuesParams,) => {
+    return [
+    `/api/lookup-values`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListLookupValuesQueryOptions = <TData = Awaited<ReturnType<typeof listLookupValues>>, TError = ErrorType<unknown>>(params?: ListLookupValuesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLookupValues>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListLookupValuesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLookupValues>>> = ({ signal }) => listLookupValues(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listLookupValues>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListLookupValuesQueryResult = NonNullable<Awaited<ReturnType<typeof listLookupValues>>>
+export type ListLookupValuesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List lookup values
+ */
+
+export function useListLookupValues<TData = Awaited<ReturnType<typeof listLookupValues>>, TError = ErrorType<unknown>>(
+ params?: ListLookupValuesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLookupValues>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListLookupValuesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateLookupValueUrl = () => {
+
+
+
+
+  return `/api/lookup-values`
+}
+
+/**
+ * @summary Create a lookup value
+ */
+export const createLookupValue = async (lookupValueInput: LookupValueInput, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getCreateLookupValueUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      lookupValueInput,)
+  }
+);}
+
+
+
+
+export const getCreateLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLookupValue>>, TError,{data: BodyType<LookupValueInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createLookupValue>>, TError,{data: BodyType<LookupValueInput>}, TContext> => {
+
+const mutationKey = ['createLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createLookupValue>>, {data: BodyType<LookupValueInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createLookupValue(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof createLookupValue>>>
+    export type CreateLookupValueMutationBody = BodyType<LookupValueInput>
+    export type CreateLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a lookup value
+ */
+export const useCreateLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLookupValue>>, TError,{data: BodyType<LookupValueInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createLookupValue>>,
+        TError,
+        {data: BodyType<LookupValueInput>},
+        TContext
+      > => {
+      return useMutation(getCreateLookupValueMutationOptions(options));
+    }
+
+export const getReorderLookupValuesUrl = () => {
+
+
+
+
+  return `/api/lookup-values/reorder`
+}
+
+/**
+ * @summary Reorder lookup values
+ */
+export const reorderLookupValues = async (lookupValueReorderInput: LookupValueReorderInput, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getReorderLookupValuesUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      lookupValueReorderInput,)
+  }
+);}
+
+
+
+
+export const getReorderLookupValuesMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reorderLookupValues>>, TError,{data: BodyType<LookupValueReorderInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reorderLookupValues>>, TError,{data: BodyType<LookupValueReorderInput>}, TContext> => {
+
+const mutationKey = ['reorderLookupValues'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reorderLookupValues>>, {data: BodyType<LookupValueReorderInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  reorderLookupValues(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReorderLookupValuesMutationResult = NonNullable<Awaited<ReturnType<typeof reorderLookupValues>>>
+    export type ReorderLookupValuesMutationBody = BodyType<LookupValueReorderInput>
+    export type ReorderLookupValuesMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Reorder lookup values
+ */
+export const useReorderLookupValues = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reorderLookupValues>>, TError,{data: BodyType<LookupValueReorderInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reorderLookupValues>>,
+        TError,
+        {data: BodyType<LookupValueReorderInput>},
+        TContext
+      > => {
+      return useMutation(getReorderLookupValuesMutationOptions(options));
+    }
+
+export const getGetLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}`
+}
+
+/**
+ * @summary Get a lookup value
+ */
+export const getLookupValue = async (id: string, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getGetLookupValueUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLookupValueQueryKey = (id: string,) => {
+    return [
+    `/api/lookup-values/${id}`
+    ] as const;
+    }
+
+
+export const getGetLookupValueQueryOptions = <TData = Awaited<ReturnType<typeof getLookupValue>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLookupValue>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLookupValueQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLookupValue>>> = ({ signal }) => getLookupValue(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLookupValue>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetLookupValueQueryResult = NonNullable<Awaited<ReturnType<typeof getLookupValue>>>
+export type GetLookupValueQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a lookup value
+ */
+
+export function useGetLookupValue<TData = Awaited<ReturnType<typeof getLookupValue>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLookupValue>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetLookupValueQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}`
+}
+
+/**
+ * @summary Update a lookup value
+ */
+export const updateLookupValue = async (id: string,
+    lookupValueUpdate: LookupValueUpdate, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getUpdateLookupValueUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      lookupValueUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLookupValue>>, TError,{id: string;data: BodyType<LookupValueUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateLookupValue>>, TError,{id: string;data: BodyType<LookupValueUpdate>}, TContext> => {
+
+const mutationKey = ['updateLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateLookupValue>>, {id: string;data: BodyType<LookupValueUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateLookupValue(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof updateLookupValue>>>
+    export type UpdateLookupValueMutationBody = BodyType<LookupValueUpdate>
+    export type UpdateLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a lookup value
+ */
+export const useUpdateLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLookupValue>>, TError,{id: string;data: BodyType<LookupValueUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateLookupValue>>,
+        TError,
+        {id: string;data: BodyType<LookupValueUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateLookupValueMutationOptions(options));
+    }
+
+export const getDeleteLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}`
+}
+
+/**
+ * @summary Delete a lookup value
+ */
+export const deleteLookupValue = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getDeleteLookupValueUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteLookupValue>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteLookupValue>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteLookupValue(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof deleteLookupValue>>>
+
+    export type DeleteLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a lookup value
+ */
+export const useDeleteLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteLookupValue>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeleteLookupValueMutationOptions(options));
+    }
+
+export const getActivateLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}/activate`
+}
+
+/**
+ * @summary Activate a lookup value
+ */
+export const activateLookupValue = async (id: string, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getActivateLookupValueUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getActivateLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activateLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof activateLookupValue>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['activateLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof activateLookupValue>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  activateLookupValue(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ActivateLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof activateLookupValue>>>
+
+    export type ActivateLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Activate a lookup value
+ */
+export const useActivateLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activateLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof activateLookupValue>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getActivateLookupValueMutationOptions(options));
+    }
+
+export const getDeactivateLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}/deactivate`
+}
+
+/**
+ * @summary Deactivate a lookup value
+ */
+export const deactivateLookupValue = async (id: string, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getDeactivateLookupValueUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getDeactivateLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deactivateLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deactivateLookupValue>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deactivateLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deactivateLookupValue>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deactivateLookupValue(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeactivateLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof deactivateLookupValue>>>
+
+    export type DeactivateLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Deactivate a lookup value
+ */
+export const useDeactivateLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deactivateLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deactivateLookupValue>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeactivateLookupValueMutationOptions(options));
+    }
+
+export const getArchiveLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}/archive`
+}
+
+/**
+ * @summary Archive a lookup value
+ */
+export const archiveLookupValue = async (id: string, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getArchiveLookupValueUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getArchiveLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof archiveLookupValue>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['archiveLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof archiveLookupValue>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  archiveLookupValue(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ArchiveLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof archiveLookupValue>>>
+
+    export type ArchiveLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Archive a lookup value
+ */
+export const useArchiveLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof archiveLookupValue>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getArchiveLookupValueMutationOptions(options));
+    }
+
+export const getUnarchiveLookupValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/lookup-values/${id}/unarchive`
+}
+
+/**
+ * @summary Unarchive a lookup value
+ */
+export const unarchiveLookupValue = async (id: string, options?: RequestInit): Promise<LookupValue> => {
+
+  return customFetch<LookupValue>(getUnarchiveLookupValueUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getUnarchiveLookupValueMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unarchiveLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof unarchiveLookupValue>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['unarchiveLookupValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unarchiveLookupValue>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  unarchiveLookupValue(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnarchiveLookupValueMutationResult = NonNullable<Awaited<ReturnType<typeof unarchiveLookupValue>>>
+
+    export type UnarchiveLookupValueMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Unarchive a lookup value
+ */
+export const useUnarchiveLookupValue = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unarchiveLookupValue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof unarchiveLookupValue>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getUnarchiveLookupValueMutationOptions(options));
+    }
 

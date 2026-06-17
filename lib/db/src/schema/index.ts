@@ -29,3 +29,4 @@ export * from "./land-bank";
 export * from "./handover";
 export * from "./customer-service";
 export * from "./fixed-assets";
+export * from "./master-data";

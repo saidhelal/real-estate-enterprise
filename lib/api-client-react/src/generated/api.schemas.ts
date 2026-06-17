@@ -17,6 +17,144 @@ export interface OkResponse {
   success: boolean;
 }
 
+/**
+ * @nullable
+ */
+export type LookupTypeMetadata = { [key: string]: unknown } | null;
+
+export interface LookupType {
+  id: string;
+  /** @nullable */
+  companyId?: string | null;
+  code: string;
+  nameEn: string;
+  nameAr: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  module?: string | null;
+  sortOrder: number;
+  isSystem: boolean;
+  isActive: boolean;
+  /** @nullable */
+  metadata?: LookupTypeMetadata;
+  createdAt: string;
+}
+
+export type LookupTypeInputMetadata = { [key: string]: unknown };
+
+export interface LookupTypeInput {
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 1 */
+  nameEn: string;
+  /** @minLength 1 */
+  nameAr: string;
+  description?: string;
+  module?: string;
+  companyId?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+  metadata?: LookupTypeInputMetadata;
+}
+
+export type LookupTypeUpdateMetadata = { [key: string]: unknown };
+
+export interface LookupTypeUpdate {
+  /** @minLength 1 */
+  nameEn?: string;
+  /** @minLength 1 */
+  nameAr?: string;
+  description?: string;
+  module?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+  metadata?: LookupTypeUpdateMetadata;
+}
+
+export interface LookupTypeListResponse {
+  data: LookupType[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/**
+ * @nullable
+ */
+export type LookupValueMetadata = { [key: string]: unknown } | null;
+
+export interface LookupValue {
+  id: string;
+  typeId: string;
+  /** @nullable */
+  companyId?: string | null;
+  /** @nullable */
+  parentId?: string | null;
+  code: string;
+  labelEn: string;
+  labelAr: string;
+  /** @nullable */
+  description?: string | null;
+  sortOrder: number;
+  isArchived: boolean;
+  isSystem: boolean;
+  isActive: boolean;
+  /** @nullable */
+  metadata?: LookupValueMetadata;
+  createdAt: string;
+}
+
+export type LookupValueInputMetadata = { [key: string]: unknown };
+
+export interface LookupValueInput {
+  /** @minLength 1 */
+  typeId: string;
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 1 */
+  labelEn: string;
+  /** @minLength 1 */
+  labelAr: string;
+  description?: string;
+  companyId?: string;
+  parentId?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+  metadata?: LookupValueInputMetadata;
+}
+
+export type LookupValueUpdateMetadata = { [key: string]: unknown };
+
+export interface LookupValueUpdate {
+  /** @minLength 1 */
+  labelEn?: string;
+  /** @minLength 1 */
+  labelAr?: string;
+  description?: string;
+  /** @nullable */
+  parentId?: string | null;
+  sortOrder?: number;
+  isActive?: boolean;
+  metadata?: LookupValueUpdateMetadata;
+}
+
+export type LookupValueReorderInputItemsItem = {
+  id: string;
+  sortOrder: number;
+};
+
+export interface LookupValueReorderInput {
+  items: LookupValueReorderInputItemsItem[];
+}
+
+export interface LookupValueListResponse {
+  data: LookupValue[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ReportExportInputReportType = typeof ReportExportInputReportType[keyof typeof ReportExportInputReportType];
 
 
@@ -13478,5 +13616,25 @@ status?: string;
 
 export type GetFixedAssetsDashboardParams = {
 companyId?: string;
+};
+
+export type ListLookupTypesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+module?: string;
+active?: boolean;
+};
+
+export type ListLookupValuesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+typeId?: string;
+typeCode?: string;
+active?: boolean;
+archived?: boolean;
 };
 

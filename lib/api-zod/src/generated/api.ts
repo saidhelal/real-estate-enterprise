@@ -27538,3 +27538,380 @@ export const GetFixedAssetsDashboardResponse = zod.object({
 })
 
 
+/**
+ * @summary List lookup types
+ */
+export const ListLookupTypesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "module": zod.coerce.string().optional(),
+  "active": zod.coerce.boolean().optional()
+})
+
+export const ListLookupTypesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "code": zod.string(),
+  "nameEn": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "module": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a lookup type
+ */
+
+
+
+
+
+export const CreateLookupTypeBody = zod.object({
+  "code": zod.string().min(1),
+  "nameEn": zod.string().min(1),
+  "nameAr": zod.string().min(1),
+  "description": zod.string().optional(),
+  "module": zod.string().optional(),
+  "companyId": zod.string().optional(),
+  "sortOrder": zod.number().optional(),
+  "isActive": zod.boolean().optional(),
+  "metadata": zod.record(zod.string(), zod.unknown()).optional()
+})
+
+
+/**
+ * @summary Get a lookup type
+ */
+export const GetLookupTypeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLookupTypeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "code": zod.string(),
+  "nameEn": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "module": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a lookup type
+ */
+export const UpdateLookupTypeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const UpdateLookupTypeBody = zod.object({
+  "nameEn": zod.string().min(1).optional(),
+  "nameAr": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "module": zod.string().optional(),
+  "sortOrder": zod.number().optional(),
+  "isActive": zod.boolean().optional(),
+  "metadata": zod.record(zod.string(), zod.unknown()).optional()
+})
+
+export const UpdateLookupTypeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "code": zod.string(),
+  "nameEn": zod.string(),
+  "nameAr": zod.string(),
+  "description": zod.string().nullish(),
+  "module": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a lookup type
+ */
+export const DeleteLookupTypeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLookupTypeResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List lookup values
+ */
+export const ListLookupValuesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "typeId": zod.coerce.string().optional(),
+  "typeCode": zod.coerce.string().optional(),
+  "active": zod.coerce.boolean().optional(),
+  "archived": zod.coerce.boolean().optional()
+})
+
+export const ListLookupValuesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a lookup value
+ */
+
+
+
+
+
+
+export const CreateLookupValueBody = zod.object({
+  "typeId": zod.string().min(1),
+  "code": zod.string().min(1),
+  "labelEn": zod.string().min(1),
+  "labelAr": zod.string().min(1),
+  "description": zod.string().optional(),
+  "companyId": zod.string().optional(),
+  "parentId": zod.string().optional(),
+  "sortOrder": zod.number().optional(),
+  "isActive": zod.boolean().optional(),
+  "metadata": zod.record(zod.string(), zod.unknown()).optional()
+})
+
+
+/**
+ * @summary Reorder lookup values
+ */
+export const ReorderLookupValuesBody = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string(),
+  "sortOrder": zod.number()
+}))
+})
+
+export const ReorderLookupValuesResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Get a lookup value
+ */
+export const GetLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLookupValueResponse = zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a lookup value
+ */
+export const UpdateLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const UpdateLookupValueBody = zod.object({
+  "labelEn": zod.string().min(1).optional(),
+  "labelAr": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "parentId": zod.string().nullish(),
+  "sortOrder": zod.number().optional(),
+  "isActive": zod.boolean().optional(),
+  "metadata": zod.record(zod.string(), zod.unknown()).optional()
+})
+
+export const UpdateLookupValueResponse = zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a lookup value
+ */
+export const DeleteLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLookupValueResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Activate a lookup value
+ */
+export const ActivateLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ActivateLookupValueResponse = zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Deactivate a lookup value
+ */
+export const DeactivateLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeactivateLookupValueResponse = zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Archive a lookup value
+ */
+export const ArchiveLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ArchiveLookupValueResponse = zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Unarchive a lookup value
+ */
+export const UnarchiveLookupValueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UnarchiveLookupValueResponse = zod.object({
+  "id": zod.string(),
+  "typeId": zod.string(),
+  "companyId": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "code": zod.string(),
+  "labelEn": zod.string(),
+  "labelAr": zod.string(),
+  "description": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isArchived": zod.boolean(),
+  "isSystem": zod.boolean(),
+  "isActive": zod.boolean(),
+  "metadata": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.string()
+})
+
+

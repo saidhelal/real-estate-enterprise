@@ -33,6 +33,7 @@ import landBankRouter from "./land-bank";
 import handoverRouter from "./handover";
 import customerServiceRouter from "./customer-service";
 import fixedAssetsRouter from "./fixed-assets";
+import masterDataRouter from "./master-data";
 import portalRouter from "./portal";
 
 const router: IRouter = Router();
@@ -75,5 +76,6 @@ router.use(landBankRouter);
 router.use(handoverRouter);
 router.use(customerServiceRouter);
 router.use(fixedAssetsRouter);
+router.use(masterDataRouter);
 
 export default router;

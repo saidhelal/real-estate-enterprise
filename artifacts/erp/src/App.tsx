@@ -12,6 +12,8 @@ import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
 import UsersPage from "@/pages/users";
 import RolesPage from "@/pages/roles";
+import MasterDataPage from "@/pages/master-data";
+import DynamicListsPage from "@/pages/dynamic-lists";
 import CompaniesPage from "@/pages/companies";
 import BranchesPage from "@/pages/branches";
 import FiscalYearsPage from "@/pages/fiscal-years";
@@ -282,6 +284,8 @@ function Router() {
             <Route path="/audit-logs" component={AuditLogsPage} />
             <Route path="/login-history" component={LoginHistoryPage} />
             <Route path="/settings" component={SettingsPage} />
+            <Route path="/master-data" component={MasterDataPage} />
+            <Route path="/dynamic-lists" component={DynamicListsPage} />
             <Route path="/change-password" component={ChangePasswordPage} />
 
             <Route path="/projects" component={ProjectsPage} />

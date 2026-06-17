@@ -19526,6 +19526,237 @@ paths:
               schema:
                 $ref: "#/components/schemas/FixedAssetsDashboard"
 
+  /lookup-types:
+    get:
+      operationId: listLookupTypes
+      tags: [masterData]
+      summary: List lookup types
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: module, in: query, required: false, schema: { type: string } }
+        - { name: active, in: query, required: false, schema: { type: boolean } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupTypeListResponse" }
+    post:
+      operationId: createLookupType
+      tags: [masterData]
+      summary: Create a lookup type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LookupTypeInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupType" }
+  /lookup-types/{id}:
+    get:
+      operationId: getLookupType
+      tags: [masterData]
+      summary: Get a lookup type
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupType" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLookupType
+      tags: [masterData]
+      summary: Update a lookup type
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LookupTypeUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupType" }
+    delete:
+      operationId: deleteLookupType
+      tags: [masterData]
+      summary: Delete a lookup type
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /lookup-values:
+    get:
+      operationId: listLookupValues
+      tags: [masterData]
+      summary: List lookup values
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: typeId, in: query, required: false, schema: { type: string } }
+        - { name: typeCode, in: query, required: false, schema: { type: string } }
+        - { name: active, in: query, required: false, schema: { type: boolean } }
+        - { name: archived, in: query, required: false, schema: { type: boolean } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValueListResponse" }
+    post:
+      operationId: createLookupValue
+      tags: [masterData]
+      summary: Create a lookup value
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LookupValueInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+  /lookup-values/reorder:
+    post:
+      operationId: reorderLookupValues
+      tags: [masterData]
+      summary: Reorder lookup values
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LookupValueReorderInput" }
+      responses:
+        "200":
+          description: Reordered
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /lookup-values/{id}:
+    get:
+      operationId: getLookupValue
+      tags: [masterData]
+      summary: Get a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      operationId: updateLookupValue
+      tags: [masterData]
+      summary: Update a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LookupValueUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+    delete:
+      operationId: deleteLookupValue
+      tags: [masterData]
+      summary: Delete a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OkResponse" }
+  /lookup-values/{id}/activate:
+    post:
+      operationId: activateLookupValue
+      tags: [masterData]
+      summary: Activate a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Activated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+  /lookup-values/{id}/deactivate:
+    post:
+      operationId: deactivateLookupValue
+      tags: [masterData]
+      summary: Deactivate a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deactivated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+  /lookup-values/{id}/archive:
+    post:
+      operationId: archiveLookupValue
+      tags: [masterData]
+      summary: Archive a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+  /lookup-values/{id}/unarchive:
+    post:
+      operationId: unarchiveLookupValue
+      tags: [masterData]
+      summary: Unarchive a lookup value
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Unarchived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LookupValue" }
+
 components:
   parameters:
     IdParam:
@@ -19553,6 +19784,128 @@ components:
       required: [success]
       properties:
         success: { type: boolean }
+
+    LookupType:
+      type: object
+      required: [id, code, nameEn, nameAr, sortOrder, isSystem, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: ["string", "null"] }
+        code: { type: string }
+        nameEn: { type: string }
+        nameAr: { type: string }
+        description: { type: ["string", "null"] }
+        module: { type: ["string", "null"] }
+        sortOrder: { type: integer }
+        isSystem: { type: boolean }
+        isActive: { type: boolean }
+        metadata: { type: ["object", "null"], additionalProperties: true }
+        createdAt: { type: string }
+
+    LookupTypeInput:
+      type: object
+      required: [code, nameEn, nameAr]
+      properties:
+        code: { type: string, minLength: 1 }
+        nameEn: { type: string, minLength: 1 }
+        nameAr: { type: string, minLength: 1 }
+        description: { type: string }
+        module: { type: string }
+        companyId: { type: string }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+        metadata: { type: object, additionalProperties: true }
+
+    LookupTypeUpdate:
+      type: object
+      properties:
+        nameEn: { type: string, minLength: 1 }
+        nameAr: { type: string, minLength: 1 }
+        description: { type: string }
+        module: { type: string }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+        metadata: { type: object, additionalProperties: true }
+
+    LookupTypeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LookupType" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    LookupValue:
+      type: object
+      required: [id, typeId, code, labelEn, labelAr, sortOrder, isArchived, isSystem, isActive, createdAt]
+      properties:
+        id: { type: string }
+        typeId: { type: string }
+        companyId: { type: ["string", "null"] }
+        parentId: { type: ["string", "null"] }
+        code: { type: string }
+        labelEn: { type: string }
+        labelAr: { type: string }
+        description: { type: ["string", "null"] }
+        sortOrder: { type: integer }
+        isArchived: { type: boolean }
+        isSystem: { type: boolean }
+        isActive: { type: boolean }
+        metadata: { type: ["object", "null"], additionalProperties: true }
+        createdAt: { type: string }
+
+    LookupValueInput:
+      type: object
+      required: [typeId, code, labelEn, labelAr]
+      properties:
+        typeId: { type: string, minLength: 1 }
+        code: { type: string, minLength: 1 }
+        labelEn: { type: string, minLength: 1 }
+        labelAr: { type: string, minLength: 1 }
+        description: { type: string }
+        companyId: { type: string }
+        parentId: { type: string }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+        metadata: { type: object, additionalProperties: true }
+
+    LookupValueUpdate:
+      type: object
+      properties:
+        labelEn: { type: string, minLength: 1 }
+        labelAr: { type: string, minLength: 1 }
+        description: { type: string }
+        parentId: { type: ["string", "null"] }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+        metadata: { type: object, additionalProperties: true }
+
+    LookupValueReorderInput:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [id, sortOrder]
+            properties:
+              id: { type: string }
+              sortOrder: { type: integer }
+
+    LookupValueListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LookupValue" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
 
     ReportExportInput:
       type: object

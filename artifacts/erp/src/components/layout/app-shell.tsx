@@ -21,6 +21,7 @@ import {
   Truck, ShoppingCart, PackageCheck, PackageX, Store, Undo2,
   Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
   LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
+  Database, ListPlus, SlidersHorizontal, Settings2,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -314,6 +315,13 @@ const NAV_GROUPS = [
     { href: "/audit-logs", icon: ListOrdered, labelKey: "nav.audit_logs" },
     { href: "/login-history", icon: History, labelKey: "nav.login_history" },
     { href: "/settings", icon: Settings, labelKey: "nav.settings" },
+  ]},
+  { titleKey: "nav.group.system_administration", items: [
+    { href: "/master-data", icon: Database, labelKey: "nav.master_data" },
+    { href: "/dynamic-lists", icon: ListPlus, labelKey: "nav.dynamic_lists" },
+    { href: "/settings", icon: SlidersHorizontal, labelKey: "nav.system_configuration" },
+    { href: "/settings", icon: Settings2, labelKey: "nav.business_settings" },
+    { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles_permissions" },
   ]},
 ];
 

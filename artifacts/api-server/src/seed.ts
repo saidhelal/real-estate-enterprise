@@ -65,7 +65,10 @@ import {
   customerNotificationsTable,
   supportTicketsTable,
   supportTicketMessagesTable,
+  lookupTypesTable,
+  lookupValuesTable,
 } from "@workspace/db";
+import { LABELS, LOOKUP_CATEGORIES } from "@workspace/master-data";
 import { hashPassword } from "./lib/auth";
 
 const MODULES: Array<{ module: string; label: string; extraActions?: string[] }> = [
@@ -77,6 +80,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "currencies", label: "Currencies" },
   { module: "numberSequences", label: "Document Numbering" },
   { module: "settings", label: "System Settings" },
+  { module: "masterData", label: "Master Data", extraActions: ["archive", "reorder"] },
   { module: "audit", label: "Audit Trail" },
   { module: "projects", label: "Projects" },
   { module: "phases", label: "Phases" },
@@ -1567,6 +1571,93 @@ async function seedPortal(): Promise<void> {
   );
 }
 
+// Master Data engine: seed each category as a system lookup type and its options
+// as system lookup values. Stored value codes are kept identical to the existing
+// snake_case enum codes so current records keep resolving to the same EN/AR
+// labels. Idempotent: types are upserted by code, values inserted on conflict do
+// nothing, and labels/order are refreshed so re-running keeps the engine current.
+async function seedMasterData(): Promise<void> {
+  let typeCount = 0;
+  let valueCount = 0;
+  for (let i = 0; i < LOOKUP_CATEGORIES.length; i++) {
+    const cat = LOOKUP_CATEGORIES[i];
+    const [existingType] = await db
+      .select()
+      .from(lookupTypesTable)
+      .where(eq(lookupTypesTable.code, cat.code));
+
+    let typeId: string;
+    if (existingType) {
+      await db
+        .update(lookupTypesTable)
+        .set({
+          nameEn: cat.nameEn,
+          nameAr: cat.nameAr,
+          module: cat.module ?? null,
+          sortOrder: i,
+          isSystem: true,
+        })
+        .where(eq(lookupTypesTable.id, existingType.id));
+      typeId = existingType.id;
+    } else {
+      const [created] = await db
+        .insert(lookupTypesTable)
+        .values({
+          code: cat.code,
+          nameEn: cat.nameEn,
+          nameAr: cat.nameAr,
+          module: cat.module ?? null,
+          sortOrder: i,
+          isSystem: true,
+        })
+        .returning();
+      typeId = created.id;
+      typeCount++;
+    }
+
+    for (let j = 0; j < cat.valueCodes.length; j++) {
+      const code = cat.valueCodes[j];
+      const label = LABELS[code];
+      if (!label) {
+        console.warn(`Master data: missing label for "${code}" in "${cat.code}"`);
+        continue;
+      }
+      const [existingValue] = await db
+        .select()
+        .from(lookupValuesTable)
+        .where(
+          and(
+            eq(lookupValuesTable.typeId, typeId),
+            eq(lookupValuesTable.code, code),
+          ),
+        );
+      if (existingValue) {
+        // Refresh labels/order for system rows; never touch admin-edited custom
+        // values (those are isSystem=false and not in the registry anyway).
+        if (existingValue.isSystem) {
+          await db
+            .update(lookupValuesTable)
+            .set({ labelEn: label.en, labelAr: label.ar, sortOrder: j })
+            .where(eq(lookupValuesTable.id, existingValue.id));
+        }
+      } else {
+        await db.insert(lookupValuesTable).values({
+          typeId,
+          code,
+          labelEn: label.en,
+          labelAr: label.ar,
+          sortOrder: j,
+          isSystem: true,
+        });
+        valueCount++;
+      }
+    }
+  }
+  console.log(
+    `Seeded master data (${LOOKUP_CATEGORIES.length} categories; +${typeCount} new types, +${valueCount} new values)`,
+  );
+}
+
 async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
@@ -1576,6 +1667,7 @@ async function main(): Promise<void> {
   await seedCompany();
   await seedNumberSequences();
   await seedSettings();
+  await seedMasterData();
   await seedRealEstate();
   await seedFinance();
   await seedReservations();

@@ -175,6 +175,9 @@ importers:
       '@workspace/db':
         specifier: workspace:*
         version: link:../../lib/db
+      '@workspace/master-data':
+        specifier: workspace:*
+        version: link:../../lib/master-data
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -350,6 +353,9 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
+      '@workspace/master-data':
+        specifier: workspace:*
+        version: link:../../lib/master-data
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -843,6 +849,8 @@ importers:
       drizzle-kit:
         specifier: ^0.31.10
         version: 0.31.10
+
+  lib/master-data: {}
 
   scripts:
     devDependencies:
