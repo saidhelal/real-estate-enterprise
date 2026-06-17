@@ -13,15 +13,16 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
 const STATUS = enumOptions(["active", "inactive"]);
-const COMPONENT_TYPE = enumOptions(["earning", "deduction"]);
-const CALC_TYPE = enumOptions(["fixed", "percentage"]);
 
 export default function SalaryComponentsPage() {
   const { language, t } = useLanguage();
+  const { options: COMPONENT_TYPE } = useLookupOptions("salary_component_type", ["earning", "deduction"]);
+  const CALC_TYPE = enumOptions(["fixed", "percentage"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 

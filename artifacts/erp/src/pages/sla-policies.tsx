@@ -14,10 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function SlaPoliciesPage() {
   const { language } = useLanguage();
+  const CHANNEL = enumOptions(["complaint", "maintenance", "support", "all"]);
+  const { options: PRIORITY } = useLookupOptions("service_priority", ["low", "medium", "high", "urgent"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
@@ -25,8 +28,8 @@ export default function SlaPoliciesPage() {
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },
-    { name: "channel", label: "Channel", labelAr: "القناة", type: "select", options: enumOptions(["complaint", "maintenance", "support", "all"]) },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "urgent"]) },
+    { name: "channel", label: "Channel", labelAr: "القناة", type: "select", options: CHANNEL },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: PRIORITY },
     { name: "firstResponseHours", label: "First Response (Hours)", labelAr: "أول استجابة (ساعات)", type: "money" },
     { name: "resolutionHours", label: "Resolution (Hours)", labelAr: "الحل (ساعات)", type: "money" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },

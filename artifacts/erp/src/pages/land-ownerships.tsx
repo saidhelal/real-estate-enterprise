@@ -14,11 +14,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function LandOwnershipsPage() {
   const { language } = useLanguage();
+  const { options: OWNERSHIP_TYPE } = useLookupOptions("land_ownership_type", ["freehold", "leasehold", "usufruct", "joint"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: parcelIdData } = useListLandParcels({ pageSize: 200 });
@@ -28,7 +30,7 @@ export default function LandOwnershipsPage() {
     { name: "parcelId", label: "Parcel", labelAr: "القطعة", type: "select", required: true, options: parcelIdOptions },
     { name: "ownerName", label: "Owner Name", labelAr: "اسم المالك", required: true },
     { name: "ownerNameAr", label: "Owner Name (Arabic)", labelAr: "اسم المالك بالعربية", rtl: true },
-    { name: "ownershipType", label: "Ownership Type", labelAr: "نوع الملكية", type: "select", options: enumOptions(["freehold", "leasehold", "usufruct", "joint"]) },
+    { name: "ownershipType", label: "Ownership Type", labelAr: "نوع الملكية", type: "select", options: OWNERSHIP_TYPE },
     { name: "sharePercentage", label: "Share %", labelAr: "نسبة الحصة", type: "money" },
     { name: "titleDeedNo", label: "Title Deed No.", labelAr: "رقم الصك" },
     { name: "registrationDate", label: "Registration Date", labelAr: "تاريخ التسجيل", type: "date" },

@@ -20,7 +20,8 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,9 +41,6 @@ import {
 } from "@/components/ui/select";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
-
-const DIRECTIONS = enumOptions(["incoming", "outgoing"]);
-const CREATE_STATUSES = enumOptions(["received", "post_dated"]);
 
 // Allowed next statuses for the lifecycle, keyed by current status.
 const NEXT_STATUSES: Record<string, string[]> = {
@@ -68,6 +66,8 @@ export default function ChequesPage() {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { options: DIRECTIONS } = useLookupOptions("cheque_direction", ["incoming", "outgoing"]);
+  const CREATE_STATUSES = enumOptions(["received", "post_dated"]);
 
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;

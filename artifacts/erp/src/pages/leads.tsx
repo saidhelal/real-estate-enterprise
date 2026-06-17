@@ -15,14 +15,21 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = enumOptions(["new", "contacted", "qualified", "proposal", "won", "lost"]);
-
 export default function LeadsPage() {
   const { language } = useLanguage();
+  const { options: STATUS } = useLookupOptions("lead_status", [
+    "new",
+    "contacted",
+    "qualified",
+    "proposal",
+    "won",
+    "lost",
+  ]);
   const { data: companies } = useListCompanies();
   const { data: branches } = useListBranches();
   const { data: sources } = useListLeadSources({ pageSize: 200 });

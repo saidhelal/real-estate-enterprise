@@ -17,10 +17,9 @@ import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const HEARING_STATUS = enumOptions(["scheduled", "held", "adjourned", "cancelled"]);
-
 export default function LegalHearingsPage() {
   const { language, t } = useLanguage();
+  const HEARING_STATUS = enumOptions(["scheduled", "held", "adjourned", "cancelled"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: cases } = useListLegalCases({ pageSize: 200 });

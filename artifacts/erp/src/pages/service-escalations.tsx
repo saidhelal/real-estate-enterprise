@@ -14,16 +14,18 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function ServiceEscalationsPage() {
   const { language } = useLanguage();
+  const { options: SOURCE_TYPE } = useLookupOptions("service_request_type", ["complaint", "maintenance", "support"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
-    { name: "sourceType", label: "Source Type", labelAr: "نوع المصدر", type: "select", required: true, options: enumOptions(["complaint", "maintenance", "support"]) },
+    { name: "sourceType", label: "Source Type", labelAr: "نوع المصدر", type: "select", required: true, options: SOURCE_TYPE },
     { name: "sourceId", label: "Source ID", labelAr: "معرّف المصدر", required: true },
     { name: "level", label: "Level", labelAr: "المستوى", type: "number" },
     { name: "escalatedToUserId", label: "Escalated To (User ID)", labelAr: "تم التصعيد إلى (معرّف المستخدم)" },

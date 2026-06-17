@@ -18,17 +18,18 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const CASE_TYPE = enumOptions(["civil", "commercial", "labor", "criminal", "administrative", "arbitration", "other"]);
-const ROLE = enumOptions(["plaintiff", "defendant", "third_party"]);
 const COUNTERPARTY_TYPE = enumOptions(["customer", "contractor", "supplier", "employee", "other"]);
 
 export default function LegalCasesPage() {
   const { language, t } = useLanguage();
+  const CASE_TYPE = enumOptions(["civil", "commercial", "labor", "criminal", "administrative", "arbitration", "other"]);
+  const { options: ROLE } = useLookupOptions("legal_case_role", ["plaintiff", "defendant", "third_party"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

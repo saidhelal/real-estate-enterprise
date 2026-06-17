@@ -13,14 +13,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = enumOptions(["pending", "partial", "paid", "overdue"]);
-
 export default function InstallmentSchedulesPage() {
   const { language } = useLanguage();
+  const { options: STATUS } = useLookupOptions("installment_status", ["pending", "partial", "paid", "overdue"]);
   const { data: companies } = useListCompanies();
   const { data: plans } = useListInstallmentPlans({ pageSize: 200 });
   const companyId = companies?.[0]?.id;

@@ -14,11 +14,12 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel, enumOptions } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function LandDocumentsPage() {
   const { language } = useLanguage();
+  const DOC_TYPE = enumOptions(["deed", "survey", "permit", "valuation", "contract", "other"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: parcelIdData } = useListLandParcels({ pageSize: 200 });
@@ -26,7 +27,7 @@ export default function LandDocumentsPage() {
 
   const fields: ResourceField[] = [
     { name: "parcelId", label: "Parcel", labelAr: "القطعة", type: "select", required: true, options: parcelIdOptions },
-    { name: "docType", label: "Document Type", labelAr: "نوع المستند", type: "select", options: enumOptions(["deed", "survey", "permit", "valuation", "contract", "other"]) },
+    { name: "docType", label: "Document Type", labelAr: "نوع المستند", type: "select", options: DOC_TYPE },
     { name: "title", label: "Title", labelAr: "العنوان", required: true },
     { name: "titleAr", label: "Title (Arabic)", labelAr: "العنوان بالعربية", rtl: true },
     { name: "fileUrl", label: "File URL", labelAr: "رابط الملف" },

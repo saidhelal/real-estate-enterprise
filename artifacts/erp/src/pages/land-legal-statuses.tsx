@@ -14,11 +14,12 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel, enumOptions } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function LandLegalStatusesPage() {
   const { language } = useLanguage();
+  const STATUS = enumOptions(["clear", "disputed", "mortgaged", "restricted", "under_review"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: parcelIdData } = useListLandParcels({ pageSize: 200 });
@@ -26,7 +27,7 @@ export default function LandLegalStatusesPage() {
 
   const fields: ResourceField[] = [
     { name: "parcelId", label: "Parcel", labelAr: "القطعة", type: "select", required: true, options: parcelIdOptions },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["clear", "disputed", "mortgaged", "restricted", "under_review"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: STATUS },
     { name: "authority", label: "Authority", labelAr: "الجهة" },
     { name: "referenceNo", label: "Reference No.", labelAr: "الرقم المرجعي" },
     { name: "effectiveDate", label: "Effective Date", labelAr: "تاريخ السريان", type: "date" },

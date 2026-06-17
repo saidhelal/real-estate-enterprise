@@ -25,10 +25,9 @@ import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import { getListContractsQueryKey } from "@workspace/api-client-react";
 
-const STATUS = enumOptions(["active", "converted", "cancelled", "expired"]);
-
 export default function ReservationsPage() {
   const { language, t } = useLanguage();
+  const STATUS = enumOptions(["active", "converted", "cancelled", "expired"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

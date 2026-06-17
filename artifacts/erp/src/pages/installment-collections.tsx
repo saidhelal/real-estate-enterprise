@@ -14,14 +14,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const METHOD = enumOptions(["cash", "bank_transfer", "cheque", "card"]);
-
 export default function InstallmentCollectionsPage() {
   const { language } = useLanguage();
+  const { options: METHOD } = useLookupOptions("payment_method", ["cash", "bank_transfer", "cheque", "card"]);
   const { data: companies } = useListCompanies();
   const { data: schedules } = useListInstallmentSchedules({ pageSize: 200 });
   const { data: users } = useListUsers();

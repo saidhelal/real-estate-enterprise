@@ -26,12 +26,12 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const CONTRACT_TYPE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
-const SOURCE_MODULE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
 const COUNTERPARTY_TYPE = enumOptions(["customer", "contractor", "supplier", "employee", "other"]);
 
 export default function LegalContractsPage() {
   const { language, t } = useLanguage();
+  const CONTRACT_TYPE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
+  const SOURCE_MODULE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

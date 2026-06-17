@@ -15,10 +15,12 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function WarehousesPage() {
   const { language } = useLanguage();
+  const { options: WAREHOUSE_TYPE } = useLookupOptions("warehouse_type", ["main", "transit", "virtual", "quarantine"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: branchData } = useListBranches();
@@ -29,7 +31,7 @@ export default function WarehousesPage() {
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },
     { name: "branchId", label: "Branch", labelAr: "الفرع", type: "select", options: branchOptions },
-    { name: "warehouseType", label: "Warehouse Type", labelAr: "نوع المستودع", type: "select", options: enumOptions(["main", "transit", "virtual", "quarantine"]) },
+    { name: "warehouseType", label: "Warehouse Type", labelAr: "نوع المستودع", type: "select", options: WAREHOUSE_TYPE },
     { name: "address", label: "Address", labelAr: "العنوان", type: "textarea" },
     { name: "manager", label: "Manager", labelAr: "المدير" },
     { name: "phone", label: "Phone", labelAr: "الهاتف" },

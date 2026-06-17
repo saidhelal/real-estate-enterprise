@@ -14,15 +14,16 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const CLAIM_TYPE = enumOptions(["financial", "contractual", "damages", "other"]);
-const DIRECTION = enumOptions(["by_company", "against_company"]);
 const CLAIM_STATUS = enumOptions(["draft", "submitted", "under_review", "accepted", "rejected", "settled"]);
 
 export default function LegalClaimsPage() {
   const { language, t } = useLanguage();
+  const CLAIM_TYPE = enumOptions(["financial", "contractual", "damages", "other"]);
+  const { options: DIRECTION } = useLookupOptions("legal_claim_direction", ["by_company", "against_company"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: cases } = useListLegalCases({ pageSize: 200 });

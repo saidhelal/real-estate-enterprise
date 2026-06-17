@@ -20,11 +20,14 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
-import { enumLabel, enumOptions } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function DrawingsPage() {
   const { language } = useLanguage();
+  const { options: DRAWING_TYPE } = useLookupOptions("engineering_discipline", ["architectural", "structural", "mep"]);
+  const { options: APPROVAL_STATUS } = useLookupOptions("submittal_status", ["draft", "submitted", "approved", "approved_with_comments", "rejected", "superseded"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: disciplineData } = useListEngineeringDisciplines({ pageSize: 200 });
@@ -46,7 +49,7 @@ export default function DrawingsPage() {
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "title", label: "Title", labelAr: "العنوان", required: true },
     { name: "titleAr", label: "Title (Arabic)", labelAr: "العنوان بالعربية", required: true, rtl: true },
-    { name: "drawingType", label: "Drawing Type", labelAr: "نوع الرسم", type: "select", options: enumOptions(["architectural", "structural", "mep"]) },
+    { name: "drawingType", label: "Drawing Type", labelAr: "نوع الرسم", type: "select", options: DRAWING_TYPE },
     { name: "disciplineId", label: "Discipline", labelAr: "التخصص", type: "select", options: disciplineOptions },
     { name: "categoryId", label: "Category", labelAr: "الفئة", type: "select", options: categoryOptions },
     { name: "consultantId", label: "Consultant", labelAr: "الاستشاري", type: "select", options: consultantOptions },
@@ -55,7 +58,7 @@ export default function DrawingsPage() {
     { name: "buildingId", label: "Building", labelAr: "المبنى", type: "select", options: buildingOptions },
     { name: "floorId", label: "Floor", labelAr: "الطابق", type: "select", options: floorOptions },
     { name: "currentVersion", label: "Current Version", labelAr: "الإصدار الحالي" },
-    { name: "approvalStatus", label: "Approval Status", labelAr: "حالة الاعتماد", type: "select", options: enumOptions(["draft", "submitted", "approved", "approved_with_comments", "rejected", "superseded"]) },
+    { name: "approvalStatus", label: "Approval Status", labelAr: "حالة الاعتماد", type: "select", options: APPROVAL_STATUS },
     { name: "drawingDate", label: "Drawing Date", labelAr: "تاريخ الرسم", type: "date" },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
   ];

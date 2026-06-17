@@ -15,11 +15,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
-import { enumLabel, enumOptions } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function TechnicalSubmittalsPage() {
   const { language } = useLanguage();
+  const { options: SUBMITTAL_STATUS } = useLookupOptions("submittal_status", ["submitted", "under_review", "approved", "approved_with_comments", "rejected"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: projectData } = useListProjects({ pageSize: 200 });
@@ -34,7 +36,7 @@ export default function TechnicalSubmittalsPage() {
     { name: "submittalType", label: "Submittal Type", labelAr: "نوع التقديم" },
     { name: "submittedBy", label: "Submitted By", labelAr: "مقدم من" },
     { name: "consultantId", label: "Consultant", labelAr: "الاستشاري", type: "select", options: consultantOptions },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["submitted", "under_review", "approved", "approved_with_comments", "rejected"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: SUBMITTAL_STATUS },
     { name: "submittedDate", label: "Submitted Date", labelAr: "تاريخ التقديم", type: "date" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];

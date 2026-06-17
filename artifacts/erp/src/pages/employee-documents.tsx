@@ -18,10 +18,10 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
 const STATUS = enumOptions(["active", "inactive"]);
-const DOC_TYPE = enumOptions(["id_card", "passport", "visa", "certificate", "work_permit", "contract", "other"]);
 
 export default function EmployeeDocumentsPage() {
   const { language, t } = useLanguage();
+  const DOC_TYPE = enumOptions(["id_card", "passport", "visa", "certificate", "work_permit", "contract", "other"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: employees } = useListEmployees({ pageSize: 200 });

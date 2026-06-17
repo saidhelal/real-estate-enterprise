@@ -15,13 +15,14 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
-const TAX_TYPES = enumOptions(["output", "input", "exempt"]);
 const STATUS = enumOptions(["active", "inactive"]);
 
 export default function TaxCodesPage() {
   const { language, t } = useLanguage();
+  const { options: TAX_TYPES } = useLookupOptions("tax_type", ["output", "input", "exempt"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: accounts } = useListAccounts({ pageSize: 500 });

@@ -13,20 +13,22 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function AssetCategoriesPage() {
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
+  const { options: DEPRECIATION_METHODS } = useLookupOptions("asset_depreciation_method", ["straight_line", "declining_balance"]);
 
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },
     { name: "usefulLifeYears", label: "Useful Life (Years)", labelAr: "العمر الإنتاجي (سنوات)", type: "money" },
-    { name: "depreciationMethod", label: "Depreciation Method", labelAr: "طريقة الإهلاك", type: "select", options: enumOptions(["straight_line", "declining_balance"]) },
+    { name: "depreciationMethod", label: "Depreciation Method", labelAr: "طريقة الإهلاك", type: "select", options: DEPRECIATION_METHODS },
     { name: "depreciationRate", label: "Depreciation Rate (%)", labelAr: "معدل الإهلاك (%)", type: "money" },
     { name: "assetAccountId", label: "Asset Account ID", labelAr: "معرّف حساب الأصل" },
     { name: "depreciationAccountId", label: "Depreciation Account ID", labelAr: "معرّف حساب مجمع الإهلاك" },

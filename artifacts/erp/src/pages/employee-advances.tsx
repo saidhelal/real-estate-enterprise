@@ -16,16 +16,16 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const PAYMENT_METHOD = enumOptions(["cash", "bank_transfer"]);
-
 export default function EmployeeAdvancesPage() {
   const { language, t } = useLanguage();
+  const { options: PAYMENT_METHOD } = useLookupOptions("payment_method", ["cash", "bank_transfer"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

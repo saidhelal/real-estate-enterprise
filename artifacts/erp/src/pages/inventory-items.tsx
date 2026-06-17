@@ -17,10 +17,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function InventoryItemsPage() {
   const { language } = useLanguage();
+  const ITEM_TYPE = enumOptions(["stock", "non_stock", "service", "asset"]);
+  const { options: VALUATION_METHOD } = useLookupOptions("costing_method", ["fifo", "lifo", "average", "standard"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: categoryData } = useListItemCategorys({ pageSize: 200 });
@@ -37,11 +40,11 @@ export default function InventoryItemsPage() {
     { name: "categoryId", label: "Category", labelAr: "الفئة", type: "select", options: categoryOptions },
     { name: "groupId", label: "Group", labelAr: "المجموعة", type: "select", options: groupOptions },
     { name: "uomId", label: "Unit", labelAr: "الوحدة", type: "select", options: uomOptions },
-    { name: "itemType", label: "Item Type", labelAr: "نوع الصنف", type: "select", options: enumOptions(["stock", "non_stock", "service", "asset"]) },
+    { name: "itemType", label: "Item Type", labelAr: "نوع الصنف", type: "select", options: ITEM_TYPE },
     { name: "barcode", label: "Barcode", labelAr: "الباركود" },
     { name: "costPrice", label: "Cost Price", labelAr: "سعر التكلفة", type: "money" },
     { name: "sellingPrice", label: "Selling Price", labelAr: "سعر البيع", type: "money" },
-    { name: "valuationMethod", label: "Valuation Method", labelAr: "طريقة التقييم", type: "select", options: enumOptions(["fifo", "lifo", "average", "standard"]) },
+    { name: "valuationMethod", label: "Valuation Method", labelAr: "طريقة التقييم", type: "select", options: VALUATION_METHOD },
     { name: "reorderPoint", label: "Reorder Point", labelAr: "نقطة إعادة الطلب", type: "number" },
     { name: "minStock", label: "Min Stock", labelAr: "الحد الأدنى للمخزون", type: "number" },
     { name: "maxStock", label: "Max Stock", labelAr: "الحد الأقصى للمخزون", type: "number" },

@@ -15,10 +15,12 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function LandAcquisitionsPage() {
   const { language } = useLanguage();
+  const { options: ACQUISITION_TYPE } = useLookupOptions("land_acquisition_method", ["purchase", "inheritance", "grant", "exchange"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: parcelIdData } = useListLandParcels({ pageSize: 200 });
@@ -26,7 +28,7 @@ export default function LandAcquisitionsPage() {
 
   const fields: ResourceField[] = [
     { name: "parcelId", label: "Parcel", labelAr: "القطعة", type: "select", required: true, options: parcelIdOptions },
-    { name: "acquisitionType", label: "Acquisition Type", labelAr: "نوع الاستحواذ", type: "select", options: enumOptions(["purchase", "inheritance", "grant", "exchange"]) },
+    { name: "acquisitionType", label: "Acquisition Type", labelAr: "نوع الاستحواذ", type: "select", options: ACQUISITION_TYPE },
     { name: "sellerName", label: "Seller Name", labelAr: "اسم البائع" },
     { name: "acquisitionDate", label: "Acquisition Date", labelAr: "تاريخ الاستحواذ", type: "date" },
     { name: "cost", label: "Cost", labelAr: "التكلفة", type: "money" },

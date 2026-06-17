@@ -46,9 +46,9 @@ import { Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 
 const PAYEE_TYPES = enumOptions(["supplier", "contractor", "other"]);
-const PAYMENT_METHODS = enumOptions(["cash", "bank_transfer", "cheque"]);
 const today = () => new Date().toISOString().slice(0, 10);
 const NONE = "__none__";
 
@@ -68,6 +68,8 @@ export default function PaymentVouchersPage() {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const { options: PAYMENT_METHODS } = useLookupOptions("payment_method", ["cash", "bank_transfer", "cheque"]);
 
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;

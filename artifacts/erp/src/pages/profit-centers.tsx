@@ -16,11 +16,11 @@ import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const KINDS = enumOptions(["segment", "department", "project", "branch"]);
 const STATUS = enumOptions(["active", "inactive"]);
 
 export default function ProfitCentersPage() {
   const { language, t } = useLanguage();
+  const KINDS = enumOptions(["segment", "department", "project", "branch"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: centers } = useListProfitCenters({ pageSize: 500 });

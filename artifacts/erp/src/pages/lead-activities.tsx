@@ -15,13 +15,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
-
-const ACTIVITY_TYPE = enumOptions(["note", "call", "meeting", "email", "visit"]);
 
 export default function LeadActivitiesPage() {
   const { language } = useLanguage();
+  const { options: ACTIVITY_TYPE } = useLookupOptions("lead_activity_type", ["note", "call", "meeting", "email", "visit"]);
   const { data: companies } = useListCompanies();
   const { data: leads } = useListLeads({ pageSize: 200 });
   const { data: users } = useListUsers();

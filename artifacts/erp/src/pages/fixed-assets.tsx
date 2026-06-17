@@ -14,11 +14,14 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function FixedAssetsPage() {
   const { language } = useLanguage();
+  const { options: DEPRECIATION_METHOD } = useLookupOptions("asset_depreciation_method", ["straight_line", "declining_balance"]);
+  const { options: STATUS } = useLookupOptions("asset_status", ["active", "under_maintenance", "disposed", "written_off"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: categoryIdData } = useListAssetCategories({ pageSize: 200 });
@@ -35,10 +38,10 @@ export default function FixedAssetsPage() {
     { name: "acquisitionCost", label: "Acquisition Cost", labelAr: "تكلفة الاقتناء", type: "money" },
     { name: "salvageValue", label: "Salvage Value", labelAr: "القيمة المتبقية", type: "money" },
     { name: "usefulLifeYears", label: "Useful Life (Years)", labelAr: "العمر الإنتاجي (سنوات)", type: "money" },
-    { name: "depreciationMethod", label: "Depreciation Method", labelAr: "طريقة الإهلاك", type: "select", options: enumOptions(["straight_line", "declining_balance"]) },
+    { name: "depreciationMethod", label: "Depreciation Method", labelAr: "طريقة الإهلاك", type: "select", options: DEPRECIATION_METHOD },
     { name: "accumulatedDepreciation", label: "Accumulated Depreciation", labelAr: "مجمع الإهلاك", type: "money" },
     { name: "bookValue", label: "Book Value", labelAr: "القيمة الدفترية", type: "money" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["active", "under_maintenance", "disposed", "written_off"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: STATUS },
     { name: "location", label: "Location", labelAr: "الموقع" },
     { name: "locationAr", label: "Location (Arabic)", labelAr: "الموقع بالعربية", rtl: true },
     { name: "serialNo", label: "Serial No.", labelAr: "الرقم التسلسلي" },

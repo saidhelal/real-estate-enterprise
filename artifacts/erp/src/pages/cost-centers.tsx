@@ -13,14 +13,15 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const KINDS = enumOptions(["department", "project", "branch"]);
 const STATUS = enumOptions(["active", "inactive"]);
 
 export default function CostCentersPage() {
   const { language, t } = useLanguage();
+  const { options: KINDS } = useLookupOptions("cost_center_kind", ["department", "project", "branch"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: centers } = useListCostCenters({ pageSize: 500 });

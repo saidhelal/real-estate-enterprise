@@ -15,10 +15,12 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function ConsultantResponsesPage() {
   const { language } = useLanguage();
+  const { options: DECISION } = useLookupOptions("submittal_status", ["approved", "approved_with_comments", "rejected"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: consultantData } = useListConsultants({ pageSize: 200 });
@@ -30,7 +32,7 @@ export default function ConsultantResponsesPage() {
     { name: "referenceId", label: "Reference ID", labelAr: "معرّف المرجع" },
     { name: "consultantId", label: "Consultant", labelAr: "الاستشاري", type: "select", options: consultantOptions },
     { name: "response", label: "Response", labelAr: "الرد", type: "textarea" },
-    { name: "decision", label: "Decision", labelAr: "القرار", type: "select", options: enumOptions(["approved", "approved_with_comments", "rejected"]) },
+    { name: "decision", label: "Decision", labelAr: "القرار", type: "select", options: DECISION },
     { name: "responseDate", label: "Response Date", labelAr: "تاريخ الرد", type: "date" },
   ];
 

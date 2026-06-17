@@ -14,14 +14,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = enumOptions(["present", "absent", "late", "on_leave", "holiday", "weekend"]);
-
 export default function AttendancePage() {
   const { language, t } = useLanguage();
+  const { options: STATUS } = useLookupOptions("attendance_status", ["present", "absent", "late", "on_leave", "holiday", "weekend"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: employees } = useListEmployees({ pageSize: 200 });

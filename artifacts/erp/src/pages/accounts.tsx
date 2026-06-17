@@ -13,15 +13,16 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const TYPES = enumOptions(["asset", "liability", "equity", "revenue", "expense"]);
 const SIDES = enumOptions(["debit", "credit"]);
 const STATUS = enumOptions(["active", "inactive"]);
 
 export default function AccountsPage() {
   const { language, t } = useLanguage();
+  const { options: TYPES } = useLookupOptions("account_type", ["asset", "liability", "equity", "revenue", "expense"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: accounts } = useListAccounts({ pageSize: 500 });

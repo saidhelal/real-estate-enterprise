@@ -15,6 +15,7 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function AssetDisposalsPage() {
@@ -23,12 +24,13 @@ export default function AssetDisposalsPage() {
   const companyId = companies?.[0]?.id;
   const { data: assetIdData } = useListFixedAssets({ pageSize: 200 });
   const assetIdOptions = (assetIdData?.data ?? []).map((x) => ({ value: x.id, label: x.name, labelAr: x.nameAr ?? x.name }));
+  const { options: DISPOSAL_TYPES } = useLookupOptions("asset_disposal_type", ["sale", "scrap", "donation", "write_off"]);
 
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "assetId", label: "Asset", labelAr: "الأصل", type: "select", required: true, options: assetIdOptions },
     { name: "disposalDate", label: "Disposal Date", labelAr: "تاريخ الاستبعاد", type: "date" },
-    { name: "disposalType", label: "Disposal Type", labelAr: "نوع الاستبعاد", type: "select", options: enumOptions(["sale", "scrap", "donation", "write_off"]) },
+    { name: "disposalType", label: "Disposal Type", labelAr: "نوع الاستبعاد", type: "select", options: DISPOSAL_TYPES },
     { name: "proceeds", label: "Proceeds", labelAr: "العائدات", type: "money" },
     { name: "bookValueAtDisposal", label: "Book Value at Disposal", labelAr: "القيمة الدفترية عند الاستبعاد", type: "money" },
     { name: "gainLoss", label: "Gain / Loss", labelAr: "الربح / الخسارة", type: "money" },

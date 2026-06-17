@@ -13,11 +13,14 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function HandoverRequestsPage() {
   const { language } = useLanguage();
+  const { options: HANDOVER_TYPE } = useLookupOptions("handover_type", ["initial", "final"]);
+  const { options: STATUS } = useLookupOptions("handover_status", ["requested", "scheduled", "in_progress", "completed", "cancelled"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
@@ -27,9 +30,9 @@ export default function HandoverRequestsPage() {
     { name: "customerId", label: "Customer ID", labelAr: "معرّف العميل" },
     { name: "contractId", label: "Contract ID", labelAr: "معرّف العقد" },
     { name: "reservationId", label: "Reservation ID", labelAr: "معرّف الحجز" },
-    { name: "handoverType", label: "Handover Type", labelAr: "نوع التسليم", type: "select", options: enumOptions(["initial", "final"]) },
+    { name: "handoverType", label: "Handover Type", labelAr: "نوع التسليم", type: "select", options: HANDOVER_TYPE },
     { name: "requestDate", label: "Request Date", labelAr: "تاريخ الطلب", type: "date" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["requested", "scheduled", "in_progress", "completed", "cancelled"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: STATUS },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 

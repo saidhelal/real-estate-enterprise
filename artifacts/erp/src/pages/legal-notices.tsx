@@ -22,11 +22,11 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const NOTICE_TYPE = enumOptions(["warning", "demand", "termination", "legal", "other"]);
 const RECIPIENT_TYPE = enumOptions(["customer", "contractor", "supplier", "employee", "other"]);
 
 export default function LegalNoticesPage() {
   const { language, t } = useLanguage();
+  const NOTICE_TYPE = enumOptions(["warning", "demand", "termination", "legal", "other"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

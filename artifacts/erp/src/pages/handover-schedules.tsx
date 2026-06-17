@@ -14,11 +14,12 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel, enumOptions } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function HandoverSchedulesPage() {
   const { language } = useLanguage();
+  const STATUS = enumOptions(["scheduled", "rescheduled", "done", "cancelled"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: requestIdData } = useListHandoverRequests({ pageSize: 200 });
@@ -31,7 +32,7 @@ export default function HandoverSchedulesPage() {
     { name: "location", label: "Location", labelAr: "الموقع" },
     { name: "locationAr", label: "Location (Arabic)", labelAr: "الموقع بالعربية", rtl: true },
     { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["scheduled", "rescheduled", "done", "cancelled"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: STATUS },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 

@@ -15,11 +15,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
-import { enumLabel, enumOptions } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function CostEstimatesPage() {
   const { language } = useLanguage();
+  const { options: STATUS } = useLookupOptions("submittal_status", ["draft", "submitted", "approved", "rejected"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: projectData } = useListProjects({ pageSize: 200 });
@@ -35,7 +37,7 @@ export default function CostEstimatesPage() {
     { name: "boqId", label: "BOQ", labelAr: "جدول الكميات", type: "select", options: boqOptions },
     { name: "estimatedCost", label: "Estimated Cost", labelAr: "التكلفة التقديرية", type: "money" },
     { name: "estimateDate", label: "Estimate Date", labelAr: "تاريخ التقدير", type: "date" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["draft", "submitted", "approved", "rejected"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: STATUS },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 

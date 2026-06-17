@@ -14,10 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function PurchaseRequestsPage() {
   const { language } = useLanguage();
+  const REQUEST_TYPE = enumOptions(["item", "service"]);
+  const { options: PRIORITY } = useLookupOptions("service_priority", ["low", "medium", "high", "urgent"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
@@ -26,10 +29,10 @@ export default function PurchaseRequestsPage() {
     { name: "title", label: "Title", labelAr: "العنوان", required: true },
     { name: "titleAr", label: "Title (Arabic)", labelAr: "العنوان بالعربية", required: true, rtl: true },
     { name: "department", label: "Department", labelAr: "القسم" },
-    { name: "requestType", label: "Request Type", labelAr: "نوع الطلب", type: "select", options: enumOptions(["item", "service"]) },
+    { name: "requestType", label: "Request Type", labelAr: "نوع الطلب", type: "select", options: REQUEST_TYPE },
     { name: "requestDate", label: "Request Date", labelAr: "تاريخ الطلب", type: "date" },
     { name: "requiredDate", label: "Required Date", labelAr: "التاريخ المطلوب", type: "date" },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "urgent"]) },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: PRIORITY },
     { name: "budgetAmount", label: "Budget Amount", labelAr: "مبلغ الميزانية", type: "money" },
     { name: "estimatedAmount", label: "Estimated Amount", labelAr: "المبلغ التقديري", type: "money" },
     { name: "requestedBy", label: "Requested By", labelAr: "طلب بواسطة" },

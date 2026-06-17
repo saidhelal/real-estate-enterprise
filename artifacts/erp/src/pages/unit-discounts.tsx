@@ -13,13 +13,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
-
-const DISCOUNT_TYPE = enumOptions(["percentage", "fixed"]);
 
 export default function UnitDiscountsPage() {
   const { language } = useLanguage();
+  const { options: DISCOUNT_TYPE } = useLookupOptions("discount_type", ["percentage", "fixed"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 

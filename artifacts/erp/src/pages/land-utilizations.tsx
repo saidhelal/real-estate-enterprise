@@ -19,6 +19,7 @@ import { useLanguage } from "@/lib/language-provider";
 
 export default function LandUtilizationsPage() {
   const { language } = useLanguage();
+  const UTILIZATION_TYPE = enumOptions(["development", "sale", "lease", "reserve"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: parcelIdData } = useListLandParcels({ pageSize: 200 });
@@ -26,7 +27,7 @@ export default function LandUtilizationsPage() {
 
   const fields: ResourceField[] = [
     { name: "parcelId", label: "Parcel", labelAr: "القطعة", type: "select", required: true, options: parcelIdOptions },
-    { name: "utilizationType", label: "Utilization Type", labelAr: "نوع الاستغلال", type: "select", options: enumOptions(["development", "sale", "lease", "reserve"]) },
+    { name: "utilizationType", label: "Utilization Type", labelAr: "نوع الاستغلال", type: "select", options: UTILIZATION_TYPE },
     { name: "allocatedArea", label: "Allocated Area", labelAr: "المساحة المخصصة", type: "money" },
     { name: "projectId", label: "Project ID", labelAr: "معرّف المشروع" },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["planned", "active", "completed", "cancelled"]) },

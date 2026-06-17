@@ -7,6 +7,20 @@ export type Lang = "en" | "ar";
 // share a single source of truth. Add new enum values to the lib's LABELS map.
 export const ENUM_LABELS: Record<string, LabelPair> = LABELS;
 
+// ENGINE_LABELS is a runtime registry populated by LookupLabelProvider (see
+// lib/lookups.ts) with the admin-managed Master Data values. enumLabel/enumOptions
+// consult it first so renamed/added labels show everywhere without per-page edits;
+// it falls back to the static ENUM_LABELS registry until the engine values load.
+let ENGINE_LABELS: Record<string, LabelPair> = {};
+
+export function setEngineLabels(map: Record<string, LabelPair>): void {
+  ENGINE_LABELS = map;
+}
+
+function labelEntry(value: string): LabelPair | undefined {
+  return ENGINE_LABELS[value] ?? ENUM_LABELS[value];
+}
+
 export const CRM_CLASSIFICATIONS = [
   "interested",
   "follow_up",
@@ -20,7 +34,7 @@ export const CRM_CLASSIFICATIONS = [
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {
   if (!value) return "-";
-  const entry = ENUM_LABELS[value];
+  const entry = labelEntry(value);
   return entry ? entry[lang] : value;
 }
 
@@ -32,7 +46,7 @@ export interface EnumOption {
 
 export function enumOptions(values: string[]): EnumOption[] {
   return values.map((v) => {
-    const e = ENUM_LABELS[v];
+    const e = labelEntry(v);
     return { value: v, label: e?.en ?? v, labelAr: e?.ar ?? v };
   });
 }

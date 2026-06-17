@@ -13,14 +13,14 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const ADVISOR_TYPE = enumOptions(["internal", "external"]);
-
 export default function LegalAdvisorsPage() {
   const { language, t } = useLanguage();
+  const { options: ADVISOR_TYPE } = useLookupOptions("advisor_type", ["internal", "external"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: lawFirms } = useListLawFirms({ pageSize: 200 });

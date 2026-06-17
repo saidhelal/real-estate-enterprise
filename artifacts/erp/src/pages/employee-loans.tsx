@@ -16,17 +16,17 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const LOAN_TYPE = enumOptions(["personal", "housing", "car", "emergency", "other"]);
-const PAYMENT_METHOD = enumOptions(["cash", "bank_transfer"]);
-
 export default function EmployeeLoansPage() {
   const { language, t } = useLanguage();
+  const LOAN_TYPE = enumOptions(["personal", "housing", "car", "emergency", "other"]);
+  const { options: PAYMENT_METHOD } = useLookupOptions("payment_method", ["cash", "bank_transfer"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

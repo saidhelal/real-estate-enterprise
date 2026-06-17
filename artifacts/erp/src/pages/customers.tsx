@@ -15,14 +15,16 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel, CRM_CLASSIFICATIONS } from "@/lib/enums";
+import { enumLabel, CRM_CLASSIFICATIONS } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
-
-const TYPE = enumOptions(["individual", "company"]);
-const CLASSIFICATION = enumOptions([...CRM_CLASSIFICATIONS]);
 
 export default function CustomersPage() {
   const { language } = useLanguage();
+  const { options: TYPE } = useLookupOptions("customer_type", ["individual", "company"]);
+  const { options: CLASSIFICATION } = useLookupOptions("customer_classification", [
+    ...CRM_CLASSIFICATIONS,
+  ]);
   const { data: companies } = useListCompanies();
   const { data: branches } = useListBranches();
   const { data: users } = useListUsers();

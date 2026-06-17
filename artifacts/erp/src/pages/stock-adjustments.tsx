@@ -15,10 +15,12 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function StockAdjustmentsPage() {
   const { language } = useLanguage();
+  const { options: ADJUSTMENT_TYPE } = useLookupOptions("stock_adjustment_reason", ["increase", "decrease", "revaluation", "damage", "loss", "expiry"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: warehouseData } = useListWarehouses({ pageSize: 200 });
@@ -28,7 +30,7 @@ export default function StockAdjustmentsPage() {
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "adjustmentDate", label: "Adjustment Date", labelAr: "تاريخ التسوية", type: "date" },
     { name: "warehouseId", label: "Warehouse", labelAr: "المستودع", type: "select", options: warehouseOptions },
-    { name: "adjustmentType", label: "Adjustment Type", labelAr: "نوع التسوية", type: "select", options: enumOptions(["increase", "decrease", "revaluation", "damage", "loss", "expiry"]) },
+    { name: "adjustmentType", label: "Adjustment Type", labelAr: "نوع التسوية", type: "select", options: ADJUSTMENT_TYPE },
     { name: "reason", label: "Reason", labelAr: "السبب" },
     { name: "totalValue", label: "Total Value", labelAr: "القيمة الإجمالية", type: "money" },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["draft", "approved", "completed", "cancelled"]) },

@@ -16,6 +16,7 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ListPlus } from "lucide-react";
@@ -23,12 +24,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const FREQUENCY = enumOptions(["monthly", "quarterly", "semi_annual", "annual", "custom"]);
-
 const STATUS = enumOptions(["active", "completed", "cancelled"]);
 
 export default function InstallmentPlansPage() {
   const { language, t } = useLanguage();
+  const { options: FREQUENCY } = useLookupOptions("installment_frequency", ["monthly", "quarterly", "semi_annual", "annual", "custom"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: companies } = useListCompanies();

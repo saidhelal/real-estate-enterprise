@@ -21,9 +21,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const STATUS = enumOptions(["pending", "paid", "waived"]);
-
 export default function PenaltiesPage() {
+  const STATUS = enumOptions(["pending", "paid", "waived"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { language, t } = useLanguage();

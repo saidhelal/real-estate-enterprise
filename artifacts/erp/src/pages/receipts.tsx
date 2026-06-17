@@ -24,11 +24,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
-
-const PAYMENT_METHODS = enumOptions(["cash", "bank_transfer", "cheque"]);
 
 function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
   if (status === "posted") return "default";
@@ -41,6 +40,7 @@ export default function ReceiptsPage() {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { options: PAYMENT_METHODS } = useLookupOptions("payment_method", ["cash", "bank_transfer", "cheque"]);
   const { data: companies } = useListCompanies();
   const { data: customers } = useListCustomers({ pageSize: 200 });
   const { data: contracts } = useListContracts({ pageSize: 200 });

@@ -14,7 +14,8 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function AssetInventoryCountsPage() {
@@ -23,13 +24,14 @@ export default function AssetInventoryCountsPage() {
   const companyId = companies?.[0]?.id;
   const { data: assetIdData } = useListFixedAssets({ pageSize: 200 });
   const assetIdOptions = (assetIdData?.data ?? []).map((x) => ({ value: x.id, label: x.name, labelAr: x.nameAr ?? x.name }));
+  const { options: COUNT_RESULTS } = useLookupOptions("asset_count_result", ["found", "missing", "damaged"]);
 
   const fields: ResourceField[] = [
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "assetId", label: "Asset", labelAr: "الأصل", type: "select", options: assetIdOptions },
     { name: "branchId", label: "Branch ID", labelAr: "معرّف الفرع" },
     { name: "countDate", label: "Count Date", labelAr: "تاريخ الجرد", type: "date" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["found", "missing", "damaged"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: COUNT_RESULTS },
     { name: "location", label: "Location", labelAr: "الموقع" },
     { name: "countedBy", label: "Counted By", labelAr: "تم الجرد بواسطة" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },

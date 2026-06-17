@@ -14,14 +14,15 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
 const STATUS = enumOptions(["draft", "submitted", "approved", "completed"]);
-const RATING = enumOptions(["excellent", "good", "average", "poor"]);
 
 export default function EmployeeEvaluationsPage() {
   const { language, t } = useLanguage();
+  const { options: RATING } = useLookupOptions("evaluation_rating", ["excellent", "good", "average", "poor"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: employees } = useListEmployees({ pageSize: 200 });

@@ -16,10 +16,9 @@ import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const PENALTY_TYPE = enumOptions(["fixed", "percentage"]);
-
 export default function PenaltyRulesPage() {
   const { language } = useLanguage();
+  const PENALTY_TYPE = enumOptions(["fixed", "percentage"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 

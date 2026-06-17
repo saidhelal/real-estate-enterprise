@@ -13,11 +13,12 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumLabel, enumOptions } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function LandParcelsPage() {
   const { language } = useLanguage();
+  const STATUS = enumOptions(["available", "acquired", "under_development", "developed", "sold", "on_hold"]);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
@@ -25,7 +26,7 @@ export default function LandParcelsPage() {
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["available", "acquired", "under_development", "developed", "sold", "on_hold"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: STATUS },
     { name: "area", label: "Area", labelAr: "المساحة", type: "money" },
     { name: "areaUnit", label: "Area Unit", labelAr: "وحدة المساحة" },
     { name: "marketValue", label: "Market Value", labelAr: "القيمة السوقية", type: "money" },
