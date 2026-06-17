@@ -60,6 +60,7 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
+import { recomputeUnitStatus, ensureLegalContractForContract } from "../lib/integrations";
 import { nextDocumentNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
@@ -104,7 +105,11 @@ router.get("/reservations", requirePermission("reservations.view"), async (req, 
 router.post("/reservations", requirePermission("reservations.create"), async (req, res): Promise<void> => {
   const parsed = CreateReservationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(reservationsTable).values({ ...parsed.data }).returning();
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(reservationsTable).values({ ...parsed.data }).returning();
+    await recomputeUnitStatus(tx, created.unitId);
+    return created;
+  });
   await recordAudit(req, { action: "create", entity: "reservation", entityId: row.id, newValue: row });
   res.status(201).json(GetReservationResponse.parse(serializeRow(row)));
 });
@@ -123,16 +128,26 @@ router.patch("/reservations/:id", requirePermission("reservations.update"), asyn
   const [existing] = await db.select().from(reservationsTable).where(and(eq(reservationsTable.id, id), eq(reservationsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
-  const [row] = Object.keys(update).length
-    ? await db.update(reservationsTable).set(update).where(eq(reservationsTable.id, id)).returning()
-    : [existing];
+  const row = await db.transaction(async (tx) => {
+    const [updated] = Object.keys(update).length
+      ? await tx.update(reservationsTable).set(update).where(eq(reservationsTable.id, id)).returning()
+      : [existing];
+    await recomputeUnitStatus(tx, existing.unitId);
+    if (updated.unitId !== existing.unitId) await recomputeUnitStatus(tx, updated.unitId);
+    return updated;
+  });
   await recordAudit(req, { action: "update", entity: "reservation", entityId: id, oldValue: existing, newValue: row });
   res.json(GetReservationResponse.parse(serializeRow(row)));
 });
 
 router.delete("/reservations/:id", requirePermission("reservations.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(reservationsTable).set({ isDeleted: true, isActive: false }).where(and(eq(reservationsTable.id, id), eq(reservationsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [updated] = await tx.update(reservationsTable).set({ isDeleted: true, isActive: false }).where(and(eq(reservationsTable.id, id), eq(reservationsTable.isDeleted, false))).returning();
+    if (!updated) return null;
+    await recomputeUnitStatus(tx, updated.unitId);
+    return updated;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "reservation", entityId: id });
   res.json({ success: true });
@@ -276,7 +291,10 @@ router.post("/contracts", requirePermission("contracts.create"), async (req, res
       sourceId: created.id,
       userId: req.authUser?.id ?? null,
     });
-    return created;
+    // Mark the unit Sold and register the contract in Legal Affairs.
+    await recomputeUnitStatus(tx, created.unitId);
+    const legalContractId = await ensureLegalContractForContract(tx, created);
+    return { ...created, legalContractId: legalContractId ?? created.legalContractId };
   });
   await recordAudit(req, { action: "create", entity: "contract", entityId: row.id, newValue: row });
   res.status(201).json(GetContractResponse.parse(serializeRow(row)));
@@ -296,9 +314,16 @@ router.patch("/contracts/:id", requirePermission("contracts.update"), async (req
   const [existing] = await db.select().from(contractsTable).where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
-  const [row] = Object.keys(update).length
-    ? await db.update(contractsTable).set(update).where(eq(contractsTable.id, id)).returning()
-    : [existing];
+  const row = await db.transaction(async (tx) => {
+    const [updated] = Object.keys(update).length
+      ? await tx.update(contractsTable).set(update).where(eq(contractsTable.id, id)).returning()
+      : [existing];
+    // A status change (e.g. -> cancelled/terminated) or a unit change must
+    // refresh the affected unit(s) so they free up or lock as Sold.
+    await recomputeUnitStatus(tx, existing.unitId);
+    if (updated.unitId !== existing.unitId) await recomputeUnitStatus(tx, updated.unitId);
+    return updated;
+  });
   await recordAudit(req, { action: "update", entity: "contract", entityId: id, oldValue: existing, newValue: row });
   res.json(GetContractResponse.parse(serializeRow(row)));
 });
@@ -309,6 +334,8 @@ router.delete("/contracts/:id", requirePermission("contracts.delete"), async (re
     const [updated] = await tx.update(contractsTable).set({ isDeleted: true, isActive: false }).where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false))).returning();
     if (!updated) return null;
     await reverseAutomaticEntriesForSource(tx, "contract", updated.id, req.authUser?.id ?? null);
+    // Free the unit (reverts to Reserved if an active reservation remains, else Available).
+    await recomputeUnitStatus(tx, updated.unitId);
     return updated;
   });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
@@ -410,9 +437,25 @@ router.get("/contract-cancellations", requirePermission("contractCancellations.v
 router.post("/contract-cancellations", requirePermission("contractCancellations.create"), async (req, res): Promise<void> => {
   const parsed = CreateContractCancellationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(contractCancellationsTable).values({ ...parsed.data }).returning();
-  await recordAudit(req, { action: "create", entity: "contractCancellation", entityId: row.id, newValue: row });
-  res.status(201).json(GetContractCancellationResponse.parse(serializeRow(row)));
+  let conflict: string | null = null;
+  const row = await db.transaction(async (tx) => {
+    // Cancel the underlying contract first: flip its status, reverse its
+    // recognized sale on the ledger, and free the unit. Only log the
+    // cancellation once the canonical mutation succeeds.
+    const [contract] = await tx
+      .update(contractsTable)
+      .set({ status: "cancelled" })
+      .where(and(eq(contractsTable.id, parsed.data.contractId), eq(contractsTable.isDeleted, false)))
+      .returning();
+    if (!contract) { conflict = "404"; return null; }
+    await reverseAutomaticEntriesForSource(tx, "contract", contract.id, req.authUser?.id ?? null);
+    await recomputeUnitStatus(tx, contract.unitId);
+    const [created] = await tx.insert(contractCancellationsTable).values({ ...parsed.data }).returning();
+    return created;
+  });
+  if (conflict === "404") { res.status(404).json({ error: "Contract not found" }); return; }
+  await recordAudit(req, { action: "create", entity: "contractCancellation", entityId: row!.id, newValue: row });
+  res.status(201).json(GetContractCancellationResponse.parse(serializeRow(row!)));
 });
 
 router.get("/contract-cancellations/:id", requirePermission("contractCancellations.view"), async (req, res): Promise<void> => {
@@ -474,9 +517,26 @@ router.get("/unit-transfers", requirePermission("unitTransfers.view"), async (re
 router.post("/unit-transfers", requirePermission("unitTransfers.create"), async (req, res): Promise<void> => {
   const parsed = CreateUnitTransferBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(unitTransfersTable).values({ ...parsed.data }).returning();
-  await recordAudit(req, { action: "create", entity: "unitTransfer", entityId: row.id, newValue: row });
-  res.status(201).json(GetUnitTransferResponse.parse(serializeRow(row)));
+  let conflict: string | null = null;
+  const row = await db.transaction(async (tx) => {
+    // Repoint the contract to the destination unit first (the GL source FK
+    // stays the contract id). Only log the transfer if a live contract was
+    // actually moved.
+    const [contract] = await tx
+      .update(contractsTable)
+      .set({ unitId: parsed.data.toUnitId })
+      .where(and(eq(contractsTable.id, parsed.data.contractId), eq(contractsTable.isDeleted, false)))
+      .returning();
+    if (!contract) { conflict = "404"; return null; }
+    // Refresh both units: the source frees up and the destination locks as Sold.
+    await recomputeUnitStatus(tx, parsed.data.fromUnitId);
+    await recomputeUnitStatus(tx, parsed.data.toUnitId);
+    const [created] = await tx.insert(unitTransfersTable).values({ ...parsed.data }).returning();
+    return created;
+  });
+  if (conflict === "404") { res.status(404).json({ error: "Contract not found" }); return; }
+  await recordAudit(req, { action: "create", entity: "unitTransfer", entityId: row!.id, newValue: row });
+  res.status(201).json(GetUnitTransferResponse.parse(serializeRow(row!)));
 });
 
 router.get("/unit-transfers/:id", requirePermission("unitTransfers.view"), async (req, res): Promise<void> => {
@@ -774,7 +834,10 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
       })
       .returning();
     await tx.update(reservationsTable).set({ status: "converted" }).where(eq(reservationsTable.id, id));
-    return created;
+    // The unit is now under contract (Sold) and the contract is registered in Legal Affairs.
+    await recomputeUnitStatus(tx, created.unitId);
+    const legalContractId = await ensureLegalContractForContract(tx, created);
+    return { ...created, legalContractId: legalContractId ?? created.legalContractId };
   });
   if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
   if (conflict) { res.status(409).json({ error: conflict }); return; }

@@ -1,0 +1,171 @@
+import { and, eq, inArray } from "drizzle-orm";
+import {
+  unitsTable,
+  unitStatusesTable,
+  contractsTable,
+  reservationsTable,
+  legalContractsTable,
+  customersTable,
+} from "@workspace/db";
+import type { ContractRow } from "@workspace/db";
+import type { Tx } from "./posting";
+import { nextDocumentNumber } from "./doc-number";
+
+// ---------------------------------------------------------------------------
+// Cross-module integration side effects. These keep the canonical shared
+// records (units, legal registry) in sync when sales lifecycle events happen,
+// without duplicating data. All helpers are best-effort and idempotent so they
+// can run inside the originating business transaction without ever leaving the
+// system in a half-applied state on retry.
+// ---------------------------------------------------------------------------
+
+/**
+ * Derive a unit's status from its strongest live claim and sync
+ * `units.unitStatusId`:
+ *   - an active contract (status draft/active) on the unit  -> "sold"
+ *   - else an active reservation (status active/confirmed)  -> "reserved"
+ *   - else                                                  -> "available"
+ *
+ * Idempotent and best-effort: silently skips when the unit or the matching
+ * `unit_statuses` reference row is missing, and only writes when the resolved
+ * status actually changes. Call this after any event that creates, cancels,
+ * deletes, or moves a reservation or contract for the affected unit id(s).
+ */
+export async function recomputeUnitStatus(
+  tx: Tx,
+  unitId: string | null | undefined,
+): Promise<void> {
+  if (!unitId) return;
+  const [unit] = await tx
+    .select({
+      id: unitsTable.id,
+      companyId: unitsTable.companyId,
+      unitStatusId: unitsTable.unitStatusId,
+    })
+    .from(unitsTable)
+    .where(and(eq(unitsTable.id, unitId), eq(unitsTable.isDeleted, false)));
+  if (!unit) return;
+
+  const [contract] = await tx
+    .select({ id: contractsTable.id })
+    .from(contractsTable)
+    .where(
+      and(
+        eq(contractsTable.unitId, unitId),
+        eq(contractsTable.isDeleted, false),
+        inArray(contractsTable.status, ["draft", "active"]),
+      ),
+    )
+    .limit(1);
+
+  let code: string;
+  if (contract) {
+    code = "sold";
+  } else {
+    const [resv] = await tx
+      .select({ id: reservationsTable.id })
+      .from(reservationsTable)
+      .where(
+        and(
+          eq(reservationsTable.unitId, unitId),
+          eq(reservationsTable.isDeleted, false),
+          inArray(reservationsTable.status, ["active", "confirmed"]),
+        ),
+      )
+      .limit(1);
+    code = resv ? "reserved" : "available";
+  }
+
+  const [status] = await tx
+    .select({ id: unitStatusesTable.id })
+    .from(unitStatusesTable)
+    .where(
+      and(
+        eq(unitStatusesTable.companyId, unit.companyId),
+        eq(unitStatusesTable.code, code),
+        eq(unitStatusesTable.isDeleted, false),
+      ),
+    )
+    .limit(1);
+  if (!status) return;
+  if (unit.unitStatusId !== status.id) {
+    await tx
+      .update(unitsTable)
+      .set({ unitStatusId: status.id })
+      .where(eq(unitsTable.id, unitId));
+  }
+}
+
+/**
+ * Ensure a Legal Affairs registry entry exists for a sales contract and
+ * back-link it via `contracts.legalContractId`. The registry row points back at
+ * the sales contract through `sourceModule`/`sourceId` — the canonical FKs are
+ * never repointed. Idempotent per (sourceModule, sourceId) and best-effort.
+ * Returns the legal contract id (existing, reused, or newly created).
+ */
+export async function ensureLegalContractForContract(
+  tx: Tx,
+  contract: Pick<
+    ContractRow,
+    | "id"
+    | "companyId"
+    | "branchId"
+    | "code"
+    | "customerId"
+    | "totalPrice"
+    | "contractDate"
+    | "legalContractId"
+  >,
+): Promise<string | null> {
+  if (contract.legalContractId) return contract.legalContractId;
+
+  const [existing] = await tx
+    .select({ id: legalContractsTable.id })
+    .from(legalContractsTable)
+    .where(
+      and(
+        eq(legalContractsTable.sourceModule, "sales"),
+        eq(legalContractsTable.sourceId, contract.id),
+        eq(legalContractsTable.isDeleted, false),
+      ),
+    )
+    .limit(1);
+
+  let legalId = existing?.id ?? null;
+  if (!legalId) {
+    const [customer] = await tx
+      .select({ fullName: customersTable.fullName })
+      .from(customersTable)
+      .where(eq(customersTable.id, contract.customerId))
+      .limit(1);
+    const code =
+      (await nextDocumentNumber("LegalContract")) || `LC-${contract.code}`;
+    const [created] = await tx
+      .insert(legalContractsTable)
+      .values({
+        companyId: contract.companyId,
+        branchId: contract.branchId,
+        code,
+        title: `Sales Contract ${contract.code}`,
+        contractType: "sales",
+        sourceModule: "sales",
+        sourceId: contract.id,
+        counterpartyType: "customer",
+        counterpartyId: contract.customerId,
+        counterpartyName: customer?.fullName ?? null,
+        status: "active",
+        contractDate: contract.contractDate,
+        value: contract.totalPrice ?? "0",
+      })
+      .returning({ id: legalContractsTable.id });
+    legalId = created?.id ?? null;
+  }
+
+  if (legalId) {
+    await tx
+      .update(contractsTable)
+      .set({ legalContractId: legalId })
+      .where(eq(contractsTable.id, contract.id));
+  }
+  return legalId;
+}
