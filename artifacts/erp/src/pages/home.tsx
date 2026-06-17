@@ -18,7 +18,6 @@ import {
   Scale,
   MessageSquare,
   LandPlot,
-  PackageCheck,
   BarChart3,
   Settings,
   Home as HomeIcon,
@@ -47,7 +46,6 @@ const MODULES: ModuleCard[] = [
   { titleKey: "home.mod.legal", icon: Scale, href: "/legal-dashboard", accent: "text-indigo-600 bg-indigo-500/10 dark:text-indigo-400" },
   { titleKey: "home.mod.customer_service", icon: MessageSquare, href: "/customer-service-dashboard", accent: "text-rose-600 bg-rose-500/10 dark:text-rose-400" },
   { titleKey: "home.mod.land_bank", icon: LandPlot, href: "/land-bank-dashboard", accent: "text-lime-600 bg-lime-500/10 dark:text-lime-400" },
-  { titleKey: "home.mod.handover", icon: PackageCheck, href: "/handover-dashboard", accent: "text-teal-600 bg-teal-500/10 dark:text-teal-400" },
   { titleKey: "home.mod.reports", icon: BarChart3, href: "/executive-dashboard", accent: "text-fuchsia-600 bg-fuchsia-500/10 dark:text-fuchsia-400" },
   { titleKey: "home.mod.administration", icon: Settings, href: "/settings", accent: "text-slate-600 bg-slate-500/10 dark:text-slate-300" },
 ];

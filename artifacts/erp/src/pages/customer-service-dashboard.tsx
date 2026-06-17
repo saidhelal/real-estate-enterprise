@@ -1,6 +1,8 @@
 import {
   useGetCustomerServiceDashboard,
   getGetCustomerServiceDashboardQueryKey,
+  useGetHandoverDashboard,
+  getGetHandoverDashboardQueryKey,
   useListCompanies,
 } from "@workspace/api-client-react";
 import {
@@ -35,56 +37,108 @@ export default function CustomerServiceDashboardPage() {
   const companyId = companies?.[0]?.id;
 
   const params = { companyId };
-  const { data, isLoading } = useGetCustomerServiceDashboard(params, {
+  const { data: cs, isLoading: csLoading } = useGetCustomerServiceDashboard(params, {
     query: { enabled: !!companyId, queryKey: getGetCustomerServiceDashboardQueryKey(params) },
   });
+  const { data: hov, isLoading: hovLoading } = useGetHandoverDashboard(params, {
+    query: { enabled: !!companyId, queryKey: getGetHandoverDashboardQueryKey(params) },
+  });
 
-  if (isLoading) {
+  if (csLoading && hovLoading) {
     return <p className="text-muted-foreground">{t("common.loading")}</p>;
   }
-  if (!data) {
-    return <p className="text-muted-foreground">{t("lb.no_data")}</p>;
-  }
 
-  const byStatus = data.byStatus ?? [];
+  const csByStatus = cs?.byStatus ?? [];
+  const hovByStatus = hov?.byStatus ?? [];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h2 className="text-2xl font-bold tracking-tight">{t("nav.customer_service_dashboard")}</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Stat label={t("cs.total_escalations")} value={data.totalEscalations} />
-        <Stat label={t("cs.open_escalations")} value={data.openEscalations} />
-        <Stat label={t("cs.sla_policies")} value={data.slaPolicies} />
-      </div>
+      <section className="space-y-4">
+        <h3 className="text-lg font-semibold tracking-tight">{t("cs.after_sales_section")}</h3>
+        {!cs ? (
+          <p className="text-muted-foreground">{t("lb.no_data")}</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Stat label={t("cs.total_escalations")} value={cs.totalEscalations} />
+              <Stat label={t("cs.open_escalations")} value={cs.openEscalations} />
+              <Stat label={t("cs.sla_policies")} value={cs.slaPolicies} />
+            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">{t("cs.escalations_by_status")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("common.status")}</TableHead>
+                      <TableHead className="text-right">{t("common.count")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {csByStatus.length === 0 ? (
+                      <TableRow><TableCell colSpan={2} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                    ) : (
+                      csByStatus.map((r) => (
+                        <TableRow key={r.status}>
+                          <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
+                          <TableCell className="text-right">{r.count}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{t("cs.escalations_by_status")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("common.status")}</TableHead>
-                <TableHead className="text-right">{t("common.count")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {byStatus.length === 0 ? (
-                <TableRow><TableCell colSpan={2} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
-              ) : (
-                byStatus.map((r) => (
-                  <TableRow key={r.status}>
-                    <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
-                    <TableCell className="text-right">{r.count}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <section className="space-y-4">
+        <h3 className="text-lg font-semibold tracking-tight">{t("cs.handover_section")}</h3>
+        {!hov ? (
+          <p className="text-muted-foreground">{t("lb.no_data")}</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Stat label={t("hov.total_requests")} value={hov.totalRequests} />
+              <Stat label={t("hov.scheduled")} value={hov.scheduledCount} />
+              <Stat label={t("hov.completed")} value={hov.completedCount} />
+              <Stat label={t("hov.open_snags")} value={hov.openSnags} />
+            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">{t("hov.requests_by_status")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("common.status")}</TableHead>
+                      <TableHead className="text-right">{t("common.count")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {hovByStatus.length === 0 ? (
+                      <TableRow><TableCell colSpan={2} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                    ) : (
+                      hovByStatus.map((r) => (
+                        <TableRow key={r.status}>
+                          <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
+                          <TableCell className="text-right">{r.count}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </section>
     </div>
   );
 }
