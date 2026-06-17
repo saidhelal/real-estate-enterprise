@@ -9,6 +9,7 @@ import {
   useListUsers,
   type Customer,
 } from "@workspace/api-client-react";
+import { Link } from "wouter";
 import {
   ResourceManager,
   type ResourceField,
@@ -51,7 +52,15 @@ export default function CustomersPage() {
   ];
 
   const columns: ResourceColumn<Customer>[] = [
-    { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
+    {
+      header: "Code",
+      headerAr: "الرمز",
+      render: (r) => (
+        <Link href={`/crm/customers/${r.id}`} className="font-medium text-primary hover:underline">
+          {r.code}
+        </Link>
+      ),
+    },
     { header: "Name", headerAr: "الاسم", render: (r) => (language === "ar" ? r.nameAr ?? r.fullName : r.fullName) },
     { header: "Type", headerAr: "النوع", render: (r) => <Badge variant="secondary">{enumLabel(r.type, language)}</Badge> },
     {

@@ -189,6 +189,8 @@ router.get("/lead-activities", requirePermission("leadActivities.view"), async (
   }
   const leadId = qStr(q, "leadId");
   if (leadId) filters.push(eq(leadActivitiesTable.leadId, leadId));
+  const customerId = qStr(q, "customerId");
+  if (customerId) filters.push(eq(leadActivitiesTable.customerId, customerId));
   const where = and(...filters);
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)::int` })
@@ -207,7 +209,12 @@ router.get("/lead-activities", requirePermission("leadActivities.view"), async (
 router.post("/lead-activities", requirePermission("leadActivities.create"), async (req, res): Promise<void> => {
   const parsed = CreateLeadActivityBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(leadActivitiesTable).values({ ...parsed.data }).returning();
+  if (!parsed.data.leadId && !parsed.data.customerId) {
+    res.status(400).json({ error: "Either leadId or customerId is required" });
+    return;
+  }
+  const userId = req.authUser?.id ?? parsed.data.userId;
+  const [row] = await db.insert(leadActivitiesTable).values({ ...parsed.data, userId }).returning();
   await recordAudit(req, { action: "create", entity: "leadActivity", entityId: row.id, newValue: row });
   res.status(201).json(GetLeadActivityResponse.parse(serializeRow(row)));
 });
@@ -253,6 +260,8 @@ router.get("/lead-follow-ups", requirePermission("leadFollowUps.view"), async (r
   }
   const leadId = qStr(q, "leadId");
   if (leadId) filters.push(eq(leadFollowUpsTable.leadId, leadId));
+  const customerId = qStr(q, "customerId");
+  if (customerId) filters.push(eq(leadFollowUpsTable.customerId, customerId));
   const where = and(...filters);
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)::int` })
@@ -271,7 +280,12 @@ router.get("/lead-follow-ups", requirePermission("leadFollowUps.view"), async (r
 router.post("/lead-follow-ups", requirePermission("leadFollowUps.create"), async (req, res): Promise<void> => {
   const parsed = CreateLeadFollowUpBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(leadFollowUpsTable).values({ ...parsed.data }).returning();
+  if (!parsed.data.leadId && !parsed.data.customerId) {
+    res.status(400).json({ error: "Either leadId or customerId is required" });
+    return;
+  }
+  const userId = req.authUser?.id ?? parsed.data.userId;
+  const [row] = await db.insert(leadFollowUpsTable).values({ ...parsed.data, userId }).returning();
   await recordAudit(req, { action: "create", entity: "leadFollowUp", entityId: row.id, newValue: row });
   res.status(201).json(GetLeadFollowUpResponse.parse(serializeRow(row)));
 });

@@ -2356,14 +2356,16 @@ export const ListLeadActivitiesQueryParams = zod.object({
   "pageSize": zod.coerce.number().optional(),
   "search": zod.coerce.string().optional(),
   "companyId": zod.coerce.string().optional(),
-  "leadId": zod.coerce.string().optional()
+  "leadId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional()
 })
 
 export const ListLeadActivitiesResponse = zod.object({
   "data": zod.array(zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
   "activityType": zod.string(),
   "subject": zod.string().nullish(),
   "notes": zod.string().nullish(),
@@ -2383,7 +2385,8 @@ export const ListLeadActivitiesResponse = zod.object({
  */
 export const CreateLeadActivityBody = zod.object({
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().optional(),
+  "customerId": zod.string().optional(),
   "activityType": zod.string().optional(),
   "subject": zod.string().optional(),
   "notes": zod.string().optional(),
@@ -2402,7 +2405,8 @@ export const GetLeadActivityParams = zod.object({
 export const GetLeadActivityResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
   "activityType": zod.string(),
   "subject": zod.string().nullish(),
   "notes": zod.string().nullish(),
@@ -2423,6 +2427,7 @@ export const UpdateLeadActivityParams = zod.object({
 export const UpdateLeadActivityBody = zod.object({
   "companyId": zod.string().optional(),
   "leadId": zod.string().optional(),
+  "customerId": zod.string().optional(),
   "activityType": zod.string().optional(),
   "subject": zod.string().optional(),
   "notes": zod.string().optional(),
@@ -2433,7 +2438,8 @@ export const UpdateLeadActivityBody = zod.object({
 export const UpdateLeadActivityResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
   "activityType": zod.string(),
   "subject": zod.string().nullish(),
   "notes": zod.string().nullish(),
@@ -2465,6 +2471,7 @@ export const ListLeadFollowUpsQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
   "companyId": zod.coerce.string().optional(),
   "leadId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
   "status": zod.coerce.string().optional()
 })
 
@@ -2472,7 +2479,8 @@ export const ListLeadFollowUpsResponse = zod.object({
   "data": zod.array(zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
   "dueDate": zod.string(),
   "notes": zod.string().nullish(),
   "status": zod.string(),
@@ -2491,7 +2499,8 @@ export const ListLeadFollowUpsResponse = zod.object({
  */
 export const CreateLeadFollowUpBody = zod.object({
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().optional(),
+  "customerId": zod.string().optional(),
   "dueDate": zod.string(),
   "notes": zod.string().optional(),
   "status": zod.string().optional(),
@@ -2509,7 +2518,8 @@ export const GetLeadFollowUpParams = zod.object({
 export const GetLeadFollowUpResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
   "dueDate": zod.string(),
   "notes": zod.string().nullish(),
   "status": zod.string(),
@@ -2529,6 +2539,7 @@ export const UpdateLeadFollowUpParams = zod.object({
 export const UpdateLeadFollowUpBody = zod.object({
   "companyId": zod.string().optional(),
   "leadId": zod.string().optional(),
+  "customerId": zod.string().optional(),
   "dueDate": zod.string().optional(),
   "notes": zod.string().optional(),
   "status": zod.string().optional(),
@@ -2538,7 +2549,8 @@ export const UpdateLeadFollowUpBody = zod.object({
 export const UpdateLeadFollowUpResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
-  "leadId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
   "dueDate": zod.string(),
   "notes": zod.string().nullish(),
   "status": zod.string(),
@@ -5360,6 +5372,31 @@ export const GetCrmCustomerProfileResponse = zod.object({
   "issueDate": zod.string().nullish(),
   "expiryDate": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "activities": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "activityType": zod.string(),
+  "subject": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "activityDate": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "followUps": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "dueDate": zod.string(),
+  "notes": zod.string().nullish(),
+  "status": zod.string(),
+  "userId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 }))

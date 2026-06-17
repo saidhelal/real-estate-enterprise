@@ -11,7 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
@@ -93,7 +95,20 @@ export default function CrmDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("crm.dashboard.title")}</h2>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-2xl font-bold tracking-tight">{t("crm.dashboard.title")}</h2>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/customers">
+            <Button size="sm">{t("crm.action.new_customer")}</Button>
+          </Link>
+          <Link href="/customers">
+            <Button variant="outline" size="sm">{t("crm.action.manage_customers")}</Button>
+          </Link>
+          <Link href="/crm/available-units">
+            <Button variant="outline" size="sm">{t("crm.available_units.title")}</Button>
+          </Link>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Stat label={t("crm.stat.customers")} value={data.totalCustomers} />

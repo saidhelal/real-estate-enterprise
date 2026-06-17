@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useListCrmAvailableUnits,
   getListCrmAvailableUnitsQueryKey,
   useListCompanies,
 } from "@workspace/api-client-react";
+import { ReservationDialog } from "@/components/crm/crm-dialogs";
 import {
   Table,
   TableBody,
@@ -23,6 +25,7 @@ const PAGE_SIZE = 25;
 
 export default function CrmAvailableUnitsPage() {
   const { language, t } = useLanguage();
+  const queryClient = useQueryClient();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const [search, setSearch] = useState("");
@@ -32,6 +35,8 @@ export default function CrmAvailableUnitsPage() {
   const { data, isLoading } = useListCrmAvailableUnits(params, {
     query: { enabled: !!companyId, queryKey: getListCrmAvailableUnitsQueryKey(params) },
   });
+  const invalidateUnits = () =>
+    queryClient.invalidateQueries({ queryKey: getListCrmAvailableUnitsQueryKey(params) });
 
   const rows = data?.data ?? [];
   const total = data?.total ?? 0;
@@ -66,18 +71,19 @@ export default function CrmAvailableUnitsPage() {
                 <TableHead className="text-end">{t("crm.unit.area")}</TableHead>
                 <TableHead className="text-end">{t("crm.unit.price")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
+                <TableHead className="text-end">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center h-24 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
                     {t("common.loading")}
                   </TableCell>
                 </TableRow>
               ) : rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center h-24 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
                     {t("common.no_data")}
                   </TableCell>
                 </TableRow>
@@ -93,6 +99,21 @@ export default function CrmAvailableUnitsPage() {
                     <TableCell className="text-end">{u.basePrice ?? "-"}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">{enumLabel(u.status, language)}</Badge>
+                    </TableCell>
+                    <TableCell className="text-end">
+                      <ReservationDialog
+                        companyId={companyId}
+                        fixedUnit={{
+                          id: u.id,
+                          label: `${u.code} — ${language === "ar" ? u.nameAr ?? u.name : u.name}`,
+                        }}
+                        onCreated={invalidateUnits}
+                        trigger={
+                          <Button variant="outline" size="sm">
+                            {t("crm.action.reserve")}
+                          </Button>
+                        }
+                      />
                     </TableCell>
                   </TableRow>
                 ))

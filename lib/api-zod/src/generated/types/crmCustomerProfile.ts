@@ -12,6 +12,8 @@ import type { Customer } from './customer';
 import type { CustomerContact } from './customerContact';
 import type { CustomerDocument } from './customerDocument';
 import type { CustomerNote } from './customerNote';
+import type { LeadActivity } from './leadActivity';
+import type { LeadFollowUp } from './leadFollowUp';
 
 export interface CrmCustomerProfile {
   customer: Customer;
@@ -23,4 +25,6 @@ export interface CrmCustomerProfile {
   notes: CustomerNote[];
   contacts: CustomerContact[];
   documents: CustomerDocument[];
+  activities: LeadActivity[];
+  followUps: LeadFollowUp[];
 }

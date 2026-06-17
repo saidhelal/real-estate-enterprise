@@ -2117,6 +2117,7 @@ paths:
         - { name: search, in: query, required: false, schema: { type: string } }
         - { name: companyId, in: query, required: false, schema: { type: string } }
         - { name: leadId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
       responses:
         "200":
           description: LeadActivities
@@ -2206,6 +2207,7 @@ paths:
         - { name: search, in: query, required: false, schema: { type: string } }
         - { name: companyId, in: query, required: false, schema: { type: string } }
         - { name: leadId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
         - { name: status, in: query, required: false, schema: { type: string } }
       responses:
         "200":
@@ -20698,11 +20700,12 @@ components:
 
     LeadActivity:
       type: object
-      required: [id, companyId, leadId, activityType, activityDate, isActive, createdAt]
+      required: [id, companyId, activityType, activityDate, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
-        leadId: { type: string }
+        leadId: { type: ["string", "null"] }
+        customerId: { type: ["string", "null"] }
         activityType: { type: string }
         subject: { type: ["string", "null"] }
         notes: { type: ["string", "null"] }
@@ -20713,10 +20716,11 @@ components:
 
     LeadActivityInput:
       type: object
-      required: [companyId, leadId, activityDate]
+      required: [companyId, activityDate]
       properties:
         companyId: { type: string }
         leadId: { type: string }
+        customerId: { type: string }
         activityType: { type: string }
         subject: { type: string }
         notes: { type: string }
@@ -20728,6 +20732,7 @@ components:
       properties:
         companyId: { type: string }
         leadId: { type: string }
+        customerId: { type: string }
         activityType: { type: string }
         subject: { type: string }
         notes: { type: string }
@@ -20747,11 +20752,12 @@ components:
 
     LeadFollowUp:
       type: object
-      required: [id, companyId, leadId, dueDate, status, isActive, createdAt]
+      required: [id, companyId, dueDate, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
-        leadId: { type: string }
+        leadId: { type: ["string", "null"] }
+        customerId: { type: ["string", "null"] }
         dueDate: { type: string }
         notes: { type: ["string", "null"] }
         status: { type: string }
@@ -20761,10 +20767,11 @@ components:
 
     LeadFollowUpInput:
       type: object
-      required: [companyId, leadId, dueDate]
+      required: [companyId, dueDate]
       properties:
         companyId: { type: string }
         leadId: { type: string }
+        customerId: { type: string }
         dueDate: { type: string }
         notes: { type: string }
         status: { type: string }
@@ -20775,6 +20782,7 @@ components:
       properties:
         companyId: { type: string }
         leadId: { type: string }
+        customerId: { type: string }
         dueDate: { type: string }
         notes: { type: string }
         status: { type: string }
@@ -21903,7 +21911,7 @@ components:
 
     CrmCustomerProfile:
       type: object
-      required: [customer, stats, reservations, contracts, notes, contacts, documents]
+      required: [customer, stats, reservations, contracts, notes, contacts, documents, activities, followUps]
       properties:
         customer: { $ref: "#/components/schemas/Customer" }
         assignedToName: { type: ["string", "null"] }
@@ -21923,6 +21931,12 @@ components:
         documents:
           type: array
           items: { $ref: "#/components/schemas/CustomerDocument" }
+        activities:
+          type: array
+          items: { $ref: "#/components/schemas/LeadActivity" }
+        followUps:
+          type: array
+          items: { $ref: "#/components/schemas/LeadFollowUp" }
 
     CrmSearchHit:
       type: object

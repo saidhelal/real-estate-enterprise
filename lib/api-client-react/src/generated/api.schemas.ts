@@ -1177,7 +1177,10 @@ export interface LeadListResponse {
 export interface LeadActivity {
   id: string;
   companyId: string;
-  leadId: string;
+  /** @nullable */
+  leadId?: string | null;
+  /** @nullable */
+  customerId?: string | null;
   activityType: string;
   /** @nullable */
   subject?: string | null;
@@ -1192,7 +1195,8 @@ export interface LeadActivity {
 
 export interface LeadActivityInput {
   companyId: string;
-  leadId: string;
+  leadId?: string;
+  customerId?: string;
   activityType?: string;
   subject?: string;
   notes?: string;
@@ -1203,6 +1207,7 @@ export interface LeadActivityInput {
 export interface LeadActivityUpdate {
   companyId?: string;
   leadId?: string;
+  customerId?: string;
   activityType?: string;
   subject?: string;
   notes?: string;
@@ -1220,7 +1225,10 @@ export interface LeadActivityListResponse {
 export interface LeadFollowUp {
   id: string;
   companyId: string;
-  leadId: string;
+  /** @nullable */
+  leadId?: string | null;
+  /** @nullable */
+  customerId?: string | null;
   dueDate: string;
   /** @nullable */
   notes?: string | null;
@@ -1233,7 +1241,8 @@ export interface LeadFollowUp {
 
 export interface LeadFollowUpInput {
   companyId: string;
-  leadId: string;
+  leadId?: string;
+  customerId?: string;
   dueDate: string;
   notes?: string;
   status?: string;
@@ -1243,6 +1252,7 @@ export interface LeadFollowUpInput {
 export interface LeadFollowUpUpdate {
   companyId?: string;
   leadId?: string;
+  customerId?: string;
   dueDate?: string;
   notes?: string;
   status?: string;
@@ -2242,6 +2252,8 @@ export interface CrmCustomerProfile {
   notes: CustomerNote[];
   contacts: CustomerContact[];
   documents: CustomerDocument[];
+  activities: LeadActivity[];
+  followUps: LeadFollowUp[];
 }
 
 export interface CrmSearchHit {
@@ -11829,6 +11841,7 @@ pageSize?: number;
 search?: string;
 companyId?: string;
 leadId?: string;
+customerId?: string;
 };
 
 export type ListLeadFollowUpsParams = {
@@ -11837,6 +11850,7 @@ pageSize?: number;
 search?: string;
 companyId?: string;
 leadId?: string;
+customerId?: string;
 status?: string;
 };
 

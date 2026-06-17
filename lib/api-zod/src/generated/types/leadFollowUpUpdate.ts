@@ -9,6 +9,7 @@
 export interface LeadFollowUpUpdate {
   companyId?: string;
   leadId?: string;
+  customerId?: string;
   dueDate?: string;
   notes?: string;
   status?: string;

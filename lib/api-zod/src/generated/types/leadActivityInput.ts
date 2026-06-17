@@ -8,7 +8,8 @@
 
 export interface LeadActivityInput {
   companyId: string;
-  leadId: string;
+  leadId?: string;
+  customerId?: string;
   activityType?: string;
   subject?: string;
   notes?: string;

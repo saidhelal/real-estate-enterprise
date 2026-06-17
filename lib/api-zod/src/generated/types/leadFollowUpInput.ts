@@ -8,7 +8,8 @@
 
 export interface LeadFollowUpInput {
   companyId: string;
-  leadId: string;
+  leadId?: string;
+  customerId?: string;
   dueDate: string;
   notes?: string;
   status?: string;

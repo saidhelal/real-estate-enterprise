@@ -20,6 +20,8 @@ import {
   customerNotesTable,
   customerDocumentsTable,
   leadsTable,
+  leadActivitiesTable,
+  leadFollowUpsTable,
   reservationsTable,
   contractsTable,
   unitsTable,
@@ -243,6 +245,8 @@ router.get("/crm/customers/:id/profile", requirePermission("crm.view"), async (r
     notes,
     contacts,
     documents,
+    activities,
+    followUps,
   ] = await Promise.all([
     customer.assignedToUserId
       ? db.select({ fullName: usersTable.fullName }).from(usersTable).where(eq(usersTable.id, customer.assignedToUserId))
@@ -292,6 +296,16 @@ router.get("/crm/customers/:id/profile", requirePermission("crm.view"), async (r
       .from(customerDocumentsTable)
       .where(and(eq(customerDocumentsTable.customerId, id), eq(customerDocumentsTable.isDeleted, false)))
       .orderBy(desc(customerDocumentsTable.createdAt)),
+    db
+      .select()
+      .from(leadActivitiesTable)
+      .where(and(eq(leadActivitiesTable.customerId, id), eq(leadActivitiesTable.isDeleted, false)))
+      .orderBy(desc(leadActivitiesTable.activityDate)),
+    db
+      .select()
+      .from(leadFollowUpsTable)
+      .where(and(eq(leadFollowUpsTable.customerId, id), eq(leadFollowUpsTable.isDeleted, false)))
+      .orderBy(desc(leadFollowUpsTable.dueDate)),
   ]);
 
   const contractIds = contracts.map((c) => c.id);
@@ -346,6 +360,8 @@ router.get("/crm/customers/:id/profile", requirePermission("crm.view"), async (r
       notes: notes.map(serializeRow),
       contacts: contacts.map(serializeRow),
       documents: documents.map(serializeRow),
+      activities: activities.map(serializeRow),
+      followUps: followUps.map(serializeRow),
     }),
   );
 });

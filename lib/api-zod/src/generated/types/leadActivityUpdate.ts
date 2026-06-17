@@ -9,6 +9,7 @@
 export interface LeadActivityUpdate {
   companyId?: string;
   leadId?: string;
+  customerId?: string;
   activityType?: string;
   subject?: string;
   notes?: string;

@@ -9,7 +9,10 @@
 export interface LeadFollowUp {
   id: string;
   companyId: string;
-  leadId: string;
+  /** @nullable */
+  leadId?: string | null;
+  /** @nullable */
+  customerId?: string | null;
   dueDate: string;
   /** @nullable */
   notes?: string | null;

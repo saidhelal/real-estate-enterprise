@@ -12,5 +12,6 @@ pageSize?: number;
 search?: string;
 companyId?: string;
 leadId?: string;
+customerId?: string;
 status?: string;
 };

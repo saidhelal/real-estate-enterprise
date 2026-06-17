@@ -48,7 +48,8 @@ export type LeadRow = typeof leadsTable.$inferSelect;
 export const leadActivitiesTable = pgTable("lead_activities", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyId: uuid("company_id").notNull(),
-  leadId: uuid("lead_id").notNull(),
+  leadId: uuid("lead_id"),
+  customerId: uuid("customer_id"),
   activityType: text("activity_type").notNull().default("note"),
   subject: text("subject"),
   notes: text("notes"),
@@ -61,7 +62,8 @@ export type LeadActivityRow = typeof leadActivitiesTable.$inferSelect;
 export const leadFollowUpsTable = pgTable("lead_follow_ups", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyId: uuid("company_id").notNull(),
-  leadId: uuid("lead_id").notNull(),
+  leadId: uuid("lead_id"),
+  customerId: uuid("customer_id"),
   dueDate: date("due_date").notNull(),
   notes: text("notes"),
   status: text("status").notNull().default("pending"),

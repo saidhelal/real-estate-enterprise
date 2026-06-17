@@ -9,7 +9,10 @@
 export interface LeadActivity {
   id: string;
   companyId: string;
-  leadId: string;
+  /** @nullable */
+  leadId?: string | null;
+  /** @nullable */
+  customerId?: string | null;
   activityType: string;
   /** @nullable */
   subject?: string | null;
