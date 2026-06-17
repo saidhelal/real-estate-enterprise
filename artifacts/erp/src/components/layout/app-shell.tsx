@@ -393,7 +393,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               onClick={() => setLanguage(language === "en" ? "ar" : "en")}
               title={language === "en" ? "Switch to Arabic" : "Switch to English"}
             >
-              <span className="font-semibold">{language === "en" ? "AR" : "EN"}</span>
+              <span className="font-semibold">{language === "en" ? "EN" : "AR"}</span>
             </Button>
             
             <Button
