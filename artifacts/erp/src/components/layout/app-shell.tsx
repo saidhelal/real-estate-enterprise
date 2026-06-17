@@ -322,8 +322,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const NavLinks = () => (
     <>
       {NAV_GROUPS.map((group) => (
-        <div key={group.titleKey} className="pb-2">
-          <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+        <div key={group.titleKey} className="pb-1">
+          <p className="px-2 pb-0.5 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
             {t(group.titleKey)}
           </p>
           {group.items.map((item) => {
@@ -331,12 +331,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             return (
               <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
                 <span
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors hover:bg-muted hover:text-primary ${
                     isActive ? "bg-muted text-primary font-medium" : "text-muted-foreground"
                   }`}
                 >
-                  <item.icon className="h-4 w-4" />
-                  {t(item.labelKey)}
+                  <item.icon className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{t(item.labelKey)}</span>
                 </span>
               </Link>
             );
@@ -349,15 +349,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r bg-background md:flex">
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Building2 className="h-6 w-6" />
+      <aside className="hidden w-60 flex-col border-r bg-sidebar md:flex">
+        <div className="flex h-12 items-center border-b px-4">
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
+            <Building2 className="h-5 w-5 text-primary" />
             <span>ERP System</span>
           </Link>
         </div>
-        <ScrollArea className="flex-1 overflow-auto py-2">
-          <nav className="grid items-start px-2 text-sm font-medium lg:px-4 space-y-1">
+        <ScrollArea className="flex-1 overflow-auto py-1.5">
+          <nav className="grid items-start px-2 font-medium space-y-0.5">
             <NavLinks />
           </nav>
         </ScrollArea>
@@ -365,7 +365,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-12 items-center gap-4 border-b bg-background px-4 lg:px-6">
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -438,7 +438,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <main className="flex-1 p-3 md:p-4 overflow-auto">
           <PageNav navGroups={NAV_GROUPS} />
           {children}
         </main>

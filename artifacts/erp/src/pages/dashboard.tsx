@@ -19,10 +19,10 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("dashboard.title")}</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-xl font-semibold tracking-tight">{t("dashboard.title")}</h2>
+        <p className="text-sm text-muted-foreground">
           {t("dashboard.welcome")}, {user.fullName}
         </p>
       </div>
@@ -79,7 +79,7 @@ export default function Dashboard() {
       </div>
 
       <div>
-        <h3 className="mb-3 text-lg font-semibold tracking-tight">{t("dashboard.real_estate")}</h3>
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("dashboard.real_estate")}</h3>
         <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           <StatCard title={t("dashboard.projects")} value={re?.projects} icon={Building} isLoading={reLoading} />
           <StatCard title={t("dashboard.buildings")} value={re?.buildings} icon={Building2} isLoading={reLoading} />
@@ -97,7 +97,7 @@ export default function Dashboard() {
       </div>
 
       <div>
-        <h3 className="mb-3 text-lg font-semibold tracking-tight">{t("dashboard.finance")}</h3>
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("dashboard.finance")}</h3>
         <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           <StatCard title={t("dashboard.total_sales")} value={fin?.totalSales} icon={TrendingUp} isLoading={finLoading} />
           <StatCard title={t("dashboard.total_collections")} value={fin?.totalCollections} icon={CircleDollarSign} isLoading={finLoading} />
@@ -124,9 +124,9 @@ export default function Dashboard() {
           ) : activity?.length === 0 ? (
             <p className="text-sm text-muted-foreground">No recent activity.</p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               {activity?.map((log) => (
-                <div key={log.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+                <div key={log.id} className="flex items-center justify-between border-b pb-2.5 last:border-0 last:pb-0">
                   <div>
                     <p className="text-sm font-medium">
                       <span className="capitalize">{log.action}</span> {log.entity}

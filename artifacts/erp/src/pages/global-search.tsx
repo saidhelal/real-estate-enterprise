@@ -80,10 +80,10 @@ export default function GlobalSearchPage() {
     matchedContracts.length;
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("global_search.title")}</h2>
-        <p className="text-muted-foreground">{t("global_search.subtitle")}</p>
+        <h2 className="text-xl font-semibold tracking-tight">{t("global_search.title")}</h2>
+        <p className="text-sm text-muted-foreground">{t("global_search.subtitle")}</p>
       </div>
 
       <div className="relative max-w-xl">
