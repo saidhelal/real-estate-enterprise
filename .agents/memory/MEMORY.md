@@ -25,3 +25,4 @@
 - [Portal attachment IDOR](portal-attachment-idor.md) — multi-tenant object-storage uploads must authorize via an immutable owner mapping (object_path→customerId), not forgeable record references.
 - [Read-aggregation partition consistency](aggregation-partition-consistency.md) — paid/due/overdue must be a true partition (due excludes overdue) and DB-side numeric sums, mirrored across sibling report endpoints.
 - [CRM customer-scope & hub](crm-customer-scope.md) — lead_activities/follow_ups dual-scoped (nullable leadId+customerId); profile hub aggregates subresources under one crm.view; actor userId is auth-authoritative.
+- [Sales workflow modeling](sales-workflow-modeling.md) — installment plans require a contract; on-delivery deposits = draft (unposted) receipt; reservation payments + contracts auto-post, receipts do not.
