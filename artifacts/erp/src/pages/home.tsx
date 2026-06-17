@@ -1,7 +1,7 @@
 import { useAuth } from "@/lib/auth-provider";
 import { useLanguage } from "@/lib/language-provider";
 import { Link } from "wouter";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   useGetRealEstateDashboard,
@@ -68,10 +68,14 @@ function formatMoney(value?: number | string): string {
 
 export default function Home() {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { data: re, isLoading: reLoading } = useGetRealEstateDashboard();
   const { data: fin, isLoading: finLoading } = useGetFinanceDashboard();
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setQuery("");
+  }, [language]);
 
   const apps = useMemo(() => {
     const q = query.trim().toLowerCase();
