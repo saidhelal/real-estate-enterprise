@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function StatCard({
@@ -14,18 +14,20 @@ export function StatCard({
 }) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <Skeleton className="h-7 w-[60px]" />
-        ) : (
-          <div className="text-2xl font-bold">
-            {typeof value === "number" ? value.toLocaleString() : value ?? 0}
-          </div>
-        )}
+      <CardContent className="flex items-center gap-3 p-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
+          <Icon className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-medium text-muted-foreground">{title}</p>
+          {isLoading ? (
+            <Skeleton className="mt-1 h-5 w-[50px]" />
+          ) : (
+            <p className="text-lg font-bold leading-tight">
+              {typeof value === "number" ? value.toLocaleString() : value ?? 0}
+            </p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

@@ -36,6 +36,7 @@ import UnitPriceListsPage from "@/pages/unit-price-lists";
 import UnitPricingPage from "@/pages/unit-pricing";
 import UnitDiscountsPage from "@/pages/unit-discounts";
 import LeadsPage from "@/pages/leads";
+import GlobalSearchPage from "@/pages/global-search";
 import LeadSourcesPage from "@/pages/lead-sources";
 import LeadActivitiesPage from "@/pages/lead-activities";
 import LeadFollowUpsPage from "@/pages/lead-follow-ups";
@@ -294,6 +295,7 @@ function Router() {
             <Route path="/unit-price-lists" component={UnitPriceListsPage} />
             <Route path="/unit-pricing" component={UnitPricingPage} />
             <Route path="/unit-discounts" component={UnitDiscountsPage} />
+            <Route path="/global-search" component={GlobalSearchPage} />
             <Route path="/leads" component={LeadsPage} />
             <Route path="/lead-sources" component={LeadSourcesPage} />
             <Route path="/lead-activities" component={LeadActivitiesPage} />

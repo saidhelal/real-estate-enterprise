@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Building2, MapPin, ShieldCheck, Activity, CalendarDays, Banknote, History, Building, Home, BadgeCheck, BookMarked, FileSignature, UserPlus, AlertTriangle, Banknote as BanknoteIcon, Wallet, Receipt, TrendingUp, Landmark, CircleDollarSign } from "lucide-react";
 import { useGetDashboardSummary, useGetRecentActivity, useGetRealEstateDashboard, useGetFinanceDashboard } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { StatCard } from "@/components/stat-card";
 import { format } from "date-fns";
 
 export default function Dashboard() {
@@ -26,7 +27,7 @@ export default function Dashboard() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         <StatCard
           title={t("dashboard.users")}
           value={summary?.users}
@@ -79,7 +80,7 @@ export default function Dashboard() {
 
       <div>
         <h3 className="mb-3 text-lg font-semibold tracking-tight">{t("dashboard.real_estate")}</h3>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           <StatCard title={t("dashboard.projects")} value={re?.projects} icon={Building} isLoading={reLoading} />
           <StatCard title={t("dashboard.buildings")} value={re?.buildings} icon={Building2} isLoading={reLoading} />
           <StatCard title={t("dashboard.units")} value={re?.units} icon={Home} isLoading={reLoading} />
@@ -97,7 +98,7 @@ export default function Dashboard() {
 
       <div>
         <h3 className="mb-3 text-lg font-semibold tracking-tight">{t("dashboard.finance")}</h3>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           <StatCard title={t("dashboard.total_sales")} value={fin?.totalSales} icon={TrendingUp} isLoading={finLoading} />
           <StatCard title={t("dashboard.total_collections")} value={fin?.totalCollections} icon={CircleDollarSign} isLoading={finLoading} />
           <StatCard title={t("dashboard.outstanding_installments")} value={fin?.outstandingInstallments} icon={BanknoteIcon} isLoading={finLoading} />
@@ -142,35 +143,5 @@ export default function Dashboard() {
         </CardContent>
       </Card>
     </div>
-  );
-}
-
-function StatCard({ 
-  title, 
-  value, 
-  icon: Icon, 
-  isLoading 
-}: { 
-  title: string; 
-  value?: number | string; 
-  icon: any;
-  isLoading: boolean;
-}) {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <Skeleton className="h-7 w-[60px]" />
-        ) : (
-          <div className="text-2xl font-bold">
-            {typeof value === "number" ? value.toLocaleString() : value ?? 0}
-          </div>
-        )}
-      </CardContent>
-    </Card>
   );
 }
