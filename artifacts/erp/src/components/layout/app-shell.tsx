@@ -53,6 +53,10 @@ const NAV_GROUPS = [
     { href: "/unit-discounts", icon: Percent, labelKey: "nav.unit_discounts" },
   ]},
   { titleKey: "nav.group.crm", items: [
+    { href: "/crm-dashboard", icon: LayoutDashboard, labelKey: "nav.crm_dashboard" },
+    { href: "/crm-available-units", icon: Home, labelKey: "nav.crm_available_units" },
+    { href: "/crm-sales-performance", icon: TrendingUp, labelKey: "nav.crm_sales_performance" },
+    { href: "/crm-search", icon: FileSearch, labelKey: "nav.crm_search" },
     { href: "/leads", icon: UserPlus, labelKey: "nav.leads" },
     { href: "/lead-sources", icon: Megaphone, labelKey: "nav.lead_sources" },
     { href: "/lead-activities", icon: Activity, labelKey: "nav.lead_activities" },

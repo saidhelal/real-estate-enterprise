@@ -21,4 +21,6 @@ export interface CustomerUpdate {
   phone?: string;
   email?: string;
   address?: string;
+  classification?: string;
+  assignedToUserId?: string;
 }

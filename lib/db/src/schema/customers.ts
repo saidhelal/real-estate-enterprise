@@ -33,6 +33,11 @@ export const customersTable = pgTable("customers", {
   phone: text("phone"),
   email: text("email"),
   address: text("address"),
+  // CRM business layer (no new tables): sales pipeline classification + owning rep.
+  // classification is one of the 8 CRM stages (see lib/enums.ts on the web side);
+  // assignedToUserId points at the sales rep (users.id) who owns this customer.
+  classification: text("classification"),
+  assignedToUserId: uuid("assigned_to_user_id"),
   // Per-entity GL control accounts (override the mapping-engine default).
   receivableAccountId: uuid("receivable_account_id"),
   advanceAccountId: uuid("advance_account_id"),

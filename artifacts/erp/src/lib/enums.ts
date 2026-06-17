@@ -317,7 +317,27 @@ export const ENUM_LABELS: Record<string, { en: string; ar: string }> = {
   scrap: { en: "Scrap", ar: "خردة" },
   donation: { en: "Donation", ar: "تبرع" },
   write_off: { en: "Write-off", ar: "شطب" },
+  // CRM: customer classification
+  interested: { en: "Interested", ar: "مهتم" },
+  follow_up: { en: "Follow Up", ar: "متابعة" },
+  initial_reservation: { en: "Initial Reservation", ar: "حجز مبدئي" },
+  reserved: { en: "Reserved", ar: "محجوز" },
+  contracted: { en: "Contracted", ar: "متعاقد" },
+  not_interested: { en: "Not Interested", ar: "غير مهتم" },
+  postponed: { en: "Postponed", ar: "مؤجل" },
+  former: { en: "Former Customer", ar: "عميل سابق" },
 };
+
+export const CRM_CLASSIFICATIONS = [
+  "interested",
+  "follow_up",
+  "initial_reservation",
+  "reserved",
+  "contracted",
+  "not_interested",
+  "postponed",
+  "former",
+] as const;
 
 export function enumLabel(value: string | null | undefined, lang: Lang): string {
   if (!value) return "-";

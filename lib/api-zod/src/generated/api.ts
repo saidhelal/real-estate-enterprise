@@ -2787,6 +2787,8 @@ export const ListCustomersResponse = zod.object({
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "address": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -2813,7 +2815,9 @@ export const CreateCustomerBody = zod.object({
   "commercialRegistration": zod.string().optional(),
   "phone": zod.string().optional(),
   "email": zod.string().optional(),
-  "address": zod.string().optional()
+  "address": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "assignedToUserId": zod.string().optional()
 })
 
 
@@ -2840,6 +2844,8 @@ export const GetCustomerResponse = zod.object({
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "address": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -2866,7 +2872,9 @@ export const UpdateCustomerBody = zod.object({
   "commercialRegistration": zod.string().optional(),
   "phone": zod.string().optional(),
   "email": zod.string().optional(),
-  "address": zod.string().optional()
+  "address": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "assignedToUserId": zod.string().optional()
 })
 
 export const UpdateCustomerResponse = zod.object({
@@ -2885,6 +2893,8 @@ export const UpdateCustomerResponse = zod.object({
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "address": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -5181,6 +5191,235 @@ export const GetRealEstateDashboardResponse = zod.object({
   "contracts": zod.number(),
   "overdueInstallments": zod.number(),
   "totalContractValue": zod.string()
+})
+
+
+/**
+ * @summary CRM & Sales center dashboard
+ */
+export const GetCrmDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetCrmDashboardResponse = zod.object({
+  "totalCustomers": zod.number(),
+  "totalLeads": zod.number(),
+  "totalReservations": zod.number(),
+  "activeReservations": zod.number(),
+  "totalContracts": zod.number(),
+  "availableUnits": zod.number(),
+  "reservedUnits": zod.number(),
+  "soldUnits": zod.number(),
+  "conversionRate": zod.string(),
+  "customersByClassification": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "count": zod.number()
+})),
+  "leadsByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "count": zod.number()
+})),
+  "reservationsByStatus": zod.array(zod.object({
+  "key": zod.string(),
+  "label": zod.string().nullish(),
+  "count": zod.number()
+})),
+  "paymentStatus": zod.object({
+  "due": zod.number(),
+  "paid": zod.number(),
+  "overdue": zod.number(),
+  "dueAmount": zod.string(),
+  "paidAmount": zod.string(),
+  "overdueAmount": zod.string()
+})
+})
+
+
+/**
+ * @summary List units that are currently available (available-to-sell only)
+ */
+export const ListCrmAvailableUnitsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "search": zod.coerce.string().optional(),
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional()
+})
+
+export const ListCrmAvailableUnitsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "projectName": zod.string().nullish(),
+  "buildingId": zod.string().nullish(),
+  "buildingName": zod.string().nullish(),
+  "unitTypeId": zod.string().nullish(),
+  "unitTypeName": zod.string().nullish(),
+  "area": zod.string().nullish(),
+  "bedrooms": zod.number().nullish(),
+  "bathrooms": zod.number().nullish(),
+  "basePrice": zod.string().nullish(),
+  "status": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Unified 360 customer profile (reservations, contract status, communications)
+ */
+export const GetCrmCustomerProfileParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCrmCustomerProfileResponse = zod.object({
+  "customer": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "type": zod.string(),
+  "nationalId": zod.string().nullish(),
+  "passport": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "taxNumber": zod.string().nullish(),
+  "commercialRegistration": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "classification": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}),
+  "assignedToName": zod.string().nullish(),
+  "stats": zod.object({
+  "reservations": zod.number(),
+  "contracts": zod.number(),
+  "totalContractValue": zod.string(),
+  "paidAmount": zod.string(),
+  "dueAmount": zod.string(),
+  "overdueAmount": zod.string()
+}),
+  "reservations": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "unitCode": zod.string().nullish(),
+  "status": zod.string(),
+  "reservationDate": zod.string(),
+  "expiryDate": zod.string().nullish(),
+  "amount": zod.string()
+})),
+  "contracts": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string(),
+  "unitCode": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "legalContractId": zod.string().nullish()
+})),
+  "notes": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "note": zod.string(),
+  "userId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "contacts": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "name": zod.string(),
+  "relation": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "documents": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "docType": zod.string(),
+  "docNumber": zod.string().nullish(),
+  "fileName": zod.string().nullish(),
+  "issueDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Global CRM search (customer name/phone/no, unit no, contract no, reservation no)
+ */
+export const CrmGlobalSearchQueryParams = zod.object({
+  "q": zod.coerce.string(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const CrmGlobalSearchResponse = zod.object({
+  "customers": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "label": zod.string().nullish(),
+  "status": zod.string().nullish()
+})),
+  "units": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "label": zod.string().nullish(),
+  "status": zod.string().nullish()
+})),
+  "contracts": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "label": zod.string().nullish(),
+  "status": zod.string().nullish()
+})),
+  "reservations": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "label": zod.string().nullish(),
+  "status": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary Sales team performance and conversion by assigned rep
+ */
+export const GetCrmSalesPerformanceQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetCrmSalesPerformanceResponse = zod.object({
+  "reps": zod.array(zod.object({
+  "userId": zod.string(),
+  "userName": zod.string().nullish(),
+  "customers": zod.number(),
+  "leads": zod.number(),
+  "reservations": zod.number(),
+  "contracts": zod.number(),
+  "conversionRate": zod.string(),
+  "totalContractValue": zod.string()
+}))
 })
 
 

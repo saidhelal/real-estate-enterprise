@@ -1354,6 +1354,10 @@ export interface Customer {
   email?: string | null;
   /** @nullable */
   address?: string | null;
+  /** @nullable */
+  classification?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -1373,6 +1377,8 @@ export interface CustomerInput {
   phone?: string;
   email?: string;
   address?: string;
+  classification?: string;
+  assignedToUserId?: string;
 }
 
 export interface CustomerUpdate {
@@ -1390,6 +1396,8 @@ export interface CustomerUpdate {
   phone?: string;
   email?: string;
   address?: string;
+  classification?: string;
+  assignedToUserId?: string;
 }
 
 export interface CustomerListResponse {
@@ -2119,6 +2127,153 @@ export interface RealEstateDashboard {
   contracts: number;
   overdueInstallments: number;
   totalContractValue: string;
+}
+
+export interface CrmCountPoint {
+  key: string;
+  /** @nullable */
+  label?: string | null;
+  count: number;
+}
+
+export interface CrmPaymentStatus {
+  due: number;
+  paid: number;
+  overdue: number;
+  dueAmount: string;
+  paidAmount: string;
+  overdueAmount: string;
+}
+
+export interface CrmDashboard {
+  totalCustomers: number;
+  totalLeads: number;
+  totalReservations: number;
+  activeReservations: number;
+  totalContracts: number;
+  availableUnits: number;
+  reservedUnits: number;
+  soldUnits: number;
+  conversionRate: string;
+  customersByClassification: CrmCountPoint[];
+  leadsByStatus: CrmCountPoint[];
+  reservationsByStatus: CrmCountPoint[];
+  paymentStatus: CrmPaymentStatus;
+}
+
+export interface CrmAvailableUnit {
+  id: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  projectName?: string | null;
+  /** @nullable */
+  buildingId?: string | null;
+  /** @nullable */
+  buildingName?: string | null;
+  /** @nullable */
+  unitTypeId?: string | null;
+  /** @nullable */
+  unitTypeName?: string | null;
+  /** @nullable */
+  area?: string | null;
+  /** @nullable */
+  bedrooms?: number | null;
+  /** @nullable */
+  bathrooms?: number | null;
+  /** @nullable */
+  basePrice?: string | null;
+  status: string;
+}
+
+export interface CrmAvailableUnitListResponse {
+  data: CrmAvailableUnit[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CrmReservationSummary {
+  id: string;
+  code: string;
+  unitId: string;
+  /** @nullable */
+  unitCode?: string | null;
+  status: string;
+  reservationDate: string;
+  /** @nullable */
+  expiryDate?: string | null;
+  amount: string;
+}
+
+export interface CrmContractSummary {
+  id: string;
+  code: string;
+  unitId: string;
+  /** @nullable */
+  unitCode?: string | null;
+  status: string;
+  contractDate: string;
+  totalPrice: string;
+  /** @nullable */
+  legalContractId?: string | null;
+}
+
+export interface CrmProfileStats {
+  reservations: number;
+  contracts: number;
+  totalContractValue: string;
+  paidAmount: string;
+  dueAmount: string;
+  overdueAmount: string;
+}
+
+export interface CrmCustomerProfile {
+  customer: Customer;
+  /** @nullable */
+  assignedToName?: string | null;
+  stats: CrmProfileStats;
+  reservations: CrmReservationSummary[];
+  contracts: CrmContractSummary[];
+  notes: CustomerNote[];
+  contacts: CustomerContact[];
+  documents: CustomerDocument[];
+}
+
+export interface CrmSearchHit {
+  id: string;
+  code: string;
+  /** @nullable */
+  label?: string | null;
+  /** @nullable */
+  status?: string | null;
+}
+
+export interface CrmSearchResults {
+  customers: CrmSearchHit[];
+  units: CrmSearchHit[];
+  contracts: CrmSearchHit[];
+  reservations: CrmSearchHit[];
+}
+
+export interface CrmRepPerformance {
+  userId: string;
+  /** @nullable */
+  userName?: string | null;
+  customers: number;
+  leads: number;
+  reservations: number;
+  contracts: number;
+  conversionRate: string;
+  totalContractValue: string;
+}
+
+export interface CrmSalesPerformance {
+  reps: CrmRepPerformance[];
 }
 
 export interface BiGroupPoint {
@@ -11899,6 +12054,27 @@ planId?: string;
 };
 
 export type GetRealEstateDashboardParams = {
+companyId?: string;
+};
+
+export type GetCrmDashboardParams = {
+companyId?: string;
+};
+
+export type ListCrmAvailableUnitsParams = {
+companyId?: string;
+projectId?: string;
+search?: string;
+page?: number;
+pageSize?: number;
+};
+
+export type CrmGlobalSearchParams = {
+q: string;
+companyId?: string;
+};
+
+export type GetCrmSalesPerformanceParams = {
 companyId?: string;
 };
 

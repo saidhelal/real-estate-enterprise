@@ -4458,6 +4458,88 @@ paths:
               schema:
                 $ref: "#/components/schemas/RealEstateDashboard"
 
+  /crm/dashboard:
+    get:
+      operationId: getCrmDashboard
+      tags: [crm]
+      summary: CRM & Sales center dashboard
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CRM dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrmDashboard"
+
+  /crm/available-units:
+    get:
+      operationId: listCrmAvailableUnits
+      tags: [crm]
+      summary: List units that are currently available (available-to-sell only)
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+      responses:
+        "200":
+          description: Available units
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrmAvailableUnitListResponse"
+
+  /crm/customers/{id}/profile:
+    get:
+      operationId: getCrmCustomerProfile
+      tags: [crm]
+      summary: Unified 360 customer profile (reservations, contract status, communications)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Customer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrmCustomerProfile"
+        "404":
+          description: Not found
+
+  /crm/search:
+    get:
+      operationId: crmGlobalSearch
+      tags: [crm]
+      summary: Global CRM search (customer name/phone/no, unit no, contract no, reservation no)
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrmSearchResults"
+
+  /crm/sales-performance:
+    get:
+      operationId: getCrmSalesPerformance
+      tags: [crm]
+      summary: Sales team performance and conversion by assigned rep
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Sales performance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrmSalesPerformance"
+
   /bi/executive-dashboard:
     get:
       operationId: getExecutiveDashboard
@@ -20814,6 +20896,8 @@ components:
         phone: { type: ["string", "null"] }
         email: { type: ["string", "null"] }
         address: { type: ["string", "null"] }
+        classification: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
 
@@ -20835,6 +20919,8 @@ components:
         phone: { type: string }
         email: { type: string }
         address: { type: string }
+        classification: { type: string }
+        assignedToUserId: { type: string }
 
     CustomerUpdate:
       type: object
@@ -20853,6 +20939,8 @@ components:
         phone: { type: string }
         email: { type: string }
         address: { type: string }
+        classification: { type: string }
+        assignedToUserId: { type: string }
 
     CustomerListResponse:
       type: object
@@ -21696,6 +21784,192 @@ components:
         contracts: { type: integer }
         overdueInstallments: { type: integer }
         totalContractValue: { type: string }
+
+    CrmCountPoint:
+      type: object
+      required: [key, count]
+      properties:
+        key: { type: string }
+        label: { type: ["string", "null"] }
+        count: { type: integer }
+
+    CrmPaymentStatus:
+      type: object
+      required: [due, paid, overdue, dueAmount, paidAmount, overdueAmount]
+      properties:
+        due: { type: integer }
+        paid: { type: integer }
+        overdue: { type: integer }
+        dueAmount: { type: string }
+        paidAmount: { type: string }
+        overdueAmount: { type: string }
+
+    CrmDashboard:
+      type: object
+      required:
+        [
+          totalCustomers, totalLeads, totalReservations, activeReservations,
+          totalContracts, availableUnits, reservedUnits, soldUnits, conversionRate,
+          customersByClassification, leadsByStatus, reservationsByStatus, paymentStatus,
+        ]
+      properties:
+        totalCustomers: { type: integer }
+        totalLeads: { type: integer }
+        totalReservations: { type: integer }
+        activeReservations: { type: integer }
+        totalContracts: { type: integer }
+        availableUnits: { type: integer }
+        reservedUnits: { type: integer }
+        soldUnits: { type: integer }
+        conversionRate: { type: string }
+        customersByClassification:
+          type: array
+          items: { $ref: "#/components/schemas/CrmCountPoint" }
+        leadsByStatus:
+          type: array
+          items: { $ref: "#/components/schemas/CrmCountPoint" }
+        reservationsByStatus:
+          type: array
+          items: { $ref: "#/components/schemas/CrmCountPoint" }
+        paymentStatus: { $ref: "#/components/schemas/CrmPaymentStatus" }
+
+    CrmAvailableUnit:
+      type: object
+      required: [id, code, name, status]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        projectName: { type: ["string", "null"] }
+        buildingId: { type: ["string", "null"] }
+        buildingName: { type: ["string", "null"] }
+        unitTypeId: { type: ["string", "null"] }
+        unitTypeName: { type: ["string", "null"] }
+        area: { type: ["string", "null"] }
+        bedrooms: { type: ["integer", "null"] }
+        bathrooms: { type: ["integer", "null"] }
+        basePrice: { type: ["string", "null"] }
+        status: { type: string }
+
+    CrmAvailableUnitListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CrmAvailableUnit" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CrmReservationSummary:
+      type: object
+      required: [id, code, unitId, status, reservationDate, amount]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        unitCode: { type: ["string", "null"] }
+        status: { type: string }
+        reservationDate: { type: string }
+        expiryDate: { type: ["string", "null"] }
+        amount: { type: string }
+
+    CrmContractSummary:
+      type: object
+      required: [id, code, unitId, status, contractDate, totalPrice]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        unitCode: { type: ["string", "null"] }
+        status: { type: string }
+        contractDate: { type: string }
+        totalPrice: { type: string }
+        legalContractId: { type: ["string", "null"] }
+
+    CrmProfileStats:
+      type: object
+      required: [reservations, contracts, totalContractValue, paidAmount, dueAmount, overdueAmount]
+      properties:
+        reservations: { type: integer }
+        contracts: { type: integer }
+        totalContractValue: { type: string }
+        paidAmount: { type: string }
+        dueAmount: { type: string }
+        overdueAmount: { type: string }
+
+    CrmCustomerProfile:
+      type: object
+      required: [customer, stats, reservations, contracts, notes, contacts, documents]
+      properties:
+        customer: { $ref: "#/components/schemas/Customer" }
+        assignedToName: { type: ["string", "null"] }
+        stats: { $ref: "#/components/schemas/CrmProfileStats" }
+        reservations:
+          type: array
+          items: { $ref: "#/components/schemas/CrmReservationSummary" }
+        contracts:
+          type: array
+          items: { $ref: "#/components/schemas/CrmContractSummary" }
+        notes:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerNote" }
+        contacts:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerContact" }
+        documents:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerDocument" }
+
+    CrmSearchHit:
+      type: object
+      required: [id, code]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        label: { type: ["string", "null"] }
+        status: { type: ["string", "null"] }
+
+    CrmSearchResults:
+      type: object
+      required: [customers, units, contracts, reservations]
+      properties:
+        customers:
+          type: array
+          items: { $ref: "#/components/schemas/CrmSearchHit" }
+        units:
+          type: array
+          items: { $ref: "#/components/schemas/CrmSearchHit" }
+        contracts:
+          type: array
+          items: { $ref: "#/components/schemas/CrmSearchHit" }
+        reservations:
+          type: array
+          items: { $ref: "#/components/schemas/CrmSearchHit" }
+
+    CrmRepPerformance:
+      type: object
+      required: [userId, customers, leads, reservations, contracts, conversionRate, totalContractValue]
+      properties:
+        userId: { type: string }
+        userName: { type: ["string", "null"] }
+        customers: { type: integer }
+        leads: { type: integer }
+        reservations: { type: integer }
+        contracts: { type: integer }
+        conversionRate: { type: string }
+        totalContractValue: { type: string }
+
+    CrmSalesPerformance:
+      type: object
+      required: [reps]
+      properties:
+        reps:
+          type: array
+          items: { $ref: "#/components/schemas/CrmRepPerformance" }
 
     BiGroupPoint:
       type: object

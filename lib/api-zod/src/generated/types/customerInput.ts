@@ -21,4 +21,6 @@ export interface CustomerInput {
   phone?: string;
   email?: string;
   address?: string;
+  classification?: string;
+  assignedToUserId?: string;
 }

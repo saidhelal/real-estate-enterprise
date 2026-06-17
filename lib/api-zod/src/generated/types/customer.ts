@@ -32,6 +32,10 @@ export interface Customer {
   email?: string | null;
   /** @nullable */
   address?: string | null;
+  /** @nullable */
+  classification?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
   isActive: boolean;
   createdAt: string;
 }

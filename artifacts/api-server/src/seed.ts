@@ -279,6 +279,10 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "legalNotices", label: "Legal Notices", extraActions: ["send"] },
   { module: "legalCaseLinks", label: "Legal Case Links" },
   { module: "bi", label: "Business Intelligence" },
+  // CRM & Sales Center — a business layer over existing entities (no new tables).
+  // crm.view gates the CRM hub (dashboard, search, customer profile, available
+  // units, sales performance). Per-entity actions reuse the existing module codes.
+  { module: "crm", label: "CRM & Sales" },
   // Land Bank Management
   { module: "landParcels", label: "Land Parcels" },
   { module: "landOwnerships", label: "Land Ownership Records" },
@@ -391,6 +395,78 @@ async function seedSuperAdminUser(roleId: string): Promise<void> {
   console.log(
     `Seeded superadmin user (username: superadmin, password: ${SUPER_ADMIN_PASSWORD})`
   );
+}
+
+// CRM & Sales roles — least-privilege role templates built from EXISTING permission
+// codes. Money stays read-only (no receipts.create / installmentCollections.create)
+// and contracts stay under Legal Affairs (contracts.view only — no create/update/
+// delete/approve). Re-running upserts the permission set so the roles stay current.
+async function seedCrmRoles(): Promise<void> {
+  const crud = (m: string): string[] => [`${m}.view`, `${m}.create`, `${m}.update`, `${m}.delete`];
+  const cru = (m: string): string[] => [`${m}.view`, `${m}.create`, `${m}.update`];
+  const cr = (m: string): string[] => [`${m}.view`, `${m}.create`];
+  const view = (m: string): string[] => [`${m}.view`];
+
+  // Read-only context shared by every CRM role: the CRM hub, the real-estate
+  // catalogue, contract status (Legal Affairs owns the workflow), and finance/
+  // collections figures (payment status مستحق/مدفوع/متأخر) — all view-only.
+  const sharedRead = [
+    "crm.view",
+    ...view("projects"), ...view("buildings"), ...view("floors"),
+    ...view("units"), ...view("unitTypes"), ...view("unitStatuses"),
+    ...view("leadSources"),
+    ...view("contracts"), // view contract status / open linked record only
+    ...view("installmentPlans"), ...view("installmentSchedules"),
+    ...view("installmentCollections"), ...view("receipts"),
+  ];
+
+  // Sales User — front-line rep: works leads, customers, communication history,
+  // follow-ups and reservations; never deletes and never touches money/contracts.
+  const salesUser = [
+    ...sharedRead,
+    ...cru("leads"), ...cru("leadActivities"), ...cru("leadFollowUps"),
+    ...cru("customers"), ...cru("customerContacts"),
+    ...cru("customerDocuments"), ...cru("customerNotes"),
+    ...cru("reservations"), ...cru("reservationNotes"),
+    ...cru("reservationDocuments"), ...cr("reservationPayments"),
+  ];
+
+  // Sales Admin — team lead: everything a rep can do, plus delete/cleanup,
+  // lead assignment/distribution and conversions. Still no money, no contracts.
+  const salesAdmin = Array.from(new Set([
+    ...salesUser,
+    ...crud("leads"), ...crud("leadActivities"), ...crud("leadFollowUps"),
+    ...crud("customers"), ...crud("customerContacts"),
+    ...crud("customerDocuments"), ...crud("customerNotes"),
+    ...crud("reservations"), ...crud("reservationNotes"),
+    ...crud("reservationDocuments"), ...crud("reservationPayments"),
+    ...crud("leadAssignments"), ...crud("leadConversions"),
+    ...cru("leadSources"),
+  ]));
+
+  // CRM Manager — oversight: full CRM management plus audit visibility. Money and
+  // contract workflow remain read-only (governed by Finance and Legal Affairs).
+  const crmManager = Array.from(new Set([
+    ...salesAdmin,
+    ...view("audit"),
+    ...view("customerInvoices"),
+  ]));
+
+  const roles: Array<{ name: string; description: string; permissions: string[] }> = [
+    { name: "Sales User", description: "Front-line sales rep: leads, customers, follow-ups, reservations. Read-only on money and contracts.", permissions: salesUser },
+    { name: "Sales Admin", description: "Sales team lead: lead distribution, conversions, reservation management. Read-only on money and contracts.", permissions: salesAdmin },
+    { name: "CRM Manager", description: "CRM oversight: full sales/CRM management with audit visibility. Read-only on money and contract workflow.", permissions: crmManager },
+  ];
+
+  for (const r of roles) {
+    const [existing] = await db.select().from(rolesTable).where(eq(rolesTable.name, r.name));
+    if (existing) {
+      await db.update(rolesTable).set({ description: r.description, permissions: r.permissions }).where(eq(rolesTable.id, existing.id));
+    } else {
+      await db.insert(rolesTable).values({ name: r.name, description: r.description, permissions: r.permissions });
+    }
+  }
+  console.log(`Seeded ${roles.length} CRM roles (Sales User, Sales Admin, CRM Manager)`);
 }
 
 async function seedCurrencies(): Promise<void> {
@@ -1495,6 +1571,7 @@ async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
   await seedSuperAdminUser(roleId);
+  await seedCrmRoles();
   await seedCurrencies();
   await seedCompany();
   await seedNumberSequences();

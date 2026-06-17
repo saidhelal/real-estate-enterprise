@@ -23,6 +23,7 @@ import {
   FileSignature,
   TrendingUp,
   CircleDollarSign,
+  Contact,
   type LucideIcon,
 } from "lucide-react";
 
@@ -48,6 +49,19 @@ const MODULES: ModuleCard[] = [
       "home.item.unit_statuses",
       "home.item.pricing",
       "home.item.price_lists",
+    ],
+  },
+  {
+    titleKey: "home.mod.crm",
+    icon: Contact,
+    href: "/crm-dashboard",
+    itemKeys: [
+      "home.item.crm_dashboard",
+      "home.item.available_units",
+      "home.item.sales_performance",
+      "home.item.customer_profile",
+      "home.item.crm_search",
+      "home.item.reservation_forms",
     ],
   },
   {

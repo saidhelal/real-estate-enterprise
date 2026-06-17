@@ -23,3 +23,4 @@
 - [Report export Excel/PDF](report-export.md) — shared ReportExport descriptor; PDF via HTML window.print (Arabic/RTL), Excel via SheetJS; GL export needs pageSize 200.
 - [Two-phase cheque posting](cheque-two-phase-posting.md) — cheque ledger splits collection vs clearing legs by distinct sourceType to bridge accounts; reverse both on return/cancel.
 - [Portal attachment IDOR](portal-attachment-idor.md) — multi-tenant object-storage uploads must authorize via an immutable owner mapping (object_path→customerId), not forgeable record references.
+- [Read-aggregation partition consistency](aggregation-partition-consistency.md) — paid/due/overdue must be a true partition (due excludes overdue) and DB-side numeric sums, mirrored across sibling report endpoints.
