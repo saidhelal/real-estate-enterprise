@@ -53,7 +53,7 @@ const NAV_GROUPS = [
     { href: "/unit-pricing", icon: DollarSign, labelKey: "nav.unit_pricing" },
     { href: "/unit-discounts", icon: Percent, labelKey: "nav.unit_discounts" },
   ]},
-  { titleKey: "nav.group.crm", items: [
+  { titleKey: "nav.group.sales_crm", items: [
     { href: "/crm-dashboard", icon: LayoutDashboard, labelKey: "nav.crm_dashboard" },
     { href: "/crm-available-units", icon: Home, labelKey: "nav.crm_available_units" },
     { href: "/crm-sales-performance", icon: TrendingUp, labelKey: "nav.crm_sales_performance" },
@@ -64,14 +64,10 @@ const NAV_GROUPS = [
     { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
     { href: "/lead-assignments", icon: UserCheck, labelKey: "nav.lead_assignments" },
     { href: "/lead-conversions", icon: ArrowRightLeft, labelKey: "nav.lead_conversions" },
-  ]},
-  { titleKey: "nav.group.customers", items: [
     { href: "/customers", icon: Users, labelKey: "nav.customers" },
     { href: "/customer-contacts", icon: Contact, labelKey: "nav.customer_contacts" },
     { href: "/customer-documents", icon: FileText, labelKey: "nav.customer_documents" },
     { href: "/customer-notes", icon: StickyNote, labelKey: "nav.customer_notes" },
-  ]},
-  { titleKey: "nav.group.sales", items: [
     { href: "/reservations", icon: BookMarked, labelKey: "nav.reservations" },
     { href: "/reservation-payments", icon: Wallet, labelKey: "nav.reservation_payments" },
     { href: "/reservation-notes", icon: StickyNote, labelKey: "nav.reservation_notes" },
