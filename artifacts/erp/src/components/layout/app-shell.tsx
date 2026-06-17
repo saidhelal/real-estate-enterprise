@@ -2,6 +2,7 @@ import { useAuth } from "@/lib/auth-provider";
 import { useLanguage } from "@/lib/language-provider";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/components/theme-provider";
+import { PageNav } from "@/components/layout/page-nav";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -441,6 +442,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </header>
 
         <main className="flex-1 p-4 md:p-6 overflow-auto">
+          <PageNav navGroups={NAV_GROUPS} />
           {children}
         </main>
       </div>
