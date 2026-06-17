@@ -304,9 +304,6 @@ const NAV_GROUPS = [
   { titleKey: "nav.group.system_administration", items: [
     { href: "/master-data", icon: Database, labelKey: "nav.master_data" },
     { href: "/dynamic-lists", icon: ListPlus, labelKey: "nav.dynamic_lists" },
-    { href: "/settings", icon: SlidersHorizontal, labelKey: "nav.system_configuration" },
-    { href: "/settings", icon: Settings2, labelKey: "nav.business_settings" },
-    { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles_permissions" },
   ]},
 ];
 
