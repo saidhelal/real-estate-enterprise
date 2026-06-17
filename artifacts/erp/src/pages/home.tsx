@@ -52,24 +52,10 @@ const MODULES: ModuleCard[] = [
     ],
   },
   {
-    titleKey: "home.mod.crm",
-    icon: Contact,
-    href: "/crm-dashboard",
-    itemKeys: [
-      "home.item.crm_dashboard",
-      "home.item.available_units",
-      "home.item.sales_performance",
-      "home.item.customer_profile",
-      "home.item.crm_search",
-      "home.item.reservation_forms",
-    ],
-  },
-  {
     titleKey: "home.mod.sales",
     icon: Users,
     href: "/customers",
     itemKeys: [
-      "home.item.crm",
       "home.item.customers",
       "home.item.contacts",
       "home.item.leads",

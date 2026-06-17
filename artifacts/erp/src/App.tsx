@@ -41,11 +41,6 @@ import LeadFollowUpsPage from "@/pages/lead-follow-ups";
 import LeadAssignmentsPage from "@/pages/lead-assignments";
 import LeadConversionsPage from "@/pages/lead-conversions";
 import CustomersPage from "@/pages/customers";
-import CrmDashboardPage from "@/pages/crm-dashboard";
-import CrmAvailableUnitsPage from "@/pages/crm-available-units";
-import CrmSalesPerformancePage from "@/pages/crm-sales-performance";
-import CrmSearchPage from "@/pages/crm-search";
-import CrmCustomerProfilePage from "@/pages/crm-customer-profile";
 import CustomerContactsPage from "@/pages/customer-contacts";
 import CustomerDocumentsPage from "@/pages/customer-documents";
 import CustomerNotesPage from "@/pages/customer-notes";
@@ -304,11 +299,6 @@ function Router() {
             <Route path="/lead-follow-ups" component={LeadFollowUpsPage} />
             <Route path="/lead-assignments" component={LeadAssignmentsPage} />
             <Route path="/lead-conversions" component={LeadConversionsPage} />
-            <Route path="/crm-dashboard" component={CrmDashboardPage} />
-            <Route path="/crm-available-units" component={CrmAvailableUnitsPage} />
-            <Route path="/crm-sales-performance" component={CrmSalesPerformancePage} />
-            <Route path="/crm-search" component={CrmSearchPage} />
-            <Route path="/crm/customers/:id" component={CrmCustomerProfilePage} />
             <Route path="/customers" component={CustomersPage} />
             <Route path="/customer-contacts" component={CustomerContactsPage} />
             <Route path="/customer-documents" component={CustomerDocumentsPage} />
