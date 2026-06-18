@@ -24,6 +24,7 @@ import AuditLogsPage from "@/pages/audit-logs";
 import LoginHistoryPage from "@/pages/login-history";
 import SettingsPage from "@/pages/settings";
 import ChangePasswordPage from "@/pages/change-password";
+import ApprovalsPage from "@/pages/approvals";
 
 import ProjectsPage from "@/pages/projects";
 import PhasesPage from "@/pages/phases";
@@ -324,6 +325,7 @@ function Router() {
             <Route path="/master-data" component={MasterDataPage} />
             <Route path="/dynamic-lists" component={DynamicListsPage} />
             <Route path="/change-password" component={ChangePasswordPage} />
+            <Route path="/approvals" component={ApprovalsPage} />
 
             <Route path="/projects" component={ProjectsPage} />
             <Route path="/phases" component={PhasesPage} />

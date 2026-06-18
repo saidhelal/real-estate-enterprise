@@ -63,7 +63,7 @@ export default function ApprovalsPage() {
     { status: statusFilter },
     { query: { queryKey: getListChangeRequestsQueryKey({ status: statusFilter }) } },
   );
-  const rows = data?.data ?? [];
+  const rows = data ?? [];
 
   const approveMutation = useApproveChangeRequest();
   const rejectMutation = useRejectChangeRequest();

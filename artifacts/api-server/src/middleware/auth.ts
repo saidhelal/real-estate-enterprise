@@ -38,6 +38,22 @@ export async function requireAuth(
     return;
   }
 
+  // Enforce forced-password-change server-side: a flagged user may only reach
+  // the endpoints needed to view their identity, change the password, or log
+  // out. Everything else is blocked until the flag clears — the client-side
+  // redirect is convenience, this is the real control. `/auth/login` and
+  // `/auth/refresh` do not pass through requireAuth, so they are unaffected.
+  if (user.mustChangePassword) {
+    const allowed = ["/auth/me", "/auth/change-password", "/auth/logout"];
+    if (!allowed.some((p) => req.path.endsWith(p))) {
+      res.status(403).json({
+        error: "Password change required",
+        mustChangePassword: true,
+      });
+      return;
+    }
+  }
+
   req.authUser = user;
   next();
 }

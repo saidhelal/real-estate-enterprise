@@ -260,7 +260,6 @@ const NAV_GROUPS = [
     { href: "/support-tickets", icon: Inbox, labelKey: "nav.support_tickets" },
     { href: "/complaints", icon: AlertTriangle, labelKey: "nav.complaints" },
     { href: "/service-escalations", icon: Bell, labelKey: "nav.service_escalations" },
-    { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
     { href: "/call-logs", icon: PhoneCall, labelKey: "nav.call_logs" },
     { href: "/sla-policies", icon: ClipboardList, labelKey: "nav.sla_policies" },
     { href: "/handover-dashboard", icon: ClipboardCheck, labelKey: "nav.handover_dashboard" },
@@ -300,7 +299,6 @@ const NAV_GROUPS = [
     { href: "/visitor-logs", icon: Contact, labelKey: "nav.visitor_logs" },
     { href: "/circulars", icon: Megaphone, labelKey: "nav.circulars" },
     { href: "/policies", icon: BookOpen, labelKey: "nav.policies" },
-    { href: "/fixed-assets", icon: FileBox, labelKey: "nav.ga_assets_custody" },
   ]},
   { titleKey: "nav.group.insurance", items: [
     { href: "/insurance-dashboard", icon: LayoutDashboard, labelKey: "nav.insurance_dashboard" },
@@ -339,6 +337,7 @@ const NAV_GROUPS = [
   { titleKey: "nav.group.administration", items: [
     { href: "/users", icon: Users, labelKey: "nav.users" },
     { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles" },
+    { href: "/approvals", icon: CheckSquare, labelKey: "nav.approvals" },
     { href: "/companies", icon: Building2, labelKey: "nav.companies" },
     { href: "/branches", icon: MapPin, labelKey: "nav.branches" },
     { href: "/fiscal-years", icon: CalendarDays, labelKey: "nav.fiscal_years" },
