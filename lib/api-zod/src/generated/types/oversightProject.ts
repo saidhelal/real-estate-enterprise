@@ -5,15 +5,14 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
-import type { OversightKpi } from './oversightKpi';
 
-export interface OversightDepartment {
-  key: string;
+export interface OversightProject {
+  id: string;
+  name: string;
   status: string;
   /** @nullable */
   completionRate: string | null;
-  overdueTasks: number;
-  completedOps: number;
-  alerts: number;
-  kpis: OversightKpi[];
+  /** @nullable */
+  tone: string | null;
+  issue: string;
 }

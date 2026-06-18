@@ -37519,17 +37519,105 @@ components:
         tone: { type: ["string", "null"] }
     OversightDepartment:
       type: object
-      required: [key, kpis]
+      required: [key, status, completionRate, overdueTasks, completedOps, alerts, kpis]
       properties:
         key: { type: string }
+        status: { type: string }
+        completionRate: { type: ["string", "null"] }
+        overdueTasks: { type: integer }
+        completedOps: { type: integer }
+        alerts: { type: integer }
         kpis:
           type: array
           items: { $ref: "#/components/schemas/OversightKpi" }
+    OversightProject:
+      type: object
+      required: [id, name, status, completionRate, tone, issue]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        status: { type: string }
+        completionRate: { type: ["string", "null"] }
+        tone: { type: ["string", "null"] }
+        issue: { type: string }
+    OversightProjects:
+      type: object
+      required: [kpis, atRisk]
+      properties:
+        kpis:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        atRisk:
+          type: array
+          items: { $ref: "#/components/schemas/OversightProject" }
+    OversightAlert:
+      type: object
+      required: [key, severity, department, count, value, kind]
+      properties:
+        key: { type: string }
+        severity: { type: string }
+        department: { type: string }
+        count: { type: integer }
+        value: { type: ["string", "null"] }
+        kind: { type: ["string", "null"] }
+    OversightEvent:
+      type: object
+      required: [id, action, entity, entityId, user, timestamp]
+      properties:
+        id: { type: string }
+        action: { type: string }
+        entity: { type: string }
+        entityId: { type: ["string", "null"] }
+        user: { type: string }
+        timestamp: { type: string }
+    OversightScope:
+      type: object
+      required: [level]
+      properties:
+        level: { type: string }
     ExecutiveOversight:
       type: object
-      required: [generatedAt, departments]
+      required: [generatedAt, scope, summary, today, week, month, departments, projects, financial, sales, execution, hr, customerService, insurance, criticalAlerts, eventLog]
       properties:
         generatedAt: { type: string }
+        scope: { $ref: "#/components/schemas/OversightScope" }
+        summary:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        today:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        week:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        month:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
         departments:
           type: array
           items: { $ref: "#/components/schemas/OversightDepartment" }
+        projects: { $ref: "#/components/schemas/OversightProjects" }
+        financial:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        sales:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        execution:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        hr:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        customerService:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        insurance:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+        criticalAlerts:
+          type: array
+          items: { $ref: "#/components/schemas/OversightAlert" }
+        eventLog:
+          type: array
+          items: { $ref: "#/components/schemas/OversightEvent" }

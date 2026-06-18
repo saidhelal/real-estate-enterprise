@@ -32394,14 +32394,114 @@ export const GetExecutiveOversightQueryParams = zod.object({
 
 export const GetExecutiveOversightResponse = zod.object({
   "generatedAt": zod.string(),
+  "scope": zod.object({
+  "level": zod.string()
+}),
+  "summary": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "today": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "week": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "month": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
   "departments": zod.array(zod.object({
   "key": zod.string(),
+  "status": zod.string(),
+  "completionRate": zod.string().nullable(),
+  "overdueTasks": zod.number(),
+  "completedOps": zod.number(),
+  "alerts": zod.number(),
   "kpis": zod.array(zod.object({
   "key": zod.string(),
   "value": zod.string(),
   "kind": zod.string(),
   "tone": zod.string().nullish()
 }))
+})),
+  "projects": zod.object({
+  "kpis": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "atRisk": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "status": zod.string(),
+  "completionRate": zod.string().nullable(),
+  "tone": zod.string().nullable(),
+  "issue": zod.string()
+}))
+}),
+  "financial": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "sales": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "execution": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "hr": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "customerService": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "insurance": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+})),
+  "criticalAlerts": zod.array(zod.object({
+  "key": zod.string(),
+  "severity": zod.string(),
+  "department": zod.string(),
+  "count": zod.number(),
+  "value": zod.string().nullable(),
+  "kind": zod.string().nullable()
+})),
+  "eventLog": zod.array(zod.object({
+  "id": zod.string(),
+  "action": zod.string(),
+  "entity": zod.string(),
+  "entityId": zod.string().nullable(),
+  "user": zod.string(),
+  "timestamp": zod.string()
 }))
 })
 

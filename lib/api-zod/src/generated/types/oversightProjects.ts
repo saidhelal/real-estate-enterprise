@@ -6,14 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { OversightKpi } from './oversightKpi';
+import type { OversightProject } from './oversightProject';
 
-export interface OversightDepartment {
-  key: string;
-  status: string;
-  /** @nullable */
-  completionRate: string | null;
-  overdueTasks: number;
-  completedOps: number;
-  alerts: number;
+export interface OversightProjects {
   kpis: OversightKpi[];
+  atRisk: OversightProject[];
 }

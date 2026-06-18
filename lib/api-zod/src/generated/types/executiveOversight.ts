@@ -5,9 +5,28 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+import type { OversightAlert } from './oversightAlert';
 import type { OversightDepartment } from './oversightDepartment';
+import type { OversightEvent } from './oversightEvent';
+import type { OversightKpi } from './oversightKpi';
+import type { OversightProjects } from './oversightProjects';
+import type { OversightScope } from './oversightScope';
 
 export interface ExecutiveOversight {
   generatedAt: string;
+  scope: OversightScope;
+  summary: OversightKpi[];
+  today: OversightKpi[];
+  week: OversightKpi[];
+  month: OversightKpi[];
   departments: OversightDepartment[];
+  projects: OversightProjects;
+  financial: OversightKpi[];
+  sales: OversightKpi[];
+  execution: OversightKpi[];
+  hr: OversightKpi[];
+  customerService: OversightKpi[];
+  insurance: OversightKpi[];
+  criticalAlerts: OversightAlert[];
+  eventLog: OversightEvent[];
 }

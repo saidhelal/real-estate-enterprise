@@ -13934,12 +13934,73 @@ export interface OversightKpi {
 
 export interface OversightDepartment {
   key: string;
+  status: string;
+  /** @nullable */
+  completionRate: string | null;
+  overdueTasks: number;
+  completedOps: number;
+  alerts: number;
   kpis: OversightKpi[];
+}
+
+export interface OversightProject {
+  id: string;
+  name: string;
+  status: string;
+  /** @nullable */
+  completionRate: string | null;
+  /** @nullable */
+  tone: string | null;
+  issue: string;
+}
+
+export interface OversightProjects {
+  kpis: OversightKpi[];
+  atRisk: OversightProject[];
+}
+
+export interface OversightAlert {
+  key: string;
+  severity: string;
+  department: string;
+  count: number;
+  /** @nullable */
+  value: string | null;
+  /** @nullable */
+  kind: string | null;
+}
+
+export interface OversightEvent {
+  id: string;
+  action: string;
+  entity: string;
+  /** @nullable */
+  entityId: string | null;
+  user: string;
+  timestamp: string;
+}
+
+export interface OversightScope {
+  level: string;
 }
 
 export interface ExecutiveOversight {
   generatedAt: string;
+  scope: OversightScope;
+  summary: OversightKpi[];
+  today: OversightKpi[];
+  week: OversightKpi[];
+  month: OversightKpi[];
   departments: OversightDepartment[];
+  projects: OversightProjects;
+  financial: OversightKpi[];
+  sales: OversightKpi[];
+  execution: OversightKpi[];
+  hr: OversightKpi[];
+  customerService: OversightKpi[];
+  insurance: OversightKpi[];
+  criticalAlerts: OversightAlert[];
+  eventLog: OversightEvent[];
 }
 
 export type ListUsersParams = {

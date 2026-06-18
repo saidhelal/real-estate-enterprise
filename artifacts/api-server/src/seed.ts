@@ -82,7 +82,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "settings", label: "System Settings" },
   { module: "masterData", label: "Master Data", extraActions: ["archive", "reorder"] },
   { module: "notifications", label: "Notifications & Alerts", extraActions: ["viewAll"] },
-  { module: "executiveOversight", label: "Executive Oversight" },
+  { module: "executiveOversight", label: "Executive Oversight", extraActions: ["viewOwn"] },
   { module: "audit", label: "Audit Trail" },
   { module: "approvals", label: "Approvals (Change Requests)", extraActions: ["approve"] },
   { module: "projects", label: "Projects" },
@@ -566,6 +566,8 @@ async function seedStandardRoles(): Promise<void> {
       ...view("projects"), ...view("buildings"), ...view("units"),
       ...view("contracts"),
       ...view("installmentSchedules"), ...view("installmentCollections"),
+      // Executive oversight scoped to the manager's own department.
+      "executiveOversight.viewOwn",
     ]),
   );
 
