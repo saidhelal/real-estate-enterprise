@@ -317,6 +317,19 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "assetDepreciations", label: "Asset Depreciation", extraActions: ["post", "reverse"] },
   { module: "assetInventoryCounts", label: "Asset Inventory Counts" },
   { module: "assetDisposals", label: "Asset Disposals", extraActions: ["approve"] },
+  // General Administration
+  { module: "correspondence", label: "Correspondence" },
+  { module: "meetings", label: "Meetings" },
+  { module: "administrativeDecisions", label: "Administrative Decisions" },
+  { module: "administrativeTasks", label: "Administrative Tasks" },
+  { module: "generalServices", label: "General Services" },
+  { module: "vehicles", label: "Vehicles" },
+  { module: "drivers", label: "Drivers" },
+  { module: "vehicleMissions", label: "Vehicle Missions" },
+  { module: "vehicleMaintenance", label: "Vehicle Maintenance" },
+  { module: "visitorLogs", label: "Visitor Logs" },
+  { module: "circulars", label: "Circulars" },
+  { module: "policies", label: "Policies" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

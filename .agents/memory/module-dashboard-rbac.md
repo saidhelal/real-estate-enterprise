@@ -16,9 +16,15 @@ endpoints are readable by any authenticated user; granular RBAC lives on the CRU
 routes. New modules are built to mirror the Procurement module exactly, which
 follows this auth-only dashboard pattern.
 
-**How to apply:** When adding a new module dashboard, mirror Procurement —
-`router.get("/<module>/dashboard", async ...)` with router-level `requireAuth`,
-no `requirePermission`. A code reviewer may flag this as broken access control;
-it is an intentional, consistent codebase convention, not a defect. If a module's
-KPIs are genuinely sensitive, gate it like accounting did (dedicated `*.view`
-permission + seed entry) rather than leaving it inconsistent.
+**Two naming families, two conventions — pick by the closest sibling:**
+- Nested `/<module>/dashboard` (procurement, construction, engineering, finance,
+  realestate, inventory) → **auth-only** (no `requirePermission`).
+- Top-level `/<module>-dashboard` (customer-service-dashboard, handover-dashboard,
+  fixed-assets-dashboard, general-admin-dashboard) → **permission-gated** with a
+  representative module's `*.view` (e.g. general-admin-dashboard uses
+  `administrativeTasks.view`).
+
+**How to apply:** match the naming family of the dashboard you are adding. A new
+top-level `*-dashboard` should gate with `requirePermission("<repr-module>.view")`;
+a new nested `/<module>/dashboard` stays auth-only. Do not blindly "mirror
+Procurement" for a top-level `*-dashboard` — that would diverge from its siblings.

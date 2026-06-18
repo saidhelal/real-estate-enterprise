@@ -28565,3 +28565,1700 @@ export const UnarchiveLookupValueResponse = zod.object({
 })
 
 
+/**
+ * @summary General Administration dashboard summary
+ */
+export const GetGeneralAdminDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetGeneralAdminDashboardResponse = zod.object({
+  "meetingsCount": zod.number(),
+  "decisionsCount": zod.number(),
+  "tasksCount": zod.number(),
+  "visitorsCount": zod.number(),
+  "vehiclesCount": zod.number(),
+  "assetsCount": zod.number()
+})
+
+
+/**
+ * @summary List Correspondence
+ */
+export const ListCorrespondenceQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "direction": zod.coerce.string().optional(),
+  "correspondenceType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "assignedToEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListCorrespondenceResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Correspondence
+ */
+export const CreateCorrespondenceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string().optional(),
+  "correspondenceType": zod.string().optional(),
+  "subject": zod.string(),
+  "senderName": zod.string().optional(),
+  "recipientName": zod.string().optional(),
+  "refNumber": zod.string().optional(),
+  "correspondenceDate": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "attachmentUrl": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Correspondence
+ */
+export const GetCorrespondenceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCorrespondenceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Correspondence
+ */
+export const UpdateCorrespondenceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCorrespondenceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "direction": zod.string().optional(),
+  "correspondenceType": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "senderName": zod.string().optional(),
+  "recipientName": zod.string().optional(),
+  "refNumber": zod.string().optional(),
+  "correspondenceDate": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "attachmentUrl": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateCorrespondenceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Correspondence
+ */
+export const DeleteCorrespondenceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCorrespondenceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Meeting
+ */
+export const ListMeetingsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "meetingType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "chairpersonEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListMeetingsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "meetingType": zod.string(),
+  "scheduledAt": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "status": zod.string(),
+  "chairpersonEmployeeId": zod.string().nullish(),
+  "attendees": zod.string().nullish(),
+  "agenda": zod.string().nullish(),
+  "minutes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Meeting
+ */
+export const CreateMeetingBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "meetingType": zod.string().optional(),
+  "scheduledAt": zod.string().optional(),
+  "location": zod.string().optional(),
+  "status": zod.string().optional(),
+  "chairpersonEmployeeId": zod.string().optional(),
+  "attendees": zod.string().optional(),
+  "agenda": zod.string().optional(),
+  "minutes": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Meeting
+ */
+export const GetMeetingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetMeetingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "meetingType": zod.string(),
+  "scheduledAt": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "status": zod.string(),
+  "chairpersonEmployeeId": zod.string().nullish(),
+  "attendees": zod.string().nullish(),
+  "agenda": zod.string().nullish(),
+  "minutes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Meeting
+ */
+export const UpdateMeetingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateMeetingBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "meetingType": zod.string().optional(),
+  "scheduledAt": zod.string().optional(),
+  "location": zod.string().optional(),
+  "status": zod.string().optional(),
+  "chairpersonEmployeeId": zod.string().optional(),
+  "attendees": zod.string().optional(),
+  "agenda": zod.string().optional(),
+  "minutes": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateMeetingResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "meetingType": zod.string(),
+  "scheduledAt": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "status": zod.string(),
+  "chairpersonEmployeeId": zod.string().nullish(),
+  "attendees": zod.string().nullish(),
+  "agenda": zod.string().nullish(),
+  "minutes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Meeting
+ */
+export const DeleteMeetingParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteMeetingResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List AdministrativeDecision
+ */
+export const ListAdministrativeDecisionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "decisionType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "meetingId": zod.coerce.string().optional(),
+  "assignedToEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListAdministrativeDecisionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "decisionType": zod.string(),
+  "decisionDate": zod.string(),
+  "meetingId": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AdministrativeDecision
+ */
+export const CreateAdministrativeDecisionBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "decisionType": zod.string().optional(),
+  "decisionDate": zod.string().optional(),
+  "meetingId": zod.string().optional(),
+  "issuedByEmployeeId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AdministrativeDecision
+ */
+export const GetAdministrativeDecisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAdministrativeDecisionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "decisionType": zod.string(),
+  "decisionDate": zod.string(),
+  "meetingId": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AdministrativeDecision
+ */
+export const UpdateAdministrativeDecisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAdministrativeDecisionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "decisionType": zod.string().optional(),
+  "decisionDate": zod.string().optional(),
+  "meetingId": zod.string().optional(),
+  "issuedByEmployeeId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAdministrativeDecisionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "decisionType": zod.string(),
+  "decisionDate": zod.string(),
+  "meetingId": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AdministrativeDecision
+ */
+export const DeleteAdministrativeDecisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAdministrativeDecisionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List AdministrativeTask
+ */
+export const ListAdministrativeTasksQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "assignedToEmployeeId": zod.coerce.string().optional(),
+  "assignedByUserId": zod.coerce.string().optional()
+})
+
+export const ListAdministrativeTasksResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "assignedByUserId": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "progressPercent": zod.string(),
+  "startDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a AdministrativeTask
+ */
+export const CreateAdministrativeTaskBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "assignedByUserId": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "progressPercent": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "completedDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a AdministrativeTask
+ */
+export const GetAdministrativeTaskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetAdministrativeTaskResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "assignedByUserId": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "progressPercent": zod.string(),
+  "startDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a AdministrativeTask
+ */
+export const UpdateAdministrativeTaskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateAdministrativeTaskBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "description": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "assignedByUserId": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "progressPercent": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "completedDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAdministrativeTaskResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "assignedByUserId": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "progressPercent": zod.string(),
+  "startDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a AdministrativeTask
+ */
+export const DeleteAdministrativeTaskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteAdministrativeTaskResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List GeneralService
+ */
+export const ListGeneralServicesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "serviceType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "assignedToEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListGeneralServicesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceType": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "requestedByEmployeeId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "serviceDate": zod.string().nullish(),
+  "cost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a GeneralService
+ */
+export const CreateGeneralServiceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceType": zod.string().optional(),
+  "title": zod.string(),
+  "description": zod.string().optional(),
+  "location": zod.string().optional(),
+  "requestedByEmployeeId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "serviceDate": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a GeneralService
+ */
+export const GetGeneralServiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetGeneralServiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceType": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "requestedByEmployeeId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "serviceDate": zod.string().nullish(),
+  "cost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a GeneralService
+ */
+export const UpdateGeneralServiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateGeneralServiceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "serviceType": zod.string().optional(),
+  "title": zod.string().optional(),
+  "description": zod.string().optional(),
+  "location": zod.string().optional(),
+  "requestedByEmployeeId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "serviceDate": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateGeneralServiceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceType": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "requestedByEmployeeId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "serviceDate": zod.string().nullish(),
+  "cost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a GeneralService
+ */
+export const DeleteGeneralServiceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteGeneralServiceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Vehicle
+ */
+export const ListVehiclesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "vehicleType": zod.coerce.string().optional(),
+  "ownershipType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "assignedDriverId": zod.coerce.string().optional()
+})
+
+export const ListVehiclesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "plateNumber": zod.string(),
+  "make": zod.string().nullish(),
+  "model": zod.string().nullish(),
+  "modelYear": zod.string().nullish(),
+  "color": zod.string().nullish(),
+  "vehicleType": zod.string(),
+  "ownershipType": zod.string(),
+  "status": zod.string(),
+  "assignedDriverId": zod.string().nullish(),
+  "currentOdometer": zod.string().nullish(),
+  "registrationExpiry": zod.string().nullish(),
+  "insuranceExpiry": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Vehicle
+ */
+export const CreateVehicleBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "plateNumber": zod.string(),
+  "make": zod.string().optional(),
+  "model": zod.string().optional(),
+  "modelYear": zod.string().optional(),
+  "color": zod.string().optional(),
+  "vehicleType": zod.string().optional(),
+  "ownershipType": zod.string().optional(),
+  "status": zod.string().optional(),
+  "assignedDriverId": zod.string().optional(),
+  "currentOdometer": zod.string().optional(),
+  "registrationExpiry": zod.string().optional(),
+  "insuranceExpiry": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Vehicle
+ */
+export const GetVehicleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetVehicleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "plateNumber": zod.string(),
+  "make": zod.string().nullish(),
+  "model": zod.string().nullish(),
+  "modelYear": zod.string().nullish(),
+  "color": zod.string().nullish(),
+  "vehicleType": zod.string(),
+  "ownershipType": zod.string(),
+  "status": zod.string(),
+  "assignedDriverId": zod.string().nullish(),
+  "currentOdometer": zod.string().nullish(),
+  "registrationExpiry": zod.string().nullish(),
+  "insuranceExpiry": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Vehicle
+ */
+export const UpdateVehicleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateVehicleBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "plateNumber": zod.string().optional(),
+  "make": zod.string().optional(),
+  "model": zod.string().optional(),
+  "modelYear": zod.string().optional(),
+  "color": zod.string().optional(),
+  "vehicleType": zod.string().optional(),
+  "ownershipType": zod.string().optional(),
+  "status": zod.string().optional(),
+  "assignedDriverId": zod.string().optional(),
+  "currentOdometer": zod.string().optional(),
+  "registrationExpiry": zod.string().optional(),
+  "insuranceExpiry": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateVehicleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "plateNumber": zod.string(),
+  "make": zod.string().nullish(),
+  "model": zod.string().nullish(),
+  "modelYear": zod.string().nullish(),
+  "color": zod.string().nullish(),
+  "vehicleType": zod.string(),
+  "ownershipType": zod.string(),
+  "status": zod.string(),
+  "assignedDriverId": zod.string().nullish(),
+  "currentOdometer": zod.string().nullish(),
+  "registrationExpiry": zod.string().nullish(),
+  "insuranceExpiry": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Vehicle
+ */
+export const DeleteVehicleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteVehicleResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Driver
+ */
+export const ListDriversQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional()
+})
+
+export const ListDriversResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string().nullish(),
+  "fullName": zod.string(),
+  "licenseNumber": zod.string().nullish(),
+  "licenseType": zod.string().nullish(),
+  "licenseExpiry": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Driver
+ */
+export const CreateDriverBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string().optional(),
+  "fullName": zod.string(),
+  "licenseNumber": zod.string().optional(),
+  "licenseType": zod.string().optional(),
+  "licenseExpiry": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Driver
+ */
+export const GetDriverParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDriverResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string().nullish(),
+  "fullName": zod.string(),
+  "licenseNumber": zod.string().nullish(),
+  "licenseType": zod.string().nullish(),
+  "licenseExpiry": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Driver
+ */
+export const UpdateDriverParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDriverBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "fullName": zod.string().optional(),
+  "licenseNumber": zod.string().optional(),
+  "licenseType": zod.string().optional(),
+  "licenseExpiry": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateDriverResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string().nullish(),
+  "fullName": zod.string(),
+  "licenseNumber": zod.string().nullish(),
+  "licenseType": zod.string().nullish(),
+  "licenseExpiry": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Driver
+ */
+export const DeleteDriverParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDriverResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List VehicleMission
+ */
+export const ListVehicleMissionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "vehicleId": zod.coerce.string().optional(),
+  "driverId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListVehicleMissionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().nullish(),
+  "driverId": zod.string().nullish(),
+  "purpose": zod.string(),
+  "destination": zod.string().nullish(),
+  "requestedByEmployeeId": zod.string().nullish(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "startOdometer": zod.string().nullish(),
+  "endOdometer": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a VehicleMission
+ */
+export const CreateVehicleMissionBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().optional(),
+  "driverId": zod.string().optional(),
+  "purpose": zod.string(),
+  "destination": zod.string().optional(),
+  "requestedByEmployeeId": zod.string().optional(),
+  "startAt": zod.string().optional(),
+  "endAt": zod.string().optional(),
+  "startOdometer": zod.string().optional(),
+  "endOdometer": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a VehicleMission
+ */
+export const GetVehicleMissionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetVehicleMissionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().nullish(),
+  "driverId": zod.string().nullish(),
+  "purpose": zod.string(),
+  "destination": zod.string().nullish(),
+  "requestedByEmployeeId": zod.string().nullish(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "startOdometer": zod.string().nullish(),
+  "endOdometer": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a VehicleMission
+ */
+export const UpdateVehicleMissionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateVehicleMissionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "vehicleId": zod.string().optional(),
+  "driverId": zod.string().optional(),
+  "purpose": zod.string().optional(),
+  "destination": zod.string().optional(),
+  "requestedByEmployeeId": zod.string().optional(),
+  "startAt": zod.string().optional(),
+  "endAt": zod.string().optional(),
+  "startOdometer": zod.string().optional(),
+  "endOdometer": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateVehicleMissionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().nullish(),
+  "driverId": zod.string().nullish(),
+  "purpose": zod.string(),
+  "destination": zod.string().nullish(),
+  "requestedByEmployeeId": zod.string().nullish(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "startOdometer": zod.string().nullish(),
+  "endOdometer": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a VehicleMission
+ */
+export const DeleteVehicleMissionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteVehicleMissionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List VehicleMaintenance
+ */
+export const ListVehicleMaintenanceQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "vehicleId": zod.coerce.string().optional(),
+  "logType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListVehicleMaintenanceResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().nullish(),
+  "logType": zod.string(),
+  "serviceDate": zod.string(),
+  "odometer": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "vendorName": zod.string().nullish(),
+  "fuelLiters": zod.string().nullish(),
+  "cost": zod.string().nullish(),
+  "nextServiceDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a VehicleMaintenance
+ */
+export const CreateVehicleMaintenanceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().optional(),
+  "logType": zod.string().optional(),
+  "serviceDate": zod.string().optional(),
+  "odometer": zod.string().optional(),
+  "description": zod.string().optional(),
+  "vendorName": zod.string().optional(),
+  "fuelLiters": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "nextServiceDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a VehicleMaintenance
+ */
+export const GetVehicleMaintenanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetVehicleMaintenanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().nullish(),
+  "logType": zod.string(),
+  "serviceDate": zod.string(),
+  "odometer": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "vendorName": zod.string().nullish(),
+  "fuelLiters": zod.string().nullish(),
+  "cost": zod.string().nullish(),
+  "nextServiceDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a VehicleMaintenance
+ */
+export const UpdateVehicleMaintenanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateVehicleMaintenanceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "vehicleId": zod.string().optional(),
+  "logType": zod.string().optional(),
+  "serviceDate": zod.string().optional(),
+  "odometer": zod.string().optional(),
+  "description": zod.string().optional(),
+  "vendorName": zod.string().optional(),
+  "fuelLiters": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "nextServiceDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateVehicleMaintenanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "vehicleId": zod.string().nullish(),
+  "logType": zod.string(),
+  "serviceDate": zod.string(),
+  "odometer": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "vendorName": zod.string().nullish(),
+  "fuelLiters": zod.string().nullish(),
+  "cost": zod.string().nullish(),
+  "nextServiceDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a VehicleMaintenance
+ */
+export const DeleteVehicleMaintenanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteVehicleMaintenanceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List VisitorLog
+ */
+export const ListVisitorLogsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "permitStatus": zod.coerce.string().optional(),
+  "hostEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListVisitorLogsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "visitorName": zod.string(),
+  "idNumber": zod.string().nullish(),
+  "visitorCompany": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "hostEmployeeId": zod.string().nullish(),
+  "purpose": zod.string().nullish(),
+  "permitNumber": zod.string().nullish(),
+  "permitStatus": zod.string(),
+  "badgeNumber": zod.string().nullish(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a VisitorLog
+ */
+export const CreateVisitorLogBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "visitorName": zod.string(),
+  "idNumber": zod.string().optional(),
+  "visitorCompany": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "hostEmployeeId": zod.string().optional(),
+  "purpose": zod.string().optional(),
+  "permitNumber": zod.string().optional(),
+  "permitStatus": zod.string().optional(),
+  "badgeNumber": zod.string().optional(),
+  "checkInAt": zod.string().optional(),
+  "checkOutAt": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a VisitorLog
+ */
+export const GetVisitorLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetVisitorLogResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "visitorName": zod.string(),
+  "idNumber": zod.string().nullish(),
+  "visitorCompany": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "hostEmployeeId": zod.string().nullish(),
+  "purpose": zod.string().nullish(),
+  "permitNumber": zod.string().nullish(),
+  "permitStatus": zod.string(),
+  "badgeNumber": zod.string().nullish(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a VisitorLog
+ */
+export const UpdateVisitorLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateVisitorLogBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "visitorName": zod.string().optional(),
+  "idNumber": zod.string().optional(),
+  "visitorCompany": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "hostEmployeeId": zod.string().optional(),
+  "purpose": zod.string().optional(),
+  "permitNumber": zod.string().optional(),
+  "permitStatus": zod.string().optional(),
+  "badgeNumber": zod.string().optional(),
+  "checkInAt": zod.string().optional(),
+  "checkOutAt": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateVisitorLogResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "visitorName": zod.string(),
+  "idNumber": zod.string().nullish(),
+  "visitorCompany": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "hostEmployeeId": zod.string().nullish(),
+  "purpose": zod.string().nullish(),
+  "permitNumber": zod.string().nullish(),
+  "permitStatus": zod.string(),
+  "badgeNumber": zod.string().nullish(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a VisitorLog
+ */
+export const DeleteVisitorLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteVisitorLogResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Circular
+ */
+export const ListCircularsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "audience": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "departmentId": zod.coerce.string().optional()
+})
+
+export const ListCircularsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "circularNumber": zod.string().nullish(),
+  "issueDate": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "audience": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Circular
+ */
+export const CreateCircularBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "circularNumber": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "issuedByEmployeeId": zod.string().optional(),
+  "audience": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "body": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Circular
+ */
+export const GetCircularParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCircularResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "circularNumber": zod.string().nullish(),
+  "issueDate": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "audience": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Circular
+ */
+export const UpdateCircularParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCircularBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "circularNumber": zod.string().optional(),
+  "issueDate": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "issuedByEmployeeId": zod.string().optional(),
+  "audience": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "body": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateCircularResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "circularNumber": zod.string().nullish(),
+  "issueDate": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "audience": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Circular
+ */
+export const DeleteCircularParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCircularResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Policy
+ */
+export const ListPoliciesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "policyType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "ownerEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListPoliciesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "policyType": zod.string(),
+  "version": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "reviewDate": zod.string().nullish(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "documentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a Policy
+ */
+export const CreatePolicyBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "policyType": zod.string().optional(),
+  "version": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "reviewDate": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "documentUrl": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a Policy
+ */
+export const GetPolicyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPolicyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "policyType": zod.string(),
+  "version": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "reviewDate": zod.string().nullish(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "documentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a Policy
+ */
+export const UpdatePolicyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdatePolicyBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "title": zod.string().optional(),
+  "policyType": zod.string().optional(),
+  "version": zod.string().optional(),
+  "effectiveDate": zod.string().optional(),
+  "reviewDate": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "documentUrl": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePolicyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "policyType": zod.string(),
+  "version": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "reviewDate": zod.string().nullish(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "documentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a Policy
+ */
+export const DeletePolicyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePolicyResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

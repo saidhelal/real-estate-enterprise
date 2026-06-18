@@ -144,6 +144,19 @@ import HandoverChecklistItemsPage from "@/pages/handover-checklist-items";
 import HandoverMinutesPage from "@/pages/handover-minutes";
 import HandoverSnagsPage from "@/pages/handover-snags";
 import HandoverApprovalsPage from "@/pages/handover-approvals";
+import GeneralAdminDashboardPage from "@/pages/general-admin-dashboard";
+import CorrespondencePage from "@/pages/correspondence";
+import MeetingsPage from "@/pages/meetings";
+import AdministrativeDecisionsPage from "@/pages/administrative-decisions";
+import AdministrativeTasksPage from "@/pages/administrative-tasks";
+import GeneralServicesPage from "@/pages/general-services";
+import VehiclesPage from "@/pages/vehicles";
+import DriversPage from "@/pages/drivers";
+import VehicleMissionsPage from "@/pages/vehicle-missions";
+import VehicleMaintenancePage from "@/pages/vehicle-maintenance";
+import VisitorLogsPage from "@/pages/visitor-logs";
+import CircularsPage from "@/pages/circulars";
+import PoliciesPage from "@/pages/policies";
 import CustomerServiceDashboardPage from "@/pages/customer-service-dashboard";
 import CustomerServiceReportsPage from "@/pages/customer-service-reports";
 import SlaPoliciesPage from "@/pages/sla-policies";
@@ -399,6 +412,19 @@ function Router() {
             <Route path="/handover-snags" component={HandoverSnagsPage} />
             <Route path="/handover-approvals" component={HandoverApprovalsPage} />
             <Route path="/handover-reports" component={HandoverReportsPage} />
+            <Route path="/general-admin-dashboard" component={GeneralAdminDashboardPage} />
+            <Route path="/correspondence" component={CorrespondencePage} />
+            <Route path="/meetings" component={MeetingsPage} />
+            <Route path="/administrative-decisions" component={AdministrativeDecisionsPage} />
+            <Route path="/administrative-tasks" component={AdministrativeTasksPage} />
+            <Route path="/general-services" component={GeneralServicesPage} />
+            <Route path="/vehicles" component={VehiclesPage} />
+            <Route path="/drivers" component={DriversPage} />
+            <Route path="/vehicle-missions" component={VehicleMissionsPage} />
+            <Route path="/vehicle-maintenance" component={VehicleMaintenancePage} />
+            <Route path="/visitor-logs" component={VisitorLogsPage} />
+            <Route path="/circulars" component={CircularsPage} />
+            <Route path="/policies" component={PoliciesPage} />
             <Route path="/customer-service-dashboard" component={CustomerServiceDashboardPage} />
             <Route path="/sla-policies" component={SlaPoliciesPage} />
             <Route path="/service-escalations" component={ServiceEscalationsPage} />

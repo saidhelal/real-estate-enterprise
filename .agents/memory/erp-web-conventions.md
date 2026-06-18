@@ -31,6 +31,14 @@ options arg to a generated `useList*` hook (e.g. to set `enabled`), you must als
 pass `queryKey: getList<Entity>QueryKey(params)` or typecheck fails (the option
 type requires it).
 
+**Drizzle `numeric()` columns serialize to zod `string`, so the ResourceManager
+field type MUST be `money` (submits `String(raw)`), never `number` (submits
+`Number(raw)`).** A `numeric` column (e.g. a model year, odometer, percent) wired
+as `type: "number"` typechecks fine but every create/update 400s on the body
+validator (expects string, gets number). Plain integer/`integer()` columns use
+`number`. Match the field type to the generated zod scalar, not to the human
+meaning of the value.
+
 **List endpoints hard-cap `pageSize` at 200** (`pageParams` in api-server
 `lib/serialize.ts` uses `Math.min(rawSize, 200)`). A single `useList*` call can
 never return more than 200 rows regardless of the requested `pageSize`, so any

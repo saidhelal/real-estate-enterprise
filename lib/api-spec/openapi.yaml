@@ -20225,6 +20225,1093 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/LookupValue" }
 
+  /general-admin-dashboard:
+    get:
+      operationId: getGeneralAdminDashboard
+      tags: [generalAdminDashboard]
+      summary: General Administration dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralAdminDashboard"
+  /correspondence:
+    get:
+      operationId: listCorrespondence
+      tags: [correspondence]
+      summary: List Correspondence
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: direction, in: query, required: false, schema: { type: string } }
+        - { name: correspondenceType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+        - { name: assignedToEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Correspondence list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceListResponse"
+    post:
+      operationId: createCorrespondence
+      tags: [correspondence]
+      summary: Create a Correspondence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CorrespondenceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Correspondence"
+  /correspondence/{id}:
+    get:
+      operationId: getCorrespondence
+      tags: [correspondence]
+      summary: Get a Correspondence
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Correspondence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Correspondence"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCorrespondence
+      tags: [correspondence]
+      summary: Update a Correspondence
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CorrespondenceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Correspondence"
+    delete:
+      operationId: deleteCorrespondence
+      tags: [correspondence]
+      summary: Soft-delete a Correspondence
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /meetings:
+    get:
+      operationId: listMeetings
+      tags: [meetings]
+      summary: List Meeting
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: meetingType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: chairpersonEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Meeting list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingListResponse"
+    post:
+      operationId: createMeeting
+      tags: [meetings]
+      summary: Create a Meeting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+  /meetings/{id}:
+    get:
+      operationId: getMeeting
+      tags: [meetings]
+      summary: Get a Meeting
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Meeting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateMeeting
+      tags: [meetings]
+      summary: Update a Meeting
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+    delete:
+      operationId: deleteMeeting
+      tags: [meetings]
+      summary: Soft-delete a Meeting
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /administrative-decisions:
+    get:
+      operationId: listAdministrativeDecisions
+      tags: [administrativeDecisions]
+      summary: List AdministrativeDecision
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: decisionType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: meetingId, in: query, required: false, schema: { type: string } }
+        - { name: assignedToEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AdministrativeDecision list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeDecisionListResponse"
+    post:
+      operationId: createAdministrativeDecision
+      tags: [administrativeDecisions]
+      summary: Create a AdministrativeDecision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdministrativeDecisionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeDecision"
+  /administrative-decisions/{id}:
+    get:
+      operationId: getAdministrativeDecision
+      tags: [administrativeDecisions]
+      summary: Get a AdministrativeDecision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AdministrativeDecision
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeDecision"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAdministrativeDecision
+      tags: [administrativeDecisions]
+      summary: Update a AdministrativeDecision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdministrativeDecisionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeDecision"
+    delete:
+      operationId: deleteAdministrativeDecision
+      tags: [administrativeDecisions]
+      summary: Soft-delete a AdministrativeDecision
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /administrative-tasks:
+    get:
+      operationId: listAdministrativeTasks
+      tags: [administrativeTasks]
+      summary: List AdministrativeTask
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+        - { name: assignedToEmployeeId, in: query, required: false, schema: { type: string } }
+        - { name: assignedByUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: AdministrativeTask list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeTaskListResponse"
+    post:
+      operationId: createAdministrativeTask
+      tags: [administrativeTasks]
+      summary: Create a AdministrativeTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdministrativeTaskInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeTask"
+  /administrative-tasks/{id}:
+    get:
+      operationId: getAdministrativeTask
+      tags: [administrativeTasks]
+      summary: Get a AdministrativeTask
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: AdministrativeTask
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeTask"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateAdministrativeTask
+      tags: [administrativeTasks]
+      summary: Update a AdministrativeTask
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdministrativeTaskUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdministrativeTask"
+    delete:
+      operationId: deleteAdministrativeTask
+      tags: [administrativeTasks]
+      summary: Soft-delete a AdministrativeTask
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /general-services:
+    get:
+      operationId: listGeneralServices
+      tags: [generalServices]
+      summary: List GeneralService
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: serviceType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+        - { name: assignedToEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: GeneralService list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralServiceListResponse"
+    post:
+      operationId: createGeneralService
+      tags: [generalServices]
+      summary: Create a GeneralService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneralServiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralService"
+  /general-services/{id}:
+    get:
+      operationId: getGeneralService
+      tags: [generalServices]
+      summary: Get a GeneralService
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: GeneralService
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralService"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateGeneralService
+      tags: [generalServices]
+      summary: Update a GeneralService
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneralServiceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralService"
+    delete:
+      operationId: deleteGeneralService
+      tags: [generalServices]
+      summary: Soft-delete a GeneralService
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /vehicles:
+    get:
+      operationId: listVehicles
+      tags: [vehicles]
+      summary: List Vehicle
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: vehicleType, in: query, required: false, schema: { type: string } }
+        - { name: ownershipType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: assignedDriverId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Vehicle list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleListResponse"
+    post:
+      operationId: createVehicle
+      tags: [vehicles]
+      summary: Create a Vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+  /vehicles/{id}:
+    get:
+      operationId: getVehicle
+      tags: [vehicles]
+      summary: Get a Vehicle
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Vehicle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateVehicle
+      tags: [vehicles]
+      summary: Update a Vehicle
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+    delete:
+      operationId: deleteVehicle
+      tags: [vehicles]
+      summary: Soft-delete a Vehicle
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /drivers:
+    get:
+      operationId: listDrivers
+      tags: [drivers]
+      summary: List Driver
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Driver list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DriverListResponse"
+    post:
+      operationId: createDriver
+      tags: [drivers]
+      summary: Create a Driver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DriverInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+  /drivers/{id}:
+    get:
+      operationId: getDriver
+      tags: [drivers]
+      summary: Get a Driver
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateDriver
+      tags: [drivers]
+      summary: Update a Driver
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DriverUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Driver"
+    delete:
+      operationId: deleteDriver
+      tags: [drivers]
+      summary: Soft-delete a Driver
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /vehicle-missions:
+    get:
+      operationId: listVehicleMissions
+      tags: [vehicleMissions]
+      summary: List VehicleMission
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: vehicleId, in: query, required: false, schema: { type: string } }
+        - { name: driverId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: VehicleMission list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMissionListResponse"
+    post:
+      operationId: createVehicleMission
+      tags: [vehicleMissions]
+      summary: Create a VehicleMission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleMissionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMission"
+  /vehicle-missions/{id}:
+    get:
+      operationId: getVehicleMission
+      tags: [vehicleMissions]
+      summary: Get a VehicleMission
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: VehicleMission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMission"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateVehicleMission
+      tags: [vehicleMissions]
+      summary: Update a VehicleMission
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleMissionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMission"
+    delete:
+      operationId: deleteVehicleMission
+      tags: [vehicleMissions]
+      summary: Soft-delete a VehicleMission
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /vehicle-maintenance:
+    get:
+      operationId: listVehicleMaintenance
+      tags: [vehicleMaintenance]
+      summary: List VehicleMaintenance
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: vehicleId, in: query, required: false, schema: { type: string } }
+        - { name: logType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: VehicleMaintenance list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMaintenanceListResponse"
+    post:
+      operationId: createVehicleMaintenance
+      tags: [vehicleMaintenance]
+      summary: Create a VehicleMaintenance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleMaintenanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMaintenance"
+  /vehicle-maintenance/{id}:
+    get:
+      operationId: getVehicleMaintenance
+      tags: [vehicleMaintenance]
+      summary: Get a VehicleMaintenance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: VehicleMaintenance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMaintenance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateVehicleMaintenance
+      tags: [vehicleMaintenance]
+      summary: Update a VehicleMaintenance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleMaintenanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VehicleMaintenance"
+    delete:
+      operationId: deleteVehicleMaintenance
+      tags: [vehicleMaintenance]
+      summary: Soft-delete a VehicleMaintenance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /visitor-logs:
+    get:
+      operationId: listVisitorLogs
+      tags: [visitorLogs]
+      summary: List VisitorLog
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: permitStatus, in: query, required: false, schema: { type: string } }
+        - { name: hostEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: VisitorLog list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorLogListResponse"
+    post:
+      operationId: createVisitorLog
+      tags: [visitorLogs]
+      summary: Create a VisitorLog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VisitorLogInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorLog"
+  /visitor-logs/{id}:
+    get:
+      operationId: getVisitorLog
+      tags: [visitorLogs]
+      summary: Get a VisitorLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: VisitorLog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorLog"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateVisitorLog
+      tags: [visitorLogs]
+      summary: Update a VisitorLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VisitorLogUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorLog"
+    delete:
+      operationId: deleteVisitorLog
+      tags: [visitorLogs]
+      summary: Soft-delete a VisitorLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /circulars:
+    get:
+      operationId: listCirculars
+      tags: [circulars]
+      summary: List Circular
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: audience, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: departmentId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Circular list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CircularListResponse"
+    post:
+      operationId: createCircular
+      tags: [circulars]
+      summary: Create a Circular
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CircularInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Circular"
+  /circulars/{id}:
+    get:
+      operationId: getCircular
+      tags: [circulars]
+      summary: Get a Circular
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Circular
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Circular"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCircular
+      tags: [circulars]
+      summary: Update a Circular
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CircularUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Circular"
+    delete:
+      operationId: deleteCircular
+      tags: [circulars]
+      summary: Soft-delete a Circular
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /policies:
+    get:
+      operationId: listPolicies
+      tags: [policies]
+      summary: List Policy
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: policyType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: ownerEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Policy list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyListResponse"
+    post:
+      operationId: createPolicy
+      tags: [policies]
+      summary: Create a Policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+  /policies/{id}:
+    get:
+      operationId: getPolicy
+      tags: [policies]
+      summary: Get a Policy
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Policy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePolicy
+      tags: [policies]
+      summary: Update a Policy
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+    delete:
+      operationId: deletePolicy
+      tags: [policies]
+      summary: Soft-delete a Policy
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
 components:
   parameters:
     IdParam:
@@ -33047,3 +34134,766 @@ components:
         byStatus:
           type: array
           items: { $ref: "#/components/schemas/FixedAssetsStatusCount" }
+    GeneralAdminDashboard:
+      type: object
+      required: [meetingsCount, decisionsCount, tasksCount, visitorsCount, vehiclesCount, assetsCount]
+      properties:
+        meetingsCount: { type: integer }
+        decisionsCount: { type: integer }
+        tasksCount: { type: integer }
+        visitorsCount: { type: integer }
+        vehiclesCount: { type: integer }
+        assetsCount: { type: integer }
+    Correspondence:
+      type: object
+      required: [id, companyId, code, direction, correspondenceType, subject, correspondenceDate, priority, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        direction: { type: string }
+        correspondenceType: { type: string }
+        subject: { type: string }
+        senderName: { type: ["string", "null"] }
+        recipientName: { type: ["string", "null"] }
+        refNumber: { type: ["string", "null"] }
+        correspondenceDate: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        departmentId: { type: ["string", "null"] }
+        assignedToEmployeeId: { type: ["string", "null"] }
+        attachmentUrl: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CorrespondenceInput:
+      type: object
+      required: [companyId, code, subject]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        direction: { type: string }
+        correspondenceType: { type: string }
+        subject: { type: string }
+        senderName: { type: string }
+        recipientName: { type: string }
+        refNumber: { type: string }
+        correspondenceDate: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        departmentId: { type: string }
+        assignedToEmployeeId: { type: string }
+        attachmentUrl: { type: string }
+        notes: { type: string }
+    CorrespondenceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        direction: { type: string }
+        correspondenceType: { type: string }
+        subject: { type: string }
+        senderName: { type: string }
+        recipientName: { type: string }
+        refNumber: { type: string }
+        correspondenceDate: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        departmentId: { type: string }
+        assignedToEmployeeId: { type: string }
+        attachmentUrl: { type: string }
+        notes: { type: string }
+    CorrespondenceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Correspondence" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Meeting:
+      type: object
+      required: [id, companyId, code, title, meetingType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        meetingType: { type: string }
+        scheduledAt: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        status: { type: string }
+        chairpersonEmployeeId: { type: ["string", "null"] }
+        attendees: { type: ["string", "null"] }
+        agenda: { type: ["string", "null"] }
+        minutes: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    MeetingInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        meetingType: { type: string }
+        scheduledAt: { type: string }
+        location: { type: string }
+        status: { type: string }
+        chairpersonEmployeeId: { type: string }
+        attendees: { type: string }
+        agenda: { type: string }
+        minutes: { type: string }
+        notes: { type: string }
+    MeetingUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        meetingType: { type: string }
+        scheduledAt: { type: string }
+        location: { type: string }
+        status: { type: string }
+        chairpersonEmployeeId: { type: string }
+        attendees: { type: string }
+        agenda: { type: string }
+        minutes: { type: string }
+        notes: { type: string }
+    MeetingListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Meeting" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    AdministrativeDecision:
+      type: object
+      required: [id, companyId, code, title, decisionType, decisionDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        decisionType: { type: string }
+        decisionDate: { type: string }
+        meetingId: { type: ["string", "null"] }
+        issuedByEmployeeId: { type: ["string", "null"] }
+        assignedToEmployeeId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        dueDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    AdministrativeDecisionInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        decisionType: { type: string }
+        decisionDate: { type: string }
+        meetingId: { type: string }
+        issuedByEmployeeId: { type: string }
+        assignedToEmployeeId: { type: string }
+        description: { type: string }
+        status: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+    AdministrativeDecisionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        decisionType: { type: string }
+        decisionDate: { type: string }
+        meetingId: { type: string }
+        issuedByEmployeeId: { type: string }
+        assignedToEmployeeId: { type: string }
+        description: { type: string }
+        status: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+    AdministrativeDecisionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AdministrativeDecision" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    AdministrativeTask:
+      type: object
+      required: [id, companyId, code, title, priority, status, progressPercent, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        description: { type: ["string", "null"] }
+        assignedToEmployeeId: { type: ["string", "null"] }
+        assignedByUserId: { type: ["string", "null"] }
+        priority: { type: string }
+        status: { type: string }
+        progressPercent: { type: string }
+        startDate: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        completedDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    AdministrativeTaskInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        description: { type: string }
+        assignedToEmployeeId: { type: string }
+        assignedByUserId: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        progressPercent: { type: string }
+        startDate: { type: string }
+        dueDate: { type: string }
+        completedDate: { type: string }
+        notes: { type: string }
+    AdministrativeTaskUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        description: { type: string }
+        assignedToEmployeeId: { type: string }
+        assignedByUserId: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        progressPercent: { type: string }
+        startDate: { type: string }
+        dueDate: { type: string }
+        completedDate: { type: string }
+        notes: { type: string }
+    AdministrativeTaskListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/AdministrativeTask" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    GeneralService:
+      type: object
+      required: [id, companyId, code, serviceType, title, priority, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        serviceType: { type: string }
+        title: { type: string }
+        description: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        requestedByEmployeeId: { type: ["string", "null"] }
+        assignedToEmployeeId: { type: ["string", "null"] }
+        priority: { type: string }
+        status: { type: string }
+        serviceDate: { type: ["string", "null"] }
+        cost: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    GeneralServiceInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        serviceType: { type: string }
+        title: { type: string }
+        description: { type: string }
+        location: { type: string }
+        requestedByEmployeeId: { type: string }
+        assignedToEmployeeId: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        serviceDate: { type: string }
+        cost: { type: string }
+        notes: { type: string }
+    GeneralServiceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        serviceType: { type: string }
+        title: { type: string }
+        description: { type: string }
+        location: { type: string }
+        requestedByEmployeeId: { type: string }
+        assignedToEmployeeId: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        serviceDate: { type: string }
+        cost: { type: string }
+        notes: { type: string }
+    GeneralServiceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/GeneralService" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Vehicle:
+      type: object
+      required: [id, companyId, code, plateNumber, vehicleType, ownershipType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        plateNumber: { type: string }
+        make: { type: ["string", "null"] }
+        model: { type: ["string", "null"] }
+        modelYear: { type: ["string", "null"] }
+        color: { type: ["string", "null"] }
+        vehicleType: { type: string }
+        ownershipType: { type: string }
+        status: { type: string }
+        assignedDriverId: { type: ["string", "null"] }
+        currentOdometer: { type: ["string", "null"] }
+        registrationExpiry: { type: ["string", "null"] }
+        insuranceExpiry: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    VehicleInput:
+      type: object
+      required: [companyId, code, plateNumber]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        plateNumber: { type: string }
+        make: { type: string }
+        model: { type: string }
+        modelYear: { type: string }
+        color: { type: string }
+        vehicleType: { type: string }
+        ownershipType: { type: string }
+        status: { type: string }
+        assignedDriverId: { type: string }
+        currentOdometer: { type: string }
+        registrationExpiry: { type: string }
+        insuranceExpiry: { type: string }
+        notes: { type: string }
+    VehicleUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        plateNumber: { type: string }
+        make: { type: string }
+        model: { type: string }
+        modelYear: { type: string }
+        color: { type: string }
+        vehicleType: { type: string }
+        ownershipType: { type: string }
+        status: { type: string }
+        assignedDriverId: { type: string }
+        currentOdometer: { type: string }
+        registrationExpiry: { type: string }
+        insuranceExpiry: { type: string }
+        notes: { type: string }
+    VehicleListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Vehicle" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Driver:
+      type: object
+      required: [id, companyId, code, fullName, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: ["string", "null"] }
+        fullName: { type: string }
+        licenseNumber: { type: ["string", "null"] }
+        licenseType: { type: ["string", "null"] }
+        licenseExpiry: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    DriverInput:
+      type: object
+      required: [companyId, code, fullName]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        fullName: { type: string }
+        licenseNumber: { type: string }
+        licenseType: { type: string }
+        licenseExpiry: { type: string }
+        phone: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    DriverUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        fullName: { type: string }
+        licenseNumber: { type: string }
+        licenseType: { type: string }
+        licenseExpiry: { type: string }
+        phone: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    DriverListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Driver" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    VehicleMission:
+      type: object
+      required: [id, companyId, code, purpose, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        vehicleId: { type: ["string", "null"] }
+        driverId: { type: ["string", "null"] }
+        purpose: { type: string }
+        destination: { type: ["string", "null"] }
+        requestedByEmployeeId: { type: ["string", "null"] }
+        startAt: { type: ["string", "null"] }
+        endAt: { type: ["string", "null"] }
+        startOdometer: { type: ["string", "null"] }
+        endOdometer: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    VehicleMissionInput:
+      type: object
+      required: [companyId, code, purpose]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        vehicleId: { type: string }
+        driverId: { type: string }
+        purpose: { type: string }
+        destination: { type: string }
+        requestedByEmployeeId: { type: string }
+        startAt: { type: string }
+        endAt: { type: string }
+        startOdometer: { type: string }
+        endOdometer: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    VehicleMissionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        vehicleId: { type: string }
+        driverId: { type: string }
+        purpose: { type: string }
+        destination: { type: string }
+        requestedByEmployeeId: { type: string }
+        startAt: { type: string }
+        endAt: { type: string }
+        startOdometer: { type: string }
+        endOdometer: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    VehicleMissionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/VehicleMission" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    VehicleMaintenance:
+      type: object
+      required: [id, companyId, code, logType, serviceDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        vehicleId: { type: ["string", "null"] }
+        logType: { type: string }
+        serviceDate: { type: string }
+        odometer: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        vendorName: { type: ["string", "null"] }
+        fuelLiters: { type: ["string", "null"] }
+        cost: { type: ["string", "null"] }
+        nextServiceDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    VehicleMaintenanceInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        vehicleId: { type: string }
+        logType: { type: string }
+        serviceDate: { type: string }
+        odometer: { type: string }
+        description: { type: string }
+        vendorName: { type: string }
+        fuelLiters: { type: string }
+        cost: { type: string }
+        nextServiceDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    VehicleMaintenanceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        vehicleId: { type: string }
+        logType: { type: string }
+        serviceDate: { type: string }
+        odometer: { type: string }
+        description: { type: string }
+        vendorName: { type: string }
+        fuelLiters: { type: string }
+        cost: { type: string }
+        nextServiceDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    VehicleMaintenanceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/VehicleMaintenance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    VisitorLog:
+      type: object
+      required: [id, companyId, code, visitorName, permitStatus, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        visitorName: { type: string }
+        idNumber: { type: ["string", "null"] }
+        visitorCompany: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        hostEmployeeId: { type: ["string", "null"] }
+        purpose: { type: ["string", "null"] }
+        permitNumber: { type: ["string", "null"] }
+        permitStatus: { type: string }
+        badgeNumber: { type: ["string", "null"] }
+        checkInAt: { type: ["string", "null"] }
+        checkOutAt: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    VisitorLogInput:
+      type: object
+      required: [companyId, code, visitorName]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        visitorName: { type: string }
+        idNumber: { type: string }
+        visitorCompany: { type: string }
+        phone: { type: string }
+        hostEmployeeId: { type: string }
+        purpose: { type: string }
+        permitNumber: { type: string }
+        permitStatus: { type: string }
+        badgeNumber: { type: string }
+        checkInAt: { type: string }
+        checkOutAt: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    VisitorLogUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        visitorName: { type: string }
+        idNumber: { type: string }
+        visitorCompany: { type: string }
+        phone: { type: string }
+        hostEmployeeId: { type: string }
+        purpose: { type: string }
+        permitNumber: { type: string }
+        permitStatus: { type: string }
+        badgeNumber: { type: string }
+        checkInAt: { type: string }
+        checkOutAt: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    VisitorLogListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/VisitorLog" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Circular:
+      type: object
+      required: [id, companyId, code, title, issueDate, audience, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        circularNumber: { type: ["string", "null"] }
+        issueDate: { type: string }
+        effectiveDate: { type: ["string", "null"] }
+        issuedByEmployeeId: { type: ["string", "null"] }
+        audience: { type: string }
+        departmentId: { type: ["string", "null"] }
+        body: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CircularInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        circularNumber: { type: string }
+        issueDate: { type: string }
+        effectiveDate: { type: string }
+        issuedByEmployeeId: { type: string }
+        audience: { type: string }
+        departmentId: { type: string }
+        body: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    CircularUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        circularNumber: { type: string }
+        issueDate: { type: string }
+        effectiveDate: { type: string }
+        issuedByEmployeeId: { type: string }
+        audience: { type: string }
+        departmentId: { type: string }
+        body: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    CircularListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Circular" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Policy:
+      type: object
+      required: [id, companyId, code, title, policyType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        policyType: { type: string }
+        version: { type: ["string", "null"] }
+        effectiveDate: { type: ["string", "null"] }
+        reviewDate: { type: ["string", "null"] }
+        ownerEmployeeId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        documentUrl: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PolicyInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        policyType: { type: string }
+        version: { type: string }
+        effectiveDate: { type: string }
+        reviewDate: { type: string }
+        ownerEmployeeId: { type: string }
+        description: { type: string }
+        status: { type: string }
+        documentUrl: { type: string }
+        notes: { type: string }
+    PolicyUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        policyType: { type: string }
+        version: { type: string }
+        effectiveDate: { type: string }
+        reviewDate: { type: string }
+        ownerEmployeeId: { type: string }
+        description: { type: string }
+        status: { type: string }
+        documentUrl: { type: string }
+        notes: { type: string }
+    PolicyListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Policy" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }

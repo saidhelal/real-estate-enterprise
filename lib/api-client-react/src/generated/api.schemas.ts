@@ -12148,6 +12148,797 @@ export interface FixedAssetsDashboard {
   byStatus: FixedAssetsStatusCount[];
 }
 
+export interface GeneralAdminDashboard {
+  meetingsCount: number;
+  decisionsCount: number;
+  tasksCount: number;
+  visitorsCount: number;
+  vehiclesCount: number;
+  assetsCount: number;
+}
+
+export interface Correspondence {
+  id: string;
+  companyId: string;
+  code: string;
+  direction: string;
+  correspondenceType: string;
+  subject: string;
+  /** @nullable */
+  senderName?: string | null;
+  /** @nullable */
+  recipientName?: string | null;
+  /** @nullable */
+  refNumber?: string | null;
+  correspondenceDate: string;
+  priority: string;
+  status: string;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  assignedToEmployeeId?: string | null;
+  /** @nullable */
+  attachmentUrl?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CorrespondenceInput {
+  companyId: string;
+  code: string;
+  direction?: string;
+  correspondenceType?: string;
+  subject: string;
+  senderName?: string;
+  recipientName?: string;
+  refNumber?: string;
+  correspondenceDate?: string;
+  priority?: string;
+  status?: string;
+  departmentId?: string;
+  assignedToEmployeeId?: string;
+  attachmentUrl?: string;
+  notes?: string;
+}
+
+export interface CorrespondenceUpdate {
+  companyId?: string;
+  code?: string;
+  direction?: string;
+  correspondenceType?: string;
+  subject?: string;
+  senderName?: string;
+  recipientName?: string;
+  refNumber?: string;
+  correspondenceDate?: string;
+  priority?: string;
+  status?: string;
+  departmentId?: string;
+  assignedToEmployeeId?: string;
+  attachmentUrl?: string;
+  notes?: string;
+}
+
+export interface CorrespondenceListResponse {
+  data: Correspondence[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Meeting {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  meetingType: string;
+  /** @nullable */
+  scheduledAt?: string | null;
+  /** @nullable */
+  location?: string | null;
+  status: string;
+  /** @nullable */
+  chairpersonEmployeeId?: string | null;
+  /** @nullable */
+  attendees?: string | null;
+  /** @nullable */
+  agenda?: string | null;
+  /** @nullable */
+  minutes?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MeetingInput {
+  companyId: string;
+  code: string;
+  title: string;
+  meetingType?: string;
+  scheduledAt?: string;
+  location?: string;
+  status?: string;
+  chairpersonEmployeeId?: string;
+  attendees?: string;
+  agenda?: string;
+  minutes?: string;
+  notes?: string;
+}
+
+export interface MeetingUpdate {
+  companyId?: string;
+  code?: string;
+  title?: string;
+  meetingType?: string;
+  scheduledAt?: string;
+  location?: string;
+  status?: string;
+  chairpersonEmployeeId?: string;
+  attendees?: string;
+  agenda?: string;
+  minutes?: string;
+  notes?: string;
+}
+
+export interface MeetingListResponse {
+  data: Meeting[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AdministrativeDecision {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  decisionType: string;
+  decisionDate: string;
+  /** @nullable */
+  meetingId?: string | null;
+  /** @nullable */
+  issuedByEmployeeId?: string | null;
+  /** @nullable */
+  assignedToEmployeeId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AdministrativeDecisionInput {
+  companyId: string;
+  code: string;
+  title: string;
+  decisionType?: string;
+  decisionDate?: string;
+  meetingId?: string;
+  issuedByEmployeeId?: string;
+  assignedToEmployeeId?: string;
+  description?: string;
+  status?: string;
+  dueDate?: string;
+  notes?: string;
+}
+
+export interface AdministrativeDecisionUpdate {
+  companyId?: string;
+  code?: string;
+  title?: string;
+  decisionType?: string;
+  decisionDate?: string;
+  meetingId?: string;
+  issuedByEmployeeId?: string;
+  assignedToEmployeeId?: string;
+  description?: string;
+  status?: string;
+  dueDate?: string;
+  notes?: string;
+}
+
+export interface AdministrativeDecisionListResponse {
+  data: AdministrativeDecision[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface AdministrativeTask {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  assignedToEmployeeId?: string | null;
+  /** @nullable */
+  assignedByUserId?: string | null;
+  priority: string;
+  status: string;
+  progressPercent: string;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  completedDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AdministrativeTaskInput {
+  companyId: string;
+  code: string;
+  title: string;
+  description?: string;
+  assignedToEmployeeId?: string;
+  assignedByUserId?: string;
+  priority?: string;
+  status?: string;
+  progressPercent?: string;
+  startDate?: string;
+  dueDate?: string;
+  completedDate?: string;
+  notes?: string;
+}
+
+export interface AdministrativeTaskUpdate {
+  companyId?: string;
+  code?: string;
+  title?: string;
+  description?: string;
+  assignedToEmployeeId?: string;
+  assignedByUserId?: string;
+  priority?: string;
+  status?: string;
+  progressPercent?: string;
+  startDate?: string;
+  dueDate?: string;
+  completedDate?: string;
+  notes?: string;
+}
+
+export interface AdministrativeTaskListResponse {
+  data: AdministrativeTask[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface GeneralService {
+  id: string;
+  companyId: string;
+  code: string;
+  serviceType: string;
+  title: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  requestedByEmployeeId?: string | null;
+  /** @nullable */
+  assignedToEmployeeId?: string | null;
+  priority: string;
+  status: string;
+  /** @nullable */
+  serviceDate?: string | null;
+  /** @nullable */
+  cost?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface GeneralServiceInput {
+  companyId: string;
+  code: string;
+  serviceType?: string;
+  title: string;
+  description?: string;
+  location?: string;
+  requestedByEmployeeId?: string;
+  assignedToEmployeeId?: string;
+  priority?: string;
+  status?: string;
+  serviceDate?: string;
+  cost?: string;
+  notes?: string;
+}
+
+export interface GeneralServiceUpdate {
+  companyId?: string;
+  code?: string;
+  serviceType?: string;
+  title?: string;
+  description?: string;
+  location?: string;
+  requestedByEmployeeId?: string;
+  assignedToEmployeeId?: string;
+  priority?: string;
+  status?: string;
+  serviceDate?: string;
+  cost?: string;
+  notes?: string;
+}
+
+export interface GeneralServiceListResponse {
+  data: GeneralService[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Vehicle {
+  id: string;
+  companyId: string;
+  code: string;
+  plateNumber: string;
+  /** @nullable */
+  make?: string | null;
+  /** @nullable */
+  model?: string | null;
+  /** @nullable */
+  modelYear?: string | null;
+  /** @nullable */
+  color?: string | null;
+  vehicleType: string;
+  ownershipType: string;
+  status: string;
+  /** @nullable */
+  assignedDriverId?: string | null;
+  /** @nullable */
+  currentOdometer?: string | null;
+  /** @nullable */
+  registrationExpiry?: string | null;
+  /** @nullable */
+  insuranceExpiry?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface VehicleInput {
+  companyId: string;
+  code: string;
+  plateNumber: string;
+  make?: string;
+  model?: string;
+  modelYear?: string;
+  color?: string;
+  vehicleType?: string;
+  ownershipType?: string;
+  status?: string;
+  assignedDriverId?: string;
+  currentOdometer?: string;
+  registrationExpiry?: string;
+  insuranceExpiry?: string;
+  notes?: string;
+}
+
+export interface VehicleUpdate {
+  companyId?: string;
+  code?: string;
+  plateNumber?: string;
+  make?: string;
+  model?: string;
+  modelYear?: string;
+  color?: string;
+  vehicleType?: string;
+  ownershipType?: string;
+  status?: string;
+  assignedDriverId?: string;
+  currentOdometer?: string;
+  registrationExpiry?: string;
+  insuranceExpiry?: string;
+  notes?: string;
+}
+
+export interface VehicleListResponse {
+  data: Vehicle[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Driver {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  employeeId?: string | null;
+  fullName: string;
+  /** @nullable */
+  licenseNumber?: string | null;
+  /** @nullable */
+  licenseType?: string | null;
+  /** @nullable */
+  licenseExpiry?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DriverInput {
+  companyId: string;
+  code: string;
+  employeeId?: string;
+  fullName: string;
+  licenseNumber?: string;
+  licenseType?: string;
+  licenseExpiry?: string;
+  phone?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface DriverUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  fullName?: string;
+  licenseNumber?: string;
+  licenseType?: string;
+  licenseExpiry?: string;
+  phone?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface DriverListResponse {
+  data: Driver[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface VehicleMission {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  vehicleId?: string | null;
+  /** @nullable */
+  driverId?: string | null;
+  purpose: string;
+  /** @nullable */
+  destination?: string | null;
+  /** @nullable */
+  requestedByEmployeeId?: string | null;
+  /** @nullable */
+  startAt?: string | null;
+  /** @nullable */
+  endAt?: string | null;
+  /** @nullable */
+  startOdometer?: string | null;
+  /** @nullable */
+  endOdometer?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface VehicleMissionInput {
+  companyId: string;
+  code: string;
+  vehicleId?: string;
+  driverId?: string;
+  purpose: string;
+  destination?: string;
+  requestedByEmployeeId?: string;
+  startAt?: string;
+  endAt?: string;
+  startOdometer?: string;
+  endOdometer?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface VehicleMissionUpdate {
+  companyId?: string;
+  code?: string;
+  vehicleId?: string;
+  driverId?: string;
+  purpose?: string;
+  destination?: string;
+  requestedByEmployeeId?: string;
+  startAt?: string;
+  endAt?: string;
+  startOdometer?: string;
+  endOdometer?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface VehicleMissionListResponse {
+  data: VehicleMission[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface VehicleMaintenance {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  vehicleId?: string | null;
+  logType: string;
+  serviceDate: string;
+  /** @nullable */
+  odometer?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  vendorName?: string | null;
+  /** @nullable */
+  fuelLiters?: string | null;
+  /** @nullable */
+  cost?: string | null;
+  /** @nullable */
+  nextServiceDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface VehicleMaintenanceInput {
+  companyId: string;
+  code: string;
+  vehicleId?: string;
+  logType?: string;
+  serviceDate?: string;
+  odometer?: string;
+  description?: string;
+  vendorName?: string;
+  fuelLiters?: string;
+  cost?: string;
+  nextServiceDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface VehicleMaintenanceUpdate {
+  companyId?: string;
+  code?: string;
+  vehicleId?: string;
+  logType?: string;
+  serviceDate?: string;
+  odometer?: string;
+  description?: string;
+  vendorName?: string;
+  fuelLiters?: string;
+  cost?: string;
+  nextServiceDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface VehicleMaintenanceListResponse {
+  data: VehicleMaintenance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface VisitorLog {
+  id: string;
+  companyId: string;
+  code: string;
+  visitorName: string;
+  /** @nullable */
+  idNumber?: string | null;
+  /** @nullable */
+  visitorCompany?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  hostEmployeeId?: string | null;
+  /** @nullable */
+  purpose?: string | null;
+  /** @nullable */
+  permitNumber?: string | null;
+  permitStatus: string;
+  /** @nullable */
+  badgeNumber?: string | null;
+  /** @nullable */
+  checkInAt?: string | null;
+  /** @nullable */
+  checkOutAt?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface VisitorLogInput {
+  companyId: string;
+  code: string;
+  visitorName: string;
+  idNumber?: string;
+  visitorCompany?: string;
+  phone?: string;
+  hostEmployeeId?: string;
+  purpose?: string;
+  permitNumber?: string;
+  permitStatus?: string;
+  badgeNumber?: string;
+  checkInAt?: string;
+  checkOutAt?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface VisitorLogUpdate {
+  companyId?: string;
+  code?: string;
+  visitorName?: string;
+  idNumber?: string;
+  visitorCompany?: string;
+  phone?: string;
+  hostEmployeeId?: string;
+  purpose?: string;
+  permitNumber?: string;
+  permitStatus?: string;
+  badgeNumber?: string;
+  checkInAt?: string;
+  checkOutAt?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface VisitorLogListResponse {
+  data: VisitorLog[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Circular {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  /** @nullable */
+  circularNumber?: string | null;
+  issueDate: string;
+  /** @nullable */
+  effectiveDate?: string | null;
+  /** @nullable */
+  issuedByEmployeeId?: string | null;
+  audience: string;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  body?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CircularInput {
+  companyId: string;
+  code: string;
+  title: string;
+  circularNumber?: string;
+  issueDate?: string;
+  effectiveDate?: string;
+  issuedByEmployeeId?: string;
+  audience?: string;
+  departmentId?: string;
+  body?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface CircularUpdate {
+  companyId?: string;
+  code?: string;
+  title?: string;
+  circularNumber?: string;
+  issueDate?: string;
+  effectiveDate?: string;
+  issuedByEmployeeId?: string;
+  audience?: string;
+  departmentId?: string;
+  body?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface CircularListResponse {
+  data: Circular[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Policy {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  policyType: string;
+  /** @nullable */
+  version?: string | null;
+  /** @nullable */
+  effectiveDate?: string | null;
+  /** @nullable */
+  reviewDate?: string | null;
+  /** @nullable */
+  ownerEmployeeId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  documentUrl?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PolicyInput {
+  companyId: string;
+  code: string;
+  title: string;
+  policyType?: string;
+  version?: string;
+  effectiveDate?: string;
+  reviewDate?: string;
+  ownerEmployeeId?: string;
+  description?: string;
+  status?: string;
+  documentUrl?: string;
+  notes?: string;
+}
+
+export interface PolicyUpdate {
+  companyId?: string;
+  code?: string;
+  title?: string;
+  policyType?: string;
+  version?: string;
+  effectiveDate?: string;
+  reviewDate?: string;
+  ownerEmployeeId?: string;
+  description?: string;
+  status?: string;
+  documentUrl?: string;
+  notes?: string;
+}
+
+export interface PolicyListResponse {
+  data: Policy[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -13964,5 +14755,134 @@ typeId?: string;
 typeCode?: string;
 active?: boolean;
 archived?: boolean;
+};
+
+export type GetGeneralAdminDashboardParams = {
+companyId?: string;
+};
+
+export type ListCorrespondenceParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+direction?: string;
+correspondenceType?: string;
+status?: string;
+priority?: string;
+assignedToEmployeeId?: string;
+};
+
+export type ListMeetingsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+meetingType?: string;
+status?: string;
+chairpersonEmployeeId?: string;
+};
+
+export type ListAdministrativeDecisionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+decisionType?: string;
+status?: string;
+meetingId?: string;
+assignedToEmployeeId?: string;
+};
+
+export type ListAdministrativeTasksParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+priority?: string;
+assignedToEmployeeId?: string;
+assignedByUserId?: string;
+};
+
+export type ListGeneralServicesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+serviceType?: string;
+status?: string;
+priority?: string;
+assignedToEmployeeId?: string;
+};
+
+export type ListVehiclesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+vehicleType?: string;
+ownershipType?: string;
+status?: string;
+assignedDriverId?: string;
+};
+
+export type ListDriversParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+employeeId?: string;
+};
+
+export type ListVehicleMissionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+vehicleId?: string;
+driverId?: string;
+status?: string;
+};
+
+export type ListVehicleMaintenanceParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+vehicleId?: string;
+logType?: string;
+status?: string;
+};
+
+export type ListVisitorLogsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+permitStatus?: string;
+hostEmployeeId?: string;
+};
+
+export type ListCircularsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+audience?: string;
+status?: string;
+departmentId?: string;
+};
+
+export type ListPoliciesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+policyType?: string;
+status?: string;
+ownerEmployeeId?: string;
 };
 

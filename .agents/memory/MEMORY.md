@@ -15,7 +15,7 @@
 - [Reversal row linkage](reversal-row-linkage.md) — reverse side-effect rows (treasury/bank) by a stable source FK, never by reference=code free text, or unrelated rows get wiped.
 - [Drizzle array binding](drizzle-array-binding.md) — raw sql `col = any(${arr})` mis-binds & 500s at runtime (typechecks fine); use inArray(); test the non-empty path.
 - [ERP web conventions](erp-web-conventions.md) — UI doesn't gate CRUD by permission (backend 403 is authoritative); non-CRUD actions use plain fetch credentials:include; useList options need explicit queryKey.
-- [Module dashboard RBAC](module-dashboard-rbac.md) — per-module /xxx/dashboard endpoints are auth-only by convention (no requirePermission); mirror procurement, don't "fix" it.
+- [Module dashboard RBAC](module-dashboard-rbac.md) — nested /module/dashboard = auth-only; top-level /module-dashboard = permission-gated; pick by closest sibling naming.
 - [Report aggregation pagination](report-aggregation-pagination.md) — list endpoints cap pageSize (200); client report totals must loop all pages, not request one big page.
 - [Architect codegen diff false positives](architect-codegen-diff-falsepositive.md) — code-review may flag scope violations from regenerated all-module codegen context; verify against git status, not the diff.
 - [Orval body naming](orval-body-naming.md) — name OpenAPI request-body schemas as nouns (not *Body) to avoid operationId-derived collisions; OkResponse is type-only, don't .parse it.

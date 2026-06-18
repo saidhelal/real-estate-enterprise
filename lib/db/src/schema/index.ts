@@ -30,4 +30,5 @@ export * from "./handover";
 export * from "./customer-service";
 export * from "./customer-service-ops";
 export * from "./fixed-assets";
+export * from "./general-admin";
 export * from "./master-data";
