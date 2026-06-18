@@ -11,6 +11,17 @@ export interface LabelPair {
 // identical while option lists become data-driven, and the web layer re-exports
 // this map (as ENUM_LABELS) for badges/options and as the resolver fallback.
 export const LABELS: Record<string, LabelPair> = {
+  // EDMS — document statuses, classifications, and common types.
+  // (draft/approved/active/archived/expired/internal/restricted/contract/
+  //  receipt/deed/other already exist below and are reused as-is.)
+  review: { en: "Under Review", ar: "قيد المراجعة" },
+  public: { en: "Public", ar: "عام" },
+  confidential: { en: "Confidential", ar: "سري" },
+  invoice: { en: "Invoice", ar: "فاتورة" },
+  report: { en: "Report", ar: "تقرير" },
+  correspondence: { en: "Correspondence", ar: "مراسلات" },
+  license: { en: "License", ar: "ترخيص" },
+  identity: { en: "Identity", ar: "هوية" },
   // customer service ops
   inbound: { en: "Inbound", ar: "وارد" },
   outbound: { en: "Outbound", ar: "صادر" },

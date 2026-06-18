@@ -33378,3 +33378,1378 @@ export const CreatePrintJobBody = zod.object({
 })
 
 
+/**
+ * @summary List and search documents with filters
+ */
+export const ListDocumentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "search": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "documentType": zod.coerce.string().optional(),
+  "classification": zod.coerce.string().optional(),
+  "moduleKey": zod.coerce.string().optional(),
+  "sourceId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional(),
+  "departmentId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "fileFormat": zod.coerce.string().optional(),
+  "dateFrom": zod.coerce.string().optional(),
+  "dateTo": zod.coerce.string().optional(),
+  "includeArchived": zod.coerce.boolean().optional()
+})
+
+export const ListDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a document (metadata, optional first file version)
+ */
+
+
+
+export const CreateDocumentBody = zod.object({
+  "companyId": zod.string(),
+  "name": zod.string().min(1),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "documentType": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "moduleKey": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "sourceRef": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "creationDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "tags": zod.array(zod.string()).optional(),
+  "fileObjectPath": zod.string().optional(),
+  "fileName": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "mimeType": zod.string().optional(),
+  "fileSize": zod.number().optional(),
+  "changeSummary": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a document with its versions and links
+ */
+export const GetDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDocumentResponse = zod.object({
+  "document": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}),
+  "versions": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "versionNumber": zod.number(),
+  "fileObjectPath": zod.string(),
+  "fileName": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "mimeType": zod.string().nullish(),
+  "fileSize": zod.number().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "uploadedByUserId": zod.string().nullish(),
+  "uploadedByUserName": zod.string().nullish(),
+  "isCurrent": zod.boolean().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean().optional(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})),
+  "links": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "moduleKey": zod.string(),
+  "sourceId": zod.string(),
+  "sourceRef": zod.string().nullish(),
+  "linkedByUserId": zod.string().nullish(),
+  "linkedByUserName": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Update document metadata
+ */
+export const UpdateDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateDocumentBody = zod.object({
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "documentType": zod.string().optional(),
+  "classification": zod.string().optional(),
+  "moduleKey": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "sourceRef": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "creationDate": zod.string().optional(),
+  "expiryDate": zod.string().optional(),
+  "tags": zod.array(zod.string()).optional()
+})
+
+export const UpdateDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Owner/Super-Admin approved soft delete (no hard delete)
+ */
+export const DeleteDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteDocumentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Get a presigned URL for uploading a document file
+ */
+export const CreateDocumentUploadUrlBody = zod.object({
+  "fileName": zod.string().optional(),
+  "contentType": zod.string().optional()
+})
+
+export const CreateDocumentUploadUrlResponse = zod.object({
+  "uploadUrl": zod.string(),
+  "filePath": zod.string()
+})
+
+
+/**
+ * @summary List a document's file versions
+ */
+export const ListDocumentVersionsParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ListDocumentVersionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "versionNumber": zod.number(),
+  "fileObjectPath": zod.string(),
+  "fileName": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "mimeType": zod.string().nullish(),
+  "fileSize": zod.number().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "uploadedByUserId": zod.string().nullish(),
+  "uploadedByUserName": zod.string().nullish(),
+  "isCurrent": zod.boolean().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean().optional(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary Upload a new file version
+ */
+export const CreateDocumentVersionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const CreateDocumentVersionBody = zod.object({
+  "fileObjectPath": zod.string().min(1),
+  "fileName": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "mimeType": zod.string().optional(),
+  "fileSize": zod.number().optional(),
+  "changeSummary": zod.string().optional(),
+  "changeReason": zod.string().optional()
+})
+
+
+/**
+ * @summary Make a prior version the current one
+ */
+export const RevertDocumentVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const RevertDocumentVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Compare two versions side-by-side (metadata)
+ */
+export const CompareDocumentVersionsQueryParams = zod.object({
+  "documentId": zod.coerce.string(),
+  "a": zod.coerce.string(),
+  "b": zod.coerce.string()
+})
+
+export const CompareDocumentVersionsResponse = zod.object({
+  "a": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "versionNumber": zod.number(),
+  "fileObjectPath": zod.string(),
+  "fileName": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "mimeType": zod.string().nullish(),
+  "fileSize": zod.number().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "uploadedByUserId": zod.string().nullish(),
+  "uploadedByUserName": zod.string().nullish(),
+  "isCurrent": zod.boolean().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean().optional(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+}),
+  "b": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "versionNumber": zod.number(),
+  "fileObjectPath": zod.string(),
+  "fileName": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "mimeType": zod.string().nullish(),
+  "fileSize": zod.number().nullish(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "uploadedByUserId": zod.string().nullish(),
+  "uploadedByUserName": zod.string().nullish(),
+  "isCurrent": zod.boolean().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean().optional(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+})
+
+
+/**
+ * @summary Submit a document for endorsement
+ */
+export const SubmitDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SubmitDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const SubmitDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Endorse a submitted document (department manager)
+ */
+export const EndorseDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const EndorseDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const EndorseDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Approve a document (general manager / owner / super admin)
+ */
+export const ApproveDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const ApproveDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Reject a document in the approval workflow
+ */
+export const RejectDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RejectDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const RejectDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Archive a document (no hard delete)
+ */
+export const ArchiveDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ArchiveDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const ArchiveDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Restore an archived document
+ */
+export const RestoreDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RestoreDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const RestoreDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Mark an approved document active
+ */
+export const ActivateDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ActivateDocumentBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const ActivateDocumentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Request an Owner/Super-Admin approved delete
+ */
+export const RequestDocumentDeleteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RequestDocumentDeleteBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const RequestDocumentDeleteResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Attach signature/stamp images and signer metadata
+ */
+export const SetDocumentSignatureParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SetDocumentSignatureBody = zod.object({
+  "signatureObjectPath": zod.string().optional(),
+  "signerName": zod.string().optional(),
+  "stampObjectPath": zod.string().optional(),
+  "stampLabel": zod.string().optional()
+})
+
+export const SetDocumentSignatureResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary List a document's cross-module links
+ */
+export const ListDocumentLinksParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ListDocumentLinksResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "moduleKey": zod.string(),
+  "sourceId": zod.string(),
+  "sourceRef": zod.string().nullish(),
+  "linkedByUserId": zod.string().nullish(),
+  "linkedByUserName": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Link a document to another module record
+ */
+export const CreateDocumentLinkParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const CreateDocumentLinkBody = zod.object({
+  "moduleKey": zod.string().min(1),
+  "sourceId": zod.string().min(1),
+  "sourceRef": zod.string().optional()
+})
+
+
+/**
+ * @summary Remove a cross-module link
+ */
+export const DeleteDocumentLinkParams = zod.object({
+  "id": zod.coerce.string(),
+  "linkId": zod.coerce.string()
+})
+
+export const DeleteDocumentLinkResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List documents linked to a specific module record
+ */
+export const ListModuleDocumentsQueryParams = zod.object({
+  "moduleKey": zod.coerce.string(),
+  "sourceId": zod.coerce.string(),
+  "companyId": zod.coerce.string().optional()
+})
+
+export const ListModuleDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary EDMS dashboard totals and per-module breakdown
+ */
+export const GetDocumentsDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetDocumentsDashboardResponse = zod.object({
+  "totals": zod.object({
+  "total": zod.number(),
+  "active": zod.number(),
+  "archived": zod.number(),
+  "expired": zod.number(),
+  "pendingApproval": zod.number(),
+  "recentlyAdded": zod.number()
+}),
+  "byModule": zod.array(zod.object({
+  "moduleKey": zod.string(),
+  "count": zod.number()
+})),
+  "recent": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary On-demand scan for near-expiry/expired documents (emits notifications)
+ */
+export const ScanDocumentExpiryBody = zod.object({
+  "companyId": zod.string().optional(),
+  "nearDays": zod.number().optional()
+})
+
+export const ScanDocumentExpiryResponse = zod.object({
+  "scanned": zod.number(),
+  "expired": zod.number(),
+  "nearExpiry": zod.number(),
+  "notified": zod.number()
+})
+
+

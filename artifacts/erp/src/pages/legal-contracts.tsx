@@ -20,6 +20,7 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -144,6 +145,7 @@ export default function LegalContractsPage() {
               {t("legal.activate")}
             </Button>
           )}
+          <DocumentsRowAction moduleKey="legal_contracts" sourceId={r.id} />
         </>
       )}
     />

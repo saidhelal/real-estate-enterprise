@@ -23355,6 +23355,512 @@ paths:
               schema:
                 $ref: "#/components/schemas/PrintJobResult"
 
+  /documents:
+    get:
+      operationId: listDocuments
+      tags: [documents]
+      summary: List and search documents with filters
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: documentType, in: query, required: false, schema: { type: string } }
+        - { name: classification, in: query, required: false, schema: { type: string } }
+        - { name: moduleKey, in: query, required: false, schema: { type: string } }
+        - { name: sourceId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+        - { name: departmentId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: fileFormat, in: query, required: false, schema: { type: string } }
+        - { name: dateFrom, in: query, required: false, schema: { type: string } }
+        - { name: dateTo, in: query, required: false, schema: { type: string } }
+        - { name: includeArchived, in: query, required: false, schema: { type: boolean } }
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentListResponse"
+    post:
+      operationId: createDocument
+      tags: [documents]
+      summary: Create a document (metadata, optional first file version)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /documents/{id}:
+    get:
+      operationId: getDocument
+      tags: [documents]
+      summary: Get a document with its versions and links
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Document
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentDetail"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateDocument
+      tags: [documents]
+      summary: Update document metadata
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteDocument
+      tags: [documents]
+      summary: Owner/Super-Admin approved soft delete (no hard delete)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "404":
+          description: Not found
+
+  /document-uploads:
+    post:
+      operationId: createDocumentUploadUrl
+      tags: [documents]
+      summary: Get a presigned URL for uploading a document file
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentUploadInput"
+      responses:
+        "200":
+          description: Upload URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentUploadResponse"
+
+  /documents/{id}/versions:
+    get:
+      operationId: listDocumentVersions
+      tags: [documents]
+      summary: List a document's file versions
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Versions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentVersionListResponse"
+    post:
+      operationId: createDocumentVersion
+      tags: [documents]
+      summary: Upload a new file version
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentVersionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentVersion"
+        "404":
+          description: Not found
+
+  /documents/{id}/versions/{versionId}/revert:
+    post:
+      operationId: revertDocumentVersion
+      tags: [documents]
+      summary: Make a prior version the current one
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Reverted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/versions/compare:
+    get:
+      operationId: compareDocumentVersions
+      tags: [documents]
+      summary: Compare two versions side-by-side (metadata)
+      parameters:
+        - { name: documentId, in: query, required: true, schema: { type: string } }
+        - { name: a, in: query, required: true, schema: { type: string } }
+        - { name: b, in: query, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Comparison
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentVersionCompare"
+        "404":
+          description: Not found
+
+  /documents/{id}/submit:
+    post:
+      operationId: submitDocument
+      tags: [documents]
+      summary: Submit a document for endorsement
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/endorse:
+    post:
+      operationId: endorseDocument
+      tags: [documents]
+      summary: Endorse a submitted document (department manager)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Endorsed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/approve:
+    post:
+      operationId: approveDocument
+      tags: [documents]
+      summary: Approve a document (general manager / owner / super admin)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/reject:
+    post:
+      operationId: rejectDocument
+      tags: [documents]
+      summary: Reject a document in the approval workflow
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/archive:
+    post:
+      operationId: archiveDocument
+      tags: [documents]
+      summary: Archive a document (no hard delete)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/restore:
+    post:
+      operationId: restoreDocument
+      tags: [documents]
+      summary: Restore an archived document
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Restored
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/activate:
+    post:
+      operationId: activateDocument
+      tags: [documents]
+      summary: Mark an approved document active
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Activated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/request-delete:
+    post:
+      operationId: requestDocumentDelete
+      tags: [documents]
+      summary: Request an Owner/Super-Admin approved delete
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentWorkflowAction"
+      responses:
+        "200":
+          description: Requested
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/signature:
+    post:
+      operationId: setDocumentSignature
+      tags: [documents]
+      summary: Attach signature/stamp images and signer metadata
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentSignatureInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+
+  /documents/{id}/links:
+    get:
+      operationId: listDocumentLinks
+      tags: [documents]
+      summary: List a document's cross-module links
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Links
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentLinkListResponse"
+    post:
+      operationId: createDocumentLink
+      tags: [documents]
+      summary: Link a document to another module record
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentLinkInput"
+      responses:
+        "201":
+          description: Linked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentLink"
+        "404":
+          description: Not found
+
+  /documents/{id}/links/{linkId}:
+    delete:
+      operationId: deleteDocumentLink
+      tags: [documents]
+      summary: Remove a cross-module link
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: linkId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "404":
+          description: Not found
+
+  /module-documents:
+    get:
+      operationId: listModuleDocuments
+      tags: [documents]
+      summary: List documents linked to a specific module record
+      parameters:
+        - { name: moduleKey, in: query, required: true, schema: { type: string } }
+        - { name: sourceId, in: query, required: true, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentListResponse"
+
+  /documents-dashboard:
+    get:
+      operationId: getDocumentsDashboard
+      tags: [documents]
+      summary: EDMS dashboard totals and per-module breakdown
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentsDashboard"
+
+  /documents-expiry-scan:
+    post:
+      operationId: scanDocumentExpiry
+      tags: [documents]
+      summary: On-demand scan for near-expiry/expired documents (emits notifications)
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentExpiryScanInput"
+      responses:
+        "200":
+          description: Scan result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentExpiryScanResult"
+
 components:
   parameters:
     IdParam:
@@ -38253,3 +38759,286 @@ components:
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }
+    Document:
+      type: object
+      required: [id, companyId, documentNumber, name, documentType, classification, status, isActive, isDeleted, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        documentNumber: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        documentType: { type: string }
+        classification: { type: string }
+        moduleKey: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        sourceRef: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        customerId: { type: ["string", "null"] }
+        unitId: { type: ["string", "null"] }
+        departmentId: { type: ["string", "null"] }
+        branchId: { type: ["string", "null"] }
+        status: { type: string }
+        currentVersionId: { type: ["string", "null"] }
+        currentVersionNumber: { type: ["integer", "null"] }
+        currentFileObjectPath: { type: ["string", "null"] }
+        currentFileName: { type: ["string", "null"] }
+        currentFileFormat: { type: ["string", "null"] }
+        currentMimeType: { type: ["string", "null"] }
+        currentFileSize: { type: ["integer", "null"] }
+        versionCount: { type: ["integer", "null"] }
+        creationDate: { type: ["string", "null"] }
+        expiryDate: { type: ["string", "null"] }
+        tags: { type: ["array", "null"], items: { type: string } }
+        qrValue: { type: ["string", "null"] }
+        barcodeValue: { type: ["string", "null"] }
+        signatureObjectPath: { type: ["string", "null"] }
+        signerName: { type: ["string", "null"] }
+        signedAt: { type: ["string", "null"] }
+        stampObjectPath: { type: ["string", "null"] }
+        stampLabel: { type: ["string", "null"] }
+        ownerUserId: { type: ["string", "null"] }
+        createdByUserId: { type: ["string", "null"] }
+        createdByUserName: { type: ["string", "null"] }
+        lastEditedByUserId: { type: ["string", "null"] }
+        lastEditedByUserName: { type: ["string", "null"] }
+        submittedByUserName: { type: ["string", "null"] }
+        submittedAt: { type: ["string", "null"] }
+        endorsedByUserName: { type: ["string", "null"] }
+        endorsedAt: { type: ["string", "null"] }
+        approvedByUserName: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        rejectedByUserName: { type: ["string", "null"] }
+        rejectedAt: { type: ["string", "null"] }
+        rejectReason: { type: ["string", "null"] }
+        archivedAt: { type: ["string", "null"] }
+        deleteRequestedAt: { type: ["string", "null"] }
+        deleteReason: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        isDeleted: { type: boolean }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    DocumentVersion:
+      type: object
+      required: [id, companyId, documentId, versionNumber, fileObjectPath, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        documentId: { type: string }
+        versionNumber: { type: integer }
+        fileObjectPath: { type: string }
+        fileName: { type: ["string", "null"] }
+        fileFormat: { type: ["string", "null"] }
+        mimeType: { type: ["string", "null"] }
+        fileSize: { type: ["integer", "null"] }
+        changeSummary: { type: ["string", "null"] }
+        changeReason: { type: ["string", "null"] }
+        uploadedByUserId: { type: ["string", "null"] }
+        uploadedByUserName: { type: ["string", "null"] }
+        isCurrent: { type: ["boolean", "null"] }
+        isActive: { type: boolean }
+        isDeleted: { type: boolean }
+        createdAt: { type: string }
+        updatedAt: { type: ["string", "null"] }
+
+    DocumentLink:
+      type: object
+      required: [id, companyId, documentId, moduleKey, sourceId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        documentId: { type: string }
+        moduleKey: { type: string }
+        sourceId: { type: string }
+        sourceRef: { type: ["string", "null"] }
+        linkedByUserId: { type: ["string", "null"] }
+        linkedByUserName: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DocumentDetail:
+      type: object
+      required: [document, versions, links]
+      properties:
+        document: { $ref: "#/components/schemas/Document" }
+        versions:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentVersion" }
+        links:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentLink" }
+
+    DocumentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Document" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    DocumentVersionListResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentVersion" }
+
+    DocumentLinkListResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentLink" }
+
+    DocumentInput:
+      type: object
+      required: [companyId, name]
+      properties:
+        companyId: { type: string }
+        name: { type: string, minLength: 1 }
+        nameAr: { type: string }
+        description: { type: string }
+        documentType: { type: string }
+        classification: { type: string }
+        moduleKey: { type: string }
+        sourceId: { type: string }
+        sourceRef: { type: string }
+        projectId: { type: string }
+        customerId: { type: string }
+        unitId: { type: string }
+        departmentId: { type: string }
+        branchId: { type: string }
+        creationDate: { type: string }
+        expiryDate: { type: string }
+        tags: { type: array, items: { type: string } }
+        fileObjectPath: { type: string }
+        fileName: { type: string }
+        fileFormat: { type: string }
+        mimeType: { type: string }
+        fileSize: { type: integer }
+        changeSummary: { type: string }
+
+    DocumentUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        documentType: { type: string }
+        classification: { type: string }
+        moduleKey: { type: string }
+        sourceId: { type: string }
+        sourceRef: { type: string }
+        projectId: { type: string }
+        customerId: { type: string }
+        unitId: { type: string }
+        departmentId: { type: string }
+        branchId: { type: string }
+        creationDate: { type: string }
+        expiryDate: { type: string }
+        tags: { type: array, items: { type: string } }
+
+    DocumentVersionInput:
+      type: object
+      required: [fileObjectPath]
+      properties:
+        fileObjectPath: { type: string, minLength: 1 }
+        fileName: { type: string }
+        fileFormat: { type: string }
+        mimeType: { type: string }
+        fileSize: { type: integer }
+        changeSummary: { type: string }
+        changeReason: { type: string }
+
+    DocumentLinkInput:
+      type: object
+      required: [moduleKey, sourceId]
+      properties:
+        moduleKey: { type: string, minLength: 1 }
+        sourceId: { type: string, minLength: 1 }
+        sourceRef: { type: string }
+
+    DocumentSignatureInput:
+      type: object
+      properties:
+        signatureObjectPath: { type: string }
+        signerName: { type: string }
+        stampObjectPath: { type: string }
+        stampLabel: { type: string }
+
+    DocumentWorkflowAction:
+      type: object
+      properties:
+        reason: { type: string }
+
+    DocumentUploadInput:
+      type: object
+      properties:
+        fileName: { type: string }
+        contentType: { type: string }
+
+    DocumentUploadResponse:
+      type: object
+      required: [uploadUrl, filePath]
+      properties:
+        uploadUrl: { type: string }
+        filePath: { type: string }
+
+    DocumentVersionCompare:
+      type: object
+      required: [a, b]
+      properties:
+        a: { $ref: "#/components/schemas/DocumentVersion" }
+        b: { $ref: "#/components/schemas/DocumentVersion" }
+
+    DocumentsDashboardTotals:
+      type: object
+      required: [total, active, archived, expired, pendingApproval, recentlyAdded]
+      properties:
+        total: { type: integer }
+        active: { type: integer }
+        archived: { type: integer }
+        expired: { type: integer }
+        pendingApproval: { type: integer }
+        recentlyAdded: { type: integer }
+
+    DocumentModuleCount:
+      type: object
+      required: [moduleKey, count]
+      properties:
+        moduleKey: { type: string }
+        count: { type: integer }
+
+    DocumentsDashboard:
+      type: object
+      required: [totals, byModule, recent]
+      properties:
+        totals: { $ref: "#/components/schemas/DocumentsDashboardTotals" }
+        byModule:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentModuleCount" }
+        recent:
+          type: array
+          items: { $ref: "#/components/schemas/Document" }
+
+    DocumentExpiryScanInput:
+      type: object
+      properties:
+        companyId: { type: string }
+        nearDays: { type: integer }
+
+    DocumentExpiryScanResult:
+      type: object
+      required: [scanned, expired, nearExpiry, notified]
+      properties:
+        scanned: { type: integer }
+        expired: { type: integer }
+        nearExpiry: { type: integer }
+        notified: { type: integer }

@@ -335,6 +335,9 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "policies", label: "Policies" },
   // Forms & Printing — central Print Engine surfaced inside every module.
   { module: "formTemplates", label: "Forms & Printing", extraActions: ["submit", "endorse", "approve", "reject", "disable", "enable", "activate", "print"] },
+  // Electronic Document Management System (EDMS) — central document repository
+  // surfaced across every module. viewAll bypasses the per-document scope filter.
+  { module: "documents", label: "Document Management (EDMS)", extraActions: ["submit", "endorse", "approve", "reject", "activate", "archive", "restore", "requestDelete", "viewAll"] },
   // Insurance Management (standalone module)
   { module: "employeeInsurances", label: "Employee Insurances" },
   { module: "insuranceForms", label: "Insurance Forms" },

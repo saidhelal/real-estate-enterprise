@@ -44,6 +44,7 @@ import {
   Search,
   Package,
   FileBox,
+  FolderArchive,
   Database,
   Briefcase,
   ShieldCheck,
@@ -91,6 +92,7 @@ const MODULES: ModuleCard[] = [
   { titleKey: "home.mod.executive_oversight", icon: Gauge, href: "/executive-oversight", accent: "text-purple-600 bg-purple-500/10 dark:text-purple-400" },
   { titleKey: "home.mod.reports", icon: BarChart3, href: "/executive-dashboard", accent: "text-fuchsia-600 bg-fuchsia-500/10 dark:text-fuchsia-400" },
   { titleKey: "home.mod.administration", icon: Settings, href: "/settings", accent: "text-slate-600 bg-slate-500/10 dark:text-slate-300" },
+  { titleKey: "home.mod.edms", icon: FolderArchive, href: "/documents-dashboard", accent: "text-blue-600 bg-blue-500/10 dark:text-blue-400" },
   { titleKey: "home.mod.system_administration", icon: Database, href: "/master-data", accent: "text-zinc-600 bg-zinc-500/10 dark:text-zinc-300" },
 ];
 

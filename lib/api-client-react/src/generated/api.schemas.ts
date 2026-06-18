@@ -14262,6 +14262,301 @@ export interface PrintJobListResponse {
   pageSize: number;
 }
 
+export interface Document {
+  id: string;
+  companyId: string;
+  documentNumber: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  /** @nullable */
+  description?: string | null;
+  documentType: string;
+  classification: string;
+  /** @nullable */
+  moduleKey?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  /** @nullable */
+  sourceRef?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  customerId?: string | null;
+  /** @nullable */
+  unitId?: string | null;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  branchId?: string | null;
+  status: string;
+  /** @nullable */
+  currentVersionId?: string | null;
+  /** @nullable */
+  currentVersionNumber?: number | null;
+  /** @nullable */
+  currentFileObjectPath?: string | null;
+  /** @nullable */
+  currentFileName?: string | null;
+  /** @nullable */
+  currentFileFormat?: string | null;
+  /** @nullable */
+  currentMimeType?: string | null;
+  /** @nullable */
+  currentFileSize?: number | null;
+  /** @nullable */
+  versionCount?: number | null;
+  /** @nullable */
+  creationDate?: string | null;
+  /** @nullable */
+  expiryDate?: string | null;
+  /** @nullable */
+  tags?: string[] | null;
+  /** @nullable */
+  qrValue?: string | null;
+  /** @nullable */
+  barcodeValue?: string | null;
+  /** @nullable */
+  signatureObjectPath?: string | null;
+  /** @nullable */
+  signerName?: string | null;
+  /** @nullable */
+  signedAt?: string | null;
+  /** @nullable */
+  stampObjectPath?: string | null;
+  /** @nullable */
+  stampLabel?: string | null;
+  /** @nullable */
+  ownerUserId?: string | null;
+  /** @nullable */
+  createdByUserId?: string | null;
+  /** @nullable */
+  createdByUserName?: string | null;
+  /** @nullable */
+  lastEditedByUserId?: string | null;
+  /** @nullable */
+  lastEditedByUserName?: string | null;
+  /** @nullable */
+  submittedByUserName?: string | null;
+  /** @nullable */
+  submittedAt?: string | null;
+  /** @nullable */
+  endorsedByUserName?: string | null;
+  /** @nullable */
+  endorsedAt?: string | null;
+  /** @nullable */
+  approvedByUserName?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  rejectedByUserName?: string | null;
+  /** @nullable */
+  rejectedAt?: string | null;
+  /** @nullable */
+  rejectReason?: string | null;
+  /** @nullable */
+  archivedAt?: string | null;
+  /** @nullable */
+  deleteRequestedAt?: string | null;
+  /** @nullable */
+  deleteReason?: string | null;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DocumentVersion {
+  id: string;
+  companyId: string;
+  documentId: string;
+  versionNumber: number;
+  fileObjectPath: string;
+  /** @nullable */
+  fileName?: string | null;
+  /** @nullable */
+  fileFormat?: string | null;
+  /** @nullable */
+  mimeType?: string | null;
+  /** @nullable */
+  fileSize?: number | null;
+  /** @nullable */
+  changeSummary?: string | null;
+  /** @nullable */
+  changeReason?: string | null;
+  /** @nullable */
+  uploadedByUserId?: string | null;
+  /** @nullable */
+  uploadedByUserName?: string | null;
+  /** @nullable */
+  isCurrent?: boolean | null;
+  isActive: boolean;
+  isDeleted?: boolean;
+  createdAt: string;
+  /** @nullable */
+  updatedAt?: string | null;
+}
+
+export interface DocumentLink {
+  id: string;
+  companyId: string;
+  documentId: string;
+  moduleKey: string;
+  sourceId: string;
+  /** @nullable */
+  sourceRef?: string | null;
+  /** @nullable */
+  linkedByUserId?: string | null;
+  /** @nullable */
+  linkedByUserName?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DocumentDetail {
+  document: Document;
+  versions: DocumentVersion[];
+  links: DocumentLink[];
+}
+
+export interface DocumentListResponse {
+  data: Document[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DocumentVersionListResponse {
+  data: DocumentVersion[];
+}
+
+export interface DocumentLinkListResponse {
+  data: DocumentLink[];
+}
+
+export interface DocumentInput {
+  companyId: string;
+  /** @minLength 1 */
+  name: string;
+  nameAr?: string;
+  description?: string;
+  documentType?: string;
+  classification?: string;
+  moduleKey?: string;
+  sourceId?: string;
+  sourceRef?: string;
+  projectId?: string;
+  customerId?: string;
+  unitId?: string;
+  departmentId?: string;
+  branchId?: string;
+  creationDate?: string;
+  expiryDate?: string;
+  tags?: string[];
+  fileObjectPath?: string;
+  fileName?: string;
+  fileFormat?: string;
+  mimeType?: string;
+  fileSize?: number;
+  changeSummary?: string;
+}
+
+export interface DocumentUpdate {
+  name?: string;
+  nameAr?: string;
+  description?: string;
+  documentType?: string;
+  classification?: string;
+  moduleKey?: string;
+  sourceId?: string;
+  sourceRef?: string;
+  projectId?: string;
+  customerId?: string;
+  unitId?: string;
+  departmentId?: string;
+  branchId?: string;
+  creationDate?: string;
+  expiryDate?: string;
+  tags?: string[];
+}
+
+export interface DocumentVersionInput {
+  /** @minLength 1 */
+  fileObjectPath: string;
+  fileName?: string;
+  fileFormat?: string;
+  mimeType?: string;
+  fileSize?: number;
+  changeSummary?: string;
+  changeReason?: string;
+}
+
+export interface DocumentLinkInput {
+  /** @minLength 1 */
+  moduleKey: string;
+  /** @minLength 1 */
+  sourceId: string;
+  sourceRef?: string;
+}
+
+export interface DocumentSignatureInput {
+  signatureObjectPath?: string;
+  signerName?: string;
+  stampObjectPath?: string;
+  stampLabel?: string;
+}
+
+export interface DocumentWorkflowAction {
+  reason?: string;
+}
+
+export interface DocumentUploadInput {
+  fileName?: string;
+  contentType?: string;
+}
+
+export interface DocumentUploadResponse {
+  uploadUrl: string;
+  filePath: string;
+}
+
+export interface DocumentVersionCompare {
+  a: DocumentVersion;
+  b: DocumentVersion;
+}
+
+export interface DocumentsDashboardTotals {
+  total: number;
+  active: number;
+  archived: number;
+  expired: number;
+  pendingApproval: number;
+  recentlyAdded: number;
+}
+
+export interface DocumentModuleCount {
+  moduleKey: string;
+  count: number;
+}
+
+export interface DocumentsDashboard {
+  totals: DocumentsDashboardTotals;
+  byModule: DocumentModuleCount[];
+  recent: Document[];
+}
+
+export interface DocumentExpiryScanInput {
+  companyId?: string;
+  nearDays?: number;
+}
+
+export interface DocumentExpiryScanResult {
+  scanned: number;
+  expired: number;
+  nearExpiry: number;
+  notified: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -16423,5 +16718,42 @@ companyId?: string;
 moduleKey?: string;
 templateId?: string;
 entityId?: string;
+};
+
+export type ListDocumentsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+search?: string;
+status?: string;
+documentType?: string;
+classification?: string;
+moduleKey?: string;
+sourceId?: string;
+customerId?: string;
+projectId?: string;
+unitId?: string;
+departmentId?: string;
+branchId?: string;
+fileFormat?: string;
+dateFrom?: string;
+dateTo?: string;
+includeArchived?: boolean;
+};
+
+export type CompareDocumentVersionsParams = {
+documentId: string;
+a: string;
+b: string;
+};
+
+export type ListModuleDocumentsParams = {
+moduleKey: string;
+sourceId: string;
+companyId?: string;
+};
+
+export type GetDocumentsDashboardParams = {
+companyId?: string;
 };
 

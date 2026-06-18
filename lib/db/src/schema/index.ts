@@ -36,3 +36,4 @@ export * from "./master-data";
 export * from "./governance";
 export * from "./notifications";
 export * from "./printing";
+export * from "./documents";

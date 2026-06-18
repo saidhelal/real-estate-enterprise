@@ -4,6 +4,7 @@
 - [Cookie-auth login redirect](cookie-auth-login-redirect.md) — login 200 but stuck on /login: invalidate current-user query before navigating.
 - [RBAC enforcement](rbac-enforcement.md) — requireAuth is not authorization; add requirePermission per-handler and smoke-test with a role-less user.
 - [Print/export XSS](print-export-xss.md) — client-side document.write print views must HTML-escape every stored field interpolated into the template.
+- [Inline preview XSS](inline-preview-xss.md) — uploaded-file inline preview/serve must force active types (html/svg/xml/js) to octet-stream+attachment+nosniff and never iframe them same-origin.
 - [Idempotent action endpoints](transactional-action-endpoints.md) — convert/generate-style POSTs: row-lock + re-check inside the tx, respond 404/409 via a conflict var after commit.
 - [Finance ledger integrity](finance-ledger-integrity.md) — money-moving records: parameterized balance SQL, immutable financial+status fields on PATCH, transactional delete reversal, atomic schedule updates; gate posting on immutable status.
 - [Generic JSX breaks dev plugin](generic-jsx-cartographer.md) — `<Comp<T>>` typechecks but 500s in Vite; drop the type arg, infer from props.
@@ -36,3 +37,4 @@
 - [e2e HMR false positives](e2e-hmr-false-positive.md) — single-page blank-panel e2e failures during concurrent edits are usually Vite HMR reloads, not real bugs; re-test on a stable build.
 - [Executive Oversight module](executive-oversight.md) — cross-department KPI views = ONE read-only GET aggregating existing tables (no new schema); reuse per-module dashboard query patterns.
 - [Central Print Engine](print-engine.md) — per-module Forms & Printing surfaced via RAW_NAV_GROUPS→NAV_GROUPS derivation + one /forms-printing/:moduleKey route; client must DOMPurify+sandbox template HTML (server only escapes tokens); createFormUploadUrl mutation vars are void.
+- [Long-running commands via workflow](long-running-commands-via-workflow.md) — codegen/cold-tsc exceed bash 120s & get reaped if backgrounded; run as a temp workflow + poll getWorkflowStatus.

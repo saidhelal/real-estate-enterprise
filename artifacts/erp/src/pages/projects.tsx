@@ -13,6 +13,7 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
@@ -57,6 +58,7 @@ export default function ProjectsPage() {
       useDelete={useDeleteProject}
       getListQueryKey={getListProjectsQueryKey}
       companyId={companyId}
+      rowActions={(r) => <DocumentsRowAction moduleKey="projects" sourceId={r.id} />}
     />
   );
 }

@@ -11,6 +11,10 @@ import { AppShell } from "@/components/layout/app-shell";
 import Login from "@/pages/login";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
+import DocumentsPage from "@/pages/documents";
+import DocumentDetailPage from "@/pages/document-detail";
+import DocumentsDashboardPage from "@/pages/documents-dashboard";
+import DocumentApprovalsPage from "@/pages/document-approvals";
 import UsersPage from "@/pages/users";
 import RolesPage from "@/pages/roles";
 import MasterDataPage from "@/pages/master-data";
@@ -329,6 +333,10 @@ function Router() {
             <Route path="/dynamic-lists" component={DynamicListsPage} />
             <Route path="/change-password" component={ChangePasswordPage} />
             <Route path="/approvals" component={ApprovalsPage} />
+            <Route path="/documents-dashboard" component={DocumentsDashboardPage} />
+            <Route path="/document-approvals" component={DocumentApprovalsPage} />
+            <Route path="/documents/:id" component={DocumentDetailPage} />
+            <Route path="/documents" component={DocumentsPage} />
 
             <Route path="/projects" component={ProjectsPage} />
             <Route path="/phases" component={PhasesPage} />

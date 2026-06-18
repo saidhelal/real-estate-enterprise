@@ -41,6 +41,11 @@ const RAW_NAV_GROUPS = [
     { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
     { href: "/notifications", icon: Bell, labelKey: "nav.notifications_center" },
   ]},
+  { titleKey: "nav.group.edms", items: [
+    { href: "/documents-dashboard", icon: LayoutDashboard, labelKey: "nav.documents_dashboard" },
+    { href: "/documents", icon: FolderArchive, labelKey: "nav.documents" },
+    { href: "/document-approvals", icon: Inbox, labelKey: "nav.document_approvals" },
+  ]},
   { titleKey: "nav.group.sales_crm", items: [
     { href: "/global-search", icon: Search, labelKey: "nav.global_search" },
     { href: "/customers", icon: Users, labelKey: "nav.customers" },

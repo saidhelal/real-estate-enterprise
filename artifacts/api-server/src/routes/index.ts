@@ -41,6 +41,7 @@ import executiveOversightRouter from "./executive-oversight";
 import formTemplatesRouter from "./form-templates";
 import printJobsRouter from "./print-jobs";
 import portalRouter from "./portal";
+import documentsRouter from "./documents";
 
 const router: IRouter = Router();
 
@@ -87,6 +88,7 @@ router.use(masterDataRouter);
 router.use(changeRequestsRouter);
 router.use(notificationsRouter);
 router.use(executiveOversightRouter);
+router.use(documentsRouter);
 router.use(formTemplatesRouter);
 router.use(printJobsRouter);
 
