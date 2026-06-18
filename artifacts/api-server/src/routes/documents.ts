@@ -54,6 +54,8 @@ import {
   loadVersions,
   notifyUser,
   scanDocumentExpiry,
+  claimObjectOwnership,
+  ObjectClaimError,
 } from "../lib/edms";
 
 type Row = Record<string, unknown>;
@@ -166,6 +168,15 @@ router.get("/documents", requirePermission(`${MODULE}.view`), async (req, res): 
   if (dateFrom) filters.push(gte(documentsTable.creationDate, dateFrom));
   if (dateTo) filters.push(lte(documentsTable.creationDate, dateTo));
 
+  // Filter by the CURRENT version's file format in SQL (correlated EXISTS) so
+  // counts/pagination stay accurate — never post-filter the fetched page.
+  const fileFormat = qStr(q, "fileFormat");
+  if (fileFormat) {
+    filters.push(
+      sql`exists (select 1 from ${documentVersionsTable} where ${documentVersionsTable.id} = ${documentsTable.currentVersionId} and ${documentVersionsTable.fileFormat} = ${fileFormat})`,
+    );
+  }
+
   const scope = documentScopeFilter(req.authUser!);
   if (scope) filters.push(scope);
 
@@ -202,10 +213,7 @@ router.get("/documents", requirePermission(`${MODULE}.view`), async (req, res): 
     byDoc.set(key, list);
   }
 
-  // fileFormat filter is applied against the live version after enrichment.
-  const fileFormat = qStr(q, "fileFormat");
-  let data = rows.map((r) => presentDocument(r, byDoc.get(String(r.id)) ?? []));
-  if (fileFormat) data = data.filter((d) => d.currentFileFormat === fileFormat);
+  const data = rows.map((r) => presentDocument(r, byDoc.get(String(r.id)) ?? []));
 
   res.json(
     ListDocumentsResponse.parse({
@@ -227,7 +235,9 @@ router.post("/documents", requirePermission(`${MODULE}.create`), async (req, res
   const me = actor(req);
   const documentNumber = await generateDocumentNumber(body.companyId);
 
-  const { doc, versions } = await db.transaction(async (tx) => {
+  let txResult: { doc: Row; versions: Row[] };
+  try {
+    txResult = await db.transaction(async (tx) => {
     const inserted = (await tx
       .insert(documentsTable)
       .values({
@@ -260,14 +270,15 @@ router.post("/documents", requirePermission(`${MODULE}.create`), async (req, res
     const created = inserted[0];
 
     let vlist: Row[] = [];
-    if (body.fileObjectPath) {
+    const fileObjectPath = body.fileObjectPath;
+    if (fileObjectPath) {
       const ver = (await tx
         .insert(documentVersionsTable)
         .values({
           companyId: body.companyId,
           documentId: String(created.id),
           versionNumber: 1,
-          fileObjectPath: body.fileObjectPath,
+          fileObjectPath,
           fileName: body.fileName ?? null,
           fileFormat: body.fileFormat ?? null,
           mimeType: body.mimeType ?? null,
@@ -281,15 +292,27 @@ router.post("/documents", requirePermission(`${MODULE}.create`), async (req, res
         .update(documentsTable)
         .set({ currentVersionId: String(ver[0].id) })
         .where(eq(documentsTable.id, String(created.id)));
-      await tx
-        .update(documentObjectOwnersTable)
-        .set({ documentId: String(created.id), companyId: body.companyId })
-        .where(eq(documentObjectOwnersTable.objectPath, body.fileObjectPath));
+      const claim = await claimObjectOwnership(tx, {
+        objectPath: fileObjectPath,
+        documentId: String(created.id),
+        companyId: body.companyId,
+        purpose: "version",
+        actorId: me.id,
+      });
+      if (!claim.ok) throw new ObjectClaimError(claim.reason);
       vlist = ver;
       created.currentVersionId = String(ver[0].id);
     }
     return { doc: created, versions: vlist };
-  });
+    });
+  } catch (e) {
+    if (e instanceof ObjectClaimError) {
+      res.status(e.status).json({ error: e.message });
+      return;
+    }
+    throw e;
+  }
+  const { doc, versions } = txResult;
 
   await recordAudit(req, {
     action: "create",
@@ -650,14 +673,17 @@ router.post(
     const nextNumber =
       existing.reduce((max, v) => Math.max(max, Number(v.versionNumber) || 0), 0) + 1;
 
-    const row = await db.transaction(async (tx) => {
+    const fileObjectPath = body.fileObjectPath;
+    let row: Row;
+    try {
+      row = await db.transaction(async (tx) => {
       const ver = (await tx
         .insert(documentVersionsTable)
         .values({
           companyId: String(doc.companyId),
           documentId: id,
           versionNumber: nextNumber,
-          fileObjectPath: body.fileObjectPath,
+          fileObjectPath,
           fileName: body.fileName ?? null,
           fileFormat: body.fileFormat ?? null,
           mimeType: body.mimeType ?? null,
@@ -676,12 +702,25 @@ router.post(
           lastEditedByUserName: me.name,
         })
         .where(eq(documentsTable.id, id));
-      await tx
-        .update(documentObjectOwnersTable)
-        .set({ documentId: id, companyId: String(doc.companyId) })
-        .where(eq(documentObjectOwnersTable.objectPath, body.fileObjectPath));
+      if (fileObjectPath) {
+        const claim = await claimObjectOwnership(tx, {
+          objectPath: fileObjectPath,
+          documentId: id,
+          companyId: String(doc.companyId),
+          purpose: "version",
+          actorId: me.id,
+        });
+        if (!claim.ok) throw new ObjectClaimError(claim.reason);
+      }
       return ver[0];
-    });
+      });
+    } catch (e) {
+      if (e instanceof ObjectClaimError) {
+        res.status(e.status).json({ error: e.message });
+        return;
+      }
+      throw e;
+    }
 
     await recordAudit(req, {
       action: "create-version",
@@ -1080,29 +1119,55 @@ router.post(
     }
     const body = parsed.data;
     const me = actor(req);
-    const update: Record<string, unknown> = { signedAt: new Date() };
-    if (body.signatureObjectPath !== undefined) {
-      update.signatureObjectPath = body.signatureObjectPath;
-      await db
-        .update(documentObjectOwnersTable)
-        .set({ documentId: id, companyId: String(existing.companyId), purpose: "signature" })
-        .where(eq(documentObjectOwnersTable.objectPath, body.signatureObjectPath));
-    }
-    if (body.signerName !== undefined) update.signerName = body.signerName || me.name;
-    if (body.stampObjectPath !== undefined) {
-      update.stampObjectPath = body.stampObjectPath;
-      await db
-        .update(documentObjectOwnersTable)
-        .set({ documentId: id, companyId: String(existing.companyId), purpose: "stamp" })
-        .where(eq(documentObjectOwnersTable.objectPath, body.stampObjectPath));
-    }
-    if (body.stampLabel !== undefined) update.stampLabel = body.stampLabel;
 
-    const row = ((await db
-      .update(documentsTable)
-      .set(update)
-      .where(eq(documentsTable.id, id))
-      .returning()) as Row[])[0];
+    const signatureObjectPath = body.signatureObjectPath;
+    const stampObjectPath = body.stampObjectPath;
+    let row: Row;
+    try {
+      row = await db.transaction(async (tx) => {
+        const update: Record<string, unknown> = { signedAt: new Date() };
+        if (signatureObjectPath !== undefined) {
+          if (signatureObjectPath) {
+            const claim = await claimObjectOwnership(tx, {
+              objectPath: signatureObjectPath,
+              documentId: id,
+              companyId: String(existing.companyId),
+              purpose: "signature",
+              actorId: me.id,
+            });
+            if (!claim.ok) throw new ObjectClaimError(claim.reason);
+          }
+          update.signatureObjectPath = signatureObjectPath;
+        }
+        if (body.signerName !== undefined) update.signerName = body.signerName || me.name;
+        if (stampObjectPath !== undefined) {
+          if (stampObjectPath) {
+            const claim = await claimObjectOwnership(tx, {
+              objectPath: stampObjectPath,
+              documentId: id,
+              companyId: String(existing.companyId),
+              purpose: "stamp",
+              actorId: me.id,
+            });
+            if (!claim.ok) throw new ObjectClaimError(claim.reason);
+          }
+          update.stampObjectPath = stampObjectPath;
+        }
+        if (body.stampLabel !== undefined) update.stampLabel = body.stampLabel;
+
+        return ((await tx
+          .update(documentsTable)
+          .set(update)
+          .where(eq(documentsTable.id, id))
+          .returning()) as Row[])[0];
+      });
+    } catch (e) {
+      if (e instanceof ObjectClaimError) {
+        res.status(e.status).json({ error: e.message });
+        return;
+      }
+      throw e;
+    }
     await recordAudit(req, {
       action: "sign",
       entity: "document",

@@ -3,10 +3,85 @@ import {
   db,
   documentsTable,
   documentVersionsTable,
+  documentObjectOwnersTable,
   notificationsTable,
 } from "@workspace/db";
 import type { AuthUser } from "./auth";
 import { serializeRow } from "./serialize";
+
+/** A Drizzle transaction handle (or the base db) for owner-claim writes. */
+type DbLike = Parameters<Parameters<typeof db.transaction>[0]>[0] | typeof db;
+
+export type ObjectClaimResult =
+  | { ok: true }
+  | { ok: false; reason: "missing" | "forbidden" | "bound" };
+
+/**
+ * Bind a server-minted object path to a document immutably. The owner row is
+ * created at upload-presign time with `documentId = null` and the minting
+ * user's id. Claiming enforces that the path:
+ *   - exists and is not soft-deleted,
+ *   - was minted by the same actor (no hijacking another user's upload),
+ *   - is unbound OR already bound to THIS document (idempotent retry only) —
+ *     never re-pointed from one document to another.
+ * The row is locked FOR UPDATE so concurrent claims cannot race. On success it
+ * sets documentId/companyId/purpose; on failure nothing is written.
+ */
+export async function claimObjectOwnership(
+  tx: DbLike,
+  opts: {
+    objectPath: string;
+    documentId: string;
+    companyId: string | null;
+    purpose: "version" | "signature" | "stamp";
+    actorId: string | null;
+  },
+): Promise<ObjectClaimResult> {
+  const [row] = (await tx
+    .select()
+    .from(documentObjectOwnersTable)
+    .where(eq(documentObjectOwnersTable.objectPath, opts.objectPath))
+    .for("update")
+    .limit(1)) as Row[];
+  if (!row || row.isDeleted) return { ok: false, reason: "missing" };
+  if (row.uploadedByUserId && String(row.uploadedByUserId) !== opts.actorId) {
+    return { ok: false, reason: "forbidden" };
+  }
+  if (row.documentId && String(row.documentId) !== opts.documentId) {
+    return { ok: false, reason: "bound" };
+  }
+  await tx
+    .update(documentObjectOwnersTable)
+    .set({
+      documentId: opts.documentId,
+      companyId: opts.companyId,
+      purpose: opts.purpose,
+    })
+    .where(eq(documentObjectOwnersTable.id, String(row.id)));
+  return { ok: true };
+}
+
+/**
+ * Thrown inside a transaction when an object-ownership claim fails, so the tx
+ * rolls back. Carries the HTTP status + message the route should respond with.
+ */
+export class ObjectClaimError extends Error {
+  status: number;
+  constructor(reason: "missing" | "forbidden" | "bound") {
+    let status = 403;
+    let message = "You did not upload this file.";
+    if (reason === "missing") {
+      status = 400;
+      message = "Unknown or expired upload reference.";
+    } else if (reason === "bound") {
+      status = 409;
+      message = "This file is already attached to another document.";
+    }
+    super(message);
+    this.name = "ObjectClaimError";
+    this.status = status;
+  }
+}
 
 /* -------------------------------------------------------------------------- */
 /* Electronic Document Management System (EDMS) — shared helpers              */

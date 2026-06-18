@@ -40,3 +40,4 @@
 - [Long-running commands via workflow](long-running-commands-via-workflow.md) — codegen/cold-tsc exceed bash 120s & get reaped if backgrounded; run as a temp workflow + poll getWorkflowStatus.
 - [Global delete/edit governance](global-delete-governance.md) — a mounted middleware parks every direct DELETE/protected-PATCH as an approval change request; per-handler owner/"must-be-requested" delete gates break the approved re-dispatch.
 - [Orval binary endpoints](orval-binary-endpoints.md) — Orval emits no hook for octet-stream GETs; model in OpenAPI for contract, consume via same-origin URL helper.
+- [Transaction rollback via typed error](tx-rollback-typed-error.md) — abort+rollback a Drizzle tx by throwing a typed Error caught outside; a closure-assigned flag narrows to never and wont typecheck.
