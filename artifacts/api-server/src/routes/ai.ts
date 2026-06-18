@@ -36,15 +36,33 @@ function langName(language: string | undefined): string {
   return language === "ar" ? "Arabic" : "English";
 }
 
-function filtersFrom(body: {
-  companyId?: string;
-  from?: string;
-  to?: string;
-  projectId?: string;
-  branchId?: string;
-}): ContextFilters {
+/**
+ * Resolve the company the AI is allowed to ground on. Company scope is enforced
+ * from the authenticated user, never trusted from the request body: a user bound
+ * to a company can only ever see that company's data (the requested companyId is
+ * ignored). Only an unassigned user (companyId null — e.g. the super admin) may
+ * filter to a specific requested company; with no request they see all companies.
+ */
+function effectiveCompanyId(
+  user: { companyId: string | null },
+  requested: string | null | undefined,
+): string | null {
+  if (user.companyId) return user.companyId;
+  return requested ?? null;
+}
+
+function filtersFrom(
+  user: { companyId: string | null },
+  body: {
+    companyId?: string;
+    from?: string;
+    to?: string;
+    projectId?: string;
+    branchId?: string;
+  },
+): ContextFilters {
   return {
-    companyId: body.companyId ?? null,
+    companyId: effectiveCompanyId(user, body.companyId),
     from: body.from ?? null,
     to: body.to ?? null,
     projectId: body.projectId ?? null,
@@ -81,7 +99,7 @@ async function runAnalysis(
     return;
   }
   const body = parsed.data;
-  const context = await buildErpContext(req.authUser!, filtersFrom(body));
+  const context = await buildErpContext(req.authUser!, filtersFrom(req.authUser!, body));
   const language = langName(body.language);
 
   const system: ChatMsg = {
@@ -256,10 +274,10 @@ router.post("/ai/conversations/:id/messages", async (req, res): Promise<void> =>
     content,
   });
 
-  // Build grounding context (company filter not applied for chat — the model
-  // sees everything the user is permitted to view) and conversation history.
+  // Build grounding context (scoped to the user's own company when assigned;
+  // unassigned users such as the super admin see all companies) and history.
   const context = await buildErpContext(req.authUser!, {
-    companyId: null,
+    companyId: effectiveCompanyId(req.authUser!, null),
     from: null,
     to: null,
     projectId: null,

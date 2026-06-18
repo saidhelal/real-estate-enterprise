@@ -1,5 +1,3 @@
-import { openai } from "@workspace/integrations-openai-ai-server";
-
 /**
  * Central AI provider wrapper. The rest of the codebase talks to the model
  * exclusively through these helpers so the underlying provider can be swapped
@@ -7,6 +5,12 @@ import { openai } from "@workspace/integrations-openai-ai-server";
  *
  * gpt-5 family models reject `temperature` and `max_tokens`; they take
  * `max_completion_tokens` instead. Keep that detail isolated here.
+ *
+ * The provider client is imported lazily: the integration module throws at
+ * import time when its env vars are unset, so importing it eagerly would crash
+ * the whole API server on boot whenever AI is unconfigured. Callers always gate
+ * on `aiConfigured()` first (and respond 503), so the dynamic import only ever
+ * runs when the integration is actually provisioned.
  */
 export const AI_MODEL = process.env.AI_MODEL ?? "gpt-5";
 const MAX_COMPLETION_TOKENS = 8192;
@@ -24,11 +28,25 @@ export function aiConfigured(): boolean {
   );
 }
 
+let _openaiPromise: Promise<
+  typeof import("@workspace/integrations-openai-ai-server")["openai"]
+> | null = null;
+
+async function getOpenAI() {
+  if (!_openaiPromise) {
+    _openaiPromise = import("@workspace/integrations-openai-ai-server").then(
+      (m) => m.openai,
+    );
+  }
+  return _openaiPromise;
+}
+
 /**
  * Single-shot completion constrained to a JSON object. Returns the raw JSON
  * string from the model (callers parse + validate against a Zod schema).
  */
 export async function aiCompleteJson(messages: ChatMsg[]): Promise<string> {
+  const openai = await getOpenAI();
   const res = await openai.chat.completions.create({
     model: AI_MODEL,
     max_completion_tokens: MAX_COMPLETION_TOKENS,
@@ -45,6 +63,7 @@ export async function aiCompleteJson(messages: ChatMsg[]): Promise<string> {
 export async function* aiStreamText(
   messages: ChatMsg[],
 ): AsyncGenerator<string, void, unknown> {
+  const openai = await getOpenAI();
   const stream = await openai.chat.completions.create({
     model: AI_MODEL,
     max_completion_tokens: MAX_COMPLETION_TOKENS,
