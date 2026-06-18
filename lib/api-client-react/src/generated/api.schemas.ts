@@ -13848,6 +13848,82 @@ export interface ProjectLaborInsuranceListResponse {
   pageSize: number;
 }
 
+export interface Notification {
+  id: string;
+  /** @nullable */
+  companyId?: string | null;
+  recipientUserId: string;
+  /** @nullable */
+  actorUserId?: string | null;
+  /** @nullable */
+  departmentId?: string | null;
+  category: string;
+  /** @nullable */
+  eventType?: string | null;
+  priority: string;
+  channel: string;
+  title: string;
+  /** @nullable */
+  body?: string | null;
+  /** @nullable */
+  sourceModule?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  /** @nullable */
+  sourceRef?: string | null;
+  /** @nullable */
+  link?: string | null;
+  isRead: boolean;
+  /** @nullable */
+  readAt?: string | null;
+  isFavorite: boolean;
+  isArchived: boolean;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface NotificationInput {
+  companyId?: string;
+  recipientUserId: string;
+  actorUserId?: string;
+  departmentId?: string;
+  category?: string;
+  eventType?: string;
+  priority?: string;
+  channel?: string;
+  title: string;
+  body?: string;
+  sourceModule?: string;
+  sourceId?: string;
+  sourceRef?: string;
+  link?: string;
+}
+
+export interface NotificationUpdate {
+  isRead?: boolean;
+  isFavorite?: boolean;
+  isArchived?: boolean;
+  priority?: string;
+  title?: string;
+  body?: string;
+}
+
+export interface NotificationListResponse {
+  data: Notification[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface NotificationsDashboard {
+  total: number;
+  unread: number;
+  urgent: number;
+  today: number;
+  week: number;
+  month: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -15959,5 +16035,20 @@ companyId?: string;
 insuranceStatus?: string;
 projectId?: string;
 subcontractorInsuranceId?: string;
+};
+
+export type GetNotificationsDashboardParams = {
+companyId?: string;
+};
+
+export type ListNotificationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+view?: string;
+category?: string;
+priority?: string;
+channel?: string;
 };
 

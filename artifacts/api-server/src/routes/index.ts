@@ -36,6 +36,7 @@ import generalAdminRouter from "./general-admin";
 import insuranceRouter from "./insurance";
 import masterDataRouter from "./master-data";
 import changeRequestsRouter from "./change-requests";
+import notificationsRouter from "./notifications";
 import portalRouter from "./portal";
 
 const router: IRouter = Router();
@@ -81,5 +82,6 @@ router.use(generalAdminRouter);
 router.use(insuranceRouter);
 router.use(masterDataRouter);
 router.use(changeRequestsRouter);
+router.use(notificationsRouter);
 
 export default router;

@@ -32385,3 +32385,210 @@ export const DeleteProjectLaborInsuranceResponse = zod.object({
 })
 
 
+/**
+ * @summary Notification Center dashboard summary
+ */
+export const GetNotificationsDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetNotificationsDashboardResponse = zod.object({
+  "total": zod.number(),
+  "unread": zod.number(),
+  "urgent": zod.number(),
+  "today": zod.number(),
+  "week": zod.number(),
+  "month": zod.number()
+})
+
+
+/**
+ * @summary List notifications
+ */
+export const ListNotificationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "view": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "channel": zod.coerce.string().optional()
+})
+
+export const ListNotificationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "recipientUserId": zod.string(),
+  "actorUserId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "eventType": zod.string().nullish(),
+  "priority": zod.string(),
+  "channel": zod.string(),
+  "title": zod.string(),
+  "body": zod.string().nullish(),
+  "sourceModule": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "link": zod.string().nullish(),
+  "isRead": zod.boolean(),
+  "readAt": zod.string().nullish(),
+  "isFavorite": zod.boolean(),
+  "isArchived": zod.boolean(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a notification
+ */
+export const CreateNotificationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "recipientUserId": zod.string(),
+  "actorUserId": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "category": zod.string().optional(),
+  "eventType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "channel": zod.string().optional(),
+  "title": zod.string(),
+  "body": zod.string().optional(),
+  "sourceModule": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "sourceRef": zod.string().optional(),
+  "link": zod.string().optional()
+})
+
+
+/**
+ * @summary Mark all visible notifications as read
+ */
+export const MarkAllNotificationsReadResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Get a notification
+ */
+export const GetNotificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetNotificationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "recipientUserId": zod.string(),
+  "actorUserId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "eventType": zod.string().nullish(),
+  "priority": zod.string(),
+  "channel": zod.string(),
+  "title": zod.string(),
+  "body": zod.string().nullish(),
+  "sourceModule": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "link": zod.string().nullish(),
+  "isRead": zod.boolean(),
+  "readAt": zod.string().nullish(),
+  "isFavorite": zod.boolean(),
+  "isArchived": zod.boolean(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a notification (read/favorite/archive state)
+ */
+export const UpdateNotificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateNotificationBody = zod.object({
+  "isRead": zod.boolean().optional(),
+  "isFavorite": zod.boolean().optional(),
+  "isArchived": zod.boolean().optional(),
+  "priority": zod.string().optional(),
+  "title": zod.string().optional(),
+  "body": zod.string().optional()
+})
+
+export const UpdateNotificationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "recipientUserId": zod.string(),
+  "actorUserId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "eventType": zod.string().nullish(),
+  "priority": zod.string(),
+  "channel": zod.string(),
+  "title": zod.string(),
+  "body": zod.string().nullish(),
+  "sourceModule": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "link": zod.string().nullish(),
+  "isRead": zod.boolean(),
+  "readAt": zod.string().nullish(),
+  "isFavorite": zod.boolean(),
+  "isArchived": zod.boolean(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Move a notification to trash
+ */
+export const DeleteNotificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteNotificationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Restore a notification from trash
+ */
+export const RestoreNotificationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RestoreNotificationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "recipientUserId": zod.string(),
+  "actorUserId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "eventType": zod.string().nullish(),
+  "priority": zod.string(),
+  "channel": zod.string(),
+  "title": zod.string(),
+  "body": zod.string().nullish(),
+  "sourceModule": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "link": zod.string().nullish(),
+  "isRead": zod.boolean(),
+  "readAt": zod.string().nullish(),
+  "isFavorite": zod.boolean(),
+  "isArchived": zod.boolean(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+

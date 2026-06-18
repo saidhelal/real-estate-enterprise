@@ -39,6 +39,7 @@ const NAV_GROUPS = [
   { titleKey: "nav.group.general", items: [
     { href: "/", icon: Home, labelKey: "nav.home" },
     { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+    { href: "/notifications", icon: Bell, labelKey: "nav.notifications_center" },
   ]},
   { titleKey: "nav.group.sales_crm", items: [
     { href: "/global-search", icon: Search, labelKey: "nav.global_search" },

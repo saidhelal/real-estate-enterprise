@@ -19,3 +19,5 @@ A new top-level module (e.g. Insurance Management) is wired across these surface
 10. i18n: add EN and AR keys in `language-provider.tsx` for every `nav.*`, `nav.group.*`, `home.mod.*`, and dashboard `t()` key — both language objects must stay at parity.
 
 **Why:** these ten surfaces are independent files; missing any one yields a silently broken module (404 route, blank nav, untranslated key, or a typecheck failure from the CountKey/counts pair).
+
+**Governance gotcha for personal/soft-delete modules:** the global `governanceMiddleware` parks EVERY `DELETE /<resource>/:id` as a pending change_request (400 "A reason is required..." without a reason header). For a personal inbox / per-user soft-delete module (e.g. notifications, where delete = move to own trash, restorable), add its `/<resource>` prefix to `EXEMPT_PREFIXES` in `artifacts/api-server/src/middleware/governance.ts` so delete/restore work directly without approval. Only do this for resources that are genuinely per-user and recoverable — not shared business data.

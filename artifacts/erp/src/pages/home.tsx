@@ -12,6 +12,7 @@ import {
   useGetCustomerServiceDashboard,
   useGetGeneralAdminDashboard,
   useGetInsuranceDashboard,
+  useGetNotificationsDashboard,
   useListCompanies,
   getGetRealEstateDashboardQueryKey,
   getGetFinanceDashboardQueryKey,
@@ -21,6 +22,7 @@ import {
   getGetCustomerServiceDashboardQueryKey,
   getGetGeneralAdminDashboardQueryKey,
   getGetInsuranceDashboardQueryKey,
+  getGetNotificationsDashboardQueryKey,
 } from "@workspace/api-client-react";
 import {
   Building,
@@ -45,6 +47,7 @@ import {
   Database,
   Briefcase,
   ShieldCheck,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 
@@ -57,7 +60,8 @@ type CountKey =
   | "legal"
   | "customer_service"
   | "general_admin"
-  | "insurance";
+  | "insurance"
+  | "notifications";
 
 type ModuleCard = {
   titleKey: string;
@@ -82,6 +86,7 @@ const MODULES: ModuleCard[] = [
   { titleKey: "home.mod.fixed_assets", icon: FileBox, href: "/fixed-assets-dashboard", accent: "text-stone-600 bg-stone-500/10 dark:text-stone-300" },
   { titleKey: "home.mod.general_admin", icon: Briefcase, href: "/general-admin-dashboard", accent: "text-blue-600 bg-blue-500/10 dark:text-blue-400", countKey: "general_admin" },
   { titleKey: "home.mod.insurance", icon: ShieldCheck, href: "/insurance-dashboard", accent: "text-emerald-600 bg-emerald-500/10 dark:text-emerald-400", countKey: "insurance" },
+  { titleKey: "home.mod.notifications", icon: Bell, href: "/notifications", accent: "text-red-600 bg-red-500/10 dark:text-red-400", countKey: "notifications" },
   { titleKey: "home.mod.reports", icon: BarChart3, href: "/executive-dashboard", accent: "text-fuchsia-600 bg-fuchsia-500/10 dark:text-fuchsia-400" },
   { titleKey: "home.mod.administration", icon: Settings, href: "/settings", accent: "text-slate-600 bg-slate-500/10 dark:text-slate-300" },
   { titleKey: "home.mod.system_administration", icon: Database, href: "/master-data", accent: "text-zinc-600 bg-zinc-500/10 dark:text-zinc-300" },
@@ -133,6 +138,9 @@ export default function Home() {
   const { data: ins, isLoading: insLoading } = useGetInsuranceDashboard(params, {
     query: { enabled, queryKey: getGetInsuranceDashboardQueryKey(params) },
   });
+  const { data: notif, isLoading: notifLoading } = useGetNotificationsDashboard(params, {
+    query: { enabled, queryKey: getGetNotificationsDashboardQueryKey(params) },
+  });
 
   const [query, setQuery] = useState("");
 
@@ -150,6 +158,7 @@ export default function Home() {
     customer_service: { value: cs?.complaints, loading: csLoading || !enabled },
     general_admin: { value: ga?.tasksCount, loading: gaLoading || !enabled },
     insurance: { value: ins?.insuredCount, loading: insLoading || !enabled },
+    notifications: { value: notif?.unread, loading: notifLoading || !enabled },
   };
 
   const apps = useMemo(() => {

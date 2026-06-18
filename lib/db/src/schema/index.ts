@@ -34,3 +34,4 @@ export * from "./general-admin";
 export * from "./insurance";
 export * from "./master-data";
 export * from "./governance";
+export * from "./notifications";

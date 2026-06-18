@@ -36,8 +36,10 @@ const PROTECTED_EDIT = new Set([
   "cheques",
 ]);
 
-// Paths (relative to /api) that are never governed.
-const EXEMPT_PREFIXES = ["/change-requests", "/auth", "/portal"];
+// Paths (relative to /api) that are never governed. Notifications are a personal
+// inbox: delete = move to trash (soft, restorable per-user), so it must not be
+// parked as an approval change request.
+const EXEMPT_PREFIXES = ["/change-requests", "/auth", "/portal", "/notifications"];
 
 // Matches exactly "/<resource>/<id>" (no further segments).
 const RESOURCE_ID = /^\/([a-z0-9-]+)\/([^/]+)$/;

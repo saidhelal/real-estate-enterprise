@@ -158,6 +158,7 @@ import VehicleMaintenancePage from "@/pages/vehicle-maintenance";
 import VisitorLogsPage from "@/pages/visitor-logs";
 import CircularsPage from "@/pages/circulars";
 import PoliciesPage from "@/pages/policies";
+import NotificationsPage from "@/pages/notifications";
 import CustomerServiceDashboardPage from "@/pages/customer-service-dashboard";
 import CustomerServiceReportsPage from "@/pages/customer-service-reports";
 import SlaPoliciesPage from "@/pages/sla-policies";
@@ -448,6 +449,7 @@ function Router() {
             <Route path="/visitor-logs" component={VisitorLogsPage} />
             <Route path="/circulars" component={CircularsPage} />
             <Route path="/policies" component={PoliciesPage} />
+            <Route path="/notifications" component={NotificationsPage} />
             <Route path="/customer-service-dashboard" component={CustomerServiceDashboardPage} />
             <Route path="/sla-policies" component={SlaPoliciesPage} />
             <Route path="/service-escalations" component={ServiceEscalationsPage} />

@@ -81,6 +81,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "numberSequences", label: "Document Numbering" },
   { module: "settings", label: "System Settings" },
   { module: "masterData", label: "Master Data", extraActions: ["archive", "reorder"] },
+  { module: "notifications", label: "Notifications & Alerts", extraActions: ["viewAll"] },
   { module: "audit", label: "Audit Trail" },
   { module: "approvals", label: "Approvals (Change Requests)", extraActions: ["approve"] },
   { module: "projects", label: "Projects" },
@@ -549,6 +550,8 @@ async function seedStandardRoles(): Promise<void> {
       ...view("paymentVouchers"), ...view("customerInvoices"),
       ...view("journalEntries"), ...view("customers"), ...view("leads"),
       ...view("audit"),
+      // Org-wide visibility into the notification center (every department).
+      "notifications.viewAll",
     ]),
   );
 
