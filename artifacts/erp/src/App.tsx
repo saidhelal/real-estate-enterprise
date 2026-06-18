@@ -112,6 +112,19 @@ import HrAnalyticsPage from "@/pages/hr-analytics";
 import FinancialAnalyticsPage from "@/pages/financial-analytics";
 import ReportsEnginePage from "@/pages/reports-engine";
 
+import { AiChatPage } from "@/pages/ai-chat-page";
+import { AiAnalysisPage } from "@/pages/ai-analysis-page";
+import {
+  useGenerateAiAnalytics,
+  useGenerateAiInsights,
+  useGenerateAiRecommendations,
+  useGenerateAiForecasting,
+  useGenerateAiAlerts,
+  useGenerateAiRiskAnalysis,
+  useGenerateAiDecisionSupport,
+  useGenerateAiExecutiveAdvisor,
+} from "@workspace/api-client-react";
+
 import EngineeringDashboardPage from "@/pages/engineering-dashboard";
 import EngineeringDisciplinesPage from "@/pages/engineering-disciplines";
 import ConsultantsPage from "@/pages/consultants";
@@ -587,6 +600,36 @@ function Router() {
             <Route path="/hr-analytics" component={HrAnalyticsPage} />
             <Route path="/financial-analytics" component={FinancialAnalyticsPage} />
             <Route path="/reports-engine" component={ReportsEnginePage} />
+            <Route path="/ai-assistant">
+              <AiChatPage feature="assistant" titleKey="ai.assistant.title" subtitleKey="ai.assistant.subtitle" />
+            </Route>
+            <Route path="/ai-chat-erp">
+              <AiChatPage feature="chat-erp" titleKey="ai.chat_erp.title" subtitleKey="ai.chat_erp.subtitle" />
+            </Route>
+            <Route path="/ai-analytics">
+              <AiAnalysisPage titleKey="ai.analytics.title" subtitleKey="ai.analytics.subtitle" useMutationHook={useGenerateAiAnalytics} />
+            </Route>
+            <Route path="/ai-insights">
+              <AiAnalysisPage titleKey="ai.insights.title" subtitleKey="ai.insights.subtitle" useMutationHook={useGenerateAiInsights} />
+            </Route>
+            <Route path="/ai-recommendations">
+              <AiAnalysisPage titleKey="ai.recommendations.title" subtitleKey="ai.recommendations.subtitle" useMutationHook={useGenerateAiRecommendations} />
+            </Route>
+            <Route path="/ai-forecasting">
+              <AiAnalysisPage titleKey="ai.forecasting.title" subtitleKey="ai.forecasting.subtitle" useMutationHook={useGenerateAiForecasting} />
+            </Route>
+            <Route path="/ai-alerts">
+              <AiAnalysisPage titleKey="ai.alerts.title" subtitleKey="ai.alerts.subtitle" useMutationHook={useGenerateAiAlerts} />
+            </Route>
+            <Route path="/ai-risk-analysis">
+              <AiAnalysisPage titleKey="ai.risk_analysis.title" subtitleKey="ai.risk_analysis.subtitle" useMutationHook={useGenerateAiRiskAnalysis} />
+            </Route>
+            <Route path="/ai-decision-support">
+              <AiAnalysisPage titleKey="ai.decision_support.title" subtitleKey="ai.decision_support.subtitle" useMutationHook={useGenerateAiDecisionSupport} />
+            </Route>
+            <Route path="/ai-executive-advisor">
+              <AiAnalysisPage titleKey="ai.executive_advisor.title" subtitleKey="ai.executive_advisor.subtitle" useMutationHook={useGenerateAiExecutiveAdvisor} />
+            </Route>
             <Route path="/insurance-dashboard" component={InsuranceDashboardPage} />
             <Route path="/employee-insurances" component={EmployeeInsurancesPage} />
             <Route path="/insurance-forms" component={InsuranceFormsPage} />

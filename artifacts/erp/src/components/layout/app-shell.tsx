@@ -23,6 +23,7 @@ import {
   LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
   Inbox, PhoneCall, Star, Printer,
+  Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -331,6 +332,16 @@ const RAW_NAV_GROUPS = [
     { href: "/insurance-contractors-report", icon: FileSpreadsheet, labelKey: "nav.insurance_contractors_report" },
   ]},
   { titleKey: "nav.group.business_intelligence", items: [
+    { href: "/ai-assistant", icon: Sparkles, labelKey: "nav.ai_assistant" },
+    { href: "/ai-chat-erp", icon: MessagesSquare, labelKey: "nav.ai_chat_erp" },
+    { href: "/ai-analytics", icon: BarChart3, labelKey: "nav.ai_analytics" },
+    { href: "/ai-insights", icon: Lightbulb, labelKey: "nav.ai_insights" },
+    { href: "/ai-recommendations", icon: Target, labelKey: "nav.ai_recommendations" },
+    { href: "/ai-forecasting", icon: TrendingUp, labelKey: "nav.ai_forecasting" },
+    { href: "/ai-alerts", icon: BellRing, labelKey: "nav.ai_alerts" },
+    { href: "/ai-risk-analysis", icon: ShieldAlert, labelKey: "nav.ai_risk_analysis" },
+    { href: "/ai-decision-support", icon: Compass, labelKey: "nav.ai_decision_support" },
+    { href: "/ai-executive-advisor", icon: Brain, labelKey: "nav.ai_executive_advisor" },
     { href: "/executive-oversight", icon: Gauge, labelKey: "nav.executive_oversight" },
     { href: "/executive-dashboard", icon: Gauge, labelKey: "nav.executive_dashboard" },
     { href: "/sales-analytics", icon: TrendingUp, labelKey: "nav.sales_analytics" },

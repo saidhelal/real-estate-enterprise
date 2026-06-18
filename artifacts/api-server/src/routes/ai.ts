@@ -1,0 +1,362 @@
+import { Router, type IRouter, type Request, type Response } from "express";
+import { and, eq, asc, desc } from "drizzle-orm";
+import { db, conversations, messages } from "@workspace/db";
+import {
+  CreateAiConversationBody,
+  SendAiMessageBody,
+  GenerateAiInsightsBody,
+  GenerateAiInsightsResponse,
+} from "@workspace/api-zod";
+import { requireAuth, requirePermission } from "../middleware/auth";
+import { recordAudit } from "../lib/audit";
+import {
+  aiCompleteJson,
+  aiStreamText,
+  aiConfigured,
+  AI_MODEL,
+  type ChatMsg,
+} from "../lib/ai-provider";
+import { buildErpContext, type ContextFilters } from "../lib/ai-context";
+
+const router: IRouter = Router();
+
+// Path-scoped guards: requireAuth THEN requirePermission, both bound to /ai so
+// they never leak onto sibling routers mounted on the same app.
+router.use("/ai", requireAuth);
+router.use("/ai", requirePermission("ai.view"));
+
+// ---------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------
+
+const AiAnalysisInput = GenerateAiInsightsBody;
+const AiAnalysisResult = GenerateAiInsightsResponse;
+
+function langName(language: string | undefined): string {
+  return language === "ar" ? "Arabic" : "English";
+}
+
+function filtersFrom(body: {
+  companyId?: string;
+  from?: string;
+  to?: string;
+  projectId?: string;
+  branchId?: string;
+}): ContextFilters {
+  return {
+    companyId: body.companyId ?? null,
+    from: body.from ?? null,
+    to: body.to ?? null,
+    projectId: body.projectId ?? null,
+    branchId: body.branchId ?? null,
+  };
+}
+
+const BASE_SYSTEM =
+  "You are the Enterprise AI Advisor embedded in a real-estate holding " +
+  "company's ERP. You answer ONLY from the structured ERP data provided to " +
+  "you in the DATA block. Never invent figures, customers, or events. If the " +
+  "data needed to answer is absent, say so plainly. All monetary figures are " +
+  "in the company's base currency. Be concise, executive, and specific; cite " +
+  "the actual numbers from the data.";
+
+/**
+ * Run a generative analysis feature: build the permission-scoped data context,
+ * ask the model for a structured JSON result, validate it, and respond. Shared
+ * by all eight non-chat AI endpoints.
+ */
+async function runAnalysis(
+  req: Request,
+  res: Response,
+  feature: string,
+  instruction: string,
+): Promise<void> {
+  if (!aiConfigured()) {
+    res.status(503).json({ error: "AI provider is not configured." });
+    return;
+  }
+  const parsed = AiAnalysisInput.safeParse(req.body ?? {});
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid request body" });
+    return;
+  }
+  const body = parsed.data;
+  const context = await buildErpContext(req.authUser!, filtersFrom(body));
+  const language = langName(body.language);
+
+  const system: ChatMsg = {
+    role: "system",
+    content:
+      `${BASE_SYSTEM}\n\nTASK: ${instruction}\n\n` +
+      `Respond in ${language}. Return STRICT JSON with this exact shape: ` +
+      `{"title": string, "summary": string, "sections": [{"heading": string, ` +
+      `"body": string, "severity": "info"|"positive"|"warning"|"critical"}]}. ` +
+      `Provide 3-6 sections. Use "severity" to flag risks (critical/warning), ` +
+      `healthy signals (positive), or neutral notes (info). ` +
+      `The user can view these data domains: ${context.domains.join(", ") || "none"}.` +
+      (context.hasData
+        ? ""
+        : " NOTE: the data is empty or all-zero for this scope; say clearly that there is not enough data and do not fabricate."),
+  };
+  const user: ChatMsg = {
+    role: "user",
+    content:
+      (body.prompt ? `User request: ${body.prompt}\n\n` : "") +
+      `DATA (JSON):\n${JSON.stringify(context.data)}`,
+  };
+
+  let raw: string;
+  try {
+    raw = await aiCompleteJson([system, user]);
+  } catch (err) {
+    req.log.error({ err }, "AI completion failed");
+    res.status(502).json({ error: "AI provider request failed." });
+    return;
+  }
+
+  let modelJson: unknown;
+  try {
+    modelJson = JSON.parse(raw);
+  } catch {
+    req.log.error({ raw }, "AI returned non-JSON");
+    res.status(502).json({ error: "AI returned an invalid response." });
+    return;
+  }
+
+  const obj = (modelJson ?? {}) as Record<string, unknown>;
+  const result = {
+    feature,
+    title: typeof obj.title === "string" ? obj.title : feature,
+    summary: typeof obj.summary === "string" ? obj.summary : "",
+    generatedAt: new Date().toISOString(),
+    model: AI_MODEL,
+    dataAvailable: context.hasData,
+    sections: Array.isArray(obj.sections) ? obj.sections : [],
+  };
+
+  const validated = AiAnalysisResult.safeParse(result);
+  if (!validated.success) {
+    req.log.error({ issues: validated.error.issues }, "AI result failed validation");
+    res.status(502).json({ error: "AI produced a malformed result." });
+    return;
+  }
+  res.json(validated.data);
+}
+
+// ---------------------------------------------------------------------------
+// Conversations (per-user)
+// ---------------------------------------------------------------------------
+
+router.get("/ai/conversations", async (req, res): Promise<void> => {
+  const userId = req.authUser!.id;
+  const feature = typeof req.query.feature === "string" ? req.query.feature : null;
+  const where = feature
+    ? and(eq(conversations.userId, userId), eq(conversations.feature, feature))
+    : eq(conversations.userId, userId);
+  const rows = await db
+    .select()
+    .from(conversations)
+    .where(where)
+    .orderBy(desc(conversations.createdAt));
+  res.json(
+    rows.map((r) => ({
+      id: r.id,
+      title: r.title,
+      feature: r.feature,
+      createdAt: r.createdAt.toISOString(),
+    })),
+  );
+});
+
+router.post("/ai/conversations", async (req, res): Promise<void> => {
+  const parsed = CreateAiConversationBody.safeParse(req.body ?? {});
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid request body" });
+    return;
+  }
+  const [row] = await db
+    .insert(conversations)
+    .values({
+      userId: req.authUser!.id,
+      title: parsed.data.title,
+      feature: parsed.data.feature ?? "assistant",
+    })
+    .returning();
+  await recordAudit(req, { action: "create", entity: "ai", entityId: String(row.id) });
+  res.status(201).json({
+    id: row.id,
+    title: row.title,
+    feature: row.feature,
+    createdAt: row.createdAt.toISOString(),
+  });
+});
+
+/** Load a conversation only if it belongs to the requesting user. */
+async function ownedConversation(req: Request, id: number) {
+  if (!Number.isInteger(id)) return null;
+  const [row] = await db
+    .select()
+    .from(conversations)
+    .where(and(eq(conversations.id, id), eq(conversations.userId, req.authUser!.id)))
+    .limit(1);
+  return row ?? null;
+}
+
+router.get("/ai/conversations/:id/messages", async (req, res): Promise<void> => {
+  const convo = await ownedConversation(req, Number(req.params.id));
+  if (!convo) {
+    res.status(404).json({ error: "Conversation not found" });
+    return;
+  }
+  const rows = await db
+    .select()
+    .from(messages)
+    .where(eq(messages.conversationId, convo.id))
+    .orderBy(asc(messages.id));
+  res.json(
+    rows.map((r) => ({
+      id: r.id,
+      conversationId: r.conversationId,
+      role: r.role,
+      content: r.content,
+      createdAt: r.createdAt.toISOString(),
+    })),
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Chat (SSE). Grounds every reply in the user's permission-scoped ERP data.
+// ---------------------------------------------------------------------------
+
+router.post("/ai/conversations/:id/messages", async (req, res): Promise<void> => {
+  const convo = await ownedConversation(req, Number(req.params.id));
+  if (!convo) {
+    res.status(404).json({ error: "Conversation not found" });
+    return;
+  }
+  if (!aiConfigured()) {
+    res.status(503).json({ error: "AI provider is not configured." });
+    return;
+  }
+  const parsed = SendAiMessageBody.safeParse(req.body ?? {});
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid request body" });
+    return;
+  }
+  const content = parsed.data.content.trim();
+  if (!content) {
+    res.status(400).json({ error: "Message is empty" });
+    return;
+  }
+
+  // Persist the user's message before answering.
+  await db.insert(messages).values({
+    conversationId: convo.id,
+    role: "user",
+    content,
+  });
+
+  // Build grounding context (company filter not applied for chat — the model
+  // sees everything the user is permitted to view) and conversation history.
+  const context = await buildErpContext(req.authUser!, {
+    companyId: null,
+    from: null,
+    to: null,
+    projectId: null,
+    branchId: null,
+  });
+  const history = await db
+    .select()
+    .from(messages)
+    .where(eq(messages.conversationId, convo.id))
+    .orderBy(asc(messages.id));
+
+  const chat: ChatMsg[] = [
+    {
+      role: "system",
+      content:
+        `${BASE_SYSTEM} Reply in the same language the user writes in. ` +
+        `The user can view these data domains: ${context.domains.join(", ") || "none"}.\n\n` +
+        `DATA (JSON):\n${JSON.stringify(context.data)}`,
+    },
+    ...history.map((m): ChatMsg => ({
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: m.content,
+    })),
+  ];
+
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+
+  let full = "";
+  try {
+    for await (const delta of aiStreamText(chat)) {
+      full += delta;
+      res.write(`data: ${JSON.stringify({ delta })}\n\n`);
+    }
+  } catch (err) {
+    req.log.error({ err }, "AI stream failed");
+    res.write(`data: ${JSON.stringify({ error: "AI provider request failed." })}\n\n`);
+    res.end();
+    return;
+  }
+
+  // Persist the assistant reply so the thread reloads intact.
+  if (full.trim()) {
+    await db.insert(messages).values({
+      conversationId: convo.id,
+      role: "assistant",
+      content: full,
+    });
+  }
+  res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+  res.end();
+});
+
+// ---------------------------------------------------------------------------
+// Generative analysis features (eight)
+// ---------------------------------------------------------------------------
+
+router.post("/ai/insights", (req, res) =>
+  runAnalysis(req, res, "insights",
+    "Surface the most important insights hidden in the data — trends, " +
+    "concentrations, anomalies, and what changed."));
+
+router.post("/ai/analytics", (req, res) =>
+  runAnalysis(req, res, "analytics",
+    "Produce a narrative analytics summary across the available domains, " +
+    "explaining the key figures and what they mean for the business."));
+
+router.post("/ai/recommendations", (req, res) =>
+  runAnalysis(req, res, "recommendations",
+    "Give prioritized, actionable recommendations grounded in the data, each " +
+    "tied to the specific figures that justify it."));
+
+router.post("/ai/forecasting", (req, res) =>
+  runAnalysis(req, res, "forecasting",
+    "Project likely near-term outcomes (sales, collections, cash) from the " +
+    "trends in the data, stating assumptions and confidence."));
+
+router.post("/ai/alerts", (req, res) =>
+  runAnalysis(req, res, "alerts",
+    "Generate operational alerts: overdue collections, low cash, stalled " +
+    "contracts, or anything needing attention. Use severity to rank them."));
+
+router.post("/ai/risk-analysis", (req, res) =>
+  runAnalysis(req, res, "risk-analysis",
+    "Assess financial, sales, collection, and operational risk from the data. " +
+    "Quantify exposure where possible and rank by severity."));
+
+router.post("/ai/decision-support", (req, res) =>
+  runAnalysis(req, res, "decision-support",
+    "Frame the key decisions the data implies, with options, trade-offs, and a " +
+    "recommended course of action."));
+
+router.post("/ai/executive-advisor", (req, res) =>
+  runAnalysis(req, res, "executive-advisor",
+    "Write an executive advisory brief for leadership: overall health, the " +
+    "few things that matter most, and what to do next."));
+
+export default router;

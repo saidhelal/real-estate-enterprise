@@ -47,6 +47,12 @@ import type {
   AdvanceRecoveryListResponse,
   AdvanceRecoveryUpdate,
   AgingResponse,
+  AiAnalysisInput,
+  AiAnalysisResult,
+  AiConversation,
+  AiConversationInput,
+  AiMessage,
+  AiMessageInput,
   AssetCategory,
   AssetCategoryInput,
   AssetCategoryListResponse,
@@ -752,6 +758,7 @@ import type {
   ListAdministrativeTasksParams,
   ListAdvancePaymentsParams,
   ListAdvanceRecoverysParams,
+  ListAiConversationsParams,
   ListAssetCategoriesParams,
   ListAssetDepreciationsParams,
   ListAssetDisposalsParams,
@@ -20987,6 +20994,878 @@ export function useGetFinancialAnalytics<TData = Awaited<ReturnType<typeof getFi
 
 
 
+
+export const getListAiConversationsUrl = (params?: ListAiConversationsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/ai/conversations?${stringifiedParams}` : `/api/ai/conversations`
+}
+
+/**
+ * @summary List the current user's AI conversations
+ */
+export const listAiConversations = async (params?: ListAiConversationsParams, options?: RequestInit): Promise<AiConversation[]> => {
+
+  return customFetch<AiConversation[]>(getListAiConversationsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAiConversationsQueryKey = (params?: ListAiConversationsParams,) => {
+    return [
+    `/api/ai/conversations`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAiConversationsQueryOptions = <TData = Awaited<ReturnType<typeof listAiConversations>>, TError = ErrorType<unknown>>(params?: ListAiConversationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAiConversations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAiConversationsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAiConversations>>> = ({ signal }) => listAiConversations(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAiConversations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAiConversationsQueryResult = NonNullable<Awaited<ReturnType<typeof listAiConversations>>>
+export type ListAiConversationsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List the current user's AI conversations
+ */
+
+export function useListAiConversations<TData = Awaited<ReturnType<typeof listAiConversations>>, TError = ErrorType<unknown>>(
+ params?: ListAiConversationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAiConversations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAiConversationsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateAiConversationUrl = () => {
+
+
+
+
+  return `/api/ai/conversations`
+}
+
+/**
+ * @summary Create an AI conversation
+ */
+export const createAiConversation = async (aiConversationInput: AiConversationInput, options?: RequestInit): Promise<AiConversation> => {
+
+  return customFetch<AiConversation>(getCreateAiConversationUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiConversationInput,)
+  }
+);}
+
+
+
+
+export const getCreateAiConversationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAiConversation>>, TError,{data: BodyType<AiConversationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAiConversation>>, TError,{data: BodyType<AiConversationInput>}, TContext> => {
+
+const mutationKey = ['createAiConversation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAiConversation>>, {data: BodyType<AiConversationInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAiConversation(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAiConversationMutationResult = NonNullable<Awaited<ReturnType<typeof createAiConversation>>>
+    export type CreateAiConversationMutationBody = BodyType<AiConversationInput>
+    export type CreateAiConversationMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create an AI conversation
+ */
+export const useCreateAiConversation = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAiConversation>>, TError,{data: BodyType<AiConversationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAiConversation>>,
+        TError,
+        {data: BodyType<AiConversationInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAiConversationMutationOptions(options));
+    }
+
+export const getListAiMessagesUrl = (id: number,) => {
+
+
+
+
+  return `/api/ai/conversations/${id}/messages`
+}
+
+/**
+ * @summary List messages in an AI conversation
+ */
+export const listAiMessages = async (id: number, options?: RequestInit): Promise<AiMessage[]> => {
+
+  return customFetch<AiMessage[]>(getListAiMessagesUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAiMessagesQueryKey = (id: number,) => {
+    return [
+    `/api/ai/conversations/${id}/messages`
+    ] as const;
+    }
+
+
+export const getListAiMessagesQueryOptions = <TData = Awaited<ReturnType<typeof listAiMessages>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAiMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAiMessagesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAiMessages>>> = ({ signal }) => listAiMessages(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAiMessages>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAiMessagesQueryResult = NonNullable<Awaited<ReturnType<typeof listAiMessages>>>
+export type ListAiMessagesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List messages in an AI conversation
+ */
+
+export function useListAiMessages<TData = Awaited<ReturnType<typeof listAiMessages>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAiMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAiMessagesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getSendAiMessageUrl = (id: number,) => {
+
+
+
+
+  return `/api/ai/conversations/${id}/messages`
+}
+
+/**
+ * @summary Send a message and receive a streaming, data-grounded response
+ */
+export const sendAiMessage = async (id: number,
+    aiMessageInput: AiMessageInput, options?: RequestInit): Promise<unknown> => {
+
+  return customFetch<unknown>(getSendAiMessageUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiMessageInput,)
+  }
+);}
+
+
+
+
+export const getSendAiMessageMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendAiMessage>>, TError,{id: number;data: BodyType<AiMessageInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendAiMessage>>, TError,{id: number;data: BodyType<AiMessageInput>}, TContext> => {
+
+const mutationKey = ['sendAiMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendAiMessage>>, {id: number;data: BodyType<AiMessageInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  sendAiMessage(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendAiMessageMutationResult = NonNullable<Awaited<ReturnType<typeof sendAiMessage>>>
+    export type SendAiMessageMutationBody = BodyType<AiMessageInput>
+    export type SendAiMessageMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Send a message and receive a streaming, data-grounded response
+ */
+export const useSendAiMessage = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendAiMessage>>, TError,{id: number;data: BodyType<AiMessageInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendAiMessage>>,
+        TError,
+        {id: number;data: BodyType<AiMessageInput>},
+        TContext
+      > => {
+      return useMutation(getSendAiMessageMutationOptions(options));
+    }
+
+export const getGenerateAiInsightsUrl = () => {
+
+
+
+
+  return `/api/ai/insights`
+}
+
+/**
+ * @summary Generate AI insights grounded in ERP data
+ */
+export const generateAiInsights = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiInsightsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiInsightsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiInsights>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiInsights>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiInsights'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiInsights>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiInsights(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiInsightsMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiInsights>>>
+    export type GenerateAiInsightsMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiInsightsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI insights grounded in ERP data
+ */
+export const useGenerateAiInsights = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiInsights>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiInsights>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiInsightsMutationOptions(options));
+    }
+
+export const getGenerateAiAnalyticsUrl = () => {
+
+
+
+
+  return `/api/ai/analytics`
+}
+
+/**
+ * @summary Generate an AI narrative analytics summary grounded in ERP data
+ */
+export const generateAiAnalytics = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiAnalyticsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiAnalyticsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiAnalytics>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiAnalytics>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiAnalytics'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiAnalytics>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiAnalytics(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiAnalyticsMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiAnalytics>>>
+    export type GenerateAiAnalyticsMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiAnalyticsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate an AI narrative analytics summary grounded in ERP data
+ */
+export const useGenerateAiAnalytics = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiAnalytics>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiAnalytics>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiAnalyticsMutationOptions(options));
+    }
+
+export const getGenerateAiRecommendationsUrl = () => {
+
+
+
+
+  return `/api/ai/recommendations`
+}
+
+/**
+ * @summary Generate AI recommendations grounded in ERP data
+ */
+export const generateAiRecommendations = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiRecommendationsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiRecommendationsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiRecommendations>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiRecommendations>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiRecommendations'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiRecommendations>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiRecommendations(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiRecommendationsMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiRecommendations>>>
+    export type GenerateAiRecommendationsMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiRecommendationsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI recommendations grounded in ERP data
+ */
+export const useGenerateAiRecommendations = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiRecommendations>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiRecommendations>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiRecommendationsMutationOptions(options));
+    }
+
+export const getGenerateAiForecastingUrl = () => {
+
+
+
+
+  return `/api/ai/forecasting`
+}
+
+/**
+ * @summary Generate AI forecasting grounded in ERP data
+ */
+export const generateAiForecasting = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiForecastingUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiForecastingMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiForecasting>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiForecasting>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiForecasting'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiForecasting>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiForecasting(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiForecastingMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiForecasting>>>
+    export type GenerateAiForecastingMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiForecastingMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI forecasting grounded in ERP data
+ */
+export const useGenerateAiForecasting = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiForecasting>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiForecasting>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiForecastingMutationOptions(options));
+    }
+
+export const getGenerateAiAlertsUrl = () => {
+
+
+
+
+  return `/api/ai/alerts`
+}
+
+/**
+ * @summary Generate AI alerts grounded in ERP data
+ */
+export const generateAiAlerts = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiAlertsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiAlertsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiAlerts>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiAlerts>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiAlerts'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiAlerts>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiAlerts(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiAlertsMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiAlerts>>>
+    export type GenerateAiAlertsMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiAlertsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI alerts grounded in ERP data
+ */
+export const useGenerateAiAlerts = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiAlerts>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiAlerts>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiAlertsMutationOptions(options));
+    }
+
+export const getGenerateAiRiskAnalysisUrl = () => {
+
+
+
+
+  return `/api/ai/risk-analysis`
+}
+
+/**
+ * @summary Generate AI risk analysis grounded in ERP data
+ */
+export const generateAiRiskAnalysis = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiRiskAnalysisUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiRiskAnalysisMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiRiskAnalysis>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiRiskAnalysis>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiRiskAnalysis'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiRiskAnalysis>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiRiskAnalysis(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiRiskAnalysisMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiRiskAnalysis>>>
+    export type GenerateAiRiskAnalysisMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiRiskAnalysisMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI risk analysis grounded in ERP data
+ */
+export const useGenerateAiRiskAnalysis = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiRiskAnalysis>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiRiskAnalysis>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiRiskAnalysisMutationOptions(options));
+    }
+
+export const getGenerateAiDecisionSupportUrl = () => {
+
+
+
+
+  return `/api/ai/decision-support`
+}
+
+/**
+ * @summary Generate AI decision support grounded in ERP data
+ */
+export const generateAiDecisionSupport = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiDecisionSupportUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiDecisionSupportMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiDecisionSupport>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiDecisionSupport>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiDecisionSupport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiDecisionSupport>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiDecisionSupport(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiDecisionSupportMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiDecisionSupport>>>
+    export type GenerateAiDecisionSupportMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiDecisionSupportMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI decision support grounded in ERP data
+ */
+export const useGenerateAiDecisionSupport = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiDecisionSupport>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiDecisionSupport>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiDecisionSupportMutationOptions(options));
+    }
+
+export const getGenerateAiExecutiveAdvisorUrl = () => {
+
+
+
+
+  return `/api/ai/executive-advisor`
+}
+
+/**
+ * @summary Generate an AI executive advisory brief grounded in ERP data
+ */
+export const generateAiExecutiveAdvisor = async (aiAnalysisInput: AiAnalysisInput, options?: RequestInit): Promise<AiAnalysisResult> => {
+
+  return customFetch<AiAnalysisResult>(getGenerateAiExecutiveAdvisorUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAnalysisInput,)
+  }
+);}
+
+
+
+
+export const getGenerateAiExecutiveAdvisorMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiExecutiveAdvisor>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateAiExecutiveAdvisor>>, TError,{data: BodyType<AiAnalysisInput>}, TContext> => {
+
+const mutationKey = ['generateAiExecutiveAdvisor'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateAiExecutiveAdvisor>>, {data: BodyType<AiAnalysisInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateAiExecutiveAdvisor(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateAiExecutiveAdvisorMutationResult = NonNullable<Awaited<ReturnType<typeof generateAiExecutiveAdvisor>>>
+    export type GenerateAiExecutiveAdvisorMutationBody = BodyType<AiAnalysisInput>
+    export type GenerateAiExecutiveAdvisorMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate an AI executive advisory brief grounded in ERP data
+ */
+export const useGenerateAiExecutiveAdvisor = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateAiExecutiveAdvisor>>, TError,{data: BodyType<AiAnalysisInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateAiExecutiveAdvisor>>,
+        TError,
+        {data: BodyType<AiAnalysisInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateAiExecutiveAdvisorMutationOptions(options));
+    }
 
 export const getListCashboxesUrl = (params?: ListCashboxesParams,) => {
   const normalizedParams = new URLSearchParams();

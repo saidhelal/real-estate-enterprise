@@ -5736,6 +5736,284 @@ export const GetFinancialAnalyticsResponse = zod.object({
 
 
 /**
+ * @summary List the current user's AI conversations
+ */
+export const ListAiConversationsQueryParams = zod.object({
+  "feature": zod.coerce.string().optional()
+})
+
+export const ListAiConversationsResponseItem = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "feature": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAiConversationsResponse = zod.array(ListAiConversationsResponseItem)
+
+
+/**
+ * @summary Create an AI conversation
+ */
+export const CreateAiConversationBody = zod.object({
+  "title": zod.string(),
+  "feature": zod.string().optional()
+})
+
+
+/**
+ * @summary List messages in an AI conversation
+ */
+export const ListAiMessagesParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListAiMessagesResponseItem = zod.object({
+  "id": zod.number(),
+  "conversationId": zod.number(),
+  "role": zod.string(),
+  "content": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAiMessagesResponse = zod.array(ListAiMessagesResponseItem)
+
+
+/**
+ * @summary Send a message and receive a streaming, data-grounded response
+ */
+export const SendAiMessageParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const SendAiMessageBody = zod.object({
+  "content": zod.string()
+})
+
+
+/**
+ * @summary Generate AI insights grounded in ERP data
+ */
+export const GenerateAiInsightsBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiInsightsResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate an AI narrative analytics summary grounded in ERP data
+ */
+export const GenerateAiAnalyticsBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiAnalyticsResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate AI recommendations grounded in ERP data
+ */
+export const GenerateAiRecommendationsBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiRecommendationsResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate AI forecasting grounded in ERP data
+ */
+export const GenerateAiForecastingBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiForecastingResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate AI alerts grounded in ERP data
+ */
+export const GenerateAiAlertsBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiAlertsResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate AI risk analysis grounded in ERP data
+ */
+export const GenerateAiRiskAnalysisBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiRiskAnalysisResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate AI decision support grounded in ERP data
+ */
+export const GenerateAiDecisionSupportBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiDecisionSupportResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
+ * @summary Generate an AI executive advisory brief grounded in ERP data
+ */
+export const GenerateAiExecutiveAdvisorBody = zod.object({
+  "companyId": zod.string().optional(),
+  "from": zod.string().optional(),
+  "to": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "prompt": zod.string().optional(),
+  "language": zod.enum(['en', 'ar']).optional()
+})
+
+export const GenerateAiExecutiveAdvisorResponse = zod.object({
+  "feature": zod.string(),
+  "title": zod.string(),
+  "summary": zod.string(),
+  "generatedAt": zod.coerce.date(),
+  "model": zod.string(),
+  "dataAvailable": zod.boolean(),
+  "sections": zod.array(zod.object({
+  "heading": zod.string(),
+  "body": zod.string(),
+  "severity": zod.enum(['info', 'positive', 'warning', 'critical']).optional()
+}))
+})
+
+
+/**
  * @summary List cashboxes
  */
 export const ListCashboxesQueryParams = zod.object({

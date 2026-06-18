@@ -50,6 +50,8 @@ tags:
     description: Budget lines
   - name: accountingReports
     description: Accounting reports and dashboard
+  - name: ai
+    description: Enterprise AI assistant and grounded intelligence features
 paths:
   /healthz:
     get:
@@ -4760,6 +4762,226 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FinancialAnalytics"
+
+  /ai/conversations:
+    get:
+      operationId: listAiConversations
+      tags: [ai]
+      summary: List the current user's AI conversations
+      parameters:
+        - { name: feature, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AiConversation"
+    post:
+      operationId: createAiConversation
+      tags: [ai]
+      summary: Create an AI conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiConversationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiConversation"
+
+  /ai/conversations/{id}/messages:
+    get:
+      operationId: listAiMessages
+      tags: [ai]
+      summary: List messages in an AI conversation
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AiMessage"
+    post:
+      operationId: sendAiMessage
+      tags: [ai]
+      summary: Send a message and receive a streaming, data-grounded response
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiMessageInput"
+      responses:
+        "200":
+          description: SSE stream of assistant text chunks
+          content:
+            text/event-stream: {}
+
+  /ai/insights:
+    post:
+      operationId: generateAiInsights
+      tags: [ai]
+      summary: Generate AI insights grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/analytics:
+    post:
+      operationId: generateAiAnalytics
+      tags: [ai]
+      summary: Generate an AI narrative analytics summary grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/recommendations:
+    post:
+      operationId: generateAiRecommendations
+      tags: [ai]
+      summary: Generate AI recommendations grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/forecasting:
+    post:
+      operationId: generateAiForecasting
+      tags: [ai]
+      summary: Generate AI forecasting grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/alerts:
+    post:
+      operationId: generateAiAlerts
+      tags: [ai]
+      summary: Generate AI alerts grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/risk-analysis:
+    post:
+      operationId: generateAiRiskAnalysis
+      tags: [ai]
+      summary: Generate AI risk analysis grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/decision-support:
+    post:
+      operationId: generateAiDecisionSupport
+      tags: [ai]
+      summary: Generate AI decision support grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
+
+  /ai/executive-advisor:
+    post:
+      operationId: generateAiExecutiveAdvisor
+      tags: [ai]
+      summary: Generate an AI executive advisory brief grounded in ERP data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAnalysisInput"
+      responses:
+        "200":
+          description: AI analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAnalysisResult"
 
   /cashboxes:
     get:
@@ -23912,6 +24134,72 @@ components:
           type: string
       required:
         - status
+
+    AiConversation:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        feature: { type: string }
+        createdAt: { type: string, format: date-time }
+      required: [id, title, feature, createdAt]
+
+    AiConversationInput:
+      type: object
+      properties:
+        title: { type: string }
+        feature: { type: string }
+      required: [title]
+
+    AiMessage:
+      type: object
+      properties:
+        id: { type: integer }
+        conversationId: { type: integer }
+        role: { type: string }
+        content: { type: string }
+        createdAt: { type: string, format: date-time }
+      required: [id, conversationId, role, content, createdAt]
+
+    AiMessageInput:
+      type: object
+      properties:
+        content: { type: string }
+      required: [content]
+
+    AiAnalysisInput:
+      type: object
+      properties:
+        companyId: { type: string }
+        from: { type: string }
+        to: { type: string }
+        projectId: { type: string }
+        branchId: { type: string }
+        prompt: { type: string }
+        language: { type: string, enum: [en, ar] }
+
+    AiAnalysisSection:
+      type: object
+      properties:
+        heading: { type: string }
+        body: { type: string }
+        severity: { type: string, enum: [info, positive, warning, critical] }
+      required: [heading, body]
+
+    AiAnalysisResult:
+      type: object
+      properties:
+        feature: { type: string }
+        title: { type: string }
+        summary: { type: string }
+        generatedAt: { type: string, format: date-time }
+        model: { type: string }
+        dataAvailable: { type: boolean }
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiAnalysisSection"
+      required: [feature, title, summary, generatedAt, model, dataAvailable, sections]
 
     Error:
       type: object

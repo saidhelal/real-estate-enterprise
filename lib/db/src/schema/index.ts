@@ -37,3 +37,5 @@ export * from "./governance";
 export * from "./notifications";
 export * from "./printing";
 export * from "./documents";
+export * from "./conversations";
+export * from "./messages";

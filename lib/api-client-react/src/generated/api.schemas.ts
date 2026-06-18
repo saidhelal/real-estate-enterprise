@@ -9,6 +9,74 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface AiConversation {
+  id: number;
+  title: string;
+  feature: string;
+  createdAt: string;
+}
+
+export interface AiConversationInput {
+  title: string;
+  feature?: string;
+}
+
+export interface AiMessage {
+  id: number;
+  conversationId: number;
+  role: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface AiMessageInput {
+  content: string;
+}
+
+export type AiAnalysisInputLanguage = typeof AiAnalysisInputLanguage[keyof typeof AiAnalysisInputLanguage];
+
+
+export const AiAnalysisInputLanguage = {
+  en: 'en',
+  ar: 'ar',
+} as const;
+
+export interface AiAnalysisInput {
+  companyId?: string;
+  from?: string;
+  to?: string;
+  projectId?: string;
+  branchId?: string;
+  prompt?: string;
+  language?: AiAnalysisInputLanguage;
+}
+
+export type AiAnalysisSectionSeverity = typeof AiAnalysisSectionSeverity[keyof typeof AiAnalysisSectionSeverity];
+
+
+export const AiAnalysisSectionSeverity = {
+  info: 'info',
+  positive: 'positive',
+  warning: 'warning',
+  critical: 'critical',
+} as const;
+
+export interface AiAnalysisSection {
+  heading: string;
+  body: string;
+  severity?: AiAnalysisSectionSeverity;
+}
+
+export interface AiAnalysisResult {
+  feature: string;
+  title: string;
+  summary: string;
+  generatedAt: string;
+  model: string;
+  dataAvailable: boolean;
+  sections: AiAnalysisSection[];
+}
+
 export interface Error {
   error: string;
 }
@@ -15025,6 +15093,10 @@ from?: string;
 to?: string;
 projectId?: string;
 branchId?: string;
+};
+
+export type ListAiConversationsParams = {
+feature?: string;
 };
 
 export type ListCashboxesParams = {

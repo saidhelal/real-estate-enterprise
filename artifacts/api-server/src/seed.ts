@@ -286,6 +286,10 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "legalNotices", label: "Legal Notices", extraActions: ["send"] },
   { module: "legalCaseLinks", label: "Legal Case Links" },
   { module: "bi", label: "Business Intelligence" },
+  // Enterprise AI layer — grounded assistant + generative intelligence over
+  // existing data. Read-only; no new business tables. Auth-only conversation
+  // store is per-user. ai.view gates the whole module.
+  { module: "ai", label: "Enterprise AI" },
   // CRM & Sales Center — a business layer over existing entities (no new tables).
   // crm.view gates the CRM hub (dashboard, search, customer profile, available
   // units, sales performance). Per-entity actions reuse the existing module codes.
