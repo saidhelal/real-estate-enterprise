@@ -5,6 +5,8 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+import type { NotificationChannel } from './notificationChannel';
+import type { NotificationPriority } from './notificationPriority';
 
 export interface Notification {
   id: string;
@@ -18,8 +20,8 @@ export interface Notification {
   category: string;
   /** @nullable */
   eventType?: string | null;
-  priority: string;
-  channel: string;
+  priority: NotificationPriority;
+  channel: NotificationChannel;
   title: string;
   /** @nullable */
   body?: string | null;

@@ -38386,8 +38386,8 @@ components:
         departmentId: { type: ["string", "null"] }
         category: { type: string }
         eventType: { type: ["string", "null"] }
-        priority: { type: string }
-        channel: { type: string }
+        priority: { type: string, enum: [normal, medium, high, urgent] }
+        channel: { type: string, enum: [in_app, email, sms, whatsapp, push] }
         title: { type: string }
         body: { type: ["string", "null"] }
         sourceModule: { type: ["string", "null"] }
@@ -38410,8 +38410,8 @@ components:
         departmentId: { type: string }
         category: { type: string }
         eventType: { type: string }
-        priority: { type: string }
-        channel: { type: string }
+        priority: { type: string, enum: [normal, medium, high, urgent] }
+        channel: { type: string, enum: [in_app, email, sms, whatsapp, push] }
         title: { type: string }
         body: { type: string }
         sourceModule: { type: string }
@@ -38424,7 +38424,7 @@ components:
         isRead: { type: boolean }
         isFavorite: { type: boolean }
         isArchived: { type: boolean }
-        priority: { type: string }
+        priority: { type: string, enum: [normal, medium, high, urgent] }
         title: { type: string }
         body: { type: string }
     NotificationListResponse:

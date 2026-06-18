@@ -5,6 +5,8 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+import type { NotificationInputChannel } from './notificationInputChannel';
+import type { NotificationInputPriority } from './notificationInputPriority';
 
 export interface NotificationInput {
   companyId?: string;
@@ -13,8 +15,8 @@ export interface NotificationInput {
   departmentId?: string;
   category?: string;
   eventType?: string;
-  priority?: string;
-  channel?: string;
+  priority?: NotificationInputPriority;
+  channel?: NotificationInputChannel;
   title: string;
   body?: string;
   sourceModule?: string;

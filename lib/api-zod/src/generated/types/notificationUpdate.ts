@@ -5,12 +5,13 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+import type { NotificationUpdatePriority } from './notificationUpdatePriority';
 
 export interface NotificationUpdate {
   isRead?: boolean;
   isFavorite?: boolean;
   isArchived?: boolean;
-  priority?: string;
+  priority?: NotificationUpdatePriority;
   title?: string;
   body?: string;
 }

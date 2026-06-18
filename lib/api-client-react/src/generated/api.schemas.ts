@@ -13848,6 +13848,27 @@ export interface ProjectLaborInsuranceListResponse {
   pageSize: number;
 }
 
+export type NotificationPriority = typeof NotificationPriority[keyof typeof NotificationPriority];
+
+
+export const NotificationPriority = {
+  normal: 'normal',
+  medium: 'medium',
+  high: 'high',
+  urgent: 'urgent',
+} as const;
+
+export type NotificationChannel = typeof NotificationChannel[keyof typeof NotificationChannel];
+
+
+export const NotificationChannel = {
+  in_app: 'in_app',
+  email: 'email',
+  sms: 'sms',
+  whatsapp: 'whatsapp',
+  push: 'push',
+} as const;
+
 export interface Notification {
   id: string;
   /** @nullable */
@@ -13860,8 +13881,8 @@ export interface Notification {
   category: string;
   /** @nullable */
   eventType?: string | null;
-  priority: string;
-  channel: string;
+  priority: NotificationPriority;
+  channel: NotificationChannel;
   title: string;
   /** @nullable */
   body?: string | null;
@@ -13882,6 +13903,27 @@ export interface Notification {
   createdAt: string;
 }
 
+export type NotificationInputPriority = typeof NotificationInputPriority[keyof typeof NotificationInputPriority];
+
+
+export const NotificationInputPriority = {
+  normal: 'normal',
+  medium: 'medium',
+  high: 'high',
+  urgent: 'urgent',
+} as const;
+
+export type NotificationInputChannel = typeof NotificationInputChannel[keyof typeof NotificationInputChannel];
+
+
+export const NotificationInputChannel = {
+  in_app: 'in_app',
+  email: 'email',
+  sms: 'sms',
+  whatsapp: 'whatsapp',
+  push: 'push',
+} as const;
+
 export interface NotificationInput {
   companyId?: string;
   recipientUserId: string;
@@ -13889,8 +13931,8 @@ export interface NotificationInput {
   departmentId?: string;
   category?: string;
   eventType?: string;
-  priority?: string;
-  channel?: string;
+  priority?: NotificationInputPriority;
+  channel?: NotificationInputChannel;
   title: string;
   body?: string;
   sourceModule?: string;
@@ -13899,11 +13941,21 @@ export interface NotificationInput {
   link?: string;
 }
 
+export type NotificationUpdatePriority = typeof NotificationUpdatePriority[keyof typeof NotificationUpdatePriority];
+
+
+export const NotificationUpdatePriority = {
+  normal: 'normal',
+  medium: 'medium',
+  high: 'high',
+  urgent: 'urgent',
+} as const;
+
 export interface NotificationUpdate {
   isRead?: boolean;
   isFavorite?: boolean;
   isArchived?: boolean;
-  priority?: string;
+  priority?: NotificationUpdatePriority;
   title?: string;
   body?: string;
 }
