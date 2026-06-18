@@ -1319,6 +1319,33 @@ router.delete(
 /* Authorizes against the document's scope + the immutable owner mapping.      */
 /* -------------------------------------------------------------------------- */
 
+// Only these inert types may ever be previewed inline (same-origin). Anything
+// not on this allowlist — active content (HTML/SVG/XML/JS) AND any unknown
+// type — is served as an opaque download. An allowlist is required (not a
+// blocklist) so a missing/forged mime can never default to inline execution.
+const SAFE_INLINE_MIME = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "text/plain",
+]);
+
+const EXT_TO_MIME: Record<string, string> = {
+  pdf: "application/pdf",
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  gif: "image/gif",
+  webp: "image/webp",
+  bmp: "image/bmp",
+  txt: "text/plain",
+};
+
+const normalizeMime = (raw: string): string => raw.toLowerCase().split(";")[0].trim();
+
 router.get(
   "/documents-file",
   requirePermission(`${MODULE}.view`),
@@ -1378,25 +1405,33 @@ router.get(
       const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
       const response = await objectStorageService.downloadObject(objectFile);
       res.status(response.status);
-      response.headers.forEach((value, key) => res.setHeader(key, value));
-      // Active content (HTML, SVG, scripts) must never render inline in the
+      // Never forward the object store's own Content-Type / Content-Disposition
+      // / CSP — we decide those ourselves below so a forged or attacker-set
+      // upload header cannot force same-origin inline execution.
+      const SKIP_HEADERS = new Set([
+        "content-type",
+        "content-disposition",
+        "content-security-policy",
+      ]);
+      response.headers.forEach((value, key) => {
+        if (!SKIP_HEADERS.has(key.toLowerCase())) res.setHeader(key, value);
+      });
+      // Active content (HTML, SVG, XML, scripts) must never render inline in the
       // app's same origin, or an uploaded file could execute script (stored
-      // XSS). Force such types to download as an opaque octet-stream.
-      const storedMime = String(version.mimeType ?? "").toLowerCase();
-      const dangerousMime =
-        storedMime === "text/html" ||
-        storedMime === "application/xhtml+xml" ||
-        storedMime === "image/svg+xml" ||
-        storedMime.includes("javascript") ||
-        storedMime.includes("ecmascript") ||
-        storedMime === "application/xml" ||
-        storedMime === "text/xml";
-      const forceAttachment = download || dangerousMime;
-      if (version.mimeType) {
-        res.setHeader("Content-Type", dangerousMime ? "application/octet-stream" : storedMime);
-      }
+      // XSS). Resolve the type from a trusted fallback chain — stored metadata,
+      // then the object store's reported type, then the file extension — and
+      // only allow inline preview for an explicit allowlist of inert types.
+      // Anything else (active content OR an unknown/missing type) is served as
+      // an opaque octet-stream download.
+      const fileName = String(version.fileName ?? String(doc.documentNumber));
+      const storedMime = normalizeMime(String(version.mimeType ?? ""));
+      const objectMime = normalizeMime(String(response.headers.get("content-type") ?? ""));
+      const ext = (fileName.match(/\.([a-z0-9]+)$/i)?.[1] ?? "").toLowerCase();
+      const candidateMime = storedMime || objectMime || EXT_TO_MIME[ext] || "";
+      const canInline = SAFE_INLINE_MIME.has(candidateMime);
+      const forceAttachment = download || !canInline;
+      res.setHeader("Content-Type", canInline ? candidateMime : "application/octet-stream");
       res.setHeader("X-Content-Type-Options", "nosniff");
-      const fileName = String(version.fileName ?? `${String(doc.documentNumber)}`);
       res.setHeader(
         "Content-Disposition",
         `${forceAttachment ? "attachment" : "inline"}; filename="${fileName.replace(/"/g, "")}"`,
