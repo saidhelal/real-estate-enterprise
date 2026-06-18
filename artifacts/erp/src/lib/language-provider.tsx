@@ -2919,7 +2919,7 @@ const translations: Record<Language, Record<string, string>> = {
     "fa.asset": "الأصل",
     "fa.period": "الفترة",
     "fa.amount": "المبلغ",
-    "nav.group.business_intelligence": "الذكاء الاصطناعي وذكاء الأعمال",
+    "nav.group.business_intelligence": "الذكاء الاصطناعي وذكاء الأعمال (AI & BI)",
     "nav.ai_assistant": "المساعد الذكي",
     "nav.ai_analytics": "التحليلات الذكية",
     "nav.ai_insights": "رؤى الذكاء الاصطناعي",
