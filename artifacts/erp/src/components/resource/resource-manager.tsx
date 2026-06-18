@@ -157,7 +157,8 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
   const confirmDelete = () => {
     if (!deleteTarget) return;
     const reason = deleteReason.trim();
-    if (reason) setNextChangeReason(reason, heading);
+    if (!reason) return;
+    setNextChangeReason(reason, heading);
     deleteMutation.mutate(
       { id: deleteTarget.id },
       {
@@ -339,7 +340,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
               </Button>
               <Button
                 variant="destructive"
-                disabled={deleteMutation.isPending}
+                disabled={deleteMutation.isPending || !deleteReason.trim()}
                 onClick={confirmDelete}
               >
                 {t("common.delete")}

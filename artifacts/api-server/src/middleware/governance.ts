@@ -46,6 +46,11 @@ function isExempt(path: string): boolean {
   return EXEMPT_PREFIXES.some((p) => path === p || path.startsWith(p + "/"));
 }
 
+/** Convert a kebab-case URL resource segment to the camelCase permission module. */
+function toPermissionModule(segment: string): string {
+  return segment.replace(/-([a-z0-9])/g, (_, c: string) => c.toUpperCase());
+}
+
 /**
  * Governs destructive/protected writes. Mounted under /api BEFORE the routers.
  * A direct DELETE on any resource, or a direct PATCH on a protected financial
@@ -100,10 +105,29 @@ export async function governanceMiddleware(
   }
   req.authUser = user;
 
+  // Authorize the REQUESTER before parking a change request. The governance
+  // middleware runs ahead of the route's own requirePermission guard, so
+  // without this a user could submit delete/edit requests for actions they are
+  // not permitted to perform (and an approver could unknowingly execute them).
+  // The required permission mirrors the route convention `${module}.${action}`.
+  const action = method === "DELETE" ? "delete" : "update";
+  const requiredPermission = `${toPermissionModule(entity)}.${action}`;
+  if (!user.permissions.includes("*") && !user.permissions.includes(requiredPermission)) {
+    res.status(403).json({ error: "You do not have permission to perform this action." });
+    return;
+  }
+
   const reasonHeader = req.headers["x-change-reason"];
   const labelHeader = req.headers["x-change-entity-label"];
-  const reason = typeof reasonHeader === "string" ? reasonHeader : "";
+  const reason = typeof reasonHeader === "string" ? reasonHeader.trim() : "";
   const entityLabel = typeof labelHeader === "string" ? labelHeader : null;
+
+  // A justification is mandatory for every governed change request.
+  if (!reason) {
+    res.status(400).json({ error: "A reason is required to submit this request." });
+    return;
+  }
+
   const fullPath = req.originalUrl.split("?")[0];
 
   const companyId =
