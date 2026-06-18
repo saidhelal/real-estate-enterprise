@@ -25,6 +25,9 @@ import {
   TrendingUp,
   CircleDollarSign,
   Search,
+  Package,
+  FileBox,
+  Database,
   type LucideIcon,
 } from "lucide-react";
 
@@ -40,14 +43,17 @@ const MODULES: ModuleCard[] = [
   { titleKey: "home.mod.sales", icon: Users, href: "/customers", accent: "text-emerald-600 bg-emerald-500/10 dark:text-emerald-400" },
   { titleKey: "home.mod.finance", icon: Calculator, href: "/accounting-dashboard", accent: "text-amber-600 bg-amber-500/10 dark:text-amber-400" },
   { titleKey: "home.mod.procurement", icon: ShoppingCart, href: "/procurement-dashboard", accent: "text-orange-600 bg-orange-500/10 dark:text-orange-400" },
+  { titleKey: "home.mod.inventory", icon: Package, href: "/inventory-dashboard", accent: "text-teal-600 bg-teal-500/10 dark:text-teal-400" },
   { titleKey: "home.mod.engineering", icon: Compass, href: "/engineering-dashboard", accent: "text-cyan-600 bg-cyan-500/10 dark:text-cyan-400" },
   { titleKey: "home.mod.construction", icon: HardHat, href: "/construction-dashboard", accent: "text-yellow-600 bg-yellow-500/10 dark:text-yellow-400" },
   { titleKey: "home.mod.hr", icon: UserCog, href: "/hr-dashboard", accent: "text-violet-600 bg-violet-500/10 dark:text-violet-400" },
   { titleKey: "home.mod.legal", icon: Scale, href: "/legal-dashboard", accent: "text-indigo-600 bg-indigo-500/10 dark:text-indigo-400" },
   { titleKey: "home.mod.customer_service", icon: MessageSquare, href: "/customer-service-dashboard", accent: "text-rose-600 bg-rose-500/10 dark:text-rose-400" },
   { titleKey: "home.mod.land_bank", icon: LandPlot, href: "/land-bank-dashboard", accent: "text-lime-600 bg-lime-500/10 dark:text-lime-400" },
+  { titleKey: "home.mod.fixed_assets", icon: FileBox, href: "/fixed-assets-dashboard", accent: "text-stone-600 bg-stone-500/10 dark:text-stone-300" },
   { titleKey: "home.mod.reports", icon: BarChart3, href: "/executive-dashboard", accent: "text-fuchsia-600 bg-fuchsia-500/10 dark:text-fuchsia-400" },
   { titleKey: "home.mod.administration", icon: Settings, href: "/settings", accent: "text-slate-600 bg-slate-500/10 dark:text-slate-300" },
+  { titleKey: "home.mod.system_administration", icon: Database, href: "/master-data", accent: "text-zinc-600 bg-zinc-500/10 dark:text-zinc-300" },
 ];
 
 function formatCount(value?: number | string): string {
