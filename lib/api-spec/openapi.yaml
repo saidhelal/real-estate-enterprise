@@ -18884,6 +18884,557 @@ paths:
               schema:
                 $ref: "#/components/schemas/CustomerServiceDashboard"
 
+  /complaints:
+    get:
+      operationId: listCsComplaints
+      tags: [complaints]
+      summary: List complaints
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: category, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CsComplaints
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsComplaintListResponse"
+    post:
+      operationId: createCsComplaint
+      tags: [complaints]
+      summary: Create a CsComplaint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsComplaintInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsComplaint"
+  /complaints/{id}:
+    get:
+      operationId: getCsComplaint
+      tags: [complaints]
+      summary: Get a CsComplaint
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CsComplaint
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsComplaint"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCsComplaint
+      tags: [complaints]
+      summary: Update a CsComplaint
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsComplaintUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsComplaint"
+    delete:
+      operationId: deleteCsComplaint
+      tags: [complaints]
+      summary: Soft-delete a CsComplaint
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /maintenance-requests:
+    get:
+      operationId: listCsMaintenanceRequests
+      tags: [maintenanceRequests]
+      summary: List maintenance-requests
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+        - { name: category, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CsMaintenanceRequests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsMaintenanceRequestListResponse"
+    post:
+      operationId: createCsMaintenanceRequest
+      tags: [maintenanceRequests]
+      summary: Create a CsMaintenanceRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsMaintenanceRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsMaintenanceRequest"
+  /maintenance-requests/{id}:
+    get:
+      operationId: getCsMaintenanceRequest
+      tags: [maintenanceRequests]
+      summary: Get a CsMaintenanceRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CsMaintenanceRequest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsMaintenanceRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCsMaintenanceRequest
+      tags: [maintenanceRequests]
+      summary: Update a CsMaintenanceRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsMaintenanceRequestUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsMaintenanceRequest"
+    delete:
+      operationId: deleteCsMaintenanceRequest
+      tags: [maintenanceRequests]
+      summary: Soft-delete a CsMaintenanceRequest
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /support-tickets:
+    get:
+      operationId: listCsSupportTickets
+      tags: [supportTickets]
+      summary: List support-tickets
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: category, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CsSupportTickets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsSupportTicketListResponse"
+    post:
+      operationId: createCsSupportTicket
+      tags: [supportTickets]
+      summary: Create a CsSupportTicket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsSupportTicketInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsSupportTicket"
+  /support-tickets/{id}:
+    get:
+      operationId: getCsSupportTicket
+      tags: [supportTickets]
+      summary: Get a CsSupportTicket
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CsSupportTicket
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsSupportTicket"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCsSupportTicket
+      tags: [supportTickets]
+      summary: Update a CsSupportTicket
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CsSupportTicketUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsSupportTicket"
+    delete:
+      operationId: deleteCsSupportTicket
+      tags: [supportTickets]
+      summary: Soft-delete a CsSupportTicket
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /call-logs:
+    get:
+      operationId: listCallLogs
+      tags: [callLogs]
+      summary: List call-logs
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: direction, in: query, required: false, schema: { type: string } }
+        - { name: channel, in: query, required: false, schema: { type: string } }
+        - { name: callStatus, in: query, required: false, schema: { type: string } }
+        - { name: agentUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CallLogs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallLogListResponse"
+    post:
+      operationId: createCallLog
+      tags: [callLogs]
+      summary: Create a CallLog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CallLogInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallLog"
+  /call-logs/{id}:
+    get:
+      operationId: getCallLog
+      tags: [callLogs]
+      summary: Get a CallLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CallLog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallLog"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCallLog
+      tags: [callLogs]
+      summary: Update a CallLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CallLogUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallLog"
+    delete:
+      operationId: deleteCallLog
+      tags: [callLogs]
+      summary: Soft-delete a CallLog
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /work-orders:
+    get:
+      operationId: listWorkOrders
+      tags: [workOrders]
+      summary: List work-orders
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: unitId, in: query, required: false, schema: { type: string } }
+        - { name: sourceType, in: query, required: false, schema: { type: string } }
+        - { name: priority, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: WorkOrders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkOrderListResponse"
+    post:
+      operationId: createWorkOrder
+      tags: [workOrders]
+      summary: Create a WorkOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkOrderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkOrder"
+  /work-orders/{id}:
+    get:
+      operationId: getWorkOrder
+      tags: [workOrders]
+      summary: Get a WorkOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: WorkOrder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkOrder"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateWorkOrder
+      tags: [workOrders]
+      summary: Update a WorkOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkOrderUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkOrder"
+    delete:
+      operationId: deleteWorkOrder
+      tags: [workOrders]
+      summary: Soft-delete a WorkOrder
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /customer-satisfaction-surveys:
+    get:
+      operationId: listCustomerSatisfactionSurveys
+      tags: [customerSatisfactionSurveys]
+      summary: List customer-satisfaction-surveys
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: customerId, in: query, required: false, schema: { type: string } }
+        - { name: channel, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: CustomerSatisfactionSurveys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerSatisfactionSurveyListResponse"
+    post:
+      operationId: createCustomerSatisfactionSurvey
+      tags: [customerSatisfactionSurveys]
+      summary: Create a CustomerSatisfactionSurvey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerSatisfactionSurveyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerSatisfactionSurvey"
+  /customer-satisfaction-surveys/{id}:
+    get:
+      operationId: getCustomerSatisfactionSurvey
+      tags: [customerSatisfactionSurveys]
+      summary: Get a CustomerSatisfactionSurvey
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: CustomerSatisfactionSurvey
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerSatisfactionSurvey"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateCustomerSatisfactionSurvey
+      tags: [customerSatisfactionSurveys]
+      summary: Update a CustomerSatisfactionSurvey
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerSatisfactionSurveyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerSatisfactionSurvey"
+    delete:
+      operationId: deleteCustomerSatisfactionSurvey
+      tags: [customerSatisfactionSurveys]
+      summary: Soft-delete a CustomerSatisfactionSurvey
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
   /asset-categories:
     get:
       operationId: listAssetCategories
@@ -31644,6 +32195,410 @@ components:
         data:
           type: array
           items: { $ref: "#/components/schemas/ServiceEscalation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CsComplaint:
+      type: object
+      required: [id, companyId, customerId, code, category, subject, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        customerId: { type: string }
+        customerUserId: { type: ["string", "null"] }
+        code: { type: string }
+        category: { type: string }
+        subject: { type: string }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        attachmentUrl: { type: ["string", "null"] }
+        resolvedAt: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
+        slaPolicyId: { type: ["string", "null"] }
+        dueAt: { type: ["string", "null"] }
+        firstResponseAt: { type: ["string", "null"] }
+        escalationLevel: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CsComplaintInput:
+      type: object
+      required: [companyId, customerId, code, subject]
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        code: { type: string }
+        category: { type: string }
+        subject: { type: string }
+        description: { type: string }
+        status: { type: string }
+        resolvedAt: { type: string }
+        assignedToUserId: { type: string }
+        slaPolicyId: { type: string }
+        dueAt: { type: string }
+        firstResponseAt: { type: string }
+        escalationLevel: { type: string }
+    CsComplaintUpdate:
+      type: object
+      properties:
+        customerId: { type: string }
+        code: { type: string }
+        category: { type: string }
+        subject: { type: string }
+        description: { type: string }
+        status: { type: string }
+        resolvedAt: { type: string }
+        assignedToUserId: { type: string }
+        slaPolicyId: { type: string }
+        dueAt: { type: string }
+        firstResponseAt: { type: string }
+        escalationLevel: { type: string }
+    CsComplaintListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CsComplaint" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CsMaintenanceRequest:
+      type: object
+      required: [id, companyId, customerId, code, category, priority, subject, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        customerId: { type: string }
+        customerUserId: { type: ["string", "null"] }
+        code: { type: string }
+        unitId: { type: ["string", "null"] }
+        contractId: { type: ["string", "null"] }
+        category: { type: string }
+        priority: { type: string }
+        subject: { type: string }
+        description: { type: ["string", "null"] }
+        status: { type: string }
+        attachmentUrl: { type: ["string", "null"] }
+        resolvedAt: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
+        slaPolicyId: { type: ["string", "null"] }
+        dueAt: { type: ["string", "null"] }
+        firstResponseAt: { type: ["string", "null"] }
+        escalationLevel: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CsMaintenanceRequestInput:
+      type: object
+      required: [companyId, customerId, code, subject]
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        contractId: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        subject: { type: string }
+        description: { type: string }
+        status: { type: string }
+        resolvedAt: { type: string }
+        assignedToUserId: { type: string }
+        slaPolicyId: { type: string }
+        dueAt: { type: string }
+        firstResponseAt: { type: string }
+        escalationLevel: { type: string }
+    CsMaintenanceRequestUpdate:
+      type: object
+      properties:
+        customerId: { type: string }
+        code: { type: string }
+        unitId: { type: string }
+        contractId: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        subject: { type: string }
+        description: { type: string }
+        status: { type: string }
+        resolvedAt: { type: string }
+        assignedToUserId: { type: string }
+        slaPolicyId: { type: string }
+        dueAt: { type: string }
+        firstResponseAt: { type: string }
+        escalationLevel: { type: string }
+    CsMaintenanceRequestListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CsMaintenanceRequest" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CsSupportTicket:
+      type: object
+      required: [id, companyId, customerId, code, subject, category, priority, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        customerId: { type: string }
+        customerUserId: { type: ["string", "null"] }
+        code: { type: string }
+        subject: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        closedAt: { type: ["string", "null"] }
+        assignedToUserId: { type: ["string", "null"] }
+        slaPolicyId: { type: ["string", "null"] }
+        dueAt: { type: ["string", "null"] }
+        firstResponseAt: { type: ["string", "null"] }
+        escalationLevel: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CsSupportTicketInput:
+      type: object
+      required: [companyId, customerId, code, subject]
+      properties:
+        companyId: { type: string }
+        customerId: { type: string }
+        code: { type: string }
+        subject: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        closedAt: { type: string }
+        assignedToUserId: { type: string }
+        slaPolicyId: { type: string }
+        dueAt: { type: string }
+        firstResponseAt: { type: string }
+        escalationLevel: { type: string }
+    CsSupportTicketUpdate:
+      type: object
+      properties:
+        customerId: { type: string }
+        code: { type: string }
+        subject: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        closedAt: { type: string }
+        assignedToUserId: { type: string }
+        slaPolicyId: { type: string }
+        dueAt: { type: string }
+        firstResponseAt: { type: string }
+        escalationLevel: { type: string }
+    CsSupportTicketListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CsSupportTicket" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CallLog:
+      type: object
+      required: [id, companyId, code, direction, channel, subject, callStatus, followUpRequired, calledAt, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        customerId: { type: ["string", "null"] }
+        direction: { type: string }
+        channel: { type: string }
+        subject: { type: string }
+        summary: { type: ["string", "null"] }
+        callStatus: { type: string }
+        durationMinutes: { type: ["string", "null"] }
+        agentUserId: { type: ["string", "null"] }
+        sourceType: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        followUpRequired: { type: boolean }
+        calledAt: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CallLogInput:
+      type: object
+      required: [companyId, code, subject]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        customerId: { type: string }
+        direction: { type: string }
+        channel: { type: string }
+        subject: { type: string }
+        summary: { type: string }
+        callStatus: { type: string }
+        durationMinutes: { type: string }
+        agentUserId: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        followUpRequired: { type: boolean }
+        calledAt: { type: string }
+        notes: { type: string }
+    CallLogUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        customerId: { type: string }
+        direction: { type: string }
+        channel: { type: string }
+        subject: { type: string }
+        summary: { type: string }
+        callStatus: { type: string }
+        durationMinutes: { type: string }
+        agentUserId: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        followUpRequired: { type: boolean }
+        calledAt: { type: string }
+        notes: { type: string }
+    CallLogListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CallLog" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    WorkOrder:
+      type: object
+      required: [id, companyId, code, sourceType, title, priority, status, progressPercent, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        customerId: { type: ["string", "null"] }
+        unitId: { type: ["string", "null"] }
+        sourceType: { type: string }
+        sourceId: { type: ["string", "null"] }
+        title: { type: string }
+        description: { type: ["string", "null"] }
+        priority: { type: string }
+        status: { type: string }
+        assignedToUserId: { type: ["string", "null"] }
+        scheduledDate: { type: ["string", "null"] }
+        completedDate: { type: ["string", "null"] }
+        progressPercent: { type: string }
+        estimatedCost: { type: ["string", "null"] }
+        actualCost: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    WorkOrderInput:
+      type: object
+      required: [companyId, code, title]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        customerId: { type: string }
+        unitId: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        title: { type: string }
+        description: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        assignedToUserId: { type: string }
+        scheduledDate: { type: string }
+        completedDate: { type: string }
+        progressPercent: { type: string }
+        estimatedCost: { type: string }
+        actualCost: { type: string }
+        notes: { type: string }
+    WorkOrderUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        customerId: { type: string }
+        unitId: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        title: { type: string }
+        description: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        assignedToUserId: { type: string }
+        scheduledDate: { type: string }
+        completedDate: { type: string }
+        progressPercent: { type: string }
+        estimatedCost: { type: string }
+        actualCost: { type: string }
+        notes: { type: string }
+    WorkOrderListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/WorkOrder" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    CustomerSatisfactionSurvey:
+      type: object
+      required: [id, companyId, code, channel, status, surveyDate, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        customerId: { type: ["string", "null"] }
+        channel: { type: string }
+        sourceType: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        status: { type: string }
+        surveyDate: { type: string }
+        overallRating: { type: ["string", "null"] }
+        npsScore: { type: ["string", "null"] }
+        comments: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CustomerSatisfactionSurveyInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        customerId: { type: string }
+        channel: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        status: { type: string }
+        surveyDate: { type: string }
+        overallRating: { type: string }
+        npsScore: { type: string }
+        comments: { type: string }
+    CustomerSatisfactionSurveyUpdate:
+      type: object
+      properties:
+        code: { type: string }
+        customerId: { type: string }
+        channel: { type: string }
+        sourceType: { type: string }
+        sourceId: { type: string }
+        status: { type: string }
+        surveyDate: { type: string }
+        overallRating: { type: string }
+        npsScore: { type: string }
+        comments: { type: string }
+    CustomerSatisfactionSurveyListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/CustomerSatisfactionSurvey" }
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }

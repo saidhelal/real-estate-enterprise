@@ -28,5 +28,6 @@ export * from "./portal";
 export * from "./land-bank";
 export * from "./handover";
 export * from "./customer-service";
+export * from "./customer-service-ops";
 export * from "./fixed-assets";
 export * from "./master-data";

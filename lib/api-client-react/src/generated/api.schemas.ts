@@ -11335,6 +11335,424 @@ export interface ServiceEscalationListResponse {
   pageSize: number;
 }
 
+export interface CsComplaint {
+  id: string;
+  companyId: string;
+  customerId: string;
+  /** @nullable */
+  customerUserId?: string | null;
+  code: string;
+  category: string;
+  subject: string;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  attachmentUrl?: string | null;
+  /** @nullable */
+  resolvedAt?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  /** @nullable */
+  slaPolicyId?: string | null;
+  /** @nullable */
+  dueAt?: string | null;
+  /** @nullable */
+  firstResponseAt?: string | null;
+  /** @nullable */
+  escalationLevel?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CsComplaintInput {
+  companyId: string;
+  customerId: string;
+  code: string;
+  category?: string;
+  subject: string;
+  description?: string;
+  status?: string;
+  resolvedAt?: string;
+  assignedToUserId?: string;
+  slaPolicyId?: string;
+  dueAt?: string;
+  firstResponseAt?: string;
+  escalationLevel?: string;
+}
+
+export interface CsComplaintUpdate {
+  customerId?: string;
+  code?: string;
+  category?: string;
+  subject?: string;
+  description?: string;
+  status?: string;
+  resolvedAt?: string;
+  assignedToUserId?: string;
+  slaPolicyId?: string;
+  dueAt?: string;
+  firstResponseAt?: string;
+  escalationLevel?: string;
+}
+
+export interface CsComplaintListResponse {
+  data: CsComplaint[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CsMaintenanceRequest {
+  id: string;
+  companyId: string;
+  customerId: string;
+  /** @nullable */
+  customerUserId?: string | null;
+  code: string;
+  /** @nullable */
+  unitId?: string | null;
+  /** @nullable */
+  contractId?: string | null;
+  category: string;
+  priority: string;
+  subject: string;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  /** @nullable */
+  attachmentUrl?: string | null;
+  /** @nullable */
+  resolvedAt?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  /** @nullable */
+  slaPolicyId?: string | null;
+  /** @nullable */
+  dueAt?: string | null;
+  /** @nullable */
+  firstResponseAt?: string | null;
+  /** @nullable */
+  escalationLevel?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CsMaintenanceRequestInput {
+  companyId: string;
+  customerId: string;
+  code: string;
+  unitId?: string;
+  contractId?: string;
+  category?: string;
+  priority?: string;
+  subject: string;
+  description?: string;
+  status?: string;
+  resolvedAt?: string;
+  assignedToUserId?: string;
+  slaPolicyId?: string;
+  dueAt?: string;
+  firstResponseAt?: string;
+  escalationLevel?: string;
+}
+
+export interface CsMaintenanceRequestUpdate {
+  customerId?: string;
+  code?: string;
+  unitId?: string;
+  contractId?: string;
+  category?: string;
+  priority?: string;
+  subject?: string;
+  description?: string;
+  status?: string;
+  resolvedAt?: string;
+  assignedToUserId?: string;
+  slaPolicyId?: string;
+  dueAt?: string;
+  firstResponseAt?: string;
+  escalationLevel?: string;
+}
+
+export interface CsMaintenanceRequestListResponse {
+  data: CsMaintenanceRequest[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CsSupportTicket {
+  id: string;
+  companyId: string;
+  customerId: string;
+  /** @nullable */
+  customerUserId?: string | null;
+  code: string;
+  subject: string;
+  category: string;
+  priority: string;
+  status: string;
+  /** @nullable */
+  closedAt?: string | null;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  /** @nullable */
+  slaPolicyId?: string | null;
+  /** @nullable */
+  dueAt?: string | null;
+  /** @nullable */
+  firstResponseAt?: string | null;
+  /** @nullable */
+  escalationLevel?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CsSupportTicketInput {
+  companyId: string;
+  customerId: string;
+  code: string;
+  subject: string;
+  category?: string;
+  priority?: string;
+  status?: string;
+  closedAt?: string;
+  assignedToUserId?: string;
+  slaPolicyId?: string;
+  dueAt?: string;
+  firstResponseAt?: string;
+  escalationLevel?: string;
+}
+
+export interface CsSupportTicketUpdate {
+  customerId?: string;
+  code?: string;
+  subject?: string;
+  category?: string;
+  priority?: string;
+  status?: string;
+  closedAt?: string;
+  assignedToUserId?: string;
+  slaPolicyId?: string;
+  dueAt?: string;
+  firstResponseAt?: string;
+  escalationLevel?: string;
+}
+
+export interface CsSupportTicketListResponse {
+  data: CsSupportTicket[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CallLog {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  customerId?: string | null;
+  direction: string;
+  channel: string;
+  subject: string;
+  /** @nullable */
+  summary?: string | null;
+  callStatus: string;
+  /** @nullable */
+  durationMinutes?: string | null;
+  /** @nullable */
+  agentUserId?: string | null;
+  /** @nullable */
+  sourceType?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  followUpRequired: boolean;
+  calledAt: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CallLogInput {
+  companyId: string;
+  code: string;
+  customerId?: string;
+  direction?: string;
+  channel?: string;
+  subject: string;
+  summary?: string;
+  callStatus?: string;
+  durationMinutes?: string;
+  agentUserId?: string;
+  sourceType?: string;
+  sourceId?: string;
+  followUpRequired?: boolean;
+  calledAt?: string;
+  notes?: string;
+}
+
+export interface CallLogUpdate {
+  code?: string;
+  customerId?: string;
+  direction?: string;
+  channel?: string;
+  subject?: string;
+  summary?: string;
+  callStatus?: string;
+  durationMinutes?: string;
+  agentUserId?: string;
+  sourceType?: string;
+  sourceId?: string;
+  followUpRequired?: boolean;
+  calledAt?: string;
+  notes?: string;
+}
+
+export interface CallLogListResponse {
+  data: CallLog[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface WorkOrder {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  customerId?: string | null;
+  /** @nullable */
+  unitId?: string | null;
+  sourceType: string;
+  /** @nullable */
+  sourceId?: string | null;
+  title: string;
+  /** @nullable */
+  description?: string | null;
+  priority: string;
+  status: string;
+  /** @nullable */
+  assignedToUserId?: string | null;
+  /** @nullable */
+  scheduledDate?: string | null;
+  /** @nullable */
+  completedDate?: string | null;
+  progressPercent: string;
+  /** @nullable */
+  estimatedCost?: string | null;
+  /** @nullable */
+  actualCost?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface WorkOrderInput {
+  companyId: string;
+  code: string;
+  customerId?: string;
+  unitId?: string;
+  sourceType?: string;
+  sourceId?: string;
+  title: string;
+  description?: string;
+  priority?: string;
+  status?: string;
+  assignedToUserId?: string;
+  scheduledDate?: string;
+  completedDate?: string;
+  progressPercent?: string;
+  estimatedCost?: string;
+  actualCost?: string;
+  notes?: string;
+}
+
+export interface WorkOrderUpdate {
+  code?: string;
+  customerId?: string;
+  unitId?: string;
+  sourceType?: string;
+  sourceId?: string;
+  title?: string;
+  description?: string;
+  priority?: string;
+  status?: string;
+  assignedToUserId?: string;
+  scheduledDate?: string;
+  completedDate?: string;
+  progressPercent?: string;
+  estimatedCost?: string;
+  actualCost?: string;
+  notes?: string;
+}
+
+export interface WorkOrderListResponse {
+  data: WorkOrder[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface CustomerSatisfactionSurvey {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  customerId?: string | null;
+  channel: string;
+  /** @nullable */
+  sourceType?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  status: string;
+  surveyDate: string;
+  /** @nullable */
+  overallRating?: string | null;
+  /** @nullable */
+  npsScore?: string | null;
+  /** @nullable */
+  comments?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CustomerSatisfactionSurveyInput {
+  companyId: string;
+  code: string;
+  customerId?: string;
+  channel?: string;
+  sourceType?: string;
+  sourceId?: string;
+  status?: string;
+  surveyDate?: string;
+  overallRating?: string;
+  npsScore?: string;
+  comments?: string;
+}
+
+export interface CustomerSatisfactionSurveyUpdate {
+  code?: string;
+  customerId?: string;
+  channel?: string;
+  sourceType?: string;
+  sourceId?: string;
+  status?: string;
+  surveyDate?: string;
+  overallRating?: string;
+  npsScore?: string;
+  comments?: string;
+}
+
+export interface CustomerSatisfactionSurveyListResponse {
+  data: CustomerSatisfactionSurvey[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface CustomerServiceStatusCount {
   status: string;
   count: number;
@@ -13393,6 +13811,77 @@ status?: string;
 
 export type GetCustomerServiceDashboardParams = {
 companyId?: string;
+};
+
+export type ListCsComplaintsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+category?: string;
+status?: string;
+assignedToUserId?: string;
+};
+
+export type ListCsMaintenanceRequestsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+unitId?: string;
+category?: string;
+priority?: string;
+status?: string;
+assignedToUserId?: string;
+};
+
+export type ListCsSupportTicketsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+category?: string;
+priority?: string;
+status?: string;
+assignedToUserId?: string;
+};
+
+export type ListCallLogsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+direction?: string;
+channel?: string;
+callStatus?: string;
+agentUserId?: string;
+};
+
+export type ListWorkOrdersParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+unitId?: string;
+sourceType?: string;
+priority?: string;
+status?: string;
+assignedToUserId?: string;
+};
+
+export type ListCustomerSatisfactionSurveysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+customerId?: string;
+channel?: string;
+status?: string;
 };
 
 export type ListAssetCategoriesParams = {

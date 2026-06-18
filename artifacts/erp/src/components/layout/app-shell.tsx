@@ -22,6 +22,7 @@ import {
   Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
   LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
+  Inbox, PhoneCall, Star,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -256,8 +257,12 @@ const NAV_GROUPS = [
   ]},
   { titleKey: "nav.group.customer_service", items: [
     { href: "/customer-service-dashboard", icon: MessageSquare, labelKey: "nav.customer_service_dashboard" },
-    { href: "/sla-policies", icon: ClipboardList, labelKey: "nav.sla_policies" },
+    { href: "/support-tickets", icon: Inbox, labelKey: "nav.support_tickets" },
+    { href: "/complaints", icon: AlertTriangle, labelKey: "nav.complaints" },
     { href: "/service-escalations", icon: Bell, labelKey: "nav.service_escalations" },
+    { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
+    { href: "/call-logs", icon: PhoneCall, labelKey: "nav.call_logs" },
+    { href: "/sla-policies", icon: ClipboardList, labelKey: "nav.sla_policies" },
     { href: "/handover-dashboard", icon: ClipboardCheck, labelKey: "nav.handover_dashboard" },
     { href: "/handover-requests", icon: FileCheck, labelKey: "nav.handover_requests" },
     { href: "/handover-schedules", icon: CalendarClock, labelKey: "nav.handover_schedules" },
@@ -265,6 +270,9 @@ const NAV_GROUPS = [
     { href: "/handover-minutes", icon: FileText, labelKey: "nav.handover_minutes" },
     { href: "/handover-snags", icon: AlertTriangle, labelKey: "nav.handover_snags" },
     { href: "/handover-approvals", icon: ShieldCheck, labelKey: "nav.handover_approvals" },
+    { href: "/maintenance-requests", icon: Wrench, labelKey: "nav.maintenance_requests" },
+    { href: "/work-orders", icon: Hammer, labelKey: "nav.work_orders" },
+    { href: "/customer-satisfaction-surveys", icon: Star, labelKey: "nav.customer_satisfaction_surveys" },
     { href: "/handover-reports", icon: BarChart3, labelKey: "nav.handover_reports" },
     { href: "/customer-service-reports", icon: BarChart3, labelKey: "nav.customer_service_reports" },
   ]},

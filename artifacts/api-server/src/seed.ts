@@ -304,6 +304,12 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   // Customer Service
   { module: "slaPolicies", label: "SLA Policies" },
   { module: "serviceEscalations", label: "Service Escalations", extraActions: ["resolve"] },
+  { module: "complaints", label: "Complaints" },
+  { module: "maintenanceRequests", label: "Maintenance Requests" },
+  { module: "supportTickets", label: "Customer Requests" },
+  { module: "callLogs", label: "Call Center" },
+  { module: "workOrders", label: "Work Orders" },
+  { module: "customerSatisfactionSurveys", label: "Satisfaction Surveys" },
   // Fixed Assets
   { module: "assetCategories", label: "Asset Categories" },
   { module: "fixedAssets", label: "Fixed Assets" },

@@ -26467,6 +26467,901 @@ export const GetCustomerServiceDashboardResponse = zod.object({
 
 
 /**
+ * @summary List complaints
+ */
+export const ListCsComplaintsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional()
+})
+
+export const ListCsComplaintsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "category": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CsComplaint
+ */
+export const CreateCsComplaintBody = zod.object({
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "code": zod.string(),
+  "category": zod.string().optional(),
+  "subject": zod.string(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "resolvedAt": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "slaPolicyId": zod.string().optional(),
+  "dueAt": zod.string().optional(),
+  "firstResponseAt": zod.string().optional(),
+  "escalationLevel": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CsComplaint
+ */
+export const GetCsComplaintParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCsComplaintResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "category": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CsComplaint
+ */
+export const UpdateCsComplaintParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCsComplaintBody = zod.object({
+  "customerId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "category": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "resolvedAt": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "slaPolicyId": zod.string().optional(),
+  "dueAt": zod.string().optional(),
+  "firstResponseAt": zod.string().optional(),
+  "escalationLevel": zod.string().optional()
+})
+
+export const UpdateCsComplaintResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "category": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CsComplaint
+ */
+export const DeleteCsComplaintParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCsComplaintResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List maintenance-requests
+ */
+export const ListCsMaintenanceRequestsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional()
+})
+
+export const ListCsMaintenanceRequestsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "unitId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CsMaintenanceRequest
+ */
+export const CreateCsMaintenanceRequestBody = zod.object({
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "code": zod.string(),
+  "unitId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "category": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "subject": zod.string(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "resolvedAt": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "slaPolicyId": zod.string().optional(),
+  "dueAt": zod.string().optional(),
+  "firstResponseAt": zod.string().optional(),
+  "escalationLevel": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CsMaintenanceRequest
+ */
+export const GetCsMaintenanceRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCsMaintenanceRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "unitId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CsMaintenanceRequest
+ */
+export const UpdateCsMaintenanceRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCsMaintenanceRequestBody = zod.object({
+  "customerId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "contractId": zod.string().optional(),
+  "category": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.string().optional(),
+  "resolvedAt": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "slaPolicyId": zod.string().optional(),
+  "dueAt": zod.string().optional(),
+  "firstResponseAt": zod.string().optional(),
+  "escalationLevel": zod.string().optional()
+})
+
+export const UpdateCsMaintenanceRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "unitId": zod.string().nullish(),
+  "contractId": zod.string().nullish(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "subject": zod.string(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "attachmentUrl": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CsMaintenanceRequest
+ */
+export const DeleteCsMaintenanceRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCsMaintenanceRequestResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List support-tickets
+ */
+export const ListCsSupportTicketsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional()
+})
+
+export const ListCsSupportTicketsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "subject": zod.string(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "closedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CsSupportTicket
+ */
+export const CreateCsSupportTicketBody = zod.object({
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "code": zod.string(),
+  "subject": zod.string(),
+  "category": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "closedAt": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "slaPolicyId": zod.string().optional(),
+  "dueAt": zod.string().optional(),
+  "firstResponseAt": zod.string().optional(),
+  "escalationLevel": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CsSupportTicket
+ */
+export const GetCsSupportTicketParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCsSupportTicketResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "subject": zod.string(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "closedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CsSupportTicket
+ */
+export const UpdateCsSupportTicketParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCsSupportTicketBody = zod.object({
+  "customerId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "category": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "closedAt": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "slaPolicyId": zod.string().optional(),
+  "dueAt": zod.string().optional(),
+  "firstResponseAt": zod.string().optional(),
+  "escalationLevel": zod.string().optional()
+})
+
+export const UpdateCsSupportTicketResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "customerId": zod.string(),
+  "customerUserId": zod.string().nullish(),
+  "code": zod.string(),
+  "subject": zod.string(),
+  "category": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "closedAt": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "slaPolicyId": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
+  "firstResponseAt": zod.string().nullish(),
+  "escalationLevel": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CsSupportTicket
+ */
+export const DeleteCsSupportTicketParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCsSupportTicketResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List call-logs
+ */
+export const ListCallLogsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "direction": zod.coerce.string().optional(),
+  "channel": zod.coerce.string().optional(),
+  "callStatus": zod.coerce.string().optional(),
+  "agentUserId": zod.coerce.string().optional()
+})
+
+export const ListCallLogsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "direction": zod.string(),
+  "channel": zod.string(),
+  "subject": zod.string(),
+  "summary": zod.string().nullish(),
+  "callStatus": zod.string(),
+  "durationMinutes": zod.string().nullish(),
+  "agentUserId": zod.string().nullish(),
+  "sourceType": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "followUpRequired": zod.boolean(),
+  "calledAt": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CallLog
+ */
+export const CreateCallLogBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().optional(),
+  "direction": zod.string().optional(),
+  "channel": zod.string().optional(),
+  "subject": zod.string(),
+  "summary": zod.string().optional(),
+  "callStatus": zod.string().optional(),
+  "durationMinutes": zod.string().optional(),
+  "agentUserId": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "followUpRequired": zod.boolean().optional(),
+  "calledAt": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CallLog
+ */
+export const GetCallLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCallLogResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "direction": zod.string(),
+  "channel": zod.string(),
+  "subject": zod.string(),
+  "summary": zod.string().nullish(),
+  "callStatus": zod.string(),
+  "durationMinutes": zod.string().nullish(),
+  "agentUserId": zod.string().nullish(),
+  "sourceType": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "followUpRequired": zod.boolean(),
+  "calledAt": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CallLog
+ */
+export const UpdateCallLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCallLogBody = zod.object({
+  "code": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "direction": zod.string().optional(),
+  "channel": zod.string().optional(),
+  "subject": zod.string().optional(),
+  "summary": zod.string().optional(),
+  "callStatus": zod.string().optional(),
+  "durationMinutes": zod.string().optional(),
+  "agentUserId": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "followUpRequired": zod.boolean().optional(),
+  "calledAt": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateCallLogResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "direction": zod.string(),
+  "channel": zod.string(),
+  "subject": zod.string(),
+  "summary": zod.string().nullish(),
+  "callStatus": zod.string(),
+  "durationMinutes": zod.string().nullish(),
+  "agentUserId": zod.string().nullish(),
+  "sourceType": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "followUpRequired": zod.boolean(),
+  "calledAt": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CallLog
+ */
+export const DeleteCallLogParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCallLogResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List work-orders
+ */
+export const ListWorkOrdersQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "unitId": zod.coerce.string().optional(),
+  "sourceType": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional()
+})
+
+export const ListWorkOrdersResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "assignedToUserId": zod.string().nullish(),
+  "scheduledDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "progressPercent": zod.string(),
+  "estimatedCost": zod.string().nullish(),
+  "actualCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a WorkOrder
+ */
+export const CreateWorkOrderBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "title": zod.string(),
+  "description": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "scheduledDate": zod.string().optional(),
+  "completedDate": zod.string().optional(),
+  "progressPercent": zod.string().optional(),
+  "estimatedCost": zod.string().optional(),
+  "actualCost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a WorkOrder
+ */
+export const GetWorkOrderParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetWorkOrderResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "assignedToUserId": zod.string().nullish(),
+  "scheduledDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "progressPercent": zod.string(),
+  "estimatedCost": zod.string().nullish(),
+  "actualCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a WorkOrder
+ */
+export const UpdateWorkOrderParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateWorkOrderBody = zod.object({
+  "code": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "unitId": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "title": zod.string().optional(),
+  "description": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "status": zod.string().optional(),
+  "assignedToUserId": zod.string().optional(),
+  "scheduledDate": zod.string().optional(),
+  "completedDate": zod.string().optional(),
+  "progressPercent": zod.string().optional(),
+  "estimatedCost": zod.string().optional(),
+  "actualCost": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateWorkOrderResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "sourceType": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "assignedToUserId": zod.string().nullish(),
+  "scheduledDate": zod.string().nullish(),
+  "completedDate": zod.string().nullish(),
+  "progressPercent": zod.string(),
+  "estimatedCost": zod.string().nullish(),
+  "actualCost": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a WorkOrder
+ */
+export const DeleteWorkOrderParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteWorkOrderResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List customer-satisfaction-surveys
+ */
+export const ListCustomerSatisfactionSurveysQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "customerId": zod.coerce.string().optional(),
+  "channel": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListCustomerSatisfactionSurveysResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "channel": zod.string(),
+  "sourceType": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "status": zod.string(),
+  "surveyDate": zod.string(),
+  "overallRating": zod.string().nullish(),
+  "npsScore": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a CustomerSatisfactionSurvey
+ */
+export const CreateCustomerSatisfactionSurveyBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().optional(),
+  "channel": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "surveyDate": zod.string().optional(),
+  "overallRating": zod.string().optional(),
+  "npsScore": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a CustomerSatisfactionSurvey
+ */
+export const GetCustomerSatisfactionSurveyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetCustomerSatisfactionSurveyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "channel": zod.string(),
+  "sourceType": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "status": zod.string(),
+  "surveyDate": zod.string(),
+  "overallRating": zod.string().nullish(),
+  "npsScore": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a CustomerSatisfactionSurvey
+ */
+export const UpdateCustomerSatisfactionSurveyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateCustomerSatisfactionSurveyBody = zod.object({
+  "code": zod.string().optional(),
+  "customerId": zod.string().optional(),
+  "channel": zod.string().optional(),
+  "sourceType": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "surveyDate": zod.string().optional(),
+  "overallRating": zod.string().optional(),
+  "npsScore": zod.string().optional(),
+  "comments": zod.string().optional()
+})
+
+export const UpdateCustomerSatisfactionSurveyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "customerId": zod.string().nullish(),
+  "channel": zod.string(),
+  "sourceType": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "status": zod.string(),
+  "surveyDate": zod.string(),
+  "overallRating": zod.string().nullish(),
+  "npsScore": zod.string().nullish(),
+  "comments": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a CustomerSatisfactionSurvey
+ */
+export const DeleteCustomerSatisfactionSurveyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteCustomerSatisfactionSurveyResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
  * @summary List asset-categories
  */
 export const ListAssetCategoriesQueryParams = zod.object({

@@ -11,6 +11,19 @@ export interface LabelPair {
 // identical while option lists become data-driven, and the web layer re-exports
 // this map (as ENUM_LABELS) for badges/options and as the resolver fallback.
 export const LABELS: Record<string, LabelPair> = {
+  // customer service ops
+  inbound: { en: "Inbound", ar: "وارد" },
+  outbound: { en: "Outbound", ar: "صادر" },
+  phone: { en: "Phone", ar: "هاتف" },
+  whatsapp: { en: "WhatsApp", ar: "واتساب" },
+  sms: { en: "SMS", ar: "رسالة نصية" },
+  missed: { en: "Missed", ar: "فائتة" },
+  no_answer: { en: "No Answer", ar: "بدون رد" },
+  voicemail: { en: "Voicemail", ar: "بريد صوتي" },
+  manual: { en: "Manual", ar: "يدوي" },
+  work_order: { en: "Work Order", ar: "أمر عمل" },
+  handover: { en: "Handover", ar: "تسليم" },
+  periodic: { en: "Periodic", ar: "دوري" },
   // land bank
   available: { en: "Available", ar: "متاحة" },
   acquired: { en: "Acquired", ar: "مُكتسبة" },

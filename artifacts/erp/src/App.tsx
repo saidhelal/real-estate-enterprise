@@ -148,6 +148,12 @@ import CustomerServiceDashboardPage from "@/pages/customer-service-dashboard";
 import CustomerServiceReportsPage from "@/pages/customer-service-reports";
 import SlaPoliciesPage from "@/pages/sla-policies";
 import ServiceEscalationsPage from "@/pages/service-escalations";
+import ComplaintsPage from "@/pages/complaints";
+import MaintenanceRequestsPage from "@/pages/maintenance-requests";
+import SupportTicketsPage from "@/pages/support-tickets";
+import CallLogsPage from "@/pages/call-logs";
+import WorkOrdersPage from "@/pages/work-orders";
+import CustomerSatisfactionSurveysPage from "@/pages/customer-satisfaction-surveys";
 import FixedAssetsDashboardPage from "@/pages/fixed-assets-dashboard";
 import FixedAssetsReportsPage from "@/pages/fixed-assets-reports";
 import AssetCategoriesPage from "@/pages/asset-categories";
@@ -396,6 +402,12 @@ function Router() {
             <Route path="/customer-service-dashboard" component={CustomerServiceDashboardPage} />
             <Route path="/sla-policies" component={SlaPoliciesPage} />
             <Route path="/service-escalations" component={ServiceEscalationsPage} />
+            <Route path="/complaints" component={ComplaintsPage} />
+            <Route path="/maintenance-requests" component={MaintenanceRequestsPage} />
+            <Route path="/support-tickets" component={SupportTicketsPage} />
+            <Route path="/call-logs" component={CallLogsPage} />
+            <Route path="/work-orders" component={WorkOrdersPage} />
+            <Route path="/customer-satisfaction-surveys" component={CustomerSatisfactionSurveysPage} />
             <Route path="/customer-service-reports" component={CustomerServiceReportsPage} />
             <Route path="/fixed-assets-dashboard" component={FixedAssetsDashboardPage} />
             <Route path="/asset-categories" component={AssetCategoriesPage} />
