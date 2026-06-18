@@ -35,3 +35,4 @@
 - [Home dashboard tile counts](home-dashboard-tile-counts.md) — Home tiles reuse per-module dashboard endpoints + matching queryKey (shared cache, company[0]-scoped); pick a representative count non-zero when the module has any records.
 - [e2e HMR false positives](e2e-hmr-false-positive.md) — single-page blank-panel e2e failures during concurrent edits are usually Vite HMR reloads, not real bugs; re-test on a stable build.
 - [Executive Oversight module](executive-oversight.md) — cross-department KPI views = ONE read-only GET aggregating existing tables (no new schema); reuse per-module dashboard query patterns.
+- [Central Print Engine](print-engine.md) — per-module Forms & Printing surfaced via RAW_NAV_GROUPS→NAV_GROUPS derivation + one /forms-printing/:moduleKey route; client must DOMPurify+sandbox template HTML (server only escapes tokens); createFormUploadUrl mutation vars are void.

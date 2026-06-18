@@ -22,7 +22,7 @@ import {
   Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
   LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
-  Inbox, PhoneCall, Star,
+  Inbox, PhoneCall, Star, Printer,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -35,7 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const NAV_GROUPS = [
+const RAW_NAV_GROUPS = [
   { titleKey: "nav.group.general", items: [
     { href: "/", icon: Home, labelKey: "nav.home" },
     { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
@@ -354,6 +354,38 @@ const NAV_GROUPS = [
     { href: "/dynamic-lists", icon: ListPlus, labelKey: "nav.dynamic_lists" },
   ]},
 ];
+
+const FORMS_MODULE_BY_GROUP: Record<string, string> = {
+  "nav.group.sales_crm": "sales",
+  "nav.group.real_estate": "realEstate",
+  "nav.group.financial_management": "finance",
+  "nav.group.engineering": "engineering",
+  "nav.group.construction": "construction",
+  "nav.group.procurement": "procurement",
+  "nav.group.inventory": "inventory",
+  "nav.group.hr": "hr",
+  "nav.group.legal": "legal",
+  "nav.group.land_bank": "landBank",
+  "nav.group.customer_service": "customerService",
+  "nav.group.fixed_assets": "fixedAssets",
+  "nav.group.general_admin": "general",
+  "nav.group.insurance": "insurance",
+  "nav.group.business_intelligence": "businessIntelligence",
+  "nav.group.administration": "administration",
+  "nav.group.system_administration": "systemAdministration",
+};
+
+const NAV_GROUPS = RAW_NAV_GROUPS.map((group) => {
+  const moduleKey = FORMS_MODULE_BY_GROUP[group.titleKey];
+  if (!moduleKey) return group;
+  return {
+    ...group,
+    items: [
+      ...group.items,
+      { href: `/forms-printing/${moduleKey}`, icon: Printer, labelKey: "nav.forms_printing" },
+    ],
+  };
+});
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();

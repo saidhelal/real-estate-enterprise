@@ -38,6 +38,8 @@ import masterDataRouter from "./master-data";
 import changeRequestsRouter from "./change-requests";
 import notificationsRouter from "./notifications";
 import executiveOversightRouter from "./executive-oversight";
+import formTemplatesRouter from "./form-templates";
+import printJobsRouter from "./print-jobs";
 import portalRouter from "./portal";
 
 const router: IRouter = Router();
@@ -85,5 +87,7 @@ router.use(masterDataRouter);
 router.use(changeRequestsRouter);
 router.use(notificationsRouter);
 router.use(executiveOversightRouter);
+router.use(formTemplatesRouter);
+router.use(printJobsRouter);
 
 export default router;

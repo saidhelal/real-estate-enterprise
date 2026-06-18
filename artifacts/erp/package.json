@@ -44,7 +44,9 @@
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-query": "catalog:",
+    "@types/dompurify": "^3.2.0",
     "@types/node": "catalog:",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
@@ -75,5 +77,10 @@
     "wouter": "^3.3.5",
     "xlsx": "^0.18.5",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.11",
+    "jsbarcode": "^3.12.3",
+    "qrcode": "^1.5.4"
   }
 }

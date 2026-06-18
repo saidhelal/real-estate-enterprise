@@ -333,6 +333,8 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "visitorLogs", label: "Visitor Logs" },
   { module: "circulars", label: "Circulars" },
   { module: "policies", label: "Policies" },
+  // Forms & Printing — central Print Engine surfaced inside every module.
+  { module: "formTemplates", label: "Forms & Printing", extraActions: ["submit", "endorse", "approve", "reject", "disable", "enable", "activate", "print"] },
   // Insurance Management (standalone module)
   { module: "employeeInsurances", label: "Employee Insurances" },
   { module: "insuranceForms", label: "Insurance Forms" },
@@ -555,6 +557,8 @@ async function seedStandardRoles(): Promise<void> {
       "notifications.viewAll",
       // Executive oversight: cross-department read-only KPI console.
       ...view("executiveOversight"),
+      // Forms & Printing: read templates and print approved official documents.
+      ...view("formTemplates"), "formTemplates.print",
     ]),
   );
 
@@ -568,6 +572,8 @@ async function seedStandardRoles(): Promise<void> {
       ...view("installmentSchedules"), ...view("installmentCollections"),
       // Executive oversight scoped to the manager's own department.
       "executiveOversight.viewOwn",
+      // Forms & Printing: author templates, submit, endorse (manager), print.
+      ...cru("formTemplates"), "formTemplates.submit", "formTemplates.endorse", "formTemplates.print",
     ]),
   );
 
@@ -577,6 +583,8 @@ async function seedStandardRoles(): Promise<void> {
     new Set([
       ...cru("leads"), ...cru("customers"), ...cru("reservations"),
       ...view("projects"), ...view("buildings"), ...view("units"),
+      // Forms & Printing: author templates, submit for endorsement, print.
+      ...cru("formTemplates"), "formTemplates.submit", "formTemplates.print",
     ]),
   );
 

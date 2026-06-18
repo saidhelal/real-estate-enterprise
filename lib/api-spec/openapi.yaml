@@ -22959,6 +22959,402 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+  /form-templates:
+    get:
+      operationId: listFormTemplates
+      tags: [formTemplates]
+      summary: List form templates for a module's Forms & Printing section
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: moduleKey, in: query, required: false, schema: { type: string } }
+        - { name: documentType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Form templates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateListResponse"
+    post:
+      operationId: createFormTemplate
+      tags: [formTemplates]
+      summary: Create a form template with an initial draft version
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateDetail"
+
+  /form-template-imports:
+    post:
+      operationId: importFormTemplate
+      tags: [formTemplates]
+      summary: Convert an uploaded Word/PDF/HTML file into template HTML
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormImportInput"
+      responses:
+        "200":
+          description: Imported content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormImportResult"
+
+  /form-uploads:
+    post:
+      operationId: createFormUploadUrl
+      tags: [formTemplates]
+      summary: Get a signed upload URL for a template source file
+      responses:
+        "200":
+          description: Upload URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormUploadResponse"
+
+  /form-binding-catalog:
+    get:
+      operationId: getFormBindingCatalog
+      tags: [formTemplates]
+      summary: Available no-code binding fields for a module/document type
+      parameters:
+        - { name: moduleKey, in: query, required: false, schema: { type: string } }
+        - { name: documentType, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Binding catalog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormBindingCatalogResponse"
+
+  /form-templates/{id}:
+    get:
+      operationId: getFormTemplate
+      tags: [formTemplates]
+      summary: Get a form template with its full version history
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Form template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateFormTemplate
+      tags: [formTemplates]
+      summary: Update form template metadata
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplateUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+
+  /form-templates/{id}/disable:
+    post:
+      operationId: disableFormTemplate
+      tags: [formTemplates]
+      summary: Disable a form template (never hard-deleted)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormStatusChange"
+      responses:
+        "200":
+          description: Disabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+
+  /form-templates/{id}/enable:
+    post:
+      operationId: enableFormTemplate
+      tags: [formTemplates]
+      summary: Re-enable a disabled form template
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormStatusChange"
+      responses:
+        "200":
+          description: Enabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplate"
+
+  /form-templates/{id}/versions:
+    get:
+      operationId: listFormTemplateVersions
+      tags: [formTemplates]
+      summary: List all versions of a template (kept forever)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Versions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateVersionListResponse"
+    post:
+      operationId: createFormTemplateVersion
+      tags: [formTemplates]
+      summary: Create a new draft version (edit a template)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplateVersionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateVersion"
+
+  /form-templates/{id}/versions/{versionId}:
+    patch:
+      operationId: updateFormTemplateVersion
+      tags: [formTemplates]
+      summary: Update a draft or rejected version
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormTemplateVersionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateVersion"
+
+  /form-templates/{id}/versions/{versionId}/submit:
+    post:
+      operationId: submitFormTemplateVersion
+      tags: [formTemplates]
+      summary: Submit a draft version for manager endorsement
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormVersionAction"
+      responses:
+        "200":
+          description: Submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateVersion"
+
+  /form-templates/{id}/versions/{versionId}/endorse:
+    post:
+      operationId: endorseFormTemplateVersion
+      tags: [formTemplates]
+      summary: Department manager endorses a submitted version
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormVersionAction"
+      responses:
+        "200":
+          description: Endorsed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateVersion"
+
+  /form-templates/{id}/versions/{versionId}/approve:
+    post:
+      operationId: approveFormTemplateVersion
+      tags: [formTemplates]
+      summary: Owner/Super Admin approves and activates a version
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormVersionAction"
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateDetail"
+
+  /form-templates/{id}/versions/{versionId}/reject:
+    post:
+      operationId: rejectFormTemplateVersion
+      tags: [formTemplates]
+      summary: Reject a submitted/endorsed version with a reason
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormVersionAction"
+      responses:
+        "200":
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateVersion"
+
+  /form-templates/{id}/versions/{versionId}/activate:
+    post:
+      operationId: activateFormTemplateVersion
+      tags: [formTemplates]
+      summary: Revert — make a previously approved version the active one
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormVersionAction"
+      responses:
+        "200":
+          description: Activated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormTemplateDetail"
+
+  /form-renders:
+    get:
+      operationId: renderFormTemplate
+      tags: [formTemplates]
+      summary: Render the current approved version with data bound (preview, no log)
+      parameters:
+        - { name: templateId, in: query, required: true, schema: { type: string } }
+        - { name: entityId, in: query, required: false, schema: { type: string } }
+        - { name: language, in: query, required: false, schema: { type: string } }
+        - { name: versionId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Rendered document
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormRenderResponse"
+        "404":
+          description: Not found or no approved version
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /print-jobs:
+    get:
+      operationId: listPrintJobs
+      tags: [printJobs]
+      summary: List print log entries
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: moduleKey, in: query, required: false, schema: { type: string } }
+        - { name: templateId, in: query, required: false, schema: { type: string } }
+        - { name: entityId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Print log
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrintJobListResponse"
+    post:
+      operationId: createPrintJob
+      tags: [printJobs]
+      summary: Record a print/reprint (uses latest approved version) and return the document
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrintJobInput"
+      responses:
+        "201":
+          description: Recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrintJobResult"
+
 components:
   parameters:
     IdParam:
@@ -37621,3 +38017,239 @@ components:
         eventLog:
           type: array
           items: { $ref: "#/components/schemas/OversightEvent" }
+
+    FormTemplate:
+      type: object
+      required: [id, companyId, moduleKey, code, name, documentType, sourceFormat, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        moduleKey: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        documentType: { type: string }
+        sourceFormat: { type: string }
+        status: { type: string }
+        currentVersionId: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+        updatedAt: { type: ["string", "null"] }
+    FormTemplateVersion:
+      type: object
+      required: [id, companyId, templateId, versionNumber, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        templateId: { type: string }
+        versionNumber: { type: integer }
+        content: { type: ["string", "null"] }
+        contentAr: { type: ["string", "null"] }
+        fileObjectPath: { type: ["string", "null"] }
+        fileFormat: { type: ["string", "null"] }
+        fieldBindings: { type: ["object", "null"], additionalProperties: true }
+        settings: { type: ["object", "null"], additionalProperties: true }
+        status: { type: string }
+        changeSummary: { type: ["string", "null"] }
+        changeReason: { type: ["string", "null"] }
+        submittedByUserName: { type: ["string", "null"] }
+        submittedAt: { type: ["string", "null"] }
+        endorsedByUserName: { type: ["string", "null"] }
+        endorsedAt: { type: ["string", "null"] }
+        approvedByUserName: { type: ["string", "null"] }
+        approvedAt: { type: ["string", "null"] }
+        rejectedByUserName: { type: ["string", "null"] }
+        rejectedAt: { type: ["string", "null"] }
+        rejectReason: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    FormTemplateDetail:
+      type: object
+      required: [template, versions]
+      properties:
+        template: { $ref: "#/components/schemas/FormTemplate" }
+        versions:
+          type: array
+          items: { $ref: "#/components/schemas/FormTemplateVersion" }
+    FormTemplateListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/FormTemplate" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    FormTemplateVersionListResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/FormTemplateVersion" }
+    FormTemplateInput:
+      type: object
+      required: [companyId, moduleKey, code, name]
+      properties:
+        companyId: { type: string }
+        moduleKey: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        documentType: { type: string }
+        sourceFormat: { type: string }
+        content: { type: string }
+        contentAr: { type: string }
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+        settings: { type: object, additionalProperties: true }
+        fieldBindings: { type: object, additionalProperties: true }
+        changeSummary: { type: string }
+    FormTemplateUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        nameAr: { type: string }
+        description: { type: string }
+        documentType: { type: string }
+    FormStatusChange:
+      type: object
+      properties:
+        reason: { type: string }
+    FormVersionAction:
+      type: object
+      properties:
+        reason: { type: string }
+    FormTemplateVersionInput:
+      type: object
+      properties:
+        content: { type: string }
+        contentAr: { type: string }
+        sourceFormat: { type: string }
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+        settings: { type: object, additionalProperties: true }
+        fieldBindings: { type: object, additionalProperties: true }
+        changeSummary: { type: string }
+        changeReason: { type: string }
+    FormTemplateVersionUpdate:
+      type: object
+      properties:
+        content: { type: string }
+        contentAr: { type: string }
+        sourceFormat: { type: string }
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+        settings: { type: object, additionalProperties: true }
+        fieldBindings: { type: object, additionalProperties: true }
+        changeSummary: { type: string }
+        changeReason: { type: string }
+    FormRenderResponse:
+      type: object
+      required: [html, templateId, templateVersionId, versionNumber, language, moduleKey]
+      properties:
+        html: { type: string }
+        documentNumber: { type: ["string", "null"] }
+        templateId: { type: string }
+        templateVersionId: { type: string }
+        versionNumber: { type: integer }
+        language: { type: string }
+        moduleKey: { type: string }
+        documentType: { type: ["string", "null"] }
+        printCount: { type: integer }
+    FormBindingToken:
+      type: object
+      required: [token, label, labelAr]
+      properties:
+        token: { type: string }
+        label: { type: string }
+        labelAr: { type: string }
+        sample: { type: ["string", "null"] }
+    FormBindingGroup:
+      type: object
+      required: [group, groupAr, tokens]
+      properties:
+        group: { type: string }
+        groupAr: { type: string }
+        tokens:
+          type: array
+          items: { $ref: "#/components/schemas/FormBindingToken" }
+    FormBindingCatalogResponse:
+      type: object
+      required: [moduleKey, groups]
+      properties:
+        moduleKey: { type: string }
+        documentType: { type: ["string", "null"] }
+        groups:
+          type: array
+          items: { $ref: "#/components/schemas/FormBindingGroup" }
+    FormUploadResponse:
+      type: object
+      required: [uploadUrl, filePath]
+      properties:
+        uploadUrl: { type: string }
+        filePath: { type: string }
+    FormImportInput:
+      type: object
+      required: [fileObjectPath, fileFormat]
+      properties:
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+    FormImportResult:
+      type: object
+      required: [html, fileFormat]
+      properties:
+        html: { type: string }
+        fileFormat: { type: string }
+        warning: { type: ["string", "null"] }
+    PrintJob:
+      type: object
+      required: [id, companyId, moduleKey, templateId, templateVersionId, copies, printSequence, isReprint, printedAt, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        moduleKey: { type: string }
+        templateId: { type: string }
+        templateVersionId: { type: string }
+        entityType: { type: ["string", "null"] }
+        entityId: { type: ["string", "null"] }
+        documentNumber: { type: ["string", "null"] }
+        language: { type: string }
+        copies: { type: integer }
+        printSequence: { type: integer }
+        isReprint: { type: boolean }
+        reprintReason: { type: ["string", "null"] }
+        printedByUserName: { type: ["string", "null"] }
+        printedAt: { type: string }
+        createdAt: { type: string }
+    PrintJobInput:
+      type: object
+      required: [templateId]
+      properties:
+        templateId: { type: string }
+        versionId: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        documentNumber: { type: string }
+        language: { type: string }
+        copies: { type: integer }
+        reprintReason: { type: string }
+    PrintJobResult:
+      type: object
+      required: [printJob, html]
+      properties:
+        printJob: { $ref: "#/components/schemas/PrintJob" }
+        html: { type: string }
+    PrintJobListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PrintJob" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }

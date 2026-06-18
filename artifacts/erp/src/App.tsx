@@ -250,6 +250,7 @@ import AttendancePage from "@/pages/attendance";
 import LeaveTypesPage from "@/pages/leave-types";
 import LeaveBalancesPage from "@/pages/leave-balances";
 import LeaveRequestsPage from "@/pages/leave-requests";
+import FormsPrintingPage from "@/pages/forms-printing";
 import SalaryComponentsPage from "@/pages/salary-components";
 import PayrollPeriodsPage from "@/pages/payroll-periods";
 import PayrollRunsPage from "@/pages/payroll-runs";
@@ -540,6 +541,7 @@ function Router() {
             <Route path="/leave-types" component={LeaveTypesPage} />
             <Route path="/leave-balances" component={LeaveBalancesPage} />
             <Route path="/leave-requests" component={LeaveRequestsPage} />
+            <Route path="/forms-printing/:moduleKey" component={FormsPrintingPage} />
             <Route path="/salary-components" component={SalaryComponentsPage} />
             <Route path="/payroll-periods" component={PayrollPeriodsPage} />
             <Route path="/payroll-runs" component={PayrollRunsPage} />

@@ -35,3 +35,4 @@ export * from "./insurance";
 export * from "./master-data";
 export * from "./governance";
 export * from "./notifications";
+export * from "./printing";

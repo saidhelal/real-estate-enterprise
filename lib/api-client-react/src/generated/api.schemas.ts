@@ -14003,6 +14003,265 @@ export interface ExecutiveOversight {
   eventLog: OversightEvent[];
 }
 
+export interface FormTemplate {
+  id: string;
+  companyId: string;
+  moduleKey: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  /** @nullable */
+  description?: string | null;
+  documentType: string;
+  sourceFormat: string;
+  status: string;
+  /** @nullable */
+  currentVersionId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  /** @nullable */
+  updatedAt?: string | null;
+}
+
+/**
+ * @nullable
+ */
+export type FormTemplateVersionFieldBindings = { [key: string]: unknown } | null;
+
+/**
+ * @nullable
+ */
+export type FormTemplateVersionSettings = { [key: string]: unknown } | null;
+
+export interface FormTemplateVersion {
+  id: string;
+  companyId: string;
+  templateId: string;
+  versionNumber: number;
+  /** @nullable */
+  content?: string | null;
+  /** @nullable */
+  contentAr?: string | null;
+  /** @nullable */
+  fileObjectPath?: string | null;
+  /** @nullable */
+  fileFormat?: string | null;
+  /** @nullable */
+  fieldBindings?: FormTemplateVersionFieldBindings;
+  /** @nullable */
+  settings?: FormTemplateVersionSettings;
+  status: string;
+  /** @nullable */
+  changeSummary?: string | null;
+  /** @nullable */
+  changeReason?: string | null;
+  /** @nullable */
+  submittedByUserName?: string | null;
+  /** @nullable */
+  submittedAt?: string | null;
+  /** @nullable */
+  endorsedByUserName?: string | null;
+  /** @nullable */
+  endorsedAt?: string | null;
+  /** @nullable */
+  approvedByUserName?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  rejectedByUserName?: string | null;
+  /** @nullable */
+  rejectedAt?: string | null;
+  /** @nullable */
+  rejectReason?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface FormTemplateDetail {
+  template: FormTemplate;
+  versions: FormTemplateVersion[];
+}
+
+export interface FormTemplateListResponse {
+  data: FormTemplate[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface FormTemplateVersionListResponse {
+  data: FormTemplateVersion[];
+}
+
+export type FormTemplateInputSettings = { [key: string]: unknown };
+
+export type FormTemplateInputFieldBindings = { [key: string]: unknown };
+
+export interface FormTemplateInput {
+  companyId: string;
+  moduleKey: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  description?: string;
+  documentType?: string;
+  sourceFormat?: string;
+  content?: string;
+  contentAr?: string;
+  fileObjectPath?: string;
+  fileFormat?: string;
+  settings?: FormTemplateInputSettings;
+  fieldBindings?: FormTemplateInputFieldBindings;
+  changeSummary?: string;
+}
+
+export interface FormTemplateUpdate {
+  name?: string;
+  nameAr?: string;
+  description?: string;
+  documentType?: string;
+}
+
+export interface FormStatusChange {
+  reason?: string;
+}
+
+export interface FormVersionAction {
+  reason?: string;
+}
+
+export type FormTemplateVersionInputSettings = { [key: string]: unknown };
+
+export type FormTemplateVersionInputFieldBindings = { [key: string]: unknown };
+
+export interface FormTemplateVersionInput {
+  content?: string;
+  contentAr?: string;
+  sourceFormat?: string;
+  fileObjectPath?: string;
+  fileFormat?: string;
+  settings?: FormTemplateVersionInputSettings;
+  fieldBindings?: FormTemplateVersionInputFieldBindings;
+  changeSummary?: string;
+  changeReason?: string;
+}
+
+export type FormTemplateVersionUpdateSettings = { [key: string]: unknown };
+
+export type FormTemplateVersionUpdateFieldBindings = { [key: string]: unknown };
+
+export interface FormTemplateVersionUpdate {
+  content?: string;
+  contentAr?: string;
+  sourceFormat?: string;
+  fileObjectPath?: string;
+  fileFormat?: string;
+  settings?: FormTemplateVersionUpdateSettings;
+  fieldBindings?: FormTemplateVersionUpdateFieldBindings;
+  changeSummary?: string;
+  changeReason?: string;
+}
+
+export interface FormRenderResponse {
+  html: string;
+  /** @nullable */
+  documentNumber?: string | null;
+  templateId: string;
+  templateVersionId: string;
+  versionNumber: number;
+  language: string;
+  moduleKey: string;
+  /** @nullable */
+  documentType?: string | null;
+  printCount?: number;
+}
+
+export interface FormBindingToken {
+  token: string;
+  label: string;
+  labelAr: string;
+  /** @nullable */
+  sample?: string | null;
+}
+
+export interface FormBindingGroup {
+  group: string;
+  groupAr: string;
+  tokens: FormBindingToken[];
+}
+
+export interface FormBindingCatalogResponse {
+  moduleKey: string;
+  /** @nullable */
+  documentType?: string | null;
+  groups: FormBindingGroup[];
+}
+
+export interface FormUploadResponse {
+  uploadUrl: string;
+  filePath: string;
+}
+
+export interface FormImportInput {
+  fileObjectPath: string;
+  fileFormat: string;
+}
+
+export interface FormImportResult {
+  html: string;
+  fileFormat: string;
+  /** @nullable */
+  warning?: string | null;
+}
+
+export interface PrintJob {
+  id: string;
+  companyId: string;
+  moduleKey: string;
+  templateId: string;
+  templateVersionId: string;
+  /** @nullable */
+  entityType?: string | null;
+  /** @nullable */
+  entityId?: string | null;
+  /** @nullable */
+  documentNumber?: string | null;
+  language?: string;
+  copies: number;
+  printSequence: number;
+  isReprint: boolean;
+  /** @nullable */
+  reprintReason?: string | null;
+  /** @nullable */
+  printedByUserName?: string | null;
+  printedAt: string;
+  createdAt: string;
+}
+
+export interface PrintJobInput {
+  templateId: string;
+  versionId?: string;
+  entityType?: string;
+  entityId?: string;
+  documentNumber?: string;
+  language?: string;
+  copies?: number;
+  reprintReason?: string;
+}
+
+export interface PrintJobResult {
+  printJob: PrintJob;
+  html: string;
+}
+
+export interface PrintJobListResponse {
+  data: PrintJob[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -16133,5 +16392,36 @@ view?: string;
 category?: string;
 priority?: string;
 channel?: string;
+};
+
+export type ListFormTemplatesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+moduleKey?: string;
+documentType?: string;
+status?: string;
+};
+
+export type GetFormBindingCatalogParams = {
+moduleKey?: string;
+documentType?: string;
+};
+
+export type RenderFormTemplateParams = {
+templateId: string;
+entityId?: string;
+language?: string;
+versionId?: string;
+};
+
+export type ListPrintJobsParams = {
+page?: number;
+pageSize?: number;
+companyId?: string;
+moduleKey?: string;
+templateId?: string;
+entityId?: string;
 };
 

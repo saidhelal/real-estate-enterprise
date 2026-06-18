@@ -32713,3 +32713,668 @@ export const RestoreNotificationResponse = zod.object({
 })
 
 
+/**
+ * @summary List form templates for a module's Forms & Printing section
+ */
+export const ListFormTemplatesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "moduleKey": zod.coerce.string().optional(),
+  "documentType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListFormTemplatesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a form template with an initial draft version
+ */
+export const CreateFormTemplateBody = zod.object({
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "documentType": zod.string().optional(),
+  "sourceFormat": zod.string().optional(),
+  "content": zod.string().optional(),
+  "contentAr": zod.string().optional(),
+  "fileObjectPath": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "settings": zod.record(zod.string(), zod.unknown()).optional(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).optional(),
+  "changeSummary": zod.string().optional()
+})
+
+
+/**
+ * @summary Convert an uploaded Word/PDF/HTML file into template HTML
+ */
+export const ImportFormTemplateBody = zod.object({
+  "fileObjectPath": zod.string(),
+  "fileFormat": zod.string()
+})
+
+export const ImportFormTemplateResponse = zod.object({
+  "html": zod.string(),
+  "fileFormat": zod.string(),
+  "warning": zod.string().nullish()
+})
+
+
+/**
+ * @summary Get a signed upload URL for a template source file
+ */
+export const CreateFormUploadUrlResponse = zod.object({
+  "uploadUrl": zod.string(),
+  "filePath": zod.string()
+})
+
+
+/**
+ * @summary Available no-code binding fields for a module/document type
+ */
+export const GetFormBindingCatalogQueryParams = zod.object({
+  "moduleKey": zod.coerce.string().optional(),
+  "documentType": zod.coerce.string().optional()
+})
+
+export const GetFormBindingCatalogResponse = zod.object({
+  "moduleKey": zod.string(),
+  "documentType": zod.string().nullish(),
+  "groups": zod.array(zod.object({
+  "group": zod.string(),
+  "groupAr": zod.string(),
+  "tokens": zod.array(zod.object({
+  "token": zod.string(),
+  "label": zod.string(),
+  "labelAr": zod.string(),
+  "sample": zod.string().nullish()
+}))
+}))
+})
+
+
+/**
+ * @summary Get a form template with its full version history
+ */
+export const GetFormTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetFormTemplateResponse = zod.object({
+  "template": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+}),
+  "versions": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Update form template metadata
+ */
+export const UpdateFormTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateFormTemplateBody = zod.object({
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "description": zod.string().optional(),
+  "documentType": zod.string().optional()
+})
+
+export const UpdateFormTemplateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Disable a form template (never hard-deleted)
+ */
+export const DisableFormTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DisableFormTemplateBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const DisableFormTemplateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Re-enable a disabled form template
+ */
+export const EnableFormTemplateParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const EnableFormTemplateBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const EnableFormTemplateResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary List all versions of a template (kept forever)
+ */
+export const ListFormTemplateVersionsParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ListFormTemplateVersionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Create a new draft version (edit a template)
+ */
+export const CreateFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const CreateFormTemplateVersionBody = zod.object({
+  "content": zod.string().optional(),
+  "contentAr": zod.string().optional(),
+  "sourceFormat": zod.string().optional(),
+  "fileObjectPath": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "settings": zod.record(zod.string(), zod.unknown()).optional(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).optional(),
+  "changeSummary": zod.string().optional(),
+  "changeReason": zod.string().optional()
+})
+
+
+/**
+ * @summary Update a draft or rejected version
+ */
+export const UpdateFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const UpdateFormTemplateVersionBody = zod.object({
+  "content": zod.string().optional(),
+  "contentAr": zod.string().optional(),
+  "sourceFormat": zod.string().optional(),
+  "fileObjectPath": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "settings": zod.record(zod.string(), zod.unknown()).optional(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).optional(),
+  "changeSummary": zod.string().optional(),
+  "changeReason": zod.string().optional()
+})
+
+export const UpdateFormTemplateVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Submit a draft version for manager endorsement
+ */
+export const SubmitFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const SubmitFormTemplateVersionBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const SubmitFormTemplateVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Department manager endorses a submitted version
+ */
+export const EndorseFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const EndorseFormTemplateVersionBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const EndorseFormTemplateVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Owner/Super Admin approves and activates a version
+ */
+export const ApproveFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const ApproveFormTemplateVersionBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const ApproveFormTemplateVersionResponse = zod.object({
+  "template": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+}),
+  "versions": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Reject a submitted/endorsed version with a reason
+ */
+export const RejectFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const RejectFormTemplateVersionBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const RejectFormTemplateVersionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Revert — make a previously approved version the active one
+ */
+export const ActivateFormTemplateVersionParams = zod.object({
+  "id": zod.coerce.string(),
+  "versionId": zod.coerce.string()
+})
+
+export const ActivateFormTemplateVersionBody = zod.object({
+  "reason": zod.string().optional()
+})
+
+export const ActivateFormTemplateVersionResponse = zod.object({
+  "template": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "sourceFormat": zod.string(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+}),
+  "versions": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "templateId": zod.string(),
+  "versionNumber": zod.number(),
+  "content": zod.string().nullish(),
+  "contentAr": zod.string().nullish(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "fieldBindings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "settings": zod.record(zod.string(), zod.unknown()).nullish(),
+  "status": zod.string(),
+  "changeSummary": zod.string().nullish(),
+  "changeReason": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Render the current approved version with data bound (preview, no log)
+ */
+export const RenderFormTemplateQueryParams = zod.object({
+  "templateId": zod.coerce.string(),
+  "entityId": zod.coerce.string().optional(),
+  "language": zod.coerce.string().optional(),
+  "versionId": zod.coerce.string().optional()
+})
+
+export const RenderFormTemplateResponse = zod.object({
+  "html": zod.string(),
+  "documentNumber": zod.string().nullish(),
+  "templateId": zod.string(),
+  "templateVersionId": zod.string(),
+  "versionNumber": zod.number(),
+  "language": zod.string(),
+  "moduleKey": zod.string(),
+  "documentType": zod.string().nullish(),
+  "printCount": zod.number().optional()
+})
+
+
+/**
+ * @summary List print log entries
+ */
+export const ListPrintJobsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "moduleKey": zod.coerce.string().optional(),
+  "templateId": zod.coerce.string().optional(),
+  "entityId": zod.coerce.string().optional()
+})
+
+export const ListPrintJobsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "moduleKey": zod.string(),
+  "templateId": zod.string(),
+  "templateVersionId": zod.string(),
+  "entityType": zod.string().nullish(),
+  "entityId": zod.string().nullish(),
+  "documentNumber": zod.string().nullish(),
+  "language": zod.string().optional(),
+  "copies": zod.number(),
+  "printSequence": zod.number(),
+  "isReprint": zod.boolean(),
+  "reprintReason": zod.string().nullish(),
+  "printedByUserName": zod.string().nullish(),
+  "printedAt": zod.string(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Record a print/reprint (uses latest approved version) and return the document
+ */
+export const CreatePrintJobBody = zod.object({
+  "templateId": zod.string(),
+  "versionId": zod.string().optional(),
+  "entityType": zod.string().optional(),
+  "entityId": zod.string().optional(),
+  "documentNumber": zod.string().optional(),
+  "language": zod.string().optional(),
+  "copies": zod.number().optional(),
+  "reprintReason": zod.string().optional()
+})
+
+

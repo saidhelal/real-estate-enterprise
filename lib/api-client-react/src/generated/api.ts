@@ -383,6 +383,22 @@ import type {
   FloorInput,
   FloorListResponse,
   FloorUpdate,
+  FormBindingCatalogResponse,
+  FormImportInput,
+  FormImportResult,
+  FormRenderResponse,
+  FormStatusChange,
+  FormTemplate,
+  FormTemplateDetail,
+  FormTemplateInput,
+  FormTemplateListResponse,
+  FormTemplateUpdate,
+  FormTemplateVersion,
+  FormTemplateVersionInput,
+  FormTemplateVersionListResponse,
+  FormTemplateVersionUpdate,
+  FormUploadResponse,
+  FormVersionAction,
   GeneralAdminDashboard,
   GeneralLedgerResponse,
   GeneralService,
@@ -406,6 +422,7 @@ import type {
   GetFinanceDashboardParams,
   GetFinancialAnalyticsParams,
   GetFixedAssetsDashboardParams,
+  GetFormBindingCatalogParams,
   GetGeneralAdminDashboardParams,
   GetGeneralLedgerParams,
   GetHandoverDashboardParams,
@@ -790,6 +807,7 @@ import type {
   ListFiscalPeriodsParams,
   ListFixedAssetsParams,
   ListFloorsParams,
+  ListFormTemplatesParams,
   ListGeneralServicesParams,
   ListGoodsIssueItemsParams,
   ListGoodsIssuesParams,
@@ -870,6 +888,7 @@ import type {
   ListPenaltyRulesParams,
   ListPhasesParams,
   ListPoliciesParams,
+  ListPrintJobsParams,
   ListProcurementApprovalsParams,
   ListProfitCentersParams,
   ListProjectLaborInsurancesParams,
@@ -1024,6 +1043,9 @@ import type {
   PortalUploadInput,
   PortalUploadResult,
   PortalVerifyOtpInput,
+  PrintJobInput,
+  PrintJobListResponse,
+  PrintJobResult,
   ProcurementAnalytics,
   ProcurementApproval,
   ProcurementApprovalInput,
@@ -1084,6 +1106,7 @@ import type {
   ReceiptInput,
   ReceiptListResponse,
   ReceiptUpdate,
+  RenderFormTemplateParams,
   ReorderLevel,
   ReorderLevelInput,
   ReorderLevelListResponse,
@@ -97689,5 +97712,1510 @@ export const useRestoreNotification = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getRestoreNotificationMutationOptions(options));
+    }
+
+export const getListFormTemplatesUrl = (params?: ListFormTemplatesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/form-templates?${stringifiedParams}` : `/api/form-templates`
+}
+
+/**
+ * @summary List form templates for a module's Forms & Printing section
+ */
+export const listFormTemplates = async (params?: ListFormTemplatesParams, options?: RequestInit): Promise<FormTemplateListResponse> => {
+
+  return customFetch<FormTemplateListResponse>(getListFormTemplatesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFormTemplatesQueryKey = (params?: ListFormTemplatesParams,) => {
+    return [
+    `/api/form-templates`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListFormTemplatesQueryOptions = <TData = Awaited<ReturnType<typeof listFormTemplates>>, TError = ErrorType<unknown>>(params?: ListFormTemplatesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFormTemplates>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFormTemplatesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFormTemplates>>> = ({ signal }) => listFormTemplates(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFormTemplates>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFormTemplatesQueryResult = NonNullable<Awaited<ReturnType<typeof listFormTemplates>>>
+export type ListFormTemplatesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List form templates for a module's Forms & Printing section
+ */
+
+export function useListFormTemplates<TData = Awaited<ReturnType<typeof listFormTemplates>>, TError = ErrorType<unknown>>(
+ params?: ListFormTemplatesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFormTemplates>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFormTemplatesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateFormTemplateUrl = () => {
+
+
+
+
+  return `/api/form-templates`
+}
+
+/**
+ * @summary Create a form template with an initial draft version
+ */
+export const createFormTemplate = async (formTemplateInput: FormTemplateInput, options?: RequestInit): Promise<FormTemplateDetail> => {
+
+  return customFetch<FormTemplateDetail>(getCreateFormTemplateUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formTemplateInput,)
+  }
+);}
+
+
+
+
+export const getCreateFormTemplateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFormTemplate>>, TError,{data: BodyType<FormTemplateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createFormTemplate>>, TError,{data: BodyType<FormTemplateInput>}, TContext> => {
+
+const mutationKey = ['createFormTemplate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFormTemplate>>, {data: BodyType<FormTemplateInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createFormTemplate(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateFormTemplateMutationResult = NonNullable<Awaited<ReturnType<typeof createFormTemplate>>>
+    export type CreateFormTemplateMutationBody = BodyType<FormTemplateInput>
+    export type CreateFormTemplateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a form template with an initial draft version
+ */
+export const useCreateFormTemplate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFormTemplate>>, TError,{data: BodyType<FormTemplateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createFormTemplate>>,
+        TError,
+        {data: BodyType<FormTemplateInput>},
+        TContext
+      > => {
+      return useMutation(getCreateFormTemplateMutationOptions(options));
+    }
+
+export const getImportFormTemplateUrl = () => {
+
+
+
+
+  return `/api/form-template-imports`
+}
+
+/**
+ * @summary Convert an uploaded Word/PDF/HTML file into template HTML
+ */
+export const importFormTemplate = async (formImportInput: FormImportInput, options?: RequestInit): Promise<FormImportResult> => {
+
+  return customFetch<FormImportResult>(getImportFormTemplateUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formImportInput,)
+  }
+);}
+
+
+
+
+export const getImportFormTemplateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importFormTemplate>>, TError,{data: BodyType<FormImportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof importFormTemplate>>, TError,{data: BodyType<FormImportInput>}, TContext> => {
+
+const mutationKey = ['importFormTemplate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof importFormTemplate>>, {data: BodyType<FormImportInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  importFormTemplate(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ImportFormTemplateMutationResult = NonNullable<Awaited<ReturnType<typeof importFormTemplate>>>
+    export type ImportFormTemplateMutationBody = BodyType<FormImportInput>
+    export type ImportFormTemplateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Convert an uploaded Word/PDF/HTML file into template HTML
+ */
+export const useImportFormTemplate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importFormTemplate>>, TError,{data: BodyType<FormImportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof importFormTemplate>>,
+        TError,
+        {data: BodyType<FormImportInput>},
+        TContext
+      > => {
+      return useMutation(getImportFormTemplateMutationOptions(options));
+    }
+
+export const getCreateFormUploadUrlUrl = () => {
+
+
+
+
+  return `/api/form-uploads`
+}
+
+/**
+ * @summary Get a signed upload URL for a template source file
+ */
+export const createFormUploadUrl = async ( options?: RequestInit): Promise<FormUploadResponse> => {
+
+  return customFetch<FormUploadResponse>(getCreateFormUploadUrlUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getCreateFormUploadUrlMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFormUploadUrl>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createFormUploadUrl>>, TError,void, TContext> => {
+
+const mutationKey = ['createFormUploadUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFormUploadUrl>>, void> = () => {
+
+
+          return  createFormUploadUrl(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateFormUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof createFormUploadUrl>>>
+
+    export type CreateFormUploadUrlMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Get a signed upload URL for a template source file
+ */
+export const useCreateFormUploadUrl = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFormUploadUrl>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createFormUploadUrl>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getCreateFormUploadUrlMutationOptions(options));
+    }
+
+export const getGetFormBindingCatalogUrl = (params?: GetFormBindingCatalogParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/form-binding-catalog?${stringifiedParams}` : `/api/form-binding-catalog`
+}
+
+/**
+ * @summary Available no-code binding fields for a module/document type
+ */
+export const getFormBindingCatalog = async (params?: GetFormBindingCatalogParams, options?: RequestInit): Promise<FormBindingCatalogResponse> => {
+
+  return customFetch<FormBindingCatalogResponse>(getGetFormBindingCatalogUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFormBindingCatalogQueryKey = (params?: GetFormBindingCatalogParams,) => {
+    return [
+    `/api/form-binding-catalog`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetFormBindingCatalogQueryOptions = <TData = Awaited<ReturnType<typeof getFormBindingCatalog>>, TError = ErrorType<unknown>>(params?: GetFormBindingCatalogParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFormBindingCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFormBindingCatalogQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFormBindingCatalog>>> = ({ signal }) => getFormBindingCatalog(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFormBindingCatalog>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFormBindingCatalogQueryResult = NonNullable<Awaited<ReturnType<typeof getFormBindingCatalog>>>
+export type GetFormBindingCatalogQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Available no-code binding fields for a module/document type
+ */
+
+export function useGetFormBindingCatalog<TData = Awaited<ReturnType<typeof getFormBindingCatalog>>, TError = ErrorType<unknown>>(
+ params?: GetFormBindingCatalogParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFormBindingCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFormBindingCatalogQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetFormTemplateUrl = (id: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}`
+}
+
+/**
+ * @summary Get a form template with its full version history
+ */
+export const getFormTemplate = async (id: string, options?: RequestInit): Promise<FormTemplateDetail> => {
+
+  return customFetch<FormTemplateDetail>(getGetFormTemplateUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFormTemplateQueryKey = (id: string,) => {
+    return [
+    `/api/form-templates/${id}`
+    ] as const;
+    }
+
+
+export const getGetFormTemplateQueryOptions = <TData = Awaited<ReturnType<typeof getFormTemplate>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFormTemplate>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFormTemplateQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFormTemplate>>> = ({ signal }) => getFormTemplate(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFormTemplate>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFormTemplateQueryResult = NonNullable<Awaited<ReturnType<typeof getFormTemplate>>>
+export type GetFormTemplateQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a form template with its full version history
+ */
+
+export function useGetFormTemplate<TData = Awaited<ReturnType<typeof getFormTemplate>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFormTemplate>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFormTemplateQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateFormTemplateUrl = (id: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}`
+}
+
+/**
+ * @summary Update form template metadata
+ */
+export const updateFormTemplate = async (id: string,
+    formTemplateUpdate: FormTemplateUpdate, options?: RequestInit): Promise<FormTemplate> => {
+
+  return customFetch<FormTemplate>(getUpdateFormTemplateUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formTemplateUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateFormTemplateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateFormTemplate>>, TError,{id: string;data: BodyType<FormTemplateUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateFormTemplate>>, TError,{id: string;data: BodyType<FormTemplateUpdate>}, TContext> => {
+
+const mutationKey = ['updateFormTemplate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateFormTemplate>>, {id: string;data: BodyType<FormTemplateUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateFormTemplate(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateFormTemplateMutationResult = NonNullable<Awaited<ReturnType<typeof updateFormTemplate>>>
+    export type UpdateFormTemplateMutationBody = BodyType<FormTemplateUpdate>
+    export type UpdateFormTemplateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update form template metadata
+ */
+export const useUpdateFormTemplate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateFormTemplate>>, TError,{id: string;data: BodyType<FormTemplateUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateFormTemplate>>,
+        TError,
+        {id: string;data: BodyType<FormTemplateUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateFormTemplateMutationOptions(options));
+    }
+
+export const getDisableFormTemplateUrl = (id: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/disable`
+}
+
+/**
+ * @summary Disable a form template (never hard-deleted)
+ */
+export const disableFormTemplate = async (id: string,
+    formStatusChange?: FormStatusChange, options?: RequestInit): Promise<FormTemplate> => {
+
+  return customFetch<FormTemplate>(getDisableFormTemplateUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formStatusChange,)
+  }
+);}
+
+
+
+
+export const getDisableFormTemplateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof disableFormTemplate>>, TError,{id: string;data?: BodyType<FormStatusChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof disableFormTemplate>>, TError,{id: string;data?: BodyType<FormStatusChange>}, TContext> => {
+
+const mutationKey = ['disableFormTemplate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof disableFormTemplate>>, {id: string;data?: BodyType<FormStatusChange>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  disableFormTemplate(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DisableFormTemplateMutationResult = NonNullable<Awaited<ReturnType<typeof disableFormTemplate>>>
+    export type DisableFormTemplateMutationBody = BodyType<FormStatusChange> | undefined
+    export type DisableFormTemplateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Disable a form template (never hard-deleted)
+ */
+export const useDisableFormTemplate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof disableFormTemplate>>, TError,{id: string;data?: BodyType<FormStatusChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof disableFormTemplate>>,
+        TError,
+        {id: string;data?: BodyType<FormStatusChange>},
+        TContext
+      > => {
+      return useMutation(getDisableFormTemplateMutationOptions(options));
+    }
+
+export const getEnableFormTemplateUrl = (id: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/enable`
+}
+
+/**
+ * @summary Re-enable a disabled form template
+ */
+export const enableFormTemplate = async (id: string,
+    formStatusChange?: FormStatusChange, options?: RequestInit): Promise<FormTemplate> => {
+
+  return customFetch<FormTemplate>(getEnableFormTemplateUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formStatusChange,)
+  }
+);}
+
+
+
+
+export const getEnableFormTemplateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enableFormTemplate>>, TError,{id: string;data?: BodyType<FormStatusChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof enableFormTemplate>>, TError,{id: string;data?: BodyType<FormStatusChange>}, TContext> => {
+
+const mutationKey = ['enableFormTemplate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof enableFormTemplate>>, {id: string;data?: BodyType<FormStatusChange>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  enableFormTemplate(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EnableFormTemplateMutationResult = NonNullable<Awaited<ReturnType<typeof enableFormTemplate>>>
+    export type EnableFormTemplateMutationBody = BodyType<FormStatusChange> | undefined
+    export type EnableFormTemplateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Re-enable a disabled form template
+ */
+export const useEnableFormTemplate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof enableFormTemplate>>, TError,{id: string;data?: BodyType<FormStatusChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof enableFormTemplate>>,
+        TError,
+        {id: string;data?: BodyType<FormStatusChange>},
+        TContext
+      > => {
+      return useMutation(getEnableFormTemplateMutationOptions(options));
+    }
+
+export const getListFormTemplateVersionsUrl = (id: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions`
+}
+
+/**
+ * @summary List all versions of a template (kept forever)
+ */
+export const listFormTemplateVersions = async (id: string, options?: RequestInit): Promise<FormTemplateVersionListResponse> => {
+
+  return customFetch<FormTemplateVersionListResponse>(getListFormTemplateVersionsUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFormTemplateVersionsQueryKey = (id: string,) => {
+    return [
+    `/api/form-templates/${id}/versions`
+    ] as const;
+    }
+
+
+export const getListFormTemplateVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listFormTemplateVersions>>, TError = ErrorType<unknown>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFormTemplateVersions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFormTemplateVersionsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFormTemplateVersions>>> = ({ signal }) => listFormTemplateVersions(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFormTemplateVersions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFormTemplateVersionsQueryResult = NonNullable<Awaited<ReturnType<typeof listFormTemplateVersions>>>
+export type ListFormTemplateVersionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List all versions of a template (kept forever)
+ */
+
+export function useListFormTemplateVersions<TData = Awaited<ReturnType<typeof listFormTemplateVersions>>, TError = ErrorType<unknown>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFormTemplateVersions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFormTemplateVersionsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateFormTemplateVersionUrl = (id: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions`
+}
+
+/**
+ * @summary Create a new draft version (edit a template)
+ */
+export const createFormTemplateVersion = async (id: string,
+    formTemplateVersionInput: FormTemplateVersionInput, options?: RequestInit): Promise<FormTemplateVersion> => {
+
+  return customFetch<FormTemplateVersion>(getCreateFormTemplateVersionUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formTemplateVersionInput,)
+  }
+);}
+
+
+
+
+export const getCreateFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFormTemplateVersion>>, TError,{id: string;data: BodyType<FormTemplateVersionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createFormTemplateVersion>>, TError,{id: string;data: BodyType<FormTemplateVersionInput>}, TContext> => {
+
+const mutationKey = ['createFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFormTemplateVersion>>, {id: string;data: BodyType<FormTemplateVersionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createFormTemplateVersion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof createFormTemplateVersion>>>
+    export type CreateFormTemplateVersionMutationBody = BodyType<FormTemplateVersionInput>
+    export type CreateFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a new draft version (edit a template)
+ */
+export const useCreateFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFormTemplateVersion>>, TError,{id: string;data: BodyType<FormTemplateVersionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createFormTemplateVersion>>,
+        TError,
+        {id: string;data: BodyType<FormTemplateVersionInput>},
+        TContext
+      > => {
+      return useMutation(getCreateFormTemplateVersionMutationOptions(options));
+    }
+
+export const getUpdateFormTemplateVersionUrl = (id: string,
+    versionId: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions/${versionId}`
+}
+
+/**
+ * @summary Update a draft or rejected version
+ */
+export const updateFormTemplateVersion = async (id: string,
+    versionId: string,
+    formTemplateVersionUpdate: FormTemplateVersionUpdate, options?: RequestInit): Promise<FormTemplateVersion> => {
+
+  return customFetch<FormTemplateVersion>(getUpdateFormTemplateVersionUrl(id,versionId),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formTemplateVersionUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateFormTemplateVersion>>, TError,{id: string;versionId: string;data: BodyType<FormTemplateVersionUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateFormTemplateVersion>>, TError,{id: string;versionId: string;data: BodyType<FormTemplateVersionUpdate>}, TContext> => {
+
+const mutationKey = ['updateFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateFormTemplateVersion>>, {id: string;versionId: string;data: BodyType<FormTemplateVersionUpdate>}> = (props) => {
+          const {id,versionId,data} = props ?? {};
+
+          return  updateFormTemplateVersion(id,versionId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof updateFormTemplateVersion>>>
+    export type UpdateFormTemplateVersionMutationBody = BodyType<FormTemplateVersionUpdate>
+    export type UpdateFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a draft or rejected version
+ */
+export const useUpdateFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateFormTemplateVersion>>, TError,{id: string;versionId: string;data: BodyType<FormTemplateVersionUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateFormTemplateVersion>>,
+        TError,
+        {id: string;versionId: string;data: BodyType<FormTemplateVersionUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateFormTemplateVersionMutationOptions(options));
+    }
+
+export const getSubmitFormTemplateVersionUrl = (id: string,
+    versionId: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions/${versionId}/submit`
+}
+
+/**
+ * @summary Submit a draft version for manager endorsement
+ */
+export const submitFormTemplateVersion = async (id: string,
+    versionId: string,
+    formVersionAction?: FormVersionAction, options?: RequestInit): Promise<FormTemplateVersion> => {
+
+  return customFetch<FormTemplateVersion>(getSubmitFormTemplateVersionUrl(id,versionId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formVersionAction,)
+  }
+);}
+
+
+
+
+export const getSubmitFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext> => {
+
+const mutationKey = ['submitFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitFormTemplateVersion>>, {id: string;versionId: string;data?: BodyType<FormVersionAction>}> = (props) => {
+          const {id,versionId,data} = props ?? {};
+
+          return  submitFormTemplateVersion(id,versionId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof submitFormTemplateVersion>>>
+    export type SubmitFormTemplateVersionMutationBody = BodyType<FormVersionAction> | undefined
+    export type SubmitFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Submit a draft version for manager endorsement
+ */
+export const useSubmitFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitFormTemplateVersion>>,
+        TError,
+        {id: string;versionId: string;data?: BodyType<FormVersionAction>},
+        TContext
+      > => {
+      return useMutation(getSubmitFormTemplateVersionMutationOptions(options));
+    }
+
+export const getEndorseFormTemplateVersionUrl = (id: string,
+    versionId: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions/${versionId}/endorse`
+}
+
+/**
+ * @summary Department manager endorses a submitted version
+ */
+export const endorseFormTemplateVersion = async (id: string,
+    versionId: string,
+    formVersionAction?: FormVersionAction, options?: RequestInit): Promise<FormTemplateVersion> => {
+
+  return customFetch<FormTemplateVersion>(getEndorseFormTemplateVersionUrl(id,versionId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formVersionAction,)
+  }
+);}
+
+
+
+
+export const getEndorseFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof endorseFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof endorseFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext> => {
+
+const mutationKey = ['endorseFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof endorseFormTemplateVersion>>, {id: string;versionId: string;data?: BodyType<FormVersionAction>}> = (props) => {
+          const {id,versionId,data} = props ?? {};
+
+          return  endorseFormTemplateVersion(id,versionId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EndorseFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof endorseFormTemplateVersion>>>
+    export type EndorseFormTemplateVersionMutationBody = BodyType<FormVersionAction> | undefined
+    export type EndorseFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Department manager endorses a submitted version
+ */
+export const useEndorseFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof endorseFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof endorseFormTemplateVersion>>,
+        TError,
+        {id: string;versionId: string;data?: BodyType<FormVersionAction>},
+        TContext
+      > => {
+      return useMutation(getEndorseFormTemplateVersionMutationOptions(options));
+    }
+
+export const getApproveFormTemplateVersionUrl = (id: string,
+    versionId: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions/${versionId}/approve`
+}
+
+/**
+ * @summary Owner/Super Admin approves and activates a version
+ */
+export const approveFormTemplateVersion = async (id: string,
+    versionId: string,
+    formVersionAction?: FormVersionAction, options?: RequestInit): Promise<FormTemplateDetail> => {
+
+  return customFetch<FormTemplateDetail>(getApproveFormTemplateVersionUrl(id,versionId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formVersionAction,)
+  }
+);}
+
+
+
+
+export const getApproveFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof approveFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext> => {
+
+const mutationKey = ['approveFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof approveFormTemplateVersion>>, {id: string;versionId: string;data?: BodyType<FormVersionAction>}> = (props) => {
+          const {id,versionId,data} = props ?? {};
+
+          return  approveFormTemplateVersion(id,versionId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ApproveFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof approveFormTemplateVersion>>>
+    export type ApproveFormTemplateVersionMutationBody = BodyType<FormVersionAction> | undefined
+    export type ApproveFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Owner/Super Admin approves and activates a version
+ */
+export const useApproveFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof approveFormTemplateVersion>>,
+        TError,
+        {id: string;versionId: string;data?: BodyType<FormVersionAction>},
+        TContext
+      > => {
+      return useMutation(getApproveFormTemplateVersionMutationOptions(options));
+    }
+
+export const getRejectFormTemplateVersionUrl = (id: string,
+    versionId: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions/${versionId}/reject`
+}
+
+/**
+ * @summary Reject a submitted/endorsed version with a reason
+ */
+export const rejectFormTemplateVersion = async (id: string,
+    versionId: string,
+    formVersionAction?: FormVersionAction, options?: RequestInit): Promise<FormTemplateVersion> => {
+
+  return customFetch<FormTemplateVersion>(getRejectFormTemplateVersionUrl(id,versionId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formVersionAction,)
+  }
+);}
+
+
+
+
+export const getRejectFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof rejectFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext> => {
+
+const mutationKey = ['rejectFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rejectFormTemplateVersion>>, {id: string;versionId: string;data?: BodyType<FormVersionAction>}> = (props) => {
+          const {id,versionId,data} = props ?? {};
+
+          return  rejectFormTemplateVersion(id,versionId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RejectFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof rejectFormTemplateVersion>>>
+    export type RejectFormTemplateVersionMutationBody = BodyType<FormVersionAction> | undefined
+    export type RejectFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Reject a submitted/endorsed version with a reason
+ */
+export const useRejectFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof rejectFormTemplateVersion>>,
+        TError,
+        {id: string;versionId: string;data?: BodyType<FormVersionAction>},
+        TContext
+      > => {
+      return useMutation(getRejectFormTemplateVersionMutationOptions(options));
+    }
+
+export const getActivateFormTemplateVersionUrl = (id: string,
+    versionId: string,) => {
+
+
+
+
+  return `/api/form-templates/${id}/versions/${versionId}/activate`
+}
+
+/**
+ * @summary Revert — make a previously approved version the active one
+ */
+export const activateFormTemplateVersion = async (id: string,
+    versionId: string,
+    formVersionAction?: FormVersionAction, options?: RequestInit): Promise<FormTemplateDetail> => {
+
+  return customFetch<FormTemplateDetail>(getActivateFormTemplateVersionUrl(id,versionId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      formVersionAction,)
+  }
+);}
+
+
+
+
+export const getActivateFormTemplateVersionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activateFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof activateFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext> => {
+
+const mutationKey = ['activateFormTemplateVersion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof activateFormTemplateVersion>>, {id: string;versionId: string;data?: BodyType<FormVersionAction>}> = (props) => {
+          const {id,versionId,data} = props ?? {};
+
+          return  activateFormTemplateVersion(id,versionId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ActivateFormTemplateVersionMutationResult = NonNullable<Awaited<ReturnType<typeof activateFormTemplateVersion>>>
+    export type ActivateFormTemplateVersionMutationBody = BodyType<FormVersionAction> | undefined
+    export type ActivateFormTemplateVersionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Revert — make a previously approved version the active one
+ */
+export const useActivateFormTemplateVersion = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof activateFormTemplateVersion>>, TError,{id: string;versionId: string;data?: BodyType<FormVersionAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof activateFormTemplateVersion>>,
+        TError,
+        {id: string;versionId: string;data?: BodyType<FormVersionAction>},
+        TContext
+      > => {
+      return useMutation(getActivateFormTemplateVersionMutationOptions(options));
+    }
+
+export const getRenderFormTemplateUrl = (params: RenderFormTemplateParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/form-renders?${stringifiedParams}` : `/api/form-renders`
+}
+
+/**
+ * @summary Render the current approved version with data bound (preview, no log)
+ */
+export const renderFormTemplate = async (params: RenderFormTemplateParams, options?: RequestInit): Promise<FormRenderResponse> => {
+
+  return customFetch<FormRenderResponse>(getRenderFormTemplateUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getRenderFormTemplateQueryKey = (params?: RenderFormTemplateParams,) => {
+    return [
+    `/api/form-renders`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getRenderFormTemplateQueryOptions = <TData = Awaited<ReturnType<typeof renderFormTemplate>>, TError = ErrorType<Error>>(params: RenderFormTemplateParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof renderFormTemplate>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getRenderFormTemplateQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof renderFormTemplate>>> = ({ signal }) => renderFormTemplate(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof renderFormTemplate>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type RenderFormTemplateQueryResult = NonNullable<Awaited<ReturnType<typeof renderFormTemplate>>>
+export type RenderFormTemplateQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Render the current approved version with data bound (preview, no log)
+ */
+
+export function useRenderFormTemplate<TData = Awaited<ReturnType<typeof renderFormTemplate>>, TError = ErrorType<Error>>(
+ params: RenderFormTemplateParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof renderFormTemplate>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getRenderFormTemplateQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListPrintJobsUrl = (params?: ListPrintJobsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/print-jobs?${stringifiedParams}` : `/api/print-jobs`
+}
+
+/**
+ * @summary List print log entries
+ */
+export const listPrintJobs = async (params?: ListPrintJobsParams, options?: RequestInit): Promise<PrintJobListResponse> => {
+
+  return customFetch<PrintJobListResponse>(getListPrintJobsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPrintJobsQueryKey = (params?: ListPrintJobsParams,) => {
+    return [
+    `/api/print-jobs`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPrintJobsQueryOptions = <TData = Awaited<ReturnType<typeof listPrintJobs>>, TError = ErrorType<unknown>>(params?: ListPrintJobsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrintJobs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPrintJobsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPrintJobs>>> = ({ signal }) => listPrintJobs(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPrintJobs>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPrintJobsQueryResult = NonNullable<Awaited<ReturnType<typeof listPrintJobs>>>
+export type ListPrintJobsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List print log entries
+ */
+
+export function useListPrintJobs<TData = Awaited<ReturnType<typeof listPrintJobs>>, TError = ErrorType<unknown>>(
+ params?: ListPrintJobsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrintJobs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPrintJobsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreatePrintJobUrl = () => {
+
+
+
+
+  return `/api/print-jobs`
+}
+
+/**
+ * @summary Record a print/reprint (uses latest approved version) and return the document
+ */
+export const createPrintJob = async (printJobInput: PrintJobInput, options?: RequestInit): Promise<PrintJobResult> => {
+
+  return customFetch<PrintJobResult>(getCreatePrintJobUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      printJobInput,)
+  }
+);}
+
+
+
+
+export const getCreatePrintJobMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPrintJob>>, TError,{data: BodyType<PrintJobInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPrintJob>>, TError,{data: BodyType<PrintJobInput>}, TContext> => {
+
+const mutationKey = ['createPrintJob'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPrintJob>>, {data: BodyType<PrintJobInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPrintJob(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePrintJobMutationResult = NonNullable<Awaited<ReturnType<typeof createPrintJob>>>
+    export type CreatePrintJobMutationBody = BodyType<PrintJobInput>
+    export type CreatePrintJobMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Record a print/reprint (uses latest approved version) and return the document
+ */
+export const useCreatePrintJob = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPrintJob>>, TError,{data: BodyType<PrintJobInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPrintJob>>,
+        TError,
+        {data: BodyType<PrintJobInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePrintJobMutationOptions(options));
     }
 
