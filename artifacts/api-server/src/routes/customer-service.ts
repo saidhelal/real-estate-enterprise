@@ -5,6 +5,15 @@ import {
   db,
   slaPoliciesTable,
   serviceEscalationsTable,
+  customersTable,
+  contractsTable,
+  reservationsTable,
+  installmentPlansTable,
+  installmentSchedulesTable,
+  complaintsTable,
+  leadFollowUpsTable,
+  leadsTable,
+  handoverRequestsTable,
 } from "@workspace/db";
 import {
   ListSlaPoliciesResponse,
@@ -173,7 +182,31 @@ router.get("/customer-service-dashboard", requirePermission("serviceEscalations.
   const slaWhere = and(eq(slaPoliciesTable.isDeleted, false), ...(companyId ? [eq(slaPoliciesTable.companyId, companyId)] : []));
   const [{ count: slaPolicies }] = await db.select({ count: sql<number>`count(*)::int` }).from(slaPoliciesTable).where(slaWhere);
   const byStatusRows = await db.select({ status: serviceEscalationsTable.status, count: sql<number>`count(*)::int` }).from(serviceEscalationsTable).where(where).groupBy(serviceEscalationsTable.status);
-  res.json(GetCustomerServiceDashboardResponse.parse({ totalEscalations: count, openEscalations, slaPolicies, byStatus: byStatusRows.map((r) => ({ status: r.status, count: r.count })) }));
+
+  const cnt = sql<number>`count(*)::int`;
+  const [
+    [{ count: customers }],
+    [{ count: contracts }],
+    [{ count: reservations }],
+    [{ count: installmentPlans }],
+    [{ count: installmentSchedules }],
+    [{ count: complaints }],
+    [{ count: followUps }],
+    [{ count: leads }],
+    [{ count: deliveredUnits }],
+  ] = await Promise.all([
+    db.select({ count: cnt }).from(customersTable).where(and(eq(customersTable.isDeleted, false), ...(companyId ? [eq(customersTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(contractsTable).where(and(eq(contractsTable.isDeleted, false), ...(companyId ? [eq(contractsTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(reservationsTable).where(and(eq(reservationsTable.isDeleted, false), ...(companyId ? [eq(reservationsTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(installmentPlansTable).where(and(eq(installmentPlansTable.isDeleted, false), ...(companyId ? [eq(installmentPlansTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(installmentSchedulesTable).where(and(eq(installmentSchedulesTable.isDeleted, false), ...(companyId ? [eq(installmentSchedulesTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(complaintsTable).where(and(eq(complaintsTable.isDeleted, false), ...(companyId ? [eq(complaintsTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(leadFollowUpsTable).where(and(eq(leadFollowUpsTable.isDeleted, false), ...(companyId ? [eq(leadFollowUpsTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(leadsTable).where(and(eq(leadsTable.isDeleted, false), ...(companyId ? [eq(leadsTable.companyId, companyId)] : []))),
+    db.select({ count: cnt }).from(handoverRequestsTable).where(and(eq(handoverRequestsTable.isDeleted, false), eq(handoverRequestsTable.status, "completed"), ...(companyId ? [eq(handoverRequestsTable.companyId, companyId)] : []))),
+  ]);
+
+  res.json(GetCustomerServiceDashboardResponse.parse({ totalEscalations: count, openEscalations, slaPolicies, customers, contracts, reservations, installmentPlans, installmentSchedules, deliveredUnits, complaints, followUps, leads, byStatus: byStatusRows.map((r) => ({ status: r.status, count: r.count })) }));
 });
 
 export default router;

@@ -56,6 +56,26 @@ export default function CustomerServiceDashboardPage() {
       <h2 className="text-2xl font-bold tracking-tight">{t("nav.customer_service_dashboard")}</h2>
 
       <section className="space-y-4">
+        <h3 className="text-lg font-semibold tracking-tight">{t("cs.overview_section")}</h3>
+        {!cs ? (
+          <p className="text-muted-foreground">{t("lb.no_data")}</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <Stat label={t("cs.ov_customers")} value={cs.customers} />
+            <Stat label={t("cs.ov_contracts")} value={cs.contracts} />
+            <Stat label={t("cs.ov_reservations")} value={cs.reservations} />
+            <Stat label={t("cs.ov_installment_plans")} value={cs.installmentPlans} />
+            <Stat label={t("cs.ov_installment_schedules")} value={cs.installmentSchedules} />
+            <Stat label={t("cs.ov_delivered_units")} value={cs.deliveredUnits} />
+            <Stat label={t("cs.ov_service_requests")} value={cs.totalEscalations} />
+            <Stat label={t("cs.ov_complaints")} value={cs.complaints} />
+            <Stat label={t("cs.ov_follow_ups")} value={cs.followUps} />
+            <Stat label={t("cs.ov_leads")} value={cs.leads} />
+          </div>
+        )}
+      </section>
+
+      <section className="space-y-4">
         <h3 className="text-lg font-semibold tracking-tight">{t("cs.after_sales_section")}</h3>
         {!cs ? (
           <p className="text-muted-foreground">{t("lb.no_data")}</p>

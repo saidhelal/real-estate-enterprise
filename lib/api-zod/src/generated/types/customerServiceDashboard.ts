@@ -11,5 +11,14 @@ export interface CustomerServiceDashboard {
   totalEscalations: number;
   openEscalations: number;
   slaPolicies: number;
+  customers: number;
+  contracts: number;
+  reservations: number;
+  installmentPlans: number;
+  installmentSchedules: number;
+  deliveredUnits: number;
+  complaints: number;
+  followUps: number;
+  leads: number;
   byStatus: CustomerServiceStatusCount[];
 }

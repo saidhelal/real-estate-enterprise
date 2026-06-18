@@ -31657,11 +31657,35 @@ components:
 
     CustomerServiceDashboard:
       type: object
-      required: [totalEscalations, openEscalations, slaPolicies, byStatus]
+      required:
+        [
+          totalEscalations,
+          openEscalations,
+          slaPolicies,
+          byStatus,
+          customers,
+          contracts,
+          reservations,
+          installmentPlans,
+          installmentSchedules,
+          deliveredUnits,
+          complaints,
+          followUps,
+          leads,
+        ]
       properties:
         totalEscalations: { type: integer }
         openEscalations: { type: integer }
         slaPolicies: { type: integer }
+        customers: { type: integer }
+        contracts: { type: integer }
+        reservations: { type: integer }
+        installmentPlans: { type: integer }
+        installmentSchedules: { type: integer }
+        deliveredUnits: { type: integer }
+        complaints: { type: integer }
+        followUps: { type: integer }
+        leads: { type: integer }
         byStatus:
           type: array
           items: { $ref: "#/components/schemas/CustomerServiceStatusCount" }

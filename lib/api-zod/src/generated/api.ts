@@ -26450,6 +26450,15 @@ export const GetCustomerServiceDashboardResponse = zod.object({
   "totalEscalations": zod.number(),
   "openEscalations": zod.number(),
   "slaPolicies": zod.number(),
+  "customers": zod.number(),
+  "contracts": zod.number(),
+  "reservations": zod.number(),
+  "installmentPlans": zod.number(),
+  "installmentSchedules": zod.number(),
+  "deliveredUnits": zod.number(),
+  "complaints": zod.number(),
+  "followUps": zod.number(),
+  "leads": zod.number(),
   "byStatus": zod.array(zod.object({
   "status": zod.string(),
   "count": zod.number()
