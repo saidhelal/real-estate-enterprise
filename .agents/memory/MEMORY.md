@@ -3,6 +3,8 @@
 - [Lib declaration staleness](lib-staleness.md) — run typecheck:libs after editing lib/* or artifacts see phantom "no exported member".
 - [Cookie-auth login redirect](cookie-auth-login-redirect.md) — login 200 but stuck on /login: invalidate current-user query before navigating.
 - [RBAC enforcement](rbac-enforcement.md) — requireAuth is not authorization; add requirePermission per-handler and smoke-test with a role-less user.
+- [Router-scoped middleware](router-unscoped-middleware.md) — unscoped router.use(requirePermission) on a prefix-less router 403s every router mounted after it; scope to the module path.
+- [Tenant-scoped create](router-unscoped-middleware.md) — endpoints accepting a body companyId must gate it with canOperateOnCompany, or creator/owner read-visibility lets scoped users cross companies.
 - [Print/export XSS](print-export-xss.md) — client-side document.write print views must HTML-escape every stored field interpolated into the template.
 - [Inline preview XSS](inline-preview-xss.md) — uploaded-file inline preview/serve must force active types (html/svg/xml/js) to octet-stream+attachment+nosniff and never iframe them same-origin.
 - [Idempotent action endpoints](transactional-action-endpoints.md) — convert/generate-style POSTs: row-lock + re-check inside the tx, respond 404/409 via a conflict var after commit.

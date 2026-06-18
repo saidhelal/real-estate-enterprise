@@ -233,6 +233,10 @@ router.post("/documents", requirePermission(`${MODULE}.create`), async (req, res
     return;
   }
   const body = parsed.data;
+  if (!canOperateOnCompany(req.authUser!, body.companyId)) {
+    res.status(403).json({ error: "You cannot create documents for this company." });
+    return;
+  }
   const me = actor(req);
   const documentNumber = await generateDocumentNumber(body.companyId);
 
