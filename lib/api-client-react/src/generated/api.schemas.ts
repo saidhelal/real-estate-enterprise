@@ -14546,7 +14546,7 @@ export interface DocumentsDashboard {
 }
 
 export interface DocumentExpiryScanInput {
-  companyId?: string;
+  companyId: string;
   nearDays?: number;
 }
 
@@ -16746,6 +16746,12 @@ export type CompareDocumentVersionsParams = {
 documentId: string;
 a: string;
 b: string;
+};
+
+export type GetDocumentFileParams = {
+documentId: string;
+versionId?: string;
+download?: string;
 };
 
 export type ListModuleDocumentsParams = {

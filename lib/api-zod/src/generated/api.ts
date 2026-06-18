@@ -33888,6 +33888,17 @@ export const CompareDocumentVersionsResponse = zod.object({
 
 
 /**
+ * Streams the current (or a specified) version's binary. Active content (HTML/SVG/XML/scripts) is always forced to an attachment download with nosniff to prevent stored XSS in the app origin. Uses a query-param document id (not a path param) so the generated params schema does not collide with the combined params type.
+ * @summary Serve a document's file for inline preview or download
+ */
+export const GetDocumentFileQueryParams = zod.object({
+  "documentId": zod.coerce.string(),
+  "versionId": zod.coerce.string().optional(),
+  "download": zod.coerce.string().optional()
+})
+
+
+/**
  * @summary Submit a document for endorsement
  */
 export const SubmitDocumentParams = zod.object({
@@ -34742,7 +34753,7 @@ export const GetDocumentsDashboardResponse = zod.object({
  * @summary On-demand scan for near-expiry/expired documents (emits notifications)
  */
 export const ScanDocumentExpiryBody = zod.object({
-  "companyId": zod.string().optional(),
+  "companyId": zod.string(),
   "nearDays": zod.number().optional()
 })
 

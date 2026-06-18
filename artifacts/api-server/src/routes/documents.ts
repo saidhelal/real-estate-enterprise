@@ -49,6 +49,7 @@ import {
   generateDocumentNumber,
   documentScopeFilter,
   canSeeDocument,
+  canOperateOnCompany,
   presentDocument,
   presentVersion,
   loadVersions,
@@ -502,9 +503,9 @@ router.post(
       res.status(400).json({ error: parsed.error.message });
       return;
     }
-    const companyId = qStr(req.query as Record<string, unknown>, "companyId");
-    if (!companyId) {
-      res.status(400).json({ error: "companyId is required." });
+    const companyId = parsed.data.companyId;
+    if (!canOperateOnCompany(req.authUser!, companyId)) {
+      res.status(403).json({ error: "You cannot scan documents for this company." });
       return;
     }
     const nearDays = parsed.data.nearDays ?? 30;
@@ -1315,10 +1316,14 @@ router.delete(
 /* -------------------------------------------------------------------------- */
 
 router.get(
-  "/documents/:id/file",
+  "/documents-file",
   requirePermission(`${MODULE}.view`),
   async (req, res): Promise<void> => {
-    const id = String(req.params.id);
+    const id = qStr(req.query as Record<string, unknown>, "documentId");
+    if (!id) {
+      res.status(400).json({ error: "documentId is required." });
+      return;
+    }
     const doc = await loadDocument(id);
     if (!doc) {
       res.status(404).json({ error: "Not found" });

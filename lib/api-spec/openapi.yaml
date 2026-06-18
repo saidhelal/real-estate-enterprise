@@ -23550,7 +23550,7 @@ paths:
         "404":
           description: Not found
 
-  /documents/{id}/file:
+  /documents-file:
     get:
       operationId: getDocumentFile
       tags: [documents]
@@ -23558,9 +23558,14 @@ paths:
       description: >-
         Streams the current (or a specified) version's binary. Active content
         (HTML/SVG/XML/scripts) is always forced to an attachment download with
-        nosniff to prevent stored XSS in the app origin.
+        nosniff to prevent stored XSS in the app origin. Uses a query-param
+        document id (not a path param) so the generated params schema does not
+        collide with the combined params type.
       parameters:
-        - $ref: "#/components/parameters/IdParam"
+        - name: documentId
+          in: query
+          required: true
+          schema: { type: string }
         - name: versionId
           in: query
           required: false
@@ -23568,7 +23573,7 @@ paths:
         - name: download
           in: query
           required: false
-          schema: { type: string, enum: ["true", "false"] }
+          schema: { type: string }
       responses:
         "200":
           description: File stream
@@ -39061,6 +39066,7 @@ components:
 
     DocumentExpiryScanInput:
       type: object
+      required: [companyId]
       properties:
         companyId: { type: string }
         nearDays: { type: integer }

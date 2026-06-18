@@ -436,6 +436,7 @@ import type {
   GetConstructionAnalyticsParams,
   GetConstructionDashboardParams,
   GetCustomerServiceDashboardParams,
+  GetDocumentFileParams,
   GetDocumentsDashboardParams,
   GetEngineeringDashboardParams,
   GetExecutiveDashboardParams,
@@ -99980,6 +99981,91 @@ export function useCompareDocumentVersions<TData = Awaited<ReturnType<typeof com
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getCompareDocumentVersionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetDocumentFileUrl = (params: GetDocumentFileParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/documents-file?${stringifiedParams}` : `/api/documents-file`
+}
+
+/**
+ * Streams the current (or a specified) version's binary. Active content (HTML/SVG/XML/scripts) is always forced to an attachment download with nosniff to prevent stored XSS in the app origin. Uses a query-param document id (not a path param) so the generated params schema does not collide with the combined params type.
+ * @summary Serve a document's file for inline preview or download
+ */
+export const getDocumentFile = async (params: GetDocumentFileParams, options?: RequestInit): Promise<Blob> => {
+
+  return customFetch<Blob>(getGetDocumentFileUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDocumentFileQueryKey = (params?: GetDocumentFileParams,) => {
+    return [
+    `/api/documents-file`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetDocumentFileQueryOptions = <TData = Awaited<ReturnType<typeof getDocumentFile>>, TError = ErrorType<void>>(params: GetDocumentFileParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDocumentFile>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDocumentFileQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDocumentFile>>> = ({ signal }) => getDocumentFile(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDocumentFile>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDocumentFileQueryResult = NonNullable<Awaited<ReturnType<typeof getDocumentFile>>>
+export type GetDocumentFileQueryError = ErrorType<void>
+
+
+/**
+ * @summary Serve a document's file for inline preview or download
+ */
+
+export function useGetDocumentFile<TData = Awaited<ReturnType<typeof getDocumentFile>>, TError = ErrorType<void>>(
+ params: GetDocumentFileParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDocumentFile>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDocumentFileQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

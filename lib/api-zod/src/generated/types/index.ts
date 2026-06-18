@@ -461,6 +461,7 @@ export * from './getCollectionAnalyticsParams';
 export * from './getConstructionAnalyticsParams';
 export * from './getConstructionDashboardParams';
 export * from './getCustomerServiceDashboardParams';
+export * from './getDocumentFileParams';
 export * from './getDocumentsDashboardParams';
 export * from './getEngineeringDashboardParams';
 export * from './getExecutiveDashboardParams';

@@ -146,6 +146,20 @@ export function documentScopeFilter(user: AuthUser): SQL | undefined {
   return or(...conds);
 }
 
+/**
+ * True when the user may run privileged company-wide operations (e.g. the
+ * expiry scan, which mutates document status + emits notifications) against
+ * `companyId`. A `*` / `documents.viewAll` holder may target any company;
+ * everyone else is bound to their own company so a scoped user cannot trigger
+ * cross-company status mutations.
+ */
+export function canOperateOnCompany(user: AuthUser, companyId: string): boolean {
+  if (user.permissions.includes("*") || user.permissions.includes("documents.viewAll")) {
+    return true;
+  }
+  return !!user.companyId && user.companyId === companyId;
+}
+
 /** True when the user is allowed to see this already-loaded document. */
 export function canSeeDocument(user: AuthUser, doc: Row): boolean {
   if (user.permissions.includes("*") || user.permissions.includes("documents.viewAll")) {

@@ -46,7 +46,7 @@ import {
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
-router.use(requireAuth);
+router.use("/bi", requireAuth);
 
 type Filters = {
   companyId: string | null;
@@ -77,7 +77,7 @@ const countText = (): SQL<string> => sql<string>`count(*)::text`;
 const monthExpr = (col: unknown): SQL<string> =>
   sql<string>`to_char(${col}, 'YYYY-MM')`;
 
-router.use(requirePermission("bi.view"));
+router.use("/bi", requirePermission("bi.view"));
 
 // ---------------------------------------------------------------------------
 // Executive dashboard

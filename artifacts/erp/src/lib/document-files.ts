@@ -60,12 +60,12 @@ export function documentFileUrl(
   versionId?: string,
   download?: boolean,
 ): string {
-  const base = `/api/documents/${documentId}/file`;
+  const base = `/api/documents-file`;
   const params = new URLSearchParams();
+  params.set("documentId", documentId);
   if (versionId) params.set("versionId", versionId);
   if (download) params.set("download", "true");
-  const qs = params.toString();
-  return qs ? `${base}?${qs}` : base;
+  return `${base}?${params.toString()}`;
 }
 
 export type PreviewKind = "image" | "pdf" | "text" | "none";
