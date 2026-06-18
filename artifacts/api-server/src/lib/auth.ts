@@ -35,6 +35,9 @@ export interface AuthUser {
   permissions: string[];
   mustChangePassword: boolean;
   scopes: UserScopes;
+  /** The company this user belongs to (null for unassigned). Used to bound
+   *  cross-company visibility of `public`-classified documents. */
+  companyId: string | null;
 }
 
 export async function hashPassword(plain: string): Promise<string> {

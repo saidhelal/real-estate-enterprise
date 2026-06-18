@@ -1244,8 +1244,9 @@ router.delete(
 );
 
 /* -------------------------------------------------------------------------- */
-/* File serving (inline preview + download) — not in the OpenAPI contract.    */
-/* Authorizes against the document's scope + the immutable owner mapping.     */
+/* File serving (inline preview + download) — modeled in OpenAPI as           */
+/* getDocumentFile (binary stream; hand-written here because it pipes bytes).  */
+/* Authorizes against the document's scope + the immutable owner mapping.      */
 /* -------------------------------------------------------------------------- */
 
 router.get(

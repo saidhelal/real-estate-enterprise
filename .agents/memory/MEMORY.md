@@ -39,3 +39,4 @@
 - [Central Print Engine](print-engine.md) — per-module Forms & Printing surfaced via RAW_NAV_GROUPS→NAV_GROUPS derivation + one /forms-printing/:moduleKey route; client must DOMPurify+sandbox template HTML (server only escapes tokens); createFormUploadUrl mutation vars are void.
 - [Long-running commands via workflow](long-running-commands-via-workflow.md) — codegen/cold-tsc exceed bash 120s & get reaped if backgrounded; run as a temp workflow + poll getWorkflowStatus.
 - [Global delete/edit governance](global-delete-governance.md) — a mounted middleware parks every direct DELETE/protected-PATCH as an approval change request; per-handler owner/"must-be-requested" delete gates break the approved re-dispatch.
+- [Orval binary endpoints](orval-binary-endpoints.md) — Orval emits no hook for octet-stream GETs; model in OpenAPI for contract, consume via same-origin URL helper.

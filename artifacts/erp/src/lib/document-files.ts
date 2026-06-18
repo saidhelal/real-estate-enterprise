@@ -5,6 +5,41 @@ import {
   type DocumentVersion,
 } from "@workspace/api-client-react";
 
+/**
+ * Presign + PUT raw bytes to object storage and return the normalized object
+ * path, WITHOUT registering a document version. Used for auxiliary images
+ * (signature / stamp) that attach to the document metadata rather than its
+ * version history.
+ */
+export function useObjectUpload() {
+  const uploadUrlMutation = useCreateDocumentUploadUrl();
+  const [isUploading, setIsUploading] = useState(false);
+
+  const uploadObject = useCallback(
+    async (file: File): Promise<string> => {
+      setIsUploading(true);
+      try {
+        const contentType = file.type || "application/octet-stream";
+        const { uploadUrl, filePath } = await uploadUrlMutation.mutateAsync({
+          data: { fileName: file.name, contentType },
+        });
+        const put = await fetch(uploadUrl, {
+          method: "PUT",
+          body: file,
+          headers: { "Content-Type": contentType },
+        });
+        if (!put.ok) throw new Error(`Upload failed (${put.status})`);
+        return filePath;
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [uploadUrlMutation],
+  );
+
+  return { uploadObject, isUploading };
+}
+
 /** Human-readable file size. */
 export function formatFileSize(bytes?: number | null): string {
   if (bytes === undefined || bytes === null) return "-";
@@ -20,9 +55,17 @@ export function formatFileSize(bytes?: number | null): string {
 }
 
 /** Same-origin URL the API serves the current (or a specific) file from. */
-export function documentFileUrl(documentId: string, versionId?: string): string {
+export function documentFileUrl(
+  documentId: string,
+  versionId?: string,
+  download?: boolean,
+): string {
   const base = `/api/documents/${documentId}/file`;
-  return versionId ? `${base}?versionId=${encodeURIComponent(versionId)}` : base;
+  const params = new URLSearchParams();
+  if (versionId) params.set("versionId", versionId);
+  if (download) params.set("download", "true");
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
 }
 
 export type PreviewKind = "image" | "pdf" | "text" | "none";

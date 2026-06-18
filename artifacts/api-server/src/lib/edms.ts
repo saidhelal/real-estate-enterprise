@@ -35,15 +35,29 @@ export async function generateDocumentNumber(companyId: string): Promise<string>
  * Build the scoped-visibility predicate for a user over the documents table.
  * A user with "*" (super admin) or the explicit `documents.viewAll` grant sees
  * everything (returns undefined — no extra filter). Otherwise a user sees only:
- *   - public documents, OR
+ *   - public documents WITHIN THEIR OWN COMPANY, OR
  *   - documents they own or created, OR
  *   - documents whose branch / department / project is in their scope grants.
+ *
+ * `public` is a sensitivity level ("visible to all employees"), NOT a
+ * cross-tenant flag: it is always bounded to the user's company so a scoped
+ * user can never enumerate another company's public documents — even when the
+ * caller omits the optional companyId list filter. Branch/department/project
+ * grants are inherently company-specific, so they need no extra company bound.
  */
 export function documentScopeFilter(user: AuthUser): SQL | undefined {
   if (user.permissions.includes("*") || user.permissions.includes("documents.viewAll")) {
     return undefined;
   }
-  const conds: SQL[] = [eq(documentsTable.classification, "public")];
+  const conds: SQL[] = [];
+  if (user.companyId) {
+    conds.push(
+      and(
+        eq(documentsTable.classification, "public"),
+        eq(documentsTable.companyId, user.companyId),
+      ) as SQL,
+    );
+  }
   if (user.id) {
     conds.push(eq(documentsTable.ownerUserId, user.id));
     conds.push(eq(documentsTable.createdByUserId, user.id));
@@ -52,6 +66,8 @@ export function documentScopeFilter(user: AuthUser): SQL | undefined {
   if (s.branchIds.length) conds.push(inArray(documentsTable.branchId, s.branchIds));
   if (s.departmentIds.length) conds.push(inArray(documentsTable.departmentId, s.departmentIds));
   if (s.projectIds.length) conds.push(inArray(documentsTable.projectId, s.projectIds));
+  // No visibility grants at all → match nothing (a false predicate).
+  if (conds.length === 0) return sql`false`;
   return or(...conds);
 }
 
@@ -60,7 +76,14 @@ export function canSeeDocument(user: AuthUser, doc: Row): boolean {
   if (user.permissions.includes("*") || user.permissions.includes("documents.viewAll")) {
     return true;
   }
-  if (doc.classification === "public") return true;
+  // `public` only grants visibility within the user's own company (see above).
+  if (
+    doc.classification === "public" &&
+    user.companyId &&
+    String(doc.companyId) === user.companyId
+  ) {
+    return true;
+  }
   if (user.id && (doc.ownerUserId === user.id || doc.createdByUserId === user.id)) return true;
   const s = user.scopes;
   if (doc.branchId && s.branchIds.includes(String(doc.branchId))) return true;

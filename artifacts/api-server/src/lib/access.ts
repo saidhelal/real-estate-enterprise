@@ -98,5 +98,6 @@ export async function loadAuthUser(userId: string): Promise<AuthUser | null> {
     permissions: Array.from(permissionSet),
     mustChangePassword: user.mustChangePassword,
     scopes: await loadUserScopes(user.id),
+    companyId: user.companyId ?? null,
   };
 }

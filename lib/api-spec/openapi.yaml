@@ -23550,6 +23550,36 @@ paths:
         "404":
           description: Not found
 
+  /documents/{id}/file:
+    get:
+      operationId: getDocumentFile
+      tags: [documents]
+      summary: Serve a document's file for inline preview or download
+      description: >-
+        Streams the current (or a specified) version's binary. Active content
+        (HTML/SVG/XML/scripts) is always forced to an attachment download with
+        nosniff to prevent stored XSS in the app origin.
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - name: versionId
+          in: query
+          required: false
+          schema: { type: string }
+        - name: download
+          in: query
+          required: false
+          schema: { type: string, enum: ["true", "false"] }
+      responses:
+        "200":
+          description: File stream
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+
   /documents/{id}/submit:
     post:
       operationId: submitDocument

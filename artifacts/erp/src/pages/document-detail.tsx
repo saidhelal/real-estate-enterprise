@@ -16,6 +16,8 @@ import {
   useArchiveDocument,
   useRestoreDocument,
   useRevertDocumentVersion,
+  useCompareDocumentVersions,
+  getCompareDocumentVersionsQueryKey,
   useSetDocumentSignature,
   useCreateDocumentLink,
   useDeleteDocumentLink,
@@ -48,7 +50,15 @@ import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
 import { useToast } from "@/hooks/use-toast";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   useDocumentUpload,
+  useObjectUpload,
   formatFileSize,
   documentFileUrl,
   previewKind,
@@ -80,6 +90,7 @@ export default function DocumentDetailPage() {
   const links: DocumentLink[] = data?.links ?? [];
 
   const { upload, isUploading } = useDocumentUpload();
+  const { uploadObject, isUploading: imageUploading } = useObjectUpload();
   const submit = useSubmitDocument();
   const endorse = useEndorseDocument();
   const approve = useApproveDocument();
@@ -95,6 +106,8 @@ export default function DocumentDetailPage() {
   const qrRef = useRef<HTMLImageElement>(null);
   const barcodeRef = useRef<HTMLCanvasElement>(null);
   const versionInputRef = useRef<HTMLInputElement>(null);
+  const signatureInputRef = useRef<HTMLInputElement>(null);
+  const stampInputRef = useRef<HTMLInputElement>(null);
 
   const [dragOver, setDragOver] = useState(false);
   const [changeSummary, setChangeSummary] = useState("");
@@ -102,8 +115,26 @@ export default function DocumentDetailPage() {
   const [reason, setReason] = useState("");
   const [signerName, setSignerName] = useState("");
   const [stampLabel, setStampLabel] = useState("");
+  const [signatureObjectPath, setSignatureObjectPath] = useState("");
+  const [stampObjectPath, setStampObjectPath] = useState("");
   const [linkModule, setLinkModule] = useState("");
   const [linkSource, setLinkSource] = useState("");
+  const [compareA, setCompareA] = useState("");
+  const [compareB, setCompareB] = useState("");
+
+  const compare = useCompareDocumentVersions(
+    { documentId: id, a: compareA, b: compareB },
+    {
+      query: {
+        enabled: !!(compareA && compareB && compareA !== compareB),
+        queryKey: getCompareDocumentVersionsQueryKey({
+          documentId: id,
+          a: compareA,
+          b: compareB,
+        }),
+      },
+    },
+  );
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: getGetDocumentQueryKey(id) });
@@ -193,9 +224,35 @@ export default function DocumentDetailPage() {
 
   const saveSignature = () =>
     setSignature.mutate(
-      { id, data: { signerName: signerName || undefined, stampLabel: stampLabel || undefined } },
+      {
+        id,
+        data: {
+          signerName: signerName || undefined,
+          stampLabel: stampLabel || undefined,
+          signatureObjectPath: signatureObjectPath || undefined,
+          stampObjectPath: stampObjectPath || undefined,
+        },
+      },
       { onSuccess: ok, onError: fail },
     );
+
+  const handleSignatureImage = async (file: File) => {
+    try {
+      const path = await uploadObject(file);
+      setSignatureObjectPath(path);
+    } catch {
+      fail();
+    }
+  };
+
+  const handleStampImage = async (file: File) => {
+    try {
+      const path = await uploadObject(file);
+      setStampObjectPath(path);
+    } catch {
+      fail();
+    }
+  };
 
   const addLink = () => {
     if (!linkModule.trim() || !linkSource.trim()) return;
@@ -443,6 +500,99 @@ export default function DocumentDetailPage() {
               </Table>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{t("edms.compare_versions")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap items-end gap-3">
+                <div className="grid gap-1.5">
+                  <Label>{t("edms.version_a")}</Label>
+                  <Select value={compareA} onValueChange={setCompareA}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder={t("edms.select_version")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {versions.map((v) => (
+                        <SelectItem key={v.id} value={v.id}>
+                          v{v.versionNumber}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-1.5">
+                  <Label>{t("edms.version_b")}</Label>
+                  <Select value={compareB} onValueChange={setCompareB}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder={t("edms.select_version")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {versions.map((v) => (
+                        <SelectItem key={v.id} value={v.id}>
+                          v{v.versionNumber}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {compare.isLoading && (
+                <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+              )}
+
+              {compare.data && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {[compare.data.a, compare.data.b].map((v, i) => (
+                    <div key={v.id} className="rounded-md border p-4">
+                      <p className="mb-2 flex items-center gap-2 text-sm font-medium">
+                        {i === 0 ? t("edms.version_a") : t("edms.version_b")}
+                        <Badge variant="secondary">v{v.versionNumber}</Badge>
+                        {v.isCurrent && <Badge>{t("edms.current")}</Badge>}
+                      </p>
+                      <dl className="space-y-1 text-sm">
+                        <div className="flex justify-between gap-4">
+                          <dt className="text-muted-foreground">{t("edms.file_name")}</dt>
+                          <dd className="truncate text-right">{v.fileName ?? "-"}</dd>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <dt className="text-muted-foreground">{t("edms.file_size")}</dt>
+                          <dd>{formatFileSize(v.fileSize)}</dd>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <dt className="text-muted-foreground">{t("edms.change_summary")}</dt>
+                          <dd className="truncate text-right">{v.changeSummary ?? "-"}</dd>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <dt className="text-muted-foreground">{t("edms.uploaded_by")}</dt>
+                          <dd>{v.uploadedByUserName ?? "-"}</dd>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <dt className="text-muted-foreground">{t("edms.uploaded_at")}</dt>
+                          <dd>{v.createdAt ?? "-"}</dd>
+                        </div>
+                      </dl>
+                      <div className="mt-3 flex gap-2">
+                        <Button asChild size="sm" variant="outline">
+                          <a href={documentFileUrl(id, v.id)} target="_blank" rel="noreferrer">
+                            {t("common.view")}
+                          </a>
+                        </Button>
+                        <Button asChild size="sm" variant="outline">
+                          <a href={documentFileUrl(id, v.id, true)}>
+                            <Download className="mr-2 h-4 w-4" />
+                            {t("edms.download")}
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="links" className="mt-4 space-y-4">
@@ -536,15 +686,73 @@ export default function DocumentDetailPage() {
                 <Input value={signerName} onChange={(e) => setSignerName(e.target.value)} />
               </div>
               <div className="grid gap-1.5">
+                <Label>{t("edms.signature_image")}</Label>
+                <input
+                  ref={signatureInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void handleSignatureImage(f);
+                    e.target.value = "";
+                  }}
+                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={imageUploading}
+                    onClick={() => signatureInputRef.current?.click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    {signatureObjectPath ? t("edms.replace_image") : t("edms.upload_image")}
+                  </Button>
+                  {(signatureObjectPath || doc.signatureObjectPath) && (
+                    <Badge variant="secondary">{t("edms.image_attached")}</Badge>
+                  )}
+                </div>
+              </div>
+              <div className="grid gap-1.5">
                 <Label>{t("edms.stamp_label")}</Label>
                 <Input value={stampLabel} onChange={(e) => setStampLabel(e.target.value)} />
+              </div>
+              <div className="grid gap-1.5">
+                <Label>{t("edms.stamp_image")}</Label>
+                <input
+                  ref={stampInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void handleStampImage(f);
+                    e.target.value = "";
+                  }}
+                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={imageUploading}
+                    onClick={() => stampInputRef.current?.click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    {stampObjectPath ? t("edms.replace_image") : t("edms.upload_image")}
+                  </Button>
+                  {(stampObjectPath || doc.stampObjectPath) && (
+                    <Badge variant="secondary">{t("edms.image_attached")}</Badge>
+                  )}
+                </div>
               </div>
               {doc.signedAt && (
                 <p className="text-xs text-muted-foreground">
                   {t("edms.signed_at")}: {doc.signedAt}
                 </p>
               )}
-              <Button disabled={setSignature.isPending} onClick={saveSignature}>
+              <Button disabled={setSignature.isPending || imageUploading} onClick={saveSignature}>
                 {t("common.save")}
               </Button>
             </CardContent>
