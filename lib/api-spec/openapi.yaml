@@ -23375,6 +23375,7 @@ paths:
         - { name: unitId, in: query, required: false, schema: { type: string } }
         - { name: departmentId, in: query, required: false, schema: { type: string } }
         - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: ownerUserId, in: query, required: false, schema: { type: string } }
         - { name: fileFormat, in: query, required: false, schema: { type: string } }
         - { name: dateFrom, in: query, required: false, schema: { type: string } }
         - { name: dateTo, in: query, required: false, schema: { type: string } }

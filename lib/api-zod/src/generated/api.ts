@@ -33396,6 +33396,7 @@ export const ListDocumentsQueryParams = zod.object({
   "unitId": zod.coerce.string().optional(),
   "departmentId": zod.coerce.string().optional(),
   "branchId": zod.coerce.string().optional(),
+  "ownerUserId": zod.coerce.string().optional(),
   "fileFormat": zod.coerce.string().optional(),
   "dateFrom": zod.coerce.string().optional(),
   "dateTo": zod.coerce.string().optional(),

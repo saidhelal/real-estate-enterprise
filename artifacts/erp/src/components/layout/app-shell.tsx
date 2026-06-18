@@ -44,6 +44,7 @@ const RAW_NAV_GROUPS = [
   { titleKey: "nav.group.edms", items: [
     { href: "/documents-dashboard", icon: LayoutDashboard, labelKey: "nav.documents_dashboard" },
     { href: "/documents", icon: FolderArchive, labelKey: "nav.documents" },
+    { href: "/document-search", icon: Search, labelKey: "nav.document_search" },
     { href: "/document-approvals", icon: Inbox, labelKey: "nav.document_approvals" },
   ]},
   { titleKey: "nav.group.sales_crm", items: [

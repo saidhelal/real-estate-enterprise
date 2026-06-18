@@ -156,6 +156,7 @@ router.get("/documents", requirePermission(`${MODULE}.view`), async (req, res): 
     "unitId",
     "departmentId",
     "branchId",
+    "ownerUserId",
   ] as const) {
     const v = qStr(q, c);
     if (v) filters.push(eq(documentsTable[c], v));
@@ -571,6 +572,19 @@ router.delete(
       res.status(404).json({ error: "Not found" });
       return;
     }
+    if (!canSeeDocument(req.authUser!, existing)) {
+      res.status(403).json({ error: "You do not have access to this document." });
+      return;
+    }
+    // Delete governance is enforced globally by `governanceMiddleware`: a direct
+    // DELETE is never executed here — it is parked as a pending change request and
+    // only an Owner / Super Admin (`approvals.approve`) may approve it, which
+    // re-dispatches this handler internally. So we only ever soft-delete (the
+    // module never hard-deletes). We must NOT additionally gate on the document's
+    // own `deleteRequestedAt`/owner: the approved re-dispatch runs authenticated
+    // as the approver, and that EDMS-native request flag is independent of the
+    // change-request approval that already authorized this call — gating on it
+    // here would reject every legitimately approved deletion.
     await db
       .update(documentsTable)
       .set({ isDeleted: true, isActive: false })
@@ -627,6 +641,10 @@ router.post(
       res.status(404).json({ error: "Not found" });
       return;
     }
+    if (!canSeeDocument(req.authUser!, doc)) {
+      res.status(403).json({ error: "You do not have access to this document." });
+      return;
+    }
     const me = actor(req);
     const existing = await loadVersions(id);
     const nextNumber =
@@ -671,6 +689,19 @@ router.post(
       entityId: String(row.id),
       newValue: { documentId: id, versionNumber: nextNumber },
     });
+    if (doc.ownerUserId && doc.ownerUserId !== me.id) {
+      const ref = String(doc.documentNumber ?? doc.name ?? "");
+      await notifyUser({
+        companyId: String(doc.companyId),
+        recipientUserId: String(doc.ownerUserId),
+        actorUserId: me.id,
+        eventType: "document_new_version",
+        title: `New version added: ${ref}`,
+        body: `${me.name} added version ${nextNumber} to ${String(doc.name)}.`,
+        sourceId: id,
+        sourceRef: ref,
+      });
+    }
     res.status(201).json(presentVersion(row, String(row.id)));
   },
 );
@@ -684,6 +715,10 @@ router.post(
     const doc = await loadDocument(id);
     if (!doc) {
       res.status(404).json({ error: "Not found" });
+      return;
+    }
+    if (!canSeeDocument(req.authUser!, doc)) {
+      res.status(403).json({ error: "You do not have access to this document." });
       return;
     }
     const target = (await db
@@ -1116,6 +1151,10 @@ router.post(
       res.status(404).json({ error: "Not found" });
       return;
     }
+    if (!canSeeDocument(req.authUser!, doc)) {
+      res.status(403).json({ error: "You do not have access to this document." });
+      return;
+    }
     const body = parsed.data;
     const me = actor(req);
     // Idempotent: do not create a duplicate link to the same record.
@@ -1167,6 +1206,15 @@ router.delete(
   async (req, res): Promise<void> => {
     const id = String(req.params.id);
     const linkId = String(req.params.linkId);
+    const doc = await loadDocument(id);
+    if (!doc) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    if (!canSeeDocument(req.authUser!, doc)) {
+      res.status(403).json({ error: "You do not have access to this document." });
+      return;
+    }
     const existing = (await db
       .select()
       .from(documentLinksTable)
@@ -1245,6 +1293,12 @@ router.get(
       res.status(403).json({ error: "Forbidden" });
       return;
     }
+    await recordAudit(req, {
+      action: download ? "download" : "view-file",
+      entity: "document",
+      entityId: id,
+      newValue: { versionId: String(version.id), fileName: version.fileName ?? null },
+    });
     try {
       const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
       const response = await objectStorageService.downloadObject(objectFile);

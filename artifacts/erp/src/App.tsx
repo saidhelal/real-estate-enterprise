@@ -15,6 +15,7 @@ import DocumentsPage from "@/pages/documents";
 import DocumentDetailPage from "@/pages/document-detail";
 import DocumentsDashboardPage from "@/pages/documents-dashboard";
 import DocumentApprovalsPage from "@/pages/document-approvals";
+import DocumentSearchPage from "@/pages/document-search";
 import UsersPage from "@/pages/users";
 import RolesPage from "@/pages/roles";
 import MasterDataPage from "@/pages/master-data";
@@ -335,6 +336,7 @@ function Router() {
             <Route path="/approvals" component={ApprovalsPage} />
             <Route path="/documents-dashboard" component={DocumentsDashboardPage} />
             <Route path="/document-approvals" component={DocumentApprovalsPage} />
+            <Route path="/document-search" component={DocumentSearchPage} />
             <Route path="/documents/:id" component={DocumentDetailPage} />
             <Route path="/documents" component={DocumentsPage} />
 

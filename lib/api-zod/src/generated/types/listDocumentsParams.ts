@@ -21,6 +21,7 @@ projectId?: string;
 unitId?: string;
 departmentId?: string;
 branchId?: string;
+ownerUserId?: string;
 fileFormat?: string;
 dateFrom?: string;
 dateTo?: string;
