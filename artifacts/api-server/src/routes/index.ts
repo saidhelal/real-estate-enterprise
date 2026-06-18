@@ -33,6 +33,7 @@ import handoverRouter from "./handover";
 import customerServiceRouter from "./customer-service";
 import fixedAssetsRouter from "./fixed-assets";
 import generalAdminRouter from "./general-admin";
+import insuranceRouter from "./insurance";
 import masterDataRouter from "./master-data";
 import portalRouter from "./portal";
 
@@ -76,6 +77,7 @@ router.use(handoverRouter);
 router.use(customerServiceRouter);
 router.use(fixedAssetsRouter);
 router.use(generalAdminRouter);
+router.use(insuranceRouter);
 router.use(masterDataRouter);
 
 export default router;

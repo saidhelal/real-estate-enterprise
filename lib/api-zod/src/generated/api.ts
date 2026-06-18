@@ -30262,3 +30262,1897 @@ export const DeletePolicyResponse = zod.object({
 })
 
 
+/**
+ * @summary Insurance Management dashboard summary
+ */
+export const GetInsuranceDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetInsuranceDashboardResponse = zod.object({
+  "insuredCount": zod.number(),
+  "suspendedCount": zod.number(),
+  "subscriptionsTotal": zod.string(),
+  "arrearsTotal": zod.string(),
+  "penaltiesTotal": zod.string(),
+  "alertsCount": zod.number()
+})
+
+
+/**
+ * @summary List EmployeeInsurances
+ */
+export const ListEmployeeInsurancesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional(),
+  "insuranceType": zod.coerce.string().optional(),
+  "insuranceStatus": zod.coerce.string().optional()
+})
+
+export const ListEmployeeInsurancesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "insuranceNumber": zod.string().nullish(),
+  "insuranceAuthority": zod.string().nullish(),
+  "insuranceType": zod.string(),
+  "insuranceSalary": zod.string().nullish(),
+  "basicSalary": zod.string().nullish(),
+  "subscriptionDate": zod.string().nullish(),
+  "insuranceOffice": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a EmployeeInsurance
+ */
+export const CreateEmployeeInsuranceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "insuranceNumber": zod.string().optional(),
+  "insuranceAuthority": zod.string().optional(),
+  "insuranceType": zod.string().optional(),
+  "insuranceSalary": zod.string().optional(),
+  "basicSalary": zod.string().optional(),
+  "subscriptionDate": zod.string().optional(),
+  "insuranceOffice": zod.string().optional(),
+  "insuranceStatus": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a EmployeeInsurance
+ */
+export const GetEmployeeInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetEmployeeInsuranceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "insuranceNumber": zod.string().nullish(),
+  "insuranceAuthority": zod.string().nullish(),
+  "insuranceType": zod.string(),
+  "insuranceSalary": zod.string().nullish(),
+  "basicSalary": zod.string().nullish(),
+  "subscriptionDate": zod.string().nullish(),
+  "insuranceOffice": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a EmployeeInsurance
+ */
+export const UpdateEmployeeInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateEmployeeInsuranceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "insuranceNumber": zod.string().optional(),
+  "insuranceAuthority": zod.string().optional(),
+  "insuranceType": zod.string().optional(),
+  "insuranceSalary": zod.string().optional(),
+  "basicSalary": zod.string().optional(),
+  "subscriptionDate": zod.string().optional(),
+  "insuranceOffice": zod.string().optional(),
+  "insuranceStatus": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateEmployeeInsuranceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "insuranceNumber": zod.string().nullish(),
+  "insuranceAuthority": zod.string().nullish(),
+  "insuranceType": zod.string(),
+  "insuranceSalary": zod.string().nullish(),
+  "basicSalary": zod.string().nullish(),
+  "subscriptionDate": zod.string().nullish(),
+  "insuranceOffice": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a EmployeeInsurance
+ */
+export const DeleteEmployeeInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteEmployeeInsuranceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceForms
+ */
+export const ListInsuranceFormsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "formType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceFormsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "formType": zod.string(),
+  "formNumber": zod.string().nullish(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "submissionDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceForm
+ */
+export const CreateInsuranceFormBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "formType": zod.string().optional(),
+  "formNumber": zod.string().optional(),
+  "employeeInsuranceId": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "submissionDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceForm
+ */
+export const GetInsuranceFormParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceFormResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "formType": zod.string(),
+  "formNumber": zod.string().nullish(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "submissionDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceForm
+ */
+export const UpdateInsuranceFormParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceFormBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "formType": zod.string().optional(),
+  "formNumber": zod.string().optional(),
+  "employeeInsuranceId": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "submissionDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceFormResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "formType": zod.string(),
+  "formNumber": zod.string().nullish(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "submissionDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceForm
+ */
+export const DeleteInsuranceFormParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceFormResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceAdditions
+ */
+export const ListInsuranceAdditionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceAdditionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "additionDate": zod.string().nullish(),
+  "insuranceSalary": zod.string().nullish(),
+  "formNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceAddition
+ */
+export const CreateInsuranceAdditionBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().optional(),
+  "additionDate": zod.string().optional(),
+  "insuranceSalary": zod.string().optional(),
+  "formNumber": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceAddition
+ */
+export const GetInsuranceAdditionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceAdditionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "additionDate": zod.string().nullish(),
+  "insuranceSalary": zod.string().nullish(),
+  "formNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceAddition
+ */
+export const UpdateInsuranceAdditionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceAdditionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "employeeInsuranceId": zod.string().optional(),
+  "additionDate": zod.string().optional(),
+  "insuranceSalary": zod.string().optional(),
+  "formNumber": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceAdditionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "additionDate": zod.string().nullish(),
+  "insuranceSalary": zod.string().nullish(),
+  "formNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceAddition
+ */
+export const DeleteInsuranceAdditionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceAdditionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceExclusions
+ */
+export const ListInsuranceExclusionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "reason": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceExclusionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "exclusionDate": zod.string().nullish(),
+  "reason": zod.string(),
+  "formNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceExclusion
+ */
+export const CreateInsuranceExclusionBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().optional(),
+  "exclusionDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "formNumber": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceExclusion
+ */
+export const GetInsuranceExclusionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceExclusionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "exclusionDate": zod.string().nullish(),
+  "reason": zod.string(),
+  "formNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceExclusion
+ */
+export const UpdateInsuranceExclusionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceExclusionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "employeeInsuranceId": zod.string().optional(),
+  "exclusionDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "formNumber": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceExclusionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "exclusionDate": zod.string().nullish(),
+  "reason": zod.string(),
+  "formNumber": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceExclusion
+ */
+export const DeleteInsuranceExclusionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceExclusionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceDataAmendments
+ */
+export const ListInsuranceDataAmendmentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "amendmentType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceDataAmendmentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "amendmentType": zod.string(),
+  "fieldName": zod.string().nullish(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceDataAmendment
+ */
+export const CreateInsuranceDataAmendmentBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().optional(),
+  "amendmentType": zod.string().optional(),
+  "fieldName": zod.string().optional(),
+  "oldValue": zod.string().optional(),
+  "newValue": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceDataAmendment
+ */
+export const GetInsuranceDataAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceDataAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "amendmentType": zod.string(),
+  "fieldName": zod.string().nullish(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceDataAmendment
+ */
+export const UpdateInsuranceDataAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceDataAmendmentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "employeeInsuranceId": zod.string().optional(),
+  "amendmentType": zod.string().optional(),
+  "fieldName": zod.string().optional(),
+  "oldValue": zod.string().optional(),
+  "newValue": zod.string().optional(),
+  "amendmentDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceDataAmendmentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "amendmentType": zod.string(),
+  "fieldName": zod.string().nullish(),
+  "oldValue": zod.string().nullish(),
+  "newValue": zod.string().nullish(),
+  "amendmentDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceDataAmendment
+ */
+export const DeleteInsuranceDataAmendmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceDataAmendmentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceSubscriptions
+ */
+export const ListInsuranceSubscriptionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "period": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListInsuranceSubscriptionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().nullish(),
+  "period": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "employerShare": zod.string().nullish(),
+  "employeeShare": zod.string().nullish(),
+  "totalAmount": zod.string(),
+  "employeeCount": zod.number().nullish(),
+  "status": zod.string(),
+  "paymentDate": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceSubscription
+ */
+export const CreateInsuranceSubscriptionBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().optional(),
+  "period": zod.string(),
+  "dueDate": zod.string().optional(),
+  "employerShare": zod.string().optional(),
+  "employeeShare": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "employeeCount": zod.number().optional(),
+  "status": zod.string().optional(),
+  "paymentDate": zod.string().optional(),
+  "paymentMethod": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceSubscription
+ */
+export const GetInsuranceSubscriptionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceSubscriptionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().nullish(),
+  "period": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "employerShare": zod.string().nullish(),
+  "employeeShare": zod.string().nullish(),
+  "totalAmount": zod.string(),
+  "employeeCount": zod.number().nullish(),
+  "status": zod.string(),
+  "paymentDate": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceSubscription
+ */
+export const UpdateInsuranceSubscriptionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceSubscriptionBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "period": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "employerShare": zod.string().optional(),
+  "employeeShare": zod.string().optional(),
+  "totalAmount": zod.string().optional(),
+  "employeeCount": zod.number().optional(),
+  "status": zod.string().optional(),
+  "paymentDate": zod.string().optional(),
+  "paymentMethod": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceSubscriptionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().nullish(),
+  "period": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "employerShare": zod.string().nullish(),
+  "employeeShare": zod.string().nullish(),
+  "totalAmount": zod.string(),
+  "employeeCount": zod.number().nullish(),
+  "status": zod.string(),
+  "paymentDate": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceSubscription
+ */
+export const DeleteInsuranceSubscriptionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceSubscriptionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsurancePaymentNotices
+ */
+export const ListInsurancePaymentNoticesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "subscriptionId": zod.coerce.string().optional()
+})
+
+export const ListInsurancePaymentNoticesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeNumber": zod.string().nullish(),
+  "subscriptionId": zod.string().nullish(),
+  "period": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsurancePaymentNotice
+ */
+export const CreateInsurancePaymentNoticeBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeNumber": zod.string().optional(),
+  "subscriptionId": zod.string().optional(),
+  "period": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "noticeDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsurancePaymentNotice
+ */
+export const GetInsurancePaymentNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsurancePaymentNoticeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeNumber": zod.string().nullish(),
+  "subscriptionId": zod.string().nullish(),
+  "period": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsurancePaymentNotice
+ */
+export const UpdateInsurancePaymentNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsurancePaymentNoticeBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "noticeNumber": zod.string().optional(),
+  "subscriptionId": zod.string().optional(),
+  "period": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "noticeDate": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsurancePaymentNoticeResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "noticeNumber": zod.string().nullish(),
+  "subscriptionId": zod.string().nullish(),
+  "period": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "noticeDate": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsurancePaymentNotice
+ */
+export const DeleteInsurancePaymentNoticeParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsurancePaymentNoticeResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceReconciliations
+ */
+export const ListInsuranceReconciliationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "period": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional()
+})
+
+export const ListInsuranceReconciliationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string(),
+  "expectedAmount": zod.string().nullish(),
+  "actualAmount": zod.string().nullish(),
+  "difference": zod.string().nullish(),
+  "status": zod.string(),
+  "reconciliationDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceReconciliation
+ */
+export const CreateInsuranceReconciliationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string(),
+  "expectedAmount": zod.string().optional(),
+  "actualAmount": zod.string().optional(),
+  "difference": zod.string().optional(),
+  "status": zod.string().optional(),
+  "reconciliationDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceReconciliation
+ */
+export const GetInsuranceReconciliationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceReconciliationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string(),
+  "expectedAmount": zod.string().nullish(),
+  "actualAmount": zod.string().nullish(),
+  "difference": zod.string().nullish(),
+  "status": zod.string(),
+  "reconciliationDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceReconciliation
+ */
+export const UpdateInsuranceReconciliationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceReconciliationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "period": zod.string().optional(),
+  "expectedAmount": zod.string().optional(),
+  "actualAmount": zod.string().optional(),
+  "difference": zod.string().optional(),
+  "status": zod.string().optional(),
+  "reconciliationDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceReconciliationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string(),
+  "expectedAmount": zod.string().nullish(),
+  "actualAmount": zod.string().nullish(),
+  "difference": zod.string().nullish(),
+  "status": zod.string(),
+  "reconciliationDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceReconciliation
+ */
+export const DeleteInsuranceReconciliationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceReconciliationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceArrears
+ */
+export const ListInsuranceArrearsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "period": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "subscriptionId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceArrearsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string().nullish(),
+  "subscriptionId": zod.string().nullish(),
+  "amount": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "daysOverdue": zod.number().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceArrear
+ */
+export const CreateInsuranceArrearBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string().optional(),
+  "subscriptionId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceArrear
+ */
+export const GetInsuranceArrearParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceArrearResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string().nullish(),
+  "subscriptionId": zod.string().nullish(),
+  "amount": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "daysOverdue": zod.number().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceArrear
+ */
+export const UpdateInsuranceArrearParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceArrearBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "period": zod.string().optional(),
+  "subscriptionId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "daysOverdue": zod.number().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceArrearResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "period": zod.string().nullish(),
+  "subscriptionId": zod.string().nullish(),
+  "amount": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "daysOverdue": zod.number().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceArrear
+ */
+export const DeleteInsuranceArrearParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceArrearResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsurancePenalties
+ */
+export const ListInsurancePenaltiesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "penaltyType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "subscriptionId": zod.coerce.string().optional()
+})
+
+export const ListInsurancePenaltiesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().nullish(),
+  "penaltyType": zod.string(),
+  "subscriptionId": zod.string().nullish(),
+  "amount": zod.string(),
+  "penaltyDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "status": zod.string(),
+  "paymentDate": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsurancePenalty
+ */
+export const CreateInsurancePenaltyBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().optional(),
+  "penaltyType": zod.string().optional(),
+  "subscriptionId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "penaltyDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "status": zod.string().optional(),
+  "paymentDate": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsurancePenalty
+ */
+export const GetInsurancePenaltyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsurancePenaltyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().nullish(),
+  "penaltyType": zod.string(),
+  "subscriptionId": zod.string().nullish(),
+  "amount": zod.string(),
+  "penaltyDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "status": zod.string(),
+  "paymentDate": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsurancePenalty
+ */
+export const UpdateInsurancePenaltyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsurancePenaltyBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "penaltyType": zod.string().optional(),
+  "subscriptionId": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "penaltyDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "status": zod.string().optional(),
+  "paymentDate": zod.string().optional(),
+  "reference": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsurancePenaltyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "branchId": zod.string().nullish(),
+  "penaltyType": zod.string(),
+  "subscriptionId": zod.string().nullish(),
+  "amount": zod.string(),
+  "penaltyDate": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "status": zod.string(),
+  "paymentDate": zod.string().nullish(),
+  "reference": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsurancePenalty
+ */
+export const DeleteInsurancePenaltyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsurancePenaltyResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List ServiceTerminations
+ */
+export const ListServiceTerminationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "reason": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional()
+})
+
+export const ListServiceTerminationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "terminationDate": zod.string().nullish(),
+  "reason": zod.string(),
+  "lastWorkingDay": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ServiceTermination
+ */
+export const CreateServiceTerminationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().optional(),
+  "terminationDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "lastWorkingDay": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ServiceTermination
+ */
+export const GetServiceTerminationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetServiceTerminationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "terminationDate": zod.string().nullish(),
+  "reason": zod.string(),
+  "lastWorkingDay": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ServiceTermination
+ */
+export const UpdateServiceTerminationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateServiceTerminationBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "employeeInsuranceId": zod.string().optional(),
+  "terminationDate": zod.string().optional(),
+  "reason": zod.string().optional(),
+  "lastWorkingDay": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateServiceTerminationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "employeeInsuranceId": zod.string().nullish(),
+  "terminationDate": zod.string().nullish(),
+  "reason": zod.string(),
+  "lastWorkingDay": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ServiceTermination
+ */
+export const DeleteServiceTerminationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteServiceTerminationResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceSettlements
+ */
+export const ListInsuranceSettlementsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional(),
+  "serviceTerminationId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceSettlementsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceTerminationId": zod.string().nullish(),
+  "employeeId": zod.string(),
+  "settlementAmount": zod.string().nullish(),
+  "settlementDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceSettlement
+ */
+export const CreateInsuranceSettlementBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceTerminationId": zod.string().optional(),
+  "employeeId": zod.string(),
+  "settlementAmount": zod.string().optional(),
+  "settlementDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceSettlement
+ */
+export const GetInsuranceSettlementParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceSettlementResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceTerminationId": zod.string().nullish(),
+  "employeeId": zod.string(),
+  "settlementAmount": zod.string().nullish(),
+  "settlementDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceSettlement
+ */
+export const UpdateInsuranceSettlementParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceSettlementBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "serviceTerminationId": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "settlementAmount": zod.string().optional(),
+  "settlementDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceSettlementResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "serviceTerminationId": zod.string().nullish(),
+  "employeeId": zod.string(),
+  "settlementAmount": zod.string().nullish(),
+  "settlementDate": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceSettlement
+ */
+export const DeleteInsuranceSettlementParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceSettlementResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List InsuranceClearances
+ */
+export const ListInsuranceClearancesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "employeeId": zod.coerce.string().optional(),
+  "serviceTerminationId": zod.coerce.string().optional()
+})
+
+export const ListInsuranceClearancesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "serviceTerminationId": zod.string().nullish(),
+  "clearanceDate": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a InsuranceClearance
+ */
+export const CreateInsuranceClearanceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "serviceTerminationId": zod.string().optional(),
+  "clearanceDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a InsuranceClearance
+ */
+export const GetInsuranceClearanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInsuranceClearanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "serviceTerminationId": zod.string().nullish(),
+  "clearanceDate": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a InsuranceClearance
+ */
+export const UpdateInsuranceClearanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateInsuranceClearanceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "employeeId": zod.string().optional(),
+  "serviceTerminationId": zod.string().optional(),
+  "clearanceDate": zod.string().optional(),
+  "amount": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateInsuranceClearanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "employeeId": zod.string(),
+  "serviceTerminationId": zod.string().nullish(),
+  "clearanceDate": zod.string().nullish(),
+  "amount": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a InsuranceClearance
+ */
+export const DeleteInsuranceClearanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteInsuranceClearanceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List SubcontractorInsurances
+ */
+export const ListSubcontractorInsurancesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "contractorType": zod.coerce.string().optional(),
+  "insuranceStatus": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional()
+})
+
+export const ListSubcontractorInsurancesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractorName": zod.string(),
+  "contractorType": zod.string(),
+  "insuranceNumber": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "coverageAmount": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a SubcontractorInsurance
+ */
+export const CreateSubcontractorInsuranceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractorName": zod.string(),
+  "contractorType": zod.string().optional(),
+  "insuranceNumber": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "coverageAmount": zod.string().optional(),
+  "insuranceStatus": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a SubcontractorInsurance
+ */
+export const GetSubcontractorInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSubcontractorInsuranceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractorName": zod.string(),
+  "contractorType": zod.string(),
+  "insuranceNumber": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "coverageAmount": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a SubcontractorInsurance
+ */
+export const UpdateSubcontractorInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateSubcontractorInsuranceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "contractorName": zod.string().optional(),
+  "contractorType": zod.string().optional(),
+  "insuranceNumber": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "coverageAmount": zod.string().optional(),
+  "insuranceStatus": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSubcontractorInsuranceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "contractorName": zod.string(),
+  "contractorType": zod.string(),
+  "insuranceNumber": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "coverageAmount": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a SubcontractorInsurance
+ */
+export const DeleteSubcontractorInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSubcontractorInsuranceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List ProjectLaborInsurances
+ */
+export const ListProjectLaborInsurancesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "insuranceStatus": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "subcontractorInsuranceId": zod.coerce.string().optional()
+})
+
+export const ListProjectLaborInsurancesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "laborName": zod.string(),
+  "projectId": zod.string().nullish(),
+  "subcontractorInsuranceId": zod.string().nullish(),
+  "insuranceNumber": zod.string().nullish(),
+  "workerCount": zod.number().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a ProjectLaborInsurance
+ */
+export const CreateProjectLaborInsuranceBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "laborName": zod.string(),
+  "projectId": zod.string().optional(),
+  "subcontractorInsuranceId": zod.string().optional(),
+  "insuranceNumber": zod.string().optional(),
+  "workerCount": zod.number().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "insuranceStatus": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a ProjectLaborInsurance
+ */
+export const GetProjectLaborInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetProjectLaborInsuranceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "laborName": zod.string(),
+  "projectId": zod.string().nullish(),
+  "subcontractorInsuranceId": zod.string().nullish(),
+  "insuranceNumber": zod.string().nullish(),
+  "workerCount": zod.number().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a ProjectLaborInsurance
+ */
+export const UpdateProjectLaborInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateProjectLaborInsuranceBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "laborName": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "subcontractorInsuranceId": zod.string().optional(),
+  "insuranceNumber": zod.string().optional(),
+  "workerCount": zod.number().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "insuranceStatus": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateProjectLaborInsuranceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "laborName": zod.string(),
+  "projectId": zod.string().nullish(),
+  "subcontractorInsuranceId": zod.string().nullish(),
+  "insuranceNumber": zod.string().nullish(),
+  "workerCount": zod.number().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "insuranceStatus": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a ProjectLaborInsurance
+ */
+export const DeleteProjectLaborInsuranceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteProjectLaborInsuranceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

@@ -12939,6 +12939,838 @@ export interface PolicyListResponse {
   pageSize: number;
 }
 
+export interface InsuranceDashboard {
+  insuredCount: number;
+  suspendedCount: number;
+  subscriptionsTotal: string;
+  arrearsTotal: string;
+  penaltiesTotal: string;
+  alertsCount: number;
+}
+
+export interface EmployeeInsurance {
+  id: string;
+  companyId: string;
+  code: string;
+  employeeId: string;
+  /** @nullable */
+  insuranceNumber?: string | null;
+  /** @nullable */
+  insuranceAuthority?: string | null;
+  insuranceType: string;
+  /** @nullable */
+  insuranceSalary?: string | null;
+  /** @nullable */
+  basicSalary?: string | null;
+  /** @nullable */
+  subscriptionDate?: string | null;
+  /** @nullable */
+  insuranceOffice?: string | null;
+  insuranceStatus: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeInsuranceInput {
+  companyId: string;
+  code: string;
+  employeeId: string;
+  insuranceNumber?: string;
+  insuranceAuthority?: string;
+  insuranceType?: string;
+  insuranceSalary?: string;
+  basicSalary?: string;
+  subscriptionDate?: string;
+  insuranceOffice?: string;
+  insuranceStatus?: string;
+  notes?: string;
+}
+
+export interface EmployeeInsuranceUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  insuranceNumber?: string;
+  insuranceAuthority?: string;
+  insuranceType?: string;
+  insuranceSalary?: string;
+  basicSalary?: string;
+  subscriptionDate?: string;
+  insuranceOffice?: string;
+  insuranceStatus?: string;
+  notes?: string;
+}
+
+export interface EmployeeInsuranceListResponse {
+  data: EmployeeInsurance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceForm {
+  id: string;
+  companyId: string;
+  code: string;
+  formType: string;
+  /** @nullable */
+  formNumber?: string | null;
+  /** @nullable */
+  employeeInsuranceId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  submissionDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceFormInput {
+  companyId: string;
+  code: string;
+  formType?: string;
+  formNumber?: string;
+  employeeInsuranceId?: string;
+  employeeId?: string;
+  submissionDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceFormUpdate {
+  companyId?: string;
+  code?: string;
+  formType?: string;
+  formNumber?: string;
+  employeeInsuranceId?: string;
+  employeeId?: string;
+  submissionDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceFormListResponse {
+  data: InsuranceForm[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceAddition {
+  id: string;
+  companyId: string;
+  code: string;
+  employeeId: string;
+  /** @nullable */
+  employeeInsuranceId?: string | null;
+  /** @nullable */
+  additionDate?: string | null;
+  /** @nullable */
+  insuranceSalary?: string | null;
+  /** @nullable */
+  formNumber?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceAdditionInput {
+  companyId: string;
+  code: string;
+  employeeId: string;
+  employeeInsuranceId?: string;
+  additionDate?: string;
+  insuranceSalary?: string;
+  formNumber?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceAdditionUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  employeeInsuranceId?: string;
+  additionDate?: string;
+  insuranceSalary?: string;
+  formNumber?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceAdditionListResponse {
+  data: InsuranceAddition[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceExclusion {
+  id: string;
+  companyId: string;
+  code: string;
+  employeeId: string;
+  /** @nullable */
+  employeeInsuranceId?: string | null;
+  /** @nullable */
+  exclusionDate?: string | null;
+  reason: string;
+  /** @nullable */
+  formNumber?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceExclusionInput {
+  companyId: string;
+  code: string;
+  employeeId: string;
+  employeeInsuranceId?: string;
+  exclusionDate?: string;
+  reason?: string;
+  formNumber?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceExclusionUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  employeeInsuranceId?: string;
+  exclusionDate?: string;
+  reason?: string;
+  formNumber?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceExclusionListResponse {
+  data: InsuranceExclusion[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceDataAmendment {
+  id: string;
+  companyId: string;
+  code: string;
+  employeeId: string;
+  /** @nullable */
+  employeeInsuranceId?: string | null;
+  amendmentType: string;
+  /** @nullable */
+  fieldName?: string | null;
+  /** @nullable */
+  oldValue?: string | null;
+  /** @nullable */
+  newValue?: string | null;
+  /** @nullable */
+  amendmentDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceDataAmendmentInput {
+  companyId: string;
+  code: string;
+  employeeId: string;
+  employeeInsuranceId?: string;
+  amendmentType?: string;
+  fieldName?: string;
+  oldValue?: string;
+  newValue?: string;
+  amendmentDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceDataAmendmentUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  employeeInsuranceId?: string;
+  amendmentType?: string;
+  fieldName?: string;
+  oldValue?: string;
+  newValue?: string;
+  amendmentDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceDataAmendmentListResponse {
+  data: InsuranceDataAmendment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceSubscription {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  branchId?: string | null;
+  period: string;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  employerShare?: string | null;
+  /** @nullable */
+  employeeShare?: string | null;
+  totalAmount: string;
+  /** @nullable */
+  employeeCount?: number | null;
+  status: string;
+  /** @nullable */
+  paymentDate?: string | null;
+  /** @nullable */
+  paymentMethod?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceSubscriptionInput {
+  companyId: string;
+  code: string;
+  branchId?: string;
+  period: string;
+  dueDate?: string;
+  employerShare?: string;
+  employeeShare?: string;
+  totalAmount?: string;
+  employeeCount?: number;
+  status?: string;
+  paymentDate?: string;
+  paymentMethod?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface InsuranceSubscriptionUpdate {
+  companyId?: string;
+  code?: string;
+  branchId?: string;
+  period?: string;
+  dueDate?: string;
+  employerShare?: string;
+  employeeShare?: string;
+  totalAmount?: string;
+  employeeCount?: number;
+  status?: string;
+  paymentDate?: string;
+  paymentMethod?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface InsuranceSubscriptionListResponse {
+  data: InsuranceSubscription[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsurancePaymentNotice {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  noticeNumber?: string | null;
+  /** @nullable */
+  subscriptionId?: string | null;
+  /** @nullable */
+  period?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  /** @nullable */
+  noticeDate?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsurancePaymentNoticeInput {
+  companyId: string;
+  code: string;
+  noticeNumber?: string;
+  subscriptionId?: string;
+  period?: string;
+  amount?: string;
+  noticeDate?: string;
+  dueDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsurancePaymentNoticeUpdate {
+  companyId?: string;
+  code?: string;
+  noticeNumber?: string;
+  subscriptionId?: string;
+  period?: string;
+  amount?: string;
+  noticeDate?: string;
+  dueDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsurancePaymentNoticeListResponse {
+  data: InsurancePaymentNotice[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceReconciliation {
+  id: string;
+  companyId: string;
+  code: string;
+  period: string;
+  /** @nullable */
+  expectedAmount?: string | null;
+  /** @nullable */
+  actualAmount?: string | null;
+  /** @nullable */
+  difference?: string | null;
+  status: string;
+  /** @nullable */
+  reconciliationDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceReconciliationInput {
+  companyId: string;
+  code: string;
+  period: string;
+  expectedAmount?: string;
+  actualAmount?: string;
+  difference?: string;
+  status?: string;
+  reconciliationDate?: string;
+  notes?: string;
+}
+
+export interface InsuranceReconciliationUpdate {
+  companyId?: string;
+  code?: string;
+  period?: string;
+  expectedAmount?: string;
+  actualAmount?: string;
+  difference?: string;
+  status?: string;
+  reconciliationDate?: string;
+  notes?: string;
+}
+
+export interface InsuranceReconciliationListResponse {
+  data: InsuranceReconciliation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceArrear {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  period?: string | null;
+  /** @nullable */
+  subscriptionId?: string | null;
+  amount: string;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  daysOverdue?: number | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceArrearInput {
+  companyId: string;
+  code: string;
+  period?: string;
+  subscriptionId?: string;
+  amount?: string;
+  dueDate?: string;
+  daysOverdue?: number;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceArrearUpdate {
+  companyId?: string;
+  code?: string;
+  period?: string;
+  subscriptionId?: string;
+  amount?: string;
+  dueDate?: string;
+  daysOverdue?: number;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceArrearListResponse {
+  data: InsuranceArrear[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsurancePenalty {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  branchId?: string | null;
+  penaltyType: string;
+  /** @nullable */
+  subscriptionId?: string | null;
+  amount: string;
+  /** @nullable */
+  penaltyDate?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  status: string;
+  /** @nullable */
+  paymentDate?: string | null;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsurancePenaltyInput {
+  companyId: string;
+  code: string;
+  branchId?: string;
+  penaltyType?: string;
+  subscriptionId?: string;
+  amount?: string;
+  penaltyDate?: string;
+  reason?: string;
+  status?: string;
+  paymentDate?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface InsurancePenaltyUpdate {
+  companyId?: string;
+  code?: string;
+  branchId?: string;
+  penaltyType?: string;
+  subscriptionId?: string;
+  amount?: string;
+  penaltyDate?: string;
+  reason?: string;
+  status?: string;
+  paymentDate?: string;
+  reference?: string;
+  notes?: string;
+}
+
+export interface InsurancePenaltyListResponse {
+  data: InsurancePenalty[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ServiceTermination {
+  id: string;
+  companyId: string;
+  code: string;
+  employeeId: string;
+  /** @nullable */
+  employeeInsuranceId?: string | null;
+  /** @nullable */
+  terminationDate?: string | null;
+  reason: string;
+  /** @nullable */
+  lastWorkingDay?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ServiceTerminationInput {
+  companyId: string;
+  code: string;
+  employeeId: string;
+  employeeInsuranceId?: string;
+  terminationDate?: string;
+  reason?: string;
+  lastWorkingDay?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ServiceTerminationUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  employeeInsuranceId?: string;
+  terminationDate?: string;
+  reason?: string;
+  lastWorkingDay?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface ServiceTerminationListResponse {
+  data: ServiceTermination[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceSettlement {
+  id: string;
+  companyId: string;
+  code: string;
+  /** @nullable */
+  serviceTerminationId?: string | null;
+  employeeId: string;
+  /** @nullable */
+  settlementAmount?: string | null;
+  /** @nullable */
+  settlementDate?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceSettlementInput {
+  companyId: string;
+  code: string;
+  serviceTerminationId?: string;
+  employeeId: string;
+  settlementAmount?: string;
+  settlementDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceSettlementUpdate {
+  companyId?: string;
+  code?: string;
+  serviceTerminationId?: string;
+  employeeId?: string;
+  settlementAmount?: string;
+  settlementDate?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceSettlementListResponse {
+  data: InsuranceSettlement[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface InsuranceClearance {
+  id: string;
+  companyId: string;
+  code: string;
+  employeeId: string;
+  /** @nullable */
+  serviceTerminationId?: string | null;
+  /** @nullable */
+  clearanceDate?: string | null;
+  /** @nullable */
+  amount?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface InsuranceClearanceInput {
+  companyId: string;
+  code: string;
+  employeeId: string;
+  serviceTerminationId?: string;
+  clearanceDate?: string;
+  amount?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceClearanceUpdate {
+  companyId?: string;
+  code?: string;
+  employeeId?: string;
+  serviceTerminationId?: string;
+  clearanceDate?: string;
+  amount?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface InsuranceClearanceListResponse {
+  data: InsuranceClearance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SubcontractorInsurance {
+  id: string;
+  companyId: string;
+  code: string;
+  contractorName: string;
+  contractorType: string;
+  /** @nullable */
+  insuranceNumber?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  /** @nullable */
+  coverageAmount?: string | null;
+  insuranceStatus: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SubcontractorInsuranceInput {
+  companyId: string;
+  code: string;
+  contractorName: string;
+  contractorType?: string;
+  insuranceNumber?: string;
+  projectId?: string;
+  startDate?: string;
+  endDate?: string;
+  coverageAmount?: string;
+  insuranceStatus?: string;
+  notes?: string;
+}
+
+export interface SubcontractorInsuranceUpdate {
+  companyId?: string;
+  code?: string;
+  contractorName?: string;
+  contractorType?: string;
+  insuranceNumber?: string;
+  projectId?: string;
+  startDate?: string;
+  endDate?: string;
+  coverageAmount?: string;
+  insuranceStatus?: string;
+  notes?: string;
+}
+
+export interface SubcontractorInsuranceListResponse {
+  data: SubcontractorInsurance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface ProjectLaborInsurance {
+  id: string;
+  companyId: string;
+  code: string;
+  laborName: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  subcontractorInsuranceId?: string | null;
+  /** @nullable */
+  insuranceNumber?: string | null;
+  /** @nullable */
+  workerCount?: number | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  insuranceStatus: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface ProjectLaborInsuranceInput {
+  companyId: string;
+  code: string;
+  laborName: string;
+  projectId?: string;
+  subcontractorInsuranceId?: string;
+  insuranceNumber?: string;
+  workerCount?: number;
+  startDate?: string;
+  endDate?: string;
+  insuranceStatus?: string;
+  notes?: string;
+}
+
+export interface ProjectLaborInsuranceUpdate {
+  companyId?: string;
+  code?: string;
+  laborName?: string;
+  projectId?: string;
+  subcontractorInsuranceId?: string;
+  insuranceNumber?: string;
+  workerCount?: number;
+  startDate?: string;
+  endDate?: string;
+  insuranceStatus?: string;
+  notes?: string;
+}
+
+export interface ProjectLaborInsuranceListResponse {
+  data: ProjectLaborInsurance[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -14884,5 +15716,156 @@ companyId?: string;
 policyType?: string;
 status?: string;
 ownerEmployeeId?: string;
+};
+
+export type GetInsuranceDashboardParams = {
+companyId?: string;
+};
+
+export type ListEmployeeInsurancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+employeeId?: string;
+insuranceType?: string;
+insuranceStatus?: string;
+};
+
+export type ListInsuranceFormsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+formType?: string;
+status?: string;
+employeeId?: string;
+};
+
+export type ListInsuranceAdditionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+employeeId?: string;
+};
+
+export type ListInsuranceExclusionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+reason?: string;
+status?: string;
+employeeId?: string;
+};
+
+export type ListInsuranceDataAmendmentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+amendmentType?: string;
+status?: string;
+employeeId?: string;
+};
+
+export type ListInsuranceSubscriptionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+period?: string;
+status?: string;
+};
+
+export type ListInsurancePaymentNoticesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+subscriptionId?: string;
+};
+
+export type ListInsuranceReconciliationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+period?: string;
+status?: string;
+};
+
+export type ListInsuranceArrearsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+period?: string;
+status?: string;
+subscriptionId?: string;
+};
+
+export type ListInsurancePenaltiesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+penaltyType?: string;
+status?: string;
+subscriptionId?: string;
+};
+
+export type ListServiceTerminationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+reason?: string;
+status?: string;
+employeeId?: string;
+};
+
+export type ListInsuranceSettlementsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+employeeId?: string;
+serviceTerminationId?: string;
+};
+
+export type ListInsuranceClearancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+employeeId?: string;
+serviceTerminationId?: string;
+};
+
+export type ListSubcontractorInsurancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+contractorType?: string;
+insuranceStatus?: string;
+projectId?: string;
+};
+
+export type ListProjectLaborInsurancesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+insuranceStatus?: string;
+projectId?: string;
+subcontractorInsuranceId?: string;
 };
 

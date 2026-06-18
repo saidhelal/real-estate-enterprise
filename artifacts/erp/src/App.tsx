@@ -271,6 +271,27 @@ import LegalClaimsPage from "@/pages/legal-claims";
 import LegalNoticesPage from "@/pages/legal-notices";
 import LegalCaseLinksPage from "@/pages/legal-case-links";
 import LegalReportsPage from "@/pages/legal-reports";
+import InsuranceDashboardPage from "@/pages/insurance-dashboard";
+import EmployeeInsurancesPage from "@/pages/employee-insurances";
+import InsuranceFormsPage from "@/pages/insurance-forms";
+import InsuranceAdditionsPage from "@/pages/insurance-additions";
+import InsuranceExclusionsPage from "@/pages/insurance-exclusions";
+import InsuranceDataAmendmentsPage from "@/pages/insurance-data-amendments";
+import InsuranceSubscriptionsPage from "@/pages/insurance-subscriptions";
+import InsurancePaymentNoticesPage from "@/pages/insurance-payment-notices";
+import InsuranceReconciliationsPage from "@/pages/insurance-reconciliations";
+import InsuranceArrearsPage from "@/pages/insurance-arrears";
+import InsurancePenaltiesPage from "@/pages/insurance-penalties";
+import ServiceTerminationsPage from "@/pages/service-terminations";
+import InsuranceSettlementsPage from "@/pages/insurance-settlements";
+import InsuranceClearancesPage from "@/pages/insurance-clearances";
+import SubcontractorInsurancesPage from "@/pages/subcontractor-insurances";
+import ProjectLaborInsurancesPage from "@/pages/project-labor-insurances";
+import InsuranceInsuredReportPage from "@/pages/insurance-insured-report";
+import InsuranceSubscriptionsReportPage from "@/pages/insurance-subscriptions-report";
+import InsuranceArrearsReportPage from "@/pages/insurance-arrears-report";
+import InsurancePenaltiesReportPage from "@/pages/insurance-penalties-report";
+import InsuranceContractorsReportPage from "@/pages/insurance-contractors-report";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -548,6 +569,27 @@ function Router() {
             <Route path="/hr-analytics" component={HrAnalyticsPage} />
             <Route path="/financial-analytics" component={FinancialAnalyticsPage} />
             <Route path="/reports-engine" component={ReportsEnginePage} />
+            <Route path="/insurance-dashboard" component={InsuranceDashboardPage} />
+            <Route path="/employee-insurances" component={EmployeeInsurancesPage} />
+            <Route path="/insurance-forms" component={InsuranceFormsPage} />
+            <Route path="/insurance-additions" component={InsuranceAdditionsPage} />
+            <Route path="/insurance-exclusions" component={InsuranceExclusionsPage} />
+            <Route path="/insurance-data-amendments" component={InsuranceDataAmendmentsPage} />
+            <Route path="/insurance-subscriptions" component={InsuranceSubscriptionsPage} />
+            <Route path="/insurance-payment-notices" component={InsurancePaymentNoticesPage} />
+            <Route path="/insurance-reconciliations" component={InsuranceReconciliationsPage} />
+            <Route path="/insurance-arrears" component={InsuranceArrearsPage} />
+            <Route path="/insurance-penalties" component={InsurancePenaltiesPage} />
+            <Route path="/service-terminations" component={ServiceTerminationsPage} />
+            <Route path="/insurance-settlements" component={InsuranceSettlementsPage} />
+            <Route path="/insurance-clearances" component={InsuranceClearancesPage} />
+            <Route path="/subcontractor-insurances" component={SubcontractorInsurancesPage} />
+            <Route path="/project-labor-insurances" component={ProjectLaborInsurancesPage} />
+            <Route path="/insurance-insured-report" component={InsuranceInsuredReportPage} />
+            <Route path="/insurance-subscriptions-report" component={InsuranceSubscriptionsReportPage} />
+            <Route path="/insurance-arrears-report" component={InsuranceArrearsReportPage} />
+            <Route path="/insurance-penalties-report" component={InsurancePenaltiesReportPage} />
+            <Route path="/insurance-contractors-report" component={InsuranceContractorsReportPage} />
             <Route>
               <div className="flex h-[50vh] items-center justify-center font-semibold text-lg text-muted-foreground">404 Not Found</div>
             </Route>

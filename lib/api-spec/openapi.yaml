@@ -21312,6 +21312,1353 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OkResponse"
+  # === Insurance Management ===
+  /insurance-dashboard:
+    get:
+      operationId: getInsuranceDashboard
+      tags: [insuranceDashboard]
+      summary: Insurance Management dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceDashboard"
+  /employee-insurances:
+    get:
+      operationId: listEmployeeInsurances
+      tags: [employeeInsurances]
+      summary: List EmployeeInsurances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+        - { name: insuranceType, in: query, required: false, schema: { type: string } }
+        - { name: insuranceStatus, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: EmployeeInsurance list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeInsuranceListResponse"
+    post:
+      operationId: createEmployeeInsurance
+      tags: [employeeInsurances]
+      summary: Create a EmployeeInsurance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeInsuranceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeInsurance"
+  /employee-insurances/{id}:
+    get:
+      operationId: getEmployeeInsurance
+      tags: [employeeInsurances]
+      summary: Get a EmployeeInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: EmployeeInsurance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeInsurance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateEmployeeInsurance
+      tags: [employeeInsurances]
+      summary: Update a EmployeeInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeInsuranceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeInsurance"
+    delete:
+      operationId: deleteEmployeeInsurance
+      tags: [employeeInsurances]
+      summary: Soft-delete a EmployeeInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-forms:
+    get:
+      operationId: listInsuranceForms
+      tags: [insuranceForms]
+      summary: List InsuranceForms
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: formType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceForm list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceFormListResponse"
+    post:
+      operationId: createInsuranceForm
+      tags: [insuranceForms]
+      summary: Create a InsuranceForm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceFormInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceForm"
+  /insurance-forms/{id}:
+    get:
+      operationId: getInsuranceForm
+      tags: [insuranceForms]
+      summary: Get a InsuranceForm
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceForm
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceForm"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceForm
+      tags: [insuranceForms]
+      summary: Update a InsuranceForm
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceFormUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceForm"
+    delete:
+      operationId: deleteInsuranceForm
+      tags: [insuranceForms]
+      summary: Soft-delete a InsuranceForm
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-additions:
+    get:
+      operationId: listInsuranceAdditions
+      tags: [insuranceAdditions]
+      summary: List InsuranceAdditions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceAddition list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceAdditionListResponse"
+    post:
+      operationId: createInsuranceAddition
+      tags: [insuranceAdditions]
+      summary: Create a InsuranceAddition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceAdditionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceAddition"
+  /insurance-additions/{id}:
+    get:
+      operationId: getInsuranceAddition
+      tags: [insuranceAdditions]
+      summary: Get a InsuranceAddition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceAddition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceAddition"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceAddition
+      tags: [insuranceAdditions]
+      summary: Update a InsuranceAddition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceAdditionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceAddition"
+    delete:
+      operationId: deleteInsuranceAddition
+      tags: [insuranceAdditions]
+      summary: Soft-delete a InsuranceAddition
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-exclusions:
+    get:
+      operationId: listInsuranceExclusions
+      tags: [insuranceExclusions]
+      summary: List InsuranceExclusions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: reason, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceExclusion list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceExclusionListResponse"
+    post:
+      operationId: createInsuranceExclusion
+      tags: [insuranceExclusions]
+      summary: Create a InsuranceExclusion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceExclusionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceExclusion"
+  /insurance-exclusions/{id}:
+    get:
+      operationId: getInsuranceExclusion
+      tags: [insuranceExclusions]
+      summary: Get a InsuranceExclusion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceExclusion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceExclusion"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceExclusion
+      tags: [insuranceExclusions]
+      summary: Update a InsuranceExclusion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceExclusionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceExclusion"
+    delete:
+      operationId: deleteInsuranceExclusion
+      tags: [insuranceExclusions]
+      summary: Soft-delete a InsuranceExclusion
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-data-amendments:
+    get:
+      operationId: listInsuranceDataAmendments
+      tags: [insuranceDataAmendments]
+      summary: List InsuranceDataAmendments
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: amendmentType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceDataAmendment list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceDataAmendmentListResponse"
+    post:
+      operationId: createInsuranceDataAmendment
+      tags: [insuranceDataAmendments]
+      summary: Create a InsuranceDataAmendment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceDataAmendmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceDataAmendment"
+  /insurance-data-amendments/{id}:
+    get:
+      operationId: getInsuranceDataAmendment
+      tags: [insuranceDataAmendments]
+      summary: Get a InsuranceDataAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceDataAmendment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceDataAmendment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceDataAmendment
+      tags: [insuranceDataAmendments]
+      summary: Update a InsuranceDataAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceDataAmendmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceDataAmendment"
+    delete:
+      operationId: deleteInsuranceDataAmendment
+      tags: [insuranceDataAmendments]
+      summary: Soft-delete a InsuranceDataAmendment
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-subscriptions:
+    get:
+      operationId: listInsuranceSubscriptions
+      tags: [insuranceSubscriptions]
+      summary: List InsuranceSubscriptions
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: period, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceSubscription list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSubscriptionListResponse"
+    post:
+      operationId: createInsuranceSubscription
+      tags: [insuranceSubscriptions]
+      summary: Create a InsuranceSubscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceSubscriptionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSubscription"
+  /insurance-subscriptions/{id}:
+    get:
+      operationId: getInsuranceSubscription
+      tags: [insuranceSubscriptions]
+      summary: Get a InsuranceSubscription
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceSubscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSubscription"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceSubscription
+      tags: [insuranceSubscriptions]
+      summary: Update a InsuranceSubscription
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceSubscriptionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSubscription"
+    delete:
+      operationId: deleteInsuranceSubscription
+      tags: [insuranceSubscriptions]
+      summary: Soft-delete a InsuranceSubscription
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-payment-notices:
+    get:
+      operationId: listInsurancePaymentNotices
+      tags: [insurancePaymentNotices]
+      summary: List InsurancePaymentNotices
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: subscriptionId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsurancePaymentNotice list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePaymentNoticeListResponse"
+    post:
+      operationId: createInsurancePaymentNotice
+      tags: [insurancePaymentNotices]
+      summary: Create a InsurancePaymentNotice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancePaymentNoticeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePaymentNotice"
+  /insurance-payment-notices/{id}:
+    get:
+      operationId: getInsurancePaymentNotice
+      tags: [insurancePaymentNotices]
+      summary: Get a InsurancePaymentNotice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsurancePaymentNotice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePaymentNotice"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsurancePaymentNotice
+      tags: [insurancePaymentNotices]
+      summary: Update a InsurancePaymentNotice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancePaymentNoticeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePaymentNotice"
+    delete:
+      operationId: deleteInsurancePaymentNotice
+      tags: [insurancePaymentNotices]
+      summary: Soft-delete a InsurancePaymentNotice
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-reconciliations:
+    get:
+      operationId: listInsuranceReconciliations
+      tags: [insuranceReconciliations]
+      summary: List InsuranceReconciliations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: period, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceReconciliation list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceReconciliationListResponse"
+    post:
+      operationId: createInsuranceReconciliation
+      tags: [insuranceReconciliations]
+      summary: Create a InsuranceReconciliation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceReconciliationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceReconciliation"
+  /insurance-reconciliations/{id}:
+    get:
+      operationId: getInsuranceReconciliation
+      tags: [insuranceReconciliations]
+      summary: Get a InsuranceReconciliation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceReconciliation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceReconciliation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceReconciliation
+      tags: [insuranceReconciliations]
+      summary: Update a InsuranceReconciliation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceReconciliationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceReconciliation"
+    delete:
+      operationId: deleteInsuranceReconciliation
+      tags: [insuranceReconciliations]
+      summary: Soft-delete a InsuranceReconciliation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-arrears:
+    get:
+      operationId: listInsuranceArrears
+      tags: [insuranceArrears]
+      summary: List InsuranceArrears
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: period, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: subscriptionId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceArrear list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceArrearListResponse"
+    post:
+      operationId: createInsuranceArrear
+      tags: [insuranceArrears]
+      summary: Create a InsuranceArrear
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceArrearInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceArrear"
+  /insurance-arrears/{id}:
+    get:
+      operationId: getInsuranceArrear
+      tags: [insuranceArrears]
+      summary: Get a InsuranceArrear
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceArrear
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceArrear"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceArrear
+      tags: [insuranceArrears]
+      summary: Update a InsuranceArrear
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceArrearUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceArrear"
+    delete:
+      operationId: deleteInsuranceArrear
+      tags: [insuranceArrears]
+      summary: Soft-delete a InsuranceArrear
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-penalties:
+    get:
+      operationId: listInsurancePenalties
+      tags: [insurancePenalties]
+      summary: List InsurancePenalties
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: penaltyType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: subscriptionId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsurancePenalty list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePenaltyListResponse"
+    post:
+      operationId: createInsurancePenalty
+      tags: [insurancePenalties]
+      summary: Create a InsurancePenalty
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancePenaltyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePenalty"
+  /insurance-penalties/{id}:
+    get:
+      operationId: getInsurancePenalty
+      tags: [insurancePenalties]
+      summary: Get a InsurancePenalty
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsurancePenalty
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePenalty"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsurancePenalty
+      tags: [insurancePenalties]
+      summary: Update a InsurancePenalty
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancePenaltyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsurancePenalty"
+    delete:
+      operationId: deleteInsurancePenalty
+      tags: [insurancePenalties]
+      summary: Soft-delete a InsurancePenalty
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /service-terminations:
+    get:
+      operationId: listServiceTerminations
+      tags: [serviceTerminations]
+      summary: List ServiceTerminations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: reason, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ServiceTermination list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceTerminationListResponse"
+    post:
+      operationId: createServiceTermination
+      tags: [serviceTerminations]
+      summary: Create a ServiceTermination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceTerminationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceTermination"
+  /service-terminations/{id}:
+    get:
+      operationId: getServiceTermination
+      tags: [serviceTerminations]
+      summary: Get a ServiceTermination
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ServiceTermination
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceTermination"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateServiceTermination
+      tags: [serviceTerminations]
+      summary: Update a ServiceTermination
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceTerminationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceTermination"
+    delete:
+      operationId: deleteServiceTermination
+      tags: [serviceTerminations]
+      summary: Soft-delete a ServiceTermination
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-settlements:
+    get:
+      operationId: listInsuranceSettlements
+      tags: [insuranceSettlements]
+      summary: List InsuranceSettlements
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+        - { name: serviceTerminationId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceSettlement list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSettlementListResponse"
+    post:
+      operationId: createInsuranceSettlement
+      tags: [insuranceSettlements]
+      summary: Create a InsuranceSettlement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceSettlementInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSettlement"
+  /insurance-settlements/{id}:
+    get:
+      operationId: getInsuranceSettlement
+      tags: [insuranceSettlements]
+      summary: Get a InsuranceSettlement
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceSettlement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSettlement"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceSettlement
+      tags: [insuranceSettlements]
+      summary: Update a InsuranceSettlement
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceSettlementUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceSettlement"
+    delete:
+      operationId: deleteInsuranceSettlement
+      tags: [insuranceSettlements]
+      summary: Soft-delete a InsuranceSettlement
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /insurance-clearances:
+    get:
+      operationId: listInsuranceClearances
+      tags: [insuranceClearances]
+      summary: List InsuranceClearances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: employeeId, in: query, required: false, schema: { type: string } }
+        - { name: serviceTerminationId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: InsuranceClearance list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceClearanceListResponse"
+    post:
+      operationId: createInsuranceClearance
+      tags: [insuranceClearances]
+      summary: Create a InsuranceClearance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceClearanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceClearance"
+  /insurance-clearances/{id}:
+    get:
+      operationId: getInsuranceClearance
+      tags: [insuranceClearances]
+      summary: Get a InsuranceClearance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: InsuranceClearance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceClearance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateInsuranceClearance
+      tags: [insuranceClearances]
+      summary: Update a InsuranceClearance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsuranceClearanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsuranceClearance"
+    delete:
+      operationId: deleteInsuranceClearance
+      tags: [insuranceClearances]
+      summary: Soft-delete a InsuranceClearance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /subcontractor-insurances:
+    get:
+      operationId: listSubcontractorInsurances
+      tags: [subcontractorInsurances]
+      summary: List SubcontractorInsurances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: contractorType, in: query, required: false, schema: { type: string } }
+        - { name: insuranceStatus, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: SubcontractorInsurance list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubcontractorInsuranceListResponse"
+    post:
+      operationId: createSubcontractorInsurance
+      tags: [subcontractorInsurances]
+      summary: Create a SubcontractorInsurance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubcontractorInsuranceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubcontractorInsurance"
+  /subcontractor-insurances/{id}:
+    get:
+      operationId: getSubcontractorInsurance
+      tags: [subcontractorInsurances]
+      summary: Get a SubcontractorInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: SubcontractorInsurance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubcontractorInsurance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateSubcontractorInsurance
+      tags: [subcontractorInsurances]
+      summary: Update a SubcontractorInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubcontractorInsuranceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubcontractorInsurance"
+    delete:
+      operationId: deleteSubcontractorInsurance
+      tags: [subcontractorInsurances]
+      summary: Soft-delete a SubcontractorInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /project-labor-insurances:
+    get:
+      operationId: listProjectLaborInsurances
+      tags: [projectLaborInsurances]
+      summary: List ProjectLaborInsurances
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: insuranceStatus, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: subcontractorInsuranceId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: ProjectLaborInsurance list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectLaborInsuranceListResponse"
+    post:
+      operationId: createProjectLaborInsurance
+      tags: [projectLaborInsurances]
+      summary: Create a ProjectLaborInsurance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectLaborInsuranceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectLaborInsurance"
+  /project-labor-insurances/{id}:
+    get:
+      operationId: getProjectLaborInsurance
+      tags: [projectLaborInsurances]
+      summary: Get a ProjectLaborInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: ProjectLaborInsurance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectLaborInsurance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateProjectLaborInsurance
+      tags: [projectLaborInsurances]
+      summary: Update a ProjectLaborInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectLaborInsuranceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectLaborInsurance"
+    delete:
+      operationId: deleteProjectLaborInsurance
+      tags: [projectLaborInsurances]
+      summary: Soft-delete a ProjectLaborInsurance
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
 components:
   parameters:
     IdParam:
@@ -34894,6 +36241,830 @@ components:
         data:
           type: array
           items: { $ref: "#/components/schemas/Policy" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    # === Insurance Management ===
+    InsuranceDashboard:
+      type: object
+      required: [insuredCount, suspendedCount, subscriptionsTotal, arrearsTotal, penaltiesTotal, alertsCount]
+      properties:
+        insuredCount: { type: integer }
+        suspendedCount: { type: integer }
+        subscriptionsTotal: { type: string }
+        arrearsTotal: { type: string }
+        penaltiesTotal: { type: string }
+        alertsCount: { type: integer }
+    EmployeeInsurance:
+      type: object
+      required: [id, companyId, code, employeeId, insuranceType, insuranceStatus, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        insuranceNumber: { type: ["string", "null"] }
+        insuranceAuthority: { type: ["string", "null"] }
+        insuranceType: { type: string }
+        insuranceSalary: { type: ["string", "null"] }
+        basicSalary: { type: ["string", "null"] }
+        subscriptionDate: { type: ["string", "null"] }
+        insuranceOffice: { type: ["string", "null"] }
+        insuranceStatus: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    EmployeeInsuranceInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        insuranceNumber: { type: string }
+        insuranceAuthority: { type: string }
+        insuranceType: { type: string }
+        insuranceSalary: { type: string }
+        basicSalary: { type: string }
+        subscriptionDate: { type: string }
+        insuranceOffice: { type: string }
+        insuranceStatus: { type: string }
+        notes: { type: string }
+    EmployeeInsuranceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        insuranceNumber: { type: string }
+        insuranceAuthority: { type: string }
+        insuranceType: { type: string }
+        insuranceSalary: { type: string }
+        basicSalary: { type: string }
+        subscriptionDate: { type: string }
+        insuranceOffice: { type: string }
+        insuranceStatus: { type: string }
+        notes: { type: string }
+    EmployeeInsuranceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EmployeeInsurance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceForm:
+      type: object
+      required: [id, companyId, code, formType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        formType: { type: string }
+        formNumber: { type: ["string", "null"] }
+        employeeInsuranceId: { type: ["string", "null"] }
+        employeeId: { type: ["string", "null"] }
+        submissionDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceFormInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        formType: { type: string }
+        formNumber: { type: string }
+        employeeInsuranceId: { type: string }
+        employeeId: { type: string }
+        submissionDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceFormUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        formType: { type: string }
+        formNumber: { type: string }
+        employeeInsuranceId: { type: string }
+        employeeId: { type: string }
+        submissionDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceFormListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceForm" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceAddition:
+      type: object
+      required: [id, companyId, code, employeeId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: ["string", "null"] }
+        additionDate: { type: ["string", "null"] }
+        insuranceSalary: { type: ["string", "null"] }
+        formNumber: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceAdditionInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        additionDate: { type: string }
+        insuranceSalary: { type: string }
+        formNumber: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceAdditionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        additionDate: { type: string }
+        insuranceSalary: { type: string }
+        formNumber: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceAdditionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceAddition" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceExclusion:
+      type: object
+      required: [id, companyId, code, employeeId, reason, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: ["string", "null"] }
+        exclusionDate: { type: ["string", "null"] }
+        reason: { type: string }
+        formNumber: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceExclusionInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        exclusionDate: { type: string }
+        reason: { type: string }
+        formNumber: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceExclusionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        exclusionDate: { type: string }
+        reason: { type: string }
+        formNumber: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceExclusionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceExclusion" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceDataAmendment:
+      type: object
+      required: [id, companyId, code, employeeId, amendmentType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: ["string", "null"] }
+        amendmentType: { type: string }
+        fieldName: { type: ["string", "null"] }
+        oldValue: { type: ["string", "null"] }
+        newValue: { type: ["string", "null"] }
+        amendmentDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceDataAmendmentInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        amendmentType: { type: string }
+        fieldName: { type: string }
+        oldValue: { type: string }
+        newValue: { type: string }
+        amendmentDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceDataAmendmentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        amendmentType: { type: string }
+        fieldName: { type: string }
+        oldValue: { type: string }
+        newValue: { type: string }
+        amendmentDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceDataAmendmentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceDataAmendment" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceSubscription:
+      type: object
+      required: [id, companyId, code, period, totalAmount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        branchId: { type: ["string", "null"] }
+        period: { type: string }
+        dueDate: { type: ["string", "null"] }
+        employerShare: { type: ["string", "null"] }
+        employeeShare: { type: ["string", "null"] }
+        totalAmount: { type: string }
+        employeeCount: { type: ["integer", "null"] }
+        status: { type: string }
+        paymentDate: { type: ["string", "null"] }
+        paymentMethod: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceSubscriptionInput:
+      type: object
+      required: [companyId, code, period]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        branchId: { type: string }
+        period: { type: string }
+        dueDate: { type: string }
+        employerShare: { type: string }
+        employeeShare: { type: string }
+        totalAmount: { type: string }
+        employeeCount: { type: integer }
+        status: { type: string }
+        paymentDate: { type: string }
+        paymentMethod: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+    InsuranceSubscriptionUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        branchId: { type: string }
+        period: { type: string }
+        dueDate: { type: string }
+        employerShare: { type: string }
+        employeeShare: { type: string }
+        totalAmount: { type: string }
+        employeeCount: { type: integer }
+        status: { type: string }
+        paymentDate: { type: string }
+        paymentMethod: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+    InsuranceSubscriptionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceSubscription" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsurancePaymentNotice:
+      type: object
+      required: [id, companyId, code, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        noticeNumber: { type: ["string", "null"] }
+        subscriptionId: { type: ["string", "null"] }
+        period: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        noticeDate: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsurancePaymentNoticeInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        noticeNumber: { type: string }
+        subscriptionId: { type: string }
+        period: { type: string }
+        amount: { type: string }
+        noticeDate: { type: string }
+        dueDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsurancePaymentNoticeUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        noticeNumber: { type: string }
+        subscriptionId: { type: string }
+        period: { type: string }
+        amount: { type: string }
+        noticeDate: { type: string }
+        dueDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsurancePaymentNoticeListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsurancePaymentNotice" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceReconciliation:
+      type: object
+      required: [id, companyId, code, period, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        period: { type: string }
+        expectedAmount: { type: ["string", "null"] }
+        actualAmount: { type: ["string", "null"] }
+        difference: { type: ["string", "null"] }
+        status: { type: string }
+        reconciliationDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceReconciliationInput:
+      type: object
+      required: [companyId, code, period]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        period: { type: string }
+        expectedAmount: { type: string }
+        actualAmount: { type: string }
+        difference: { type: string }
+        status: { type: string }
+        reconciliationDate: { type: string }
+        notes: { type: string }
+    InsuranceReconciliationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        period: { type: string }
+        expectedAmount: { type: string }
+        actualAmount: { type: string }
+        difference: { type: string }
+        status: { type: string }
+        reconciliationDate: { type: string }
+        notes: { type: string }
+    InsuranceReconciliationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceReconciliation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceArrear:
+      type: object
+      required: [id, companyId, code, amount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        period: { type: ["string", "null"] }
+        subscriptionId: { type: ["string", "null"] }
+        amount: { type: string }
+        dueDate: { type: ["string", "null"] }
+        daysOverdue: { type: ["integer", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceArrearInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        period: { type: string }
+        subscriptionId: { type: string }
+        amount: { type: string }
+        dueDate: { type: string }
+        daysOverdue: { type: integer }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceArrearUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        period: { type: string }
+        subscriptionId: { type: string }
+        amount: { type: string }
+        dueDate: { type: string }
+        daysOverdue: { type: integer }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceArrearListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceArrear" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsurancePenalty:
+      type: object
+      required: [id, companyId, code, penaltyType, amount, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        branchId: { type: ["string", "null"] }
+        penaltyType: { type: string }
+        subscriptionId: { type: ["string", "null"] }
+        amount: { type: string }
+        penaltyDate: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        status: { type: string }
+        paymentDate: { type: ["string", "null"] }
+        reference: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsurancePenaltyInput:
+      type: object
+      required: [companyId, code]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        branchId: { type: string }
+        penaltyType: { type: string }
+        subscriptionId: { type: string }
+        amount: { type: string }
+        penaltyDate: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        paymentDate: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+    InsurancePenaltyUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        branchId: { type: string }
+        penaltyType: { type: string }
+        subscriptionId: { type: string }
+        amount: { type: string }
+        penaltyDate: { type: string }
+        reason: { type: string }
+        status: { type: string }
+        paymentDate: { type: string }
+        reference: { type: string }
+        notes: { type: string }
+    InsurancePenaltyListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsurancePenalty" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    ServiceTermination:
+      type: object
+      required: [id, companyId, code, employeeId, reason, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: ["string", "null"] }
+        terminationDate: { type: ["string", "null"] }
+        reason: { type: string }
+        lastWorkingDay: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ServiceTerminationInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        terminationDate: { type: string }
+        reason: { type: string }
+        lastWorkingDay: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    ServiceTerminationUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        employeeInsuranceId: { type: string }
+        terminationDate: { type: string }
+        reason: { type: string }
+        lastWorkingDay: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    ServiceTerminationListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ServiceTermination" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceSettlement:
+      type: object
+      required: [id, companyId, code, employeeId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        serviceTerminationId: { type: ["string", "null"] }
+        employeeId: { type: string }
+        settlementAmount: { type: ["string", "null"] }
+        settlementDate: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceSettlementInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        serviceTerminationId: { type: string }
+        employeeId: { type: string }
+        settlementAmount: { type: string }
+        settlementDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceSettlementUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        serviceTerminationId: { type: string }
+        employeeId: { type: string }
+        settlementAmount: { type: string }
+        settlementDate: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceSettlementListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceSettlement" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    InsuranceClearance:
+      type: object
+      required: [id, companyId, code, employeeId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        serviceTerminationId: { type: ["string", "null"] }
+        clearanceDate: { type: ["string", "null"] }
+        amount: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    InsuranceClearanceInput:
+      type: object
+      required: [companyId, code, employeeId]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        serviceTerminationId: { type: string }
+        clearanceDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceClearanceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        employeeId: { type: string }
+        serviceTerminationId: { type: string }
+        clearanceDate: { type: string }
+        amount: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    InsuranceClearanceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InsuranceClearance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    SubcontractorInsurance:
+      type: object
+      required: [id, companyId, code, contractorName, contractorType, insuranceStatus, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        contractorName: { type: string }
+        contractorType: { type: string }
+        insuranceNumber: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        coverageAmount: { type: ["string", "null"] }
+        insuranceStatus: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    SubcontractorInsuranceInput:
+      type: object
+      required: [companyId, code, contractorName]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractorName: { type: string }
+        contractorType: { type: string }
+        insuranceNumber: { type: string }
+        projectId: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        coverageAmount: { type: string }
+        insuranceStatus: { type: string }
+        notes: { type: string }
+    SubcontractorInsuranceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        contractorName: { type: string }
+        contractorType: { type: string }
+        insuranceNumber: { type: string }
+        projectId: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        coverageAmount: { type: string }
+        insuranceStatus: { type: string }
+        notes: { type: string }
+    SubcontractorInsuranceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SubcontractorInsurance" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    ProjectLaborInsurance:
+      type: object
+      required: [id, companyId, code, laborName, insuranceStatus, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        laborName: { type: string }
+        projectId: { type: ["string", "null"] }
+        subcontractorInsuranceId: { type: ["string", "null"] }
+        insuranceNumber: { type: ["string", "null"] }
+        workerCount: { type: ["integer", "null"] }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        insuranceStatus: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    ProjectLaborInsuranceInput:
+      type: object
+      required: [companyId, code, laborName]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        laborName: { type: string }
+        projectId: { type: string }
+        subcontractorInsuranceId: { type: string }
+        insuranceNumber: { type: string }
+        workerCount: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        insuranceStatus: { type: string }
+        notes: { type: string }
+    ProjectLaborInsuranceUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        laborName: { type: string }
+        projectId: { type: string }
+        subcontractorInsuranceId: { type: string }
+        insuranceNumber: { type: string }
+        workerCount: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        insuranceStatus: { type: string }
+        notes: { type: string }
+    ProjectLaborInsuranceListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/ProjectLaborInsurance" }
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }

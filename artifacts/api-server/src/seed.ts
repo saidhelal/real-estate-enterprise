@@ -330,6 +330,22 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "visitorLogs", label: "Visitor Logs" },
   { module: "circulars", label: "Circulars" },
   { module: "policies", label: "Policies" },
+  // Insurance Management (standalone module)
+  { module: "employeeInsurances", label: "Employee Insurances" },
+  { module: "insuranceForms", label: "Insurance Forms" },
+  { module: "insuranceAdditions", label: "Insurance Additions" },
+  { module: "insuranceExclusions", label: "Insurance Exclusions" },
+  { module: "insuranceDataAmendments", label: "Insurance Data Amendments" },
+  { module: "insuranceSubscriptions", label: "Insurance Subscriptions" },
+  { module: "insurancePaymentNotices", label: "Insurance Payment Notices" },
+  { module: "insuranceReconciliations", label: "Insurance Reconciliations" },
+  { module: "insuranceArrears", label: "Insurance Arrears" },
+  { module: "insurancePenalties", label: "Insurance Penalties" },
+  { module: "serviceTerminations", label: "Service Terminations" },
+  { module: "insuranceSettlements", label: "Insurance Settlements" },
+  { module: "insuranceClearances", label: "Insurance Clearances" },
+  { module: "subcontractorInsurances", label: "Subcontractor Insurances" },
+  { module: "projectLaborInsurances", label: "Project Labor Insurances" },
 ];
 const ACTIONS = ["view", "create", "update", "delete"] as const;
 

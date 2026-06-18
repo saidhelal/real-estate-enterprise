@@ -383,6 +383,26 @@ export const LABELS: Record<string, LabelPair> = {
   regulation: { en: "Regulation", ar: "لائحة" },
   procedure: { en: "Procedure", ar: "إجراء" },
   guideline: { en: "Guideline", ar: "دليل إرشادي" },
+  // Insurance Management
+  comprehensive: { en: "Comprehensive", ar: "شامل" },
+  social_insurance: { en: "Social Insurance", ar: "تأمينات اجتماعية" },
+  medical_insurance: { en: "Medical Insurance", ar: "تأمين طبي" },
+  exclusion: { en: "Exclusion", ar: "استبعاد" },
+  amendment: { en: "Amendment", ar: "تعديل" },
+  salary: { en: "Salary", ar: "الراتب" },
+  resignation: { en: "Resignation", ar: "استقالة" },
+  retirement: { en: "Retirement", ar: "تقاعد" },
+  death: { en: "Death", ar: "وفاة" },
+  outstanding: { en: "Outstanding", ar: "مستحق" },
+  late_payment: { en: "Late Payment", ar: "تأخر سداد" },
+  underpayment: { en: "Underpayment", ar: "نقص سداد" },
+  reconciled: { en: "Reconciled", ar: "تمت المطابقة" },
+  matched: { en: "Matched", ar: "مطابق" },
+  unmatched: { en: "Unmatched", ar: "غير مطابق" },
+  subcontractor: { en: "Subcontractor", ar: "مقاول باطن" },
+  supplier_contractor: { en: "Supplier Contractor", ar: "مقاول مورد" },
+  data: { en: "Data", ar: "بيانات" },
+  status: { en: "Status", ar: "الحالة" },
 };
 
 export interface LookupCategory {
