@@ -37,6 +37,7 @@ import insuranceRouter from "./insurance";
 import masterDataRouter from "./master-data";
 import changeRequestsRouter from "./change-requests";
 import notificationsRouter from "./notifications";
+import executiveOversightRouter from "./executive-oversight";
 import portalRouter from "./portal";
 
 const router: IRouter = Router();
@@ -83,5 +84,6 @@ router.use(insuranceRouter);
 router.use(masterDataRouter);
 router.use(changeRequestsRouter);
 router.use(notificationsRouter);
+router.use(executiveOversightRouter);
 
 export default router;

@@ -82,6 +82,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "settings", label: "System Settings" },
   { module: "masterData", label: "Master Data", extraActions: ["archive", "reorder"] },
   { module: "notifications", label: "Notifications & Alerts", extraActions: ["viewAll"] },
+  { module: "executiveOversight", label: "Executive Oversight" },
   { module: "audit", label: "Audit Trail" },
   { module: "approvals", label: "Approvals (Change Requests)", extraActions: ["approve"] },
   { module: "projects", label: "Projects" },
@@ -552,6 +553,8 @@ async function seedStandardRoles(): Promise<void> {
       ...view("audit"),
       // Org-wide visibility into the notification center (every department).
       "notifications.viewAll",
+      // Executive oversight: cross-department read-only KPI console.
+      ...view("executiveOversight"),
     ]),
   );
 

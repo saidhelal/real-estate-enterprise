@@ -22809,6 +22809,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OkResponse"
+  /executive-oversight/dashboard:
+    get:
+      operationId: getExecutiveOversight
+      tags: [executiveOversight]
+      summary: Executive oversight dashboard (read-only cross-department KPIs)
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Oversight snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecutiveOversight"
   /notifications-dashboard:
     get:
       operationId: getNotificationsDashboard
@@ -37495,3 +37509,27 @@ components:
         today: { type: integer }
         week: { type: integer }
         month: { type: integer }
+    OversightKpi:
+      type: object
+      required: [key, value, kind]
+      properties:
+        key: { type: string }
+        value: { type: string }
+        kind: { type: string }
+        tone: { type: ["string", "null"] }
+    OversightDepartment:
+      type: object
+      required: [key, kpis]
+      properties:
+        key: { type: string }
+        kpis:
+          type: array
+          items: { $ref: "#/components/schemas/OversightKpi" }
+    ExecutiveOversight:
+      type: object
+      required: [generatedAt, departments]
+      properties:
+        generatedAt: { type: string }
+        departments:
+          type: array
+          items: { $ref: "#/components/schemas/OversightDepartment" }

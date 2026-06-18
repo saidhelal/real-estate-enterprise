@@ -97,6 +97,7 @@ import YearEndClosingPage from "@/pages/year-end-closing";
 import FinancialReportsPage from "@/pages/financial-reports";
 
 import ExecutiveDashboardPage from "@/pages/executive-dashboard";
+import ExecutiveOversightPage from "@/pages/executive-oversight";
 import SalesAnalyticsPage from "@/pages/sales-analytics";
 import CollectionAnalyticsPage from "@/pages/collection-analytics";
 import ConstructionAnalyticsPage from "@/pages/construction-analytics";
@@ -565,6 +566,7 @@ function Router() {
             <Route path="/legal-case-links" component={LegalCaseLinksPage} />
             <Route path="/legal-reports" component={LegalReportsPage} />
             <Route path="/executive-dashboard" component={ExecutiveDashboardPage} />
+            <Route path="/executive-oversight" component={ExecutiveOversightPage} />
             <Route path="/sales-analytics" component={SalesAnalyticsPage} />
             <Route path="/collection-analytics" component={CollectionAnalyticsPage} />
             <Route path="/construction-analytics" component={ConstructionAnalyticsPage} />

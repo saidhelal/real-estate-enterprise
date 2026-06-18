@@ -325,6 +325,7 @@ const NAV_GROUPS = [
     { href: "/insurance-contractors-report", icon: FileSpreadsheet, labelKey: "nav.insurance_contractors_report" },
   ]},
   { titleKey: "nav.group.business_intelligence", items: [
+    { href: "/executive-oversight", icon: Gauge, labelKey: "nav.executive_oversight" },
     { href: "/executive-dashboard", icon: Gauge, labelKey: "nav.executive_dashboard" },
     { href: "/sales-analytics", icon: TrendingUp, labelKey: "nav.sales_analytics" },
     { href: "/collection-analytics", icon: LineChart, labelKey: "nav.collection_analytics" },

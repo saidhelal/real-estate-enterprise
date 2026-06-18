@@ -32386,6 +32386,27 @@ export const DeleteProjectLaborInsuranceResponse = zod.object({
 
 
 /**
+ * @summary Executive oversight dashboard (read-only cross-department KPIs)
+ */
+export const GetExecutiveOversightQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetExecutiveOversightResponse = zod.object({
+  "generatedAt": zod.string(),
+  "departments": zod.array(zod.object({
+  "key": zod.string(),
+  "kpis": zod.array(zod.object({
+  "key": zod.string(),
+  "value": zod.string(),
+  "kind": zod.string(),
+  "tone": zod.string().nullish()
+}))
+}))
+})
+
+
+/**
  * @summary Notification Center dashboard summary
  */
 export const GetNotificationsDashboardQueryParams = zod.object({

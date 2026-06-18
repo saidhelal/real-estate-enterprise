@@ -13924,6 +13924,24 @@ export interface NotificationsDashboard {
   month: number;
 }
 
+export interface OversightKpi {
+  key: string;
+  value: string;
+  kind: string;
+  /** @nullable */
+  tone?: string | null;
+}
+
+export interface OversightDepartment {
+  key: string;
+  kpis: OversightKpi[];
+}
+
+export interface ExecutiveOversight {
+  generatedAt: string;
+  departments: OversightDepartment[];
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -16035,6 +16053,10 @@ companyId?: string;
 insuranceStatus?: string;
 projectId?: string;
 subcontractorInsuranceId?: string;
+};
+
+export type GetExecutiveOversightParams = {
+companyId?: string;
 };
 
 export type GetNotificationsDashboardParams = {

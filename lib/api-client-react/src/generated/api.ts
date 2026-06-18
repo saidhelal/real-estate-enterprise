@@ -364,6 +364,7 @@ import type {
   ExchangeRate,
   ExchangeRateInput,
   ExecutiveDashboard,
+  ExecutiveOversight,
   FinanceDashboard,
   FinancialAnalytics,
   FiscalPeriod,
@@ -401,6 +402,7 @@ import type {
   GetCustomerServiceDashboardParams,
   GetEngineeringDashboardParams,
   GetExecutiveDashboardParams,
+  GetExecutiveOversightParams,
   GetFinanceDashboardParams,
   GetFinancialAnalyticsParams,
   GetFixedAssetsDashboardParams,
@@ -97006,6 +97008,90 @@ export const useDeleteProjectLaborInsurance = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getDeleteProjectLaborInsuranceMutationOptions(options));
     }
+
+export const getGetExecutiveOversightUrl = (params?: GetExecutiveOversightParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/executive-oversight/dashboard?${stringifiedParams}` : `/api/executive-oversight/dashboard`
+}
+
+/**
+ * @summary Executive oversight dashboard (read-only cross-department KPIs)
+ */
+export const getExecutiveOversight = async (params?: GetExecutiveOversightParams, options?: RequestInit): Promise<ExecutiveOversight> => {
+
+  return customFetch<ExecutiveOversight>(getGetExecutiveOversightUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetExecutiveOversightQueryKey = (params?: GetExecutiveOversightParams,) => {
+    return [
+    `/api/executive-oversight/dashboard`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetExecutiveOversightQueryOptions = <TData = Awaited<ReturnType<typeof getExecutiveOversight>>, TError = ErrorType<unknown>>(params?: GetExecutiveOversightParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExecutiveOversight>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetExecutiveOversightQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getExecutiveOversight>>> = ({ signal }) => getExecutiveOversight(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getExecutiveOversight>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetExecutiveOversightQueryResult = NonNullable<Awaited<ReturnType<typeof getExecutiveOversight>>>
+export type GetExecutiveOversightQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Executive oversight dashboard (read-only cross-department KPIs)
+ */
+
+export function useGetExecutiveOversight<TData = Awaited<ReturnType<typeof getExecutiveOversight>>, TError = ErrorType<unknown>>(
+ params?: GetExecutiveOversightParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getExecutiveOversight>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetExecutiveOversightQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getGetNotificationsDashboardUrl = (params?: GetNotificationsDashboardParams,) => {
   const normalizedParams = new URLSearchParams();
