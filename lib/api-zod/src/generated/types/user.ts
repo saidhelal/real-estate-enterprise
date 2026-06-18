@@ -17,6 +17,7 @@ export interface User {
   phone?: string | null;
   status: UserStatus;
   isActive: boolean;
+  mustChangePassword?: boolean;
   /** @nullable */
   lastLoginAt?: string | null;
   failedAttempts?: number;

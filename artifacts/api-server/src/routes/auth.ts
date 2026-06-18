@@ -22,6 +22,7 @@ import {
   clearAuthCookies,
 } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
+import { recordAudit } from "../lib/audit";
 import { requireAuth } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -120,6 +121,10 @@ router.post("/auth/login", async (req, res): Promise<void> => {
   await recordLogin(user.id, username, true, ip, userAgent);
 
   const authUser = await loadAuthUser(user.id);
+  if (authUser) {
+    req.authUser = authUser;
+    await recordAudit(req, { action: "login", entity: "auth", entityId: user.id });
+  }
   res.json({ accessToken, user: authUser });
 });
 
@@ -177,10 +182,21 @@ router.post("/auth/refresh", async (req, res): Promise<void> => {
 router.post("/auth/logout", async (req, res): Promise<void> => {
   const raw = req.cookies?.[REFRESH_COOKIE];
   if (raw) {
-    await db
-      .update(sessionsTable)
-      .set({ revokedAt: new Date() })
+    const [session] = await db
+      .select()
+      .from(sessionsTable)
       .where(eq(sessionsTable.tokenHash, hashToken(raw)));
+    if (session) {
+      await db
+        .update(sessionsTable)
+        .set({ revokedAt: new Date() })
+        .where(eq(sessionsTable.id, session.id));
+      const authUser = await loadAuthUser(session.userId);
+      if (authUser) {
+        req.authUser = authUser;
+        await recordAudit(req, { action: "logout", entity: "auth", entityId: session.userId });
+      }
+    }
   }
   clearAuthCookies(res);
   res.json({ success: true });
@@ -218,8 +234,13 @@ router.post("/auth/change-password", requireAuth, async (req, res): Promise<void
 
   await db
     .update(usersTable)
-    .set({ passwordHash: await hashPassword(parsed.data.newPassword) })
+    .set({
+      passwordHash: await hashPassword(parsed.data.newPassword),
+      mustChangePassword: false,
+    })
     .where(eq(usersTable.id, userId));
+
+  await recordAudit(req, { action: "change-password", entity: "users", entityId: userId });
 
   res.json({ success: true });
 });

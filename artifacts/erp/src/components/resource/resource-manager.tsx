@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { setNextChangeReason } from "@workspace/api-client-react";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -96,6 +97,15 @@ export interface ResourceManagerProps<T extends { id: string }> {
 
 const NONE = "__none__";
 
+/** Server governance middleware answers a governed mutation with 202 + this shape. */
+function isPendingApproval(result: unknown): boolean {
+  return (
+    typeof result === "object" &&
+    result !== null &&
+    (result as { pendingApproval?: unknown }).pendingApproval === true
+  );
+}
+
 export function ResourceManager<T extends { id: string }>(props: ResourceManagerProps<T>) {
   const {
     title,
@@ -124,6 +134,8 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
   const [search, setSearch] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<T | null>(null);
+  const [deleteReason, setDeleteReason] = useState("");
 
   const params: Record<string, unknown> = { page, pageSize };
   if (search) params.search = search;
@@ -142,13 +154,21 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: getListQueryKey() });
 
-  const handleDelete = (id: string) => {
-    if (!confirm(t("common.delete") + "?")) return;
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    const reason = deleteReason.trim();
+    if (reason) setNextChangeReason(reason, heading);
     deleteMutation.mutate(
-      { id },
+      { id: deleteTarget.id },
       {
-        onSuccess: () => {
-          toast({ title: t("common.deleted") });
+        onSuccess: (result: unknown) => {
+          if (isPendingApproval(result)) {
+            toast({ title: t("governance.submitted") });
+          } else {
+            toast({ title: t("common.deleted") });
+          }
+          setDeleteTarget(null);
+          setDeleteReason("");
           invalidate();
         },
         onError: () => toast({ title: t("common.error"), variant: "destructive" }),
@@ -240,7 +260,10 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                         variant="ghost"
                         size="icon"
                         className="text-destructive"
-                        onClick={() => handleDelete(row.id)}
+                        onClick={() => {
+                          setDeleteReason("");
+                          setDeleteTarget(row);
+                        }}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -279,6 +302,52 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
           </Button>
         </div>
       </div>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null);
+            setDeleteReason("");
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("common.delete")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">{t("governance.delete_hint")}</p>
+            <div className="space-y-2">
+              <Label>{t("governance.reason")}</Label>
+              <Textarea
+                value={deleteReason}
+                onChange={(e) => setDeleteReason(e.target.value)}
+                placeholder={t("governance.reason_placeholder")}
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setDeleteTarget(null);
+                  setDeleteReason("");
+                }}
+              >
+                {t("common.cancel")}
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={deleteMutation.isPending}
+                onClick={confirmDelete}
+              >
+                {t("common.delete")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -358,8 +427,10 @@ function ResourceForm<T extends { id: string }>({
       updateMutation.mutate(
         { id: record.id, data: payload },
         {
-          onSuccess: () => {
-            toast({ title: t("common.saved") });
+          onSuccess: (result: unknown) => {
+            toast({
+              title: isPendingApproval(result) ? t("governance.submitted") : t("common.saved"),
+            });
             onSuccess();
           },
           onError: () => toast({ title: t("common.error"), variant: "destructive" }),
@@ -369,8 +440,10 @@ function ResourceForm<T extends { id: string }>({
       createMutation.mutate(
         { data: payload },
         {
-          onSuccess: () => {
-            toast({ title: t("common.created") });
+          onSuccess: (result: unknown) => {
+            toast({
+              title: isPendingApproval(result) ? t("governance.submitted") : t("common.created"),
+            });
             onSuccess();
           },
           onError: () => toast({ title: t("common.error"), variant: "destructive" }),

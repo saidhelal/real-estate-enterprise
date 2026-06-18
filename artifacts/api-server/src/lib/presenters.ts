@@ -10,6 +10,7 @@ import type {
   NumberSequenceRow,
   AuditLogRow,
   LoginHistoryRow,
+  ChangeRequestRow,
 } from "@workspace/db";
 
 function iso(d: Date | null | undefined): string | null {
@@ -47,10 +48,37 @@ export function toUser(row: UserRow, roles: RoleApi[] = []) {
     phone: row.phone,
     status: row.status,
     isActive: row.isActive,
+    mustChangePassword: row.mustChangePassword,
     lastLoginAt: iso(row.lastLoginAt),
     failedAttempts: row.failedAttempts,
     companyId: row.companyId,
     roles,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: iso(row.updatedAt),
+  };
+}
+
+export function toChangeRequest(row: ChangeRequestRow) {
+  return {
+    id: row.id,
+    companyId: row.companyId,
+    requestType: row.requestType,
+    entity: row.entity,
+    entityId: row.entityId,
+    entityLabel: row.entityLabel,
+    method: row.method,
+    path: row.path,
+    payload: row.payload ?? null,
+    reason: row.reason,
+    status: row.status,
+    requestedBy: row.requestedBy,
+    requestedByName: row.requestedByName,
+    reviewedBy: row.reviewedBy,
+    reviewedByName: row.reviewedByName,
+    reviewNotes: row.reviewNotes,
+    reviewedAt: iso(row.reviewedAt),
+    executedAt: iso(row.executedAt),
+    executionError: row.executionError,
     createdAt: row.createdAt.toISOString(),
     updatedAt: iso(row.updatedAt),
   };

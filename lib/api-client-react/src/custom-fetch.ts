@@ -17,6 +17,18 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 
 let _baseUrl: string | null = null;
 let _authTokenGetter: AuthTokenGetter | null = null;
+let _nextChangeReason: { reason: string; entityLabel?: string } | null = null;
+
+/**
+ * Governance: queue a human-readable reason (and optional entity label) to be
+ * attached to the NEXT request as `x-change-reason` / `x-change-entity-label`
+ * headers. The server's governance middleware records these on the change
+ * request it creates for a governed delete/edit. The value is consumed and
+ * cleared after a single request so it never leaks onto unrelated calls.
+ */
+export function setNextChangeReason(reason: string, entityLabel?: string): void {
+  _nextChangeReason = { reason, entityLabel };
+}
 
 /**
  * Set a base URL that is prepended to every relative request URL
@@ -347,6 +359,16 @@ export async function customFetch<T = unknown>(
 
   if (responseType === "json" && !headers.has("accept")) {
     headers.set("accept", DEFAULT_JSON_ACCEPT);
+  }
+
+  // Governance: attach a queued change reason to this single request, then
+  // clear it so it cannot bleed onto subsequent calls.
+  if (_nextChangeReason && (method === "DELETE" || method === "PATCH" || method === "PUT")) {
+    headers.set("x-change-reason", _nextChangeReason.reason);
+    if (_nextChangeReason.entityLabel) {
+      headers.set("x-change-entity-label", _nextChangeReason.entityLabel);
+    }
+    _nextChangeReason = null;
   }
 
   // Attach bearer token when an auth getter is configured and no

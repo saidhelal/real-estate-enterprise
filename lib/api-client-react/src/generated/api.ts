@@ -138,6 +138,8 @@ import type {
   CertificateStatusListResponse,
   CertificateStatusUpdate,
   ChangePasswordInput,
+  ChangeRequest,
+  ChangeRequestReview,
   Cheque,
   ChequeInput,
   ChequeListResponse,
@@ -730,6 +732,7 @@ import type {
   ListCertificateApprovalsParams,
   ListCertificateItemsParams,
   ListCertificateStatussParams,
+  ListChangeRequestsParams,
   ListChequeStatusHistorysParams,
   ListChequesParams,
   ListCircularsParams,
@@ -1093,6 +1096,7 @@ import type {
   ReservationPaymentListResponse,
   ReservationPaymentUpdate,
   ReservationUpdate,
+  ResetPasswordInput,
   Retention,
   RetentionInput,
   RetentionListResponse,
@@ -1250,6 +1254,8 @@ import type {
   UnitUpdate,
   User,
   UserInput,
+  UserScopes,
+  UserScopesUpdate,
   UserStatusUpdate,
   UserUpdate,
   VariationOrder,
@@ -3957,6 +3963,532 @@ export const useSetUserStatus = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getSetUserStatusMutationOptions(options));
+    }
+
+export const getResetUserPasswordUrl = (id: string,) => {
+
+
+
+
+  return `/api/users/${id}/reset-password`
+}
+
+/**
+ * @summary Administratively reset a user's password
+ */
+export const resetUserPassword = async (id: string,
+    resetPasswordInput: ResetPasswordInput, options?: RequestInit): Promise<User> => {
+
+  return customFetch<User>(getResetUserPasswordUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      resetPasswordInput,)
+  }
+);}
+
+
+
+
+export const getResetUserPasswordMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetUserPassword>>, TError,{id: string;data: BodyType<ResetPasswordInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetUserPassword>>, TError,{id: string;data: BodyType<ResetPasswordInput>}, TContext> => {
+
+const mutationKey = ['resetUserPassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetUserPassword>>, {id: string;data: BodyType<ResetPasswordInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  resetUserPassword(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetUserPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof resetUserPassword>>>
+    export type ResetUserPasswordMutationBody = BodyType<ResetPasswordInput>
+    export type ResetUserPasswordMutationError = ErrorType<Error>
+
+    /**
+ * @summary Administratively reset a user's password
+ */
+export const useResetUserPassword = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetUserPassword>>, TError,{id: string;data: BodyType<ResetPasswordInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetUserPassword>>,
+        TError,
+        {id: string;data: BodyType<ResetPasswordInput>},
+        TContext
+      > => {
+      return useMutation(getResetUserPasswordMutationOptions(options));
+    }
+
+export const getGetUserScopesUrl = (id: string,) => {
+
+
+
+
+  return `/api/users/${id}/scopes`
+}
+
+/**
+ * @summary Get a user's branch/department/project scopes
+ */
+export const getUserScopes = async (id: string, options?: RequestInit): Promise<UserScopes> => {
+
+  return customFetch<UserScopes>(getGetUserScopesUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUserScopesQueryKey = (id: string,) => {
+    return [
+    `/api/users/${id}/scopes`
+    ] as const;
+    }
+
+
+export const getGetUserScopesQueryOptions = <TData = Awaited<ReturnType<typeof getUserScopes>>, TError = ErrorType<unknown>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserScopes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserScopesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserScopes>>> = ({ signal }) => getUserScopes(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserScopes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUserScopesQueryResult = NonNullable<Awaited<ReturnType<typeof getUserScopes>>>
+export type GetUserScopesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get a user's branch/department/project scopes
+ */
+
+export function useGetUserScopes<TData = Awaited<ReturnType<typeof getUserScopes>>, TError = ErrorType<unknown>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserScopes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUserScopesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getSetUserScopesUrl = (id: string,) => {
+
+
+
+
+  return `/api/users/${id}/scopes`
+}
+
+/**
+ * @summary Replace a user's branch/department/project scopes
+ */
+export const setUserScopes = async (id: string,
+    userScopesUpdate: UserScopesUpdate, options?: RequestInit): Promise<UserScopes> => {
+
+  return customFetch<UserScopes>(getSetUserScopesUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      userScopesUpdate,)
+  }
+);}
+
+
+
+
+export const getSetUserScopesMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setUserScopes>>, TError,{id: string;data: BodyType<UserScopesUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof setUserScopes>>, TError,{id: string;data: BodyType<UserScopesUpdate>}, TContext> => {
+
+const mutationKey = ['setUserScopes'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setUserScopes>>, {id: string;data: BodyType<UserScopesUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  setUserScopes(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SetUserScopesMutationResult = NonNullable<Awaited<ReturnType<typeof setUserScopes>>>
+    export type SetUserScopesMutationBody = BodyType<UserScopesUpdate>
+    export type SetUserScopesMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Replace a user's branch/department/project scopes
+ */
+export const useSetUserScopes = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setUserScopes>>, TError,{id: string;data: BodyType<UserScopesUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof setUserScopes>>,
+        TError,
+        {id: string;data: BodyType<UserScopesUpdate>},
+        TContext
+      > => {
+      return useMutation(getSetUserScopesMutationOptions(options));
+    }
+
+export const getListChangeRequestsUrl = (params?: ListChangeRequestsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/change-requests?${stringifiedParams}` : `/api/change-requests`
+}
+
+/**
+ * @summary List delete/edit change requests
+ */
+export const listChangeRequests = async (params?: ListChangeRequestsParams, options?: RequestInit): Promise<ChangeRequest[]> => {
+
+  return customFetch<ChangeRequest[]>(getListChangeRequestsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListChangeRequestsQueryKey = (params?: ListChangeRequestsParams,) => {
+    return [
+    `/api/change-requests`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListChangeRequestsQueryOptions = <TData = Awaited<ReturnType<typeof listChangeRequests>>, TError = ErrorType<unknown>>(params?: ListChangeRequestsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listChangeRequests>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListChangeRequestsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listChangeRequests>>> = ({ signal }) => listChangeRequests(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listChangeRequests>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListChangeRequestsQueryResult = NonNullable<Awaited<ReturnType<typeof listChangeRequests>>>
+export type ListChangeRequestsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List delete/edit change requests
+ */
+
+export function useListChangeRequests<TData = Awaited<ReturnType<typeof listChangeRequests>>, TError = ErrorType<unknown>>(
+ params?: ListChangeRequestsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listChangeRequests>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListChangeRequestsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetChangeRequestUrl = (id: string,) => {
+
+
+
+
+  return `/api/change-requests/${id}`
+}
+
+/**
+ * @summary Get a change request
+ */
+export const getChangeRequest = async (id: string, options?: RequestInit): Promise<ChangeRequest> => {
+
+  return customFetch<ChangeRequest>(getGetChangeRequestUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetChangeRequestQueryKey = (id: string,) => {
+    return [
+    `/api/change-requests/${id}`
+    ] as const;
+    }
+
+
+export const getGetChangeRequestQueryOptions = <TData = Awaited<ReturnType<typeof getChangeRequest>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getChangeRequest>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetChangeRequestQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getChangeRequest>>> = ({ signal }) => getChangeRequest(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getChangeRequest>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetChangeRequestQueryResult = NonNullable<Awaited<ReturnType<typeof getChangeRequest>>>
+export type GetChangeRequestQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a change request
+ */
+
+export function useGetChangeRequest<TData = Awaited<ReturnType<typeof getChangeRequest>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getChangeRequest>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetChangeRequestQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getApproveChangeRequestUrl = (id: string,) => {
+
+
+
+
+  return `/api/change-requests/${id}/approve`
+}
+
+/**
+ * @summary Approve and execute a change request (Owner / Super Admin only)
+ */
+export const approveChangeRequest = async (id: string,
+    changeRequestReview?: ChangeRequestReview, options?: RequestInit): Promise<ChangeRequest> => {
+
+  return customFetch<ChangeRequest>(getApproveChangeRequestUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      changeRequestReview,)
+  }
+);}
+
+
+
+
+export const getApproveChangeRequestMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveChangeRequest>>, TError,{id: string;data?: BodyType<ChangeRequestReview>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof approveChangeRequest>>, TError,{id: string;data?: BodyType<ChangeRequestReview>}, TContext> => {
+
+const mutationKey = ['approveChangeRequest'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof approveChangeRequest>>, {id: string;data?: BodyType<ChangeRequestReview>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  approveChangeRequest(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ApproveChangeRequestMutationResult = NonNullable<Awaited<ReturnType<typeof approveChangeRequest>>>
+    export type ApproveChangeRequestMutationBody = BodyType<ChangeRequestReview> | undefined
+    export type ApproveChangeRequestMutationError = ErrorType<Error>
+
+    /**
+ * @summary Approve and execute a change request (Owner / Super Admin only)
+ */
+export const useApproveChangeRequest = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveChangeRequest>>, TError,{id: string;data?: BodyType<ChangeRequestReview>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof approveChangeRequest>>,
+        TError,
+        {id: string;data?: BodyType<ChangeRequestReview>},
+        TContext
+      > => {
+      return useMutation(getApproveChangeRequestMutationOptions(options));
+    }
+
+export const getRejectChangeRequestUrl = (id: string,) => {
+
+
+
+
+  return `/api/change-requests/${id}/reject`
+}
+
+/**
+ * @summary Reject a change request (Owner / Super Admin only)
+ */
+export const rejectChangeRequest = async (id: string,
+    changeRequestReview?: ChangeRequestReview, options?: RequestInit): Promise<ChangeRequest> => {
+
+  return customFetch<ChangeRequest>(getRejectChangeRequestUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      changeRequestReview,)
+  }
+);}
+
+
+
+
+export const getRejectChangeRequestMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectChangeRequest>>, TError,{id: string;data?: BodyType<ChangeRequestReview>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof rejectChangeRequest>>, TError,{id: string;data?: BodyType<ChangeRequestReview>}, TContext> => {
+
+const mutationKey = ['rejectChangeRequest'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rejectChangeRequest>>, {id: string;data?: BodyType<ChangeRequestReview>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  rejectChangeRequest(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RejectChangeRequestMutationResult = NonNullable<Awaited<ReturnType<typeof rejectChangeRequest>>>
+    export type RejectChangeRequestMutationBody = BodyType<ChangeRequestReview> | undefined
+    export type RejectChangeRequestMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Reject a change request (Owner / Super Admin only)
+ */
+export const useRejectChangeRequest = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectChangeRequest>>, TError,{id: string;data?: BodyType<ChangeRequestReview>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof rejectChangeRequest>>,
+        TError,
+        {id: string;data?: BodyType<ChangeRequestReview>},
+        TContext
+      > => {
+      return useMutation(getRejectChangeRequestMutationOptions(options));
     }
 
 export const getListRolesUrl = () => {

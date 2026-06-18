@@ -82,6 +82,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "settings", label: "System Settings" },
   { module: "masterData", label: "Master Data", extraActions: ["archive", "reorder"] },
   { module: "audit", label: "Audit Trail" },
+  { module: "approvals", label: "Approvals (Change Requests)", extraActions: ["approve"] },
   { module: "projects", label: "Projects" },
   { module: "phases", label: "Phases" },
   { module: "buildings", label: "Buildings" },
@@ -506,6 +507,116 @@ async function seedCrmRoles(): Promise<void> {
     }
   }
   console.log(`Seeded ${roles.length} CRM roles (Sales User, Sales Admin, CRM Manager)`);
+}
+
+// The seven standard organizational roles. Owner and Super Admin carry full
+// access (["*"] + isSystem). The rest are least-privilege templates built from
+// real permission codes. System Admin runs the platform (users/roles/companies/
+// settings/audit) but is deliberately NOT an approver and never holds "*" — so
+// it cannot self-approve governed deletes/edits (approvals stay with Owner /
+// Super Admin). Re-running upserts the permission sets so the roles stay current.
+async function seedStandardRoles(): Promise<void> {
+  const crud = (m: string): string[] => [`${m}.view`, `${m}.create`, `${m}.update`, `${m}.delete`];
+  const cru = (m: string): string[] => [`${m}.view`, `${m}.create`, `${m}.update`];
+  const view = (m: string): string[] => [`${m}.view`];
+
+  // Platform administration surface (no money, no approvals, no "*").
+  const systemAdmin = Array.from(
+    new Set([
+      ...crud("users"),
+      ...crud("roles"),
+      ...crud("companies"),
+      ...crud("branches"),
+      ...crud("fiscalYears"),
+      ...crud("currencies"),
+      ...crud("numberSequences"),
+      ...crud("settings"),
+      ...crud("masterData"),
+      ...view("audit"),
+      "users.update",
+    ]),
+  );
+
+  // General Manager — org-wide read visibility plus audit; operational write
+  // stays with the specialist roles. Read-only on money and approvals.
+  const generalManager = Array.from(
+    new Set([
+      ...view("companies"), ...view("branches"), ...view("fiscalYears"),
+      ...view("projects"), ...view("buildings"), ...view("units"),
+      ...view("contracts"), ...view("reservations"),
+      ...view("installmentPlans"), ...view("installmentSchedules"),
+      ...view("installmentCollections"), ...view("receipts"),
+      ...view("paymentVouchers"), ...view("customerInvoices"),
+      ...view("journalEntries"), ...view("customers"), ...view("leads"),
+      ...view("audit"),
+    ]),
+  );
+
+  // Department Manager — manages day-to-day operational records within scope
+  // (branch/department/project scoping is enforced separately via user_scopes).
+  const departmentManager = Array.from(
+    new Set([
+      ...cru("leads"), ...cru("customers"), ...cru("reservations"),
+      ...view("projects"), ...view("buildings"), ...view("units"),
+      ...view("contracts"),
+      ...view("installmentSchedules"), ...view("installmentCollections"),
+    ]),
+  );
+
+  // Employee — front-line worker: create/update operational records, no deletes
+  // (deletes are governed anyway), no money, no approvals.
+  const employee = Array.from(
+    new Set([
+      ...cru("leads"), ...cru("customers"), ...cru("reservations"),
+      ...view("projects"), ...view("buildings"), ...view("units"),
+    ]),
+  );
+
+  // Auditor — read-only across the books and the audit/approval trail.
+  const auditor = Array.from(
+    new Set([
+      ...view("audit"), ...view("approvals"),
+      ...view("contracts"), ...view("reservations"),
+      ...view("installmentPlans"), ...view("installmentSchedules"),
+      ...view("installmentCollections"), ...view("receipts"),
+      ...view("paymentVouchers"), ...view("customerInvoices"),
+      ...view("supplierInvoices"), ...view("journalEntries"),
+      ...view("cheques"), ...view("customers"),
+    ]),
+  );
+
+  const roles: Array<{
+    name: string;
+    description: string;
+    permissions: string[];
+    isSystem: boolean;
+  }> = [
+    { name: "Owner", description: "Business owner: full unrestricted access including governance approvals.", permissions: ["*"], isSystem: true },
+    { name: "Super Admin", description: "Top-level administrator: full unrestricted access including governance approvals.", permissions: ["*"], isSystem: true },
+    { name: "System Admin", description: "Platform administration (users, roles, org structure, settings, audit). Not an approver; no financial access.", permissions: systemAdmin, isSystem: false },
+    { name: "General Manager", description: "Organization-wide read visibility with audit access. Read-only on money and approvals.", permissions: generalManager, isSystem: false },
+    { name: "Department Manager", description: "Manages operational records within assigned branch/department/project scope.", permissions: departmentManager, isSystem: false },
+    { name: "Employee", description: "Front-line worker: create and update operational records within scope. No deletes, money, or approvals.", permissions: employee, isSystem: false },
+    { name: "Auditor", description: "Read-only access across financial records, audit trail, and approval history.", permissions: auditor, isSystem: false },
+  ];
+
+  for (const r of roles) {
+    const [existing] = await db.select().from(rolesTable).where(eq(rolesTable.name, r.name));
+    if (existing) {
+      await db
+        .update(rolesTable)
+        .set({ description: r.description, permissions: r.permissions, isSystem: r.isSystem })
+        .where(eq(rolesTable.id, existing.id));
+    } else {
+      await db.insert(rolesTable).values({
+        name: r.name,
+        description: r.description,
+        permissions: r.permissions,
+        isSystem: r.isSystem,
+      });
+    }
+  }
+  console.log(`Seeded ${roles.length} standard roles (Owner, Super Admin, System Admin, GM, Dept Manager, Employee, Auditor)`);
 }
 
 async function seedCurrencies(): Promise<void> {
@@ -1697,6 +1808,7 @@ async function main(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
   await seedSuperAdminUser(roleId);
+  await seedStandardRoles();
   await seedCrmRoles();
   await seedCurrencies();
   await seedCompany();

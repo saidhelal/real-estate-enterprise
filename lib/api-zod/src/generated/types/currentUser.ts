@@ -5,6 +5,7 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+import type { UserScopes } from './userScopes';
 
 export interface CurrentUser {
   id: string;
@@ -13,4 +14,6 @@ export interface CurrentUser {
   email: string;
   roles: string[];
   permissions: string[];
+  mustChangePassword: boolean;
+  scopes: UserScopes;
 }

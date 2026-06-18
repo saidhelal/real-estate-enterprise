@@ -199,6 +199,12 @@ export interface LoginInput {
   password: string;
 }
 
+export interface UserScopes {
+  branchIds: string[];
+  departmentIds: string[];
+  projectIds: string[];
+}
+
 export interface CurrentUser {
   id: string;
   username: string;
@@ -206,6 +212,8 @@ export interface CurrentUser {
   email: string;
   roles: string[];
   permissions: string[];
+  mustChangePassword: boolean;
+  scopes: UserScopes;
 }
 
 export interface AuthSession {
@@ -222,6 +230,74 @@ export interface ChangePasswordInput {
   currentPassword: string;
   /** @minLength 8 */
   newPassword: string;
+}
+
+export interface UserScopesUpdate {
+  branchIds: string[];
+  departmentIds: string[];
+  projectIds: string[];
+}
+
+export interface ResetPasswordInput {
+  /** @minLength 8 */
+  newPassword: string;
+  mustChangePassword?: boolean;
+}
+
+export type ChangeRequestRequestType = typeof ChangeRequestRequestType[keyof typeof ChangeRequestRequestType];
+
+
+export const ChangeRequestRequestType = {
+  delete: 'delete',
+  edit: 'edit',
+} as const;
+
+export type ChangeRequestStatus = typeof ChangeRequestStatus[keyof typeof ChangeRequestStatus];
+
+
+export const ChangeRequestStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+  executed: 'executed',
+  failed: 'failed',
+} as const;
+
+export interface ChangeRequest {
+  id: string;
+  /** @nullable */
+  companyId?: string | null;
+  requestType: ChangeRequestRequestType;
+  entity: string;
+  entityId: string;
+  /** @nullable */
+  entityLabel?: string | null;
+  method: string;
+  path: string;
+  payload?: unknown;
+  reason: string;
+  status: ChangeRequestStatus;
+  requestedBy: string;
+  requestedByName: string;
+  /** @nullable */
+  reviewedBy?: string | null;
+  /** @nullable */
+  reviewedByName?: string | null;
+  /** @nullable */
+  reviewNotes?: string | null;
+  /** @nullable */
+  reviewedAt?: string | null;
+  /** @nullable */
+  executedAt?: string | null;
+  /** @nullable */
+  executionError?: string | null;
+  createdAt: string;
+  /** @nullable */
+  updatedAt?: string | null;
+}
+
+export interface ChangeRequestReview {
+  reviewNotes?: string;
 }
 
 export interface PortalLoginInput {
@@ -561,6 +637,7 @@ export interface User {
   phone?: string | null;
   status: UserStatus;
   isActive: boolean;
+  mustChangePassword?: boolean;
   /** @nullable */
   lastLoginAt?: string | null;
   failedAttempts?: number;
@@ -13783,6 +13860,21 @@ export const ListUsersStatus = {
   active: 'active',
   inactive: 'inactive',
   locked: 'locked',
+} as const;
+
+export type ListChangeRequestsParams = {
+status?: ListChangeRequestsStatus;
+};
+
+export type ListChangeRequestsStatus = typeof ListChangeRequestsStatus[keyof typeof ListChangeRequestsStatus];
+
+
+export const ListChangeRequestsStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+  executed: 'executed',
+  failed: 'failed',
 } as const;
 
 export type ListBranchesParams = {

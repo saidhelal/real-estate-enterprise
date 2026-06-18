@@ -1,15 +1,19 @@
 import { Router, type IRouter } from "express";
 import { and, eq, ilike, or } from "drizzle-orm";
-import { db, usersTable, userRolesTable } from "@workspace/db";
+import { db, usersTable, userRolesTable, userScopesTable } from "@workspace/db";
 import {
   ListUsersResponse,
   CreateUserBody,
   GetUserResponse,
   UpdateUserBody,
   SetUserStatusBody,
+  ResetUserPasswordBody,
+  SetUserScopesBody,
+  GetUserScopesResponse,
+  SetUserScopesResponse,
 } from "@workspace/api-zod";
 import { hashPassword, validatePasswordPolicy } from "../lib/auth";
-import { roleUserCounts, rolesApiForUser } from "../lib/access";
+import { roleUserCounts, rolesApiForUser, loadUserScopes } from "../lib/access";
 import { toUser } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
@@ -196,5 +200,109 @@ router.patch("/users/:id/status", requirePermission("users.update"), async (req,
   });
   res.json(GetUserResponse.parse(toUser(row, await rolesApiForUser(id))));
 });
+
+// Administrative password reset. Sets a temporary password and, by default,
+// forces the user to change it on next login.
+router.post(
+  "/users/:id/reset-password",
+  requirePermission("users.update"),
+  async (req, res): Promise<void> => {
+    const parsed = ResetUserPasswordBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
+    const policyError = validatePasswordPolicy(parsed.data.newPassword);
+    if (policyError) {
+      res.status(400).json({ error: policyError });
+      return;
+    }
+    const id = String(req.params.id);
+    const mustChange = parsed.data.mustChangePassword ?? true;
+    const [row] = await db
+      .update(usersTable)
+      .set({
+        passwordHash: await hashPassword(parsed.data.newPassword),
+        mustChangePassword: mustChange,
+        failedAttempts: 0,
+        lockedUntil: null,
+        status: "active",
+      })
+      .where(and(eq(usersTable.id, id), eq(usersTable.isDeleted, false)))
+      .returning();
+    if (!row) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    await recordAudit(req, {
+      action: "reset-password",
+      entity: "users",
+      entityId: id,
+      newValue: { mustChangePassword: mustChange },
+    });
+    res.json(GetUserResponse.parse(toUser(row, await rolesApiForUser(id))));
+  },
+);
+
+router.get(
+  "/users/:id/scopes",
+  requirePermission("users.view"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const [row] = await db
+      .select()
+      .from(usersTable)
+      .where(and(eq(usersTable.id, id), eq(usersTable.isDeleted, false)))
+      .limit(1);
+    if (!row) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    res.json(GetUserScopesResponse.parse(await loadUserScopes(id)));
+  },
+);
+
+router.put(
+  "/users/:id/scopes",
+  requirePermission("users.update"),
+  async (req, res): Promise<void> => {
+    const parsed = SetUserScopesBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
+    const id = String(req.params.id);
+    const [row] = await db
+      .select()
+      .from(usersTable)
+      .where(and(eq(usersTable.id, id), eq(usersTable.isDeleted, false)))
+      .limit(1);
+    if (!row) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const { branchIds, departmentIds, projectIds } = parsed.data;
+    const inserts = [
+      ...branchIds.map((scopeId) => ({ userId: id, scopeType: "branch", scopeId })),
+      ...departmentIds.map((scopeId) => ({ userId: id, scopeType: "department", scopeId })),
+      ...projectIds.map((scopeId) => ({ userId: id, scopeType: "project", scopeId })),
+    ];
+
+    await db.transaction(async (tx) => {
+      await tx.delete(userScopesTable).where(eq(userScopesTable.userId, id));
+      if (inserts.length > 0) await tx.insert(userScopesTable).values(inserts);
+    });
+
+    await recordAudit(req, {
+      action: "set-scopes",
+      entity: "users",
+      entityId: id,
+      newValue: { branchIds, departmentIds, projectIds },
+    });
+
+    res.json(SetUserScopesResponse.parse(await loadUserScopes(id)));
+  },
+);
 
 export default router;

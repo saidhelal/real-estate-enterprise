@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
-import { useChangePassword } from "@workspace/api-client-react";
+import {
+  useChangePassword,
+  getGetCurrentUserQueryKey,
+} from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/lib/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +16,8 @@ export default function ChangePasswordPage() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const changePassword = useChangePassword();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -48,6 +55,7 @@ export default function ChangePasswordPage() {
           setCurrentPassword("");
           setNewPassword("");
           setConfirmPassword("");
+          queryClient.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
         },
         onError: (err: any) => {
           toast({ 
@@ -68,6 +76,11 @@ export default function ChangePasswordPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {user?.mustChangePassword && (
+              <div className="bg-amber-500/10 text-amber-700 dark:text-amber-400 px-3 py-2 rounded text-sm font-medium">
+                {t("change_password.forced_notice")}
+              </div>
+            )}
             {error && (
               <div className="bg-destructive/10 text-destructive px-3 py-2 rounded text-sm font-medium">
                 {error}

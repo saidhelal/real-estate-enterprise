@@ -695,6 +695,156 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
+  /users/{id}/reset-password:
+    post:
+      operationId: resetUserPassword
+      tags: [users]
+      summary: Administratively reset a user's password
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordInput"
+      responses:
+        "200":
+          description: Reset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{id}/scopes:
+    get:
+      operationId: getUserScopes
+      tags: [users]
+      summary: Get a user's branch/department/project scopes
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Scopes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserScopes"
+    put:
+      operationId: setUserScopes
+      tags: [users]
+      summary: Replace a user's branch/department/project scopes
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserScopesUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserScopes"
+
+  /change-requests:
+    get:
+      operationId: listChangeRequests
+      tags: [governance]
+      summary: List delete/edit change requests
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema: { type: string, enum: [pending, approved, rejected, executed, failed] }
+      responses:
+        "200":
+          description: Change requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChangeRequest"
+
+  /change-requests/{id}:
+    get:
+      operationId: getChangeRequest
+      tags: [governance]
+      summary: Get a change request
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Change request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangeRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /change-requests/{id}/approve:
+    post:
+      operationId: approveChangeRequest
+      tags: [governance]
+      summary: Approve and execute a change request (Owner / Super Admin only)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeRequestReview"
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangeRequest"
+        "400":
+          description: Execution failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /change-requests/{id}/reject:
+    post:
+      operationId: rejectChangeRequest
+      tags: [governance]
+      summary: Reject a change request (Owner / Super Admin only)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeRequestReview"
+      responses:
+        "200":
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangeRequest"
+
   /roles:
     get:
       operationId: listRoles
@@ -22854,7 +23004,7 @@ components:
 
     CurrentUser:
       type: object
-      required: [id, username, fullName, email, roles, permissions]
+      required: [id, username, fullName, email, roles, permissions, mustChangePassword, scopes]
       properties:
         id: { type: string }
         username: { type: string }
@@ -22866,6 +23016,74 @@ components:
         permissions:
           type: array
           items: { type: string }
+        mustChangePassword: { type: boolean }
+        scopes: { $ref: "#/components/schemas/UserScopes" }
+
+    UserScopes:
+      type: object
+      required: [branchIds, departmentIds, projectIds]
+      properties:
+        branchIds:
+          type: array
+          items: { type: string }
+        departmentIds:
+          type: array
+          items: { type: string }
+        projectIds:
+          type: array
+          items: { type: string }
+
+    UserScopesUpdate:
+      type: object
+      required: [branchIds, departmentIds, projectIds]
+      properties:
+        branchIds:
+          type: array
+          items: { type: string }
+        departmentIds:
+          type: array
+          items: { type: string }
+        projectIds:
+          type: array
+          items: { type: string }
+
+    ResetPasswordInput:
+      type: object
+      required: [newPassword]
+      properties:
+        newPassword: { type: string, minLength: 8 }
+        mustChangePassword: { type: boolean }
+
+    ChangeRequest:
+      type: object
+      required: [id, requestType, entity, entityId, method, path, reason, status, requestedBy, requestedByName, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: ["string", "null"] }
+        requestType: { type: string, enum: [delete, edit] }
+        entity: { type: string }
+        entityId: { type: string }
+        entityLabel: { type: ["string", "null"] }
+        method: { type: string }
+        path: { type: string }
+        payload: {}
+        reason: { type: string }
+        status: { type: string, enum: [pending, approved, rejected, executed, failed] }
+        requestedBy: { type: string }
+        requestedByName: { type: string }
+        reviewedBy: { type: ["string", "null"] }
+        reviewedByName: { type: ["string", "null"] }
+        reviewNotes: { type: ["string", "null"] }
+        reviewedAt: { type: ["string", "null"] }
+        executedAt: { type: ["string", "null"] }
+        executionError: { type: ["string", "null"] }
+        createdAt: { type: string }
+        updatedAt: { type: ["string", "null"] }
+
+    ChangeRequestReview:
+      type: object
+      properties:
+        reviewNotes: { type: string }
 
     PortalLoginInput:
       type: object
@@ -23154,6 +23372,7 @@ components:
         phone: { type: ["string", "null"] }
         status: { type: string, enum: [active, inactive, locked] }
         isActive: { type: boolean }
+        mustChangePassword: { type: boolean }
         lastLoginAt: { type: ["string", "null"] }
         failedAttempts: { type: integer }
         companyId: { type: ["string", "null"] }

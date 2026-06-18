@@ -1,7 +1,22 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { db, usersTable, rolesTable, userRolesTable } from "@workspace/db";
-import type { AuthUser } from "./auth";
+import { db, usersTable, rolesTable, userRolesTable, userScopesTable } from "@workspace/db";
+import type { AuthUser, UserScopes } from "./auth";
 import { toRole, type RoleApi } from "./presenters";
+
+/** Load a user's branch/department/project scope grants. */
+export async function loadUserScopes(userId: string): Promise<UserScopes> {
+  const rows = await db
+    .select({ scopeType: userScopesTable.scopeType, scopeId: userScopesTable.scopeId })
+    .from(userScopesTable)
+    .where(eq(userScopesTable.userId, userId));
+  const scopes: UserScopes = { branchIds: [], departmentIds: [], projectIds: [] };
+  for (const r of rows) {
+    if (r.scopeType === "branch") scopes.branchIds.push(r.scopeId);
+    else if (r.scopeType === "department") scopes.departmentIds.push(r.scopeId);
+    else if (r.scopeType === "project") scopes.projectIds.push(r.scopeId);
+  }
+  return scopes;
+}
 
 /** Count of (non-deleted) users assigned to each role, keyed by role id. */
 export async function roleUserCounts(): Promise<Map<string, number>> {
@@ -81,5 +96,7 @@ export async function loadAuthUser(userId: string): Promise<AuthUser | null> {
     email: user.email,
     roles: roleNames,
     permissions: Array.from(permissionSet),
+    mustChangePassword: user.mustChangePassword,
+    scopes: await loadUserScopes(user.id),
   };
 }

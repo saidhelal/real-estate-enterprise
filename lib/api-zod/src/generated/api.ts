@@ -37,7 +37,13 @@ export const LoginResponse = zod.object({
   "fullName": zod.string(),
   "email": zod.string(),
   "roles": zod.array(zod.string()),
-  "permissions": zod.array(zod.string())
+  "permissions": zod.array(zod.string()),
+  "mustChangePassword": zod.boolean(),
+  "scopes": zod.object({
+  "branchIds": zod.array(zod.string()),
+  "departmentIds": zod.array(zod.string()),
+  "projectIds": zod.array(zod.string())
+})
 })
 })
 
@@ -67,7 +73,13 @@ export const GetCurrentUserResponse = zod.object({
   "fullName": zod.string(),
   "email": zod.string(),
   "roles": zod.array(zod.string()),
-  "permissions": zod.array(zod.string())
+  "permissions": zod.array(zod.string()),
+  "mustChangePassword": zod.boolean(),
+  "scopes": zod.object({
+  "branchIds": zod.array(zod.string()),
+  "departmentIds": zod.array(zod.string()),
+  "projectIds": zod.array(zod.string())
+})
 })
 
 
@@ -511,6 +523,7 @@ export const ListUsersResponseItem = zod.object({
   "phone": zod.string().nullish(),
   "status": zod.enum(['active', 'inactive', 'locked']),
   "isActive": zod.boolean(),
+  "mustChangePassword": zod.boolean().optional(),
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
@@ -565,6 +578,7 @@ export const GetUserResponse = zod.object({
   "phone": zod.string().nullish(),
   "status": zod.enum(['active', 'inactive', 'locked']),
   "isActive": zod.boolean(),
+  "mustChangePassword": zod.boolean().optional(),
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
@@ -608,6 +622,7 @@ export const UpdateUserResponse = zod.object({
   "phone": zod.string().nullish(),
   "status": zod.enum(['active', 'inactive', 'locked']),
   "isActive": zod.boolean(),
+  "mustChangePassword": zod.boolean().optional(),
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
@@ -656,6 +671,7 @@ export const SetUserStatusResponse = zod.object({
   "phone": zod.string().nullish(),
   "status": zod.enum(['active', 'inactive', 'locked']),
   "isActive": zod.boolean(),
+  "mustChangePassword": zod.boolean().optional(),
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
@@ -668,6 +684,219 @@ export const SetUserStatusResponse = zod.object({
   "userCount": zod.number(),
   "createdAt": zod.string()
 })).optional(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Administratively reset a user's password
+ */
+export const ResetUserPasswordParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const resetUserPasswordBodyNewPasswordMin = 8;
+
+
+
+export const ResetUserPasswordBody = zod.object({
+  "newPassword": zod.string().min(resetUserPasswordBodyNewPasswordMin),
+  "mustChangePassword": zod.boolean().optional()
+})
+
+export const ResetUserPasswordResponse = zod.object({
+  "id": zod.string(),
+  "username": zod.string(),
+  "fullName": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "status": zod.enum(['active', 'inactive', 'locked']),
+  "isActive": zod.boolean(),
+  "mustChangePassword": zod.boolean().optional(),
+  "lastLoginAt": zod.string().nullish(),
+  "failedAttempts": zod.number().optional(),
+  "companyId": zod.string().nullish(),
+  "roles": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "isSystem": zod.boolean(),
+  "permissions": zod.array(zod.string()),
+  "userCount": zod.number(),
+  "createdAt": zod.string()
+})).optional(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Get a user's branch/department/project scopes
+ */
+export const GetUserScopesParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetUserScopesResponse = zod.object({
+  "branchIds": zod.array(zod.string()),
+  "departmentIds": zod.array(zod.string()),
+  "projectIds": zod.array(zod.string())
+})
+
+
+/**
+ * @summary Replace a user's branch/department/project scopes
+ */
+export const SetUserScopesParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SetUserScopesBody = zod.object({
+  "branchIds": zod.array(zod.string()),
+  "departmentIds": zod.array(zod.string()),
+  "projectIds": zod.array(zod.string())
+})
+
+export const SetUserScopesResponse = zod.object({
+  "branchIds": zod.array(zod.string()),
+  "departmentIds": zod.array(zod.string()),
+  "projectIds": zod.array(zod.string())
+})
+
+
+/**
+ * @summary List delete/edit change requests
+ */
+export const ListChangeRequestsQueryParams = zod.object({
+  "status": zod.enum(['pending', 'approved', 'rejected', 'executed', 'failed']).optional()
+})
+
+export const ListChangeRequestsResponseItem = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "requestType": zod.enum(['delete', 'edit']),
+  "entity": zod.string(),
+  "entityId": zod.string(),
+  "entityLabel": zod.string().nullish(),
+  "method": zod.string(),
+  "path": zod.string(),
+  "payload": zod.unknown().optional(),
+  "reason": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'executed', 'failed']),
+  "requestedBy": zod.string(),
+  "requestedByName": zod.string(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedByName": zod.string().nullish(),
+  "reviewNotes": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "executedAt": zod.string().nullish(),
+  "executionError": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+export const ListChangeRequestsResponse = zod.array(ListChangeRequestsResponseItem)
+
+
+/**
+ * @summary Get a change request
+ */
+export const GetChangeRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetChangeRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "requestType": zod.enum(['delete', 'edit']),
+  "entity": zod.string(),
+  "entityId": zod.string(),
+  "entityLabel": zod.string().nullish(),
+  "method": zod.string(),
+  "path": zod.string(),
+  "payload": zod.unknown().optional(),
+  "reason": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'executed', 'failed']),
+  "requestedBy": zod.string(),
+  "requestedByName": zod.string(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedByName": zod.string().nullish(),
+  "reviewNotes": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "executedAt": zod.string().nullish(),
+  "executionError": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Approve and execute a change request (Owner / Super Admin only)
+ */
+export const ApproveChangeRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ApproveChangeRequestBody = zod.object({
+  "reviewNotes": zod.string().optional()
+})
+
+export const ApproveChangeRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "requestType": zod.enum(['delete', 'edit']),
+  "entity": zod.string(),
+  "entityId": zod.string(),
+  "entityLabel": zod.string().nullish(),
+  "method": zod.string(),
+  "path": zod.string(),
+  "payload": zod.unknown().optional(),
+  "reason": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'executed', 'failed']),
+  "requestedBy": zod.string(),
+  "requestedByName": zod.string(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedByName": zod.string().nullish(),
+  "reviewNotes": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "executedAt": zod.string().nullish(),
+  "executionError": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Reject a change request (Owner / Super Admin only)
+ */
+export const RejectChangeRequestParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const RejectChangeRequestBody = zod.object({
+  "reviewNotes": zod.string().optional()
+})
+
+export const RejectChangeRequestResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string().nullish(),
+  "requestType": zod.enum(['delete', 'edit']),
+  "entity": zod.string(),
+  "entityId": zod.string(),
+  "entityLabel": zod.string().nullish(),
+  "method": zod.string(),
+  "path": zod.string(),
+  "payload": zod.unknown().optional(),
+  "reason": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'executed', 'failed']),
+  "requestedBy": zod.string(),
+  "requestedByName": zod.string(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedByName": zod.string().nullish(),
+  "reviewNotes": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "executedAt": zod.string().nullish(),
+  "executionError": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string().nullish()
 })

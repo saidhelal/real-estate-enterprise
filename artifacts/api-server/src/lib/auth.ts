@@ -20,6 +20,12 @@ export const REFRESH_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
 export const MAX_FAILED_ATTEMPTS = 5;
 export const LOCKOUT_MINUTES = 15;
 
+export interface UserScopes {
+  branchIds: string[];
+  departmentIds: string[];
+  projectIds: string[];
+}
+
 export interface AuthUser {
   id: string;
   username: string;
@@ -27,6 +33,8 @@ export interface AuthUser {
   email: string;
   roles: string[];
   permissions: string[];
+  mustChangePassword: boolean;
+  scopes: UserScopes;
 }
 
 export async function hashPassword(plain: string): Promise<string> {
