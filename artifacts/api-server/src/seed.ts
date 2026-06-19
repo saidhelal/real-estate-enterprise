@@ -604,6 +604,37 @@ async function seedStandardRoles(): Promise<void> {
     ]),
   );
 
+  // Supervisor — sits between Department Manager and Employee: full operational
+  // create/update within scope plus endorsement of forms, but no deletes,
+  // money, or governance approvals.
+  const supervisor = Array.from(
+    new Set([
+      ...cru("leads"), ...cru("customers"), ...cru("reservations"),
+      ...view("projects"), ...view("buildings"), ...view("units"),
+      ...view("contracts"),
+      ...view("installmentSchedules"), ...view("installmentCollections"),
+      "executiveOversight.viewOwn",
+      ...cru("formTemplates"), "formTemplates.submit", "formTemplates.endorse", "formTemplates.print",
+    ]),
+  );
+
+  // Read Only — general view-only access across operational and financial
+  // records. No writes anywhere; broader than Auditor (which centers on the
+  // audit/approval trail).
+  const readOnly = Array.from(
+    new Set([
+      ...view("companies"), ...view("branches"), ...view("projects"),
+      ...view("buildings"), ...view("units"),
+      ...view("leads"), ...view("customers"), ...view("reservations"),
+      ...view("contracts"),
+      ...view("installmentPlans"), ...view("installmentSchedules"),
+      ...view("installmentCollections"), ...view("receipts"),
+      ...view("paymentVouchers"), ...view("customerInvoices"),
+      ...view("supplierInvoices"), ...view("journalEntries"),
+      ...view("cheques"),
+    ]),
+  );
+
   // Auditor — read-only across the books and the audit/approval trail.
   const auditor = Array.from(
     new Set([
@@ -628,7 +659,9 @@ async function seedStandardRoles(): Promise<void> {
     { name: "System Admin", description: "Platform administration (users, roles, org structure, settings, audit). Not an approver; no financial access.", permissions: systemAdmin, isSystem: false },
     { name: "General Manager", description: "Organization-wide read visibility with audit access. Read-only on money and approvals.", permissions: generalManager, isSystem: false },
     { name: "Department Manager", description: "Manages operational records within assigned branch/department/project scope.", permissions: departmentManager, isSystem: false },
+    { name: "Supervisor", description: "Team supervisor: create/update operational records and endorse forms within scope. No deletes, money, or approvals.", permissions: supervisor, isSystem: false },
     { name: "Employee", description: "Front-line worker: create and update operational records within scope. No deletes, money, or approvals.", permissions: employee, isSystem: false },
+    { name: "Read Only", description: "View-only access across operational and financial records. No writes anywhere.", permissions: readOnly, isSystem: false },
     { name: "Auditor", description: "Read-only access across financial records, audit trail, and approval history.", permissions: auditor, isSystem: false },
   ];
 
@@ -648,7 +681,7 @@ async function seedStandardRoles(): Promise<void> {
       });
     }
   }
-  console.log(`Seeded ${roles.length} standard roles (Owner, Super Admin, System Admin, GM, Dept Manager, Employee, Auditor)`);
+  console.log(`Seeded ${roles.length} standard roles (Owner, Super Admin, System Admin, GM, Dept Manager, Supervisor, Employee, Read Only, Auditor)`);
 }
 
 async function seedCurrencies(): Promise<void> {
