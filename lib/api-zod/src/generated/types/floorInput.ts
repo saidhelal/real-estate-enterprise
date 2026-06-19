@@ -8,6 +8,8 @@
 
 export interface FloorInput {
   companyId: string;
+  projectId?: string;
+  phaseId?: string;
   buildingId: string;
   code: string;
   name: string;

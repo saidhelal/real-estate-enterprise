@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, desc, eq, ilike, or, type SQL } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, or, type SQL } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import {
   db,
@@ -13,6 +13,7 @@ import {
   reservationNotesTable,
   reservationDocumentsTable,
   unitTransfersTable,
+  unitsTable,
 } from "@workspace/db";
 import {
   ListReservationsResponse,
@@ -105,6 +106,37 @@ router.get("/reservations", requirePermission("reservations.view"), async (req, 
 router.post("/reservations", requirePermission("reservations.create"), async (req, res): Promise<void> => {
   const parsed = CreateReservationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  // A unit must be available: not already held by a live reservation, and not
+  // already under a live (draft/active) contract.
+  const [unit] = await db
+    .select({ id: unitsTable.id })
+    .from(unitsTable)
+    .where(and(eq(unitsTable.id, parsed.data.unitId), eq(unitsTable.isDeleted, false)));
+  if (!unit) { res.status(400).json({ error: "Invalid unit" }); return; }
+  const [liveReservation] = await db
+    .select({ id: reservationsTable.id })
+    .from(reservationsTable)
+    .where(
+      and(
+        eq(reservationsTable.unitId, parsed.data.unitId),
+        eq(reservationsTable.isDeleted, false),
+        inArray(reservationsTable.status, ["active", "confirmed"]),
+      ),
+    )
+    .limit(1);
+  if (liveReservation) { res.status(400).json({ error: "Unit is already reserved" }); return; }
+  const [liveContract] = await db
+    .select({ id: contractsTable.id })
+    .from(contractsTable)
+    .where(
+      and(
+        eq(contractsTable.unitId, parsed.data.unitId),
+        eq(contractsTable.isDeleted, false),
+        inArray(contractsTable.status, ["draft", "active"]),
+      ),
+    )
+    .limit(1);
+  if (liveContract) { res.status(400).json({ error: "Unit is already under a contract" }); return; }
   const row = await db.transaction(async (tx) => {
     const [created] = await tx.insert(reservationsTable).values({ ...parsed.data }).returning();
     await recomputeUnitStatus(tx, created.unitId);
@@ -276,6 +308,38 @@ router.get("/contracts", requirePermission("contracts.view"), async (req, res): 
 router.post("/contracts", requirePermission("contracts.create"), async (req, res): Promise<void> => {
   const parsed = CreateContractBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  // A unit must be actively reserved (and not already under another live
+  // contract) before it can be sold directly here. The reservation->contract
+  // convert flow uses its own handler and is intentionally exempt.
+  const [unit] = await db
+    .select({ id: unitsTable.id })
+    .from(unitsTable)
+    .where(and(eq(unitsTable.id, parsed.data.unitId), eq(unitsTable.isDeleted, false)));
+  if (!unit) { res.status(400).json({ error: "Invalid unit" }); return; }
+  const [liveContract] = await db
+    .select({ id: contractsTable.id })
+    .from(contractsTable)
+    .where(
+      and(
+        eq(contractsTable.unitId, parsed.data.unitId),
+        eq(contractsTable.isDeleted, false),
+        inArray(contractsTable.status, ["draft", "active"]),
+      ),
+    )
+    .limit(1);
+  if (liveContract) { res.status(400).json({ error: "Unit is already under a contract" }); return; }
+  const [activeReservation] = await db
+    .select({ id: reservationsTable.id })
+    .from(reservationsTable)
+    .where(
+      and(
+        eq(reservationsTable.unitId, parsed.data.unitId),
+        eq(reservationsTable.isDeleted, false),
+        inArray(reservationsTable.status, ["active", "confirmed"]),
+      ),
+    )
+    .limit(1);
+  if (!activeReservation) { res.status(400).json({ error: "Unit must be reserved before creating a contract" }); return; }
   const row = await db.transaction(async (tx) => {
     const [created] = await tx.insert(contractsTable).values({ ...parsed.data }).returning();
     // Recognize the sale on the ledger (best-effort; skipped if accounting unconfigured).

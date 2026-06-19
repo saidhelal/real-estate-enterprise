@@ -2118,6 +2118,8 @@ export const ListFloorsResponse = zod.object({
   "data": zod.array(zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
   "buildingId": zod.string(),
   "code": zod.string(),
   "name": zod.string(),
@@ -2137,6 +2139,8 @@ export const ListFloorsResponse = zod.object({
  */
 export const CreateFloorBody = zod.object({
   "companyId": zod.string(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
   "buildingId": zod.string(),
   "code": zod.string(),
   "name": zod.string(),
@@ -2155,6 +2159,8 @@ export const GetFloorParams = zod.object({
 export const GetFloorResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
   "buildingId": zod.string(),
   "code": zod.string(),
   "name": zod.string(),
@@ -2174,6 +2180,8 @@ export const UpdateFloorParams = zod.object({
 
 export const UpdateFloorBody = zod.object({
   "companyId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
   "buildingId": zod.string().optional(),
   "code": zod.string().optional(),
   "name": zod.string().optional(),
@@ -2184,6 +2192,8 @@ export const UpdateFloorBody = zod.object({
 export const UpdateFloorResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
+  "projectId": zod.string().nullish(),
+  "phaseId": zod.string().nullish(),
   "buildingId": zod.string(),
   "code": zod.string(),
   "name": zod.string(),
@@ -2228,6 +2238,7 @@ export const ListUnitsResponse = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().nullish(),
   "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
   "buildingId": zod.string(),
   "floorId": zod.string(),
   "unitTypeId": zod.string().nullish(),
@@ -2255,6 +2266,7 @@ export const CreateUnitBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
   "projectId": zod.string(),
+  "phaseId": zod.string().optional(),
   "buildingId": zod.string(),
   "floorId": zod.string(),
   "unitTypeId": zod.string().optional(),
@@ -2281,6 +2293,7 @@ export const GetUnitResponse = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().nullish(),
   "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
   "buildingId": zod.string(),
   "floorId": zod.string(),
   "unitTypeId": zod.string().nullish(),
@@ -2308,6 +2321,7 @@ export const UpdateUnitBody = zod.object({
   "companyId": zod.string().optional(),
   "branchId": zod.string().optional(),
   "projectId": zod.string().optional(),
+  "phaseId": zod.string().optional(),
   "buildingId": zod.string().optional(),
   "floorId": zod.string().optional(),
   "unitTypeId": zod.string().optional(),
@@ -2326,6 +2340,7 @@ export const UpdateUnitResponse = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().nullish(),
   "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
   "buildingId": zod.string(),
   "floorId": zod.string(),
   "unitTypeId": zod.string().nullish(),

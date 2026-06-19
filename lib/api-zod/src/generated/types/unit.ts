@@ -12,6 +12,8 @@ export interface Unit {
   /** @nullable */
   branchId?: string | null;
   projectId: string;
+  /** @nullable */
+  phaseId?: string | null;
   buildingId: string;
   floorId: string;
   /** @nullable */

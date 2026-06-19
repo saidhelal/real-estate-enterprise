@@ -23,11 +23,11 @@ export default function BuildingsPage() {
   const { data: phases } = useListPhases({ pageSize: 200 });
   const companyId = companies?.[0]?.id;
   const projectOptions = (projects?.data ?? []).map((p) => ({ value: p.id, label: p.name }));
-  const phaseOptions = (phases?.data ?? []).map((p) => ({ value: p.id, label: p.name }));
+  const phaseOptions = (phases?.data ?? []).map((p) => ({ value: p.id, label: p.name, parentValue: p.projectId }));
 
   const fields: ResourceField[] = [
-    { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", required: true, options: projectOptions },
-    { name: "phaseId", label: "Phase", labelAr: "المرحلة", type: "select", options: phaseOptions },
+    { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", required: true, searchable: true, options: projectOptions },
+    { name: "phaseId", label: "Phase", labelAr: "المرحلة", type: "select", searchable: true, dependsOn: "projectId", options: phaseOptions },
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },

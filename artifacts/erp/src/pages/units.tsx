@@ -5,6 +5,7 @@ import {
   useDeleteUnit,
   getListUnitsQueryKey,
   useListProjects,
+  useListPhases,
   useListBuildings,
   useListFloors,
   useListUnitTypes,
@@ -25,6 +26,7 @@ export default function UnitsPage() {
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const { data: projects } = useListProjects({ pageSize: 200 });
+  const { data: phases } = useListPhases({ pageSize: 200 });
   const { data: buildings } = useListBuildings({ pageSize: 200 });
   const { data: floors } = useListFloors({ pageSize: 200 });
   const { data: unitTypes } = useListUnitTypes({ pageSize: 200 });
@@ -32,16 +34,18 @@ export default function UnitsPage() {
   const { data: branches } = useListBranches();
   const companyId = companies?.[0]?.id;
   const projectOptions = (projects?.data ?? []).map((p) => ({ value: p.id, label: p.name }));
-  const buildingOptions = (buildings?.data ?? []).map((b) => ({ value: b.id, label: b.name }));
-  const floorOptions = (floors?.data ?? []).map((f) => ({ value: f.id, label: f.name }));
+  const phaseOptions = (phases?.data ?? []).map((p) => ({ value: p.id, label: p.name, parentValue: p.projectId }));
+  const buildingOptions = (buildings?.data ?? []).map((b) => ({ value: b.id, label: b.name, parentValue: b.projectId, parentValues: { projectId: b.projectId, phaseId: b.phaseId ?? null } }));
+  const floorOptions = (floors?.data ?? []).map((f) => ({ value: f.id, label: f.name, parentValue: f.buildingId }));
   const unitTypeOptions = (unitTypes?.data ?? []).map((u) => ({ value: u.id, label: u.name }));
   const unitStatusOptions = (unitStatuses?.data ?? []).map((u) => ({ value: u.id, label: u.name }));
   const branchOptions = (branches ?? []).map((b) => ({ value: b.id, label: b.name }));
 
   const fields: ResourceField[] = [
-    { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", required: true, options: projectOptions },
-    { name: "buildingId", label: "Building", labelAr: "المبنى", type: "select", required: true, options: buildingOptions },
-    { name: "floorId", label: "Floor", labelAr: "الطابق", type: "select", required: true, options: floorOptions },
+    { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", required: true, searchable: true, options: projectOptions },
+    { name: "phaseId", label: "Phase", labelAr: "المرحلة", type: "select", searchable: true, dependsOn: "projectId", options: phaseOptions },
+    { name: "buildingId", label: "Building", labelAr: "المبنى", type: "select", required: true, searchable: true, dependsOn: ["projectId", "phaseId"], options: buildingOptions },
+    { name: "floorId", label: "Floor", labelAr: "الطابق", type: "select", required: true, searchable: true, dependsOn: "buildingId", options: floorOptions },
     { name: "unitTypeId", label: "Unit Type", labelAr: "نوع الوحدة", type: "select", options: unitTypeOptions },
     { name: "unitStatusId", label: "Unit Status", labelAr: "حالة الوحدة", type: "select", options: unitStatusOptions },
     { name: "branchId", label: "Branch", labelAr: "الفرع", type: "select", options: branchOptions },

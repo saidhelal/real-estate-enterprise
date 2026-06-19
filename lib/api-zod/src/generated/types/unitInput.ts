@@ -10,6 +10,7 @@ export interface UnitInput {
   companyId: string;
   branchId?: string;
   projectId: string;
+  phaseId?: string;
   buildingId: string;
   floorId: string;
   unitTypeId?: string;

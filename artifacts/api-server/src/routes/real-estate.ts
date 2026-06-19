@@ -273,10 +273,29 @@ router.get("/floors", requirePermission("floors.view"), async (req, res): Promis
   res.json(ListFloorsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
 });
 
+// Resolve a floor's place in the hierarchy from its parent building so
+// floors.projectId / floors.phaseId always match the building they belong to,
+// regardless of what the client sent.
+async function deriveFloorHierarchy(
+  buildingId: string,
+): Promise<{ projectId: string; phaseId: string | null } | null> {
+  const [b] = await db
+    .select({ projectId: buildingsTable.projectId, phaseId: buildingsTable.phaseId })
+    .from(buildingsTable)
+    .where(and(eq(buildingsTable.id, buildingId), eq(buildingsTable.isDeleted, false)));
+  if (!b) return null;
+  return { projectId: b.projectId, phaseId: b.phaseId ?? null };
+}
+
 router.post("/floors", requirePermission("floors.create"), async (req, res): Promise<void> => {
   const parsed = CreateFloorBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(floorsTable).values({ ...parsed.data }).returning();
+  const hierarchy = await deriveFloorHierarchy(parsed.data.buildingId);
+  if (!hierarchy) { res.status(400).json({ error: "Invalid building" }); return; }
+  const [row] = await db
+    .insert(floorsTable)
+    .values({ ...parsed.data, projectId: hierarchy.projectId, phaseId: hierarchy.phaseId })
+    .returning();
   await recordAudit(req, { action: "create", entity: "floor", entityId: row.id, newValue: row });
   res.status(201).json(GetFloorResponse.parse(serializeRow(row)));
 });
@@ -294,10 +313,14 @@ router.patch("/floors/:id", requirePermission("floors.update"), async (req, res)
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [existing] = await db.select().from(floorsTable).where(and(eq(floorsTable.id, id), eq(floorsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  const update = { ...parsed.data };
-  const [row] = Object.keys(update).length
-    ? await db.update(floorsTable).set(update).where(eq(floorsTable.id, id)).returning()
-    : [existing];
+  const update: Record<string, unknown> = { ...parsed.data };
+  // Keep projectId/phaseId in lockstep with the (possibly changed) building.
+  const targetBuildingId = parsed.data.buildingId ?? existing.buildingId;
+  const hierarchy = await deriveFloorHierarchy(targetBuildingId);
+  if (!hierarchy) { res.status(400).json({ error: "Invalid building" }); return; }
+  update.projectId = hierarchy.projectId;
+  update.phaseId = hierarchy.phaseId;
+  const [row] = await db.update(floorsTable).set(update).where(eq(floorsTable.id, id)).returning();
   await recordAudit(req, { action: "update", entity: "floor", entityId: id, oldValue: existing, newValue: row });
   res.json(GetFloorResponse.parse(serializeRow(row)));
 });
@@ -349,10 +372,40 @@ router.get("/units", requirePermission("units.view"), async (req, res): Promise<
   res.json(ListUnitsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
 });
 
+// Resolve a unit's place in the hierarchy from its parent floor (floor ->
+// building -> project/phase) so a unit can never be wired to a floor/building/
+// project that disagree. The client's floorId is authoritative; the rest is
+// derived server-side.
+async function deriveUnitHierarchy(
+  floorId: string,
+): Promise<{ buildingId: string; projectId: string; phaseId: string | null } | null> {
+  const [f] = await db
+    .select({ buildingId: floorsTable.buildingId })
+    .from(floorsTable)
+    .where(and(eq(floorsTable.id, floorId), eq(floorsTable.isDeleted, false)));
+  if (!f) return null;
+  const [b] = await db
+    .select({ projectId: buildingsTable.projectId, phaseId: buildingsTable.phaseId })
+    .from(buildingsTable)
+    .where(and(eq(buildingsTable.id, f.buildingId), eq(buildingsTable.isDeleted, false)));
+  if (!b) return null;
+  return { buildingId: f.buildingId, projectId: b.projectId, phaseId: b.phaseId ?? null };
+}
+
 router.post("/units", requirePermission("units.create"), async (req, res): Promise<void> => {
   const parsed = CreateUnitBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(unitsTable).values({ ...parsed.data }).returning();
+  const hierarchy = await deriveUnitHierarchy(parsed.data.floorId);
+  if (!hierarchy) { res.status(400).json({ error: "Invalid floor" }); return; }
+  const [row] = await db
+    .insert(unitsTable)
+    .values({
+      ...parsed.data,
+      buildingId: hierarchy.buildingId,
+      projectId: hierarchy.projectId,
+      phaseId: hierarchy.phaseId,
+    })
+    .returning();
   await recordAudit(req, { action: "create", entity: "unit", entityId: row.id, newValue: row });
   res.status(201).json(GetUnitResponse.parse(serializeRow(row)));
 });
@@ -370,7 +423,18 @@ router.patch("/units/:id", requirePermission("units.update"), async (req, res): 
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [existing] = await db.select().from(unitsTable).where(and(eq(unitsTable.id, id), eq(unitsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  const update = { ...parsed.data };
+  const update: Record<string, unknown> = { ...parsed.data };
+  // Always re-derive (and overwrite) the building/project/phase chain from the
+  // effective floor — the incoming floorId if present, otherwise the existing
+  // one. This prevents a client from patching buildingId/projectId/phaseId
+  // alone and persisting a chain that disagrees with the floor.
+  const effectiveFloorId = parsed.data.floorId ?? existing.floorId;
+  const hierarchy = await deriveUnitHierarchy(effectiveFloorId);
+  if (!hierarchy) { res.status(400).json({ error: "Invalid floor" }); return; }
+  update.floorId = effectiveFloorId;
+  update.buildingId = hierarchy.buildingId;
+  update.projectId = hierarchy.projectId;
+  update.phaseId = hierarchy.phaseId;
   const [row] = Object.keys(update).length
     ? await db.update(unitsTable).set(update).where(eq(unitsTable.id, id)).returning()
     : [existing];

@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import {
   db,
   pool,
@@ -741,6 +741,84 @@ async function seedSettings(): Promise<void> {
   console.log("Seeded system settings");
 }
 
+/** The full unit-status lifecycle catalog for the unified hierarchy. */
+const UNIT_STATUS_CATALOG = [
+  { code: "available", name: "Available", nameAr: "متاحة" },
+  { code: "reserved", name: "Reserved", nameAr: "محجوزة" },
+  { code: "sold", name: "Sold", nameAr: "مباعة" },
+  { code: "delivered", name: "Delivered", nameAr: "مُسلّمة" },
+  { code: "blocked", name: "Blocked", nameAr: "محظورة" },
+  { code: "maintenance", name: "Maintenance", nameAr: "صيانة" },
+  { code: "cancelled", name: "Cancelled", nameAr: "ملغاة" },
+];
+
+/**
+ * Idempotently ensure every unit status in UNIT_STATUS_CATALOG exists for the
+ * company, inserting only the ones missing by code. Safe to run repeatedly.
+ */
+async function ensureUnitStatuses(companyId: string): Promise<void> {
+  const existing = await db
+    .select()
+    .from(unitStatusesTable)
+    .where(eq(unitStatusesTable.companyId, companyId));
+  const existingCodes = new Set(existing.map((s) => s.code));
+  const missing = UNIT_STATUS_CATALOG.filter((s) => !existingCodes.has(s.code));
+  if (missing.length > 0) {
+    await db
+      .insert(unitStatusesTable)
+      .values(missing.map((s) => ({ companyId, ...s })));
+    console.log(`Seeded ${missing.length} unit status(es)`);
+  }
+}
+
+/**
+ * Backfill the unified hierarchy columns: floors inherit projectId/phaseId from
+ * their building; units inherit phaseId from their building (only when the
+ * building actually has a phase, leaving genuinely phase-less units null).
+ * Idempotent — only rows still missing the value are touched.
+ */
+async function backfillHierarchy(companyId: string): Promise<void> {
+  const buildings = await db
+    .select()
+    .from(buildingsTable)
+    .where(eq(buildingsTable.companyId, companyId));
+  const buildingById = new Map(buildings.map((b) => [b.id, b]));
+
+  const floorsToFix = await db
+    .select()
+    .from(floorsTable)
+    .where(and(eq(floorsTable.companyId, companyId), isNull(floorsTable.projectId)));
+  let floorsFixed = 0;
+  for (const floor of floorsToFix) {
+    const building = buildingById.get(floor.buildingId);
+    if (!building) continue;
+    await db
+      .update(floorsTable)
+      .set({ projectId: building.projectId, phaseId: building.phaseId })
+      .where(eq(floorsTable.id, floor.id));
+    floorsFixed++;
+  }
+
+  const unitsToFix = await db
+    .select()
+    .from(unitsTable)
+    .where(and(eq(unitsTable.companyId, companyId), isNull(unitsTable.phaseId)));
+  let unitsFixed = 0;
+  for (const unit of unitsToFix) {
+    const building = buildingById.get(unit.buildingId);
+    if (!building || !building.phaseId) continue;
+    await db
+      .update(unitsTable)
+      .set({ phaseId: building.phaseId })
+      .where(eq(unitsTable.id, unit.id));
+    unitsFixed++;
+  }
+
+  if (floorsFixed > 0 || unitsFixed > 0) {
+    console.log(`Backfilled hierarchy: ${floorsFixed} floor(s), ${unitsFixed} unit(s)`);
+  }
+}
+
 async function seedRealEstate(): Promise<void> {
   const [company] = await db
     .select()
@@ -756,6 +834,14 @@ async function seedRealEstate(): Promise<void> {
     .where(eq(branchesTable.companyId, company.id));
   const companyId = company.id;
   const branchId = branch?.id ?? null;
+
+  // Idempotent unit-status catalog (the full hierarchy lifecycle set) and a
+  // backfill of the unified hierarchy columns. These run UNCONDITIONALLY,
+  // before the demo-data early-return below, so existing databases pick up the
+  // new statuses and have floors/units repaired even when demo data already
+  // exists.
+  await ensureUnitStatuses(companyId);
+  await backfillHierarchy(companyId);
 
   const [existingProject] = await db
     .select()
@@ -776,14 +862,16 @@ async function seedRealEstate(): Promise<void> {
     ])
     .returning();
 
-  const [availableStatus, reservedStatus, soldStatus] = await db
-    .insert(unitStatusesTable)
-    .values([
-      { companyId, code: "available", name: "Available", nameAr: "متاحة" },
-      { companyId, code: "reserved", name: "Reserved", nameAr: "محجوزة" },
-      { companyId, code: "sold", name: "Sold", nameAr: "مباعة" },
-    ])
-    .returning();
+  // ensureUnitStatuses (above) has already created all seven statuses; resolve
+  // the three needed for demo units by code.
+  const seededStatuses = await db
+    .select()
+    .from(unitStatusesTable)
+    .where(eq(unitStatusesTable.companyId, companyId));
+  const statusByCode = new Map(seededStatuses.map((s) => [s.code, s]));
+  const availableStatus = statusByCode.get("available")!;
+  const reservedStatus = statusByCode.get("reserved")!;
+  const soldStatus = statusByCode.get("sold")!;
 
   await db.insert(leadSourcesTable).values([
     { companyId, code: "WEB", name: "Website", nameAr: "الموقع الإلكتروني" },

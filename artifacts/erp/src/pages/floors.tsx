@@ -4,6 +4,8 @@ import {
   useUpdateFloor,
   useDeleteFloor,
   getListFloorsQueryKey,
+  useListProjects,
+  useListPhases,
   useListBuildings,
   useListCompanies,
   type Floor,
@@ -18,12 +20,18 @@ import { useLanguage } from "@/lib/language-provider";
 export default function FloorsPage() {
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
+  const { data: projects } = useListProjects({ pageSize: 200 });
+  const { data: phases } = useListPhases({ pageSize: 200 });
   const { data: buildings } = useListBuildings({ pageSize: 200 });
   const companyId = companies?.[0]?.id;
-  const buildingOptions = (buildings?.data ?? []).map((b) => ({ value: b.id, label: b.name }));
+  const projectOptions = (projects?.data ?? []).map((p) => ({ value: p.id, label: p.name }));
+  const phaseOptions = (phases?.data ?? []).map((p) => ({ value: p.id, label: p.name, parentValue: p.projectId }));
+  const buildingOptions = (buildings?.data ?? []).map((b) => ({ value: b.id, label: b.name, parentValue: b.projectId, parentValues: { projectId: b.projectId, phaseId: b.phaseId ?? null } }));
 
   const fields: ResourceField[] = [
-    { name: "buildingId", label: "Building", labelAr: "المبنى", type: "select", required: true, options: buildingOptions },
+    { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", required: true, searchable: true, options: projectOptions },
+    { name: "phaseId", label: "Phase", labelAr: "المرحلة", type: "select", searchable: true, dependsOn: "projectId", options: phaseOptions },
+    { name: "buildingId", label: "Building", labelAr: "المبنى", type: "select", required: true, searchable: true, dependsOn: ["projectId", "phaseId"], options: buildingOptions },
     { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },

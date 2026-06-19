@@ -8,6 +8,8 @@
 
 export interface FloorUpdate {
   companyId?: string;
+  projectId?: string;
+  phaseId?: string;
   buildingId?: string;
   code?: string;
   name?: string;

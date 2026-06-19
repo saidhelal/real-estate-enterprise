@@ -87,6 +87,8 @@ export type BuildingRow = typeof buildingsTable.$inferSelect;
 export const floorsTable = pgTable("floors", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyId: uuid("company_id").notNull(),
+  projectId: uuid("project_id"),
+  phaseId: uuid("phase_id"),
   buildingId: uuid("building_id").notNull(),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -101,6 +103,7 @@ export const unitsTable = pgTable("units", {
   companyId: uuid("company_id").notNull(),
   branchId: uuid("branch_id"),
   projectId: uuid("project_id").notNull(),
+  phaseId: uuid("phase_id"),
   buildingId: uuid("building_id").notNull(),
   floorId: uuid("floor_id").notNull(),
   unitTypeId: uuid("unit_type_id"),

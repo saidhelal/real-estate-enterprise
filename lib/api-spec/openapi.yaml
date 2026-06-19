@@ -25337,6 +25337,8 @@ components:
       properties:
         id: { type: string }
         companyId: { type: string }
+        projectId: { type: ["string", "null"] }
+        phaseId: { type: ["string", "null"] }
         buildingId: { type: string }
         code: { type: string }
         name: { type: string }
@@ -25350,6 +25352,8 @@ components:
       required: [companyId, buildingId, code, name, nameAr]
       properties:
         companyId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
         buildingId: { type: string }
         code: { type: string }
         name: { type: string }
@@ -25360,6 +25364,8 @@ components:
       type: object
       properties:
         companyId: { type: string }
+        projectId: { type: string }
+        phaseId: { type: string }
         buildingId: { type: string }
         code: { type: string }
         name: { type: string }
@@ -25385,6 +25391,7 @@ components:
         companyId: { type: string }
         branchId: { type: ["string", "null"] }
         projectId: { type: string }
+        phaseId: { type: ["string", "null"] }
         buildingId: { type: string }
         floorId: { type: string }
         unitTypeId: { type: ["string", "null"] }
@@ -25406,6 +25413,7 @@ components:
         companyId: { type: string }
         branchId: { type: string }
         projectId: { type: string }
+        phaseId: { type: string }
         buildingId: { type: string }
         floorId: { type: string }
         unitTypeId: { type: string }
@@ -25424,6 +25432,7 @@ components:
         companyId: { type: string }
         branchId: { type: string }
         projectId: { type: string }
+        phaseId: { type: string }
         buildingId: { type: string }
         floorId: { type: string }
         unitTypeId: { type: string }

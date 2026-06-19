@@ -29,7 +29,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsUpDown,
+  Check,
+} from "lucide-react";
 
 export type FieldType = "text" | "textarea" | "number" | "money" | "date" | "select" | "boolean";
 
@@ -37,6 +59,24 @@ export interface SelectOption {
   value: string;
   label: string;
   labelAr?: string;
+  /**
+   * Parent record id this option belongs to. When the owning field declares
+   * `dependsOn`, options are filtered to those whose `parentValue` matches the
+   * current value of the parent field (cascading dropdowns).
+   */
+  parentValue?: string;
+  /**
+   * Per-parent ancestor ids for multi-parent narrowing. When the owning field
+   * declares `dependsOn` as a list (e.g. a Building that must match both the
+   * selected Project and the selected Phase), the option is kept only if, for
+   * every parent field that currently has a value, the matching entry here
+   * equals it. A `null`/`undefined` entry means "this option has no such
+   * ancestor" (e.g. a building with no phase), so it is excluded once that
+   * parent is chosen. Falls back to `parentValue` for single-parent fields.
+   */
+  parentValues?: Record<string, string | null | undefined>;
+  /** Render the option but make it unselectable (e.g. a unit that is not available). */
+  disabled?: boolean;
 }
 
 export interface ResourceField {
@@ -53,6 +93,20 @@ export interface ResourceField {
   /** Optional input placeholder (falls back to the label). */
   placeholder?: string;
   placeholderAr?: string;
+  /**
+   * Name of the parent select field (or several, for multi-parent narrowing).
+   * This field's options are filtered to those whose ancestor id(s) match every
+   * parent field that currently has a value, and the value is reset whenever any
+   * parent changes. When a parent has no value, it imposes no constraint.
+   */
+  dependsOn?: string | string[];
+  /** Render a searchable combobox instead of a plain select. */
+  searchable?: boolean;
+  /**
+   * Field used only to narrow other (cascading) selects — excluded from the
+   * submitted payload. Useful for hierarchy filters that are not stored columns.
+   */
+  filterOnly?: boolean;
 }
 
 export interface ResourceColumn<T> {
@@ -418,6 +472,7 @@ function ResourceForm<T extends { id: string }>({
   const buildPayload = (): Record<string, unknown> => {
     const payload: Record<string, unknown> = {};
     for (const f of fields) {
+      if (f.filterOnly) continue;
       if (isEdit && f.createOnly) continue;
       const raw = formData[f.name];
       if (raw === undefined || raw === "" || raw === NONE) continue;
@@ -440,6 +495,7 @@ function ResourceForm<T extends { id: string }>({
     let firstInvalid: string | null = null;
     for (const f of fields) {
       if (f.name === "companyId") continue;
+      if (f.filterOnly) continue;
       if (isEdit && f.createOnly) continue;
       if (!f.required) continue;
       const raw = formData[f.name];
@@ -489,9 +545,57 @@ function ResourceForm<T extends { id: string }>({
     }
   };
 
+  // Normalize a field's dependsOn into a list of parent field names.
+  const dependsList = (f: ResourceField): string[] =>
+    f.dependsOn === undefined ? [] : Array.isArray(f.dependsOn) ? f.dependsOn : [f.dependsOn];
+
+  // Fields that cascade off a given parent field name (direct children).
+  const childrenOf = (parent: string) =>
+    fields.filter((f) => dependsList(f).includes(parent)).map((f) => f.name);
+
   const setValue = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      // Reset every descendant field so a stale child selection can't survive a
+      // parent change (e.g. changing Project clears Building -> Floor -> Unit).
+      const queue = childrenOf(name);
+      while (queue.length) {
+        const child = queue.shift() as string;
+        next[child] = "";
+        queue.push(...childrenOf(child));
+      }
+      return next;
+    });
     setErrors((prev) => (prev[name] ? { ...prev, [name]: false } : prev));
+  };
+
+  // Options visible for a field, applying cascade filtering by the parent value.
+  // The currently-selected value is always kept so editing a record never hides
+  // its own stored value (e.g. a unit whose parent floor differs from the
+  // current filter, or stale/inconsistent data) — without it the trigger would
+  // show the placeholder despite a value being set ("ghost value").
+  const visibleOptions = (f: ResourceField): SelectOption[] => {
+    const opts = f.options ?? [];
+    const parents = dependsList(f);
+    if (parents.length === 0) return opts;
+    const current = formData[f.name];
+    // Active constraints: parent fields that currently hold a real value.
+    const active = parents
+      .map((p) => [p, formData[p]] as const)
+      .filter(([, v]) => v && v !== NONE);
+    if (active.length === 0) return opts;
+    return opts.filter((o) => {
+      if (o.value === current) return true;
+      return active.every(([p, v]) => {
+        // Prefer the per-parent map; fall back to parentValue for single-parent.
+        const ancestor =
+          o.parentValues && p in o.parentValues ? o.parentValues[p] : o.parentValue;
+        // Undefined means the option declares no value for this parent → no
+        // constraint. A null value means "no such ancestor" → excluded.
+        if (ancestor === undefined) return true;
+        return ancestor === v;
+      });
+    });
   };
 
   return (
@@ -548,6 +652,21 @@ function ResourceForm<T extends { id: string }>({
                     <SelectItem value="false">{language === "ar" ? "لا" : "No"}</SelectItem>
                   </SelectContent>
                 </Select>
+              ) : f.type === "select" && f.searchable ? (
+                <SearchableSelect
+                  options={visibleOptions(f)}
+                  value={formData[f.name] ?? ""}
+                  onChange={(v) => setValue(f.name, v)}
+                  placeholder={fieldPlaceholder(f)}
+                  searchPlaceholder={t("common.search")}
+                  emptyText={t("common.no_results")}
+                  clearable={!f.required}
+                  language={language}
+                  hasError={hasError}
+                  triggerRef={(el) => {
+                    fieldRefs.current[f.name] = el;
+                  }}
+                />
               ) : f.type === "select" ? (
                 <Select
                   value={formData[f.name] || (f.required ? "" : NONE)}
@@ -564,8 +683,8 @@ function ResourceForm<T extends { id: string }>({
                   </SelectTrigger>
                   <SelectContent>
                     {!f.required && <SelectItem value={NONE}>—</SelectItem>}
-                    {(f.options ?? []).map((o) => (
-                      <SelectItem key={o.value} value={o.value}>
+                    {visibleOptions(f).map((o) => (
+                      <SelectItem key={o.value} value={o.value} disabled={o.disabled}>
                         {language === "ar" && o.labelAr ? o.labelAr : o.label}
                       </SelectItem>
                     ))}
@@ -608,5 +727,107 @@ function ResourceForm<T extends { id: string }>({
         </Button>
       </div>
     </form>
+  );
+}
+
+/**
+ * A searchable single-select combobox built on cmdk + popover. Used for fields
+ * with many options (e.g. units). cmdk filters by each item's `value` prop, so
+ * we set that to the visible label and resolve the real option value via a
+ * closure on select. Disabled options render but are not selectable.
+ */
+function SearchableSelect({
+  options,
+  value,
+  onChange,
+  placeholder,
+  searchPlaceholder,
+  emptyText,
+  clearable,
+  language,
+  hasError,
+  triggerRef,
+}: {
+  options: SelectOption[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  searchPlaceholder: string;
+  emptyText: string;
+  clearable: boolean;
+  language: string;
+  hasError: boolean;
+  triggerRef: (el: HTMLButtonElement | null) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const optLabel = (o: SelectOption) =>
+    language === "ar" && o.labelAr ? o.labelAr : o.label;
+  const selected = options.find((o) => o.value === value);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          ref={triggerRef}
+          type="button"
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          aria-invalid={hasError}
+          className={cn(
+            "w-full justify-between font-normal",
+            !selected && "text-muted-foreground",
+            hasError && "border-destructive focus-visible:ring-destructive",
+          )}
+        >
+          <span className="truncate">{selected ? optLabel(selected) : placeholder}</span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder={searchPlaceholder} />
+          <CommandList>
+            <CommandEmpty>{emptyText}</CommandEmpty>
+            <CommandGroup>
+              {clearable && (
+                <CommandItem
+                  value="—"
+                  onSelect={() => {
+                    onChange("");
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn("mr-2 h-4 w-4", value ? "opacity-0" : "opacity-100")}
+                  />
+                  —
+                </CommandItem>
+              )}
+              {options.map((o) => (
+                <CommandItem
+                  key={o.value}
+                  value={`${optLabel(o)} ${o.value}`}
+                  disabled={o.disabled}
+                  onSelect={() => {
+                    if (o.disabled) return;
+                    onChange(o.value);
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === o.value ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  {optLabel(o)}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }

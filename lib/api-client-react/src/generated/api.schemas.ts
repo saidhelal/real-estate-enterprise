@@ -1265,6 +1265,10 @@ export interface BuildingListResponse {
 export interface Floor {
   id: string;
   companyId: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
   buildingId: string;
   code: string;
   name: string;
@@ -1276,6 +1280,8 @@ export interface Floor {
 
 export interface FloorInput {
   companyId: string;
+  projectId?: string;
+  phaseId?: string;
   buildingId: string;
   code: string;
   name: string;
@@ -1285,6 +1291,8 @@ export interface FloorInput {
 
 export interface FloorUpdate {
   companyId?: string;
+  projectId?: string;
+  phaseId?: string;
   buildingId?: string;
   code?: string;
   name?: string;
@@ -1305,6 +1313,8 @@ export interface Unit {
   /** @nullable */
   branchId?: string | null;
   projectId: string;
+  /** @nullable */
+  phaseId?: string | null;
   buildingId: string;
   floorId: string;
   /** @nullable */
@@ -1330,6 +1340,7 @@ export interface UnitInput {
   companyId: string;
   branchId?: string;
   projectId: string;
+  phaseId?: string;
   buildingId: string;
   floorId: string;
   unitTypeId?: string;
@@ -1347,6 +1358,7 @@ export interface UnitUpdate {
   companyId?: string;
   branchId?: string;
   projectId?: string;
+  phaseId?: string;
   buildingId?: string;
   floorId?: string;
   unitTypeId?: string;

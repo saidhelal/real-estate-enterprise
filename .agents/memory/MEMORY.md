@@ -47,3 +47,4 @@
 - [Orval binary endpoints](orval-binary-endpoints.md) — Orval emits no hook for octet-stream GETs; model in OpenAPI for contract, consume via same-origin URL helper.
 - [Transaction rollback via typed error](tx-rollback-typed-error.md) — abort+rollback a Drizzle tx by throwing a typed Error caught outside; a closure-assigned flag narrows to never and wont typecheck.
 - [Testing Mode tenant routing](testing-mode-tenant-routing.md) — demo schema isolation via ALS db Proxy; identity lookups in middleware MUST pin runWithTenant("production") because every sub-router's requireAuth fan-out can set demo first.
+- [Cascade dropdown infra](cascade-dropdowns.md) — ResourceManager cascade: parentValue filtering + childrenOf reset; visibleOptions must always keep the selected value or trigger shows a ghost placeholder.

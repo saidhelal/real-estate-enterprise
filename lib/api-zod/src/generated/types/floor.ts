@@ -9,6 +9,10 @@
 export interface Floor {
   id: string;
   companyId: string;
+  /** @nullable */
+  projectId?: string | null;
+  /** @nullable */
+  phaseId?: string | null;
   buildingId: string;
   code: string;
   name: string;
