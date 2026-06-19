@@ -1,14 +1,22 @@
 import type { Request, Response, NextFunction } from "express";
-import { ACCESS_COOKIE, verifyAccessToken, type AuthUser } from "../lib/auth";
+import { ACCESS_COOKIE, TESTING_COOKIE, verifyAccessToken, type AuthUser } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
+import { runWithTenant } from "@workspace/db";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       authUser?: AuthUser;
+      /** True when this request is served from the isolated demo sandbox. */
+      testingMode?: boolean;
     }
   }
+}
+
+/** A user holding "*" is a super admin — the only role allowed into Testing Mode. */
+function isSuperAdmin(user: AuthUser): boolean {
+  return user.permissions.includes("*");
 }
 
 /**
@@ -32,7 +40,12 @@ export async function requireAuth(
     return;
   }
 
-  const user = await loadAuthUser(userId);
+  // Identity always lives in production. Force the lookup onto the production
+  // tenant: several ERP sub-routers each apply their own router-level requireAuth
+  // and are mounted without a path prefix, so an earlier sibling router may have
+  // already wrapped this request's continuation in the demo tenant. Without this
+  // pin, loadAuthUser would query demo.users for a production user id and 401.
+  const user = await runWithTenant("production", () => loadAuthUser(userId));
   if (!user) {
     res.status(401).json({ error: "User no longer exists" });
     return;
@@ -55,7 +68,19 @@ export async function requireAuth(
   }
 
   req.authUser = user;
-  next();
+
+  // Tenant routing: auth itself ran on production (loadAuthUser above). From here
+  // on, if the browser is in Testing Mode AND the user is a super admin, every
+  // db access in the downstream handlers resolves to the isolated demo schema.
+  // The selection is captured in AsyncLocalStorage for the rest of the request;
+  // any non-super-admin (even with a forged cookie) stays on production.
+  const testing = req.cookies?.[TESTING_COOKIE] === "1" && isSuperAdmin(user);
+  req.testingMode = testing;
+  if (testing) {
+    runWithTenant("demo", () => next());
+  } else {
+    next();
+  }
 }
 
 /**

@@ -43,6 +43,7 @@ import formTemplatesRouter from "./form-templates";
 import printJobsRouter from "./print-jobs";
 import portalRouter from "./portal";
 import documentsRouter from "./documents";
+import testingRouter from "./testing";
 
 const router: IRouter = Router();
 
@@ -93,5 +94,6 @@ router.use(executiveOversightRouter);
 router.use(documentsRouter);
 router.use(formTemplatesRouter);
 router.use(printJobsRouter);
+router.use(testingRouter);
 
 export default router;

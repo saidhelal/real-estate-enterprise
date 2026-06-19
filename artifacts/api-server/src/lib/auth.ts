@@ -13,6 +13,13 @@ const isProduction = process.env.NODE_ENV === "production";
 
 export const ACCESS_COOKIE = "erp_access";
 export const REFRESH_COOKIE = "erp_refresh";
+/**
+ * Marks that the browser session has entered Testing Mode. Presence alone does
+ * not grant demo access — the server only honours it for super-admins (see the
+ * auth middleware), so a tampered cookie on a non-admin session is ignored and
+ * stays on production.
+ */
+export const TESTING_COOKIE = "erp_testing";
 
 export const ACCESS_TTL_SECONDS = 15 * 60; // 15 minutes
 export const REFRESH_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
@@ -111,4 +118,15 @@ export function setAccessCookie(res: Response, accessToken: string): void {
 export function clearAuthCookies(res: Response): void {
   res.clearCookie(ACCESS_COOKIE, baseCookie);
   res.clearCookie(REFRESH_COOKIE, baseCookie);
+}
+
+export function setTestingCookie(res: Response): void {
+  res.cookie(TESTING_COOKIE, "1", {
+    ...baseCookie,
+    maxAge: REFRESH_TTL_SECONDS * 1000,
+  });
+}
+
+export function clearTestingCookie(res: Response): void {
+  res.clearCookie(TESTING_COOKIE, baseCookie);
 }

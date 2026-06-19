@@ -20,6 +20,7 @@ import {
   setAuthCookies,
   setAccessCookie,
   clearAuthCookies,
+  clearTestingCookie,
 } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
 import { recordAudit } from "../lib/audit";
@@ -199,6 +200,9 @@ router.post("/auth/logout", async (req, res): Promise<void> => {
     }
   }
   clearAuthCookies(res);
+  // Testing Mode is per-session: ending the session must also exit Testing Mode
+  // so a later login in the same browser never silently lands in the demo sandbox.
+  clearTestingCookie(res);
   res.json({ success: true });
 });
 

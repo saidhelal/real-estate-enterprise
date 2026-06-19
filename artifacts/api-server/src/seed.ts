@@ -1829,7 +1829,14 @@ async function seedMasterData(): Promise<void> {
   );
 }
 
-async function main(): Promise<void> {
+/**
+ * Idempotent full seed. All db access goes through the `db` proxy, so the active
+ * AsyncLocalStorage tenant decides the target schema: run it bare for production
+ * (the CLI path), or wrap it in `runWithTenant("demo", seedAll)` to seed the
+ * isolated demo sandbox. Does NOT end any pool — the caller owns connection
+ * lifecycle (the long-running server keeps its pools open).
+ */
+export async function seedAll(): Promise<void> {
   await seedPermissions();
   const roleId = await seedSuperAdminRole();
   await seedSuperAdminUser(roleId);
@@ -1851,9 +1858,14 @@ async function main(): Promise<void> {
   console.log("Seed complete.");
 }
 
-main()
-  .catch((err) => {
-    console.error("Seed failed:", err);
-    process.exitCode = 1;
-  })
-  .finally(() => pool.end());
+// CLI entry only. The server build bundles this module (it imports `seedAll`),
+// so guard the auto-run behind an explicit flag set by the `seed` npm script —
+// otherwise importing it would run the seed and end the pool at server startup.
+if (process.env.SEED_CLI === "1") {
+  seedAll()
+    .catch((err) => {
+      console.error("Seed failed:", err);
+      process.exitCode = 1;
+    })
+    .finally(() => pool.end());
+}

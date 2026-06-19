@@ -1,4 +1,6 @@
 import { useAuth } from "@/lib/auth-provider";
+import { useTesting } from "@/lib/testing-provider";
+import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/language-provider";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/components/theme-provider";
@@ -22,7 +24,7 @@ import {
   Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
   LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
-  Inbox, PhoneCall, Star, Printer,
+  Inbox, PhoneCall, Star, Printer, FlaskConical,
   Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -408,7 +410,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const { t, language, setLanguage, dir } = useLanguage();
   const { theme, setTheme } = useTheme();
+  const { testing, canTest, busy, enter, exit, reset } = useTesting();
+  const { toast } = useToast();
   const [location] = useLocation();
+
+  const handleEnterTesting = async () => {
+    toast({ title: t("testing.entering") });
+    try {
+      await enter();
+      toast({ title: t("testing.entered") });
+    } catch {
+      toast({ title: t("testing.error"), variant: "destructive" });
+    }
+  };
+  const handleExitTesting = async () => {
+    try {
+      await exit();
+      toast({ title: t("testing.exited") });
+    } catch {
+      toast({ title: t("testing.error"), variant: "destructive" });
+    }
+  };
+  const handleResetTesting = async () => {
+    if (!window.confirm(t("testing.reset_confirm"))) return;
+    toast({ title: t("testing.resetting") });
+    try {
+      await reset();
+      toast({ title: t("testing.reset_done") });
+    } catch {
+      toast({ title: t("testing.error"), variant: "destructive" });
+    }
+  };
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -467,7 +499,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-muted/40">
+    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      {/* Permanent Testing Mode banner — visible on every page while the session
+          is routed to the isolated demo database. */}
+      {testing && (
+        <div className="flex items-center justify-center gap-2 bg-destructive px-4 py-1.5 text-center text-xs font-semibold uppercase tracking-wide text-destructive-foreground sm:text-sm">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <span>{t("testing.banner")}</span>
+        </div>
+      )}
+      <div className="flex w-full flex-1 min-h-0">
       {/* Desktop Sidebar */}
       <aside className="hidden w-60 flex-col border-r bg-sidebar md:flex">
         <div className="flex h-12 items-center border-b px-4">
@@ -507,6 +548,43 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Sheet>
 
           <div className="flex flex-1 items-center justify-end gap-2">
+            {canTest &&
+              (testing ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={busy}
+                    onClick={handleResetTesting}
+                    title={t("testing.reset")}
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    <span className="hidden lg:inline">{t("testing.reset")}</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={busy}
+                    onClick={handleExitTesting}
+                    title={t("testing.exit")}
+                    className="border-destructive/40 text-destructive hover:text-destructive"
+                  >
+                    <FlaskConical className="h-4 w-4" />
+                    <span className="hidden lg:inline">{t("testing.exit")}</span>
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={busy}
+                  onClick={handleEnterTesting}
+                  title={t("testing.enter")}
+                >
+                  <FlaskConical className="h-4 w-4" />
+                  <span className="hidden lg:inline">{t("testing.enter")}</span>
+                </Button>
+              ))}
             <Button
               variant="ghost"
               size="icon"
@@ -562,6 +640,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <PageNav navGroups={NAV_GROUPS} />
           {children}
         </main>
+      </div>
       </div>
     </div>
   );

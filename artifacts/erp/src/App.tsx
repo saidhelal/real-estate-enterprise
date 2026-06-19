@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/lib/language-provider";
 import { AuthProvider } from "@/lib/auth-provider";
+import { TestingProvider } from "@/lib/testing-provider";
 import { LookupLabelProvider } from "@/lib/lookups";
 import { AppShell } from "@/components/layout/app-shell";
 
@@ -669,9 +670,11 @@ function App() {
           <TooltipProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
               <AuthProvider>
-                <LookupLabelProvider>
-                  <Router />
-                </LookupLabelProvider>
+                <TestingProvider>
+                  <LookupLabelProvider>
+                    <Router />
+                  </LookupLabelProvider>
+                </TestingProvider>
               </AuthProvider>
             </WouterRouter>
             <Toaster />
