@@ -3,8 +3,8 @@ name: Testing Mode tenant routing
 description: How per-session demo-schema isolation works and the requireAuth/ALS pin it depends on.
 ---
 
-Testing Mode gives super admins a persistent, isolated "demo" Postgres schema in the
-same instance as production (`public`). Reads/writes route to demo while a session
+Testing Mode gives any authenticated user a persistent, isolated "demo" Postgres schema
+in the same instance as production (`public`). Reads/writes route to demo while a session
 cookie is set; production is never touched.
 
 ## Mechanism
@@ -12,8 +12,23 @@ cookie is set; production is never touched.
   AsyncLocalStorage (`runWithTenant(tenant, fn)`). Default/unknown context => production.
 - Two pools, each pinned by connection `search_path`: production=`public`,
   demo=`demo,public`.
-- The auth middleware sets the demo tenant for the request continuation only when the
-  testing cookie is "1" AND the user holds `"*"`.
+- The auth middleware sets the demo tenant for the request continuation whenever the
+  testing cookie is "1" (set only via `/testing/enter`).
+
+## Demo permission elevation (a required feature, not incidental)
+While a request is in Testing Mode, the in-memory `req.authUser` is overridden to
+`permissions: ["*"]` (request-scoped only). This is the spec's "demo permission
+elevation": a non-super-admin demo account gets FULL super-admin powers inside the
+isolated demo without its stored/production permissions ever changing. `/testing/enter`
+is therefore open to any authenticated user (entry only ever affects the sandbox);
+`/testing/reset` requires effective `"*"`, which every testing session has via the
+elevation, so testers can reset their sandbox and production super-admins can too.
+
+**Why:** gating entry to pre-existing super admins makes the elevation a no-op (they
+already hold `"*"`). The acceptance criterion only has meaning if a non-super account
+can enter and be elevated — so entry is open and the override is the actual mechanism.
+**Trap:** the override must apply ONLY on demo-routed requests (inside the testing
+branch). Never elevate on a production-routed request.
 
 ## The non-obvious gotcha (cost a debugging cycle)
 Every ERP sub-router applies its OWN router-level `requireAuth` and they are all mounted
