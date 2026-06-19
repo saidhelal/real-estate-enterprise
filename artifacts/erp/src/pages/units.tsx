@@ -21,6 +21,7 @@ import {
 } from "@/components/resource/resource-manager";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { UnitStatusRowAction } from "@/components/units/unit-status-row-action";
+import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function UnitsPage() {
@@ -41,6 +42,7 @@ export default function UnitsPage() {
   const unitTypeOptions = (unitTypes?.data ?? []).map((u) => ({ value: u.id, label: u.name }));
   const unitStatusOptions = (unitStatuses?.data ?? []).map((u) => ({ value: u.id, label: u.name }));
   const branchOptions = (branches ?? []).map((b) => ({ value: b.id, label: b.name }));
+  const unitStatusMap = new Map((unitStatuses?.data ?? []).map((u) => [u.id, u]));
 
   const fields: ResourceField[] = [
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", required: true, searchable: true, options: projectOptions },
@@ -62,6 +64,15 @@ export default function UnitsPage() {
   const columns: ResourceColumn<Unit>[] = [
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Name", headerAr: "الاسم", render: (r) => (language === "ar" ? r.nameAr : r.name) },
+    {
+      header: "Status",
+      headerAr: "الحالة",
+      render: (r) => {
+        const status = r.unitStatusId ? unitStatusMap.get(r.unitStatusId) : undefined;
+        if (!status) return "-";
+        return <Badge variant="secondary">{language === "ar" ? status.nameAr : status.name}</Badge>;
+      },
+    },
     { header: "Area", headerAr: "المساحة", render: (r) => r.area ?? "-" },
     { header: "Base Price", headerAr: "السعر الأساسي", render: (r) => r.basePrice ?? "-" },
   ];
