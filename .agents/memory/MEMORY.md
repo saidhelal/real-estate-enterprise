@@ -50,3 +50,4 @@
 - [Cascade dropdown infra](cascade-dropdowns.md) — ResourceManager cascade: parentValue filtering + childrenOf reset; visibleOptions must always keep the selected value or trigger shows a ghost placeholder. Pure logic extracted to resource/cascade.ts (vitest-tested).
 - [Notification emitter](notification-emitter.md) — notify(exec,…) idempotent per (recipient,sourceModule,sourceId,eventType); company-scoped audiences must keep null-company globals (OR companyId IS NULL); no cron, overdue is lazy-on-read.
 - [API e2e tests](api-e2e-tests.md) — vitest suite spawns the built server + uses Testing Mode (demo schema) for isolation; cookie-jar client; list shapes & required-but-derived fields gotchas.
+- [Lead distribution engine](lead-distribution-engine.md) — auto-assign must claim via conditional UPDATE (assigned IS NULL)+returning, not read-then-write; maxLeadsPerAgent is a hard cap; company scope follows app-wide registerCrud convention.

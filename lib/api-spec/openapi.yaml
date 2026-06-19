@@ -20816,6 +20816,241 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OkResponse"
+  /marketing-leads:
+    post:
+      operationId: createMarketingLead
+      tags: [marketing]
+      summary: Capture a marketing lead and auto-distribute it
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingLeadIntakeInput"
+      responses:
+        "201":
+          description: Created lead (distribution applied when a rule matches)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+  /marketing-leads/{id}/distribute:
+    post:
+      operationId: distributeMarketingLead
+      tags: [marketing]
+      summary: Run the distribution engine for an existing lead
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Lead after distribution
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /marketing-distribution-rules:
+    get:
+      operationId: listMarketingDistributionRules
+      tags: [marketing]
+      summary: List MarketingDistributionRule
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: strategy, in: query, required: false, schema: { type: string } }
+        - { name: campaignId, in: query, required: false, schema: { type: string } }
+        - { name: channelId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: MarketingDistributionRule list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionRuleListResponse"
+    post:
+      operationId: createMarketingDistributionRule
+      tags: [marketing]
+      summary: Create a MarketingDistributionRule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingDistributionRuleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionRule"
+  /marketing-distribution-rules/{id}:
+    get:
+      operationId: getMarketingDistributionRule
+      tags: [marketing]
+      summary: Get a MarketingDistributionRule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: MarketingDistributionRule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionRule"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateMarketingDistributionRule
+      tags: [marketing]
+      summary: Update a MarketingDistributionRule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingDistributionRuleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionRule"
+    delete:
+      operationId: deleteMarketingDistributionRule
+      tags: [marketing]
+      summary: Soft-delete a MarketingDistributionRule
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /marketing-distribution-agents:
+    get:
+      operationId: listMarketingDistributionAgents
+      tags: [marketing]
+      summary: List MarketingDistributionAgent
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: userId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: MarketingDistributionAgent list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionAgentListResponse"
+    post:
+      operationId: createMarketingDistributionAgent
+      tags: [marketing]
+      summary: Create a MarketingDistributionAgent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingDistributionAgentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionAgent"
+  /marketing-distribution-agents/{id}:
+    get:
+      operationId: getMarketingDistributionAgent
+      tags: [marketing]
+      summary: Get a MarketingDistributionAgent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: MarketingDistributionAgent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionAgent"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateMarketingDistributionAgent
+      tags: [marketing]
+      summary: Update a MarketingDistributionAgent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingDistributionAgentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionAgent"
+    delete:
+      operationId: deleteMarketingDistributionAgent
+      tags: [marketing]
+      summary: Soft-delete a MarketingDistributionAgent
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /marketing-distribution-logs:
+    get:
+      operationId: listMarketingDistributionLogs
+      tags: [marketing]
+      summary: List MarketingDistributionLog
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: leadId, in: query, required: false, schema: { type: string } }
+        - { name: ruleId, in: query, required: false, schema: { type: string } }
+        - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
+        - { name: strategy, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: MarketingDistributionLog list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDistributionLogListResponse"
   /general-admin-dashboard:
     get:
       operationId: getGeneralAdminDashboard
@@ -25735,6 +25970,8 @@ components:
         phone: { type: ["string", "null"] }
         email: { type: ["string", "null"] }
         sourceId: { type: ["string", "null"] }
+        campaignId: { type: ["string", "null"] }
+        channelId: { type: ["string", "null"] }
         assignedToUserId: { type: ["string", "null"] }
         status: { type: string }
         budget: { type: ["string", "null"] }
@@ -25753,6 +25990,8 @@ components:
         phone: { type: string }
         email: { type: string }
         sourceId: { type: string }
+        campaignId: { type: string }
+        channelId: { type: string }
         assignedToUserId: { type: string }
         status: { type: string }
         budget: { type: string }
@@ -25768,6 +26007,8 @@ components:
         phone: { type: string }
         email: { type: string }
         sourceId: { type: string }
+        campaignId: { type: string }
+        channelId: { type: string }
         assignedToUserId: { type: string }
         status: { type: string }
         budget: { type: string }
@@ -37432,6 +37673,163 @@ components:
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }
+
+    MarketingLeadIntakeInput:
+      type: object
+      required: [companyId, fullName]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        fullName: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        sourceId: { type: string }
+        campaignId: { type: string }
+        channelId: { type: string }
+        budget: { type: string }
+        notes: { type: string }
+        autoDistribute: { type: boolean }
+
+    MarketingDistributionRule:
+      type: object
+      required: [id, companyId, code, name, strategy, priority, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        campaignId: { type: ["string", "null"] }
+        channelId: { type: ["string", "null"] }
+        sourceId: { type: ["string", "null"] }
+        branchId: { type: ["string", "null"] }
+        strategy: { type: string }
+        targetUserId: { type: ["string", "null"] }
+        priority: { type: integer }
+        maxLeadsPerAgent: { type: ["integer", "null"] }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    MarketingDistributionRuleInput:
+      type: object
+      required: [companyId, code, name, strategy]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        campaignId: { type: string }
+        channelId: { type: string }
+        sourceId: { type: string }
+        branchId: { type: string }
+        strategy: { type: string }
+        targetUserId: { type: string }
+        priority: { type: integer }
+        maxLeadsPerAgent: { type: integer }
+        description: { type: string }
+        notes: { type: string }
+        isActive: { type: boolean }
+
+    MarketingDistributionRuleUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        campaignId: { type: string }
+        channelId: { type: string }
+        sourceId: { type: string }
+        branchId: { type: string }
+        strategy: { type: string }
+        targetUserId: { type: string }
+        priority: { type: integer }
+        maxLeadsPerAgent: { type: integer }
+        description: { type: string }
+        notes: { type: string }
+        isActive: { type: boolean }
+
+    MarketingDistributionRuleListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MarketingDistributionRule" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    MarketingDistributionAgent:
+      type: object
+      required: [id, companyId, userId, weight, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        userId: { type: string }
+        weight: { type: integer }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    MarketingDistributionAgentInput:
+      type: object
+      required: [companyId, userId]
+      properties:
+        companyId: { type: string }
+        userId: { type: string }
+        weight: { type: integer }
+        notes: { type: string }
+        isActive: { type: boolean }
+
+    MarketingDistributionAgentUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        userId: { type: string }
+        weight: { type: integer }
+        notes: { type: string }
+        isActive: { type: boolean }
+
+    MarketingDistributionAgentListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MarketingDistributionAgent" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    MarketingDistributionLog:
+      type: object
+      required: [id, companyId, leadId, assignedToUserId, strategy, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        leadId: { type: string }
+        ruleId: { type: ["string", "null"] }
+        assignedToUserId: { type: string }
+        strategy: { type: string }
+        score: { type: ["string", "null"] }
+        reason: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    MarketingDistributionLogListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MarketingDistributionLog" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
     GeneralAdminDashboard:
       type: object
       required: [meetingsCount, decisionsCount, tasksCount, visitorsCount, vehiclesCount, assetsCount]

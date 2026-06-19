@@ -170,6 +170,10 @@ import MarketingDashboardPage from "@/pages/marketing-dashboard";
 import MarketingCampaignsPage from "@/pages/marketing-campaigns";
 import MarketingChannelsPage from "@/pages/marketing-channels";
 import MarketingSettingsPage from "@/pages/marketing-settings";
+import MarketingLeadsPage from "@/pages/marketing-leads";
+import DistributionRulesPage from "@/pages/distribution-rules";
+import DistributionAgentsPage from "@/pages/distribution-agents";
+import DistributionLogsPage from "@/pages/distribution-logs";
 import CorrespondencePage from "@/pages/correspondence";
 import MeetingsPage from "@/pages/meetings";
 import AdministrativeDecisionsPage from "@/pages/administrative-decisions";
@@ -470,6 +474,10 @@ function Router() {
             <Route path="/marketing-dashboard" component={MarketingDashboardPage} />
             <Route path="/marketing-campaigns" component={MarketingCampaignsPage} />
             <Route path="/marketing-channels" component={MarketingChannelsPage} />
+            <Route path="/marketing-leads" component={MarketingLeadsPage} />
+            <Route path="/distribution-rules" component={DistributionRulesPage} />
+            <Route path="/distribution-agents" component={DistributionAgentsPage} />
+            <Route path="/distribution-logs" component={DistributionLogsPage} />
             <Route path="/marketing-settings" component={MarketingSettingsPage} />
             <Route path="/correspondence" component={CorrespondencePage} />
             <Route path="/meetings" component={MeetingsPage} />

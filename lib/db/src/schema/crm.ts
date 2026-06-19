@@ -37,6 +37,11 @@ export const leadsTable = pgTable("leads", {
   phone: text("phone"),
   email: text("email"),
   sourceId: uuid("source_id"),
+  // Marketing attribution (Phase 2). Nullable + additive: existing leads keep
+  // NULL. `sourceId` already records CRM provenance; these add the marketing
+  // campaign + channel a lead was generated from, for ROI/attribution reporting.
+  campaignId: uuid("campaign_id"),
+  channelId: uuid("channel_id"),
   assignedToUserId: uuid("assigned_to_user_id"),
   status: text("status").notNull().default("new"),
   budget: numeric("budget", { precision: 14, scale: 2 }),

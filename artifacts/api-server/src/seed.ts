@@ -341,6 +341,11 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   // `leadSources` module/permissions (no duplicate).
   { module: "marketing", label: "Marketing Campaigns" },
   { module: "marketingChannels", label: "Marketing Channels" },
+  // Smart Lead Distribution Engine: rules + eligible-agent roster (CRUD) and a
+  // read-only decision log (the engine writes it; no create/update/delete here).
+  { module: "marketingDistributionRules", label: "Lead Distribution Rules" },
+  { module: "marketingDistributionAgents", label: "Lead Distribution Agents" },
+  { module: "marketingDistributionLogs", label: "Lead Distribution Logs" },
   // Forms & Printing — central Print Engine surfaced inside every module.
   { module: "formTemplates", label: "Forms & Printing", extraActions: ["submit", "endorse", "approve", "reject", "disable", "enable", "activate", "print"] },
   // Electronic Document Management System (EDMS) — central document repository
@@ -723,6 +728,7 @@ async function seedNumberSequences(): Promise<void> {
       { documentType: "Legal Notice", prefix: "NOT", padding: 5, resetYearly: true },
       { documentType: "Legal Hearing", prefix: "HRG", padding: 5, resetYearly: true },
       { documentType: "MarketingCampaign", prefix: "MKC", padding: 5, resetYearly: true },
+      { documentType: "Lead", prefix: "LEAD", padding: 5, resetYearly: true },
     ])
     .onConflictDoNothing();
   console.log("Seeded document number sequences");

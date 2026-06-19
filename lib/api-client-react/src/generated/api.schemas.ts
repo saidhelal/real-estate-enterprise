@@ -1439,6 +1439,10 @@ export interface Lead {
   /** @nullable */
   sourceId?: string | null;
   /** @nullable */
+  campaignId?: string | null;
+  /** @nullable */
+  channelId?: string | null;
+  /** @nullable */
   assignedToUserId?: string | null;
   status: string;
   /** @nullable */
@@ -1457,6 +1461,8 @@ export interface LeadInput {
   phone?: string;
   email?: string;
   sourceId?: string;
+  campaignId?: string;
+  channelId?: string;
   assignedToUserId?: string;
   status?: string;
   budget?: string;
@@ -1471,6 +1477,8 @@ export interface LeadUpdate {
   phone?: string;
   email?: string;
   sourceId?: string;
+  campaignId?: string;
+  channelId?: string;
   assignedToUserId?: string;
   status?: string;
   budget?: string;
@@ -12440,6 +12448,149 @@ export interface MarketingChannelListResponse {
   pageSize: number;
 }
 
+export interface MarketingLeadIntakeInput {
+  companyId: string;
+  branchId?: string;
+  fullName: string;
+  phone?: string;
+  email?: string;
+  sourceId?: string;
+  campaignId?: string;
+  channelId?: string;
+  budget?: string;
+  notes?: string;
+  autoDistribute?: boolean;
+}
+
+export interface MarketingDistributionRule {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  /** @nullable */
+  campaignId?: string | null;
+  /** @nullable */
+  channelId?: string | null;
+  /** @nullable */
+  sourceId?: string | null;
+  /** @nullable */
+  branchId?: string | null;
+  strategy: string;
+  /** @nullable */
+  targetUserId?: string | null;
+  priority: number;
+  /** @nullable */
+  maxLeadsPerAgent?: number | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MarketingDistributionRuleInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  campaignId?: string;
+  channelId?: string;
+  sourceId?: string;
+  branchId?: string;
+  strategy: string;
+  targetUserId?: string;
+  priority?: number;
+  maxLeadsPerAgent?: number;
+  description?: string;
+  notes?: string;
+  isActive?: boolean;
+}
+
+export interface MarketingDistributionRuleUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  campaignId?: string;
+  channelId?: string;
+  sourceId?: string;
+  branchId?: string;
+  strategy?: string;
+  targetUserId?: string;
+  priority?: number;
+  maxLeadsPerAgent?: number;
+  description?: string;
+  notes?: string;
+  isActive?: boolean;
+}
+
+export interface MarketingDistributionRuleListResponse {
+  data: MarketingDistributionRule[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface MarketingDistributionAgent {
+  id: string;
+  companyId: string;
+  userId: string;
+  weight: number;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MarketingDistributionAgentInput {
+  companyId: string;
+  userId: string;
+  weight?: number;
+  notes?: string;
+  isActive?: boolean;
+}
+
+export interface MarketingDistributionAgentUpdate {
+  companyId?: string;
+  userId?: string;
+  weight?: number;
+  notes?: string;
+  isActive?: boolean;
+}
+
+export interface MarketingDistributionAgentListResponse {
+  data: MarketingDistributionAgent[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface MarketingDistributionLog {
+  id: string;
+  companyId: string;
+  leadId: string;
+  /** @nullable */
+  ruleId?: string | null;
+  assignedToUserId: string;
+  strategy: string;
+  /** @nullable */
+  score?: string | null;
+  /** @nullable */
+  reason?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MarketingDistributionLogListResponse {
+  data: MarketingDistributionLog[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface GeneralAdminDashboard {
   meetingsCount: number;
   decisionsCount: number;
@@ -16683,6 +16834,35 @@ pageSize?: number;
 search?: string;
 companyId?: string;
 channelType?: string;
+};
+
+export type ListMarketingDistributionRulesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+strategy?: string;
+campaignId?: string;
+channelId?: string;
+};
+
+export type ListMarketingDistributionAgentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+userId?: string;
+};
+
+export type ListMarketingDistributionLogsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+leadId?: string;
+ruleId?: string;
+assignedToUserId?: string;
+strategy?: string;
 };
 
 export type GetGeneralAdminDashboardParams = {

@@ -2518,6 +2518,8 @@ export const ListLeadsResponse = zod.object({
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
   "assignedToUserId": zod.string().nullish(),
   "status": zod.string(),
   "budget": zod.string().nullish(),
@@ -2542,6 +2544,8 @@ export const CreateLeadBody = zod.object({
   "phone": zod.string().optional(),
   "email": zod.string().optional(),
   "sourceId": zod.string().optional(),
+  "campaignId": zod.string().optional(),
+  "channelId": zod.string().optional(),
   "assignedToUserId": zod.string().optional(),
   "status": zod.string().optional(),
   "budget": zod.string().optional(),
@@ -2565,6 +2569,8 @@ export const GetLeadResponse = zod.object({
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
   "assignedToUserId": zod.string().nullish(),
   "status": zod.string(),
   "budget": zod.string().nullish(),
@@ -2589,6 +2595,8 @@ export const UpdateLeadBody = zod.object({
   "phone": zod.string().optional(),
   "email": zod.string().optional(),
   "sourceId": zod.string().optional(),
+  "campaignId": zod.string().optional(),
+  "channelId": zod.string().optional(),
   "assignedToUserId": zod.string().optional(),
   "status": zod.string().optional(),
   "budget": zod.string().optional(),
@@ -2604,6 +2612,8 @@ export const UpdateLeadResponse = zod.object({
   "phone": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
   "assignedToUserId": zod.string().nullish(),
   "status": zod.string(),
   "budget": zod.string().nullish(),
@@ -29388,6 +29398,326 @@ export const DeleteMarketingChannelParams = zod.object({
 
 export const DeleteMarketingChannelResponse = zod.object({
   "success": zod.boolean()
+})
+
+
+/**
+ * @summary Capture a marketing lead and auto-distribute it
+ */
+export const CreateMarketingLeadBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "fullName": zod.string(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "campaignId": zod.string().optional(),
+  "channelId": zod.string().optional(),
+  "budget": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "autoDistribute": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Run the distribution engine for an existing lead
+ */
+export const DistributeMarketingLeadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DistributeMarketingLeadResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
+  "assignedToUserId": zod.string().nullish(),
+  "status": zod.string(),
+  "budget": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary List MarketingDistributionRule
+ */
+export const ListMarketingDistributionRulesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "strategy": zod.coerce.string().optional(),
+  "campaignId": zod.coerce.string().optional(),
+  "channelId": zod.coerce.string().optional()
+})
+
+export const ListMarketingDistributionRulesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "strategy": zod.string(),
+  "targetUserId": zod.string().nullish(),
+  "priority": zod.number(),
+  "maxLeadsPerAgent": zod.number().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a MarketingDistributionRule
+ */
+export const CreateMarketingDistributionRuleBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "campaignId": zod.string().optional(),
+  "channelId": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "strategy": zod.string(),
+  "targetUserId": zod.string().optional(),
+  "priority": zod.number().optional(),
+  "maxLeadsPerAgent": zod.number().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "isActive": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Get a MarketingDistributionRule
+ */
+export const GetMarketingDistributionRuleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetMarketingDistributionRuleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "strategy": zod.string(),
+  "targetUserId": zod.string().nullish(),
+  "priority": zod.number(),
+  "maxLeadsPerAgent": zod.number().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a MarketingDistributionRule
+ */
+export const UpdateMarketingDistributionRuleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateMarketingDistributionRuleBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "campaignId": zod.string().optional(),
+  "channelId": zod.string().optional(),
+  "sourceId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "strategy": zod.string().optional(),
+  "targetUserId": zod.string().optional(),
+  "priority": zod.number().optional(),
+  "maxLeadsPerAgent": zod.number().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional(),
+  "isActive": zod.boolean().optional()
+})
+
+export const UpdateMarketingDistributionRuleResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "campaignId": zod.string().nullish(),
+  "channelId": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "strategy": zod.string(),
+  "targetUserId": zod.string().nullish(),
+  "priority": zod.number(),
+  "maxLeadsPerAgent": zod.number().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a MarketingDistributionRule
+ */
+export const DeleteMarketingDistributionRuleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteMarketingDistributionRuleResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List MarketingDistributionAgent
+ */
+export const ListMarketingDistributionAgentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "userId": zod.coerce.string().optional()
+})
+
+export const ListMarketingDistributionAgentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "userId": zod.string(),
+  "weight": zod.number(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a MarketingDistributionAgent
+ */
+export const CreateMarketingDistributionAgentBody = zod.object({
+  "companyId": zod.string(),
+  "userId": zod.string(),
+  "weight": zod.number().optional(),
+  "notes": zod.string().optional(),
+  "isActive": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Get a MarketingDistributionAgent
+ */
+export const GetMarketingDistributionAgentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetMarketingDistributionAgentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "userId": zod.string(),
+  "weight": zod.number(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a MarketingDistributionAgent
+ */
+export const UpdateMarketingDistributionAgentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateMarketingDistributionAgentBody = zod.object({
+  "companyId": zod.string().optional(),
+  "userId": zod.string().optional(),
+  "weight": zod.number().optional(),
+  "notes": zod.string().optional(),
+  "isActive": zod.boolean().optional()
+})
+
+export const UpdateMarketingDistributionAgentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "userId": zod.string(),
+  "weight": zod.number(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a MarketingDistributionAgent
+ */
+export const DeleteMarketingDistributionAgentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteMarketingDistributionAgentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List MarketingDistributionLog
+ */
+export const ListMarketingDistributionLogsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "leadId": zod.coerce.string().optional(),
+  "ruleId": zod.coerce.string().optional(),
+  "assignedToUserId": zod.coerce.string().optional(),
+  "strategy": zod.coerce.string().optional()
+})
+
+export const ListMarketingDistributionLogsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "leadId": zod.string(),
+  "ruleId": zod.string().nullish(),
+  "assignedToUserId": zod.string(),
+  "strategy": zod.string(),
+  "score": zod.string().nullish(),
+  "reason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
 })
 
 

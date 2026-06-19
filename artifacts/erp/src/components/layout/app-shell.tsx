@@ -26,7 +26,7 @@ import {
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
   Inbox, PhoneCall, Star, Printer, FlaskConical,
   Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
-  Share2,
+  Share2, GitBranch,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -301,6 +301,10 @@ const RAW_NAV_GROUPS = [
     { href: "/marketing-campaigns", icon: Megaphone, labelKey: "nav.marketing_campaigns" },
     { href: "/marketing-channels", icon: Share2, labelKey: "nav.marketing_channels" },
     { href: "/lead-sources", icon: Megaphone, labelKey: "nav.lead_sources" },
+    { href: "/marketing-leads", icon: UserPlus, labelKey: "nav.marketing_leads" },
+    { href: "/distribution-rules", icon: GitBranch, labelKey: "nav.distribution_rules" },
+    { href: "/distribution-agents", icon: Users, labelKey: "nav.distribution_agents" },
+    { href: "/distribution-logs", icon: ClipboardList, labelKey: "nav.distribution_logs" },
     { href: "/marketing-settings", icon: Settings, labelKey: "nav.marketing_settings" },
   ]},
   { titleKey: "nav.group.general_admin", items: [

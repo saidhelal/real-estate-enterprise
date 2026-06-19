@@ -6,18 +6,16 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface LeadInput {
+export interface MarketingLeadIntakeInput {
   companyId: string;
   branchId?: string;
-  code: string;
   fullName: string;
   phone?: string;
   email?: string;
   sourceId?: string;
   campaignId?: string;
   channelId?: string;
-  assignedToUserId?: string;
-  status?: string;
   budget?: string;
   notes?: string;
+  autoDistribute?: boolean;
 }

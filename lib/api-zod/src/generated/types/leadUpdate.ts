@@ -14,6 +14,8 @@ export interface LeadUpdate {
   phone?: string;
   email?: string;
   sourceId?: string;
+  campaignId?: string;
+  channelId?: string;
   assignedToUserId?: string;
   status?: string;
   budget?: string;

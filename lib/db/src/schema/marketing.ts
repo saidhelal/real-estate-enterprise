@@ -4,6 +4,7 @@ import {
   text,
   boolean,
   numeric,
+  integer,
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
@@ -59,3 +60,65 @@ export const marketingChannelsTable = pgTable("marketing_channels", {
   ...audit,
 });
 export type MarketingChannelRow = typeof marketingChannelsTable.$inferSelect;
+
+// --- Smart Lead Distribution Engine (Phase 3) ---
+// Dynamic, priority-ordered rules that decide which sales agent an incoming
+// (marketing-generated) lead is auto-assigned to. Each criteria column is a
+// nullable filter: NULL = wildcard (matches any), a value = must equal the
+// lead's. Rules are evaluated by `priority` ascending (lower = stronger), then
+// oldest first; the first matching active rule wins. `strategy` chooses the
+// agent within the matched rule's candidate pool.
+//   - direct          -> always `targetUserId`
+//   - round_robin     -> agent with the fewest lifetime assignments / weight
+//   - load_balanced   -> agent with the fewest open leads / weight (respects maxLeadsPerAgent)
+//   - performance     -> agent with the highest conversion rate (conversions / assignments)
+export const marketingDistributionRulesTable = pgTable("marketing_distribution_rules", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  code: text("code").notNull(),
+  name: text("name").notNull(),
+  nameAr: text("name_ar"),
+  // criteria (nullable = wildcard)
+  campaignId: uuid("campaign_id"),
+  channelId: uuid("channel_id"),
+  sourceId: uuid("source_id"),
+  branchId: uuid("branch_id"),
+  strategy: text("strategy").notNull().default("round_robin"),
+  targetUserId: uuid("target_user_id"),
+  priority: integer("priority").notNull().default(100),
+  maxLeadsPerAgent: integer("max_leads_per_agent"),
+  description: text("description"),
+  notes: text("notes"),
+  ...audit,
+});
+export type MarketingDistributionRuleRow = typeof marketingDistributionRulesTable.$inferSelect;
+
+// The eligible sales-agent roster for distribution (the HR + Sales integration
+// surface): an admin enrolls users (sales reps) here. `weight` biases the
+// load/round-robin maths so higher-capacity reps receive proportionally more
+// leads. Agents referenced by plain user uuid (no FK), per scaffold convention.
+export const marketingDistributionAgentsTable = pgTable("marketing_distribution_agents", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  userId: uuid("user_id").notNull(),
+  weight: integer("weight").notNull().default(1),
+  notes: text("notes"),
+  ...audit,
+});
+export type MarketingDistributionAgentRow = typeof marketingDistributionAgentsTable.$inferSelect;
+
+// Immutable audit log of every automatic distribution decision: which rule
+// matched, which agent was chosen, under which strategy, the score used, and a
+// human-readable reason. Read-only in the UI; powers distribution transparency.
+export const marketingDistributionLogsTable = pgTable("marketing_distribution_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  leadId: uuid("lead_id").notNull(),
+  ruleId: uuid("rule_id"),
+  assignedToUserId: uuid("assigned_to_user_id").notNull(),
+  strategy: text("strategy").notNull(),
+  score: numeric("score", { precision: 14, scale: 4 }),
+  reason: text("reason"),
+  ...audit,
+});
+export type MarketingDistributionLogRow = typeof marketingDistributionLogsTable.$inferSelect;

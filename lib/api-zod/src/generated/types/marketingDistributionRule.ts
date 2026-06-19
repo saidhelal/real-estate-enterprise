@@ -6,28 +6,29 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface Lead {
+export interface MarketingDistributionRule {
   id: string;
   companyId: string;
-  /** @nullable */
-  branchId?: string | null;
   code: string;
-  fullName: string;
+  name: string;
   /** @nullable */
-  phone?: string | null;
-  /** @nullable */
-  email?: string | null;
-  /** @nullable */
-  sourceId?: string | null;
+  nameAr?: string | null;
   /** @nullable */
   campaignId?: string | null;
   /** @nullable */
   channelId?: string | null;
   /** @nullable */
-  assignedToUserId?: string | null;
-  status: string;
+  sourceId?: string | null;
   /** @nullable */
-  budget?: string | null;
+  branchId?: string | null;
+  strategy: string;
+  /** @nullable */
+  targetUserId?: string | null;
+  priority: number;
+  /** @nullable */
+  maxLeadsPerAgent?: number | null;
+  /** @nullable */
+  description?: string | null;
   /** @nullable */
   notes?: string | null;
   isActive: boolean;
