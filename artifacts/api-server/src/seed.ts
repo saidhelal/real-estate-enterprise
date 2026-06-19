@@ -109,7 +109,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "reservationPayments", label: "Reservation Payments" },
   { module: "reservationNotes", label: "Reservation Notes" },
   { module: "reservationDocuments", label: "Reservation Documents" },
-  { module: "contracts", label: "Contracts" },
+  { module: "contracts", label: "Contracts", extraActions: ["submitFinance", "financeReview", "financeApprove", "financeReturn", "financeReject", "legalApprove"] },
   { module: "contractAmendments", label: "Contract Amendments" },
   { module: "contractCancellations", label: "Contract Cancellations" },
   { module: "contractNotes", label: "Contract Notes" },
@@ -529,6 +529,74 @@ async function seedCrmRoles(): Promise<void> {
   console.log(`Seeded ${roles.length} CRM roles (Sales User, Sales Admin, CRM Manager)`);
 }
 
+// Sales -> Finance -> Legal contract approval workflow roles. Each is a strict,
+// least-privilege slice of the contract lifecycle so the security boundaries in
+// the workflow are real and testable (Owner / Super Admin keep "*"):
+//   - Sales drafts + submits, never approves/activates.
+//   - Finance reviews + approves/returns/rejects, never edits sales data.
+//   - Legal approves+activates only after Finance, never finance-approves.
+async function seedWorkflowRoles(): Promise<void> {
+  const view = (m: string): string[] => [`${m}.view`];
+
+  // Sales Contracts — drafts the contract (customer/unit/payment/cheques) and
+  // submits it to Finance. Can create/update/view contracts but NOT approve,
+  // finance-approve, or activate. Reuses sales/customer/unit context (view).
+  const salesContracts = Array.from(
+    new Set([
+      ...view("projects"), ...view("buildings"), ...view("floors"),
+      ...view("units"), ...view("unitTypes"), ...view("unitStatuses"),
+      ...view("customers"), ...view("reservations"),
+      "contracts.view", "contracts.create", "contracts.update",
+      "contracts.submitFinance",
+      "installmentPlans.view", "installmentPlans.create",
+      "installmentSchedules.view", "installmentPlans.update",
+      "cheques.view", "cheques.create",
+    ]),
+  );
+
+  // Finance Approver — the Finance Inbox. Reviews the transaction, confirms
+  // physical cheque receipt, and approves / returns / rejects. NO contract
+  // create/update (cannot edit sales data); can mark cheques received.
+  const financeApprover = Array.from(
+    new Set([
+      ...view("projects"), ...view("units"), ...view("customers"),
+      "contracts.view", "contracts.financeReview", "contracts.financeApprove",
+      "contracts.financeReturn", "contracts.financeReject",
+      "cheques.view", "cheques.update",
+      "installmentPlans.view", "installmentSchedules.view",
+      "receipts.view",
+    ]),
+  );
+
+  // Legal Approver — receives finance-approved transactions, generates the final
+  // contract (verification id / QR / locked PDF), approves and activates. Cannot
+  // finance-approve or edit sales data.
+  const legalApprover = Array.from(
+    new Set([
+      ...view("units"), ...view("customers"),
+      "contracts.view", "contracts.legalApprove",
+      "legalContracts.view", "legalContracts.update",
+      "installmentPlans.view", "installmentSchedules.view",
+    ]),
+  );
+
+  const roles: Array<{ name: string; description: string; permissions: string[] }> = [
+    { name: "Sales Contracts", description: "Sales: draft sales contracts and submit them to Finance. Cannot approve, finance-approve, or activate.", permissions: salesContracts },
+    { name: "Finance Approver", description: "Finance Inbox: verify cheques and approve / return / reject submitted contracts. Cannot edit sales data.", permissions: financeApprover },
+    { name: "Legal Approver", description: "Legal Affairs: generate, approve and activate the final contract after Finance approval. Cannot bypass Finance.", permissions: legalApprover },
+  ];
+
+  for (const r of roles) {
+    const [existing] = await db.select().from(rolesTable).where(eq(rolesTable.name, r.name));
+    if (existing) {
+      await db.update(rolesTable).set({ description: r.description, permissions: r.permissions }).where(eq(rolesTable.id, existing.id));
+    } else {
+      await db.insert(rolesTable).values({ name: r.name, description: r.description, permissions: r.permissions });
+    }
+  }
+  console.log(`Seeded ${roles.length} workflow roles (Sales Contracts, Finance Approver, Legal Approver)`);
+}
+
 // The seven standard organizational roles. Owner and Super Admin carry full
 // access (["*"] + isSystem). The rest are least-privilege templates built from
 // real permission codes. System Admin runs the platform (users/roles/companies/
@@ -792,6 +860,7 @@ async function seedSettings(): Promise<void> {
 const UNIT_STATUS_CATALOG = [
   { code: "available", name: "Available", nameAr: "متاحة" },
   { code: "reserved", name: "Reserved", nameAr: "محجوزة" },
+  { code: "pending_sale", name: "Pending Sale", nameAr: "قيد البيع" },
   { code: "sold", name: "Sold", nameAr: "مباعة" },
   { code: "delivered", name: "Delivered", nameAr: "مُسلّمة" },
   { code: "blocked", name: "Blocked", nameAr: "محظورة" },
@@ -1977,6 +2046,7 @@ export async function seedAll(): Promise<void> {
   await seedSuperAdminUser(roleId);
   await seedStandardRoles();
   await seedCrmRoles();
+  await seedWorkflowRoles();
   await seedCurrencies();
   await seedCompany();
   await seedNumberSequences();

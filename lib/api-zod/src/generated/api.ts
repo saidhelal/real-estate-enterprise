@@ -3949,6 +3949,230 @@ export const ConvertReservationBody = zod.object({
 
 
 /**
+ * @summary Submit a draft contract to Finance for verification
+ */
+export const SubmitContractToFinanceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SubmitContractToFinanceBody = zod.object({
+  "paymentMethod": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const SubmitContractToFinanceResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Finance approves a contract (all cheques received)
+ */
+export const FinanceApproveContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const FinanceApproveContractBody = zod.object({
+  "notes": zod.string().optional()
+})
+
+export const FinanceApproveContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Finance records partial cheque receipt (stays pending)
+ */
+export const FinanceReceivePartialParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const FinanceReceivePartialBody = zod.object({
+  "chequeIds": zod.array(zod.string()),
+  "notes": zod.string().optional()
+})
+
+export const FinanceReceivePartialResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Finance rejects a submitted contract
+ */
+export const FinanceRejectContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const FinanceRejectContractBody = zod.object({
+  "notes": zod.string().optional()
+})
+
+export const FinanceRejectContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Finance returns a contract to Sales with comments
+ */
+export const FinanceReturnContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const FinanceReturnContractBody = zod.object({
+  "notes": zod.string().optional()
+})
+
+export const FinanceReturnContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Legal approves and activates a finance-approved contract
+ */
+export const LegalApproveContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const LegalApproveContractBody = zod.object({
+  "notes": zod.string().optional()
+})
+
+export const LegalApproveContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "reservationId": zod.string().nullish(),
+  "unitId": zod.string(),
+  "customerId": zod.string(),
+  "contractDate": zod.string(),
+  "totalPrice": zod.string(),
+  "downPayment": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
  * @summary Generate installment schedule rows for a plan
  */
 export const GenerateInstallmentSchedulesParams = zod.object({
@@ -4220,6 +4444,14 @@ export const ListContractsResponse = zod.object({
   "downPayment": zod.string().nullish(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -4243,7 +4475,8 @@ export const CreateContractBody = zod.object({
   "totalPrice": zod.string().optional(),
   "downPayment": zod.string().optional(),
   "status": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "paymentMethod": zod.string().optional()
 })
 
 
@@ -4267,6 +4500,14 @@ export const GetContractResponse = zod.object({
   "downPayment": zod.string().nullish(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -4290,7 +4531,8 @@ export const UpdateContractBody = zod.object({
   "totalPrice": zod.string().optional(),
   "downPayment": zod.string().optional(),
   "status": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "paymentMethod": zod.string().optional()
 })
 
 export const UpdateContractResponse = zod.object({
@@ -4306,6 +4548,14 @@ export const UpdateContractResponse = zod.object({
   "downPayment": zod.string().nullish(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
+  "legalContractId": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "submittedToFinanceAt": zod.string().nullish(),
+  "financeSlaDueAt": zod.string().nullish(),
+  "financeReviewedAt": zod.string().nullish(),
+  "financeNotes": zod.string().nullish(),
+  "legalApprovedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })

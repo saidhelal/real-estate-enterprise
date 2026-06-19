@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
-import { and, desc, eq, ilike, inArray, or, type SQL } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
+import { and, desc, eq, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import {
   db,
@@ -14,6 +15,8 @@ import {
   reservationDocumentsTable,
   unitTransfersTable,
   unitsTable,
+  chequesTable,
+  legalContractsTable,
 } from "@workspace/db";
 import {
   ListReservationsResponse,
@@ -29,6 +32,12 @@ import {
   CreateContractBody,
   GetContractResponse,
   UpdateContractBody,
+  SubmitContractToFinanceBody,
+  FinanceApproveContractBody,
+  FinanceReceivePartialBody,
+  FinanceRejectContractBody,
+  FinanceReturnContractBody,
+  LegalApproveContractBody,
   ListContractAmendmentsResponse,
   CreateContractAmendmentBody,
   GetContractAmendmentResponse,
@@ -67,6 +76,13 @@ import { nextDocumentNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
+
+// A unit is "claimed" by a contract for any of these statuses: a contract holds
+// the unit from the moment it is drafted, through the Sales->Finance->Legal
+// approval workflow, until it is activated (sold). Cancelled/rejected/completed
+// contracts release the unit. This list must include every pre-terminal
+// workflow status so two contracts can never claim the same unit concurrently.
+const LIVE_CONTRACT_STATUSES = ["draft", "pending_finance", "finance_approved", "active"] as const;
 router.use(requireAuth);
 
 // ----- reservations -----
@@ -133,7 +149,7 @@ router.post("/reservations", requirePermission("reservations.create"), async (re
       and(
         eq(contractsTable.unitId, parsed.data.unitId),
         eq(contractsTable.isDeleted, false),
-        inArray(contractsTable.status, ["draft", "active"]),
+        inArray(contractsTable.status, LIVE_CONTRACT_STATUSES as unknown as string[]),
       ),
     )
     .limit(1);
@@ -303,6 +319,47 @@ router.get("/contracts", requirePermission("contracts.view"), async (req, res): 
     .orderBy(desc(contractsTable.createdAt))
     .limit(pageSize)
     .offset(offset);
+  // Lazy SLA escalation: when the Finance inbox is read, any pending_finance
+  // contract past its review SLA raises a one-time high-priority escalation to
+  // the finance approvers (idempotent per contract via the notify dedupe).
+  if (status === "pending_finance") {
+    const now = new Date();
+    const overdue = await db
+      .select()
+      .from(contractsTable)
+      .where(
+        and(
+          eq(contractsTable.isDeleted, false),
+          eq(contractsTable.status, "pending_finance"),
+          lt(contractsTable.financeSlaDueAt, now),
+        ),
+      );
+    for (const c of overdue) {
+      // Escalate beyond Finance: alert the finance approvers (who must act) and
+      // the sales/management audience (who submitted and need visibility that
+      // their contract is stuck). Owners/Super Admins hold "*" so they are
+      // already included via either permission. De-duplicated into one set.
+      const [financeAudience, salesAudience] = await Promise.all([
+        recipientsByPermission(db, "contracts.financeApprove", { companyId: c.companyId }),
+        recipientsByPermission(db, "contracts.create", { companyId: c.companyId }),
+      ]);
+      const audience = Array.from(new Set([...financeAudience, ...salesAudience]));
+      await notify(db, {
+        recipientUserIds: audience,
+        companyId: c.companyId,
+        actorUserId: null,
+        category: "approvals",
+        eventType: "contract_finance_sla_breached",
+        priority: "urgent",
+        title: "تجاوز مهلة اعتماد المالية / Finance approval SLA breached",
+        body: `${c.code}`,
+        sourceModule: "sales",
+        sourceId: c.id,
+        sourceRef: c.code,
+        link: "/finance-inbox",
+      });
+    }
+  }
   res.json(ListContractsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
 });
 
@@ -324,7 +381,7 @@ router.post("/contracts", requirePermission("contracts.create"), async (req, res
       and(
         eq(contractsTable.unitId, parsed.data.unitId),
         eq(contractsTable.isDeleted, false),
-        inArray(contractsTable.status, ["draft", "active"]),
+        inArray(contractsTable.status, LIVE_CONTRACT_STATUSES as unknown as string[]),
       ),
     )
     .limit(1);
@@ -342,21 +399,18 @@ router.post("/contracts", requirePermission("contracts.create"), async (req, res
     .limit(1);
   if (!activeReservation) { res.status(400).json({ error: "Unit must be reserved before creating a contract" }); return; }
   const row = await db.transaction(async (tx) => {
-    const [created] = await tx.insert(contractsTable).values({ ...parsed.data }).returning();
-    // Recognize the sale on the ledger (best-effort; skipped if accounting unconfigured).
-    await postAutomaticEntry(tx, {
-      companyId: created.companyId,
-      branchId: created.branchId ?? null,
-      eventKey: "contract.created",
-      amount: created.totalPrice ?? "0",
-      entryDate: created.contractDate,
-      description: `Contract ${created.code}`,
-      reference: created.code,
-      sourceType: "contract",
-      sourceId: created.id,
-      userId: req.authUser?.id ?? null,
-    });
-    // Mark the unit Sold and register the contract in Legal Affairs.
+    // A contract is always born as a draft. The lifecycle status is owned
+    // exclusively by the workflow endpoints (submit/approve/legal-approve) and
+    // the cancellation flow — never set by the client at create — so a caller
+    // cannot inject status:"active"/"finance_approved" to skip Finance/Legal and
+    // sell a unit without the required approvals.
+    const [created] = await tx
+      .insert(contractsTable)
+      .values({ ...parsed.data, status: "draft" })
+      .returning();
+    // No GL posting at create: a contract is born as a draft and recognizes the
+    // sale on the ledger only when Legal activates it (see legal-approve). The
+    // unit is locked as Pending Sale, not Sold, until then.
     await recomputeUnitStatus(tx, created.unitId);
     const legalContractId = await ensureLegalContractForContract(tx, created);
     // Notify the sales/management audience (everyone who can create contracts)
@@ -398,6 +452,12 @@ router.patch("/contracts/:id", requirePermission("contracts.update"), async (req
   const [existing] = await db.select().from(contractsTable).where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The contract lifecycle status and all Sales->Finance->Legal workflow fields
+  // are owned by the dedicated workflow endpoints (submit/approve/return/reject/
+  // legal-approve) and the cancellation flow — never by a generic edit. Strip
+  // any client-supplied `status` so Sales cannot self-approve/activate a
+  // contract by PATCHing it straight to finance_approved/active.
+  delete (update as { status?: unknown }).status;
   const row = await db.transaction(async (tx) => {
     const [updated] = Object.keys(update).length
       ? await tx.update(contractsTable).set(update).where(eq(contractsTable.id, id)).returning()
@@ -918,7 +978,8 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
       })
       .returning();
     await tx.update(reservationsTable).set({ status: "converted" }).where(eq(reservationsTable.id, id));
-    // The unit is now under contract (Sold) and the contract is registered in Legal Affairs.
+    // The unit is now under a draft contract (Pending Sale, not Sold — it only
+    // becomes Sold at Legal activation) and is registered in Legal Affairs.
     await recomputeUnitStatus(tx, created.unitId);
     const legalContractId = await ensureLegalContractForContract(tx, created);
     return { ...created, legalContractId: legalContractId ?? created.legalContractId };
@@ -928,5 +989,366 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
   await recordAudit(req, { action: "convert", entity: "reservation", entityId: id, newValue: contract });
   res.status(201).json(GetContractResponse.parse(serializeRow(contract!)));
 });
+
+// ===========================================================================
+// Sales -> Finance -> Legal contract approval workflow
+// ---------------------------------------------------------------------------
+// A contract is born as a `draft` (created/converted above, no GL, unit locked
+// as Pending Sale). Sales submits it to Finance (`pending_finance`); Finance
+// verifies the incoming cheques and either approves (`finance_approved`),
+// returns it to Sales for fixes (back to `draft`), or rejects it (`rejected`,
+// unit freed). Finally Legal approves & activates it (`active`): the GL entry is
+// posted, the linked Legal Affairs contract is activated, and the unit flips to
+// Sold. Each transition is permission-gated (Sales cannot approve/activate,
+// Finance cannot edit the sale, Legal cannot bypass Finance), notifies the next
+// audience, and writes an audit row. State guards use a row lock + re-check
+// inside the transaction so concurrent transitions cannot race.
+// ===========================================================================
+
+/** Finance review SLA: pending_finance must be actioned within this window. */
+const FINANCE_SLA_HOURS = 48;
+
+router.post(
+  "/contracts/:id/submit-to-finance",
+  requirePermission("contracts.submitFinance"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = SubmitContractToFinanceBody.safeParse(req.body ?? {});
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+    let conflict: string | null = null;
+    let before: typeof contractsTable.$inferSelect | null = null;
+    const row = await db.transaction(async (tx) => {
+      const [c] = await tx
+        .select()
+        .from(contractsTable)
+        .where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)))
+        .for("update");
+      if (!c) { conflict = "404"; return null; }
+      if (c.status !== "draft") { conflict = `Only a draft contract can be submitted to finance (current: ${c.status})`; return null; }
+      before = c;
+      const now = new Date();
+      const slaDue = new Date(now.getTime() + FINANCE_SLA_HOURS * 60 * 60 * 1000);
+      const [updated] = await tx
+        .update(contractsTable)
+        .set({
+          status: "pending_finance",
+          paymentMethod: parsed.data.paymentMethod ?? c.paymentMethod,
+          submittedToFinanceAt: now,
+          submittedToFinanceBy: req.authUser?.id ?? null,
+          financeSlaDueAt: slaDue,
+          financeReviewedAt: null,
+          financeReviewedBy: null,
+          financeNotes: parsed.data.notes ?? null,
+        })
+        .where(eq(contractsTable.id, id))
+        .returning();
+      await recomputeUnitStatus(tx, updated.unitId);
+      const audience = await recipientsByPermission(tx, "contracts.financeApprove", { companyId: updated.companyId });
+      await notify(tx, {
+        recipientUserIds: audience.filter((u) => u !== req.authUser?.id),
+        companyId: updated.companyId,
+        actorUserId: req.authUser?.id ?? null,
+        category: "approvals",
+        eventType: "contract_pending_finance",
+        priority: "high",
+        title: "عقد بانتظار اعتماد المالية / Contract pending finance approval",
+        body: `${updated.code}`,
+        sourceModule: "sales",
+        sourceId: updated.id,
+        sourceRef: updated.code,
+        link: "/finance-inbox",
+      });
+      return updated;
+    });
+    if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+    if (conflict) { res.status(409).json({ error: conflict }); return; }
+    await recordAudit(req, { action: "submit_to_finance", entity: "contract", entityId: id, oldValue: before, newValue: row });
+    res.json(GetContractResponse.parse(serializeRow(row!)));
+  },
+);
+
+router.post(
+  "/contracts/:id/finance-partial",
+  requirePermission("contracts.financeReview"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = FinanceReceivePartialBody.safeParse(req.body ?? {});
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+    let conflict: string | null = null;
+    let before: typeof contractsTable.$inferSelect | null = null;
+    const row = await db.transaction(async (tx) => {
+      const [c] = await tx
+        .select()
+        .from(contractsTable)
+        .where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)))
+        .for("update");
+      if (!c) { conflict = "404"; return null; }
+      if (c.status !== "pending_finance") { conflict = `Cheques can only be received while a contract is pending finance (current: ${c.status})`; return null; }
+      before = c;
+      // Mark the listed cheques as received, scoped to this contract so a forged
+      // id from another contract cannot be flipped.
+      if (parsed.data.chequeIds.length) {
+        await tx
+          .update(chequesTable)
+          .set({ status: "received" })
+          .where(and(inArray(chequesTable.id, parsed.data.chequeIds), eq(chequesTable.contractId, id)));
+      }
+      const [updated] = await tx
+        .update(contractsTable)
+        .set({ financeNotes: parsed.data.notes ?? c.financeNotes })
+        .where(eq(contractsTable.id, id))
+        .returning();
+      return updated;
+    });
+    if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+    if (conflict) { res.status(409).json({ error: conflict }); return; }
+    await recordAudit(req, { action: "finance_partial", entity: "contract", entityId: id, oldValue: before, newValue: row });
+    res.json(GetContractResponse.parse(serializeRow(row!)));
+  },
+);
+
+router.post(
+  "/contracts/:id/finance-approve",
+  requirePermission("contracts.financeApprove"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = FinanceApproveContractBody.safeParse(req.body ?? {});
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+    let conflict: string | null = null;
+    let before: typeof contractsTable.$inferSelect | null = null;
+    const row = await db.transaction(async (tx) => {
+      const [c] = await tx
+        .select()
+        .from(contractsTable)
+        .where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)))
+        .for("update");
+      if (!c) { conflict = "404"; return null; }
+      if (c.status !== "pending_finance") { conflict = `Only a contract pending finance can be approved (current: ${c.status})`; return null; }
+      before = c;
+      const [updated] = await tx
+        .update(contractsTable)
+        .set({
+          status: "finance_approved",
+          financeReviewedAt: new Date(),
+          financeReviewedBy: req.authUser?.id ?? null,
+          financeNotes: parsed.data.notes ?? c.financeNotes,
+        })
+        .where(eq(contractsTable.id, id))
+        .returning();
+      await recomputeUnitStatus(tx, updated.unitId);
+      const audience = await recipientsByPermission(tx, "contracts.legalApprove", { companyId: updated.companyId });
+      await notify(tx, {
+        recipientUserIds: audience.filter((u) => u !== req.authUser?.id),
+        companyId: updated.companyId,
+        actorUserId: req.authUser?.id ?? null,
+        category: "approvals",
+        eventType: "contract_finance_approved",
+        priority: "high",
+        title: "عقد بانتظار الاعتماد القانوني / Contract pending legal approval",
+        body: `${updated.code}`,
+        sourceModule: "sales",
+        sourceId: updated.id,
+        sourceRef: updated.code,
+        link: "/legal-approvals",
+      });
+      return updated;
+    });
+    if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+    if (conflict) { res.status(409).json({ error: conflict }); return; }
+    await recordAudit(req, { action: "finance_approve", entity: "contract", entityId: id, oldValue: before, newValue: row });
+    res.json(GetContractResponse.parse(serializeRow(row!)));
+  },
+);
+
+router.post(
+  "/contracts/:id/finance-return",
+  requirePermission("contracts.financeReturn"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = FinanceReturnContractBody.safeParse(req.body ?? {});
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+    let conflict: string | null = null;
+    let before: typeof contractsTable.$inferSelect | null = null;
+    const row = await db.transaction(async (tx) => {
+      const [c] = await tx
+        .select()
+        .from(contractsTable)
+        .where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)))
+        .for("update");
+      if (!c) { conflict = "404"; return null; }
+      if (c.status !== "pending_finance") { conflict = `Only a contract pending finance can be returned (current: ${c.status})`; return null; }
+      before = c;
+      const [updated] = await tx
+        .update(contractsTable)
+        .set({
+          status: "draft",
+          financeReviewedAt: new Date(),
+          financeReviewedBy: req.authUser?.id ?? null,
+          financeNotes: parsed.data.notes ?? c.financeNotes,
+          financeSlaDueAt: null,
+        })
+        .where(eq(contractsTable.id, id))
+        .returning();
+      await recomputeUnitStatus(tx, updated.unitId);
+      const audience = await recipientsByPermission(tx, "contracts.submitFinance", { companyId: updated.companyId });
+      await notify(tx, {
+        recipientUserIds: audience.filter((u) => u !== req.authUser?.id),
+        companyId: updated.companyId,
+        actorUserId: req.authUser?.id ?? null,
+        category: "approvals",
+        eventType: "contract_finance_returned",
+        priority: "medium",
+        title: "عقد أُعيد من المالية / Contract returned by finance",
+        body: `${updated.code}`,
+        sourceModule: "sales",
+        sourceId: updated.id,
+        sourceRef: updated.code,
+        link: "/contracts",
+      });
+      return updated;
+    });
+    if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+    if (conflict) { res.status(409).json({ error: conflict }); return; }
+    await recordAudit(req, { action: "finance_return", entity: "contract", entityId: id, oldValue: before, newValue: row });
+    res.json(GetContractResponse.parse(serializeRow(row!)));
+  },
+);
+
+router.post(
+  "/contracts/:id/finance-reject",
+  requirePermission("contracts.financeReject"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = FinanceRejectContractBody.safeParse(req.body ?? {});
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+    let conflict: string | null = null;
+    let before: typeof contractsTable.$inferSelect | null = null;
+    const row = await db.transaction(async (tx) => {
+      const [c] = await tx
+        .select()
+        .from(contractsTable)
+        .where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)))
+        .for("update");
+      if (!c) { conflict = "404"; return null; }
+      if (c.status !== "pending_finance") { conflict = `Only a contract pending finance can be rejected (current: ${c.status})`; return null; }
+      before = c;
+      const [updated] = await tx
+        .update(contractsTable)
+        .set({
+          status: "rejected",
+          financeReviewedAt: new Date(),
+          financeReviewedBy: req.authUser?.id ?? null,
+          financeNotes: parsed.data.notes ?? c.financeNotes,
+          financeSlaDueAt: null,
+        })
+        .where(eq(contractsTable.id, id))
+        .returning();
+      // A rejected contract no longer claims the unit; free it (back to Reserved
+      // if a live reservation remains, else Available).
+      await recomputeUnitStatus(tx, updated.unitId);
+      const audience = await recipientsByPermission(tx, "contracts.submitFinance", { companyId: updated.companyId });
+      await notify(tx, {
+        recipientUserIds: audience.filter((u) => u !== req.authUser?.id),
+        companyId: updated.companyId,
+        actorUserId: req.authUser?.id ?? null,
+        category: "approvals",
+        eventType: "contract_finance_rejected",
+        priority: "high",
+        title: "عقد مرفوض من المالية / Contract rejected by finance",
+        body: `${updated.code}`,
+        sourceModule: "sales",
+        sourceId: updated.id,
+        sourceRef: updated.code,
+        link: "/contracts",
+      });
+      return updated;
+    });
+    if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+    if (conflict) { res.status(409).json({ error: conflict }); return; }
+    await recordAudit(req, { action: "finance_reject", entity: "contract", entityId: id, oldValue: before, newValue: row });
+    res.json(GetContractResponse.parse(serializeRow(row!)));
+  },
+);
+
+router.post(
+  "/contracts/:id/legal-approve",
+  requirePermission("contracts.legalApprove"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const parsed = LegalApproveContractBody.safeParse(req.body ?? {});
+    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+    let conflict: string | null = null;
+    let before: typeof contractsTable.$inferSelect | null = null;
+    const row = await db.transaction(async (tx) => {
+      const [c] = await tx
+        .select()
+        .from(contractsTable)
+        .where(and(eq(contractsTable.id, id), eq(contractsTable.isDeleted, false)))
+        .for("update");
+      if (!c) { conflict = "404"; return null; }
+      // Legal cannot bypass Finance: a contract must be finance_approved first.
+      if (c.status !== "finance_approved") { conflict = `Legal can only activate a finance-approved contract (current: ${c.status})`; return null; }
+      before = c;
+      const now = new Date();
+      const verificationId = c.verificationId ?? randomUUID();
+      const [updated] = await tx
+        .update(contractsTable)
+        .set({
+          status: "active",
+          legalApprovedAt: now,
+          legalApprovedBy: req.authUser?.id ?? null,
+          verificationId,
+        })
+        .where(eq(contractsTable.id, id))
+        .returning();
+      // Recognize the sale on the ledger now (best-effort; idempotent per
+      // (contract, id) so a retry cannot double-post).
+      await postAutomaticEntry(tx, {
+        companyId: updated.companyId,
+        branchId: updated.branchId ?? null,
+        eventKey: "contract.created",
+        amount: updated.totalPrice ?? "0",
+        entryDate: updated.contractDate,
+        description: `Contract ${updated.code}`,
+        reference: updated.code,
+        sourceType: "contract",
+        sourceId: updated.id,
+        userId: req.authUser?.id ?? null,
+      });
+      // Ensure the Legal Affairs registry row exists and mark it active.
+      const legalContractId = await ensureLegalContractForContract(tx, updated);
+      if (legalContractId) {
+        await tx
+          .update(legalContractsTable)
+          .set({ status: "active", reviewedBy: req.authUser?.id ?? null })
+          .where(eq(legalContractsTable.id, legalContractId));
+      }
+      // The unit is now genuinely Sold.
+      await recomputeUnitStatus(tx, updated.unitId);
+      // Close the loop back to Sales + Finance.
+      const sales = await recipientsByPermission(tx, "contracts.submitFinance", { companyId: updated.companyId });
+      const finance = await recipientsByPermission(tx, "contracts.financeApprove", { companyId: updated.companyId });
+      await notify(tx, {
+        recipientUserIds: [...new Set([...sales, ...finance])].filter((u) => u !== req.authUser?.id),
+        companyId: updated.companyId,
+        actorUserId: req.authUser?.id ?? null,
+        category: "approvals",
+        eventType: "contract_activated",
+        priority: "medium",
+        title: "عقد مُفعّل / Contract activated",
+        body: `${updated.code}`,
+        sourceModule: "sales",
+        sourceId: updated.id,
+        sourceRef: updated.code,
+        link: "/contracts",
+      });
+      return { ...updated, legalContractId: legalContractId ?? updated.legalContractId };
+    });
+    if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+    if (conflict) { res.status(409).json({ error: conflict }); return; }
+    await recordAudit(req, { action: "legal_approve", entity: "contract", entityId: id, oldValue: before, newValue: row });
+    res.json(GetContractResponse.parse(serializeRow(row!)));
+  },
+);
 
 export default router;

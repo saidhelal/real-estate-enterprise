@@ -18,4 +18,5 @@ export interface ContractUpdate {
   downPayment?: string;
   status?: string;
   notes?: string;
+  paymentMethod?: string;
 }

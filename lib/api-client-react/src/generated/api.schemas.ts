@@ -1966,6 +1966,22 @@ export interface Contract {
   status: string;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  paymentMethod?: string | null;
+  /** @nullable */
+  submittedToFinanceAt?: string | null;
+  /** @nullable */
+  financeSlaDueAt?: string | null;
+  /** @nullable */
+  financeReviewedAt?: string | null;
+  /** @nullable */
+  financeNotes?: string | null;
+  /** @nullable */
+  legalApprovedAt?: string | null;
+  /** @nullable */
+  verificationId?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -1982,6 +1998,7 @@ export interface ContractInput {
   downPayment?: string;
   status?: string;
   notes?: string;
+  paymentMethod?: string;
 }
 
 export interface ContractUpdate {
@@ -1996,6 +2013,7 @@ export interface ContractUpdate {
   downPayment?: string;
   status?: string;
   notes?: string;
+  paymentMethod?: string;
 }
 
 export interface ContractListResponse {
@@ -3109,6 +3127,24 @@ export interface ConvertReservationInput {
   contractDate?: string;
   totalPrice?: string;
   downPayment?: string;
+  notes?: string;
+}
+
+export interface SubmitToFinanceInput {
+  paymentMethod?: string;
+  notes?: string;
+}
+
+export interface FinanceDecisionInput {
+  notes?: string;
+}
+
+export interface FinancePartialInput {
+  chequeIds: string[];
+  notes?: string;
+}
+
+export interface LegalApprovalInput {
   notes?: string;
 }
 

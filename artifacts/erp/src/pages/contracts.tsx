@@ -4,6 +4,7 @@ import {
   useUpdateContract,
   useDeleteContract,
   getListContractsQueryKey,
+  useSubmitContractToFinance,
   useListBranches,
   useListReservations,
   useListProjects,
@@ -24,12 +25,30 @@ import {
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Send, FileText } from "lucide-react";
+import { Link } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = enumOptions(["draft", "active", "completed", "cancelled"]);
+const STATUS = enumOptions([
+  "draft",
+  "pending_finance",
+  "finance_approved",
+  "active",
+  "rejected",
+  "completed",
+  "cancelled",
+]);
+
+const PAYMENT_METHODS = enumOptions(["cash", "cheque", "installments", "bank_transfer"]);
 
 export default function ContractsPage() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const submitToFinance = useSubmitContractToFinance();
   const { data: companies } = useListCompanies();
   const { data: branches } = useListBranches();
   const { data: reservations } = useListReservations({ pageSize: 200 });
@@ -74,7 +93,11 @@ export default function ContractsPage() {
     { name: "contractDate", label: "Contract Date", labelAr: "تاريخ العقد", type: "date", required: true },
     { name: "totalPrice", label: "Total Price", labelAr: "السعر الإجمالي", type: "money" },
     { name: "downPayment", label: "Down Payment", labelAr: "الدفعة المقدمة", type: "money" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", required: true, options: STATUS },
+    { name: "paymentMethod", label: "Payment Method", labelAr: "طريقة الدفع", type: "select", options: PAYMENT_METHODS },
+    // Status is driven by the approval workflow (Submit to Finance -> Finance
+    // approval -> Legal activation), not edited by hand; shown read-only as a
+    // filter so it cannot be manually flipped to bypass the workflow.
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", filterOnly: true, options: STATUS },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 
@@ -82,8 +105,25 @@ export default function ContractsPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Date", headerAr: "التاريخ", render: (r) => r.contractDate },
     { header: "Total Price", headerAr: "السعر الإجمالي", render: (r) => r.totalPrice ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge> },
   ];
+
+  const handleSubmit = (r: Contract) => {
+    const label = language === "ar"
+      ? "إرسال هذا العقد إلى المالية للاعتماد؟"
+      : "Submit this contract to Finance for approval?";
+    if (!confirm(label)) return;
+    submitToFinance.mutate(
+      { id: r.id, data: {} },
+      {
+        onSuccess: () => {
+          toast({ title: language === "ar" ? "أُرسل إلى المالية" : "Submitted to Finance", description: r.code });
+          queryClient.invalidateQueries({ queryKey: getListContractsQueryKey() });
+        },
+        onError: () => toast({ title: t("common.error"), variant: "destructive" }),
+      },
+    );
+  };
 
   return (
     <ResourceManager
@@ -97,7 +137,43 @@ export default function ContractsPage() {
       useDelete={useDeleteContract}
       getListQueryKey={getListContractsQueryKey}
       companyId={companyId}
-      rowActions={(r) => <DocumentsRowAction moduleKey="contracts" sourceId={r.id} />}
+      rowActions={(r) => (
+        <div className="flex items-center gap-1">
+          {r.status === "draft" ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={submitToFinance.isPending}
+              onClick={() => handleSubmit(r)}
+              title={language === "ar" ? "إرسال إلى المالية" : "Submit to Finance"}
+            >
+              <Send className="h-4 w-4 mr-1" />
+              {language === "ar" ? "إلى المالية" : "To Finance"}
+            </Button>
+          ) : null}
+          <Button asChild variant="ghost" size="sm" title={language === "ar" ? "مستند العقد" : "Contract document"}>
+            <Link href={`/contracts/${r.id}/document`}>
+              <FileText className="h-4 w-4" />
+            </Link>
+          </Button>
+          <DocumentsRowAction moduleKey="contracts" sourceId={r.id} />
+        </div>
+      )}
     />
   );
+}
+
+function statusVariant(status: string | null | undefined): "default" | "secondary" | "destructive" | "outline" {
+  switch (status) {
+    case "active":
+      return "default";
+    case "rejected":
+    case "cancelled":
+      return "destructive";
+    case "pending_finance":
+    case "finance_approved":
+      return "outline";
+    default:
+      return "secondary";
+  }
 }

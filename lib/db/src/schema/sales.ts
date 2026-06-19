@@ -62,6 +62,17 @@ export const contractsTable = pgTable("contracts", {
   // Non-breaking back-link to the Legal Affairs master contract registry.
   legalContractId: uuid("legal_contract_id"),
   notes: text("notes"),
+  // Sales -> Finance -> Legal approval workflow (all nullable, non-breaking).
+  paymentMethod: text("payment_method"),
+  submittedToFinanceAt: timestamp("submitted_to_finance_at", { withTimezone: true }),
+  submittedToFinanceBy: uuid("submitted_to_finance_by"),
+  financeSlaDueAt: timestamp("finance_sla_due_at", { withTimezone: true }),
+  financeReviewedAt: timestamp("finance_reviewed_at", { withTimezone: true }),
+  financeReviewedBy: uuid("finance_reviewed_by"),
+  financeNotes: text("finance_notes"),
+  legalApprovedAt: timestamp("legal_approved_at", { withTimezone: true }),
+  legalApprovedBy: uuid("legal_approved_by"),
+  verificationId: text("verification_id"),
   ...audit,
 });
 export type ContractRow = typeof contractsTable.$inferSelect;

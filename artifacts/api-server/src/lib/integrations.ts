@@ -36,7 +36,9 @@ export const MANUAL_UNIT_STATUS_CODES = [
 /**
  * Derive a unit's status from its strongest live claim and sync
  * `units.unitStatusId`:
- *   - an active contract (status draft/active) on the unit  -> "sold"
+ *   - an active (legally activated) contract on the unit    -> "sold"
+ *   - else a contract still in the approval workflow
+ *     (draft/pending_finance/finance_approved)             -> "pending_sale"
  *   - else an active reservation (status active/confirmed)  -> "reserved"
  *   - else                                                  -> "available"
  *
@@ -78,21 +80,46 @@ export async function recomputeUnitStatus(
     return;
   }
 
-  const [contract] = await tx
+  // An *active* (legally activated) contract claims the unit as Sold. A contract
+  // still moving through the Sales -> Finance -> Legal approval workflow
+  // (draft / pending_finance / finance_approved) claims it as Pending Sale, so
+  // the unit is locked from a second sale but is NOT marked Sold until Legal
+  // activates the contract.
+  const [soldContract] = await tx
     .select({ id: contractsTable.id })
     .from(contractsTable)
     .where(
       and(
         eq(contractsTable.unitId, unitId),
         eq(contractsTable.isDeleted, false),
-        inArray(contractsTable.status, ["draft", "active"]),
+        eq(contractsTable.status, "active"),
       ),
     )
     .limit(1);
 
+  const [pendingContract] = soldContract
+    ? [undefined]
+    : await tx
+        .select({ id: contractsTable.id })
+        .from(contractsTable)
+        .where(
+          and(
+            eq(contractsTable.unitId, unitId),
+            eq(contractsTable.isDeleted, false),
+            inArray(contractsTable.status, [
+              "draft",
+              "pending_finance",
+              "finance_approved",
+            ]),
+          ),
+        )
+        .limit(1);
+
   let code: string;
-  if (contract) {
+  if (soldContract) {
     code = "sold";
+  } else if (pendingContract) {
+    code = "pending_sale";
   } else {
     const [resv] = await tx
       .select({ id: reservationsTable.id })
@@ -185,7 +212,11 @@ export async function ensureLegalContractForContract(
         counterpartyType: "customer",
         counterpartyId: contract.customerId,
         counterpartyName: customer?.fullName ?? null,
-        status: "active",
+        // The legal registry row is born as a draft and is only promoted to
+        // "active" when Legal approves+activates the sales contract (see the
+        // legal-approve handler). Creating it active here would mark a sale as
+        // legally binding before the Sales->Finance->Legal workflow completes.
+        status: "draft",
         contractDate: contract.contractDate,
         value: contract.totalPrice ?? "0",
       })

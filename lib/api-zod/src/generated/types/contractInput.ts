@@ -18,4 +18,5 @@ export interface ContractInput {
   downPayment?: string;
   status?: string;
   notes?: string;
+  paymentMethod?: string;
 }

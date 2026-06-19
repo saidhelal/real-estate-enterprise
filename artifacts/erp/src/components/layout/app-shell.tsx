@@ -59,6 +59,8 @@ const RAW_NAV_GROUPS = [
     { href: "/leads", icon: UserPlus, labelKey: "nav.leads" },
     { href: "/reservations", icon: BookMarked, labelKey: "nav.reservations" },
     { href: "/contracts", icon: FileSignature, labelKey: "nav.contracts" },
+    { href: "/finance-inbox", icon: Inbox, labelKey: "nav.finance_inbox" },
+    { href: "/legal-approvals", icon: Gavel, labelKey: "nav.legal_approvals" },
     { href: "/contract-amendments", icon: FilePen, labelKey: "nav.contract_amendments" },
     { href: "/contract-cancellations", icon: FileX, labelKey: "nav.contract_cancellations" },
     { href: "/unit-transfers", icon: ArrowLeftRight, labelKey: "nav.unit_transfers" },

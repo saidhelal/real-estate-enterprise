@@ -61,6 +61,9 @@ const ReservationPaymentsPage = lazy(() => import("@/pages/reservation-payments"
 const ReservationNotesPage = lazy(() => import("@/pages/reservation-notes"));
 const ReservationDocumentsPage = lazy(() => import("@/pages/reservation-documents"));
 const ContractsPage = lazy(() => import("@/pages/contracts"));
+const ContractDocumentPage = lazy(() => import("@/pages/contract-document"));
+const FinanceInboxPage = lazy(() => import("@/pages/finance-inbox"));
+const LegalApprovalsPage = lazy(() => import("@/pages/legal-approvals"));
 const ContractAmendmentsPage = lazy(() => import("@/pages/contract-amendments"));
 const ContractCancellationsPage = lazy(() => import("@/pages/contract-cancellations"));
 const ContractNotesPage = lazy(() => import("@/pages/contract-notes"));
@@ -403,6 +406,9 @@ function Router() {
             <Route path="/reservation-notes" component={ReservationNotesPage} />
             <Route path="/reservation-documents" component={ReservationDocumentsPage} />
             <Route path="/contracts" component={ContractsPage} />
+            <Route path="/contracts/:id/document" component={ContractDocumentPage} />
+            <Route path="/finance-inbox" component={FinanceInboxPage} />
+            <Route path="/legal-approvals" component={LegalApprovalsPage} />
             <Route path="/contract-amendments" component={ContractAmendmentsPage} />
             <Route path="/contract-cancellations" component={ContractCancellationsPage} />
             <Route path="/contract-notes" component={ContractNotesPage} />

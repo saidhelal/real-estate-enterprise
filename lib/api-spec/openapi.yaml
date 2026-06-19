@@ -3392,6 +3392,204 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /contracts/{id}/submit-to-finance:
+    post:
+      operationId: submitContractToFinance
+      tags: [contracts]
+      summary: Submit a draft contract to Finance for verification
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitToFinanceInput"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /contracts/{id}/finance-approve:
+    post:
+      operationId: financeApproveContract
+      tags: [contracts]
+      summary: Finance approves a contract (all cheques received)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinanceDecisionInput"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /contracts/{id}/finance-partial:
+    post:
+      operationId: financeReceivePartial
+      tags: [contracts]
+      summary: Finance records partial cheque receipt (stays pending)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancePartialInput"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /contracts/{id}/finance-reject:
+    post:
+      operationId: financeRejectContract
+      tags: [contracts]
+      summary: Finance rejects a submitted contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinanceDecisionInput"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /contracts/{id}/finance-return:
+    post:
+      operationId: financeReturnContract
+      tags: [contracts]
+      summary: Finance returns a contract to Sales with comments
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinanceDecisionInput"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /contracts/{id}/legal-approve:
+    post:
+      operationId: legalApproveContract
+      tags: [contracts]
+      summary: Legal approves and activates a finance-approved contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LegalApprovalInput"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /installment-plans/{id}/generate:
     post:
       operationId: generateInstallmentSchedules
@@ -26606,6 +26804,14 @@ components:
         downPayment: { type: ["string", "null"] }
         status: { type: string }
         notes: { type: ["string", "null"] }
+        legalContractId: { type: ["string", "null"] }
+        paymentMethod: { type: ["string", "null"] }
+        submittedToFinanceAt: { type: ["string", "null"] }
+        financeSlaDueAt: { type: ["string", "null"] }
+        financeReviewedAt: { type: ["string", "null"] }
+        financeNotes: { type: ["string", "null"] }
+        legalApprovedAt: { type: ["string", "null"] }
+        verificationId: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
 
@@ -26624,6 +26830,7 @@ components:
         downPayment: { type: string }
         status: { type: string }
         notes: { type: string }
+        paymentMethod: { type: string }
 
     ContractUpdate:
       type: object
@@ -26639,6 +26846,7 @@ components:
         downPayment: { type: string }
         status: { type: string }
         notes: { type: string }
+        paymentMethod: { type: string }
 
     ContractListResponse:
       type: object
@@ -27938,6 +28146,31 @@ components:
         contractDate: { type: string }
         totalPrice: { type: string }
         downPayment: { type: string }
+        notes: { type: string }
+
+    SubmitToFinanceInput:
+      type: object
+      properties:
+        paymentMethod: { type: string }
+        notes: { type: string }
+
+    FinanceDecisionInput:
+      type: object
+      properties:
+        notes: { type: string }
+
+    FinancePartialInput:
+      type: object
+      required: [chequeIds]
+      properties:
+        chequeIds:
+          type: array
+          items: { type: string }
+        notes: { type: string }
+
+    LegalApprovalInput:
+      type: object
+      properties:
         notes: { type: string }
 
     GenerateInstallmentsResult:

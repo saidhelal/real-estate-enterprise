@@ -356,6 +356,10 @@ export const LABELS: Record<string, LabelPair> = {
   follow_up: { en: "Follow Up", ar: "متابعة" },
   initial_reservation: { en: "Initial Reservation", ar: "حجز مبدئي" },
   reserved: { en: "Reserved", ar: "محجوز" },
+  // Sales -> Finance -> Legal approval workflow statuses.
+  pending_sale: { en: "Pending Sale", ar: "قيد البيع" },
+  pending_finance: { en: "Pending Finance Approval", ar: "بانتظار اعتماد المالية" },
+  finance_approved: { en: "Finance Approved", ar: "معتمد من المالية" },
   contracted: { en: "Contracted", ar: "متعاقد" },
   not_interested: { en: "Not Interested", ar: "غير مهتم" },
   postponed: { en: "Postponed", ar: "مؤجل" },

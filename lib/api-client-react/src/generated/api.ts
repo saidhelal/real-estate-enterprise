@@ -393,6 +393,8 @@ import type {
   ExecutiveDashboard,
   ExecutiveOversight,
   FinanceDashboard,
+  FinanceDecisionInput,
+  FinancePartialInput,
   FinancialAnalytics,
   FiscalPeriod,
   FiscalPeriodInput,
@@ -714,6 +716,7 @@ import type {
   LegalAdvisorListResponse,
   LegalAdvisorReport,
   LegalAdvisorUpdate,
+  LegalApprovalInput,
   LegalCase,
   LegalCaseCloseInput,
   LegalCaseInput,
@@ -1262,6 +1265,7 @@ import type {
   SubcontractorInsuranceInput,
   SubcontractorInsuranceListResponse,
   SubcontractorInsuranceUpdate,
+  SubmitToFinanceInput,
   Supplier,
   SupplierCategory,
   SupplierCategoryInput,
@@ -15237,6 +15241,438 @@ export const useConvertReservation = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getConvertReservationMutationOptions(options));
+    }
+
+export const getSubmitContractToFinanceUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/submit-to-finance`
+}
+
+/**
+ * @summary Submit a draft contract to Finance for verification
+ */
+export const submitContractToFinance = async (id: string,
+    submitToFinanceInput?: SubmitToFinanceInput, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getSubmitContractToFinanceUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      submitToFinanceInput,)
+  }
+);}
+
+
+
+
+export const getSubmitContractToFinanceMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitContractToFinance>>, TError,{id: string;data?: BodyType<SubmitToFinanceInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitContractToFinance>>, TError,{id: string;data?: BodyType<SubmitToFinanceInput>}, TContext> => {
+
+const mutationKey = ['submitContractToFinance'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitContractToFinance>>, {id: string;data?: BodyType<SubmitToFinanceInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  submitContractToFinance(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitContractToFinanceMutationResult = NonNullable<Awaited<ReturnType<typeof submitContractToFinance>>>
+    export type SubmitContractToFinanceMutationBody = BodyType<SubmitToFinanceInput> | undefined
+    export type SubmitContractToFinanceMutationError = ErrorType<Error>
+
+    /**
+ * @summary Submit a draft contract to Finance for verification
+ */
+export const useSubmitContractToFinance = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitContractToFinance>>, TError,{id: string;data?: BodyType<SubmitToFinanceInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitContractToFinance>>,
+        TError,
+        {id: string;data?: BodyType<SubmitToFinanceInput>},
+        TContext
+      > => {
+      return useMutation(getSubmitContractToFinanceMutationOptions(options));
+    }
+
+export const getFinanceApproveContractUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/finance-approve`
+}
+
+/**
+ * @summary Finance approves a contract (all cheques received)
+ */
+export const financeApproveContract = async (id: string,
+    financeDecisionInput?: FinanceDecisionInput, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getFinanceApproveContractUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      financeDecisionInput,)
+  }
+);}
+
+
+
+
+export const getFinanceApproveContractMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeApproveContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof financeApproveContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext> => {
+
+const mutationKey = ['financeApproveContract'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof financeApproveContract>>, {id: string;data?: BodyType<FinanceDecisionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  financeApproveContract(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinanceApproveContractMutationResult = NonNullable<Awaited<ReturnType<typeof financeApproveContract>>>
+    export type FinanceApproveContractMutationBody = BodyType<FinanceDecisionInput> | undefined
+    export type FinanceApproveContractMutationError = ErrorType<Error>
+
+    /**
+ * @summary Finance approves a contract (all cheques received)
+ */
+export const useFinanceApproveContract = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeApproveContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof financeApproveContract>>,
+        TError,
+        {id: string;data?: BodyType<FinanceDecisionInput>},
+        TContext
+      > => {
+      return useMutation(getFinanceApproveContractMutationOptions(options));
+    }
+
+export const getFinanceReceivePartialUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/finance-partial`
+}
+
+/**
+ * @summary Finance records partial cheque receipt (stays pending)
+ */
+export const financeReceivePartial = async (id: string,
+    financePartialInput: FinancePartialInput, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getFinanceReceivePartialUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      financePartialInput,)
+  }
+);}
+
+
+
+
+export const getFinanceReceivePartialMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeReceivePartial>>, TError,{id: string;data: BodyType<FinancePartialInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof financeReceivePartial>>, TError,{id: string;data: BodyType<FinancePartialInput>}, TContext> => {
+
+const mutationKey = ['financeReceivePartial'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof financeReceivePartial>>, {id: string;data: BodyType<FinancePartialInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  financeReceivePartial(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinanceReceivePartialMutationResult = NonNullable<Awaited<ReturnType<typeof financeReceivePartial>>>
+    export type FinanceReceivePartialMutationBody = BodyType<FinancePartialInput>
+    export type FinanceReceivePartialMutationError = ErrorType<Error>
+
+    /**
+ * @summary Finance records partial cheque receipt (stays pending)
+ */
+export const useFinanceReceivePartial = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeReceivePartial>>, TError,{id: string;data: BodyType<FinancePartialInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof financeReceivePartial>>,
+        TError,
+        {id: string;data: BodyType<FinancePartialInput>},
+        TContext
+      > => {
+      return useMutation(getFinanceReceivePartialMutationOptions(options));
+    }
+
+export const getFinanceRejectContractUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/finance-reject`
+}
+
+/**
+ * @summary Finance rejects a submitted contract
+ */
+export const financeRejectContract = async (id: string,
+    financeDecisionInput?: FinanceDecisionInput, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getFinanceRejectContractUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      financeDecisionInput,)
+  }
+);}
+
+
+
+
+export const getFinanceRejectContractMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeRejectContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof financeRejectContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext> => {
+
+const mutationKey = ['financeRejectContract'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof financeRejectContract>>, {id: string;data?: BodyType<FinanceDecisionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  financeRejectContract(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinanceRejectContractMutationResult = NonNullable<Awaited<ReturnType<typeof financeRejectContract>>>
+    export type FinanceRejectContractMutationBody = BodyType<FinanceDecisionInput> | undefined
+    export type FinanceRejectContractMutationError = ErrorType<Error>
+
+    /**
+ * @summary Finance rejects a submitted contract
+ */
+export const useFinanceRejectContract = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeRejectContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof financeRejectContract>>,
+        TError,
+        {id: string;data?: BodyType<FinanceDecisionInput>},
+        TContext
+      > => {
+      return useMutation(getFinanceRejectContractMutationOptions(options));
+    }
+
+export const getFinanceReturnContractUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/finance-return`
+}
+
+/**
+ * @summary Finance returns a contract to Sales with comments
+ */
+export const financeReturnContract = async (id: string,
+    financeDecisionInput?: FinanceDecisionInput, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getFinanceReturnContractUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      financeDecisionInput,)
+  }
+);}
+
+
+
+
+export const getFinanceReturnContractMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeReturnContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof financeReturnContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext> => {
+
+const mutationKey = ['financeReturnContract'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof financeReturnContract>>, {id: string;data?: BodyType<FinanceDecisionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  financeReturnContract(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinanceReturnContractMutationResult = NonNullable<Awaited<ReturnType<typeof financeReturnContract>>>
+    export type FinanceReturnContractMutationBody = BodyType<FinanceDecisionInput> | undefined
+    export type FinanceReturnContractMutationError = ErrorType<Error>
+
+    /**
+ * @summary Finance returns a contract to Sales with comments
+ */
+export const useFinanceReturnContract = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof financeReturnContract>>, TError,{id: string;data?: BodyType<FinanceDecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof financeReturnContract>>,
+        TError,
+        {id: string;data?: BodyType<FinanceDecisionInput>},
+        TContext
+      > => {
+      return useMutation(getFinanceReturnContractMutationOptions(options));
+    }
+
+export const getLegalApproveContractUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/legal-approve`
+}
+
+/**
+ * @summary Legal approves and activates a finance-approved contract
+ */
+export const legalApproveContract = async (id: string,
+    legalApprovalInput?: LegalApprovalInput, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getLegalApproveContractUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      legalApprovalInput,)
+  }
+);}
+
+
+
+
+export const getLegalApproveContractMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof legalApproveContract>>, TError,{id: string;data?: BodyType<LegalApprovalInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof legalApproveContract>>, TError,{id: string;data?: BodyType<LegalApprovalInput>}, TContext> => {
+
+const mutationKey = ['legalApproveContract'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof legalApproveContract>>, {id: string;data?: BodyType<LegalApprovalInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  legalApproveContract(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LegalApproveContractMutationResult = NonNullable<Awaited<ReturnType<typeof legalApproveContract>>>
+    export type LegalApproveContractMutationBody = BodyType<LegalApprovalInput> | undefined
+    export type LegalApproveContractMutationError = ErrorType<Error>
+
+    /**
+ * @summary Legal approves and activates a finance-approved contract
+ */
+export const useLegalApproveContract = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof legalApproveContract>>, TError,{id: string;data?: BodyType<LegalApprovalInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof legalApproveContract>>,
+        TError,
+        {id: string;data?: BodyType<LegalApprovalInput>},
+        TContext
+      > => {
+      return useMutation(getLegalApproveContractMutationOptions(options));
     }
 
 export const getGenerateInstallmentSchedulesUrl = (id: string,) => {

@@ -23,6 +23,22 @@ export interface Contract {
   status: string;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  legalContractId?: string | null;
+  /** @nullable */
+  paymentMethod?: string | null;
+  /** @nullable */
+  submittedToFinanceAt?: string | null;
+  /** @nullable */
+  financeSlaDueAt?: string | null;
+  /** @nullable */
+  financeReviewedAt?: string | null;
+  /** @nullable */
+  financeNotes?: string | null;
+  /** @nullable */
+  legalApprovedAt?: string | null;
+  /** @nullable */
+  verificationId?: string | null;
   isActive: boolean;
   createdAt: string;
 }
