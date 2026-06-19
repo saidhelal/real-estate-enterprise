@@ -62,4 +62,7 @@ export class ApiClient {
   post(pathname: string, body?: unknown) {
     return this.request("POST", pathname, body);
   }
+  patch(pathname: string, body?: unknown) {
+    return this.request("PATCH", pathname, body);
+  }
 }

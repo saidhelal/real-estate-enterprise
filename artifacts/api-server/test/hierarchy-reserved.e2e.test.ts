@@ -113,6 +113,99 @@ describe("floor create — derives project/phase from its building", () => {
   });
 });
 
+describe("floor update — re-derives project/phase when buildingId changes", () => {
+  it("moves the floor to a building in a different project and re-derives projectId/phaseId", async () => {
+    // Original hierarchy the floor is born into.
+    const projectA = await createProject();
+    const phaseA = await createPhase(projectA);
+    const buildingA = await createBuilding(projectA, phaseA);
+
+    const code = `FL-${uniq()}`;
+    const floor = await client.post("/api/floors", {
+      companyId,
+      buildingId: buildingA,
+      code,
+      name: `Floor ${code}`,
+      nameAr: `طابق ${code}`,
+    });
+    expect(floor.status, JSON.stringify(floor.json)).toBe(201);
+    expect(floor.json.projectId).toBe(projectA);
+    expect(floor.json.phaseId).toBe(phaseA);
+    const floorId = floor.json.id as string;
+
+    // A second, unrelated hierarchy we will move the floor into.
+    const projectB = await createProject();
+    const phaseB = await createPhase(projectB);
+    const buildingB = await createBuilding(projectB, phaseB);
+
+    const r = await client.patch(`/api/floors/${floorId}`, {
+      buildingId: buildingB,
+    });
+    expect(r.status, JSON.stringify(r.json)).toBe(200);
+    expect(r.json.buildingId).toBe(buildingB);
+    // project/phase must follow the new building, not linger on the old chain.
+    expect(r.json.projectId).toBe(projectB);
+    expect(r.json.phaseId).toBe(phaseB);
+    expect(r.json.projectId).not.toBe(projectA);
+    expect(r.json.phaseId).not.toBe(phaseA);
+  });
+
+  it("ignores mismatched client-supplied projectId/phaseId and keeps them tied to the building", async () => {
+    const project = await createProject();
+    const phase = await createPhase(project);
+    const building = await createBuilding(project, phase);
+
+    const code = `FL-${uniq()}`;
+    const floor = await client.post("/api/floors", {
+      companyId,
+      buildingId: building,
+      code,
+      name: `Floor ${code}`,
+      nameAr: `طابق ${code}`,
+    });
+    expect(floor.status, JSON.stringify(floor.json)).toBe(201);
+    const floorId = floor.json.id as string;
+
+    // A wrong hierarchy the client will try to force onto the floor while the
+    // buildingId stays the same — the server must overwrite these from building.
+    const wrongProject = await createProject();
+    const wrongPhase = await createPhase(wrongProject);
+
+    const r = await client.patch(`/api/floors/${floorId}`, {
+      name: "Renamed floor",
+      projectId: wrongProject,
+      phaseId: wrongPhase,
+    });
+    expect(r.status, JSON.stringify(r.json)).toBe(200);
+    expect(r.json.name).toBe("Renamed floor");
+    expect(r.json.buildingId).toBe(building);
+    expect(r.json.projectId).toBe(project);
+    expect(r.json.phaseId).toBe(phase);
+    expect(r.json.projectId).not.toBe(wrongProject);
+    expect(r.json.phaseId).not.toBe(wrongPhase);
+  });
+
+  it("rejects moving the floor to a non-existent building", async () => {
+    const project = await createProject();
+    const phase = await createPhase(project);
+    const building = await createBuilding(project, phase);
+    const code = `FL-${uniq()}`;
+    const floor = await client.post("/api/floors", {
+      companyId,
+      buildingId: building,
+      code,
+      name: `Floor ${code}`,
+      nameAr: `طابق ${code}`,
+    });
+    expect(floor.status, JSON.stringify(floor.json)).toBe(201);
+
+    const r = await client.patch(`/api/floors/${floor.json.id}`, {
+      buildingId: "00000000-0000-0000-0000-000000000000",
+    });
+    expect(r.status).toBe(400);
+  });
+});
+
 describe("unit create — derives building/project/phase from its floor", () => {
   it("overrides mismatched client-supplied projectId/buildingId/phaseId", async () => {
     // Real hierarchy the floor actually belongs to.
@@ -166,6 +259,156 @@ describe("unit create — derives building/project/phase from its floor", () => 
       code: `U-${uniq()}`,
       name: "Orphan unit",
       nameAr: "وحدة يتيمة",
+    });
+    expect(r.status).toBe(400);
+  });
+});
+
+describe("unit update — re-derives building/project/phase from its floor", () => {
+  // Create a floor under a fully real hierarchy and return all the ids.
+  async function createFloorWithHierarchy(): Promise<{
+    projectId: string;
+    phaseId: string;
+    buildingId: string;
+    floorId: string;
+  }> {
+    const projectId = await createProject();
+    const phaseId = await createPhase(projectId);
+    const buildingId = await createBuilding(projectId, phaseId);
+    const code = `FL-${uniq()}`;
+    const floor = await client.post("/api/floors", {
+      companyId,
+      buildingId,
+      code,
+      name: `Floor ${code}`,
+      nameAr: `طابق ${code}`,
+    });
+    expect(floor.status, JSON.stringify(floor.json)).toBe(201);
+    return { projectId, phaseId, buildingId, floorId: floor.json.id as string };
+  }
+
+  it("moves the unit to a floor in a different building and re-derives the whole chain", async () => {
+    const a = await createFloorWithHierarchy();
+    const code = `U-${uniq()}`;
+    const unit = await client.post("/api/units", {
+      companyId,
+      projectId: a.projectId,
+      buildingId: a.buildingId,
+      floorId: a.floorId,
+      code,
+      name: `Unit ${code}`,
+      nameAr: `وحدة ${code}`,
+    });
+    expect(unit.status, JSON.stringify(unit.json)).toBe(201);
+    const unitId = unit.json.id as string;
+
+    // Second, unrelated hierarchy/floor we move the unit into.
+    const b = await createFloorWithHierarchy();
+
+    const r = await client.patch(`/api/units/${unitId}`, {
+      floorId: b.floorId,
+    });
+    expect(r.status, JSON.stringify(r.json)).toBe(200);
+    expect(r.json.floorId).toBe(b.floorId);
+    expect(r.json.buildingId).toBe(b.buildingId);
+    expect(r.json.projectId).toBe(b.projectId);
+    expect(r.json.phaseId).toBe(b.phaseId);
+    // The old hierarchy must be fully gone, not partially carried over.
+    expect(r.json.buildingId).not.toBe(a.buildingId);
+    expect(r.json.projectId).not.toBe(a.projectId);
+    expect(r.json.phaseId).not.toBe(a.phaseId);
+  });
+
+  it("ignores mismatched client-supplied ancestors and keeps the chain tied to the new floor", async () => {
+    const a = await createFloorWithHierarchy();
+    const code = `U-${uniq()}`;
+    const unit = await client.post("/api/units", {
+      companyId,
+      projectId: a.projectId,
+      buildingId: a.buildingId,
+      floorId: a.floorId,
+      code,
+      name: `Unit ${code}`,
+      nameAr: `وحدة ${code}`,
+    });
+    expect(unit.status, JSON.stringify(unit.json)).toBe(201);
+    const unitId = unit.json.id as string;
+
+    // Real floor we move into.
+    const b = await createFloorWithHierarchy();
+    // A totally different hierarchy the client will (wrongly) claim alongside.
+    const wrong = await createFloorWithHierarchy();
+
+    const r = await client.patch(`/api/units/${unitId}`, {
+      floorId: b.floorId,
+      // Deliberately inconsistent ancestors — the server must ignore these and
+      // derive everything from floorId instead.
+      projectId: wrong.projectId,
+      phaseId: wrong.phaseId,
+      buildingId: wrong.buildingId,
+    });
+    expect(r.status, JSON.stringify(r.json)).toBe(200);
+    expect(r.json.floorId).toBe(b.floorId);
+    expect(r.json.buildingId).toBe(b.buildingId);
+    expect(r.json.projectId).toBe(b.projectId);
+    expect(r.json.phaseId).toBe(b.phaseId);
+    // Definitely not the mismatched values the client sent.
+    expect(r.json.buildingId).not.toBe(wrong.buildingId);
+    expect(r.json.projectId).not.toBe(wrong.projectId);
+    expect(r.json.phaseId).not.toBe(wrong.phaseId);
+  });
+
+  it("re-derives from the existing floor even when only ancestors are patched", async () => {
+    const a = await createFloorWithHierarchy();
+    const code = `U-${uniq()}`;
+    const unit = await client.post("/api/units", {
+      companyId,
+      projectId: a.projectId,
+      buildingId: a.buildingId,
+      floorId: a.floorId,
+      code,
+      name: `Unit ${code}`,
+      nameAr: `وحدة ${code}`,
+    });
+    expect(unit.status, JSON.stringify(unit.json)).toBe(201);
+    const unitId = unit.json.id as string;
+
+    const wrong = await createFloorWithHierarchy();
+
+    // No floorId in the patch — the server must fall back to the unit's existing
+    // floor and overwrite the bogus ancestors, never persist them.
+    const r = await client.patch(`/api/units/${unitId}`, {
+      name: "Renamed unit",
+      projectId: wrong.projectId,
+      phaseId: wrong.phaseId,
+      buildingId: wrong.buildingId,
+    });
+    expect(r.status, JSON.stringify(r.json)).toBe(200);
+    expect(r.json.name).toBe("Renamed unit");
+    expect(r.json.floorId).toBe(a.floorId);
+    expect(r.json.buildingId).toBe(a.buildingId);
+    expect(r.json.projectId).toBe(a.projectId);
+    expect(r.json.phaseId).toBe(a.phaseId);
+    expect(r.json.buildingId).not.toBe(wrong.buildingId);
+    expect(r.json.projectId).not.toBe(wrong.projectId);
+  });
+
+  it("rejects moving the unit to a non-existent floor", async () => {
+    const a = await createFloorWithHierarchy();
+    const code = `U-${uniq()}`;
+    const unit = await client.post("/api/units", {
+      companyId,
+      projectId: a.projectId,
+      buildingId: a.buildingId,
+      floorId: a.floorId,
+      code,
+      name: `Unit ${code}`,
+      nameAr: `وحدة ${code}`,
+    });
+    expect(unit.status, JSON.stringify(unit.json)).toBe(201);
+
+    const r = await client.patch(`/api/units/${unit.json.id}`, {
+      floorId: "00000000-0000-0000-0000-000000000000",
     });
     expect(r.status).toBe(400);
   });
