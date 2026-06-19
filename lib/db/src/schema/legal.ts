@@ -74,6 +74,9 @@ export const legalContractsTable = pgTable("legal_contracts", {
   approvedDocument: text("approved_document"),
   approvedDocumentAt: timestamp("approved_document_at", { withTimezone: true }),
   lockedAt: timestamp("locked_at", { withTimezone: true }),
+  // Public, non-confidential verification handle generated at approval time and
+  // encoded into the document QR code. Looked up by the public verify endpoint.
+  verificationId: text("verification_id"),
   ...audit,
 });
 export type LegalContractRow = typeof legalContractsTable.$inferSelect;

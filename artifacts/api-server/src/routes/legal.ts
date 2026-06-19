@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
-import { and, eq, ilike, or, sql, desc, gte, lte, type SQL } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
+import { and, eq, ilike, or, sql, desc, asc, gte, lte, type SQL } from "drizzle-orm";
 import {
   db,
   legalContractsTable,
@@ -17,6 +18,7 @@ import {
   legalNoticesTable,
   legalCaseLinksTable,
   documentObjectOwnersTable,
+  usersTable,
 } from "@workspace/db";
 import {
   CreateLegalContractBody, UpdateLegalContractBody, ListLegalContractsResponse,
@@ -42,9 +44,23 @@ import { requireAuth, requirePermission } from "../middleware/auth";
 import { PostingError, type Tx } from "../lib/posting";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { importDocument } from "../lib/print-engine";
-import { resolveContractTokens, buildApprovedDocument } from "../lib/contract-render";
+import {
+  resolveContractTokens,
+  buildContractDocument,
+  generateQrDataUrl,
+  contractTokenCatalog,
+  type RenderActor,
+} from "../lib/contract-render";
 
 const objectStorageService = new ObjectStorageService();
+
+/** Absolute, public base URL for verification links (prefers the published domain). */
+function publicBaseUrl(req: import("express").Request): string {
+  const domain = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
+  if (domain) return `https://${domain}`;
+  const host = req.get("host") ?? "localhost";
+  return `${req.protocol}://${host}`;
+}
 
 // Statuses in which a legal contract is still editable via generic CRUD. Once a
 // contract leaves draft/under_review (approved, active, archived, …) it is
@@ -70,6 +86,9 @@ interface CrudConfig {
   // When set, PATCH/DELETE are refused (409) unless the row's current `status`
   // is in this list — used to lock approved/archived legal contracts.
   editableStatuses?: string[];
+  // Optional best-effort hook fired after a successful create. Used to log
+  // timeline events (contract created / amended) without duplicating CRUD.
+  onCreate?: (req: import("express").Request, row: Record<string, unknown>) => Promise<void>;
 }
 
 function today(): string {
@@ -118,6 +137,13 @@ function registerCrud(cfg: CrudConfig): void {
     const inserted = (await db.insert(t).values(data).returning()) as Record<string, unknown>[];
     const row = inserted[0];
     await recordAudit(req, { action: "create", entity: cfg.entity, entityId: row.id as string, newValue: row });
+    if (cfg.onCreate) {
+      try {
+        await cfg.onCreate(req, row);
+      } catch (err) {
+        req.log.error({ err, entity: cfg.entity, entityId: row.id }, "onCreate hook failed");
+      }
+    }
     res.status(201).json(serializeRow(row));
   });
 
@@ -192,7 +218,16 @@ function registerCrud(cfg: CrudConfig): void {
 const resources: CrudConfig[] = [
   { path: "legal-contracts", table: legalContractsTable, module: "legalContracts", entity: "legalContract",
     createBody: CreateLegalContractBody, updateBody: UpdateLegalContractBody, listResponse: ListLegalContractsResponse,
-    search: ["code", "title", "titleAr", "counterpartyName"], editableStatuses: LEGAL_CONTRACT_EDITABLE_STATUSES },
+    search: ["code", "title", "titleAr", "counterpartyName"], editableStatuses: LEGAL_CONTRACT_EDITABLE_STATUSES,
+    onCreate: async (req, row) => {
+      await db.insert(contractEventsTable).values({
+        companyId: row.companyId as string,
+        legalContractId: row.id as string,
+        eventType: "create",
+        description: "Contract created",
+        performedBy: req.authUser?.id ?? null,
+      });
+    } },
   { path: "contract-templates", table: contractTemplatesTable, module: "contractTemplates", entity: "contractTemplate",
     createBody: CreateContractTemplateBody, updateBody: UpdateContractTemplateBody, listResponse: ListContractTemplatesResponse,
     search: ["code", "name", "nameAr"] },
@@ -201,7 +236,31 @@ const resources: CrudConfig[] = [
     search: ["changeSummary"] },
   { path: "legal-contract-amendments", table: legalContractAmendmentsTable, module: "legalContractAmendments", entity: "legalContractAmendment",
     createBody: CreateLegalContractAmendmentBody, updateBody: UpdateLegalContractAmendmentBody, listResponse: ListLegalContractAmendmentsResponse,
-    search: ["code", "description", "descriptionAr"] },
+    search: ["code", "description", "descriptionAr"],
+    onCreate: async (req, row) => {
+      const parentId = row.legalContractId as string | null;
+      if (!parentId) return;
+      // Bump the parent contract's version and log an "amend" timeline event so
+      // every modification flows through the existing amendment workflow.
+      await db.transaction(async (tx) => {
+        const parents = (await tx
+          .select({ v: legalContractsTable.currentVersion })
+          .from(legalContractsTable)
+          .where(eq(legalContractsTable.id, parentId))) as { v: number | null }[];
+        const nextVersion = (parents[0]?.v ?? 1) + 1;
+        await tx
+          .update(legalContractsTable)
+          .set({ currentVersion: nextVersion })
+          .where(eq(legalContractsTable.id, parentId));
+        await tx.insert(contractEventsTable).values({
+          companyId: row.companyId as string,
+          legalContractId: parentId,
+          eventType: "amend",
+          description: `Amendment recorded (v${nextVersion})`,
+          performedBy: req.authUser?.id ?? null,
+        });
+      });
+    } },
   { path: "contract-addendums", table: contractAddendumsTable, module: "contractAddendums", entity: "contractAddendum",
     createBody: CreateContractAddendumBody, updateBody: UpdateContractAddendumBody, listResponse: ListContractAddendumsResponse,
     search: ["code", "title"] },
@@ -301,12 +360,18 @@ router.post("/legal-contracts/:id/review", requirePermission("legalContracts.rev
 router.post("/legal-contracts/:id/approve", requirePermission("legalContracts.approve"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
   const userId = req.authUser?.id ?? null;
+  const actor: RenderActor = { fullName: req.authUser?.fullName ?? null, username: req.authUser?.username ?? null };
+  const approverName = req.authUser?.fullName || req.authUser?.username || "";
   try {
     const row = await db.transaction(async (tx) => {
       const c = await loadForUpdate(tx, legalContractsTable, id);
       if (!c) return null;
       if (c.status !== "draft" && c.status !== "under_review") throw new PostingError(409, "Only a draft or under-review contract can be approved");
       const approvedAt = new Date();
+      // Mint a stable public verification handle and encode it into a QR code
+      // that points at the public verify endpoint (non-confidential lookup).
+      const verificationId = (c.verificationId as string | null) ?? randomUUID();
+      const verifyUrl = `${publicBaseUrl(req)}/api/legal-verify/${verificationId}`;
       // Freeze an immutable, system-generated rendered document from the linked
       // editable template + the resolved smart-variable chain. Best-effort: if
       // no template is set or rendering fails, approval still proceeds without a
@@ -321,12 +386,19 @@ router.post("/legal-contracts/:id/approve", requirePermission("legalContracts.ap
           const tpl = tplRows[0];
           const templateHtml = tpl ? String(tpl.content ?? "") : "";
           if (templateHtml.trim()) {
-            const tokens = await resolveContractTokens(c as unknown as Parameters<typeof resolveContractTokens>[0]);
-            approvedDocument = buildApprovedDocument({
-              contract: c as unknown as Parameters<typeof buildApprovedDocument>[0]["contract"],
+            const contractForRender = { ...c, verificationId } as unknown as Parameters<typeof resolveContractTokens>[0];
+            const tokens = await resolveContractTokens(contractForRender, actor);
+            const qrDataUrl = await generateQrDataUrl(verifyUrl);
+            approvedDocument = buildContractDocument({
+              contract: contractForRender,
               templateHtml,
               tokens,
-              approvedAt,
+              mode: "approved",
+              generatedAt: approvedAt,
+              verificationId,
+              approverName,
+              version: (c.currentVersion as number | null) ?? 1,
+              qrDataUrl,
             });
           }
         }
@@ -343,6 +415,7 @@ router.post("/legal-contracts/:id/approve", requirePermission("legalContracts.ap
           approvedDocument,
           approvedDocumentAt: approvedDocument ? approvedAt : null,
           lockedAt: approvedAt,
+          verificationId,
         })
         .where(eq(legalContractsTable.id, id))
         .returning();

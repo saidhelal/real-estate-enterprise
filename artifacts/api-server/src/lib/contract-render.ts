@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import QRCode from "qrcode";
 import {
   db,
   companiesTable,
@@ -9,19 +10,22 @@ import {
   buildingsTable,
   phasesTable,
   projectsTable,
+  employeesTable,
+  installmentPlansTable,
   type LegalContractRow,
 } from "@workspace/db";
 import { renderTemplate } from "./print-engine";
 
 /* ------------------------------------------------------------------ */
-/* Contract smart variables — chained token resolution + locked doc.  */
+/* Contract smart variables — chained token resolution + official doc. */
 /*                                                                    */
 /* The Central Print Engine resolves base tokens plus ONE entity      */
 /* group. A real-estate contract needs the whole chain, so this       */
 /* resolver walks company -> sale -> customer / unit -> floor ->      */
-/* building -> phase -> project and exposes every value as a          */
-/* {{group.field}} token. Lookups are defensive: a missing link       */
-/* yields empty tokens, never an error.                               */
+/* building -> phase -> project, plus the installment plan, the       */
+/* responsible (sales) employee and the acting user, and exposes      */
+/* every value as a {{group.field}} token. Lookups are defensive: a   */
+/* missing link yields empty tokens, never an error.                  */
 /* ------------------------------------------------------------------ */
 
 function val(raw: unknown): string {
@@ -53,18 +57,30 @@ async function one(
   return rows[0] ?? null;
 }
 
+export interface RenderActor {
+  fullName?: string | null;
+  username?: string | null;
+}
+
 /**
  * Resolve the full smart-variable token map for a legal contract: always the
  * company and the contract's own metadata, plus — when the contract is linked
- * to a sales contract (sourceModule = "sales") — the entire sale entity chain.
+ * to a sales contract (sourceModule = "sales") — the entire sale entity chain
+ * (customer, unit, floor, building, phase, project, installment plan). Also
+ * resolves the responsible (sales) employee and the acting user.
  */
 export async function resolveContractTokens(
   contract: LegalContractRow,
+  actor?: RenderActor | null,
 ): Promise<Record<string, string>> {
   const values: Record<string, string> = {};
   const now = new Date();
   values["document.date"] = now.toISOString().slice(0, 10);
   values["document.time"] = now.toISOString().slice(11, 16);
+
+  // Acting user (current user) — always available from the request context.
+  values["user.name"] = val(actor?.fullName);
+  values["user.username"] = val(actor?.username);
 
   const company = await one(companiesTable, contract.companyId as string);
   if (company) {
@@ -84,6 +100,22 @@ export async function resolveContractTokens(
   values["contract.value"] = val(contract.value);
   values["contract.date"] = val(contract.contractDate);
   values["contract.status"] = val(contract.status);
+  values["contract.version"] = val(contract.currentVersion);
+  values["contract.verificationId"] = val(contract.verificationId);
+
+  // Responsible / sales representative (the employee accountable for the deal).
+  const salesRep = await one(employeesTable, contract.responsibleEmployeeId as string);
+  if (salesRep) {
+    const first = val(salesRep["firstName"]);
+    const last = val(salesRep["lastName"]);
+    values["salesRep.name"] = `${first} ${last}`.trim();
+    const firstAr = val(salesRep["firstNameAr"]);
+    const lastAr = val(salesRep["lastNameAr"]);
+    values["salesRep.nameAr"] = `${firstAr} ${lastAr}`.trim();
+    values["salesRep.code"] = val(salesRep["code"]);
+    values["salesRep.phone"] = val(salesRep["phone"]);
+    values["salesRep.email"] = val(salesRep["email"]);
+  }
 
   if (contract.sourceModule === "sales" && contract.sourceId) {
     const sale = await one(contractsTable, contract.sourceId as string);
@@ -103,6 +135,22 @@ export async function resolveContractTokens(
         values["customer.phone"] = val(customer["phone"]);
         values["customer.email"] = val(customer["email"]);
         values["customer.address"] = val(customer["address"]);
+      }
+
+      // Installment plan for this sale (latest active plan wins, defensively).
+      const plans = (await db
+        .select()
+        .from(installmentPlansTable)
+        .where(eq(installmentPlansTable.contractId, sale["id"] as string))
+        .limit(1)) as Record<string, unknown>[];
+      const plan = plans[0];
+      if (plan) {
+        values["installment.code"] = val(plan["code"]);
+        values["installment.totalAmount"] = val(plan["totalAmount"]);
+        values["installment.downPayment"] = val(plan["downPayment"]);
+        values["installment.count"] = val(plan["numberOfInstallments"]);
+        values["installment.frequency"] = val(plan["frequency"]);
+        values["installment.startDate"] = val(plan["startDate"]);
       }
 
       const unit = await one(unitsTable, sale["unitId"] as string);
@@ -150,26 +198,133 @@ export async function resolveContractTokens(
   return values;
 }
 
+/** Generate a QR-code PNG data URL for the given text (empty string on error). */
+export async function generateQrDataUrl(text: string): Promise<string> {
+  try {
+    return await QRCode.toDataURL(text, { margin: 1, width: 160 });
+  } catch {
+    return "";
+  }
+}
+
+export interface BuildDocumentArgs {
+  contract: LegalContractRow;
+  templateHtml: string;
+  tokens: Record<string, string>;
+  /** "draft" stamps a DRAFT watermark; "approved" stamps APPROVED + lock note. */
+  mode: "draft" | "approved";
+  generatedAt: Date;
+  /** Approved-mode metadata (verification id, approver, version, QR). */
+  verificationId?: string | null;
+  approverName?: string | null;
+  version?: number | null;
+  qrDataUrl?: string | null;
+}
+
 /**
- * Render the editable template into the immutable, locked approval copy. The
- * template HTML is authored content and is stored verbatim here; it is always
- * DOMPurify-sanitized on the client before being printed/displayed. Token
- * values are HTML-escaped by renderTemplate, and the wrapper escapes the title.
+ * Render the editable template into an official, print-ready document: A4 page
+ * geometry, company header, footer with automatic page numbering, a DRAFT or
+ * APPROVED watermark, and (for approved copies) a verification block carrying
+ * the QR code, verification id, approver and version. The template HTML is
+ * authored content stored verbatim; it is always DOMPurify-sanitized on the
+ * client before being printed/displayed. Token values are HTML-escaped by
+ * renderTemplate, and this wrapper escapes every interpolated field.
+ */
+export function buildContractDocument(args: BuildDocumentArgs): string {
+  const body = renderTemplate(args.templateHtml, args.tokens);
+  const title =
+    args.tokens["contract.title"] ||
+    String(args.contract.title ?? "") ||
+    String(args.contract.code ?? "");
+  const safeTitle = escapeHtml(title);
+  const companyName = escapeHtml(
+    args.tokens["company.nameAr"] || args.tokens["company.name"] || "",
+  );
+  const companyMeta = escapeHtml(
+    [args.tokens["company.taxNumber"], args.tokens["company.phone"]]
+      .filter(Boolean)
+      .join(" — "),
+  );
+  const code = escapeHtml(String(args.contract.code ?? ""));
+  const stamp = args.generatedAt.toISOString().slice(0, 19).replace("T", " ");
+  const isApproved = args.mode === "approved";
+  const watermarkText = isApproved ? "APPROVED معتمد" : "DRAFT مسودة";
+  const watermarkColor = isApproved ? "rgba(22,101,52,0.10)" : "rgba(180,83,9,0.12)";
+
+  let verifyBlock = "";
+  if (isApproved) {
+    const vid = escapeHtml(String(args.verificationId ?? ""));
+    const approver = escapeHtml(String(args.approverName ?? ""));
+    const version = escapeHtml(String(args.version ?? args.contract.currentVersion ?? 1));
+    const qr = args.qrDataUrl
+      ? `<img class="qr" src="${escapeHtml(args.qrDataUrl)}" alt="verification qr" />`
+      : "";
+    verifyBlock = `<div class="doc-verify"><div class="verify-meta"><div><span class="vlabel">رقم التحقق / Verification ID:</span> <strong>${vid}</strong></div><div><span class="vlabel">المعتمد / Approved by:</span> ${approver}</div><div><span class="vlabel">الإصدار / Version:</span> ${version}</div><div><span class="vlabel">تاريخ الاعتماد / Approved at:</span> ${escapeHtml(stamp)} UTC</div></div>${qr}</div>`;
+  }
+
+  const lockNote = isApproved
+    ? `<div class="doc-lock">نسخة رسمية معتمدة ومقفلة، غير قابلة للتعديل — Official, approved, locked copy. Generated ${escapeHtml(stamp)} UTC.</div>`
+    : `<div class="doc-lock doc-draft-note">مسودة — غير معتمدة. لا تُعتمد للتوقيع. — DRAFT — not approved, not valid for signature.</div>`;
+
+  return `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${safeTitle}</title><style>
+@page{size:A4;margin:24mm 18mm 22mm 18mm}
+*{box-sizing:border-box}
+body{font-family:system-ui,'Segoe UI',Tahoma,Arial,sans-serif;color:#111;line-height:1.6;margin:0}
+.doc-watermark{position:fixed;top:45%;left:0;right:0;text-align:center;font-size:84px;font-weight:800;letter-spacing:6px;color:${watermarkColor};transform:rotate(-24deg);z-index:0;pointer-events:none;white-space:nowrap}
+.doc-header{position:running(header)}
+header.print-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1f2937;padding-bottom:8px;margin-bottom:18px}
+header.print-header .co{font-size:16px;font-weight:700}
+header.print-header .meta{font-size:11px;color:#555;text-align:left}
+.doc-title{font-size:20px;margin:0 0 4px;position:relative;z-index:1}
+.doc-sub{font-size:12px;color:#555;margin-bottom:18px;position:relative;z-index:1}
+.doc-body{font-size:14px;position:relative;z-index:1}
+.doc-body img{max-width:100%}
+.doc-body table{border-collapse:collapse;width:100%}
+.doc-body td,.doc-body th{border:1px solid #ddd;padding:6px}
+.doc-verify{margin-top:36px;padding-top:14px;border-top:1px solid #ccc;display:flex;justify-content:space-between;align-items:center;gap:16px;position:relative;z-index:1}
+.doc-verify .verify-meta{font-size:11px;color:#333;line-height:1.9}
+.doc-verify .vlabel{color:#666}
+.doc-verify .qr{width:120px;height:120px}
+.doc-lock{margin-top:18px;padding-top:10px;border-top:1px solid #eee;font-size:11px;color:#777;position:relative;z-index:1}
+.doc-draft-note{color:#b45309;font-weight:600}
+.print-footer{position:fixed;bottom:-16mm;left:0;right:0;font-size:10px;color:#888;display:flex;justify-content:space-between;border-top:1px solid #eee;padding-top:4px}
+.print-footer .pageno::after{content:"صفحة " counter(page) " / " counter(pages)}
+</style></head><body>
+<div class="doc-watermark">${escapeHtml(watermarkText)}</div>
+<header class="print-header"><div class="co">${companyName}</div><div class="meta">${companyMeta}<br>${code}</div></header>
+<h1 class="doc-title">${safeTitle}</h1>
+<div class="doc-sub">${companyName} — ${code}</div>
+<div class="doc-body">${body}</div>
+${verifyBlock}
+${lockNote}
+<footer class="print-footer"><span>${companyName} — ${code}</span><span class="pageno"></span></footer>
+</body></html>`;
+}
+
+/**
+ * Backwards-compatible approved-document builder. Delegates to
+ * buildContractDocument in "approved" mode.
  */
 export function buildApprovedDocument(args: {
   contract: LegalContractRow;
   templateHtml: string;
   tokens: Record<string, string>;
   approvedAt: Date;
+  verificationId?: string | null;
+  approverName?: string | null;
+  qrDataUrl?: string | null;
 }): string {
-  const body = renderTemplate(args.templateHtml, args.tokens);
-  const title =
-    args.tokens["contract.title"] ||
-    String(args.contract.title ?? "") ||
-    String(args.contract.code ?? "");
-  const stamp = args.approvedAt.toISOString().slice(0, 19).replace("T", " ");
-  const safeTitle = escapeHtml(title);
-  return `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${safeTitle}</title><style>body{font-family:system-ui,'Segoe UI',Tahoma,Arial,sans-serif;padding:32px;color:#111;line-height:1.6}h1.doc-title{font-size:20px;margin:0 0 16px}.doc-meta{font-size:12px;color:#555;margin-bottom:24px}.doc-body{font-size:14px}.doc-lock{margin-top:40px;padding-top:12px;border-top:1px solid #ccc;font-size:11px;color:#777}img{max-width:100%}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:6px}</style></head><body><h1 class="doc-title">${safeTitle}</h1><div class="doc-meta">${escapeHtml(args.tokens["company.nameAr"] || args.tokens["company.name"] || "")} — ${escapeHtml(String(args.contract.code ?? ""))}</div><div class="doc-body">${body}</div><div class="doc-lock">نسخة معتمدة ومقفلة، غير قابلة للتعديل — Approved, locked copy. Generated ${escapeHtml(stamp)} UTC.</div></body></html>`;
+  return buildContractDocument({
+    contract: args.contract,
+    templateHtml: args.templateHtml,
+    tokens: args.tokens,
+    mode: "approved",
+    generatedAt: args.approvedAt,
+    verificationId: args.verificationId ?? null,
+    approverName: args.approverName ?? null,
+    version: args.contract.currentVersion ?? 1,
+    qrDataUrl: args.qrDataUrl ?? null,
+  });
 }
 
 export interface ContractTokenGroup {
@@ -239,6 +394,28 @@ export function contractTokenCatalog(): ContractTokenGroup[] {
       ],
     },
     {
+      group: "Installment plan",
+      groupAr: "خطة الأقساط",
+      tokens: [
+        { token: "installment.code", label: "Plan no.", labelAr: "رقم الخطة" },
+        { token: "installment.totalAmount", label: "Total amount", labelAr: "إجمالي المبلغ" },
+        { token: "installment.downPayment", label: "Down payment", labelAr: "الدفعة المقدمة" },
+        { token: "installment.count", label: "No. of installments", labelAr: "عدد الأقساط" },
+        { token: "installment.frequency", label: "Frequency", labelAr: "التكرار" },
+        { token: "installment.startDate", label: "Start date", labelAr: "تاريخ البدء" },
+      ],
+    },
+    {
+      group: "Sales representative",
+      groupAr: "مندوب المبيعات",
+      tokens: [
+        { token: "salesRep.name", label: "Sales rep name", labelAr: "اسم المندوب" },
+        { token: "salesRep.nameAr", label: "Sales rep name (AR)", labelAr: "اسم المندوب (عربي)" },
+        { token: "salesRep.phone", label: "Phone", labelAr: "الهاتف" },
+        { token: "salesRep.email", label: "Email", labelAr: "البريد" },
+      ],
+    },
+    {
       group: "Contract",
       groupAr: "العقد",
       tokens: [
@@ -246,7 +423,18 @@ export function contractTokenCatalog(): ContractTokenGroup[] {
         { token: "contract.title", label: "Title", labelAr: "العنوان" },
         { token: "contract.value", label: "Value", labelAr: "القيمة" },
         { token: "contract.date", label: "Contract date", labelAr: "تاريخ العقد" },
+        { token: "contract.version", label: "Version", labelAr: "الإصدار" },
+        { token: "contract.verificationId", label: "Verification ID", labelAr: "رقم التحقق" },
+      ],
+    },
+    {
+      group: "User & date",
+      groupAr: "المستخدم والتاريخ",
+      tokens: [
+        { token: "user.name", label: "Current user", labelAr: "المستخدم الحالي" },
+        { token: "user.username", label: "Username", labelAr: "اسم المستخدم" },
         { token: "document.date", label: "Print date", labelAr: "تاريخ الطباعة" },
+        { token: "document.time", label: "Print time", labelAr: "وقت الطباعة" },
       ],
     },
   ];

@@ -1,0 +1,283 @@
+Continue with Phase 2 – Enterprise Contract Management.
+
+====================================================
+MANDATORY ARCHITECTURE RULES
+====================================================
+
+The discovery phase is COMPLETE.
+
+Assume all previous exploration is complete and authoritative.
+
+Do NOT repeat discovery, exploration, schema inspection, file reading or code analysis unless I explicitly request it.
+
+Focus on implementation only.
+
+Optimize for execution time, compute cost and code quality.
+
+----------------------------------------------------
+
+Never create duplicate:
+
+- Modules
+- Menus
+- Pages
+- Tables
+- APIs
+- Services
+- Workflows
+- Reports
+- Document engines
+
+If an equivalent implementation already exists:
+
+Reuse it.
+
+Extend it.
+
+Never replace it.
+
+Creating duplicate functionality is considered a failed implementation.
+
+The ERP must remain one integrated enterprise system.
+
+----------------------------------------------------
+
+Reuse the existing:
+
+Legal Affairs
+
+Contracts
+
+Print Engine
+
+Workflow
+
+Versioning
+
+RBAC
+
+Document Management
+
+Storage
+
+Approval Engine
+
+Audit Logs
+
+Sales Integration
+
+Accounting Integration
+
+Treasury Integration
+
+Customer Service Integration
+
+Installments Integration
+
+====================================================
+IMPLEMENT ONLY THE REMAINING FEATURES
+====================================================
+
+1.
+
+Generate contracts directly from existing approved Word templates.
+
+2.
+
+Populate all contract variables automatically from:
+
+Company
+
+Customer
+
+Sale
+
+Project
+
+Phase
+
+Building
+
+Floor
+
+Unit
+
+Installment Plan
+
+Sales Representative
+
+Current Date
+
+Current User
+
+and all existing supported tokens.
+
+3.
+
+Preview contract before approval.
+
+4.
+
+Immediately after approval:
+
+Generate official PDF.
+
+Store permanently.
+
+Lock PDF.
+
+Prevent editing.
+
+Store:
+
+Approval Date
+
+Approver
+
+Version
+
+Verification ID
+
+5.
+
+Editable Word template remains available ONLY inside Legal Affairs.
+
+Other departments never access editable templates.
+
+6.
+
+Approved contract information automatically appears through the existing integrations inside:
+
+Sales
+
+Customer Profile
+
+Unit Profile
+
+Installments
+
+Accounting
+
+Treasury
+
+Customer Service
+
+Reports
+
+Document Management
+
+without creating duplicate data.
+
+7.
+
+Approved contracts:
+
+No Edit
+
+No Delete
+
+No Overwrite
+
+Any modification must use the existing Versioning / Amendment workflow.
+
+8.
+
+Automatically archive:
+
+Original Word template
+
+Generated PDF
+
+Version history
+
+Approval history
+
+Audit history
+
+9.
+
+Display complete contract timeline:
+
+Created
+
+Reviewed
+
+Approved
+
+Printed
+
+Amended
+
+Archived
+
+including user and timestamp.
+
+10.
+
+Generate unique Verification ID.
+
+Generate QR Code automatically.
+
+QR displays only public verification data.
+
+No confidential information.
+
+11.
+
+Official printing:
+
+Company header
+
+Company footer
+
+Automatic page numbering
+
+Watermark:
+
+DRAFT before approval
+
+APPROVED after approval
+
+12.
+
+Everything must respect the existing RBAC permissions.
+
+Each department only sees what its permissions allow.
+
+Owner and System Administrator retain full access.
+
+====================================================
+EXECUTION RULES
+====================================================
+
+Do NOT redesign existing modules.
+
+Do NOT rebuild working functionality.
+
+Do NOT create new screens if equivalent screens already exist.
+
+Do NOT create duplicate APIs.
+
+Do NOT create duplicate tables.
+
+Do NOT create duplicate workflows.
+
+Extend existing implementation only.
+
+If implementation requires more than 3 minutes of exploration:
+
+STOP.
+
+Assume previous exploration is sufficient.
+
+Continue implementation using existing knowledge unless I explicitly authorize further discovery.
+
+Run only targeted validation.
+
+Validate only modified components.
+
+Create ONE checkpoint after successful validation.
+
+Do NOT waste execution time.
+
+Complete the implementation before reporting back.
