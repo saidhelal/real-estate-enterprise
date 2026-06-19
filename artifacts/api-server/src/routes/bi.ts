@@ -77,6 +77,13 @@ const countText = (): SQL<string> => sql<string>`count(*)::text`;
 const monthExpr = (col: unknown): SQL<string> =>
   sql<string>`to_char(${col}, 'YYYY-MM')`;
 
+// Scope the permission guard to this router's own "/bi" paths. Routers are
+// mounted with `router.use(biRouter)` (no path prefix), and Express runs a
+// sub-router's `use` middleware for every request that passes through it — even
+// ones it has no matching route for. A bare `router.use(requirePermission(...))`
+// would therefore 403 every route mounted after this one (notifications,
+// master-data, etc.) for any user lacking "bi.view". Binding it to "/bi" keeps
+// the guard on BI endpoints only.
 router.use("/bi", requirePermission("bi.view"));
 
 // ---------------------------------------------------------------------------
