@@ -6,6 +6,7 @@ import {
   numeric,
   date,
   timestamp,
+  index,
 } from "drizzle-orm/pg-core";
 
 const audit = {
@@ -47,7 +48,13 @@ export const leadsTable = pgTable("leads", {
   budget: numeric("budget", { precision: 14, scale: 2 }),
   notes: text("notes"),
   ...audit,
-});
+}, (t) => [
+  index("leads_company_deleted_idx").on(t.companyId, t.isDeleted),
+  index("leads_assigned_status_idx").on(t.assignedToUserId, t.status),
+  index("leads_source_idx").on(t.sourceId),
+  index("leads_campaign_idx").on(t.campaignId),
+  index("leads_channel_idx").on(t.channelId),
+]);
 export type LeadRow = typeof leadsTable.$inferSelect;
 
 export const leadActivitiesTable = pgTable("lead_activities", {
@@ -85,7 +92,10 @@ export const leadAssignmentsTable = pgTable("lead_assignments", {
   assignedByUserId: uuid("assigned_by_user_id"),
   notes: text("notes"),
   ...audit,
-});
+}, (t) => [
+  index("lead_assignments_assignee_idx").on(t.assignedToUserId, t.isDeleted),
+  index("lead_assignments_lead_idx").on(t.leadId),
+]);
 export type LeadAssignmentRow = typeof leadAssignmentsTable.$inferSelect;
 
 export const leadConversionsTable = pgTable("lead_conversions", {
@@ -96,5 +106,8 @@ export const leadConversionsTable = pgTable("lead_conversions", {
   convertedByUserId: uuid("converted_by_user_id"),
   notes: text("notes"),
   ...audit,
-});
+}, (t) => [
+  index("lead_conversions_converter_idx").on(t.convertedByUserId, t.isDeleted),
+  index("lead_conversions_lead_idx").on(t.leadId),
+]);
 export type LeadConversionRow = typeof leadConversionsTable.$inferSelect;

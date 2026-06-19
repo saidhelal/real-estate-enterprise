@@ -7,6 +7,7 @@ import {
   integer,
   date,
   timestamp,
+  index,
 } from "drizzle-orm/pg-core";
 
 const audit = {
@@ -90,7 +91,9 @@ export const marketingDistributionRulesTable = pgTable("marketing_distribution_r
   description: text("description"),
   notes: text("notes"),
   ...audit,
-});
+}, (t) => [
+  index("mkt_dist_rules_lookup_idx").on(t.companyId, t.isDeleted, t.isActive, t.priority),
+]);
 export type MarketingDistributionRuleRow = typeof marketingDistributionRulesTable.$inferSelect;
 
 // The eligible sales-agent roster for distribution (the HR + Sales integration
@@ -104,7 +107,9 @@ export const marketingDistributionAgentsTable = pgTable("marketing_distribution_
   weight: integer("weight").notNull().default(1),
   notes: text("notes"),
   ...audit,
-});
+}, (t) => [
+  index("mkt_dist_agents_roster_idx").on(t.companyId, t.isDeleted, t.isActive),
+]);
 export type MarketingDistributionAgentRow = typeof marketingDistributionAgentsTable.$inferSelect;
 
 // Immutable audit log of every automatic distribution decision: which rule
@@ -120,5 +125,8 @@ export const marketingDistributionLogsTable = pgTable("marketing_distribution_lo
   score: numeric("score", { precision: 14, scale: 4 }),
   reason: text("reason"),
   ...audit,
-});
+}, (t) => [
+  index("mkt_dist_logs_company_idx").on(t.companyId, t.isDeleted),
+  index("mkt_dist_logs_lead_idx").on(t.leadId),
+]);
 export type MarketingDistributionLogRow = typeof marketingDistributionLogsTable.$inferSelect;

@@ -52,3 +52,4 @@
 - [API e2e tests](api-e2e-tests.md) — vitest suite spawns the built server + uses Testing Mode (demo schema) for isolation; cookie-jar client; list shapes & required-but-derived fields gotchas.
 - [Lead distribution engine](lead-distribution-engine.md) — auto-assign must claim via conditional UPDATE (assigned IS NULL)+returning, not read-then-write; maxLeadsPerAgent is a hard cap; company scope follows app-wide registerCrud convention.
 - [ERP route code splitting](erp-code-splitting.md) — App.tsx lazy-loads ~300 pages behind one Suspense; only Login/Home/Dashboard eager; named-export pages need .then form; queryClient staleTime caches lookups.
+- [API backend performance](backend-perf.md) — compression() wired in app.ts; pageParams already caps pageSize 200; add Drizzle indexes via pgTable 3rd-arg callback ((company_id,is_deleted) is the hot pattern).
