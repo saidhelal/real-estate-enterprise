@@ -43,6 +43,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { NONE, resetDescendants, visibleOptions } from "./cascade";
 import {
   Plus,
   Pencil,
@@ -151,8 +152,6 @@ export interface ResourceManagerProps<T extends { id: string }> {
   rowActions?: (row: T) => React.ReactNode;
   pageSize?: number;
 }
-
-const NONE = "__none__";
 
 /** Server governance middleware answers a governed mutation with 202 + this shape. */
 function isPendingApproval(result: unknown): boolean {
@@ -545,57 +544,9 @@ function ResourceForm<T extends { id: string }>({
     }
   };
 
-  // Normalize a field's dependsOn into a list of parent field names.
-  const dependsList = (f: ResourceField): string[] =>
-    f.dependsOn === undefined ? [] : Array.isArray(f.dependsOn) ? f.dependsOn : [f.dependsOn];
-
-  // Fields that cascade off a given parent field name (direct children).
-  const childrenOf = (parent: string) =>
-    fields.filter((f) => dependsList(f).includes(parent)).map((f) => f.name);
-
   const setValue = (name: string, value: string) => {
-    setFormData((prev) => {
-      const next = { ...prev, [name]: value };
-      // Reset every descendant field so a stale child selection can't survive a
-      // parent change (e.g. changing Project clears Building -> Floor -> Unit).
-      const queue = childrenOf(name);
-      while (queue.length) {
-        const child = queue.shift() as string;
-        next[child] = "";
-        queue.push(...childrenOf(child));
-      }
-      return next;
-    });
+    setFormData((prev) => resetDescendants(fields, { ...prev, [name]: value }, name));
     setErrors((prev) => (prev[name] ? { ...prev, [name]: false } : prev));
-  };
-
-  // Options visible for a field, applying cascade filtering by the parent value.
-  // The currently-selected value is always kept so editing a record never hides
-  // its own stored value (e.g. a unit whose parent floor differs from the
-  // current filter, or stale/inconsistent data) — without it the trigger would
-  // show the placeholder despite a value being set ("ghost value").
-  const visibleOptions = (f: ResourceField): SelectOption[] => {
-    const opts = f.options ?? [];
-    const parents = dependsList(f);
-    if (parents.length === 0) return opts;
-    const current = formData[f.name];
-    // Active constraints: parent fields that currently hold a real value.
-    const active = parents
-      .map((p) => [p, formData[p]] as const)
-      .filter(([, v]) => v && v !== NONE);
-    if (active.length === 0) return opts;
-    return opts.filter((o) => {
-      if (o.value === current) return true;
-      return active.every(([p, v]) => {
-        // Prefer the per-parent map; fall back to parentValue for single-parent.
-        const ancestor =
-          o.parentValues && p in o.parentValues ? o.parentValues[p] : o.parentValue;
-        // Undefined means the option declares no value for this parent → no
-        // constraint. A null value means "no such ancestor" → excluded.
-        if (ancestor === undefined) return true;
-        return ancestor === v;
-      });
-    });
   };
 
   return (
@@ -654,7 +605,7 @@ function ResourceForm<T extends { id: string }>({
                 </Select>
               ) : f.type === "select" && f.searchable ? (
                 <SearchableSelect
-                  options={visibleOptions(f)}
+                  options={visibleOptions(fields, formData, f)}
                   value={formData[f.name] ?? ""}
                   onChange={(v) => setValue(f.name, v)}
                   placeholder={fieldPlaceholder(f)}
@@ -683,7 +634,7 @@ function ResourceForm<T extends { id: string }>({
                   </SelectTrigger>
                   <SelectContent>
                     {!f.required && <SelectItem value={NONE}>—</SelectItem>}
-                    {visibleOptions(f).map((o) => (
+                    {visibleOptions(fields, formData, f).map((o) => (
                       <SelectItem key={o.value} value={o.value} disabled={o.disabled}>
                         {language === "ar" && o.labelAr ? o.labelAr : o.label}
                       </SelectItem>
