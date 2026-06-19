@@ -1,5 +1,6 @@
 import { useAuth } from "@/lib/auth-provider";
 import { useTesting } from "@/lib/testing-provider";
+import { OwnerModeControls } from "@/components/layout/owner-mode-controls";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/language-provider";
 import { Link, useLocation } from "wouter";
@@ -583,6 +584,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Sheet>
 
           <div className="flex flex-1 items-center justify-end gap-2">
+            <OwnerModeControls />
             {canTest &&
               (testing ? (
                 <>

@@ -1,33 +1,28 @@
 ---
-name: Lead distribution engine
-description: Smart lead auto-assignment engine — idempotency, caps, and the company-scope convention it follows.
+name: Smart Lead Distribution engine
+description: How marketing leads auto-assign to sales agents; where attribution lives and the idempotency/scoping invariants.
 ---
 
-# Smart Lead Distribution Engine
+# Smart Lead Distribution (marketing → sales leads)
 
-The engine runs INSIDE the caller's transaction (mirrors `lib/integrations.ts`): lead
-create + assignment + log all commit or all roll back. It matches the highest-priority
-active rule (nullable criteria = wildcard), resolves candidates (direct targetUserId |
-active agent roster), and picks per strategy (round_robin / load_balanced / performance /
-direct).
+Leads are the existing CRM `leads` table — distribution did NOT fork a new lead entity.
+Marketing attribution columns (`campaignId`, `channelId`) are additive + nullable on `leads`
+(`sourceId` already existed). Three additive tables drive it: `marketing_distribution_rules`
+(nullable criteria = wildcard, `priority` asc = stronger, `strategy`, `targetUserId`,
+`maxLeadsPerAgent`), `marketing_distribution_agents` (roster: userId + weight), and
+`marketing_distribution_logs` (immutable decision audit, read-only in UI).
 
-## Idempotency must be concurrency-safe, not read-then-write
-- The early `if (lead.assignedToUserId) return null` guard is necessary but NOT
-  sufficient — two concurrent `/distribute` calls can both pass it.
-- The authoritative claim is a **conditional UPDATE**:
-  `UPDATE leads SET assigned_to_user_id=? WHERE id=? AND assigned_to_user_id IS NULL`
-  with `.returning()`; if it claims 0 rows, bail BEFORE inserting assignment/log rows.
-  **Why:** otherwise the losing tx writes duplicate assignment + distribution-log rows.
+**Rule:** `distributeLead(tx, lead, assignedByUserId)` runs INSIDE the lead-create transaction
+and is best-effort — distribution failure must never block lead creation (intake wraps it in
+try/catch). It is idempotent via a conditional claim: `UPDATE leads SET assignedTo WHERE id=? AND
+assignedToUserId IS NULL RETURNING` — if zero rows return, it bails before writing an
+assignment/log, so concurrent `/distribute` calls and retries can't double-assign.
 
-## Hard caps must actually be hard
-- `maxLeadsPerAgent` in load_balanced is a HARD cap: if every agent is at/over the
-  limit, return null (leave the lead unassigned) — do NOT fall back to the saturated
-  pool. **Why:** a "fall back to all agents" branch silently defeats the cap.
+**Why:** mirrors the `lib/integrations.ts` cross-module side-effect convention (all-or-nothing in
+the originating tx, idempotent per claim) so a marketing intake can never half-commit a lead.
 
-## Company scoping follows the app-wide convention, deliberately
-- The marketing CRUD endpoints use `registerCrud` and trust body/query `companyId`
-  exactly like every other module (campaigns, channels, HR, legal, ...). This ERP is a
-  single-company super-admin console (no company switcher; see `erp-company-scope`).
-- A code review may flag this as a tenant-scoping gap. It is a **pre-existing app-wide
-  pattern**, not introduced per-module — do not add a one-off `canOperateOnCompany`
-  guard to a single module, which would diverge from the rest of the codebase.
+**How to apply:** intake is `POST /marketing-leads` (reuses `leads.create` perm); manual re-run is
+`POST /marketing-leads/:id/distribute` (`leads.update`). Strategies: direct / round_robin /
+load_balanced (honours `maxLeadsPerAgent` as a HARD cap — leaves unassigned if all saturated) /
+performance (conversions/assignments). New strategy → extend `pickAgent` in
+`lib/lead-distribution.ts`. All queries are company-scoped; rules matched highest-priority-first.

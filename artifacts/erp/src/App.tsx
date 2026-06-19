@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/lib/language-provider";
 import { AuthProvider } from "@/lib/auth-provider";
 import { TestingProvider } from "@/lib/testing-provider";
+import { OwnerModeProvider } from "@/lib/owner-mode-provider";
 import { LookupLabelProvider } from "@/lib/lookups";
 import { AppShell } from "@/components/layout/app-shell";
 
@@ -700,9 +701,11 @@ function App() {
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
               <AuthProvider>
                 <TestingProvider>
-                  <LookupLabelProvider>
-                    <Router />
-                  </LookupLabelProvider>
+                  <OwnerModeProvider>
+                    <LookupLabelProvider>
+                      <Router />
+                    </LookupLabelProvider>
+                  </OwnerModeProvider>
                 </TestingProvider>
               </AuthProvider>
             </WouterRouter>

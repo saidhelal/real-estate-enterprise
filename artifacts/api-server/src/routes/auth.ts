@@ -21,6 +21,12 @@ import {
   setAccessCookie,
   clearAuthCookies,
   clearTestingCookie,
+  signOwnerToken,
+  verifyOwnerToken,
+  setOwnerCookie,
+  clearOwnerCookie,
+  OWNER_COOKIE,
+  OWNER_TTL_SECONDS,
 } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
 import { recordAudit } from "../lib/audit";
@@ -203,6 +209,8 @@ router.post("/auth/logout", async (req, res): Promise<void> => {
   // Testing Mode is per-session: ending the session must also exit Testing Mode
   // so a later login in the same browser never silently lands in the demo sandbox.
   clearTestingCookie(res);
+  // Owner Mode is a per-session step-up; never let it survive a logout.
+  clearOwnerCookie(res);
   res.json({ success: true });
 });
 
@@ -247,6 +255,74 @@ router.post("/auth/change-password", requireAuth, async (req, res): Promise<void
   await recordAudit(req, { action: "change-password", entity: "users", entityId: userId });
 
   res.json({ success: true });
+});
+
+// --- Owner Mode (step-up authentication) -----------------------------------
+// Owner Mode never grants access by clicking a button: the caller must re-enter
+// the credentials of an owner-tier account (permissions include "*"). On
+// success a short-lived, separate JWT cookie is set; its expiry is the
+// inactivity timeout. Every enter/exit is audited.
+
+router.get("/auth/owner-mode", requireAuth, (req, res): void => {
+  const token = req.cookies?.[OWNER_COOKIE];
+  const userId = token ? verifyOwnerToken(token) : null;
+  // Owner Mode is bound to the current session's identity.
+  const active = userId !== null && userId === req.authUser!.id;
+  res.json({ active });
+});
+
+router.post("/auth/owner-mode/verify", requireAuth, async (req, res): Promise<void> => {
+  const parsed = LoginBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const { username, password } = parsed.data;
+  const ip = req.ip ?? null;
+  const userAgent = req.get("user-agent") ?? null;
+
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(and(eq(usersTable.username, username), eq(usersTable.isDeleted, false)));
+
+  // The step-up must confirm the *current* user's own owner-tier credentials —
+  // it is a re-authentication, not a way to assume another account.
+  const sameUser = !!user && user.id === req.authUser!.id;
+  const activeUser = !!user && user.isActive && user.status !== "inactive";
+  const ok = activeUser && sameUser && (await verifyPassword(password, user!.passwordHash));
+
+  if (!ok) {
+    await recordLogin(user?.id ?? null, username, false, ip, userAgent);
+    res.status(401).json({ error: "Owner verification failed." });
+    return;
+  }
+
+  const authUser = await loadAuthUser(user!.id);
+  const isOwnerTier = !!authUser && authUser.permissions.includes("*");
+  if (!isOwnerTier) {
+    res.status(403).json({ error: "This account is not an owner-tier account." });
+    return;
+  }
+
+  setOwnerCookie(res, signOwnerToken(user!.id));
+  await recordAudit(req, {
+    action: "owner-mode.enter",
+    entity: "auth",
+    entityId: user!.id,
+  });
+  res.json({ active: true, expiresInSeconds: OWNER_TTL_SECONDS });
+});
+
+router.post("/auth/owner-mode/exit", requireAuth, async (req, res): Promise<void> => {
+  clearOwnerCookie(res);
+  await recordAudit(req, {
+    action: "owner-mode.exit",
+    entity: "auth",
+    entityId: req.authUser!.id,
+  });
+  res.json({ active: false });
 });
 
 export default router;

@@ -20,9 +20,17 @@ export const REFRESH_COOKIE = "erp_refresh";
  * stays on production.
  */
 export const TESTING_COOKIE = "erp_testing";
+/**
+ * Step-up "Owner Mode" cookie. Holds a short-lived JWT (separate from the
+ * access token) minted only after re-entering valid owner-tier credentials.
+ * Its short TTL is the inactivity timeout — once it expires the user must
+ * re-authenticate to regain Owner Mode.
+ */
+export const OWNER_COOKIE = "erp_owner";
 
 export const ACCESS_TTL_SECONDS = 15 * 60; // 15 minutes
 export const REFRESH_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
+export const OWNER_TTL_SECONDS = 15 * 60; // 15 minutes step-up window
 
 export const MAX_FAILED_ATTEMPTS = 5;
 export const LOCKOUT_MINUTES = 15;
@@ -82,6 +90,29 @@ export function verifyAccessToken(token: string): string | null {
   }
 }
 
+export function signOwnerToken(userId: string): string {
+  return jwt.sign({ owner: true }, JWT_SECRET, {
+    subject: userId,
+    expiresIn: OWNER_TTL_SECONDS,
+  });
+}
+
+export function verifyOwnerToken(token: string): string | null {
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    if (
+      typeof payload === "object" &&
+      payload.sub &&
+      (payload as { owner?: unknown }).owner === true
+    ) {
+      return String(payload.sub);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export function generateRefreshToken(): string {
   return crypto.randomBytes(48).toString("hex");
 }
@@ -118,6 +149,17 @@ export function setAccessCookie(res: Response, accessToken: string): void {
 export function clearAuthCookies(res: Response): void {
   res.clearCookie(ACCESS_COOKIE, baseCookie);
   res.clearCookie(REFRESH_COOKIE, baseCookie);
+}
+
+export function setOwnerCookie(res: Response, ownerToken: string): void {
+  res.cookie(OWNER_COOKIE, ownerToken, {
+    ...baseCookie,
+    maxAge: OWNER_TTL_SECONDS * 1000,
+  });
+}
+
+export function clearOwnerCookie(res: Response): void {
+  res.clearCookie(OWNER_COOKIE, baseCookie);
 }
 
 export function setTestingCookie(res: Response): void {
