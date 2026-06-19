@@ -29121,6 +29121,277 @@ export const UnarchiveLookupValueResponse = zod.object({
 
 
 /**
+ * @summary Marketing dashboard summary
+ */
+export const GetMarketingDashboardQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetMarketingDashboardResponse = zod.object({
+  "campaignsCount": zod.number(),
+  "runningCampaignsCount": zod.number(),
+  "channelsCount": zod.number(),
+  "leadSourcesCount": zod.number(),
+  "totalBudget": zod.string(),
+  "totalActualCost": zod.string()
+})
+
+
+/**
+ * @summary List MarketingCampaign
+ */
+export const ListMarketingCampaignsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional(),
+  "projectId": zod.coerce.string().optional(),
+  "campaignType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "ownerUserId": zod.coerce.string().optional()
+})
+
+export const ListMarketingCampaignsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "campaignType": zod.string(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "budget": zod.string().nullish(),
+  "actualCost": zod.string(),
+  "status": zod.string(),
+  "ownerUserId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a MarketingCampaign
+ */
+export const CreateMarketingCampaignBody = zod.object({
+  "companyId": zod.string(),
+  "branchId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string(),
+  "campaignType": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "budget": zod.string().optional(),
+  "actualCost": zod.string().optional(),
+  "status": zod.string().optional(),
+  "ownerUserId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a MarketingCampaign
+ */
+export const GetMarketingCampaignParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetMarketingCampaignResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "campaignType": zod.string(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "budget": zod.string().nullish(),
+  "actualCost": zod.string(),
+  "status": zod.string(),
+  "ownerUserId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a MarketingCampaign
+ */
+export const UpdateMarketingCampaignParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateMarketingCampaignBody = zod.object({
+  "companyId": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "projectId": zod.string().optional(),
+  "name": zod.string().optional(),
+  "campaignType": zod.string().optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "budget": zod.string().optional(),
+  "actualCost": zod.string().optional(),
+  "status": zod.string().optional(),
+  "ownerUserId": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateMarketingCampaignResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "campaignType": zod.string(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "budget": zod.string().nullish(),
+  "actualCost": zod.string(),
+  "status": zod.string(),
+  "ownerUserId": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a MarketingCampaign
+ */
+export const DeleteMarketingCampaignParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteMarketingCampaignResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List MarketingChannel
+ */
+export const ListMarketingChannelsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "channelType": zod.coerce.string().optional()
+})
+
+export const ListMarketingChannelsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "channelType": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a MarketingChannel
+ */
+export const CreateMarketingChannelBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "channelType": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a MarketingChannel
+ */
+export const GetMarketingChannelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetMarketingChannelResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "channelType": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a MarketingChannel
+ */
+export const UpdateMarketingChannelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateMarketingChannelBody = zod.object({
+  "companyId": zod.string().optional(),
+  "code": zod.string().optional(),
+  "name": zod.string().optional(),
+  "nameAr": zod.string().optional(),
+  "channelType": zod.string().optional(),
+  "description": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateMarketingChannelResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "channelType": zod.string(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a MarketingChannel
+ */
+export const DeleteMarketingChannelParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteMarketingChannelResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
  * @summary General Administration dashboard summary
  */
 export const GetGeneralAdminDashboardQueryParams = zod.object({

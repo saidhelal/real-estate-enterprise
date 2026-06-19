@@ -20624,6 +20624,198 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/LookupValue" }
 
+  /marketing-dashboard:
+    get:
+      operationId: getMarketingDashboard
+      tags: [marketingDashboard]
+      summary: Marketing dashboard summary
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingDashboard"
+  /marketing-campaigns:
+    get:
+      operationId: listMarketingCampaigns
+      tags: [marketingCampaigns]
+      summary: List MarketingCampaign
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: campaignType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: ownerUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: MarketingCampaign list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingCampaignListResponse"
+    post:
+      operationId: createMarketingCampaign
+      tags: [marketingCampaigns]
+      summary: Create a MarketingCampaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingCampaignInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingCampaign"
+  /marketing-campaigns/{id}:
+    get:
+      operationId: getMarketingCampaign
+      tags: [marketingCampaigns]
+      summary: Get a MarketingCampaign
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: MarketingCampaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingCampaign"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateMarketingCampaign
+      tags: [marketingCampaigns]
+      summary: Update a MarketingCampaign
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingCampaignUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingCampaign"
+    delete:
+      operationId: deleteMarketingCampaign
+      tags: [marketingCampaigns]
+      summary: Soft-delete a MarketingCampaign
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+  /marketing-channels:
+    get:
+      operationId: listMarketingChannels
+      tags: [marketingChannels]
+      summary: List MarketingChannel
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: channelType, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: MarketingChannel list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingChannelListResponse"
+    post:
+      operationId: createMarketingChannel
+      tags: [marketingChannels]
+      summary: Create a MarketingChannel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingChannelInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingChannel"
+  /marketing-channels/{id}:
+    get:
+      operationId: getMarketingChannel
+      tags: [marketingChannels]
+      summary: Get a MarketingChannel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: MarketingChannel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingChannel"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updateMarketingChannel
+      tags: [marketingChannels]
+      summary: Update a MarketingChannel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketingChannelUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketingChannel"
+    delete:
+      operationId: deleteMarketingChannel
+      tags: [marketingChannels]
+      summary: Soft-delete a MarketingChannel
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
   /general-admin-dashboard:
     get:
       operationId: getGeneralAdminDashboard
@@ -37120,6 +37312,126 @@ components:
         byStatus:
           type: array
           items: { $ref: "#/components/schemas/FixedAssetsStatusCount" }
+    MarketingDashboard:
+      type: object
+      required: [campaignsCount, runningCampaignsCount, channelsCount, leadSourcesCount, totalBudget, totalActualCost]
+      properties:
+        campaignsCount: { type: integer }
+        runningCampaignsCount: { type: integer }
+        channelsCount: { type: integer }
+        leadSourcesCount: { type: integer }
+        totalBudget: { type: string }
+        totalActualCost: { type: string }
+    MarketingCampaign:
+      type: object
+      required: [id, companyId, code, name, campaignType, status, actualCost, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        branchId: { type: ["string", "null"] }
+        projectId: { type: ["string", "null"] }
+        code: { type: string }
+        name: { type: string }
+        campaignType: { type: string }
+        startDate: { type: ["string", "null"] }
+        endDate: { type: ["string", "null"] }
+        budget: { type: ["string", "null"] }
+        actualCost: { type: string }
+        status: { type: string }
+        ownerUserId: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    MarketingCampaignInput:
+      type: object
+      required: [companyId, name]
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        projectId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        campaignType: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        budget: { type: string }
+        actualCost: { type: string }
+        status: { type: string }
+        ownerUserId: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    MarketingCampaignUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        branchId: { type: string }
+        projectId: { type: string }
+        name: { type: string }
+        campaignType: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        budget: { type: string }
+        actualCost: { type: string }
+        status: { type: string }
+        ownerUserId: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    MarketingCampaignListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MarketingCampaign" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    MarketingChannel:
+      type: object
+      required: [id, companyId, code, name, channelType, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        channelType: { type: string }
+        description: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    MarketingChannelInput:
+      type: object
+      required: [companyId, code, name]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        channelType: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    MarketingChannelUpdate:
+      type: object
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        channelType: { type: string }
+        description: { type: string }
+        notes: { type: string }
+    MarketingChannelListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MarketingChannel" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
     GeneralAdminDashboard:
       type: object
       required: [meetingsCount, decisionsCount, tasksCount, visitorsCount, vehiclesCount, assetsCount]

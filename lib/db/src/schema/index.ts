@@ -31,6 +31,7 @@ export * from "./customer-service";
 export * from "./customer-service-ops";
 export * from "./fixed-assets";
 export * from "./general-admin";
+export * from "./marketing";
 export * from "./insurance";
 export * from "./master-data";
 export * from "./governance";

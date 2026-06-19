@@ -337,6 +337,10 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "visitorLogs", label: "Visitor Logs" },
   { module: "circulars", label: "Circulars" },
   { module: "policies", label: "Policies" },
+  // Marketing Management (standalone module). Lead Sources reuse the CRM
+  // `leadSources` module/permissions (no duplicate).
+  { module: "marketing", label: "Marketing Campaigns" },
+  { module: "marketingChannels", label: "Marketing Channels" },
   // Forms & Printing — central Print Engine surfaced inside every module.
   { module: "formTemplates", label: "Forms & Printing", extraActions: ["submit", "endorse", "approve", "reject", "disable", "enable", "activate", "print"] },
   // Electronic Document Management System (EDMS) — central document repository
@@ -718,6 +722,7 @@ async function seedNumberSequences(): Promise<void> {
       { documentType: "Legal Claim", prefix: "CLM", padding: 5, resetYearly: true },
       { documentType: "Legal Notice", prefix: "NOT", padding: 5, resetYearly: true },
       { documentType: "Legal Hearing", prefix: "HRG", padding: 5, resetYearly: true },
+      { documentType: "MarketingCampaign", prefix: "MKC", padding: 5, resetYearly: true },
     ])
     .onConflictDoNothing();
   console.log("Seeded document number sequences");
@@ -736,6 +741,9 @@ async function seedSettings(): Promise<void> {
       { key: "finance.baseCurrency", value: "SAR", category: "finance", label: "Base Currency" },
       { key: "ai.provider", value: "openai", category: "ai", label: "AI Provider" },
       { key: "ai.model", value: "gpt-5", category: "ai", label: "AI Assistant Model" },
+      { key: "marketing.defaultCampaignType", value: "digital", category: "marketing", label: "Default Campaign Type" },
+      { key: "marketing.defaultChannelType", value: "digital", category: "marketing", label: "Default Channel Type" },
+      { key: "marketing.autoCreateLeads", value: "true", category: "marketing", label: "Auto-create Leads from Campaigns" },
     ])
     .onConflictDoNothing();
   console.log("Seeded system settings");

@@ -471,6 +471,7 @@ import type {
   GetLegalContractReportParams,
   GetLegalDashboardParams,
   GetLegalLitigationReportParams,
+  GetMarketingDashboardParams,
   GetNotificationsDashboardParams,
   GetProcurementAnalyticsParams,
   GetProcurementDashboardParams,
@@ -904,6 +905,8 @@ import type {
   ListLoanInstallmentsParams,
   ListLookupTypesParams,
   ListLookupValuesParams,
+  ListMarketingCampaignsParams,
+  ListMarketingChannelsParams,
   ListMaterialSubmittalsParams,
   ListMeetingsParams,
   ListModuleDocumentsParams,
@@ -1001,6 +1004,15 @@ import type {
   LookupValueUpdate,
   MaintenanceRequest,
   MaintenanceRequestInput,
+  MarketingCampaign,
+  MarketingCampaignInput,
+  MarketingCampaignListResponse,
+  MarketingCampaignUpdate,
+  MarketingChannel,
+  MarketingChannelInput,
+  MarketingChannelListResponse,
+  MarketingChannelUpdate,
+  MarketingDashboard,
   MaterialSubmittal,
   MaterialSubmittalInput,
   MaterialSubmittalListResponse,
@@ -87740,6 +87752,838 @@ export const useUnarchiveLookupValue = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getUnarchiveLookupValueMutationOptions(options));
+    }
+
+export const getGetMarketingDashboardUrl = (params?: GetMarketingDashboardParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/marketing-dashboard?${stringifiedParams}` : `/api/marketing-dashboard`
+}
+
+/**
+ * @summary Marketing dashboard summary
+ */
+export const getMarketingDashboard = async (params?: GetMarketingDashboardParams, options?: RequestInit): Promise<MarketingDashboard> => {
+
+  return customFetch<MarketingDashboard>(getGetMarketingDashboardUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketingDashboardQueryKey = (params?: GetMarketingDashboardParams,) => {
+    return [
+    `/api/marketing-dashboard`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetMarketingDashboardQueryOptions = <TData = Awaited<ReturnType<typeof getMarketingDashboard>>, TError = ErrorType<unknown>>(params?: GetMarketingDashboardParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketingDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketingDashboardQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketingDashboard>>> = ({ signal }) => getMarketingDashboard(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketingDashboard>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketingDashboardQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketingDashboard>>>
+export type GetMarketingDashboardQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Marketing dashboard summary
+ */
+
+export function useGetMarketingDashboard<TData = Awaited<ReturnType<typeof getMarketingDashboard>>, TError = ErrorType<unknown>>(
+ params?: GetMarketingDashboardParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketingDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketingDashboardQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListMarketingCampaignsUrl = (params?: ListMarketingCampaignsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/marketing-campaigns?${stringifiedParams}` : `/api/marketing-campaigns`
+}
+
+/**
+ * @summary List MarketingCampaign
+ */
+export const listMarketingCampaigns = async (params?: ListMarketingCampaignsParams, options?: RequestInit): Promise<MarketingCampaignListResponse> => {
+
+  return customFetch<MarketingCampaignListResponse>(getListMarketingCampaignsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListMarketingCampaignsQueryKey = (params?: ListMarketingCampaignsParams,) => {
+    return [
+    `/api/marketing-campaigns`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListMarketingCampaignsQueryOptions = <TData = Awaited<ReturnType<typeof listMarketingCampaigns>>, TError = ErrorType<unknown>>(params?: ListMarketingCampaignsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMarketingCampaigns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListMarketingCampaignsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMarketingCampaigns>>> = ({ signal }) => listMarketingCampaigns(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMarketingCampaigns>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListMarketingCampaignsQueryResult = NonNullable<Awaited<ReturnType<typeof listMarketingCampaigns>>>
+export type ListMarketingCampaignsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List MarketingCampaign
+ */
+
+export function useListMarketingCampaigns<TData = Awaited<ReturnType<typeof listMarketingCampaigns>>, TError = ErrorType<unknown>>(
+ params?: ListMarketingCampaignsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMarketingCampaigns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListMarketingCampaignsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateMarketingCampaignUrl = () => {
+
+
+
+
+  return `/api/marketing-campaigns`
+}
+
+/**
+ * @summary Create a MarketingCampaign
+ */
+export const createMarketingCampaign = async (marketingCampaignInput: MarketingCampaignInput, options?: RequestInit): Promise<MarketingCampaign> => {
+
+  return customFetch<MarketingCampaign>(getCreateMarketingCampaignUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      marketingCampaignInput,)
+  }
+);}
+
+
+
+
+export const getCreateMarketingCampaignMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMarketingCampaign>>, TError,{data: BodyType<MarketingCampaignInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createMarketingCampaign>>, TError,{data: BodyType<MarketingCampaignInput>}, TContext> => {
+
+const mutationKey = ['createMarketingCampaign'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createMarketingCampaign>>, {data: BodyType<MarketingCampaignInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createMarketingCampaign(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateMarketingCampaignMutationResult = NonNullable<Awaited<ReturnType<typeof createMarketingCampaign>>>
+    export type CreateMarketingCampaignMutationBody = BodyType<MarketingCampaignInput>
+    export type CreateMarketingCampaignMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a MarketingCampaign
+ */
+export const useCreateMarketingCampaign = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMarketingCampaign>>, TError,{data: BodyType<MarketingCampaignInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createMarketingCampaign>>,
+        TError,
+        {data: BodyType<MarketingCampaignInput>},
+        TContext
+      > => {
+      return useMutation(getCreateMarketingCampaignMutationOptions(options));
+    }
+
+export const getGetMarketingCampaignUrl = (id: string,) => {
+
+
+
+
+  return `/api/marketing-campaigns/${id}`
+}
+
+/**
+ * @summary Get a MarketingCampaign
+ */
+export const getMarketingCampaign = async (id: string, options?: RequestInit): Promise<MarketingCampaign> => {
+
+  return customFetch<MarketingCampaign>(getGetMarketingCampaignUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketingCampaignQueryKey = (id: string,) => {
+    return [
+    `/api/marketing-campaigns/${id}`
+    ] as const;
+    }
+
+
+export const getGetMarketingCampaignQueryOptions = <TData = Awaited<ReturnType<typeof getMarketingCampaign>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketingCampaign>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketingCampaignQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketingCampaign>>> = ({ signal }) => getMarketingCampaign(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketingCampaign>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketingCampaignQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketingCampaign>>>
+export type GetMarketingCampaignQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a MarketingCampaign
+ */
+
+export function useGetMarketingCampaign<TData = Awaited<ReturnType<typeof getMarketingCampaign>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketingCampaign>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketingCampaignQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateMarketingCampaignUrl = (id: string,) => {
+
+
+
+
+  return `/api/marketing-campaigns/${id}`
+}
+
+/**
+ * @summary Update a MarketingCampaign
+ */
+export const updateMarketingCampaign = async (id: string,
+    marketingCampaignUpdate: MarketingCampaignUpdate, options?: RequestInit): Promise<MarketingCampaign> => {
+
+  return customFetch<MarketingCampaign>(getUpdateMarketingCampaignUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      marketingCampaignUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateMarketingCampaignMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMarketingCampaign>>, TError,{id: string;data: BodyType<MarketingCampaignUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMarketingCampaign>>, TError,{id: string;data: BodyType<MarketingCampaignUpdate>}, TContext> => {
+
+const mutationKey = ['updateMarketingCampaign'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMarketingCampaign>>, {id: string;data: BodyType<MarketingCampaignUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateMarketingCampaign(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMarketingCampaignMutationResult = NonNullable<Awaited<ReturnType<typeof updateMarketingCampaign>>>
+    export type UpdateMarketingCampaignMutationBody = BodyType<MarketingCampaignUpdate>
+    export type UpdateMarketingCampaignMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a MarketingCampaign
+ */
+export const useUpdateMarketingCampaign = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMarketingCampaign>>, TError,{id: string;data: BodyType<MarketingCampaignUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateMarketingCampaign>>,
+        TError,
+        {id: string;data: BodyType<MarketingCampaignUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateMarketingCampaignMutationOptions(options));
+    }
+
+export const getDeleteMarketingCampaignUrl = (id: string,) => {
+
+
+
+
+  return `/api/marketing-campaigns/${id}`
+}
+
+/**
+ * @summary Soft-delete a MarketingCampaign
+ */
+export const deleteMarketingCampaign = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getDeleteMarketingCampaignUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteMarketingCampaignMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMarketingCampaign>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMarketingCampaign>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteMarketingCampaign'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMarketingCampaign>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteMarketingCampaign(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMarketingCampaignMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMarketingCampaign>>>
+
+    export type DeleteMarketingCampaignMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Soft-delete a MarketingCampaign
+ */
+export const useDeleteMarketingCampaign = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMarketingCampaign>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMarketingCampaign>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeleteMarketingCampaignMutationOptions(options));
+    }
+
+export const getListMarketingChannelsUrl = (params?: ListMarketingChannelsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/marketing-channels?${stringifiedParams}` : `/api/marketing-channels`
+}
+
+/**
+ * @summary List MarketingChannel
+ */
+export const listMarketingChannels = async (params?: ListMarketingChannelsParams, options?: RequestInit): Promise<MarketingChannelListResponse> => {
+
+  return customFetch<MarketingChannelListResponse>(getListMarketingChannelsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListMarketingChannelsQueryKey = (params?: ListMarketingChannelsParams,) => {
+    return [
+    `/api/marketing-channels`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListMarketingChannelsQueryOptions = <TData = Awaited<ReturnType<typeof listMarketingChannels>>, TError = ErrorType<unknown>>(params?: ListMarketingChannelsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMarketingChannels>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListMarketingChannelsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMarketingChannels>>> = ({ signal }) => listMarketingChannels(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMarketingChannels>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListMarketingChannelsQueryResult = NonNullable<Awaited<ReturnType<typeof listMarketingChannels>>>
+export type ListMarketingChannelsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List MarketingChannel
+ */
+
+export function useListMarketingChannels<TData = Awaited<ReturnType<typeof listMarketingChannels>>, TError = ErrorType<unknown>>(
+ params?: ListMarketingChannelsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMarketingChannels>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListMarketingChannelsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateMarketingChannelUrl = () => {
+
+
+
+
+  return `/api/marketing-channels`
+}
+
+/**
+ * @summary Create a MarketingChannel
+ */
+export const createMarketingChannel = async (marketingChannelInput: MarketingChannelInput, options?: RequestInit): Promise<MarketingChannel> => {
+
+  return customFetch<MarketingChannel>(getCreateMarketingChannelUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      marketingChannelInput,)
+  }
+);}
+
+
+
+
+export const getCreateMarketingChannelMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMarketingChannel>>, TError,{data: BodyType<MarketingChannelInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createMarketingChannel>>, TError,{data: BodyType<MarketingChannelInput>}, TContext> => {
+
+const mutationKey = ['createMarketingChannel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createMarketingChannel>>, {data: BodyType<MarketingChannelInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createMarketingChannel(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateMarketingChannelMutationResult = NonNullable<Awaited<ReturnType<typeof createMarketingChannel>>>
+    export type CreateMarketingChannelMutationBody = BodyType<MarketingChannelInput>
+    export type CreateMarketingChannelMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a MarketingChannel
+ */
+export const useCreateMarketingChannel = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMarketingChannel>>, TError,{data: BodyType<MarketingChannelInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createMarketingChannel>>,
+        TError,
+        {data: BodyType<MarketingChannelInput>},
+        TContext
+      > => {
+      return useMutation(getCreateMarketingChannelMutationOptions(options));
+    }
+
+export const getGetMarketingChannelUrl = (id: string,) => {
+
+
+
+
+  return `/api/marketing-channels/${id}`
+}
+
+/**
+ * @summary Get a MarketingChannel
+ */
+export const getMarketingChannel = async (id: string, options?: RequestInit): Promise<MarketingChannel> => {
+
+  return customFetch<MarketingChannel>(getGetMarketingChannelUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketingChannelQueryKey = (id: string,) => {
+    return [
+    `/api/marketing-channels/${id}`
+    ] as const;
+    }
+
+
+export const getGetMarketingChannelQueryOptions = <TData = Awaited<ReturnType<typeof getMarketingChannel>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketingChannel>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketingChannelQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketingChannel>>> = ({ signal }) => getMarketingChannel(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketingChannel>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketingChannelQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketingChannel>>>
+export type GetMarketingChannelQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a MarketingChannel
+ */
+
+export function useGetMarketingChannel<TData = Awaited<ReturnType<typeof getMarketingChannel>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketingChannel>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketingChannelQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateMarketingChannelUrl = (id: string,) => {
+
+
+
+
+  return `/api/marketing-channels/${id}`
+}
+
+/**
+ * @summary Update a MarketingChannel
+ */
+export const updateMarketingChannel = async (id: string,
+    marketingChannelUpdate: MarketingChannelUpdate, options?: RequestInit): Promise<MarketingChannel> => {
+
+  return customFetch<MarketingChannel>(getUpdateMarketingChannelUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      marketingChannelUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateMarketingChannelMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMarketingChannel>>, TError,{id: string;data: BodyType<MarketingChannelUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMarketingChannel>>, TError,{id: string;data: BodyType<MarketingChannelUpdate>}, TContext> => {
+
+const mutationKey = ['updateMarketingChannel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMarketingChannel>>, {id: string;data: BodyType<MarketingChannelUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateMarketingChannel(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMarketingChannelMutationResult = NonNullable<Awaited<ReturnType<typeof updateMarketingChannel>>>
+    export type UpdateMarketingChannelMutationBody = BodyType<MarketingChannelUpdate>
+    export type UpdateMarketingChannelMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a MarketingChannel
+ */
+export const useUpdateMarketingChannel = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMarketingChannel>>, TError,{id: string;data: BodyType<MarketingChannelUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateMarketingChannel>>,
+        TError,
+        {id: string;data: BodyType<MarketingChannelUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateMarketingChannelMutationOptions(options));
+    }
+
+export const getDeleteMarketingChannelUrl = (id: string,) => {
+
+
+
+
+  return `/api/marketing-channels/${id}`
+}
+
+/**
+ * @summary Soft-delete a MarketingChannel
+ */
+export const deleteMarketingChannel = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getDeleteMarketingChannelUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteMarketingChannelMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMarketingChannel>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMarketingChannel>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteMarketingChannel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMarketingChannel>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteMarketingChannel(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMarketingChannelMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMarketingChannel>>>
+
+    export type DeleteMarketingChannelMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Soft-delete a MarketingChannel
+ */
+export const useDeleteMarketingChannel = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMarketingChannel>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMarketingChannel>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeleteMarketingChannelMutationOptions(options));
     }
 
 export const getGetGeneralAdminDashboardUrl = (params?: GetGeneralAdminDashboardParams,) => {

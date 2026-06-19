@@ -12320,6 +12320,126 @@ export interface FixedAssetsDashboard {
   byStatus: FixedAssetsStatusCount[];
 }
 
+export interface MarketingDashboard {
+  campaignsCount: number;
+  runningCampaignsCount: number;
+  channelsCount: number;
+  leadSourcesCount: number;
+  totalBudget: string;
+  totalActualCost: string;
+}
+
+export interface MarketingCampaign {
+  id: string;
+  companyId: string;
+  /** @nullable */
+  branchId?: string | null;
+  /** @nullable */
+  projectId?: string | null;
+  code: string;
+  name: string;
+  campaignType: string;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  /** @nullable */
+  budget?: string | null;
+  actualCost: string;
+  status: string;
+  /** @nullable */
+  ownerUserId?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MarketingCampaignInput {
+  companyId: string;
+  branchId?: string;
+  projectId?: string;
+  code?: string;
+  name: string;
+  campaignType?: string;
+  startDate?: string;
+  endDate?: string;
+  budget?: string;
+  actualCost?: string;
+  status?: string;
+  ownerUserId?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface MarketingCampaignUpdate {
+  companyId?: string;
+  branchId?: string;
+  projectId?: string;
+  name?: string;
+  campaignType?: string;
+  startDate?: string;
+  endDate?: string;
+  budget?: string;
+  actualCost?: string;
+  status?: string;
+  ownerUserId?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface MarketingCampaignListResponse {
+  data: MarketingCampaign[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface MarketingChannel {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  channelType: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface MarketingChannelInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  channelType?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface MarketingChannelUpdate {
+  companyId?: string;
+  code?: string;
+  name?: string;
+  nameAr?: string;
+  channelType?: string;
+  description?: string;
+  notes?: string;
+}
+
+export interface MarketingChannelListResponse {
+  data: MarketingChannel[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface GeneralAdminDashboard {
   meetingsCount: number;
   decisionsCount: number;
@@ -16539,6 +16659,30 @@ typeId?: string;
 typeCode?: string;
 active?: boolean;
 archived?: boolean;
+};
+
+export type GetMarketingDashboardParams = {
+companyId?: string;
+};
+
+export type ListMarketingCampaignsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+branchId?: string;
+projectId?: string;
+campaignType?: string;
+status?: string;
+ownerUserId?: string;
+};
+
+export type ListMarketingChannelsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+channelType?: string;
 };
 
 export type GetGeneralAdminDashboardParams = {

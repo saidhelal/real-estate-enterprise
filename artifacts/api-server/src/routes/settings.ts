@@ -18,6 +18,9 @@ router.use(requireAuth);
 const REQUIRED_SETTINGS = [
   { key: "ai.provider", value: "openai", category: "ai", label: "AI Provider" },
   { key: "ai.model", value: "gpt-5", category: "ai", label: "AI Assistant Model" },
+  { key: "marketing.defaultCampaignType", value: "digital", category: "marketing", label: "Default Campaign Type" },
+  { key: "marketing.defaultChannelType", value: "digital", category: "marketing", label: "Default Channel Type" },
+  { key: "marketing.autoCreateLeads", value: "true", category: "marketing", label: "Auto-create Leads from Campaigns" },
 ];
 
 async function ensureRequiredSettings(): Promise<void> {
