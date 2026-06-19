@@ -394,6 +394,19 @@ const FORMS_MODULE_BY_GROUP: Record<string, string> = {
   "nav.group.system_administration": "systemAdministration",
 };
 
+const AI_NAV_HREFS = new Set<string>([
+  "/ai-assistant",
+  "/ai-chat-erp",
+  "/ai-analytics",
+  "/ai-insights",
+  "/ai-recommendations",
+  "/ai-forecasting",
+  "/ai-alerts",
+  "/ai-risk-analysis",
+  "/ai-decision-support",
+  "/ai-executive-advisor",
+]);
+
 const NAV_GROUPS = RAW_NAV_GROUPS.map((group) => {
   const moduleKey = FORMS_MODULE_BY_GROUP[group.titleKey];
   if (!moduleKey) return group;
@@ -442,6 +455,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }
   };
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const canViewAi =
+    !!user?.permissions?.includes("*") || !!user?.permissions?.includes("ai.view");
+  const navGroups = canViewAi
+    ? NAV_GROUPS
+    : NAV_GROUPS.map((group) => ({
+        ...group,
+        items: group.items.filter((item) => !AI_NAV_HREFS.has(item.href)),
+      }));
+
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     for (const group of NAV_GROUPS) {
@@ -460,7 +483,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const NavLinks = () => {
     return (
       <>
-        {NAV_GROUPS.map((group) => {
+        {navGroups.map((group) => {
           const isOpen = openGroups[group.titleKey] ?? false;
           return (
             <div key={group.titleKey} className="pb-1">

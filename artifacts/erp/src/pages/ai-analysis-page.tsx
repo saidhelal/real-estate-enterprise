@@ -25,7 +25,16 @@ type AnalysisMutation = {
   data?: AiAnalysisResult;
   isPending: boolean;
   isError: boolean;
+  error?: unknown;
 };
+
+function getErrorStatus(error: unknown): number | undefined {
+  if (error && typeof error === "object" && "status" in error) {
+    const status = (error as { status?: unknown }).status;
+    return typeof status === "number" ? status : undefined;
+  }
+  return undefined;
+}
 
 const SEVERITY_STYLES: Record<string, { border: string; icon: typeof Info; tone: string }> = {
   info: { border: "border-l-muted-foreground/40", icon: Info, tone: "text-muted-foreground" },
@@ -50,6 +59,7 @@ export function AiAnalysisPage({
   const [prompt, setPrompt] = useState("");
 
   const result = mutation.data;
+  const noAccess = getErrorStatus(mutation.error) === 403;
 
   function run() {
     mutation.mutate({
@@ -70,38 +80,52 @@ export function AiAnalysisPage({
         </div>
       </div>
 
-      <Card>
-        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-          <Input
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder={t("ai.prompt_placeholder")}
-            className="flex-1"
-          />
-          <Button onClick={run} disabled={mutation.isPending} className="shrink-0">
-            {mutation.isPending ? (
-              <Loader2 className="h-4 w-4 me-2 animate-spin" />
-            ) : result ? (
-              <RefreshCw className="h-4 w-4 me-2" />
-            ) : (
-              <Sparkles className="h-4 w-4 me-2" />
-            )}
-            {result ? t("ai.regenerate") : t("ai.generate")}
-          </Button>
-        </CardContent>
-      </Card>
+      {noAccess ? (
+        <Card className="border-amber-500/40">
+          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
+              <ShieldAlert className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            </div>
+            <h3 className="text-lg font-semibold">{t("ai.no_access.title")}</h3>
+            <p className="max-w-md text-sm text-muted-foreground">{t("ai.no_access.body")}</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          <Card>
+            <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+              <Input
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder={t("ai.prompt_placeholder")}
+                className="flex-1"
+              />
+              <Button onClick={run} disabled={mutation.isPending} className="shrink-0">
+                {mutation.isPending ? (
+                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                ) : result ? (
+                  <RefreshCw className="h-4 w-4 me-2" />
+                ) : (
+                  <Sparkles className="h-4 w-4 me-2" />
+                )}
+                {result ? t("ai.regenerate") : t("ai.generate")}
+              </Button>
+            </CardContent>
+          </Card>
 
-      {mutation.isPending && (
-        <div className="flex items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          {t("ai.generating")}
-        </div>
-      )}
+          {mutation.isPending && (
+            <div className="flex items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-muted-foreground">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              {t("ai.generating")}
+            </div>
+          )}
 
-      {mutation.isError && !mutation.isPending && (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          {t("ai.error")}
-        </div>
+          {mutation.isError && !mutation.isPending && (
+            <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              {t("ai.error")}
+            </div>
+          )}
+        </>
       )}
 
       {!mutation.isPending && !mutation.isError && !result && (
