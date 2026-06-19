@@ -53,3 +53,4 @@
 - [Lead distribution engine](lead-distribution-engine.md) — auto-assign must claim via conditional UPDATE (assigned IS NULL)+returning, not read-then-write; maxLeadsPerAgent is a hard cap; company scope follows app-wide registerCrud convention.
 - [ERP route code splitting](erp-code-splitting.md) — App.tsx lazy-loads ~300 pages behind one Suspense; only Login/Home/Dashboard eager; named-export pages need .then form; queryClient staleTime caches lookups.
 - [API backend performance](backend-perf.md) — compression() wired in app.ts; pageParams already caps pageSize 200; add Drizzle indexes via pgTable 3rd-arg callback ((company_id,is_deleted) is the hot pattern).
+- [API stability framework](api-stability-framework.md) — startup diagnostics+DB retry, livez/readyz/metrics probes, guarded module mounting, central error handler, uncaught→graceful-shutdown; keep router static-import (bundled deploy + supertest imports app sync).

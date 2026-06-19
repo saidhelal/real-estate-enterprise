@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { mountModule } from "../lib/module-registry";
 import healthRouter from "./health";
 import authRouter from "./auth";
 import usersRouter from "./users";
@@ -48,54 +49,60 @@ import testingRouter from "./testing";
 
 const router: IRouter = Router();
 
-router.use(healthRouter);
-router.use(authRouter);
-// Portal routes manage their own auth per-route (public auth endpoints +
-// requireCustomerAuth). Mount BEFORE the ERP routers, each of which applies a
-// router-level requireAuth that would otherwise intercept /portal/* requests.
-router.use(portalRouter);
-router.use(usersRouter);
-router.use(rolesRouter);
-router.use(companiesRouter);
-router.use(branchesRouter);
-router.use(fiscalYearsRouter);
-router.use(currenciesRouter);
-router.use(settingsRouter);
-router.use(numberSequencesRouter);
-router.use(auditRouter);
-router.use(dashboardRouter);
-router.use(realEstateRouter);
-router.use(crmRouter);
-router.use(customersRouter);
-router.use(salesRouter);
-router.use(installmentsRouter);
-router.use(unitManagementRouter);
-router.use(financeRouter);
-router.use(chequesRouter);
-router.use(accountingRouter);
-router.use(arApRouter);
-router.use(engineeringRouter);
-router.use(constructionRouter);
-router.use(procurementRouter);
-router.use(inventoryRouter);
-router.use(hrRouter);
-router.use(legalRouter);
-router.use(biRouter);
-router.use(aiRouter);
-router.use(landBankRouter);
-router.use(handoverRouter);
-router.use(customerServiceRouter);
-router.use(fixedAssetsRouter);
-router.use(generalAdminRouter);
-router.use(marketingRouter);
-router.use(insuranceRouter);
-router.use(masterDataRouter);
-router.use(changeRequestsRouter);
-router.use(notificationsRouter);
-router.use(executiveOversightRouter);
-router.use(documentsRouter);
-router.use(formTemplatesRouter);
-router.use(printJobsRouter);
-router.use(testingRouter);
+// Each module is mounted in isolation: a failure mounting one module is logged
+// and recorded (and surfaced by the readiness probe) without preventing the
+// others from mounting. Combined with the centralized request error handler in
+// app.ts, this contains module-mount and per-request runtime faults so one bad
+// module cannot take down the API. (Import-time faults cannot be isolated in
+// the single-file esbuild bundle — those surface as build/startup failures.)
+// Order is preserved — health/auth first, then portal BEFORE the ERP routers
+// (portal manages its own per-route auth and would otherwise be intercepted by
+// the ERP routers' router-level requireAuth).
+mountModule(router, "health", healthRouter);
+mountModule(router, "auth", authRouter);
+mountModule(router, "portal", portalRouter);
+mountModule(router, "users", usersRouter);
+mountModule(router, "roles", rolesRouter);
+mountModule(router, "companies", companiesRouter);
+mountModule(router, "branches", branchesRouter);
+mountModule(router, "fiscalYears", fiscalYearsRouter);
+mountModule(router, "currencies", currenciesRouter);
+mountModule(router, "settings", settingsRouter);
+mountModule(router, "numberSequences", numberSequencesRouter);
+mountModule(router, "audit", auditRouter);
+mountModule(router, "dashboard", dashboardRouter);
+mountModule(router, "realEstate", realEstateRouter);
+mountModule(router, "crm", crmRouter);
+mountModule(router, "customers", customersRouter);
+mountModule(router, "sales", salesRouter);
+mountModule(router, "installments", installmentsRouter);
+mountModule(router, "unitManagement", unitManagementRouter);
+mountModule(router, "finance", financeRouter);
+mountModule(router, "cheques", chequesRouter);
+mountModule(router, "accounting", accountingRouter);
+mountModule(router, "arAp", arApRouter);
+mountModule(router, "engineering", engineeringRouter);
+mountModule(router, "construction", constructionRouter);
+mountModule(router, "procurement", procurementRouter);
+mountModule(router, "inventory", inventoryRouter);
+mountModule(router, "hr", hrRouter);
+mountModule(router, "legal", legalRouter);
+mountModule(router, "bi", biRouter);
+mountModule(router, "ai", aiRouter);
+mountModule(router, "landBank", landBankRouter);
+mountModule(router, "handover", handoverRouter);
+mountModule(router, "customerService", customerServiceRouter);
+mountModule(router, "fixedAssets", fixedAssetsRouter);
+mountModule(router, "generalAdmin", generalAdminRouter);
+mountModule(router, "marketing", marketingRouter);
+mountModule(router, "insurance", insuranceRouter);
+mountModule(router, "masterData", masterDataRouter);
+mountModule(router, "changeRequests", changeRequestsRouter);
+mountModule(router, "notifications", notificationsRouter);
+mountModule(router, "executiveOversight", executiveOversightRouter);
+mountModule(router, "documents", documentsRouter);
+mountModule(router, "formTemplates", formTemplatesRouter);
+mountModule(router, "printJobs", printJobsRouter);
+mountModule(router, "testing", testingRouter);
 
 export default router;

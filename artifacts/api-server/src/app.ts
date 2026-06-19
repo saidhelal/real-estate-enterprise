@@ -1,10 +1,16 @@
-import express, { type Express } from "express";
+import express, {
+  type Express,
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import cors from "cors";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { governanceMiddleware } from "./middleware/governance";
+import { metricsMiddleware } from "./lib/metrics";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
@@ -28,6 +34,7 @@ app.use(
     },
   }),
 );
+app.use(metricsMiddleware);
 app.use(compression());
 app.use(cors());
 app.use(cookieParser());
@@ -40,5 +47,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", governanceMiddleware);
 
 app.use("/api", router);
+
+// JSON 404 for unmatched API routes.
+app.use("/api", (_req: Request, res: Response) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+// Centralized error handler (must declare all four args). Prevents a thrown or
+// rejected handler error in any one module from crashing the process or leaking
+// internals to clients — Express 5 forwards rejected async handlers here too.
+app.use(
+  (err: unknown, req: Request, res: Response, _next: NextFunction): void => {
+    req.log?.error({ err }, "Unhandled request error");
+    if (res.headersSent) return;
+    res.status(500).json({ error: "Internal server error" });
+  },
+);
 
 export default app;
