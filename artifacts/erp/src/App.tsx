@@ -166,6 +166,10 @@ import HandoverMinutesPage from "@/pages/handover-minutes";
 import HandoverSnagsPage from "@/pages/handover-snags";
 import HandoverApprovalsPage from "@/pages/handover-approvals";
 import GeneralAdminDashboardPage from "@/pages/general-admin-dashboard";
+import MarketingDashboardPage from "@/pages/marketing-dashboard";
+import MarketingCampaignsPage from "@/pages/marketing-campaigns";
+import MarketingChannelsPage from "@/pages/marketing-channels";
+import MarketingSettingsPage from "@/pages/marketing-settings";
 import CorrespondencePage from "@/pages/correspondence";
 import MeetingsPage from "@/pages/meetings";
 import AdministrativeDecisionsPage from "@/pages/administrative-decisions";
@@ -463,6 +467,10 @@ function Router() {
             <Route path="/handover-approvals" component={HandoverApprovalsPage} />
             <Route path="/handover-reports" component={HandoverReportsPage} />
             <Route path="/general-admin-dashboard" component={GeneralAdminDashboardPage} />
+            <Route path="/marketing-dashboard" component={MarketingDashboardPage} />
+            <Route path="/marketing-campaigns" component={MarketingCampaignsPage} />
+            <Route path="/marketing-channels" component={MarketingChannelsPage} />
+            <Route path="/marketing-settings" component={MarketingSettingsPage} />
             <Route path="/correspondence" component={CorrespondencePage} />
             <Route path="/meetings" component={MeetingsPage} />
             <Route path="/administrative-decisions" component={AdministrativeDecisionsPage} />

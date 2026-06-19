@@ -150,7 +150,8 @@ router.post("/marketing-campaigns", requirePermission("marketing.create"), async
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const data = parsed.data as Record<string, unknown>;
   const code = (data.code as string | undefined) || (await nextDocumentNumber("MarketingCampaign")) || `MKC-${Date.now()}`;
-  const inserted = (await db.insert(marketingCampaignsTable).values({ ...data, code }).returning()) as Row[];
+  const values = { ...data, code } as unknown as typeof marketingCampaignsTable.$inferInsert;
+  const inserted = (await db.insert(marketingCampaignsTable).values(values).returning()) as Row[];
   const row = inserted[0];
   await recordAudit(req, { action: "create", entity: "marketingCampaign", entityId: String(row.id), newValue: row });
   res.status(201).json(GetMarketingCampaignResponse.parse(serializeRow(row)));

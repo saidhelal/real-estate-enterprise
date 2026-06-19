@@ -26,6 +26,7 @@ import {
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
   Inbox, PhoneCall, Star, Printer, FlaskConical,
   Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
+  Share2,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -294,6 +295,13 @@ const RAW_NAV_GROUPS = [
     { href: "/asset-inventory-counts", icon: ClipboardCheck, labelKey: "nav.asset_inventory_counts" },
     { href: "/asset-disposals", icon: PackageX, labelKey: "nav.asset_disposals" },
     { href: "/fixed-assets-reports", icon: BarChart3, labelKey: "nav.fixed_assets_reports" },
+  ]},
+  { titleKey: "nav.group.marketing", items: [
+    { href: "/marketing-dashboard", icon: LayoutDashboard, labelKey: "nav.marketing_dashboard" },
+    { href: "/marketing-campaigns", icon: Megaphone, labelKey: "nav.marketing_campaigns" },
+    { href: "/marketing-channels", icon: Share2, labelKey: "nav.marketing_channels" },
+    { href: "/lead-sources", icon: Megaphone, labelKey: "nav.lead_sources" },
+    { href: "/marketing-settings", icon: Settings, labelKey: "nav.marketing_settings" },
   ]},
   { titleKey: "nav.group.general_admin", items: [
     { href: "/general-admin-dashboard", icon: LayoutDashboard, labelKey: "nav.general_admin_dashboard" },

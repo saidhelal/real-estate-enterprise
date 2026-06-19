@@ -13,6 +13,7 @@ import {
   useGetGeneralAdminDashboard,
   useGetInsuranceDashboard,
   useGetNotificationsDashboard,
+  useGetMarketingDashboard,
   useListCompanies,
   getGetRealEstateDashboardQueryKey,
   getGetFinanceDashboardQueryKey,
@@ -23,6 +24,7 @@ import {
   getGetGeneralAdminDashboardQueryKey,
   getGetInsuranceDashboardQueryKey,
   getGetNotificationsDashboardQueryKey,
+  getGetMarketingDashboardQueryKey,
 } from "@workspace/api-client-react";
 import {
   Building,
@@ -50,6 +52,7 @@ import {
   ShieldCheck,
   Bell,
   Gauge,
+  Megaphone,
   type LucideIcon,
 } from "lucide-react";
 
@@ -63,7 +66,8 @@ type CountKey =
   | "customer_service"
   | "general_admin"
   | "insurance"
-  | "notifications";
+  | "notifications"
+  | "marketing";
 
 type ModuleCard = {
   titleKey: string;
@@ -87,6 +91,7 @@ const MODULES: ModuleCard[] = [
   { titleKey: "home.mod.land_bank", icon: LandPlot, href: "/land-bank-dashboard", accent: "text-lime-600 bg-lime-500/10 dark:text-lime-400" },
   { titleKey: "home.mod.fixed_assets", icon: FileBox, href: "/fixed-assets-dashboard", accent: "text-stone-600 bg-stone-500/10 dark:text-stone-300" },
   { titleKey: "home.mod.general_admin", icon: Briefcase, href: "/general-admin-dashboard", accent: "text-blue-600 bg-blue-500/10 dark:text-blue-400", countKey: "general_admin" },
+  { titleKey: "home.mod.marketing", icon: Megaphone, href: "/marketing-dashboard", accent: "text-pink-600 bg-pink-500/10 dark:text-pink-400", countKey: "marketing" },
   { titleKey: "home.mod.insurance", icon: ShieldCheck, href: "/insurance-dashboard", accent: "text-emerald-600 bg-emerald-500/10 dark:text-emerald-400", countKey: "insurance" },
   { titleKey: "home.mod.notifications", icon: Bell, href: "/notifications", accent: "text-red-600 bg-red-500/10 dark:text-red-400", countKey: "notifications" },
   { titleKey: "home.mod.executive_oversight", icon: Gauge, href: "/executive-oversight", accent: "text-purple-600 bg-purple-500/10 dark:text-purple-400" },
@@ -145,6 +150,9 @@ export default function Home() {
   const { data: notif, isLoading: notifLoading } = useGetNotificationsDashboard(params, {
     query: { enabled, queryKey: getGetNotificationsDashboardQueryKey(params) },
   });
+  const { data: mk, isLoading: mkLoading } = useGetMarketingDashboard(params, {
+    query: { enabled, queryKey: getGetMarketingDashboardQueryKey(params) },
+  });
 
   const [query, setQuery] = useState("");
 
@@ -163,6 +171,7 @@ export default function Home() {
     general_admin: { value: ga?.tasksCount, loading: gaLoading || !enabled },
     insurance: { value: ins?.insuredCount, loading: insLoading || !enabled },
     notifications: { value: notif?.unread, loading: notifLoading || !enabled },
+    marketing: { value: mk?.campaignsCount, loading: mkLoading || !enabled },
   };
 
   const apps = useMemo(() => {
