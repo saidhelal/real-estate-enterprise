@@ -1,0 +1,299 @@
+Before continuing any new feature development, perform a complete ERP-wide audit and stabilization.
+
+OBJECTIVE:
+The ERP must become production-ready for full end-to-end testing. Do not stop after fixing a single page. Continue until every module works correctly.
+
+GENERAL REQUIREMENTS
+
+1. Audit every module in the ERP.
+
+2. Find and fix:
+- Missing master data
+- Empty dropdowns
+- Broken foreign-key relationships
+- CRUD failures
+- Validation problems
+- Permission issues
+- Save/update/delete failures
+- Missing API endpoints
+- Missing database seeds
+- UI inconsistencies
+
+3. Every CRUD operation must work correctly:
+- Create
+- Read
+- Update
+- Delete
+- Search
+- Filter
+- Pagination
+- Export (where applicable)
+
+MASTER DATA
+
+If any master table is empty, automatically seed realistic default data.
+
+Create complete seed data for:
+
+- Companies
+- Branches
+- Departments
+- Sections
+- Job Titles
+- Employment Types
+- Nationalities
+- Genders
+- Marital Status
+- Cities
+- Countries
+- Payment Methods
+- Banks
+- Currencies
+- Taxes
+- Cost Centers
+- Project Types
+- Project Statuses
+- Unit Types
+- Unit Statuses
+- Customer Types
+- Lead Sources
+- Vendors
+- Suppliers
+- Contractors
+- Expense Categories
+- Revenue Categories
+- Installment Plans
+- Contract Types
+- Approval Types
+- User Roles
+- Permissions
+
+No dropdown anywhere in the ERP should ever appear empty.
+
+FORM UX
+
+Improve every form in the ERP.
+
+Required fields:
+- Display a clear red (*) beside every required field.
+
+Optional fields:
+- Display "(Optional)" in English.
+- Display "(اختياري)" in Arabic.
+
+Users must immediately know which fields are required.
+
+Validation:
+- Required fields must prevent saving if empty.
+- Show clear validation messages.
+- Focus automatically on the first invalid field.
+- Highlight invalid fields with a red border.
+- Optional fields must never block saving.
+
+INPUT EXPERIENCE
+
+Add meaningful placeholders.
+
+Examples:
+
+Employee Code:
+EMP001
+
+Project:
+PRJ001
+
+Customer:
+CUS001
+
+Branch:
+BR001
+
+Company:
+COM001
+
+Unit:
+UNT001
+
+Contract:
+CON001
+
+Invoice:
+INV001
+
+Receipt:
+REC001
+
+Voucher:
+VCH001
+
+EMPLOYEE MODULE
+
+Ensure Employees works completely.
+
+Dropdowns must load:
+
+- Company
+- Branch
+- Department
+- Section
+- Job Title
+- Manager
+- Employment Type
+
+Nothing should be empty.
+
+AUTO CODE GENERATION
+
+Automatically generate codes for every entity while allowing manual override if permissions allow.
+
+Examples:
+
+Company
+COM001
+
+Branch
+BR001
+
+Department
+DEP001
+
+Section
+SEC001
+
+Employee
+EMP001
+
+Customer
+CUS001
+
+Lead
+LED001
+
+Project
+PRJ001
+
+Building
+BLD001
+
+Floor
+FLR001
+
+Unit
+UNT001
+
+Reservation
+RES001
+
+Contract
+CON001
+
+Installment
+INS001
+
+Invoice
+INV001
+
+Receipt
+REC001
+
+Voucher
+VCH001
+
+Purchase Order
+PO001
+
+Supplier
+SUP001
+
+Vendor
+VEN001
+
+Contractor
+CTR001
+
+DO NOT BREAK EXISTING DATA
+
+Never delete existing records.
+
+If seed data already exists, keep it.
+
+Only insert missing records.
+
+TEST MODE
+
+Keep the current Demo environment isolated.
+
+Everything created by Demo users must stay inside the testing database/session.
+
+Nothing from Demo testing should affect production data.
+
+PERMISSIONS
+
+Demo user must have full CRUD permissions for testing.
+
+Do not restrict create/edit/delete during testing.
+
+Only keep dangerous system settings restricted.
+
+SYSTEM AUDIT
+
+Continue checking every module automatically until all are verified, including:
+
+Administration
+Companies
+Branches
+Departments
+Sections
+Employees
+Users
+Roles
+CRM
+Customers
+Leads
+Projects
+Engineering
+Land Bank
+Buildings
+Floors
+Units
+Reservations
+Contracts
+Collections
+Installments
+Treasury
+Banks
+Accounting
+Journal Entries
+Invoices
+Receipts
+Vouchers
+Procurement
+Inventory
+Suppliers
+Contractors
+HR
+Legal
+Customer Service
+Reports
+AI Assistant
+BI Dashboard
+Notifications
+Document Management
+Workflow
+Audit Trail
+
+Do not stop after fixing one issue.
+
+Continue auditing until every module is functional.
+
+FINAL REPORT
+
+When finished provide:
+
+1. Every issue found.
+2. Every issue fixed.
+3. Remaining issues (if any).
+4. Modules fully verified.
+5. Modules still requiring review.
+6. Overall ERP readiness percentage.
+7. Confirm whether the ERP is ready for complete end-to-end testing.
