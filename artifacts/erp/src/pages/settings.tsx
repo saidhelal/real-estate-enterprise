@@ -13,6 +13,30 @@ import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const AI_PROVIDER_SETTING_KEY = "ai.provider";
+const AI_MODEL_SETTING_KEY = "ai.model";
+
+const AI_PROVIDER_OPTIONS = [
+  { value: "openai", label: "OpenAI" },
+  { value: "openrouter", label: "OpenRouter" },
+  { value: "gemini", label: "Gemini" },
+];
+
+// Suggested models per provider. OpenRouter exposes a long tail of models, so it
+// is left free-form (any other provider with an empty list behaves the same).
+const AI_MODEL_OPTIONS: Record<string, string[]> = {
+  openai: ["gpt-5", "gpt-5-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4o", "gpt-4o-mini"],
+  gemini: ["gemini-3.1-pro-preview", "gemini-3-flash-preview", "gemini-2.5-pro", "gemini-2.5-flash"],
+  openrouter: [],
+};
 
 export default function SettingsPage() {
   const { t } = useLanguage();
@@ -84,17 +108,74 @@ export default function SettingsPage() {
               <CardTitle className="capitalize">{category}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {items.map(setting => (
-                <div key={setting.key} className="space-y-2">
-                  <Label htmlFor={setting.key}>{setting.label}</Label>
-                  <Input 
-                    id={setting.key}
-                    value={values[setting.key] ?? ""}
-                    onChange={e => setValues(prev => ({ ...prev, [setting.key]: e.target.value }))}
-                  />
-                  <p className="text-xs text-muted-foreground font-mono">{setting.key}</p>
-                </div>
-              ))}
+              {items.map(setting => {
+                const setValue = (value: string) =>
+                  setValues(prev => ({ ...prev, [setting.key]: value }));
+                const current = values[setting.key] ?? "";
+
+                let control;
+                if (setting.key === AI_PROVIDER_SETTING_KEY) {
+                  control = (
+                    <Select value={current} onValueChange={setValue}>
+                      <SelectTrigger id={setting.key}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {AI_PROVIDER_OPTIONS.map(p => (
+                          <SelectItem key={p.value} value={p.value}>
+                            {p.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  );
+                } else if (setting.key === AI_MODEL_SETTING_KEY) {
+                  const provider = values[AI_PROVIDER_SETTING_KEY] ?? "openai";
+                  const suggestions = AI_MODEL_OPTIONS[provider] ?? [];
+                  // Always include the current value so a custom/seeded model isn't lost.
+                  const options =
+                    current && !suggestions.includes(current)
+                      ? [current, ...suggestions]
+                      : suggestions;
+                  control =
+                    options.length > 0 ? (
+                      <Select value={current} onValueChange={setValue}>
+                        <SelectTrigger id={setting.key}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {options.map(model => (
+                            <SelectItem key={model} value={model}>
+                              {model}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input
+                        id={setting.key}
+                        value={current}
+                        onChange={e => setValue(e.target.value)}
+                      />
+                    );
+                } else {
+                  control = (
+                    <Input
+                      id={setting.key}
+                      value={current}
+                      onChange={e => setValue(e.target.value)}
+                    />
+                  );
+                }
+
+                return (
+                  <div key={setting.key} className="space-y-2">
+                    <Label htmlFor={setting.key}>{setting.label}</Label>
+                    {control}
+                    <p className="text-xs text-muted-foreground font-mono">{setting.key}</p>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         ))}

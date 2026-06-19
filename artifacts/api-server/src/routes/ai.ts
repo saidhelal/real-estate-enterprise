@@ -13,7 +13,7 @@ import {
   aiCompleteJson,
   aiStreamText,
   aiConfigured,
-  AI_MODEL,
+  resolveAiModel,
   type ChatMsg,
 } from "../lib/ai-provider";
 import { buildErpContext, type ContextFilters } from "../lib/ai-context";
@@ -89,7 +89,7 @@ async function runAnalysis(
   feature: string,
   instruction: string,
 ): Promise<void> {
-  if (!aiConfigured()) {
+  if (!(await aiConfigured())) {
     res.status(503).json({ error: "AI provider is not configured." });
     return;
   }
@@ -147,7 +147,7 @@ async function runAnalysis(
     title: typeof obj.title === "string" ? obj.title : feature,
     summary: typeof obj.summary === "string" ? obj.summary : "",
     generatedAt: new Date().toISOString(),
-    model: AI_MODEL,
+    model: await resolveAiModel(),
     dataAvailable: context.hasData,
     sections: Array.isArray(obj.sections) ? obj.sections : [],
   };
@@ -252,7 +252,7 @@ router.post("/ai/conversations/:id/messages", async (req, res): Promise<void> =>
     res.status(404).json({ error: "Conversation not found" });
     return;
   }
-  if (!aiConfigured()) {
+  if (!(await aiConfigured())) {
     res.status(503).json({ error: "AI provider is not configured." });
     return;
   }

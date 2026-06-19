@@ -734,6 +734,8 @@ async function seedSettings(): Promise<void> {
       { key: "security.maxLoginAttempts", value: "5", category: "security", label: "Max Login Attempts" },
       { key: "security.lockoutMinutes", value: "15", category: "security", label: "Lockout Duration (minutes)" },
       { key: "finance.baseCurrency", value: "SAR", category: "finance", label: "Base Currency" },
+      { key: "ai.provider", value: "openai", category: "ai", label: "AI Provider" },
+      { key: "ai.model", value: "gpt-5", category: "ai", label: "AI Assistant Model" },
     ])
     .onConflictDoNothing();
   console.log("Seeded system settings");

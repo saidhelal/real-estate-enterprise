@@ -1,18 +1,53 @@
 /**
  * Central AI provider wrapper. The rest of the codebase talks to the model
- * exclusively through these helpers so the underlying provider can be swapped
- * (OpenAI today, via the Replit AI integration) without touching routes.
+ * exclusively through these helpers so the underlying provider AND model can be
+ * swapped from System Settings (`ai.provider` / `ai.model`) without touching any
+ * route.
+ *
+ * Every supported provider is reached through the Replit AI integrations proxy,
+ * which exposes an OpenAI-compatible Chat Completions endpoint. A provider is
+ * therefore just a `(baseURL, apiKey)` pair sourced from its own
+ * `AI_INTEGRATIONS_<PROVIDER>_*` env vars; selecting one only changes which
+ * client we build. New providers are added to `AI_PROVIDERS` — no route change.
  *
  * gpt-5 family models reject `temperature` and `max_tokens`; they take
  * `max_completion_tokens` instead. Keep that detail isolated here.
  *
- * The provider client is imported lazily: the integration module throws at
- * import time when its env vars are unset, so importing it eagerly would crash
- * the whole API server on boot whenever AI is unconfigured. Callers always gate
- * on `aiConfigured()` first (and respond 503), so the dynamic import only ever
- * runs when the integration is actually provisioned.
+ * Clients are constructed lazily (and cached) only when a call is actually made
+ * and the selected provider is configured, so an unconfigured provider can never
+ * crash the API server on boot. Callers gate on `aiConfigured()` (→ 503) first.
  */
-export const AI_MODEL = process.env.AI_MODEL ?? "gpt-5";
+import OpenAI from "openai";
+import { eq } from "drizzle-orm";
+import { db, settingsTable } from "@workspace/db";
+
+/** System-settings keys holding the admin-selected provider/model. */
+export const AI_PROVIDER_SETTING_KEY = "ai.provider";
+export const AI_MODEL_SETTING_KEY = "ai.model";
+
+/**
+ * Fallbacks used when the matching system setting is empty/missing or the
+ * settings table is unreachable. The `AI_PROVIDER` / `AI_MODEL` env vars still
+ * override the hard-coded defaults so a deployment can pin them without the DB.
+ */
+export const DEFAULT_AI_PROVIDER = "openai";
+export const DEFAULT_AI_MODEL = process.env.AI_MODEL ?? "gpt-5";
+
+/**
+ * Allowlist of selectable providers. `envPrefix` names the integration env var
+ * pair (`<prefix>_BASE_URL` + `<prefix>_API_KEY`) provisioned by the Replit AI
+ * integration for that provider.
+ */
+export const AI_PROVIDERS = {
+  openai: { label: "OpenAI", envPrefix: "AI_INTEGRATIONS_OPENAI" },
+  openrouter: { label: "OpenRouter", envPrefix: "AI_INTEGRATIONS_OPENROUTER" },
+  gemini: { label: "Gemini", envPrefix: "AI_INTEGRATIONS_GEMINI" },
+} as const;
+
+export type AiProviderId = keyof typeof AI_PROVIDERS;
+
+const ENV_DEFAULT_PROVIDER = process.env.AI_PROVIDER ?? DEFAULT_AI_PROVIDER;
+
 const MAX_COMPLETION_TOKENS = 8192;
 
 export type ChatMsg = {
@@ -20,25 +55,90 @@ export type ChatMsg = {
   content: string;
 };
 
-/** True when the AI integration is provisioned. */
-export function aiConfigured(): boolean {
-  return Boolean(
-    process.env.AI_INTEGRATIONS_OPENAI_BASE_URL &&
-      process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  );
+export function isAiProviderId(value: string): value is AiProviderId {
+  return Object.prototype.hasOwnProperty.call(AI_PROVIDERS, value);
 }
 
-let _openaiPromise: Promise<
-  typeof import("@workspace/integrations-openai-ai-server")["openai"]
-> | null = null;
+function providerEnv(id: AiProviderId): {
+  baseURL: string | undefined;
+  apiKey: string | undefined;
+} {
+  const prefix = AI_PROVIDERS[id].envPrefix;
+  return {
+    baseURL: process.env[`${prefix}_BASE_URL`],
+    apiKey: process.env[`${prefix}_API_KEY`],
+  };
+}
 
-async function getOpenAI() {
-  if (!_openaiPromise) {
-    _openaiPromise = import("@workspace/integrations-openai-ai-server").then(
-      (m) => m.openai,
-    );
+/** True when the given provider's integration env vars are both present. */
+export function providerConfigured(id: AiProviderId): boolean {
+  const { baseURL, apiKey } = providerEnv(id);
+  return Boolean(baseURL && apiKey);
+}
+
+/** Read a single setting value, trimmed; null on missing/empty/DB error. */
+async function readSetting(key: string): Promise<string | null> {
+  try {
+    const [row] = await db
+      .select({ value: settingsTable.value })
+      .from(settingsTable)
+      .where(eq(settingsTable.key, key))
+      .limit(1);
+    const value = row?.value?.trim();
+    return value ? value : null;
+  } catch {
+    return null;
   }
-  return _openaiPromise;
+}
+
+/**
+ * Resolve the active provider from the `ai.provider` system setting, letting
+ * admins swap providers from the Settings page without a code change. Falls back
+ * to the env/default when the setting is empty/missing/unknown so a bad row can
+ * never take the assistant offline.
+ */
+export async function resolveAiProvider(): Promise<AiProviderId> {
+  const value = await readSetting(AI_PROVIDER_SETTING_KEY);
+  if (value && isAiProviderId(value)) return value;
+  if (isAiProviderId(ENV_DEFAULT_PROVIDER)) return ENV_DEFAULT_PROVIDER;
+  return DEFAULT_AI_PROVIDER;
+}
+
+/**
+ * Resolve the active model from the `ai.model` system setting. Falls back to
+ * `DEFAULT_AI_MODEL` when empty/missing or the DB read fails.
+ */
+export async function resolveAiModel(): Promise<string> {
+  return (await readSetting(AI_MODEL_SETTING_KEY)) ?? DEFAULT_AI_MODEL;
+}
+
+/** True when the currently-selected provider is provisioned. */
+export async function aiConfigured(): Promise<boolean> {
+  return providerConfigured(await resolveAiProvider());
+}
+
+const _clients = new Map<AiProviderId, OpenAI>();
+
+/** Build (and cache) an OpenAI-compatible client for the given provider. */
+function getClient(id: AiProviderId): OpenAI {
+  const cached = _clients.get(id);
+  if (cached) return cached;
+  const { baseURL, apiKey } = providerEnv(id);
+  if (!baseURL || !apiKey) {
+    throw new Error(`AI provider "${id}" is not configured.`);
+  }
+  const client = new OpenAI({ apiKey, baseURL });
+  _clients.set(id, client);
+  return client;
+}
+
+/** Resolve the active provider + model and return a ready client. */
+async function activeClient(): Promise<{ client: OpenAI; model: string }> {
+  const [provider, model] = await Promise.all([
+    resolveAiProvider(),
+    resolveAiModel(),
+  ]);
+  return { client: getClient(provider), model };
 }
 
 /**
@@ -46,9 +146,9 @@ async function getOpenAI() {
  * string from the model (callers parse + validate against a Zod schema).
  */
 export async function aiCompleteJson(messages: ChatMsg[]): Promise<string> {
-  const openai = await getOpenAI();
-  const res = await openai.chat.completions.create({
-    model: AI_MODEL,
+  const { client, model } = await activeClient();
+  const res = await client.chat.completions.create({
+    model,
     max_completion_tokens: MAX_COMPLETION_TOKENS,
     response_format: { type: "json_object" },
     messages,
@@ -63,9 +163,9 @@ export async function aiCompleteJson(messages: ChatMsg[]): Promise<string> {
 export async function* aiStreamText(
   messages: ChatMsg[],
 ): AsyncGenerator<string, void, unknown> {
-  const openai = await getOpenAI();
-  const stream = await openai.chat.completions.create({
-    model: AI_MODEL,
+  const { client, model } = await activeClient();
+  const stream = await client.chat.completions.create({
+    model,
     max_completion_tokens: MAX_COMPLETION_TOKENS,
     stream: true,
     messages,
