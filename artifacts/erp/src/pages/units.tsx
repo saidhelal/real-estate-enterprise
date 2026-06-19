@@ -89,6 +89,14 @@ export default function UnitsPage() {
       useDelete={useDeleteUnit}
       getListQueryKey={getListUnitsQueryKey}
       companyId={companyId}
+      filters={[
+        {
+          name: "unitStatusId",
+          label: "Status",
+          labelAr: "الحالة",
+          options: unitStatusOptions,
+        },
+      ]}
       rowActions={(r) => (
         <>
           <UnitStatusRowAction unitId={r.id} />

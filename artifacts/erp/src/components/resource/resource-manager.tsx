@@ -54,6 +54,9 @@ import {
   Check,
 } from "lucide-react";
 
+/** Sentinel value for the "All" (cleared) state of a toolbar filter select. */
+const ALL = "__all__";
+
 export type FieldType = "text" | "textarea" | "number" | "money" | "date" | "select" | "boolean";
 
 export interface SelectOption {
@@ -116,6 +119,18 @@ export interface ResourceColumn<T> {
   render: (row: T) => React.ReactNode;
 }
 
+/**
+ * A toolbar filter rendered as a select next to the search box. The chosen
+ * value is injected into the list query under `name` (server-side filtering, so
+ * it combines cleanly with paging). An "All" option clears the filter.
+ */
+export interface ResourceFilter {
+  name: string;
+  label: string;
+  labelAr?: string;
+  options: SelectOption[];
+}
+
 interface MutationLike {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mutate: (vars: any, opts?: any) => void;
@@ -150,6 +165,8 @@ export interface ResourceManagerProps<T extends { id: string }> {
   canDelete?: boolean | ((row: T) => boolean);
   /** Extra per-row action buttons rendered before edit/delete. */
   rowActions?: (row: T) => React.ReactNode;
+  /** Toolbar select filters injected into the list query (server-side). */
+  filters?: ResourceFilter[];
   pageSize?: number;
 }
 
@@ -179,6 +196,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     canEdit = true,
     canDelete = true,
     rowActions,
+    filters,
     pageSize = 10,
   } = props;
 
@@ -188,6 +206,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<T | null>(null);
@@ -195,6 +214,9 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
 
   const params: Record<string, unknown> = { page, pageSize };
   if (search) params.search = search;
+  for (const [k, v] of Object.entries(filterValues)) {
+    if (v) params[k] = v;
+  }
 
   const { data, isLoading } = useList(params);
   const rows = data?.data ?? [];
@@ -264,16 +286,46 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
         )}
       </div>
 
-      {searchable && (
-        <Input
-          placeholder={t("common.search")}
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
-          className="max-w-sm"
-        />
+      {(searchable || (filters && filters.length > 0)) && (
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+          {searchable && (
+            <Input
+              placeholder={t("common.search")}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="max-w-sm"
+            />
+          )}
+          {filters?.map((filter) => {
+            const filterLabel =
+              language === "ar" && filter.labelAr ? filter.labelAr : filter.label;
+            return (
+              <Select
+                key={filter.name}
+                value={filterValues[filter.name] || ALL}
+                onValueChange={(v) => {
+                  setFilterValues((prev) => ({ ...prev, [filter.name]: v === ALL ? "" : v }));
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder={filterLabel} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>{t("common.all")}</SelectItem>
+                  {filter.options.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {language === "ar" && o.labelAr ? o.labelAr : o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            );
+          })}
+        </div>
       )}
 
       <div className="rounded-md border bg-card">
