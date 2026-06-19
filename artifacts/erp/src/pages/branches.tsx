@@ -7,6 +7,7 @@ import {
   useDeleteBranch,
   useListCompanies,
   getListBranchesQueryKey,
+  setNextChangeReason,
   BranchInput,
   Branch
 } from "@workspace/api-client-react";
@@ -40,6 +41,29 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+/** Server governance middleware answers a governed mutation with 202 + this shape. */
+function isPendingApproval(result: unknown): boolean {
+  return (
+    typeof result === "object" &&
+    result !== null &&
+    (result as { pendingApproval?: unknown }).pendingApproval === true
+  );
+}
+
+/** Extract a human-readable error message from a failed API mutation. */
+function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object") {
+    const data = (error as { data?: unknown }).data;
+    if (data && typeof data === "object") {
+      const msg = (data as { error?: unknown }).error;
+      if (typeof msg === "string" && msg.trim()) return msg;
+    }
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
+
 export default function BranchesPage() {
   const { t } = useLanguage();
   const [selectedCompany, setSelectedCompany] = useState<string>("all");
@@ -55,21 +79,34 @@ export default function BranchesPage() {
   const { toast } = useToast();
   const deleteMutation = useDeleteBranch();
 
-  const handleDelete = (id: string) => {
-    if (confirm(t("common.delete_confirm"))) {
-      deleteMutation.mutate(
-        { id },
-        {
-          onSuccess: () => {
-            toast({ title: t("common.deleted") });
-            queryClient.invalidateQueries({ queryKey: getListBranchesQueryKey() });
-          },
-          onError: () => {
-            toast({ title: t("common.error"), variant: "destructive" });
-          }
-        }
-      );
+  const handleDelete = (branch: Branch) => {
+    const reason = window.prompt(t("governance.reason_prompt") ?? "");
+    if (reason === null) return;
+    if (!reason.trim()) {
+      toast({ title: t("governance.reason_required"), variant: "destructive" });
+      return;
     }
+    setNextChangeReason(reason.trim(), branch.name);
+    deleteMutation.mutate(
+      { id: branch.id },
+      {
+        onSuccess: (result: unknown) => {
+          toast({
+            title: isPendingApproval(result)
+              ? t("governance.submitted")
+              : t("common.deleted"),
+          });
+          queryClient.invalidateQueries({ queryKey: getListBranchesQueryKey() });
+        },
+        onError: (error: unknown) => {
+          toast({
+            title: t("common.error"),
+            description: getApiErrorMessage(error, t("common.error")),
+            variant: "destructive",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -142,7 +179,7 @@ export default function BranchesPage() {
                     <Button variant="ghost" size="icon" onClick={() => setEditingBranch(branch)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(branch.id)}>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(branch)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -192,11 +229,22 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
       updateMutation.mutate(
         { id: branch.id, data: formData },
         {
-          onSuccess: () => {
-            toast({ title: "Branch updated" });
+          onSuccess: (result: unknown) => {
+            toast({
+              title: isPendingApproval(result)
+                ? t("governance.submitted")
+                : t("common.saved"),
+            });
             queryClient.invalidateQueries({ queryKey: getListBranchesQueryKey() });
             onSuccess();
-          }
+          },
+          onError: (error: unknown) => {
+            toast({
+              title: t("common.error"),
+              description: getApiErrorMessage(error, t("common.error")),
+              variant: "destructive",
+            });
+          },
         }
       );
     } else {
@@ -204,10 +252,17 @@ function BranchForm({ branch, onSuccess }: { branch?: Branch; onSuccess: () => v
         { data: formData as BranchInput },
         {
           onSuccess: () => {
-            toast({ title: "Branch created" });
+            toast({ title: t("common.created") });
             queryClient.invalidateQueries({ queryKey: getListBranchesQueryKey() });
             onSuccess();
-          }
+          },
+          onError: (error: unknown) => {
+            toast({
+              title: t("common.error"),
+              description: getApiErrorMessage(error, t("common.error")),
+              variant: "destructive",
+            });
+          },
         }
       );
     }
