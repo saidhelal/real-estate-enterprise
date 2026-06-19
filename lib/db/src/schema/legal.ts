@@ -68,6 +68,12 @@ export const legalContractsTable = pgTable("legal_contracts", {
   terminationReason: text("termination_reason"),
   description: text("description"),
   notes: text("notes"),
+  // Immutable, system-generated rendered copy frozen at approval time. The
+  // editable source template stays in contract_templates; this is the locked,
+  // never-editable record served read-only after approval.
+  approvedDocument: text("approved_document"),
+  approvedDocumentAt: timestamp("approved_document_at", { withTimezone: true }),
+  lockedAt: timestamp("locked_at", { withTimezone: true }),
   ...audit,
 });
 export type LegalContractRow = typeof legalContractsTable.$inferSelect;
@@ -83,6 +89,13 @@ export const contractTemplatesTable = pgTable("contract_templates", {
   contentAr: text("content_ar"),
   description: text("description"),
   status: text("status").notNull().default("active"),
+  // Uploaded Microsoft Word (.docx) source, converted to HTML in `content`.
+  fileObjectPath: text("file_object_path"),
+  fileFormat: text("file_format"),
+  // Versioning: a template "family" shares parentTemplateId; version increments
+  // per uploaded revision. Templates are archived (status), never hard-deleted.
+  version: integer("version").notNull().default(1),
+  parentTemplateId: uuid("parent_template_id"),
   ...audit,
 });
 export type ContractTemplateRow = typeof contractTemplatesTable.$inferSelect;

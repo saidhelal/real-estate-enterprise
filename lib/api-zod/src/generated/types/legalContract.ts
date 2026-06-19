@@ -70,6 +70,12 @@ export interface LegalContract {
   description?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  approvedDocument?: string | null;
+  /** @nullable */
+  approvedDocumentAt?: string | null;
+  /** @nullable */
+  lockedAt?: string | null;
   isActive: boolean;
   createdAt: string;
 }

@@ -16705,6 +16705,27 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/OkResponse" }
+  /contract-templates/import:
+    post:
+      operationId: importContractTemplate
+      tags: [legal]
+      summary: Create a contract template from an uploaded .docx document
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ContractTemplateImportInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ContractTemplate" }
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
   /contract-templates:
     get:
       operationId: listContractTemplates
@@ -17751,6 +17772,42 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/archive:
+    post:
+      operationId: archiveLegalContract
+      tags: [legal]
+      summary: Archive a legal contract
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContract" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /legal-contracts/{id}/document:
+    get:
+      operationId: getLegalContractDocument
+      tags: [legal]
+      summary: Get the locked, system-generated approved document
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalContractDocument" }
         "404":
           description: Not found
           content:
@@ -34983,6 +35040,9 @@ components:
         terminationReason: { type: ["string", "null"] }
         description: { type: ["string", "null"] }
         notes: { type: ["string", "null"] }
+        approvedDocument: { type: ["string", "null"] }
+        approvedDocumentAt: { type: ["string", "null"] }
+        lockedAt: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
     LegalContractInput:
@@ -35083,6 +35143,10 @@ components:
         contentAr: { type: ["string", "null"] }
         description: { type: ["string", "null"] }
         status: { type: string }
+        fileObjectPath: { type: ["string", "null"] }
+        fileFormat: { type: ["string", "null"] }
+        version: { type: ["integer", "null"] }
+        parentTemplateId: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
     ContractTemplateInput:
@@ -35098,6 +35162,10 @@ components:
         contentAr: { type: string }
         description: { type: string }
         status: { type: string }
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+        version: { type: integer }
+        parentTemplateId: { type: string }
     ContractTemplateUpdate:
       type: object
       properties:
@@ -35109,6 +35177,30 @@ components:
         contentAr: { type: string }
         description: { type: string }
         status: { type: string }
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+        version: { type: integer }
+        parentTemplateId: { type: string }
+    ContractTemplateImportInput:
+      type: object
+      required: [companyId, code, name, fileObjectPath]
+      properties:
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: string }
+        contractType: { type: string }
+        description: { type: string }
+        fileObjectPath: { type: string }
+        fileFormat: { type: string }
+        parentTemplateId: { type: string }
+    LegalContractDocument:
+      type: object
+      required: [html, locked]
+      properties:
+        html: { type: string }
+        generatedAt: { type: ["string", "null"] }
+        locked: { type: boolean }
     ContractTemplateListResponse:
       type: object
       required: [data, total, page, pageSize]

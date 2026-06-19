@@ -11,10 +11,12 @@ import {
   useSuspendLegalContract,
   useTerminateLegalContract,
   useRenewLegalContract,
+  useArchiveLegalContract,
   useListContractTemplates,
   useListCompanies,
   type LegalContract,
 } from "@workspace/api-client-react";
+import DOMPurify from "dompurify";
 import {
   ResourceManager,
   type ResourceField,
@@ -45,6 +47,34 @@ export default function LegalContractsPage() {
   const suspendMutation = useSuspendLegalContract();
   const terminateMutation = useTerminateLegalContract();
   const renewMutation = useRenewLegalContract();
+  const archiveMutation = useArchiveLegalContract();
+
+  // Fetch the locked, system-generated approved document and open a sanitized,
+  // script-free print window. The HTML is always DOMPurify-sanitized before it
+  // touches the DOM, regardless of template provenance.
+  const openApprovedDocument = async (id: string) => {
+    try {
+      const res = await fetch(`/api/legal-contracts/${id}/document`, { credentials: "include" });
+      if (!res.ok) {
+        toast({ title: t("common.error"), variant: "destructive" });
+        return;
+      }
+      const data = (await res.json()) as { html?: string };
+      const clean = DOMPurify.sanitize(String(data.html ?? ""), {
+        WHOLE_DOCUMENT: true,
+        FORBID_TAGS: ["script", "style", "iframe", "object", "embed", "form"],
+      });
+      const win = window.open("", "_blank", "width=900,height=700");
+      if (!win) return;
+      win.document.open();
+      win.document.write(clean);
+      win.document.close();
+      win.focus();
+      setTimeout(() => win.print(), 350);
+    } catch {
+      toast({ title: t("common.error"), variant: "destructive" });
+    }
+  };
 
   const templateOptions = (templates?.data ?? []).map((x) => ({
     value: x.id,
@@ -143,6 +173,16 @@ export default function LegalContractsPage() {
           {r.status === "suspended" && (
             <Button variant="outline" size="sm" disabled={activateMutation.isPending} onClick={() => runAction(activateMutation, r.id)}>
               {t("legal.activate")}
+            </Button>
+          )}
+          {r.approvedDocumentAt && (
+            <Button variant="outline" size="sm" onClick={() => openApprovedDocument(r.id)}>
+              {t("legal.print_document")}
+            </Button>
+          )}
+          {r.status !== "draft" && r.status !== "under_review" && r.status !== "archived" && (
+            <Button variant="outline" size="sm" disabled={archiveMutation.isPending} onClick={() => runAction(archiveMutation, r.id)}>
+              {t("legal.archive")}
             </Button>
           )}
           <DocumentsRowAction moduleKey="legal_contracts" sourceId={r.id} />

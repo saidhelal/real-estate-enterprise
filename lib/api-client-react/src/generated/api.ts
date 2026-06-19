@@ -209,6 +209,7 @@ import type {
   ContractNoteListResponse,
   ContractNoteUpdate,
   ContractTemplate,
+  ContractTemplateImportInput,
   ContractTemplateInput,
   ContractTemplateListResponse,
   ContractTemplateUpdate,
@@ -736,6 +737,7 @@ import type {
   LegalContractAttachmentInput,
   LegalContractAttachmentListResponse,
   LegalContractAttachmentUpdate,
+  LegalContractDocument,
   LegalContractInput,
   LegalContractListResponse,
   LegalContractRenewInput,
@@ -70688,6 +70690,77 @@ export const useDeleteLegalContract = <TError = ErrorType<unknown>,
       return useMutation(getDeleteLegalContractMutationOptions(options));
     }
 
+export const getImportContractTemplateUrl = () => {
+
+
+
+
+  return `/api/contract-templates/import`
+}
+
+/**
+ * @summary Create a contract template from an uploaded .docx document
+ */
+export const importContractTemplate = async (contractTemplateImportInput: ContractTemplateImportInput, options?: RequestInit): Promise<ContractTemplate> => {
+
+  return customFetch<ContractTemplate>(getImportContractTemplateUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      contractTemplateImportInput,)
+  }
+);}
+
+
+
+
+export const getImportContractTemplateMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importContractTemplate>>, TError,{data: BodyType<ContractTemplateImportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof importContractTemplate>>, TError,{data: BodyType<ContractTemplateImportInput>}, TContext> => {
+
+const mutationKey = ['importContractTemplate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof importContractTemplate>>, {data: BodyType<ContractTemplateImportInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  importContractTemplate(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ImportContractTemplateMutationResult = NonNullable<Awaited<ReturnType<typeof importContractTemplate>>>
+    export type ImportContractTemplateMutationBody = BodyType<ContractTemplateImportInput>
+    export type ImportContractTemplateMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a contract template from an uploaded .docx document
+ */
+export const useImportContractTemplate = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importContractTemplate>>, TError,{data: BodyType<ContractTemplateImportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof importContractTemplate>>,
+        TError,
+        {data: BodyType<ContractTemplateImportInput>},
+        TContext
+      > => {
+      return useMutation(getImportContractTemplateMutationOptions(options));
+    }
+
 export const getListContractTemplatesUrl = (params?: ListContractTemplatesParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -75689,6 +75762,153 @@ export const useApproveLegalContract = <TError = ErrorType<Error>,
       > => {
       return useMutation(getApproveLegalContractMutationOptions(options));
     }
+
+export const getArchiveLegalContractUrl = (id: string,) => {
+
+
+
+
+  return `/api/legal-contracts/${id}/archive`
+}
+
+/**
+ * @summary Archive a legal contract
+ */
+export const archiveLegalContract = async (id: string, options?: RequestInit): Promise<LegalContract> => {
+
+  return customFetch<LegalContract>(getArchiveLegalContractUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getArchiveLegalContractMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveLegalContract>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof archiveLegalContract>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['archiveLegalContract'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof archiveLegalContract>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  archiveLegalContract(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ArchiveLegalContractMutationResult = NonNullable<Awaited<ReturnType<typeof archiveLegalContract>>>
+
+    export type ArchiveLegalContractMutationError = ErrorType<Error>
+
+    /**
+ * @summary Archive a legal contract
+ */
+export const useArchiveLegalContract = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveLegalContract>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof archiveLegalContract>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getArchiveLegalContractMutationOptions(options));
+    }
+
+export const getGetLegalContractDocumentUrl = (id: string,) => {
+
+
+
+
+  return `/api/legal-contracts/${id}/document`
+}
+
+/**
+ * @summary Get the locked, system-generated approved document
+ */
+export const getLegalContractDocument = async (id: string, options?: RequestInit): Promise<LegalContractDocument> => {
+
+  return customFetch<LegalContractDocument>(getGetLegalContractDocumentUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLegalContractDocumentQueryKey = (id: string,) => {
+    return [
+    `/api/legal-contracts/${id}/document`
+    ] as const;
+    }
+
+
+export const getGetLegalContractDocumentQueryOptions = <TData = Awaited<ReturnType<typeof getLegalContractDocument>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLegalContractDocument>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLegalContractDocumentQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLegalContractDocument>>> = ({ signal }) => getLegalContractDocument(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLegalContractDocument>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetLegalContractDocumentQueryResult = NonNullable<Awaited<ReturnType<typeof getLegalContractDocument>>>
+export type GetLegalContractDocumentQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get the locked, system-generated approved document
+ */
+
+export function useGetLegalContractDocument<TData = Awaited<ReturnType<typeof getLegalContractDocument>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLegalContractDocument>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetLegalContractDocumentQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getActivateLegalContractUrl = (id: string,) => {
 

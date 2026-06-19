@@ -21,6 +21,14 @@ export interface ContractTemplate {
   /** @nullable */
   description?: string | null;
   status: string;
+  /** @nullable */
+  fileObjectPath?: string | null;
+  /** @nullable */
+  fileFormat?: string | null;
+  /** @nullable */
+  version?: number | null;
+  /** @nullable */
+  parentTemplateId?: string | null;
   isActive: boolean;
   createdAt: string;
 }

@@ -16,6 +16,7 @@ import {
   legalClaimsTable,
   legalNoticesTable,
   legalCaseLinksTable,
+  documentObjectOwnersTable,
 } from "@workspace/db";
 import {
   CreateLegalContractBody, UpdateLegalContractBody, ListLegalContractsResponse,
@@ -33,11 +34,22 @@ import {
   CreateLegalNoticeBody, UpdateLegalNoticeBody, ListLegalNoticesResponse,
   CreateLegalCaseLinkBody, UpdateLegalCaseLinkBody, ListLegalCaseLinksResponse,
   SuspendLegalContractBody, TerminateLegalContractBody, RenewLegalContractBody, CloseLegalCaseBody,
+  ImportContractTemplateBody,
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { PostingError, type Tx } from "../lib/posting";
+import { ObjectStorageService } from "../lib/objectStorage";
+import { importDocument } from "../lib/print-engine";
+import { resolveContractTokens, buildApprovedDocument } from "../lib/contract-render";
+
+const objectStorageService = new ObjectStorageService();
+
+// Statuses in which a legal contract is still editable via generic CRUD. Once a
+// contract leaves draft/under_review (approved, active, archived, …) it is
+// locked: PATCH/DELETE are refused so the approved record can never be altered.
+const LEGAL_CONTRACT_EDITABLE_STATUSES = ["draft", "under_review"];
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -55,6 +67,9 @@ interface CrudConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listResponse: { parse(v: unknown): any };
   search: string[];
+  // When set, PATCH/DELETE are refused (409) unless the row's current `status`
+  // is in this list — used to lock approved/archived legal contracts.
+  editableStatuses?: string[];
 }
 
 function today(): string {
@@ -136,6 +151,10 @@ function registerCrud(cfg: CrudConfig): void {
       res.status(404).json({ error: `${cfg.entity} not found` });
       return;
     }
+    if (cfg.editableStatuses && !cfg.editableStatuses.includes(String(existing.status))) {
+      res.status(409).json({ error: `${cfg.entity} is locked and cannot be edited in status "${String(existing.status)}"` });
+      return;
+    }
     const update: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(parsed.data as Record<string, unknown>)) {
       if (v !== undefined) update[k] = v;
@@ -160,6 +179,10 @@ function registerCrud(cfg: CrudConfig): void {
       res.status(404).json({ error: `${cfg.entity} not found` });
       return;
     }
+    if (cfg.editableStatuses && !cfg.editableStatuses.includes(String(existing.status))) {
+      res.status(409).json({ error: `${cfg.entity} is locked and cannot be deleted in status "${String(existing.status)}"` });
+      return;
+    }
     await db.update(t).set({ isDeleted: true, isActive: false }).where(eq(t.id, id));
     await recordAudit(req, { action: "delete", entity: cfg.entity, entityId: id, oldValue: existing });
     res.json({ success: true });
@@ -169,7 +192,7 @@ function registerCrud(cfg: CrudConfig): void {
 const resources: CrudConfig[] = [
   { path: "legal-contracts", table: legalContractsTable, module: "legalContracts", entity: "legalContract",
     createBody: CreateLegalContractBody, updateBody: UpdateLegalContractBody, listResponse: ListLegalContractsResponse,
-    search: ["code", "title", "titleAr", "counterpartyName"] },
+    search: ["code", "title", "titleAr", "counterpartyName"], editableStatuses: LEGAL_CONTRACT_EDITABLE_STATUSES },
   { path: "contract-templates", table: contractTemplatesTable, module: "contractTemplates", entity: "contractTemplate",
     createBody: CreateContractTemplateBody, updateBody: UpdateContractTemplateBody, listResponse: ListContractTemplatesResponse,
     search: ["code", "name", "nameAr"] },
@@ -283,9 +306,44 @@ router.post("/legal-contracts/:id/approve", requirePermission("legalContracts.ap
       const c = await loadForUpdate(tx, legalContractsTable, id);
       if (!c) return null;
       if (c.status !== "draft" && c.status !== "under_review") throw new PostingError(409, "Only a draft or under-review contract can be approved");
+      const approvedAt = new Date();
+      // Freeze an immutable, system-generated rendered document from the linked
+      // editable template + the resolved smart-variable chain. Best-effort: if
+      // no template is set or rendering fails, approval still proceeds without a
+      // document (the editable template remains in Legal Affairs regardless).
+      let approvedDocument: string | null = null;
+      try {
+        if (c.templateId) {
+          const tplRows = (await tx
+            .select()
+            .from(contractTemplatesTable)
+            .where(eq(contractTemplatesTable.id, c.templateId as string))) as Record<string, unknown>[];
+          const tpl = tplRows[0];
+          const templateHtml = tpl ? String(tpl.content ?? "") : "";
+          if (templateHtml.trim()) {
+            const tokens = await resolveContractTokens(c as unknown as Parameters<typeof resolveContractTokens>[0]);
+            approvedDocument = buildApprovedDocument({
+              contract: c as unknown as Parameters<typeof buildApprovedDocument>[0]["contract"],
+              templateHtml,
+              tokens,
+              approvedAt,
+            });
+          }
+        }
+      } catch (docErr) {
+        req.log.error({ err: docErr, contractId: id }, "Failed to render approved contract document");
+        approvedDocument = null;
+      }
       const [updated] = await tx
         .update(legalContractsTable)
-        .set({ status: "approved", approvedBy: userId, approvedAt: new Date() })
+        .set({
+          status: "approved",
+          approvedBy: userId,
+          approvedAt,
+          approvedDocument,
+          approvedDocumentAt: approvedDocument ? approvedAt : null,
+          lockedAt: approvedAt,
+        })
         .where(eq(legalContractsTable.id, id))
         .returning();
       await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "approve", description: "Contract approved", performedBy: userId });
@@ -298,6 +356,123 @@ router.post("/legal-contracts/:id/approve", requirePermission("legalContracts.ap
     if (mapPostingError(res, err)) return;
     throw err;
   }
+});
+
+router.post("/legal-contracts/:id/archive", requirePermission("legalContracts.archive"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const userId = req.authUser?.id ?? null;
+  try {
+    const row = await db.transaction(async (tx) => {
+      const c = await loadForUpdate(tx, legalContractsTable, id);
+      if (!c) return null;
+      if (c.status === "archived") throw new PostingError(409, "Contract is already archived");
+      const [updated] = await tx
+        .update(legalContractsTable)
+        .set({ status: "archived", lockedAt: (c.lockedAt as Date | null) ?? new Date() })
+        .where(eq(legalContractsTable.id, id))
+        .returning();
+      await logContractEvent(tx, { companyId: c.companyId as string, legalContractId: id, eventType: "archive", description: "Contract archived", performedBy: userId });
+      return updated;
+    });
+    if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+    await recordAudit(req, { action: "archive", entity: "legalContract", entityId: id, newValue: row });
+    res.json(serializeRow(row as Record<string, unknown>));
+  } catch (err) {
+    if (mapPostingError(res, err)) return;
+    throw err;
+  }
+});
+
+router.get("/legal-contracts/:id/document", requirePermission("legalContracts.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const rows = (await db
+    .select()
+    .from(legalContractsTable)
+    .where(and(eq(legalContractsTable.id, id), eq(legalContractsTable.isDeleted, false)))) as Record<string, unknown>[];
+  const row = rows[0];
+  if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+  const html = row.approvedDocument ? String(row.approvedDocument) : null;
+  if (!html) { res.status(404).json({ error: "No approved document available for this contract" }); return; }
+  const generatedAt = row.approvedDocumentAt instanceof Date
+    ? row.approvedDocumentAt.toISOString()
+    : (row.approvedDocumentAt ? String(row.approvedDocumentAt) : null);
+  res.json({ html, generatedAt, locked: true });
+});
+
+router.post("/contract-templates/import", requirePermission("contractTemplates.create"), async (req, res): Promise<void> => {
+  const parsed = ImportContractTemplateBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const body = parsed.data;
+  const fileFormat = body.fileFormat ?? "docx";
+
+  // Authorize the object path against the immutable owner mapping the server
+  // minted at upload time. Without this, any user with contractTemplates.create
+  // could pass an arbitrary /objects/* path and read unrelated private files
+  // (object-storage IDOR). Only the uploader of this exact path may import it.
+  const objectPath = objectStorageService.normalizeObjectEntityPath(body.fileObjectPath);
+  const userId = req.authUser?.id ?? null;
+  const owner = (await db
+    .select({ uploadedByUserId: documentObjectOwnersTable.uploadedByUserId })
+    .from(documentObjectOwnersTable)
+    .where(eq(documentObjectOwnersTable.objectPath, objectPath))
+    .limit(1)) as { uploadedByUserId: string | null }[];
+  if (!owner.length || !userId || owner[0].uploadedByUserId !== userId) {
+    res.status(403).json({ error: "Not authorized to import this file" });
+    return;
+  }
+
+  let html = "";
+  let warning: string | null = null;
+  try {
+    const file = await objectStorageService.getObjectEntityFile(objectPath);
+    const [buffer] = await file.download();
+    const outcome = await importDocument(buffer, fileFormat);
+    html = outcome.html;
+    warning = outcome.warning ?? null;
+  } catch (err) {
+    req.log.error({ err, fileObjectPath: body.fileObjectPath }, "Failed to import contract template document");
+    res.status(400).json({ error: "Could not read or convert the uploaded document" });
+    return;
+  }
+
+  // Versioning: a new revision of an existing family increments the version.
+  let version = 1;
+  if (body.parentTemplateId) {
+    const siblings = (await db
+      .select({ v: contractTemplatesTable.version })
+      .from(contractTemplatesTable)
+      .where(eq(contractTemplatesTable.parentTemplateId, body.parentTemplateId))) as { v: number | null }[];
+    const parentRow = (await db
+      .select({ v: contractTemplatesTable.version })
+      .from(contractTemplatesTable)
+      .where(eq(contractTemplatesTable.id, body.parentTemplateId))) as { v: number | null }[];
+    const versions = [...siblings, ...parentRow].map((r) => r.v ?? 1);
+    version = (versions.length ? Math.max(...versions) : 1) + 1;
+  }
+
+  const inserted = (await db
+    .insert(contractTemplatesTable)
+    .values({
+      companyId: body.companyId,
+      code: body.code,
+      name: body.name,
+      nameAr: body.nameAr ?? null,
+      contractType: body.contractType ?? "legal",
+      description: body.description ?? null,
+      content: html,
+      status: "active",
+      fileObjectPath: body.fileObjectPath,
+      fileFormat,
+      version,
+      parentTemplateId: body.parentTemplateId ?? null,
+    })
+    .returning()) as Record<string, unknown>[];
+  const row = inserted[0];
+  await recordAudit(req, { action: "import", entity: "contractTemplate", entityId: row.id as string, newValue: row });
+  res.status(201).json({ ...serializeRow(row), warning });
 });
 
 router.post("/legal-contracts/:id/activate", requirePermission("legalContracts.activate"), async (req, res): Promise<void> => {

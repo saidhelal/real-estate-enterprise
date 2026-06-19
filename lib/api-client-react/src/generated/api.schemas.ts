@@ -9883,6 +9883,12 @@ export interface LegalContract {
   description?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  approvedDocument?: string | null;
+  /** @nullable */
+  approvedDocumentAt?: string | null;
+  /** @nullable */
+  lockedAt?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -9982,6 +9988,14 @@ export interface ContractTemplate {
   /** @nullable */
   description?: string | null;
   status: string;
+  /** @nullable */
+  fileObjectPath?: string | null;
+  /** @nullable */
+  fileFormat?: string | null;
+  /** @nullable */
+  version?: number | null;
+  /** @nullable */
+  parentTemplateId?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -9996,6 +10010,10 @@ export interface ContractTemplateInput {
   contentAr?: string;
   description?: string;
   status?: string;
+  fileObjectPath?: string;
+  fileFormat?: string;
+  version?: number;
+  parentTemplateId?: string;
 }
 
 export interface ContractTemplateUpdate {
@@ -10007,6 +10025,29 @@ export interface ContractTemplateUpdate {
   contentAr?: string;
   description?: string;
   status?: string;
+  fileObjectPath?: string;
+  fileFormat?: string;
+  version?: number;
+  parentTemplateId?: string;
+}
+
+export interface ContractTemplateImportInput {
+  companyId: string;
+  code: string;
+  name: string;
+  nameAr?: string;
+  contractType?: string;
+  description?: string;
+  fileObjectPath: string;
+  fileFormat?: string;
+  parentTemplateId?: string;
+}
+
+export interface LegalContractDocument {
+  html: string;
+  /** @nullable */
+  generatedAt?: string | null;
+  locked: boolean;
 }
 
 export interface ContractTemplateListResponse {

@@ -15,4 +15,8 @@ export interface ContractTemplateUpdate {
   contentAr?: string;
   description?: string;
   status?: string;
+  fileObjectPath?: string;
+  fileFormat?: string;
+  version?: number;
+  parentTemplateId?: string;
 }

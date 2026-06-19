@@ -22929,6 +22929,9 @@ export const ListLegalContractsResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -23022,6 +23025,9 @@ export const GetLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -23106,6 +23112,9 @@ export const UpdateLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -23120,6 +23129,22 @@ export const DeleteLegalContractParams = zod.object({
 
 export const DeleteLegalContractResponse = zod.object({
   "success": zod.boolean()
+})
+
+
+/**
+ * @summary Create a contract template from an uploaded .docx document
+ */
+export const ImportContractTemplateBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().optional(),
+  "contractType": zod.string().optional(),
+  "description": zod.string().optional(),
+  "fileObjectPath": zod.string(),
+  "fileFormat": zod.string().optional(),
+  "parentTemplateId": zod.string().optional()
 })
 
 
@@ -23145,6 +23170,10 @@ export const ListContractTemplatesResponse = zod.object({
   "contentAr": zod.string().nullish(),
   "description": zod.string().nullish(),
   "status": zod.string(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "version": zod.number().nullish(),
+  "parentTemplateId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -23166,7 +23195,11 @@ export const CreateContractTemplateBody = zod.object({
   "content": zod.string().optional(),
   "contentAr": zod.string().optional(),
   "description": zod.string().optional(),
-  "status": zod.string().optional()
+  "status": zod.string().optional(),
+  "fileObjectPath": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "version": zod.number().optional(),
+  "parentTemplateId": zod.string().optional()
 })
 
 
@@ -23188,6 +23221,10 @@ export const GetContractTemplateResponse = zod.object({
   "contentAr": zod.string().nullish(),
   "description": zod.string().nullish(),
   "status": zod.string(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "version": zod.number().nullish(),
+  "parentTemplateId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -23208,7 +23245,11 @@ export const UpdateContractTemplateBody = zod.object({
   "content": zod.string().optional(),
   "contentAr": zod.string().optional(),
   "description": zod.string().optional(),
-  "status": zod.string().optional()
+  "status": zod.string().optional(),
+  "fileObjectPath": zod.string().optional(),
+  "fileFormat": zod.string().optional(),
+  "version": zod.number().optional(),
+  "parentTemplateId": zod.string().optional()
 })
 
 export const UpdateContractTemplateResponse = zod.object({
@@ -23222,6 +23263,10 @@ export const UpdateContractTemplateResponse = zod.object({
   "contentAr": zod.string().nullish(),
   "description": zod.string().nullish(),
   "status": zod.string(),
+  "fileObjectPath": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "version": zod.number().nullish(),
+  "parentTemplateId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24784,6 +24829,9 @@ export const ReviewLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24832,8 +24880,76 @@ export const ApproveLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Archive a legal contract
+ */
+export const ArchiveLegalContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ArchiveLegalContractResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "titleAr": zod.string().nullish(),
+  "contractType": zod.string(),
+  "sourceModule": zod.string(),
+  "sourceId": zod.string().nullish(),
+  "templateId": zod.string().nullish(),
+  "counterpartyType": zod.string().nullish(),
+  "counterpartyId": zod.string().nullish(),
+  "counterpartyName": zod.string().nullish(),
+  "status": zod.string(),
+  "contractDate": zod.string().nullish(),
+  "effectiveDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "renewalDate": zod.string().nullish(),
+  "autoRenew": zod.boolean().nullish(),
+  "value": zod.string().nullish(),
+  "currencyId": zod.string().nullish(),
+  "governingLaw": zod.string().nullish(),
+  "responsibleEmployeeId": zod.string().nullish(),
+  "advisorId": zod.string().nullish(),
+  "currentVersion": zod.number().nullish(),
+  "reviewedBy": zod.string().nullish(),
+  "reviewedAt": zod.string().nullish(),
+  "approvedBy": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "suspendedAt": zod.string().nullish(),
+  "terminatedAt": zod.string().nullish(),
+  "terminationReason": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Get the locked, system-generated approved document
+ */
+export const GetLegalContractDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetLegalContractDocumentResponse = zod.object({
+  "html": zod.string(),
+  "generatedAt": zod.string().nullish(),
+  "locked": zod.boolean()
 })
 
 
@@ -24880,6 +24996,9 @@ export const ActivateLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24932,6 +25051,9 @@ export const SuspendLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24984,6 +25106,9 @@ export const TerminateLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -25037,6 +25162,9 @@ export const RenewLegalContractResponse = zod.object({
   "terminationReason": zod.string().nullish(),
   "description": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "approvedDocument": zod.string().nullish(),
+  "approvedDocumentAt": zod.string().nullish(),
+  "lockedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })

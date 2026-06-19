@@ -270,7 +270,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "employeeEvaluations", label: "Employee Evaluations" },
   { module: "employeeEvaluationLines", label: "Employee Evaluation Lines" },
   // Legal Affairs — Contract Governance
-  { module: "legalContracts", label: "Legal Contracts", extraActions: ["review", "approve", "activate", "suspend", "terminate", "renew"] },
+  { module: "legalContracts", label: "Legal Contracts", extraActions: ["review", "approve", "activate", "suspend", "terminate", "renew", "archive"] },
   { module: "contractTemplates", label: "Contract Templates" },
   { module: "contractVersions", label: "Contract Versions" },
   { module: "legalContractAmendments", label: "Legal Contract Amendments" },

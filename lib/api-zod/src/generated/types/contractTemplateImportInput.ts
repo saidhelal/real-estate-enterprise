@@ -6,18 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface ContractTemplateInput {
+export interface ContractTemplateImportInput {
   companyId: string;
   code: string;
   name: string;
   nameAr?: string;
   contractType?: string;
-  content?: string;
-  contentAr?: string;
   description?: string;
-  status?: string;
-  fileObjectPath?: string;
+  fileObjectPath: string;
   fileFormat?: string;
-  version?: number;
   parentTemplateId?: string;
 }

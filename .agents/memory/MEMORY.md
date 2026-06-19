@@ -26,6 +26,7 @@
 - [Report export Excel/PDF](report-export.md) — shared ReportExport descriptor; PDF via HTML window.print (Arabic/RTL), Excel via SheetJS; GL export needs pageSize 200.
 - [Two-phase cheque posting](cheque-two-phase-posting.md) — cheque ledger splits collection vs clearing legs by distinct sourceType to bridge accounts; reverse both on return/cancel.
 - [Portal attachment IDOR](portal-attachment-idor.md) — multi-tenant object-storage uploads must authorize via an immutable owner mapping (object_path→customerId), not forgeable record references.
+- [Object import authz (ERP)](object-import-authz.md) — server import routes taking client fileObjectPath must gate on documentObjectOwnersTable; canAccessObject fails (uploads set no ACL policy).
 - [Master Data engine wiring](master-data-engine-wiring.md) — labels via LookupLabelProvider→ENGINE_LABELS; useLookupOptions is engine-authoritative; wire only fields whose static codes subset the category.
 - [Shared-table ERP/portal collision](shared-table-erp-portal-collision.md) — when ERP needs CRUD over a table portal already owns in OpenAPI, Cs-prefix only the ERP schema+operationId copies; a generic registerCrud factory drives all per-entity routes.
 - [ERP company scope](erp-company-scope.md) — no company switcher; all pages use companies[0]; empty list page = session-expiry/scope, not data loss. CRM hub removed; leads kept in crm.ts.
