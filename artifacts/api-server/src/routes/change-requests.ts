@@ -10,6 +10,7 @@ import { toChangeRequest } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { internalExecuteHeaders } from "../middleware/governance";
+import { notify } from "../lib/notify";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -149,6 +150,28 @@ router.post(
       res.status(400).json({ error: executionError ?? "Execution failed" });
       return;
     }
+
+    // Tell the original requester their request was approved and executed.
+    // Best-effort; idempotent per (approvals, requestId, change_request_approved).
+    try {
+      await notify(db, {
+        recipientUserIds: [row.requestedBy],
+        companyId: row.companyId,
+        actorUserId: approver.id,
+        category: "approvals",
+        eventType: "change_request_approved",
+        priority: "medium",
+        title: "تمت الموافقة على طلبك / Your request was approved",
+        body: `${row.requestType} · ${row.entityLabel ?? row.entity}`,
+        sourceModule: "approvals",
+        sourceId: row.id,
+        sourceRef: row.entityLabel ?? row.entity,
+        link: "/approvals",
+      });
+    } catch (err) {
+      req.log.error({ err }, "Failed to emit change-request-approved notification");
+    }
+
     res.json(toChangeRequest(updated));
   },
 );

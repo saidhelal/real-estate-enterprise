@@ -62,6 +62,7 @@ import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 import { recomputeUnitStatus, ensureLegalContractForContract } from "../lib/integrations";
+import { notify, recipientsByPermission } from "../lib/notify";
 import { nextDocumentNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
@@ -358,6 +359,25 @@ router.post("/contracts", requirePermission("contracts.create"), async (req, res
     // Mark the unit Sold and register the contract in Legal Affairs.
     await recomputeUnitStatus(tx, created.unitId);
     const legalContractId = await ensureLegalContractForContract(tx, created);
+    // Notify the sales/management audience (everyone who can create contracts)
+    // except the author. Idempotent per (sales, contract id, contract_created).
+    const audience = await recipientsByPermission(tx, "contracts.create", {
+      companyId: created.companyId,
+    });
+    await notify(tx, {
+      recipientUserIds: audience.filter((id) => id !== req.authUser?.id),
+      companyId: created.companyId,
+      actorUserId: req.authUser?.id ?? null,
+      category: "contracts",
+      eventType: "contract_created",
+      priority: "medium",
+      title: "عقد بيع جديد / New sales contract",
+      body: `${created.code}`,
+      sourceModule: "sales",
+      sourceId: created.id,
+      sourceRef: created.code,
+      link: "/contracts",
+    });
     return { ...created, legalContractId: legalContractId ?? created.legalContractId };
   });
   await recordAudit(req, { action: "create", entity: "contract", entityId: row.id, newValue: row });

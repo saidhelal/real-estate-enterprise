@@ -58,6 +58,7 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import { notify, recipientsByPermission } from "../lib/notify";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -150,7 +151,29 @@ router.get("/service-escalations", requirePermission("serviceEscalations.view"),
 router.post("/service-escalations", requirePermission("serviceEscalations.create"), async (req, res): Promise<void> => {
   const parsed = CreateServiceEscalationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(serviceEscalationsTable).values({ ...parsed.data, status: "open", resolvedAt: null }).returning();
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(serviceEscalationsTable).values({ ...parsed.data, status: "open", resolvedAt: null }).returning();
+    // Notify the person it was escalated to (owner) plus anyone who can resolve
+    // escalations. Idempotent per (customer_service, escalation id, complaint_escalated).
+    const resolvers = await recipientsByPermission(tx, "serviceEscalations.resolve", {
+      companyId: created.companyId,
+    });
+    await notify(tx, {
+      recipientUserIds: [created.escalatedToUserId, ...resolvers].filter((id) => id !== req.authUser?.id),
+      companyId: created.companyId,
+      actorUserId: req.authUser?.id ?? null,
+      category: "customer_service",
+      eventType: "complaint_escalated",
+      priority: Number(created.level) >= 2 ? "urgent" : "high",
+      title: "تصعيد شكوى / Complaint escalated",
+      body: `${created.code} · ${created.sourceType} · L${created.level}`,
+      sourceModule: "customer_service",
+      sourceId: created.id,
+      sourceRef: created.code,
+      link: "/service-escalations",
+    });
+    return created;
+  });
   await recordAudit(req, { action: "create", entity: "serviceEscalation", entityId: row.id, newValue: row });
   res.status(201).json(GetServiceEscalationResponse.parse(serializeRow(row)));
 });

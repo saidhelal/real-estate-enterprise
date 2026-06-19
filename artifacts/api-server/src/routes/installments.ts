@@ -31,6 +31,7 @@ import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
+import { notify, recipientsByPermission } from "../lib/notify";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -392,6 +393,49 @@ router.get("/overdue-installments", requirePermission("installmentSchedules.view
     .orderBy(desc(installmentSchedulesTable.dueDate))
     .limit(pageSize)
     .offset(offset);
+
+  // There is no scheduler in this environment, so overdue installments are
+  // detected lazily here (on the canonical overdue scan) and a notification is
+  // raised for the collections team. The emitter is idempotent per
+  // (installments, schedule id, installment_overdue), so repeated scans never
+  // duplicate — each overdue schedule yields at most one notification. This is
+  // best-effort: a failure must never break the read.
+  try {
+    const overdue = rows.filter((r) => !r.isDeleted);
+    if (overdue.length > 0) {
+      // Resolve collectors per company so notifications never cross company
+      // boundaries (an overdue schedule must only reach that company's team).
+      const collectorsByCompany = new Map<string, string[]>();
+      for (const r of overdue) {
+        if (!collectorsByCompany.has(r.companyId)) {
+          collectorsByCompany.set(
+            r.companyId,
+            await recipientsByPermission(db, "installmentCollections.create", {
+              companyId: r.companyId,
+            }),
+          );
+        }
+        const collectors = collectorsByCompany.get(r.companyId)!;
+        if (collectors.length === 0) continue;
+        await notify(db, {
+          recipientUserIds: collectors,
+          companyId: r.companyId,
+          category: "installments",
+          eventType: "installment_overdue",
+          priority: "high",
+          title: "قسط متأخر / Overdue installment",
+          body: `#${r.installmentNumber} · ${r.dueDate} · ${r.amount}`,
+          sourceModule: "installments",
+          sourceId: r.id,
+          sourceRef: `#${r.installmentNumber}`,
+          link: "/installment-schedules",
+        });
+      }
+    }
+  } catch (err) {
+    req.log.error({ err }, "Failed to emit overdue-installment notifications");
+  }
+
   res.json(ListOverdueInstallmentsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
 });
 

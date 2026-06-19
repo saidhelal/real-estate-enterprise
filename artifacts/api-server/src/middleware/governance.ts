@@ -5,6 +5,7 @@ import { ACCESS_COOKIE, verifyAccessToken } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
 import { toChangeRequest } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
+import { notify, recipientsByPermission } from "../lib/notify";
 
 /**
  * Boot-generated secret. The change-request approval flow re-dispatches the
@@ -160,6 +161,29 @@ export async function governanceMiddleware(
     entityId,
     newValue: { reason, requestId: row.id },
   });
+
+  // Notify the approvers (anyone who governs the queue) that a request is
+  // waiting. Best-effort: a notification failure must not block parking the
+  // request. Idempotent per (approvals, requestId, change_request_submitted).
+  try {
+    const approvers = await recipientsByPermission(db, "approvals.approve");
+    await notify(db, {
+      recipientUserIds: approvers.filter((id) => id !== user.id),
+      companyId,
+      actorUserId: user.id,
+      category: "approvals",
+      eventType: "change_request_submitted",
+      priority: "high",
+      title: "طلب موافقة جديد / New approval request",
+      body: `${requestType} · ${entityLabel ?? entity}${reason ? ` · ${reason}` : ""}`,
+      sourceModule: "approvals",
+      sourceId: row.id,
+      sourceRef: entityLabel ?? entity,
+      link: "/approvals",
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to emit change-request-submitted notification");
+  }
 
   res.status(202).json({ pendingApproval: true, requestId: row.id, request: toChangeRequest(row) });
 }
