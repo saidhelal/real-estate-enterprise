@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { setNextChangeReason } from "@workspace/api-client-react";
 import { useLanguage } from "@/lib/language-provider";
@@ -50,6 +50,9 @@ export interface ResourceField {
   createOnly?: boolean;
   /** For select fields. */
   options?: SelectOption[];
+  /** Optional input placeholder (falls back to the label). */
+  placeholder?: string;
+  placeholderAr?: string;
 }
 
 export interface ResourceColumn<T> {
@@ -401,9 +404,16 @@ function ResourceForm<T extends { id: string }>({
     initial[f.name] = v === null || v === undefined ? "" : String(v);
   }
   const [formData, setFormData] = useState<Record<string, string>>(initial);
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const fieldRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const fieldLabel = (f: ResourceField) =>
     language === "ar" && f.labelAr ? f.labelAr : f.label;
+
+  const fieldPlaceholder = (f: ResourceField) => {
+    const p = language === "ar" && f.placeholderAr ? f.placeholderAr : f.placeholder;
+    return p ?? fieldLabel(f);
+  };
 
   const buildPayload = (): Record<string, unknown> => {
     const payload: Record<string, unknown> = {};
@@ -421,6 +431,32 @@ function ResourceForm<T extends { id: string }>({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Save-blocking validation: collect every empty required field, surface an
+    // inline error on each, and focus the first invalid control. Unlike the
+    // native `required` attribute this works consistently for RTL and custom
+    // Select controls.
+    const nextErrors: Record<string, boolean> = {};
+    let firstInvalid: string | null = null;
+    for (const f of fields) {
+      if (f.name === "companyId") continue;
+      if (isEdit && f.createOnly) continue;
+      if (!f.required) continue;
+      const raw = formData[f.name];
+      const empty =
+        raw === undefined || raw === NONE || (typeof raw === "string" && raw.trim() === "");
+      if (empty) {
+        nextErrors[f.name] = true;
+        if (!firstInvalid) firstInvalid = f.name;
+      }
+    }
+    if (firstInvalid) {
+      setErrors(nextErrors);
+      toast({ title: t("validation.fix_errors"), variant: "destructive" });
+      fieldRefs.current[firstInvalid]?.focus();
+      return;
+    }
+
     const payload = buildPayload();
     if (!isEdit && companyId && !payload.companyId) payload.companyId = companyId;
 
@@ -453,8 +489,10 @@ function ResourceForm<T extends { id: string }>({
     }
   };
 
-  const setValue = (name: string, value: string) =>
+  const setValue = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => (prev[name] ? { ...prev, [name]: false } : prev));
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -462,17 +500,33 @@ function ResourceForm<T extends { id: string }>({
         .filter((f) => f.name !== "companyId")
         .map((f) => {
           const disabled = isEdit && f.createOnly;
+          const hasError = !!errors[f.name];
+          const errorClass = hasError
+            ? "border-destructive focus-visible:ring-destructive"
+            : "";
           return (
             <div key={f.name} className="space-y-2">
               <Label>
                 {fieldLabel(f)}
-                {f.required && <span className="text-destructive"> *</span>}
+                {f.required ? (
+                  <span className="text-destructive"> *</span>
+                ) : (
+                  <span className="text-muted-foreground text-xs font-normal">
+                    {" "}
+                    ({t("common.optional")})
+                  </span>
+                )}
               </Label>
               {f.type === "textarea" ? (
                 <Textarea
+                  ref={(el) => {
+                    fieldRefs.current[f.name] = el;
+                  }}
                   value={formData[f.name] ?? ""}
                   onChange={(e) => setValue(f.name, e.target.value)}
-                  required={f.required}
+                  placeholder={fieldPlaceholder(f)}
+                  aria-invalid={hasError}
+                  className={errorClass}
                   dir={f.rtl ? "rtl" : undefined}
                 />
               ) : f.type === "boolean" ? (
@@ -480,7 +534,13 @@ function ResourceForm<T extends { id: string }>({
                   value={formData[f.name] || "false"}
                   onValueChange={(v) => setValue(f.name, v)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    ref={(el) => {
+                      fieldRefs.current[f.name] = el;
+                    }}
+                    aria-invalid={hasError}
+                    className={errorClass}
+                  >
                     <SelectValue placeholder={fieldLabel(f)} />
                   </SelectTrigger>
                   <SelectContent>
@@ -493,7 +553,13 @@ function ResourceForm<T extends { id: string }>({
                   value={formData[f.name] || (f.required ? "" : NONE)}
                   onValueChange={(v) => setValue(f.name, v)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    ref={(el) => {
+                      fieldRefs.current[f.name] = el;
+                    }}
+                    aria-invalid={hasError}
+                    className={errorClass}
+                  >
                     <SelectValue placeholder={fieldLabel(f)} />
                   </SelectTrigger>
                   <SelectContent>
@@ -507,6 +573,9 @@ function ResourceForm<T extends { id: string }>({
                 </Select>
               ) : (
                 <Input
+                  ref={(el) => {
+                    fieldRefs.current[f.name] = el;
+                  }}
                   type={
                     f.type === "number" || f.type === "money"
                       ? "number"
@@ -517,10 +586,15 @@ function ResourceForm<T extends { id: string }>({
                   step={f.type === "money" ? "0.01" : undefined}
                   value={formData[f.name] ?? ""}
                   onChange={(e) => setValue(f.name, e.target.value)}
-                  required={f.required}
+                  placeholder={fieldPlaceholder(f)}
+                  aria-invalid={hasError}
                   disabled={disabled}
+                  className={errorClass}
                   dir={f.rtl ? "rtl" : undefined}
                 />
+              )}
+              {hasError && (
+                <p className="text-xs text-destructive">{t("validation.required")}</p>
               )}
             </div>
           );
