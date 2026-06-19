@@ -76,6 +76,7 @@ const RAW_NAV_GROUPS = [
     { href: "/contract-documents", icon: FileText, labelKey: "nav.contract_documents" },
   ]},
   { titleKey: "nav.group.real_estate", items: [
+    { href: "/data-entry-center", icon: SlidersHorizontal, labelKey: "nav.data_entry_center" },
     { href: "/projects", icon: Building, labelKey: "nav.projects" },
     { href: "/phases", icon: Layers, labelKey: "nav.phases" },
     { href: "/buildings", icon: Building2, labelKey: "nav.buildings" },

@@ -34,6 +34,7 @@ const SettingsPage = lazy(() => import("@/pages/settings"));
 const ChangePasswordPage = lazy(() => import("@/pages/change-password"));
 const ApprovalsPage = lazy(() => import("@/pages/approvals"));
 
+const DataEntryCenterPage = lazy(() => import("@/pages/data-entry-center"));
 const ProjectsPage = lazy(() => import("@/pages/projects"));
 const PhasesPage = lazy(() => import("@/pages/phases"));
 const BuildingsPage = lazy(() => import("@/pages/buildings"));
@@ -375,6 +376,7 @@ function Router() {
             <Route path="/documents/:id" component={DocumentDetailPage} />
             <Route path="/documents" component={DocumentsPage} />
 
+            <Route path="/data-entry-center" component={DataEntryCenterPage} />
             <Route path="/projects" component={ProjectsPage} />
             <Route path="/phases" component={PhasesPage} />
             <Route path="/buildings" component={BuildingsPage} />
