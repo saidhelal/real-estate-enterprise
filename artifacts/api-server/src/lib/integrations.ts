@@ -20,6 +20,20 @@ import { nextDocumentNumber } from "./doc-number";
 // ---------------------------------------------------------------------------
 
 /**
+ * Lifecycle statuses that are set explicitly by a user (via setUnitStatus) and
+ * must never be clobbered by the automatic derivation below. Once a unit is
+ * marked delivered/blocked/maintenance/cancelled, recomputing from live
+ * reservations/contracts is a no-op until the override is released (the
+ * setUnitStatus "available" action calls this with { force: true }).
+ */
+export const MANUAL_UNIT_STATUS_CODES = [
+  "delivered",
+  "blocked",
+  "maintenance",
+  "cancelled",
+] as const;
+
+/**
  * Derive a unit's status from its strongest live claim and sync
  * `units.unitStatusId`:
  *   - an active contract (status draft/active) on the unit  -> "sold"
@@ -30,10 +44,18 @@ import { nextDocumentNumber } from "./doc-number";
  * `unit_statuses` reference row is missing, and only writes when the resolved
  * status actually changes. Call this after any event that creates, cancels,
  * deletes, or moves a reservation or contract for the affected unit id(s).
+ *
+ * Manual lifecycle overrides (delivered/blocked/maintenance/cancelled) are
+ * preserved: if a unit currently sits in one of those states the derivation is
+ * skipped, so a stray reservation/contract change can't silently flip a
+ * delivered or blocked unit back to available/reserved/sold. Pass
+ * `{ force: true }` to bypass this (used when a user explicitly releases the
+ * unit back to the auto-derived state).
  */
 export async function recomputeUnitStatus(
   tx: Tx,
   unitId: string | null | undefined,
+  opts?: { force?: boolean },
 ): Promise<void> {
   if (!unitId) return;
   const [unit] = await tx
@@ -41,10 +63,20 @@ export async function recomputeUnitStatus(
       id: unitsTable.id,
       companyId: unitsTable.companyId,
       unitStatusId: unitsTable.unitStatusId,
+      currentCode: unitStatusesTable.code,
     })
     .from(unitsTable)
+    .leftJoin(unitStatusesTable, eq(unitStatusesTable.id, unitsTable.unitStatusId))
     .where(and(eq(unitsTable.id, unitId), eq(unitsTable.isDeleted, false)));
   if (!unit) return;
+
+  if (
+    !opts?.force &&
+    unit.currentCode &&
+    (MANUAL_UNIT_STATUS_CODES as readonly string[]).includes(unit.currentCode)
+  ) {
+    return;
+  }
 
   const [contract] = await tx
     .select({ id: contractsTable.id })

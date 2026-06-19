@@ -2078,6 +2078,33 @@ paths:
               schema:
                 $ref: "#/components/schemas/OkResponse"
 
+  /units/{id}/status:
+    post:
+      operationId: setUnitStatus
+      tags: [units]
+      summary: Set a Unit's lifecycle status
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnitStatusChange"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unit"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /lead-sources:
     get:
       operationId: listLeadSources
@@ -25444,6 +25471,14 @@ components:
         bedrooms: { type: integer }
         bathrooms: { type: integer }
         basePrice: { type: string }
+
+    UnitStatusChange:
+      type: object
+      required: [statusCode]
+      properties:
+        statusCode:
+          type: string
+          enum: [available, delivered, blocked, maintenance, cancelled]
 
     UnitListResponse:
       type: object

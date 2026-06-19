@@ -32,6 +32,7 @@ import {
   CreateUnitBody,
   GetUnitResponse,
   UpdateUnitBody,
+  SetUnitStatusBody,
   ListUnitTypesResponse,
   CreateUnitTypeBody,
   GetUnitTypeResponse,
@@ -44,6 +45,7 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import { recomputeUnitStatus } from "../lib/integrations";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -448,6 +450,42 @@ router.delete("/units/:id", requirePermission("units.delete"), async (req, res):
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "unit", entityId: id });
   res.json({ success: true });
+});
+
+// Explicit lifecycle action: mark a unit delivered/blocked/maintenance/
+// cancelled, or release it back to the auto-derived state ("available").
+// The four manual codes are preserved by recomputeUnitStatus so a later
+// reservation/contract change can't silently flip them; "available" forces a
+// re-derivation from live claims (which may resolve to reserved/sold again).
+router.post("/units/:id/status", requirePermission("units.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = SetUnitStatusBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  let conflict: string | null = null;
+  const row = await db.transaction(async (tx) => {
+    const [unit] = await tx.select().from(unitsTable).where(and(eq(unitsTable.id, id), eq(unitsTable.isDeleted, false)));
+    if (!unit) { conflict = "404"; return null; }
+    if (parsed.data.statusCode === "available") {
+      // Release any manual override and re-derive from live claims.
+      await recomputeUnitStatus(tx, id, { force: true });
+    } else {
+      const [status] = await tx
+        .select({ id: unitStatusesTable.id })
+        .from(unitStatusesTable)
+        .where(and(eq(unitStatusesTable.companyId, unit.companyId), eq(unitStatusesTable.code, parsed.data.statusCode), eq(unitStatusesTable.isDeleted, false)))
+        .limit(1);
+      if (!status) { conflict = "status"; return null; }
+      if (unit.unitStatusId !== status.id) {
+        await tx.update(unitsTable).set({ unitStatusId: status.id }).where(eq(unitsTable.id, id));
+      }
+    }
+    const [updated] = await tx.select().from(unitsTable).where(eq(unitsTable.id, id));
+    return updated;
+  });
+  if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+  if (conflict === "status") { res.status(400).json({ error: "Unit status not configured for this company" }); return; }
+  await recordAudit(req, { action: "update", entity: "unit", entityId: id, newValue: row });
+  res.json(GetUnitResponse.parse(serializeRow(row!)));
 });
 
 // ----- unit types -----

@@ -1372,6 +1372,21 @@ export interface UnitUpdate {
   basePrice?: string;
 }
 
+export type UnitStatusChangeStatusCode = typeof UnitStatusChangeStatusCode[keyof typeof UnitStatusChangeStatusCode];
+
+
+export const UnitStatusChangeStatusCode = {
+  available: 'available',
+  delivered: 'delivered',
+  blocked: 'blocked',
+  maintenance: 'maintenance',
+  cancelled: 'cancelled',
+} as const;
+
+export interface UnitStatusChange {
+  statusCode: UnitStatusChangeStatusCode;
+}
+
 export interface UnitListResponse {
   data: Unit[];
   total: number;

@@ -1303,6 +1303,7 @@ import type {
   UnitPricingListResponse,
   UnitPricingUpdate,
   UnitStatus,
+  UnitStatusChange,
   UnitStatusInput,
   UnitStatusListResponse,
   UnitStatusUpdate,
@@ -9829,6 +9830,78 @@ export const useDeleteUnit = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getDeleteUnitMutationOptions(options));
+    }
+
+export const getSetUnitStatusUrl = (id: string,) => {
+
+
+
+
+  return `/api/units/${id}/status`
+}
+
+/**
+ * @summary Set a Unit's lifecycle status
+ */
+export const setUnitStatus = async (id: string,
+    unitStatusChange: UnitStatusChange, options?: RequestInit): Promise<Unit> => {
+
+  return customFetch<Unit>(getSetUnitStatusUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      unitStatusChange,)
+  }
+);}
+
+
+
+
+export const getSetUnitStatusMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setUnitStatus>>, TError,{id: string;data: BodyType<UnitStatusChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof setUnitStatus>>, TError,{id: string;data: BodyType<UnitStatusChange>}, TContext> => {
+
+const mutationKey = ['setUnitStatus'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setUnitStatus>>, {id: string;data: BodyType<UnitStatusChange>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  setUnitStatus(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SetUnitStatusMutationResult = NonNullable<Awaited<ReturnType<typeof setUnitStatus>>>
+    export type SetUnitStatusMutationBody = BodyType<UnitStatusChange>
+    export type SetUnitStatusMutationError = ErrorType<Error>
+
+    /**
+ * @summary Set a Unit's lifecycle status
+ */
+export const useSetUnitStatus = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setUnitStatus>>, TError,{id: string;data: BodyType<UnitStatusChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof setUnitStatus>>,
+        TError,
+        {id: string;data: BodyType<UnitStatusChange>},
+        TContext
+      > => {
+      return useMutation(getSetUnitStatusMutationOptions(options));
     }
 
 export const getListLeadSourcesUrl = (params?: ListLeadSourcesParams,) => {

@@ -20,6 +20,7 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
+import { UnitStatusRowAction } from "@/components/units/unit-status-row-action";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function UnitsPage() {
@@ -77,7 +78,12 @@ export default function UnitsPage() {
       useDelete={useDeleteUnit}
       getListQueryKey={getListUnitsQueryKey}
       companyId={companyId}
-      rowActions={(r) => <DocumentsRowAction moduleKey="units" sourceId={r.id} />}
+      rowActions={(r) => (
+        <>
+          <UnitStatusRowAction unitId={r.id} />
+          <DocumentsRowAction moduleKey="units" sourceId={r.id} />
+        </>
+      )}
     />
   );
 }

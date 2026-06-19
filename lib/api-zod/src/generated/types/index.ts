@@ -1379,6 +1379,8 @@ export * from './unitPricingInput';
 export * from './unitPricingListResponse';
 export * from './unitPricingUpdate';
 export * from './unitStatus';
+export * from './unitStatusChange';
+export * from './unitStatusChangeStatusCode';
 export * from './unitStatusInput';
 export * from './unitStatusListResponse';
 export * from './unitStatusUpdate';

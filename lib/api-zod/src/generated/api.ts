@@ -2370,6 +2370,39 @@ export const DeleteUnitResponse = zod.object({
 
 
 /**
+ * @summary Set a Unit's lifecycle status
+ */
+export const SetUnitStatusParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SetUnitStatusBody = zod.object({
+  "statusCode": zod.enum(['available', 'delivered', 'blocked', 'maintenance', 'cancelled'])
+})
+
+export const SetUnitStatusResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
+  "projectId": zod.string(),
+  "phaseId": zod.string().nullish(),
+  "buildingId": zod.string(),
+  "floorId": zod.string(),
+  "unitTypeId": zod.string().nullish(),
+  "unitStatusId": zod.string().nullish(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string(),
+  "area": zod.string().nullish(),
+  "bedrooms": zod.number().nullish(),
+  "bathrooms": zod.number().nullish(),
+  "basePrice": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
  * @summary List lead-sources
  */
 export const ListLeadSourcesQueryParams = zod.object({
