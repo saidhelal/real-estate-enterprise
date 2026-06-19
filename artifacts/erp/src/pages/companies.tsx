@@ -6,6 +6,7 @@ import {
   useUpdateCompany, 
   useDeleteCompany,
   getListCompaniesQueryKey,
+  setNextChangeReason,
   CompanyInput,
   Company
 } from "@workspace/api-client-react";
@@ -32,6 +33,29 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
+/** Server governance middleware answers a governed mutation with 202 + this shape. */
+function isPendingApproval(result: unknown): boolean {
+  return (
+    typeof result === "object" &&
+    result !== null &&
+    (result as { pendingApproval?: unknown }).pendingApproval === true
+  );
+}
+
+/** Extract a human-readable error message from a failed API mutation. */
+function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object") {
+    const data = (error as { data?: unknown }).data;
+    if (data && typeof data === "object") {
+      const msg = (data as { error?: unknown }).error;
+      if (typeof msg === "string" && msg.trim()) return msg;
+    }
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
+
 export default function CompaniesPage() {
   const { t } = useLanguage();
   const { data: companies, isLoading } = useListCompanies();
@@ -42,21 +66,34 @@ export default function CompaniesPage() {
   const { toast } = useToast();
   const deleteMutation = useDeleteCompany();
 
-  const handleDelete = (id: string) => {
-    if (confirm(t("common.delete_confirm"))) {
-      deleteMutation.mutate(
-        { id },
-        {
-          onSuccess: () => {
-            toast({ title: t("common.deleted") });
-            queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
-          },
-          onError: () => {
-            toast({ title: t("common.error"), variant: "destructive" });
-          }
-        }
-      );
+  const handleDelete = (company: Company) => {
+    const reason = window.prompt(t("governance.reason_prompt") ?? "");
+    if (reason === null) return;
+    if (!reason.trim()) {
+      toast({ title: t("governance.reason_required"), variant: "destructive" });
+      return;
     }
+    setNextChangeReason(reason.trim(), company.name);
+    deleteMutation.mutate(
+      { id: company.id },
+      {
+        onSuccess: (result: unknown) => {
+          toast({
+            title: isPendingApproval(result)
+              ? t("governance.submitted")
+              : t("common.deleted"),
+          });
+          queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
+        },
+        onError: (error: unknown) => {
+          toast({
+            title: t("common.error"),
+            description: getApiErrorMessage(error, t("common.error")),
+            variant: "destructive",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -116,7 +153,7 @@ export default function CompaniesPage() {
                     <Button variant="ghost" size="icon" onClick={() => setEditingCompany(company)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(company.id)}>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(company)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -163,11 +200,22 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
       updateMutation.mutate(
         { id: company.id, data: formData },
         {
-          onSuccess: () => {
-            toast({ title: t("common.saved") });
+          onSuccess: (result: unknown) => {
+            toast({
+              title: isPendingApproval(result)
+                ? t("governance.submitted")
+                : t("common.saved"),
+            });
             queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
             onSuccess();
-          }
+          },
+          onError: (error: unknown) => {
+            toast({
+              title: t("common.error"),
+              description: getApiErrorMessage(error, t("common.error")),
+              variant: "destructive",
+            });
+          },
         }
       );
     } else {
@@ -178,7 +226,14 @@ function CompanyForm({ company, onSuccess }: { company?: Company; onSuccess: () 
             toast({ title: t("common.created") });
             queryClient.invalidateQueries({ queryKey: getListCompaniesQueryKey() });
             onSuccess();
-          }
+          },
+          onError: (error: unknown) => {
+            toast({
+              title: t("common.error"),
+              description: getApiErrorMessage(error, t("common.error")),
+              variant: "destructive",
+            });
+          },
         }
       );
     }

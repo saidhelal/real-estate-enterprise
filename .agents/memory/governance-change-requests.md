@@ -26,6 +26,7 @@ Privileged destructive/financial mutations do NOT execute directly. They are int
 ## Frontend cooperation
 - `setNextChangeReason(reason, entityLabel?)` (exported from `@workspace/api-client-react`, in `custom-fetch.ts`) sets those headers on the **next** DELETE/PATCH/PUT only, consumed once.
 - Any create/update/delete `onSuccess` must detect `result.pendingApproval === true` and toast `governance.submitted` instead of the normal created/deleted toast — a 202 is success, not completion. `ResourceManager` and the Users page both do this.
+- **Hand-rolled CRUD pages (not using `ResourceManager`) are the trap:** a page whose create/update mutations omit `onError` fails **silently** — the user sees "Create/Edit does nothing" when the request actually returned 403 (read-only role, e.g. General Manager) / 409 (dup) / 400 (validation). And its delete will always 400 unless it runs the `setNextChangeReason` reason flow. Every such page must add `onError` toasts (surface `error.data.error`, fallback `error.message`) AND the reason flow for delete. Prefer migrating to `ResourceManager`.
 
 ## Force-password-change
 - `users.mustChangePassword` flag: admin reset sets it true; `change-password` clears it.
