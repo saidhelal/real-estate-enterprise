@@ -2250,6 +2250,16 @@ export const ListUnitsResponse = zod.object({
   "bedrooms": zod.number().nullish(),
   "bathrooms": zod.number().nullish(),
   "basePrice": zod.string().nullish(),
+  "pricePerMeter": zod.string().nullish(),
+  "totalPrice": zod.string().nullish(),
+  "discount": zod.string().nullish(),
+  "maxDiscount": zod.string().nullish(),
+  "minSellingPrice": zod.string().nullish(),
+  "commission": zod.string().nullish(),
+  "taxes": zod.string().nullish(),
+  "salesAvailable": zod.boolean().optional(),
+  "paymentOption": zod.string().nullish(),
+  "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -2277,7 +2287,17 @@ export const CreateUnitBody = zod.object({
   "area": zod.string().optional(),
   "bedrooms": zod.number().optional(),
   "bathrooms": zod.number().optional(),
-  "basePrice": zod.string().optional()
+  "basePrice": zod.string().optional(),
+  "pricePerMeter": zod.string().optional(),
+  "totalPrice": zod.string().optional(),
+  "discount": zod.string().optional(),
+  "maxDiscount": zod.string().optional(),
+  "minSellingPrice": zod.string().optional(),
+  "commission": zod.string().optional(),
+  "taxes": zod.string().optional(),
+  "salesAvailable": zod.boolean().optional(),
+  "paymentOption": zod.string().optional(),
+  "collectionMethod": zod.string().optional()
 })
 
 
@@ -2305,6 +2325,16 @@ export const GetUnitResponse = zod.object({
   "bedrooms": zod.number().nullish(),
   "bathrooms": zod.number().nullish(),
   "basePrice": zod.string().nullish(),
+  "pricePerMeter": zod.string().nullish(),
+  "totalPrice": zod.string().nullish(),
+  "discount": zod.string().nullish(),
+  "maxDiscount": zod.string().nullish(),
+  "minSellingPrice": zod.string().nullish(),
+  "commission": zod.string().nullish(),
+  "taxes": zod.string().nullish(),
+  "salesAvailable": zod.boolean().optional(),
+  "paymentOption": zod.string().nullish(),
+  "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -2332,7 +2362,17 @@ export const UpdateUnitBody = zod.object({
   "area": zod.string().optional(),
   "bedrooms": zod.number().optional(),
   "bathrooms": zod.number().optional(),
-  "basePrice": zod.string().optional()
+  "basePrice": zod.string().optional(),
+  "pricePerMeter": zod.string().optional(),
+  "totalPrice": zod.string().optional(),
+  "discount": zod.string().optional(),
+  "maxDiscount": zod.string().optional(),
+  "minSellingPrice": zod.string().optional(),
+  "commission": zod.string().optional(),
+  "taxes": zod.string().optional(),
+  "salesAvailable": zod.boolean().optional(),
+  "paymentOption": zod.string().optional(),
+  "collectionMethod": zod.string().optional()
 })
 
 export const UpdateUnitResponse = zod.object({
@@ -2352,6 +2392,16 @@ export const UpdateUnitResponse = zod.object({
   "bedrooms": zod.number().nullish(),
   "bathrooms": zod.number().nullish(),
   "basePrice": zod.string().nullish(),
+  "pricePerMeter": zod.string().nullish(),
+  "totalPrice": zod.string().nullish(),
+  "discount": zod.string().nullish(),
+  "maxDiscount": zod.string().nullish(),
+  "minSellingPrice": zod.string().nullish(),
+  "commission": zod.string().nullish(),
+  "taxes": zod.string().nullish(),
+  "salesAvailable": zod.boolean().optional(),
+  "paymentOption": zod.string().nullish(),
+  "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -2397,6 +2447,16 @@ export const SetUnitStatusResponse = zod.object({
   "bedrooms": zod.number().nullish(),
   "bathrooms": zod.number().nullish(),
   "basePrice": zod.string().nullish(),
+  "pricePerMeter": zod.string().nullish(),
+  "totalPrice": zod.string().nullish(),
+  "discount": zod.string().nullish(),
+  "maxDiscount": zod.string().nullish(),
+  "minSellingPrice": zod.string().nullish(),
+  "commission": zod.string().nullish(),
+  "taxes": zod.string().nullish(),
+  "salesAvailable": zod.boolean().optional(),
+  "paymentOption": zod.string().nullish(),
+  "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })

@@ -81,6 +81,13 @@ export interface SelectOption {
   parentValues?: Record<string, string | null | undefined>;
   /** Render the option but make it unselectable (e.g. a unit that is not available). */
   disabled?: boolean;
+  /**
+   * Hide the option from the list entirely (e.g. a non-available unit in the CRM
+   * picker). Unlike `disabled`, a hidden option is not rendered — except when it
+   * is the field's currently-selected value, so editing a record never drops its
+   * own stored value. See `visibleOptions`.
+   */
+  hidden?: boolean;
 }
 
 export interface ResourceField {

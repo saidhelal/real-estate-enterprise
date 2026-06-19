@@ -24,6 +24,17 @@ already-created rows instead of replaying (which would duplicate phases/building
 **How to apply:** any future bulk-create wizard over parent→child chains needs the same
 serverId-skip pattern; replay-from-top without it duplicates parents.
 
+**Pricing & Sales Setup + auto-publish (within scope — no sales lifecycle):** the
+units table itself carries the pricing/sales fields (pricePerMeter, totalPrice,
+discount, maxDiscount, minSellingPrice, commission, taxes, salesAvailable,
+paymentOption, collectionMethod) — NO new table/module. "Publishing to CRM" is just
+a `salesAvailable` boolean on the unit, NOT a reservation/contract. Auto-publish lives
+in `POST /units`: if the resolved status code is `available` and the caller omitted
+`salesAvailable`, default it true (explicit false honored). CRM/Sales "show only
+available" = unit picker marks ineligible options `hidden` (see cascade-dropdowns.md),
+not a new query. This stays inside the master-data-only boundary because no sales
+lifecycle row is created — only fields on the unit.
+
 **Gotchas:** coerce optional int fields with `Number.parseInt` + `Number.isFinite`
 guard (raw `Number("")`/`Number("x")` sends NaN and fails API validation late).
 Pass the active `language` into every shared picker — hardcoding `"en"` breaks AR labels.

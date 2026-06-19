@@ -47,8 +47,10 @@ export default function ReservationsPage() {
   const companyId = companies?.[0]?.id;
   const convert = useConvertReservation();
 
-  // Map unitStatusId -> status code so units that are not available can be shown
-  // (so an existing reservation's unit still renders on edit) but not selected.
+  // Map unitStatusId -> status code so the CRM unit picker can show ONLY units
+  // that are live inventory (status "available" AND published for sale). Units in
+  // any other status (reserved, pending sale, sold, blocked, maintenance) are
+  // hidden entirely rather than shown disabled.
   const statusCodeById = new Map((unitStatuses?.data ?? []).map((s) => [s.id, s.code]));
 
   const branchOptions = (branches ?? []).map((b) => ({ value: b.id, label: b.name }));
@@ -60,7 +62,12 @@ export default function ReservationsPage() {
     value: u.id,
     label: u.name,
     parentValue: u.floorId,
-    disabled: (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) !== "available",
+    // Live CRM inventory = available status AND published for sale. Non-eligible
+    // units are hidden from the picker (kept only if already selected, for edit).
+    hidden: !(
+      (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available" &&
+      u.salesAvailable
+    ),
   }));
   const customerOptions = (customers?.data ?? []).map((c) => ({ value: c.id, label: c.fullName }));
 

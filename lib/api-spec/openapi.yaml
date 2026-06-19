@@ -26112,6 +26112,16 @@ components:
         bedrooms: { type: ["integer", "null"] }
         bathrooms: { type: ["integer", "null"] }
         basePrice: { type: ["string", "null"] }
+        pricePerMeter: { type: ["string", "null"] }
+        totalPrice: { type: ["string", "null"] }
+        discount: { type: ["string", "null"] }
+        maxDiscount: { type: ["string", "null"] }
+        minSellingPrice: { type: ["string", "null"] }
+        commission: { type: ["string", "null"] }
+        taxes: { type: ["string", "null"] }
+        salesAvailable: { type: boolean }
+        paymentOption: { type: ["string", "null"] }
+        collectionMethod: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
 
@@ -26134,6 +26144,16 @@ components:
         bedrooms: { type: integer }
         bathrooms: { type: integer }
         basePrice: { type: string }
+        pricePerMeter: { type: string }
+        totalPrice: { type: string }
+        discount: { type: string }
+        maxDiscount: { type: string }
+        minSellingPrice: { type: string }
+        commission: { type: string }
+        taxes: { type: string }
+        salesAvailable: { type: boolean }
+        paymentOption: { type: string }
+        collectionMethod: { type: string }
 
     UnitUpdate:
       type: object
@@ -26153,6 +26173,16 @@ components:
         bedrooms: { type: integer }
         bathrooms: { type: integer }
         basePrice: { type: string }
+        pricePerMeter: { type: string }
+        totalPrice: { type: string }
+        discount: { type: string }
+        maxDiscount: { type: string }
+        minSellingPrice: { type: string }
+        commission: { type: string }
+        taxes: { type: string }
+        salesAvailable: { type: boolean }
+        paymentOption: { type: string }
+        collectionMethod: { type: string }
 
     UnitStatusChange:
       type: object

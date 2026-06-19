@@ -1332,6 +1332,25 @@ export interface Unit {
   bathrooms?: number | null;
   /** @nullable */
   basePrice?: string | null;
+  /** @nullable */
+  pricePerMeter?: string | null;
+  /** @nullable */
+  totalPrice?: string | null;
+  /** @nullable */
+  discount?: string | null;
+  /** @nullable */
+  maxDiscount?: string | null;
+  /** @nullable */
+  minSellingPrice?: string | null;
+  /** @nullable */
+  commission?: string | null;
+  /** @nullable */
+  taxes?: string | null;
+  salesAvailable?: boolean;
+  /** @nullable */
+  paymentOption?: string | null;
+  /** @nullable */
+  collectionMethod?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -1352,6 +1371,16 @@ export interface UnitInput {
   bedrooms?: number;
   bathrooms?: number;
   basePrice?: string;
+  pricePerMeter?: string;
+  totalPrice?: string;
+  discount?: string;
+  maxDiscount?: string;
+  minSellingPrice?: string;
+  commission?: string;
+  taxes?: string;
+  salesAvailable?: boolean;
+  paymentOption?: string;
+  collectionMethod?: string;
 }
 
 export interface UnitUpdate {
@@ -1370,6 +1399,16 @@ export interface UnitUpdate {
   bedrooms?: number;
   bathrooms?: number;
   basePrice?: string;
+  pricePerMeter?: string;
+  totalPrice?: string;
+  discount?: string;
+  maxDiscount?: string;
+  minSellingPrice?: string;
+  commission?: string;
+  taxes?: string;
+  salesAvailable?: boolean;
+  paymentOption?: string;
+  collectionMethod?: string;
 }
 
 export type UnitStatusChangeStatusCode = typeof UnitStatusChangeStatusCode[keyof typeof UnitStatusChangeStatusCode];

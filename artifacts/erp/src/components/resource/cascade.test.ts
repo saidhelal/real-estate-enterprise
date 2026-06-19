@@ -129,6 +129,40 @@ describe("visibleOptions — no ghost value when editing", () => {
   });
 });
 
+describe("visibleOptions — hidden options (CRM available-only picker)", () => {
+  // u2 is hidden (e.g. now reserved / not published for sale). u1/u3 stay visible.
+  const hiddenUnits: SelectOption[] = [
+    { value: "u1", label: "u1", parentValue: "f1" },
+    { value: "u2", label: "u2", parentValue: "f2", hidden: true },
+    { value: "u3", label: "u3", parentValue: "f3" },
+  ];
+  const withHidden: ResourceField = { ...byName("unitId"), options: hiddenUnits };
+  const f = fields.map((x) => (x.name === "unitId" ? withHidden : x));
+
+  it("drops hidden options when nothing is selected", () => {
+    const fd: Record<string, string> = {};
+    const visible = visibleOptions(f, fd, withHidden).map((o) => o.value);
+    expect(visible).toEqual(["u1", "u3"]);
+  });
+
+  it("keeps a hidden option when it is the currently-selected value (edit)", () => {
+    // Editing a reservation whose unit (u2) is now hidden: it must still render so
+    // the trigger shows the stored value instead of a ghost placeholder.
+    const fd: Record<string, string> = { unitId: "u2" };
+    const visible = visibleOptions(f, fd, withHidden).map((o) => o.value);
+    expect(visible).toContain("u2");
+    expect(visible).toContain("u1");
+    expect(visible).toContain("u3");
+  });
+
+  it("still hides a hidden option that is not selected, with parent filtering active", () => {
+    const fd: Record<string, string> = { floorId: "f2" };
+    const visible = visibleOptions(f, fd, withHidden).map((o) => o.value);
+    // f2's only unit (u2) is hidden and not selected -> nothing visible.
+    expect(visible).not.toContain("u2");
+  });
+});
+
 describe("resetDescendants — stale child selections are cleared on parent change", () => {
   it("clears the whole descendant chain when the root parent changes", () => {
     const prev: Record<string, string> = {

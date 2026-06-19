@@ -22,4 +22,14 @@ export interface UnitUpdate {
   bedrooms?: number;
   bathrooms?: number;
   basePrice?: string;
+  pricePerMeter?: string;
+  totalPrice?: string;
+  discount?: string;
+  maxDiscount?: string;
+  minSellingPrice?: string;
+  commission?: string;
+  taxes?: string;
+  salesAvailable?: boolean;
+  paymentOption?: string;
+  collectionMethod?: string;
 }

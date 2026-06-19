@@ -52,10 +52,13 @@ export function visibleOptions(
   formData: Record<string, string>,
   f: ResourceField,
 ): SelectOption[] {
-  const opts = f.options ?? [];
+  const current = formData[f.name];
+  // Drop options flagged hidden (e.g. non-available units in the CRM picker),
+  // but always keep the currently-selected value so editing a record never hides
+  // its own stored value.
+  const opts = (f.options ?? []).filter((o) => !o.hidden || o.value === current);
   const parents = dependsList(f);
   if (parents.length === 0) return opts;
-  const current = formData[f.name];
   // Active constraints: parent fields that currently hold a real value.
   const active = parents
     .map((p) => [p, formData[p]] as const)

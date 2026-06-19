@@ -399,10 +399,24 @@ router.post("/units", requirePermission("units.create"), async (req, res): Promi
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const hierarchy = await deriveUnitHierarchy(parsed.data.floorId);
   if (!hierarchy) { res.status(400).json({ error: "Invalid floor" }); return; }
+  // Auto-publish: a unit whose status resolves to the "available" code is offered
+  // to the CRM sales workflow by default (salesAvailable=true) unless the caller
+  // explicitly opted out. Units in any other status are never auto-published.
+  let salesAvailable = parsed.data.salesAvailable ?? false;
+  if (parsed.data.unitStatusId) {
+    const [status] = await db
+      .select({ code: unitStatusesTable.code })
+      .from(unitStatusesTable)
+      .where(and(eq(unitStatusesTable.id, parsed.data.unitStatusId), eq(unitStatusesTable.isDeleted, false)));
+    if (status?.code === "available" && parsed.data.salesAvailable === undefined) {
+      salesAvailable = true;
+    }
+  }
   const [row] = await db
     .insert(unitsTable)
     .values({
       ...parsed.data,
+      salesAvailable,
       buildingId: hierarchy.buildingId,
       projectId: hierarchy.projectId,
       phaseId: hierarchy.phaseId,

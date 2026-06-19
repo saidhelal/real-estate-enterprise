@@ -115,6 +115,16 @@ export const unitsTable = pgTable("units", {
   bedrooms: integer("bedrooms"),
   bathrooms: integer("bathrooms"),
   basePrice: numeric("base_price", { precision: 14, scale: 2 }),
+  pricePerMeter: numeric("price_per_meter", { precision: 14, scale: 2 }),
+  totalPrice: numeric("total_price", { precision: 14, scale: 2 }),
+  discount: numeric("discount", { precision: 14, scale: 2 }),
+  maxDiscount: numeric("max_discount", { precision: 14, scale: 2 }),
+  minSellingPrice: numeric("min_selling_price", { precision: 14, scale: 2 }),
+  commission: numeric("commission", { precision: 14, scale: 2 }),
+  taxes: numeric("taxes", { precision: 14, scale: 2 }),
+  salesAvailable: boolean("sales_available").notNull().default(false),
+  paymentOption: text("payment_option"),
+  collectionMethod: text("collection_method"),
   ...audit,
 });
 export type UnitRow = typeof unitsTable.$inferSelect;

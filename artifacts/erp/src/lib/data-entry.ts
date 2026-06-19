@@ -57,14 +57,28 @@ export interface DraftUnit {
   area: string;
   bedrooms: string;
   bathrooms: string;
-  // Pricing (Step 6) — computed net is written to the existing units.basePrice.
+  // Pricing & Sales Setup (Step 6) — computed net is written to units.basePrice;
+  // the raw inputs below are persisted to their matching unit columns.
   pricePerMeter: string;
   discount: string;
   discountType: DiscountType;
   additionalCharges: string;
+  maxDiscount: string;
+  minSellingPrice: string;
+  commission: string;
+  taxes: string;
+  /** Offered to the CRM sales workflow when true (and status is available). */
+  salesAvailable: boolean;
+  /** "cash" | "installments" | "mixed" */
+  paymentOption: PaymentOption;
+  /** "cash" | "bank_transfer" | "cheque" | "mixed" */
+  collectionMethod: CollectionMethod;
   // Availability (Step 7) — existing unit_statuses row id. Empty = default.
   unitStatusId: string;
 }
+
+export type PaymentOption = "cash" | "installments" | "mixed";
+export type CollectionMethod = "cash" | "bank_transfer" | "cheque" | "mixed";
 
 export interface DraftFloor {
   id: string;
@@ -219,6 +233,13 @@ export function makeUnit(buildingCode: string, floorSegment: string, sequence: n
     discount: "",
     discountType: "amount",
     additionalCharges: "",
+    maxDiscount: "",
+    minSellingPrice: "",
+    commission: "",
+    taxes: "",
+    salesAvailable: true,
+    paymentOption: "cash",
+    collectionMethod: "cash",
     unitStatusId: "",
   };
 }

@@ -31,6 +31,25 @@ export interface Unit {
   bathrooms?: number | null;
   /** @nullable */
   basePrice?: string | null;
+  /** @nullable */
+  pricePerMeter?: string | null;
+  /** @nullable */
+  totalPrice?: string | null;
+  /** @nullable */
+  discount?: string | null;
+  /** @nullable */
+  maxDiscount?: string | null;
+  /** @nullable */
+  minSellingPrice?: string | null;
+  /** @nullable */
+  commission?: string | null;
+  /** @nullable */
+  taxes?: string | null;
+  salesAvailable?: boolean;
+  /** @nullable */
+  paymentOption?: string | null;
+  /** @nullable */
+  collectionMethod?: string | null;
   isActive: boolean;
   createdAt: string;
 }

@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -50,6 +51,8 @@ import {
   uid,
   unitFullCode,
   type DiscountType,
+  type PaymentOption,
+  type CollectionMethod,
   type DraftBuilding,
   type DraftFloor,
   type DraftPhase,
@@ -63,7 +66,7 @@ const STEPS = [
   { key: "buildings", en: "Buildings", ar: "المباني" },
   { key: "floors", en: "Floors", ar: "الطوابق" },
   { key: "units", en: "Units", ar: "الوحدات" },
-  { key: "pricing", en: "Pricing", ar: "التسعير" },
+  { key: "pricing", en: "Pricing & Sales Setup", ar: "التسعير وإعداد المبيعات" },
   { key: "availability", en: "Availability", ar: "الإتاحة" },
   { key: "review", en: "Review", ar: "المراجعة" },
 ] as const;
@@ -248,9 +251,13 @@ export default function DataEntryCenterPage() {
             }
             for (const unit of floor.units) {
               if (!unit.serverId) {
-                const { net } = computePricing(unit);
+                const { total, discountAmount, net } = computePricing(unit);
                 const bedrooms = Number.parseInt(unit.bedrooms, 10);
                 const bathrooms = Number.parseInt(unit.bathrooms, 10);
+                const num = (v: string) => {
+                  const n = Number(v);
+                  return v.trim() !== "" && Number.isFinite(n) ? n.toFixed(2) : undefined;
+                };
                 const created = await createUnit.mutateAsync({
                   data: {
                     companyId,
@@ -265,6 +272,16 @@ export default function DataEntryCenterPage() {
                     ...(Number.isFinite(bedrooms) ? { bedrooms } : {}),
                     ...(Number.isFinite(bathrooms) ? { bathrooms } : {}),
                     ...(net > 0 ? { basePrice: net.toFixed(2) } : {}),
+                    ...(num(unit.pricePerMeter) ? { pricePerMeter: num(unit.pricePerMeter) } : {}),
+                    ...(total > 0 ? { totalPrice: total.toFixed(2) } : {}),
+                    ...(discountAmount > 0 ? { discount: discountAmount.toFixed(2) } : {}),
+                    ...(num(unit.maxDiscount) ? { maxDiscount: num(unit.maxDiscount) } : {}),
+                    ...(num(unit.minSellingPrice) ? { minSellingPrice: num(unit.minSellingPrice) } : {}),
+                    ...(num(unit.commission) ? { commission: num(unit.commission) } : {}),
+                    ...(num(unit.taxes) ? { taxes: num(unit.taxes) } : {}),
+                    salesAvailable: unit.salesAvailable,
+                    paymentOption: unit.paymentOption,
+                    collectionMethod: unit.collectionMethod,
                     ...(unit.unitStatusId || defaultStatusId
                       ? { unitStatusId: unit.unitStatusId || defaultStatusId }
                       : {}),
@@ -1145,6 +1162,13 @@ function PricingStep({
   const [disc, setDisc] = useState("");
   const [discType, setDiscType] = useState<DiscountType>("amount");
   const [charges, setCharges] = useState("");
+  const [maxDisc, setMaxDisc] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [commission, setCommission] = useState("");
+  const [taxes, setTaxes] = useState("");
+  const [salesAvailable, setSalesAvailable] = useState(true);
+  const [paymentOption, setPaymentOption] = useState<PaymentOption>("cash");
+  const [collectionMethod, setCollectionMethod] = useState<CollectionMethod>("cash");
 
   const active = flatBuildings.find((f) => f.building.id === buildingId) ?? flatBuildings[0];
 
@@ -1160,6 +1184,13 @@ function PricingStep({
           discount: disc,
           discountType: discType,
           additionalCharges: charges,
+          maxDiscount: maxDisc,
+          minSellingPrice: minPrice,
+          commission,
+          taxes,
+          salesAvailable,
+          paymentOption,
+          collectionMethod,
         })),
       })),
     }));
@@ -1200,6 +1231,48 @@ function PricingStep({
         <Field label={tr("Extra Charges", "رسوم إضافية")}>
           <Input type="number" className="w-28" value={charges} onChange={(e) => setCharges(e.target.value)} />
         </Field>
+        <Field label={tr("Max Discount", "أقصى خصم")}>
+          <Input type="number" className="w-24" value={maxDisc} onChange={(e) => setMaxDisc(e.target.value)} />
+        </Field>
+        <Field label={tr("Min Selling Price", "أدنى سعر بيع")}>
+          <Input type="number" className="w-28" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
+        </Field>
+        <Field label={tr("Commission", "العمولة")}>
+          <Input type="number" className="w-24" value={commission} onChange={(e) => setCommission(e.target.value)} />
+        </Field>
+        <Field label={tr("Taxes", "الضرائب")}>
+          <Input type="number" className="w-24" value={taxes} onChange={(e) => setTaxes(e.target.value)} />
+        </Field>
+        <Field label={tr("Payment Option", "خيار الدفع")}>
+          <Select value={paymentOption} onValueChange={(v) => setPaymentOption(v as PaymentOption)}>
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cash">{tr("Cash", "نقدي")}</SelectItem>
+              <SelectItem value="installments">{tr("Installments", "أقساط")}</SelectItem>
+              <SelectItem value="mixed">{tr("Mixed", "مختلط")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </Field>
+        <Field label={tr("Collection Method", "طريقة التحصيل")}>
+          <Select value={collectionMethod} onValueChange={(v) => setCollectionMethod(v as CollectionMethod)}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cash">{tr("Cash", "نقدي")}</SelectItem>
+              <SelectItem value="bank_transfer">{tr("Bank Transfer", "تحويل بنكي")}</SelectItem>
+              <SelectItem value="cheque">{tr("Cheque", "شيك")}</SelectItem>
+              <SelectItem value="mixed">{tr("Mixed", "مختلط")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </Field>
+        <Field label={tr("Sales Available", "متاح للبيع")}>
+          <div className="flex h-9 items-center">
+            <Checkbox checked={salesAvailable} onCheckedChange={(c) => setSalesAvailable(c === true)} />
+          </div>
+        </Field>
         <Button onClick={applyToBuilding}>{tr("Apply to Building", "تطبيق على المبنى")}</Button>
       </div>
 
@@ -1216,8 +1289,13 @@ function PricingStep({
                     <TableHead>{tr("Price / m²", "السعر / م²")}</TableHead>
                     <TableHead>{tr("Discount", "الخصم")}</TableHead>
                     <TableHead>{tr("Extra", "إضافي")}</TableHead>
+                    <TableHead>{tr("Max Disc.", "أقصى خصم")}</TableHead>
+                    <TableHead>{tr("Min Price", "أدنى سعر")}</TableHead>
+                    <TableHead>{tr("Commission", "العمولة")}</TableHead>
+                    <TableHead>{tr("Taxes", "الضرائب")}</TableHead>
                     <TableHead>{tr("Total", "الإجمالي")}</TableHead>
                     <TableHead>{tr("Net", "الصافي")}</TableHead>
+                    <TableHead>{tr("Available", "متاح")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1253,8 +1331,42 @@ function PricingStep({
                             onChange={(e) => setU({ additionalCharges: e.target.value })}
                           />
                         </TableCell>
+                        <TableCell>
+                          <Input
+                            className="w-20"
+                            value={u.maxDiscount}
+                            onChange={(e) => setU({ maxDiscount: e.target.value })}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Input
+                            className="w-24"
+                            value={u.minSellingPrice}
+                            onChange={(e) => setU({ minSellingPrice: e.target.value })}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Input
+                            className="w-20"
+                            value={u.commission}
+                            onChange={(e) => setU({ commission: e.target.value })}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Input
+                            className="w-20"
+                            value={u.taxes}
+                            onChange={(e) => setU({ taxes: e.target.value })}
+                          />
+                        </TableCell>
                         <TableCell>{money(total, language)}</TableCell>
                         <TableCell className="font-medium">{money(net, language)}</TableCell>
+                        <TableCell>
+                          <Checkbox
+                            checked={u.salesAvailable}
+                            onCheckedChange={(c) => setU({ salesAvailable: c === true })}
+                          />
+                        </TableCell>
                       </TableRow>
                     );
                   })}
