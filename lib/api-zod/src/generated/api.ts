@@ -22932,6 +22932,7 @@ export const ListLegalContractsResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -23028,6 +23029,7 @@ export const GetLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -23115,6 +23117,7 @@ export const UpdateLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24832,6 +24835,7 @@ export const ReviewLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24883,6 +24887,7 @@ export const ApproveLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24934,6 +24939,7 @@ export const ArchiveLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -24999,6 +25005,7 @@ export const ActivateLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -25054,6 +25061,7 @@ export const SuspendLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -25109,6 +25117,7 @@ export const TerminateLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -25165,6 +25174,7 @@ export const RenewLegalContractResponse = zod.object({
   "approvedDocument": zod.string().nullish(),
   "approvedDocumentAt": zod.string().nullish(),
   "lockedAt": zod.string().nullish(),
+  "verificationId": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })

@@ -35043,6 +35043,7 @@ components:
         approvedDocument: { type: ["string", "null"] }
         approvedDocumentAt: { type: ["string", "null"] }
         lockedAt: { type: ["string", "null"] }
+        verificationId: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
     LegalContractInput:

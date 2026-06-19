@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useListContractTemplates,
@@ -41,18 +41,15 @@ import { useToast } from "@/hooks/use-toast";
 const CONTRACT_TYPE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
 
 /**
- * Reference palette of smart variables a .docx contract template can embed as
- * {{group.field}} placeholders. Mirrors the server-side contractTokenCatalog;
- * kept intentionally compact for at-a-glance authoring guidance.
+ * Smart-variable palette ({{group.field}} placeholders) is served by the API
+ * (GET /api/contract-templates/token-catalog) so it stays the single source of
+ * truth alongside the server-side renderer — no client-side palette drift.
  */
-const TOKEN_GROUPS: Array<{ group: string; groupAr: string; tokens: string[] }> = [
-  { group: "Company", groupAr: "الشركة", tokens: ["company.name", "company.nameAr", "company.taxNumber", "company.phone", "company.address"] },
-  { group: "Customer", groupAr: "العميل", tokens: ["customer.name", "customer.nameAr", "customer.nationalId", "customer.phone", "customer.address"] },
-  { group: "Project", groupAr: "المشروع", tokens: ["project.name", "project.nameAr", "project.location", "phase.name", "building.name", "floor.name", "floor.number"] },
-  { group: "Unit", groupAr: "الوحدة", tokens: ["unit.code", "unit.name", "unit.area", "unit.basePrice", "unit.bedrooms", "unit.bathrooms"] },
-  { group: "Sale", groupAr: "البيع", tokens: ["sale.code", "sale.date", "sale.totalPrice", "sale.downPayment"] },
-  { group: "Contract", groupAr: "العقد", tokens: ["contract.code", "contract.title", "contract.value", "contract.date", "document.date"] },
-];
+type TokenCatalogGroup = {
+  group: string;
+  groupAr: string;
+  tokens: Array<{ token: string; label: string; labelAr: string }>;
+};
 
 export default function ContractTemplatesPage() {
   const { language, t } = useLanguage();
@@ -70,6 +67,24 @@ export default function ContractTemplatesPage() {
   const [name, setName] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [contractType, setContractType] = useState("legal");
+
+  const [tokenGroups, setTokenGroups] = useState<TokenCatalogGroup[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/contract-templates/token-catalog", { credentials: "include" });
+        if (!res.ok) return;
+        const d = (await res.json()) as { data?: TokenCatalogGroup[] };
+        if (!cancelled) setTokenGroups(d.data ?? []);
+      } catch {
+        /* palette is reference-only; ignore fetch failures */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const resetImportForm = () => {
     setFile(null);
@@ -181,12 +196,16 @@ export default function ContractTemplatesPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {TOKEN_GROUPS.map((g) => (
+            {tokenGroups.map((g) => (
               <div key={g.group} className="space-y-2">
                 <div className="text-sm font-medium">{language === "ar" ? g.groupAr : g.group}</div>
                 <div className="flex flex-wrap gap-1.5">
                   {g.tokens.map((tok) => (
-                    <code key={tok} className="rounded bg-muted px-1.5 py-0.5 text-xs">{`{{${tok}}}`}</code>
+                    <code
+                      key={tok.token}
+                      title={language === "ar" ? tok.labelAr : tok.label}
+                      className="rounded bg-muted px-1.5 py-0.5 text-xs"
+                    >{`{{${tok.token}}}`}</code>
                   ))}
                 </div>
               </div>

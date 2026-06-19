@@ -9,6 +9,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import router from "./routes";
+import publicLegalRouter from "./routes/public-legal";
 import { governanceMiddleware } from "./middleware/governance";
 import { metricsMiddleware } from "./lib/metrics";
 import { logger } from "./lib/logger";
@@ -40,6 +41,11 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Public, unauthenticated contract verification (QR target). Mounted BEFORE the
+// governance gate and the auth-gated /api router so external scanners can read
+// non-confidential verification data without a session.
+app.use("/api/legal-verify", publicLegalRouter);
 
 // Governance gate: converts direct DELETEs and protected PATCHes into pending
 // change requests (202). Mounted under /api BEFORE the routers. Internal

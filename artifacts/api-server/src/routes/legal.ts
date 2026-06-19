@@ -293,6 +293,15 @@ const resources: CrudConfig[] = [
     search: ["linkedName", "notes"] },
 ];
 
+// Smart-variable palette served from the server so the template designer's
+// token list can never drift from the resolver's actual capabilities.
+// Registered BEFORE the CRUD loop so the static path is matched before the
+// generated GET /contract-templates/:id route (otherwise :id="token-catalog"
+// hits the row lookup and 500s on an invalid uuid).
+router.get("/contract-templates/token-catalog", requirePermission("contractTemplates.view"), async (_req, res): Promise<void> => {
+  res.json({ data: contractTokenCatalog() });
+});
+
 for (const cfg of resources) registerCrud(cfg);
 
 /* ------------------------------------------------------------------ */
@@ -470,6 +479,87 @@ router.get("/legal-contracts/:id/document", requirePermission("legalContracts.vi
     ? row.approvedDocumentAt.toISOString()
     : (row.approvedDocumentAt ? String(row.approvedDocumentAt) : null);
   res.json({ html, generatedAt, locked: true });
+});
+
+// Live preview (DRAFT watermark). Renders the linked template with the current
+// smart-variable values WITHOUT persisting anything, so reviewers can see the
+// document before approval. Works in any status; never mutates the contract.
+router.get("/legal-contracts/:id/preview", requirePermission("legalContracts.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const rows = (await db
+    .select()
+    .from(legalContractsTable)
+    .where(and(eq(legalContractsTable.id, id), eq(legalContractsTable.isDeleted, false)))) as Record<string, unknown>[];
+  const c = rows[0];
+  if (!c) { res.status(404).json({ error: "legalContract not found" }); return; }
+  if (!c.templateId) { res.status(404).json({ error: "No template linked to this contract for preview" }); return; }
+  const tplRows = (await db
+    .select()
+    .from(contractTemplatesTable)
+    .where(eq(contractTemplatesTable.id, c.templateId as string))) as Record<string, unknown>[];
+  const templateHtml = tplRows[0] ? String(tplRows[0].content ?? "") : "";
+  if (!templateHtml.trim()) { res.status(404).json({ error: "Linked template has no content" }); return; }
+  const actor: RenderActor = { fullName: req.authUser?.fullName ?? null, username: req.authUser?.username ?? null };
+  const tokens = await resolveContractTokens(c as unknown as Parameters<typeof resolveContractTokens>[0], actor);
+  const html = buildContractDocument({
+    contract: c as unknown as Parameters<typeof buildContractDocument>[0]["contract"],
+    templateHtml,
+    tokens,
+    mode: "draft",
+    generatedAt: new Date(),
+  });
+  res.json({ html, mode: "draft", locked: false });
+});
+
+// Official print: returns the locked approved document and records a "print"
+// timeline event (best-effort). Distinct from GET /document (pure read) so the
+// timeline captures every official print without mutating on a GET.
+router.post("/legal-contracts/:id/print", requirePermission("legalContracts.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const rows = (await db
+    .select()
+    .from(legalContractsTable)
+    .where(and(eq(legalContractsTable.id, id), eq(legalContractsTable.isDeleted, false)))) as Record<string, unknown>[];
+  const row = rows[0];
+  if (!row) { res.status(404).json({ error: "legalContract not found" }); return; }
+  const html = row.approvedDocument ? String(row.approvedDocument) : null;
+  if (!html) { res.status(404).json({ error: "No approved document available for this contract" }); return; }
+  try {
+    await db.insert(contractEventsTable).values({
+      companyId: row.companyId as string,
+      legalContractId: id,
+      eventType: "print",
+      description: "Official document printed",
+      performedBy: req.authUser?.id ?? null,
+    });
+  } catch (err) {
+    req.log.error({ err, contractId: id }, "Failed to log print event");
+  }
+  const generatedAt = row.approvedDocumentAt instanceof Date
+    ? row.approvedDocumentAt.toISOString()
+    : (row.approvedDocumentAt ? String(row.approvedDocumentAt) : null);
+  res.json({ html, generatedAt, verificationId: row.verificationId ?? null, locked: true });
+});
+
+// Contract timeline: every lifecycle event (create/review/approve/print/amend/
+// archive) joined with the performing user's name, oldest first.
+router.get("/legal-contracts/:id/timeline", requirePermission("legalContracts.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const events = (await db
+    .select({
+      id: contractEventsTable.id,
+      eventType: contractEventsTable.eventType,
+      description: contractEventsTable.description,
+      eventDate: contractEventsTable.eventDate,
+      performedBy: contractEventsTable.performedBy,
+      performedByName: usersTable.fullName,
+      performedByUsername: usersTable.username,
+    })
+    .from(contractEventsTable)
+    .leftJoin(usersTable, eq(contractEventsTable.performedBy, usersTable.id))
+    .where(and(eq(contractEventsTable.legalContractId, id), eq(contractEventsTable.isDeleted, false)))
+    .orderBy(asc(contractEventsTable.eventDate))) as Record<string, unknown>[];
+  res.json({ data: events.map(serializeRow) });
 });
 
 router.post("/contract-templates/import", requirePermission("contractTemplates.create"), async (req, res): Promise<void> => {

@@ -9889,6 +9889,8 @@ export interface LegalContract {
   approvedDocumentAt?: string | null;
   /** @nullable */
   lockedAt?: string | null;
+  /** @nullable */
+  verificationId?: string | null;
   isActive: boolean;
   createdAt: string;
 }
