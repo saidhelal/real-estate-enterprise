@@ -65,8 +65,6 @@ const RAW_NAV_GROUPS: NavGroup[] = [
     { href: "/available-units", icon: Home, labelKey: "nav.available_units" },
     { href: "/crm-sales", icon: FileSign, labelKey: "nav.crm_sales" },
     { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
-    { href: "/finance-inbox", icon: Inbox, labelKey: "nav.finance_inbox" },
-    { href: "/legal-approvals", icon: Gavel, labelKey: "nav.legal_approvals" },
     { href: "/crm-reports", icon: BarChart3, labelKey: "nav.crm_reports" },
     { href: "/ai-assistant", icon: Bot, labelKey: "nav.ai_sales_assistant" },
   ]},
@@ -100,6 +98,7 @@ const RAW_NAV_GROUPS: NavGroup[] = [
       { href: "/cash-flow", icon: LineChart, labelKey: "nav.cash_flow" },
     ]},
     { titleKey: "nav.group.financial_management", items: [
+      { href: "/finance-inbox", icon: Inbox, labelKey: "nav.finance_inbox" },
       { href: "/customer-invoices", icon: FileText, labelKey: "nav.customer_invoices" },
       { href: "/ar-aging", icon: ClipboardList, labelKey: "nav.ar_aging" },
       { href: "/supplier-invoices", icon: FileBox, labelKey: "nav.supplier_invoices" },
@@ -269,6 +268,7 @@ const RAW_NAV_GROUPS: NavGroup[] = [
   ]},
   { titleKey: "nav.group.legal", items: [
     { href: "/legal-dashboard", icon: Gauge, labelKey: "nav.legal_dashboard" },
+    { href: "/legal-approvals", icon: Gavel, labelKey: "nav.legal_approvals" },
     { href: "/legal-contracts", icon: FileSign, labelKey: "nav.legal_contracts" },
     { href: "/contract-templates", icon: FileStack, labelKey: "nav.contract_templates" },
     { href: "/contract-versions", icon: FileText, labelKey: "nav.contract_versions" },

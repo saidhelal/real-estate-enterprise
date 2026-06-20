@@ -4,7 +4,6 @@ import {
   getListContractsQueryKey,
   useListUnits,
   useListCustomers,
-  useListCheques,
   useListCompanies,
   type Contract,
 } from "@workspace/api-client-react";
@@ -60,13 +59,11 @@ export default function CrmSalesPage() {
   const { data: contracts, isLoading } = useListContracts(p, { query: { queryKey: getListContractsQueryKey(p) } });
   const { data: units } = useListUnits(p);
   const { data: customers } = useListCustomers(p);
-  const { data: cheques } = useListCheques(p);
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
   const customerName = (id: string) => customers?.data.find((c) => c.id === id)?.fullName ?? id;
   const unitCode = (id: string) => units?.data.find((u) => u.id === id)?.code ?? id;
-  const chequeList = cheques?.data ?? [];
 
   const all = contracts?.data ?? [];
   const byStage = (s: SaleStage) => all.filter((c) => saleStage(c) === s);
@@ -113,7 +110,7 @@ export default function CrmSalesPage() {
             ) : null}
           </div>
         ) : null}
-        <ContractStageActions contract={c} companyId={companyId} cheques={chequeList} />
+        <ContractStageActions contract={c} companyId={companyId} />
       </div>
     );
   };
@@ -124,8 +121,8 @@ export default function CrmSalesPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("nav.crm_sales")}</h1>
         <p className="text-sm text-muted-foreground">
           {ar
-            ? "لوحة سير عمليات البيع — تابع كل عقد عبر مراحله وفعّل الإجراء المطلوب لكل مرحلة."
-            : "Operational sales workflow — track every contract through its stages and act on each step."}
+            ? "لوحة سير عمليات البيع — تابع حالة كل عقد عبر مراحله. تتم اعتمادات المالية داخل وحدة المالية والاعتمادات القانونية داخل وحدة الشؤون القانونية."
+            : "Operational sales workflow — track each contract's status through its stages. Finance approvals happen in the Finance module and legal approvals in the Legal Affairs module."}
         </p>
       </div>
 

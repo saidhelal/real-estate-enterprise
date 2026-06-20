@@ -67,3 +67,4 @@
 - [Sales Admin page scope](sales-admin-scope.md) — /sales-administration is CRM-ops only (leads/team/follow-ups/available-units+Start Sale/reports/roles); no contract/finance/cheque/legal — those stay in Finance/Legal/contract board.
 - [Cheque status lifecycle](cheque-lifecycle.md) — canonical 6-status enum (received default → under_collection → collected; returned/cancelled/replaced); replace via dedicated endpoint (keeps original + links); returned fires urgent finance alert.
 - [Fixed Assets GL wiring](fixed-assets-gl-wiring.md) — acquisition/depreciation/disposal post via shared auto-posting; disposal is multi-line (cost/accum/gain-loss residual), best-effort, accum account reused from asset.depreciation mapping.
+- [Approval action module ownership](approval-module-ownership.md) — dept approval actions live ONLY in their owning module; CRM shows status only; audit nested components (PaymentChequeManager leaked a Finance Approve button).

@@ -2,10 +2,8 @@ import { useState } from "react";
 import {
   useListReceipts,
   useCreateReceipt,
-  useApproveReceipt,
   getListReceiptsQueryKey,
   type Contract,
-  type Receipt,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -32,7 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { saleStage, isManagerial, genCode } from "@/lib/sale-workflow";
 import { enumLabel } from "@/lib/enums";
 import { ChequeLifecyclePanel } from "@/components/sales/cheque-lifecycle-panel";
-import { Wallet, Plus, CheckCircle2, Lock } from "lucide-react";
+import { Wallet, Plus, Lock } from "lucide-react";
 
 const PAYMENT_METHODS = ["cash", "bank_transfer", "cheque", "card"];
 
@@ -80,7 +78,6 @@ export function PaymentChequeManager({
   );
 
   const createReceipt = useCreateReceipt();
-  const approveReceipt = useApproveReceipt();
 
   const refreshReceipts = () => queryClient.invalidateQueries({ queryKey: getListReceiptsQueryKey({ pageSize: 200 }) });
   const onError = () => toast({ title: t("common.error"), variant: "destructive" });
@@ -114,16 +111,6 @@ export function PaymentChequeManager({
       },
       {
         onSuccess: () => { toast({ title: ar ? "أُضيفت الدفعة" : "Payment item added" }); resetItemForm(); refreshReceipts(); },
-        onError,
-      },
-    );
-  };
-
-  const approveItem = (r: Receipt) => {
-    approveReceipt.mutate(
-      { id: r.id },
-      {
-        onSuccess: () => { toast({ title: ar ? "اعتمدته المالية" : "Finance approved" }); refreshReceipts(); },
         onError,
       },
     );
@@ -229,12 +216,6 @@ export function PaymentChequeManager({
                     <span className="text-muted-foreground">{enumLabel(r.paymentMethod, language)}</span>
                     <span className="text-xs text-muted-foreground">{r.code}</span>
                     <Badge variant={r.status === "draft" ? "secondary" : "default"}>{enumLabel(r.status ?? "draft", language)}</Badge>
-                    {r.status === "draft" ? (
-                      <Button size="sm" variant="outline" className="ms-auto" onClick={() => approveItem(r)} disabled={approveReceipt.isPending}>
-                        <CheckCircle2 className="h-4 w-4 me-1" />
-                        {ar ? "اعتماد المالية" : "Finance Approve"}
-                      </Button>
-                    ) : null}
                   </div>
                 ))}
               </div>
