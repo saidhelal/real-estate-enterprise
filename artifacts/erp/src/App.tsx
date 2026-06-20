@@ -54,6 +54,12 @@ const LeadAssignmentsPage = lazy(() => import("@/pages/lead-assignments"));
 const LeadConversionsPage = lazy(() => import("@/pages/lead-conversions"));
 const CustomersPage = lazy(() => import("@/pages/customers"));
 const CustomerContactsPage = lazy(() => import("@/pages/customer-contacts"));
+const CrmDashboardPage = lazy(() => import("@/pages/crm-dashboard"));
+const MyWorkPage = lazy(() => import("@/pages/crm-my-work"));
+const CrmAvailableUnitsPage = lazy(() => import("@/pages/crm-available-units"));
+const CrmSalesPage = lazy(() => import("@/pages/crm-sales"));
+const CrmReportsPage = lazy(() => import("@/pages/crm-reports"));
+const SalesAdministrationPage = lazy(() => import("@/pages/crm-sales-administration"));
 const CustomerDocumentsPage = lazy(() => import("@/pages/customer-documents"));
 const CustomerNotesPage = lazy(() => import("@/pages/customer-notes"));
 const ReservationsPage = lazy(() => import("@/pages/reservations"));
@@ -409,6 +415,12 @@ function Router() {
             <Route path="/contracts/:id/document" component={ContractDocumentPage} />
             <Route path="/finance-inbox" component={FinanceInboxPage} />
             <Route path="/legal-approvals" component={LegalApprovalsPage} />
+            <Route path="/crm-dashboard" component={CrmDashboardPage} />
+            <Route path="/my-work" component={MyWorkPage} />
+            <Route path="/available-units" component={CrmAvailableUnitsPage} />
+            <Route path="/crm-sales" component={CrmSalesPage} />
+            <Route path="/crm-reports" component={CrmReportsPage} />
+            <Route path="/sales-administration" component={SalesAdministrationPage} />
             <Route path="/contract-amendments" component={ContractAmendmentsPage} />
             <Route path="/contract-cancellations" component={ContractCancellationsPage} />
             <Route path="/contract-notes" component={ContractNotesPage} />
