@@ -1,0 +1,309 @@
+Continue implementation.
+
+========================================================
+CRM DESIGN FREEZE V1.0
+======================
+
+IMPORTANT
+
+Architecture is FINAL.
+
+Discovery is COMPLETE.
+
+No repository exploration.
+
+No schema inspection.
+
+No redesign.
+
+No duplicate modules.
+
+No duplicate tables.
+
+No duplicate APIs.
+
+Reuse everything.
+
+Optimize execution time.
+
+========================================================
+
+Replace the current Customer Relationship Management navigation completely.
+
+Rename it simply to:
+
+CRM
+
+The previous CRM navigation is no longer approved.
+
+Hide it.
+
+Reuse its business logic where applicable.
+
+========================================================
+
+CRM MENU
+
+1. Dashboard
+
+2. My Work
+
+3. Leads
+
+4. Available Units
+
+5. Sales
+
+6. Follow-up
+
+7. Finance Status
+
+8. Legal Status
+
+9. Reports & KPIs
+
+10. AI Sales Assistant
+
+========================================================
+
+MY WORK
+
+This is the default landing page for every Sales Representative.
+
+Never open Dashboard first.
+
+Display automatically:
+
+Assigned Leads
+
+Today's Calls
+
+Today's Meetings
+
+Today's Visits
+
+Overdue Follow-ups
+
+Returned From Finance
+
+Returned From Legal
+
+Contracts Ready
+
+Manager Instructions
+
+High Priority Customers
+
+Upcoming Appointments
+
+Every task opens directly to its required screen.
+
+========================================================
+
+SALES ADMINISTRATION
+
+Inside CRM create an administration area.
+
+Visible only for:
+
+Sales Admin
+
+CRM Admin
+
+Sales Operations
+
+Owner
+
+Functions:
+
+Lead Import
+
+Lead Assignment
+
+Lead Reassignment
+
+Lead Distribution
+
+Duplicate Cleanup
+
+Bulk Operations
+
+Available Unit Publishing
+
+Emergency Unit Creation
+
+Emergency Unit Correction
+
+Emergency Unit Status Update
+
+CRM Data Validation
+
+Daily Reports
+
+Weekly Reports
+
+Monthly Reports
+
+PDF Export
+
+Excel Export
+
+Email Reports
+
+Sales Administration may edit Units ONLY as an emergency fallback when Data Entry Center is unavailable.
+
+Never duplicate the Units module.
+
+========================================================
+
+LIVE MONITORING
+
+Create a real-time operational monitoring system.
+
+Traffic Light Status
+
+Green
+
+Normal
+
+Yellow
+
+Attention
+
+Orange
+
+Manager Action Required
+
+Red
+
+Critical Delay
+
+========================================================
+
+Critical Red Conditions
+
+Lead not contacted within SLA.
+
+Follow-up overdue.
+
+Reservation expired.
+
+Finance review overdue.
+
+Legal review overdue.
+
+Contract delayed.
+
+Cheque overdue.
+
+Installment overdue.
+
+Employee inactive.
+
+Pending workflow exceeding SLA.
+
+========================================================
+
+ESCALATION
+
+Automatic escalation.
+
+Employee
+
+↓
+
+Manager
+
+↓
+
+Executive Manager
+
+↓
+
+Owner
+
+Escalation timing must be configurable.
+
+========================================================
+
+REAL-TIME TIMER
+
+Every delayed item displays:
+
+Days
+
+Hours
+
+Minutes
+
+Since delay started.
+
+========================================================
+
+CRITICAL ISSUES PANEL
+
+Managers, Executive Manager and Owner only.
+
+Display only RED items.
+
+Examples:
+
+Overdue Leads
+
+Overdue Contracts
+
+Returned Cheques
+
+Delayed Finance
+
+Delayed Legal
+
+Inactive Employees
+
+Pending Approvals
+
+Critical Customers
+
+Each item links directly to the affected record.
+
+========================================================
+
+ACCESS CONTROL
+
+Sales Representatives see only their own work.
+
+Managers see their teams.
+
+Executive Manager sees all departments.
+
+Owner sees everything.
+
+========================================================
+
+Do NOT redesign existing workflows.
+
+Reuse current Finance workflow.
+
+Reuse current Legal workflow.
+
+Reuse current Sales workflow.
+
+Reuse Data Entry Center.
+
+Reuse RBAC.
+
+Reuse Notifications.
+
+Reuse Audit Trail.
+
+========================================================
+
+Validate only modified CRM components.
+
+Run targeted smoke tests.
+
+Create one checkpoint after successful validation.
+
+Implementation starts immediately.
+
+Do NOT spend additional time exploring files already explored.
