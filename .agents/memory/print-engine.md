@@ -34,6 +34,16 @@ module, sidebar group, or home tile.
   **Why:** a lower-trust author (Employee role) could embed `<script>`; higher-trust users
   print it. Defense lives client-side because that's where the HTML is injected into a DOM.
 
+## Merged modules → one shared section per parent
+- When a module is folded into a parent (e.g. inventory→procurement, fixedAssets→finance),
+  there must be exactly ONE Forms & Printing nav item per parent: keep only the auto-derived
+  `FORMS_MODULE_BY_GROUP` link; do NOT add a second explicit `/forms-printing/<child>` link.
+- To keep the child's templates reachable, add the child key to `MODULE_GROUPS` in
+  `forms-printing.tsx` (`parent: [parent, child]`). The page runs a second `useListFormTemplates`
+  (always declared; `enabled: !!secondaryKey`; sentinel `"__none__"` queryKey to avoid cache
+  collision) and merges the lists. New templates are still created under the parent moduleKey;
+  existing child templates keep their own moduleKey + bindings. No data migration.
+
 ## Workflow gating
 - Approval cycle is strict Submit → Endorse → Approve. The UI must show **Approve only for
   `endorsed`** versions (Endorse only for `submitted`); do not show Approve for `submitted`.

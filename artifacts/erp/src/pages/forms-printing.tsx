@@ -115,6 +115,14 @@ const MODULE_LABELS: Record<string, { en: string; ar: string }> = {
   systemAdministration: { en: "System Administration", ar: "إدارة النظام" },
 };
 
+// Merged modules: a parent module's single Forms & Printing also surfaces the
+// templates of the child modules that were folded into it (links consolidated to
+// one shared section per parent — child template content stays reachable).
+const MODULE_GROUPS: Record<string, string[]> = {
+  procurement: ["procurement", "inventory"],
+  finance: ["finance", "fixedAssets"],
+};
+
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   draft: "secondary",
   submitted: "outline",
@@ -199,11 +207,28 @@ export default function FormsPrintingPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const listQuery = useListFormTemplates(
-    { moduleKey, search: search || undefined },
-    { query: { queryKey: getListFormTemplatesQueryKey({ moduleKey, search: search || undefined }) } },
+  const includedKeys = MODULE_GROUPS[moduleKey] ?? [moduleKey];
+  const primaryKey = includedKeys[0];
+  const secondaryKey = includedKeys[1];
+
+  const primaryQuery = useListFormTemplates(
+    { moduleKey: primaryKey, search: search || undefined },
+    { query: { queryKey: getListFormTemplatesQueryKey({ moduleKey: primaryKey, search: search || undefined }) } },
   );
-  const templates = listQuery.data?.data ?? [];
+  const secondaryQuery = useListFormTemplates(
+    { moduleKey: secondaryKey ?? "__none__", search: search || undefined },
+    {
+      query: {
+        enabled: !!secondaryKey,
+        queryKey: getListFormTemplatesQueryKey({ moduleKey: secondaryKey ?? "__none__", search: search || undefined }),
+      },
+    },
+  );
+  const templates = useMemo(
+    () => [...(primaryQuery.data?.data ?? []), ...(secondaryQuery.data?.data ?? [])],
+    [primaryQuery.data, secondaryQuery.data],
+  );
+  const isLoading = primaryQuery.isLoading || (!!secondaryKey && secondaryQuery.isLoading);
 
   const moduleLabel = MODULE_LABELS[moduleKey]?.[lang] ?? moduleKey;
 
@@ -227,7 +252,7 @@ export default function FormsPrintingPage() {
           lang={lang}
           moduleKey={moduleKey}
           companyId={companyId}
-          isLoading={listQuery.isLoading}
+          isLoading={isLoading}
         />
         {selectedId ? (
           <TemplateDetail key={selectedId} templateId={selectedId} lang={lang} />

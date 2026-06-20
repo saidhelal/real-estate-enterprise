@@ -124,7 +124,6 @@ const RAW_NAV_GROUPS = [
     { href: "/asset-inventory-counts", icon: ClipboardCheck, labelKey: "nav.asset_inventory_counts" },
     { href: "/asset-disposals", icon: PackageX, labelKey: "nav.asset_disposals" },
     { href: "/fixed-assets-reports", icon: BarChart3, labelKey: "nav.fixed_assets_reports" },
-    { href: "/forms-printing/fixedAssets", icon: Printer, labelKey: "nav.forms_printing_fixed_assets" },
   ]},
   { titleKey: "nav.group.engineering", items: [
     { href: "/engineering-dashboard", icon: Compass, labelKey: "nav.engineering_dashboard" },
@@ -214,7 +213,6 @@ const RAW_NAV_GROUPS = [
     { href: "/stock-count-items", icon: ListOrdered, labelKey: "nav.stock_count_items" },
     { href: "/inventory-ledger", icon: BookOpen, labelKey: "nav.inventory_ledger" },
     { href: "/inventory-reports", icon: BarChart3, labelKey: "nav.inventory_reports" },
-    { href: "/forms-printing/inventory", icon: Printer, labelKey: "nav.forms_printing_inventory" },
   ]},
   { titleKey: "nav.group.hr", items: [
     { href: "/hr-dashboard", icon: Gauge, labelKey: "nav.hr_dashboard" },
