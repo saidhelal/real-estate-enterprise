@@ -1,72 +1,56 @@
-import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 import {
-  useListContracts,
-  useListReservations,
-  useListCheques,
+  useListLeads,
+  useListLeadAssignments,
+  useListLeadFollowUps,
+  useListUsers,
   useListUnits,
-  useListCustomers,
-  getListContractsQueryKey,
-  type Contract,
+  useListUnitStatuses,
 } from "@workspace/api-client-react";
-import {
-  saleStage,
-  stageLabel,
-  isLiveStage,
-  trafficLight,
-  formatElapsed,
-  formatRemaining,
-  TRAFFIC_DOT,
-  TRAFFIC_RING,
-  type SaleStage,
-} from "@/lib/sale-workflow";
 import { enumLabel } from "@/lib/enums";
 import {
   UserCheck,
   ArrowRightLeft,
   Megaphone,
   Activity,
-  SlidersHorizontal,
   Home,
   BarChart3,
-  FileSpreadsheet,
-  FileText,
-  Banknote,
-  CheckCircle2,
+  ShieldCheck,
+  CalendarClock,
+  Users,
   AlertTriangle,
+  Inbox,
+  ListChecks,
+  Rocket,
 } from "lucide-react";
 
-/** Ticks every 60s so elapsed / remaining timers stay live. */
-function useNow(intervalMs = 60_000) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), intervalMs);
-    return () => clearInterval(id);
-  }, [intervalMs]);
-  return now;
-}
+const CLOSED_FOLLOWUP = new Set(["done", "completed", "closed", "cancelled"]);
 
-const PIPELINE: SaleStage[] = ["returned", "draft", "pending_finance", "finance_approved", "active"];
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function Kpi({
   icon: Icon,
   label,
   value,
   hint,
+  alert,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | number;
   hint?: string;
+  alert?: boolean;
 }) {
   return (
-    <Card>
+    <Card className={alert && Number(value) > 0 ? "border-amber-400/60" : undefined}>
       <CardHeader className="pb-1">
         <CardTitle className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          <Icon className="h-4 w-4" />
+          <Icon className={`h-4 w-4 ${alert && Number(value) > 0 ? "text-amber-500" : ""}`} />
           {label}
         </CardTitle>
       </CardHeader>
@@ -107,56 +91,64 @@ function AdminTile({
 export default function SalesAdministrationPage() {
   const { language, t } = useLanguage();
   const ar = language === "ar";
-  const now = useNow();
 
   const p = { pageSize: 200 } as const;
-  const { data: contractsData } = useListContracts(p, { query: { queryKey: getListContractsQueryKey(p) } });
-  const { data: reservationsData } = useListReservations(p);
-  const { data: chequesData } = useListCheques(p);
+  const { data: leadsData } = useListLeads(p);
+  const { data: assignmentsData } = useListLeadAssignments(p);
+  const { data: followUpsData } = useListLeadFollowUps(p);
+  const { data: usersData } = useListUsers();
   const { data: unitsData } = useListUnits(p);
-  const { data: customersData } = useListCustomers(p);
+  const { data: unitStatusesData } = useListUnitStatuses(p);
 
-  const contracts = contractsData?.data ?? [];
-  const reservations = reservationsData?.data ?? [];
-  const cheques = chequesData?.data ?? [];
+  const leads = leadsData?.data ?? [];
+  const assignments = assignmentsData?.data ?? [];
+  const followUps = followUpsData?.data ?? [];
+  const users = usersData ?? [];
   const units = unitsData?.data ?? [];
-  const customers = customersData?.data ?? [];
+  const statusCodeById = new Map((unitStatusesData?.data ?? []).map((s) => [s.id, s.code]));
 
-  const customerName = (id: string) => customers.find((c) => c.id === id)?.fullName ?? id;
-  const unitCode = (id: string) => units.find((u) => u.id === id)?.code ?? id;
+  const today = todayISO();
 
-  // Contract stage distribution.
-  const stageCount = (s: SaleStage) => contracts.filter((c) => saleStage(c) === s).length;
-  const liveContracts = contracts.filter((c) => isLiveStage(saleStage(c)));
-  const activeCount = stageCount("active");
+  // ---- Lead distribution ----
+  const unassignedLeads = leads.filter((l) => !l.assignedToUserId);
+  const activeAssignments = assignments.filter((a) => a.isActive);
 
-  // Pipeline value across live + active contracts.
-  const num = (v: string | null | undefined) => {
-    const n = Number(v ?? 0);
-    return Number.isFinite(n) ? n : 0;
-  };
-  const pipelineValue = [...liveContracts, ...contracts.filter((c) => saleStage(c) === "active")]
-    .reduce((sum, c) => sum + num(c.totalPrice), 0);
-  const fmtMoney = (n: number) => n.toLocaleString(ar ? "ar-EG" : "en-US", { maximumFractionDigits: 0 });
+  // ---- Follow-up monitoring ----
+  const openFollowUps = followUps.filter((f) => !CLOSED_FOLLOWUP.has(f.status));
+  const overdueFollowUps = openFollowUps.filter((f) => f.dueDate < today);
+  const dueTodayFollowUps = openFollowUps.filter((f) => f.dueDate === today);
 
-  // SLA / traffic-light escalations: live contracts that are red or orange.
-  const alerts = liveContracts
-    .filter((c) => {
-      const light = trafficLight(c, now);
-      return light === "red" || light === "orange";
+  // ---- Available units (mirror /available-units: status code "available" + salesAvailable) ----
+  const availableUnits = units.filter(
+    (u) =>
+      u.salesAvailable === true &&
+      (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available",
+  );
+
+  const userName = (id: string | null | undefined) =>
+    users.find((u) => u.id === id)?.fullName ?? (ar ? "غير مُسند" : "Unassigned");
+
+  // ---- Team monitoring / employee performance ----
+  const team = users
+    .map((u) => {
+      const assignedLeads = leads.filter((l) => l.assignedToUserId === u.id).length;
+      const repFollowUps = openFollowUps.filter((f) => f.userId === u.id);
+      const repOverdue = repFollowUps.filter((f) => f.dueDate < today).length;
+      return {
+        id: u.id,
+        name: u.fullName,
+        assignedLeads,
+        openFollowUps: repFollowUps.length,
+        overdue: repOverdue,
+      };
     })
-    .sort((a, b) => {
-      const order = { red: 0, orange: 1, yellow: 2, green: 3 } as const;
-      return order[trafficLight(a, now)] - order[trafficLight(b, now)];
-    });
+    .filter((r) => r.assignedLeads > 0 || r.openFollowUps > 0)
+    .sort((a, b) => b.assignedLeads - a.assignedLeads);
 
-  // Cheque status breakdown.
-  const chequeStatuses = ["received", "post_dated", "under_collection", "deposited", "cleared", "returned", "cancelled", "replaced"];
-  const chequeCount = (s: string) => cheques.filter((c) => c.status === s).length;
-  const activeReservations = reservations.filter((r) => r.status === "active" || r.status === "confirmed").length;
-
-  const elapsedFrom = (c: Contract) => c.submittedToFinanceAt ?? c.contractDate;
-  const maxStage = Math.max(1, ...PIPELINE.map((s) => stageCount(s)));
+  // Lead status distribution (CRM pipeline of leads, not contracts).
+  const leadStatuses = Array.from(new Set(leads.map((l) => l.status)));
+  const leadStatusCount = (s: string) => leads.filter((l) => l.status === s).length;
+  const maxLeadStatus = Math.max(1, ...leadStatuses.map((s) => leadStatusCount(s)));
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -164,108 +156,107 @@ export default function SalesAdministrationPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("nav.sales_administration")}</h1>
         <p className="text-sm text-muted-foreground">
           {ar
-            ? "لوحة متابعة المبيعات: المؤشرات، مسار الصفقات، تنبيهات اتفاقية الخدمة، وأدوات التشغيل."
-            : "Sales operations cockpit: KPIs, deal pipeline, SLA alerts, and operational tools."}
+            ? "مركز إدارة المبيعات التشغيلي: توزيع العملاء، متابعة الفريق، مؤشرات الأداء، المتابعات، الوحدات المتاحة، التقارير، والصلاحيات."
+            : "Operational sales management console: lead distribution, team monitoring, performance KPIs, follow-ups, available units, reports, and permissions."}
         </p>
       </div>
 
       {/* KPIs */}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <Kpi icon={FileText} label={ar ? "مبيعات نشطة" : "Active Sales"} value={activeCount} hint={ar ? "عقود مفعّلة" : "Activated contracts"} />
-        <Kpi icon={Banknote} label={ar ? "بانتظار المالية" : "In Finance"} value={stageCount("pending_finance")} hint={ar ? "صندوق وارد المالية" : "Finance inbox"} />
-        <Kpi icon={CheckCircle2} label={ar ? "بانتظار القانونية" : "In Legal"} value={stageCount("finance_approved")} hint={ar ? "معتمد ماليًا" : "Finance approved"} />
-        <Kpi icon={ArrowRightLeft} label={ar ? "مسودة / معاد" : "Draft / Returned"} value={stageCount("draft") + stageCount("returned")} hint={ar ? "لدى المبيعات" : "With sales"} />
-        <Kpi icon={Home} label={ar ? "حجوزات نشطة" : "Active Reservations"} value={activeReservations} hint={`${units.length} ${ar ? "وحدة" : "units"}`} />
-        <Kpi icon={BarChart3} label={ar ? "قيمة المسار" : "Pipeline Value"} value={fmtMoney(pipelineValue)} hint={ar ? "عقود حيّة ونشطة" : "Live + active"} />
+        <Kpi icon={Inbox} label={ar ? "إجمالي العملاء" : "Total Leads"} value={leads.length} hint={ar ? "العملاء المحتملون" : "Prospective leads"} />
+        <Kpi icon={AlertTriangle} label={ar ? "عملاء بدون إسناد" : "Unassigned Leads"} value={unassignedLeads.length} hint={ar ? "بحاجة لتوزيع" : "Need distribution"} alert />
+        <Kpi icon={UserCheck} label={ar ? "إسنادات نشطة" : "Active Assignments"} value={activeAssignments.length} hint={ar ? "عملاء مُسندون" : "Leads assigned"} />
+        <Kpi icon={CalendarClock} label={ar ? "متابعات مفتوحة" : "Open Follow-ups"} value={openFollowUps.length} hint={`${dueTodayFollowUps.length} ${ar ? "اليوم" : "due today"}`} />
+        <Kpi icon={AlertTriangle} label={ar ? "متابعات متأخرة" : "Overdue Follow-ups"} value={overdueFollowUps.length} hint={ar ? "تجاوزت الموعد" : "Past due date"} alert />
+        <Kpi icon={Home} label={ar ? "وحدات متاحة" : "Available Units"} value={availableUnits.length} hint={ar ? "جاهزة لبدء البيع" : "Ready to start sale"} />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Pipeline distribution */}
+        {/* Team monitoring / employee performance */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-              {ar ? "توزيع مسار الصفقات" : "Deal Pipeline"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {PIPELINE.map((s) => {
-              const c = stageCount(s);
-              return (
-                <div key={s} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <span>{stageLabel(s, ar)}</span>
-                    <span className="tabular-nums text-muted-foreground">{c}</span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-primary" style={{ width: `${(c / maxStage) * 100}%` }} />
-                  </div>
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-
-        {/* Cheque status breakdown */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Banknote className="h-4 w-4 text-muted-foreground" />
-              {ar ? "حالة الشيكات" : "Cheque Status"}
+              <Users className="h-4 w-4 text-muted-foreground" />
+              {ar ? "متابعة الفريق وأداء الموظفين" : "Team Monitoring & Performance"}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {cheques.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{ar ? "لا توجد شيكات" : "No cheques"}</p>
+            {team.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{ar ? "لا توجد بيانات فريق بعد." : "No team activity yet."}</p>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
-                {chequeStatuses.filter((s) => chequeCount(s) > 0).map((s) => (
-                  <div key={s} className="flex items-center justify-between rounded-md border p-2 text-sm">
-                    <span>{enumLabel(s, language)}</span>
-                    <Badge variant="secondary" className="tabular-nums">{chequeCount(s)}</Badge>
+              <div className="space-y-1">
+                <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 px-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <span>{ar ? "الموظف" : "Employee"}</span>
+                  <span className="text-end">{ar ? "عملاء" : "Leads"}</span>
+                  <span className="text-end">{ar ? "متابعات" : "Open"}</span>
+                  <span className="text-end">{ar ? "متأخر" : "Late"}</span>
+                </div>
+                {team.map((r) => (
+                  <div key={r.id} className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-x-3 rounded-md border p-2 text-sm">
+                    <span className="truncate font-medium">{r.name}</span>
+                    <span className="text-end tabular-nums">{r.assignedLeads}</span>
+                    <span className="text-end tabular-nums">{r.openFollowUps}</span>
+                    <span className={`text-end tabular-nums ${r.overdue > 0 ? "font-medium text-amber-500" : "text-muted-foreground"}`}>{r.overdue}</span>
                   </div>
                 ))}
               </div>
             )}
           </CardContent>
         </Card>
+
+        {/* Lead status distribution */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              {ar ? "توزيع حالات العملاء" : "Lead Status Distribution"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {leadStatuses.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{ar ? "لا يوجد عملاء بعد." : "No leads yet."}</p>
+            ) : (
+              leadStatuses.map((s) => {
+                const c = leadStatusCount(s);
+                return (
+                  <div key={s} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span>{enumLabel(s, language)}</span>
+                      <span className="tabular-nums text-muted-foreground">{c}</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div className="h-full rounded-full bg-primary" style={{ width: `${(c / maxLeadStatus) * 100}%` }} />
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </CardContent>
+        </Card>
       </div>
 
-      {/* SLA / traffic-light escalations */}
+      {/* Alerts: follow-up monitoring */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-base">
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-            {ar ? "تنبيهات المتابعة (اتفاقية الخدمة)" : "SLA Escalations"}
+            {ar ? "تنبيهات المتابعة" : "Follow-up Alerts"}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {alerts.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{ar ? "لا توجد تنبيهات — كل الصفقات ضمن المدة." : "No alerts — all deals within SLA."}</p>
+          {overdueFollowUps.length === 0 && dueTodayFollowUps.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{ar ? "لا توجد متابعات متأخرة أو مستحقة اليوم." : "No overdue or due-today follow-ups."}</p>
           ) : (
             <div className="space-y-2">
-              {alerts.map((c) => {
-                const light = trafficLight(c, now);
-                const stage = saleStage(c);
+              {[...overdueFollowUps, ...dueTodayFollowUps].slice(0, 12).map((f) => {
+                const overdue = f.dueDate < today;
                 return (
-                  <div key={c.id} className={`rounded-md border p-3 ${TRAFFIC_RING[light]}`}>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2 font-medium">
-                        <span className={`h-2.5 w-2.5 rounded-full ${TRAFFIC_DOT[light]}`} title={light} />
-                        {c.code}
-                      </span>
-                      <Badge variant={stage === "returned" ? "destructive" : "outline"}>{stageLabel(stage, ar)}</Badge>
-                    </div>
-                    <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
-                      <span>{ar ? "العميل" : "Customer"}: {customerName(c.customerId)}</span>
-                      <span>{ar ? "الوحدة" : "Unit"}: {unitCode(c.unitId)}</span>
-                      <span>{ar ? "المنقضي" : "Elapsed"}: {formatElapsed(elapsedFrom(c), ar, now)}</span>
-                      {stage === "pending_finance" && c.financeSlaDueAt ? (
-                        <span className={light === "red" ? "font-medium text-red-500" : ""}>
-                          SLA: {formatRemaining(c.financeSlaDueAt, ar, now)}
-                        </span>
-                      ) : null}
-                    </div>
+                  <div key={f.id} className={`flex flex-wrap items-center gap-2 rounded-md border p-2 text-sm ${overdue ? "border-amber-400/50" : ""}`}>
+                    <Badge variant={overdue ? "destructive" : "secondary"}>{overdue ? (ar ? "متأخر" : "Overdue") : (ar ? "اليوم" : "Today")}</Badge>
+                    <span className="text-muted-foreground">{f.dueDate}</span>
+                    <span className="font-medium">{userName(f.userId)}</span>
+                    {f.notes ? <span className="truncate text-muted-foreground">{f.notes}</span> : null}
+                    <Badge variant="outline" className="ms-auto">{enumLabel(f.status, language)}</Badge>
                   </div>
                 );
               })}
@@ -277,10 +268,11 @@ export default function SalesAdministrationPage() {
       {/* Operational tools */}
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          {ar ? "إدارة العملاء المحتملين" : "Lead Operations"}
+          {ar ? "توزيع العملاء والمتابعة" : "Lead Distribution & Follow-up"}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <AdminTile icon={UserCheck} title={ar ? "إسناد العملاء" : "Lead Assignment"} desc={ar ? "إسناد وإعادة إسناد العملاء للمندوبين" : "Assign and reassign leads to representatives"} href="/lead-assignments" />
+          <AdminTile icon={UserCheck} title={ar ? "توزيع العملاء" : "Lead Distribution"} desc={ar ? "إسناد وإعادة توزيع العملاء على الفريق" : "Assign and redistribute leads across the team"} href="/lead-assignments" />
+          <AdminTile icon={ListChecks} title={ar ? "متابعات العملاء" : "Follow-up Monitoring"} desc={ar ? "مراقبة المتابعات المستحقة والمتأخرة" : "Track due and overdue follow-ups"} href="/lead-follow-ups" />
           <AdminTile icon={ArrowRightLeft} title={ar ? "تحويل العملاء" : "Lead Conversions"} desc={ar ? "تحويل العملاء المحتملين إلى عملاء" : "Convert leads into customers"} href="/lead-conversions" />
           <AdminTile icon={Megaphone} title={ar ? "مصادر العملاء" : "Lead Sources"} desc={ar ? "إدارة مصادر وقنوات العملاء" : "Manage lead sources and channels"} href="/lead-sources" />
           <AdminTile icon={Activity} title={ar ? "أنشطة العملاء" : "Lead Activities"} desc={ar ? "سجل التواصل والأنشطة" : "Communication and activity log"} href="/lead-activities" />
@@ -289,21 +281,20 @@ export default function SalesAdministrationPage() {
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          {ar ? "المخزون والوحدات" : "Inventory & Units"}
+          {ar ? "الوحدات المتاحة" : "Available Units"}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <AdminTile icon={SlidersHorizontal} title={ar ? "نشر الوحدات المتاحة" : "Available Unit Publishing"} desc={ar ? "نشر الوحدات للبيع عبر مركز إدخال البيانات" : "Publish units for sale via the Data Entry Center"} href="/data-entry-center" />
-          <AdminTile icon={Home} title={ar ? "تعديل وحدة (طوارئ)" : "Emergency Unit Correction"} desc={ar ? "تصحيح بيانات الوحدة عند تعذر مركز إدخال البيانات" : "Correct unit data when the Data Entry Center is unavailable"} href="/units" />
+          <AdminTile icon={Rocket} title={ar ? "الوحدات المتاحة وبدء البيع" : "Available Units & Start Sale"} desc={ar ? "استعراض الوحدات المتاحة وبدء عملية البيع" : "Review available units and launch the sales workflow"} href="/available-units" />
         </div>
       </section>
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          {ar ? "التقارير" : "Reports"}
+          {ar ? "التقارير والصلاحيات" : "Reports & Permissions"}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <AdminTile icon={BarChart3} title={ar ? "تقارير ومؤشرات" : "Reports & KPIs"} desc={ar ? "مؤشرات الأداء وتقارير المبيعات" : "Performance indicators and sales reports"} href="/crm-reports" />
-          <AdminTile icon={FileSpreadsheet} title={ar ? "التقارير المالية" : "Financial Reports"} desc={ar ? "تقارير مالية مع تصدير PDF و Excel" : "Financial reports with PDF and Excel export"} href="/financial-reports" />
+          <AdminTile icon={ShieldCheck} title={ar ? "الأدوار والصلاحيات" : "Role Permissions"} desc={ar ? "إدارة أدوار وصلاحيات فريق المبيعات" : "Manage sales team roles and permissions"} href="/roles" />
         </div>
       </section>
     </div>

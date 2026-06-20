@@ -59,3 +59,4 @@
 - [API stability framework](api-stability-framework.md) — startup diagnostics+DB retry, livez/readyz/metrics probes, guarded module mounting, central error handler, uncaught→graceful-shutdown; keep router static-import (bundled deploy + supertest imports app sync).
 - [Data Entry Center wizard](data-entry-center.md) — guided bulk master-data entry ONLY (no sales/reservation/contract/installment); resumable serverId-skip commit.
 - [Approval-workflow status integrity](workflow-status-integrity.md) — status owns authz: server-force initial status on create; live-claim guards include ALL pre-terminal statuses; side-effect rows born non-active; escalation unions acting+originating audiences.
+- [Sales Admin page scope](sales-admin-scope.md) — /sales-administration is CRM-ops only (leads/team/follow-ups/available-units+Start Sale/reports/roles); no contract/finance/cheque/legal — those stay in Finance/Legal/contract board.
