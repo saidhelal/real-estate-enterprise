@@ -1,0 +1,462 @@
+Continue implementation.
+
+========================================================
+FINAL CRM IMPLEMENTATION
+PRODUCTION READY
+DESIGN FREEZE
+=============
+
+IMPORTANT
+
+Architecture is FINAL.
+
+Do NOT redesign.
+
+Do NOT inspect the repository again.
+
+Do NOT duplicate modules.
+
+Do NOT duplicate APIs.
+
+Do NOT duplicate database tables.
+
+Reuse the existing ERP completely.
+
+Optimize execution time.
+
+Complete implementation only.
+
+========================================================
+
+CRM must be Production Ready.
+
+No deferred work.
+
+No placeholders.
+
+No TODOs.
+
+========================================================
+
+1. ROLE LANDING
+
+Sales Representative
+→ My Work
+
+Sales Administration
+→ Sales Administration
+
+Sales Manager
+→ CRM Dashboard
+
+Executive Manager
+→ Executive Dashboard
+
+Owner
+→ Executive Dashboard
+
+========================================================
+
+2. AVAILABLE UNITS
+
+Available Units contains ONLY units available for sale.
+
+Every unit MUST contain ONE action only:
+
+START SALE
+
+When Start Sale is pressed:
+
+Lock the unit immediately.
+
+Unit status becomes:
+
+Pending Sale
+
+The unit disappears immediately from Available Units.
+
+No other salesperson may start another sale for the same unit.
+
+========================================================
+
+3. COMPLETE SALES WORKFLOW
+
+Start Sale
+
+↓
+
+Customer Selection
+
+↓
+
+Price Review
+
+↓
+
+Discount
+
+↓
+
+Payment Method
+
+↓
+
+Cash
+
+or
+
+Partial Cash
+
+or
+
+Installments
+
+or
+
+Cash + Installments
+
+↓
+
+Automatic Installment Generation
+
+↓
+
+Cheque Registration
+
+↓
+
+Submit To Finance
+
+========================================================
+
+4. INSTALLMENTS
+
+Support:
+
+Monthly
+
+Quarterly
+
+Semi Annual
+
+Annual
+
+Custom
+
+Unlimited installment count.
+
+Generate due dates automatically.
+
+========================================================
+
+5. CHEQUES
+
+Each installment supports:
+
+Cheque Number
+
+Cheque Amount
+
+Issue Date
+
+Due Date
+
+Bank
+
+Branch
+
+Drawer
+
+Cheque Status
+
+Received
+
+Deposited
+
+Collected
+
+Returned
+
+Cancelled
+
+Replacement Cheque
+
+Notes
+
+Automatically visible in Finance.
+
+========================================================
+
+6. FINANCE WORKFLOW
+
+Sales submits only.
+
+Finance receives.
+
+Finance confirms:
+
+Cash received
+
+Cheque received
+
+Down payment received
+
+Finance may:
+
+Approve
+
+Return
+
+Reject
+
+No contract may proceed before Finance Approval.
+
+========================================================
+
+7. LEGAL WORKFLOW
+
+Legal receives only after Finance Approval.
+
+Workflow:
+
+Draft
+
+↓
+
+Review
+
+↓
+
+Awaiting Documents
+
+↓
+
+Approved
+
+↓
+
+Issued
+
+↓
+
+Activated
+
+Only after Activation:
+
+Unit Status automatically changes:
+
+Pending Sale
+
+↓
+
+Sold
+
+========================================================
+
+8. IF FINANCE RETURNS
+
+Workflow returns to Sales.
+
+Unit remains:
+
+Pending Sale
+
+NOT Available.
+
+========================================================
+
+9. IF LEGAL RETURNS
+
+Workflow returns to Sales.
+
+Unit remains:
+
+Pending Sale
+
+NOT Available.
+
+========================================================
+
+10. IF SALE IS CANCELLED
+
+Automatically:
+
+Pending Sale
+
+↓
+
+Available
+
+Unit appears again inside Available Units.
+
+========================================================
+
+11. SALES ADMINISTRATION
+
+Fully operational.
+
+No placeholders.
+
+Functions:
+
+Lead Import
+
+Excel Import
+
+Lead Assignment
+
+Lead Reassignment
+
+Duplicate Cleanup
+
+Bulk Update
+
+Unit Publishing
+
+Emergency Unit Editing
+
+Data Validation
+
+Operational Reports
+
+Daily Reports
+
+Weekly Reports
+
+Monthly Reports
+
+Export PDF
+
+Export Excel
+
+Email Reports
+
+========================================================
+
+12. MY WORK
+
+Default working screen.
+
+Contains:
+
+Assigned Leads
+
+Today's Calls
+
+Today's Meetings
+
+Today's Visits
+
+Overdue Follow-ups
+
+Finance Returns
+
+Legal Actions
+
+Contracts Ready
+
+Manager Tasks
+
+Priority Customers
+
+Upcoming Appointments
+
+Every item opens directly to its working page.
+
+========================================================
+
+13. LIVE OPERATION MONITOR
+
+Implement now.
+
+Traffic Light System.
+
+Green
+
+Yellow
+
+Orange
+
+Red
+
+========================================================
+
+14. ESCALATION
+
+Automatic escalation.
+
+Employee
+
+↓
+
+Manager
+
+↓
+
+Executive Manager
+
+↓
+
+Owner
+
+SLA configurable.
+
+========================================================
+
+15. LIVE TIMER
+
+Every delayed item displays:
+
+Days
+
+Hours
+
+Minutes
+
+========================================================
+
+16. CRITICAL ISSUES
+
+Visible only for:
+
+Manager
+
+Executive Manager
+
+Owner
+
+Display only RED items.
+
+Each issue opens directly.
+
+========================================================
+
+17. LIVE DASHBOARD
+
+Dashboard displays LIVE operational indicators.
+
+Not static counters.
+
+========================================================
+
+18. VALIDATION
+
+Validate CRM only.
+
+Run targeted smoke tests.
+
+Run architect review.
+
+Run typecheck.
+
+Create checkpoint.
+
+Mark CRM COMPLETE only after all validation passes.
+
+========================================================
+
+Do NOT perform repository exploration again.
+
+Do NOT redesign.
+
+Complete implementation immediately.

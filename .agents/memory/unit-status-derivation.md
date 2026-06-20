@@ -5,7 +5,7 @@ description: units.unitStatusId is derived from the strongest live claim; sales 
 
 # Unit status is derived, not authored
 
-`units.unitStatusId` must always reflect the strongest live claim on the unit, resolved by `recomputeUnitStatus(tx, unitId)` (in `artifacts/api-server/src/lib/integrations.ts`): an active/draft **contract** → `sold` (wins), else an active/confirmed **reservation** → `reserved`, else `available`. It writes only on change and is best-effort (skips if the unit or the company's `unit_statuses` code row is missing).
+`units.unitStatusId` must always reflect the strongest live claim on the unit, resolved by `recomputeUnitStatus(tx, unitId)` (in `artifacts/api-server/src/lib/integrations.ts`): an **active** contract → `sold` (wins); an in-progress contract (`draft`/`pending_finance`/`finance_approved`) → `pending_sale`; else an active/confirmed **reservation** → `reserved`; else `available`. It writes only on change and is best-effort (skips if the unit or the company's `unit_statuses` code row is missing). `pending_sale` is the unit "lock" while a sale is mid-workflow — it only becomes `sold` at Legal activation, and a cancellation frees it back to `available`.
 
 **Why:** before this, reservation/contract create/cancel/transfer left unit status stale (e.g. a unit with an active contract still showing `available`). Status is a projection of contracts+reservations, so any handler that hand-sets a status code drifts from reality.
 
@@ -23,6 +23,14 @@ The lifecycle action is `POST /units/{id}/status` (operationId `setUnitStatus`, 
 **Why:** the seed provisions 7 statuses but derivation only ever produced 3; without preservation the 4 manual states were only assignable by editing a unit and any recompute wiped them.
 
 **How to apply:** when adding new derived call sites, the early-return already protects overrides; to add a new manual/terminal status, append its code to `MANUAL_UNIT_STATUS_CODES` AND the `UnitStatusChange` enum in openapi.yaml.
+
+# Single-claim invariant must be enforced by unit, not just by reservation
+
+A unit may carry at most one live contract. The direct `/contracts` create guards this by `unitId` against `LIVE_CONTRACT_STATUSES`, but `reservations/:id/convert` originally checked only for an existing contract by `reservationId`. Since direct-create does NOT mark the reservation `converted`, a direct-create followed by converting the still-active reservation would mint a second live draft contract on the same unit. The convert handler now also checks live-contract-by-`unitId` (inside the tx, after locking the reservation) and 409s.
+
+**Why:** spec requires "no other salesperson may start another sale for the same unit"; the by-reservation check alone did not cover the mixed direct-create + convert path.
+
+**How to apply:** any new path that mints a contract must enforce the single-claim guard by `unitId` (not just reservationId) inside the write transaction. (Checks are still pre-tx in create handlers, so true concurrent races would need a DB partial-unique index for full safety — not yet added.)
 
 # Legal Affairs auto-registration
 

@@ -960,6 +960,23 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
       .from(contractsTable)
       .where(and(eq(contractsTable.reservationId, id), eq(contractsTable.isDeleted, false)));
     if (existingContract) { conflict = "A contract already exists for this reservation"; return null; }
+    // Enforce the single-claim invariant by unit, not just by reservation: a unit
+    // may carry at most one live contract. Without this, a direct `/contracts`
+    // create (which does not mark the reservation converted) followed by a convert
+    // of the still-active reservation would mint a second live draft contract on
+    // the same unit. Mirror the guard used in the direct-create handler.
+    const [liveUnitContract] = await tx
+      .select({ id: contractsTable.id })
+      .from(contractsTable)
+      .where(
+        and(
+          eq(contractsTable.unitId, reservation.unitId),
+          eq(contractsTable.isDeleted, false),
+          inArray(contractsTable.status, LIVE_CONTRACT_STATUSES as unknown as string[]),
+        ),
+      )
+      .limit(1);
+    if (liveUnitContract) { conflict = "Unit is already under a contract"; return null; }
     const code = parsed.data.code || (await nextDocumentNumber("Contract")) || `CON-${Date.now()}`;
     const [created] = await tx
       .insert(contractsTable)
