@@ -81,7 +81,6 @@ const MODULES: ModuleCard[] = [
   { titleKey: "home.mod.finance", icon: Calculator, href: "/accounting-dashboard", accent: "text-amber-600 bg-amber-500/10 dark:text-amber-400", countKey: "finance" },
   { titleKey: "home.mod.procurement", icon: ShoppingCart, href: "/procurement-dashboard", accent: "text-orange-600 bg-orange-500/10 dark:text-orange-400", countKey: "procurement" },
   { titleKey: "home.mod.engineering", icon: Compass, href: "/engineering-dashboard", accent: "text-cyan-600 bg-cyan-500/10 dark:text-cyan-400" },
-  { titleKey: "home.mod.construction", icon: HardHat, href: "/construction-dashboard", accent: "text-yellow-600 bg-yellow-500/10 dark:text-yellow-400" },
   { titleKey: "home.mod.hr", icon: UserCog, href: "/hr-dashboard", accent: "text-violet-600 bg-violet-500/10 dark:text-violet-400", countKey: "hr" },
   { titleKey: "home.mod.legal", icon: Scale, href: "/legal-dashboard", accent: "text-indigo-600 bg-indigo-500/10 dark:text-indigo-400", countKey: "legal" },
   { titleKey: "home.mod.customer_service", icon: MessageSquare, href: "/customer-service-dashboard", accent: "text-rose-600 bg-rose-500/10 dark:text-rose-400", countKey: "customer_service" },

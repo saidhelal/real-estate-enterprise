@@ -121,6 +121,7 @@ const MODULE_LABELS: Record<string, { en: string; ar: string }> = {
 const MODULE_GROUPS: Record<string, string[]> = {
   procurement: ["procurement", "inventory"],
   finance: ["finance", "fixedAssets"],
+  engineering: ["engineering", "construction"],
 };
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {

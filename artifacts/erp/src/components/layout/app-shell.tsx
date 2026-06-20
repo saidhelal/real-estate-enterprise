@@ -147,8 +147,6 @@ const RAW_NAV_GROUPS = [
     { href: "/material-submittals", icon: Microscope, labelKey: "nav.material_submittals" },
     { href: "/consultant-responses", icon: MessageSquare, labelKey: "nav.consultant_responses" },
     { href: "/engineering-progress", icon: Gauge, labelKey: "nav.engineering_progress" },
-  ]},
-  { titleKey: "nav.group.construction", items: [
     { href: "/construction-dashboard", icon: Hammer, labelKey: "nav.construction_dashboard" },
     { href: "/contractors", icon: HardHat, labelKey: "nav.contractors" },
     { href: "/contractor-contracts", icon: FileSignature, labelKey: "nav.contractor_contracts" },
@@ -379,7 +377,6 @@ const FORMS_MODULE_BY_GROUP: Record<string, string> = {
   "nav.group.real_estate": "realEstate",
   "nav.group.financial_management": "finance",
   "nav.group.engineering": "engineering",
-  "nav.group.construction": "construction",
   "nav.group.procurement": "procurement",
   "nav.group.hr": "hr",
   "nav.group.legal": "legal",
