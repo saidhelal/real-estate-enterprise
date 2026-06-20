@@ -23,6 +23,7 @@
 - [Architect codegen diff false positives](architect-codegen-diff-falsepositive.md) — code-review may flag scope violations from regenerated all-module codegen context; verify against git status, not the diff.
 - [Orval body naming](orval-body-naming.md) — name OpenAPI request-body schemas as nouns (not *Body) to avoid operationId-derived collisions; OkResponse is type-only, don't .parse it.
 - [Accounting reversal & reports](accounting-reversal-reports.md) — ledger aggregations must count status IN (posted,reversed) or reversals leave a phantom balance; auto-posting is idempotent per (sourceType,sourceId).
+- [Account-mapping coverage](account-mapping-coverage.md) — every postAutomaticEntry eventKey needs a DEFAULT_MAPPINGS row or GL posting silently skips (contractor-extract bug).
 - [Report export Excel/PDF](report-export.md) — shared ReportExport descriptor; PDF via HTML window.print (Arabic/RTL), Excel via SheetJS; GL export needs pageSize 200.
 - [Two-phase cheque posting](cheque-two-phase-posting.md) — cheque ledger splits collection vs clearing legs by distinct sourceType to bridge accounts; reverse both on return/cancel.
 - [Portal attachment IDOR](portal-attachment-idor.md) — multi-tenant object-storage uploads must authorize via an immutable owner mapping (object_path→customerId), not forgeable record references.

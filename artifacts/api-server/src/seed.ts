@@ -1316,6 +1316,7 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["payment.cash", "2010", "1010", "Cash payment to supplier/contractor"],
   ["payment.bank", "2010", "1020", "Bank payment to supplier/contractor"],
   ["payment.cheque", "2010", "2030", "Cheque payment to supplier/contractor"],
+  ["engineering.contractor_invoice", "1040", "2010", "Contractor progress invoice (extract/مستخلص) — capitalize construction cost to Inventory/WIP vs Accounts Payable"],
   ["invoice.customer.revenue", "1030", "4010", "Customer invoice revenue"],
   ["invoice.customer.tax", "1030", "2040", "Customer invoice output VAT"],
   ["invoice.supplier.expense", "5030", "2010", "Supplier invoice expense"],
