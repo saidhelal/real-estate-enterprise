@@ -2350,7 +2350,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.crm_sales": "المبيعات",
     "nav.crm_reports": "التقارير والمؤشرات",
     "nav.ai_sales_assistant": "مساعد المبيعات الذكي",
-    "nav.sales_administration": "إدارة المبيعات",
+    "nav.sales_administration": "إدارة السيلز",
     "nav.lead_sources": "مصادر العملاء",
     "nav.lead_activities": "الأنشطة",
     "nav.lead_follow_ups": "المتابعات",

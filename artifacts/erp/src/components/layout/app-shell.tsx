@@ -53,6 +53,7 @@ const RAW_NAV_GROUPS = [
     { href: "/document-approvals", icon: Inbox, labelKey: "nav.document_approvals" },
   ]},
   { titleKey: "nav.group.sales_crm", items: [
+    { href: "/sales-administration", icon: SlidersHorizontal, labelKey: "nav.sales_administration" },
     { href: "/crm-dashboard", icon: LayoutDashboard, labelKey: "nav.crm_dashboard" },
     { href: "/my-work", icon: ClipboardList, labelKey: "nav.my_work" },
     { href: "/leads", icon: UserPlus, labelKey: "nav.leads" },
@@ -63,7 +64,6 @@ const RAW_NAV_GROUPS = [
     { href: "/legal-approvals", icon: Gavel, labelKey: "nav.legal_approvals" },
     { href: "/crm-reports", icon: BarChart3, labelKey: "nav.crm_reports" },
     { href: "/ai-assistant", icon: Bot, labelKey: "nav.ai_sales_assistant" },
-    { href: "/sales-administration", icon: SlidersHorizontal, labelKey: "nav.sales_administration" },
   ]},
   { titleKey: "nav.group.real_estate", items: [
     { href: "/data-entry-center", icon: SlidersHorizontal, labelKey: "nav.data_entry_center" },
@@ -398,6 +398,8 @@ const FORMS_MODULE_BY_GROUP: Record<string, string> = {
   "nav.group.system_administration": "systemAdministration",
 };
 
+const SALES_ADMIN_HREFS = new Set<string>(["/sales-administration"]);
+
 const AI_NAV_HREFS = new Set<string>([
   "/ai-assistant",
   "/ai-chat-erp",
@@ -460,14 +462,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const canViewAi =
-    !!user?.permissions?.includes("*") || !!user?.permissions?.includes("ai.view");
-  const navGroups = canViewAi
-    ? NAV_GROUPS
-    : NAV_GROUPS.map((group) => ({
-        ...group,
-        items: group.items.filter((item) => !AI_NAV_HREFS.has(item.href)),
-      }));
+  const isWildcard = !!user?.permissions?.includes("*");
+  const canViewAi = isWildcard || !!user?.permissions?.includes("ai.view");
+  // Sales Administration is restricted to Sales Admin / Sales Manager / Executive
+  // Manager / Owner roles (and super admins with the "*" wildcard).
+  const rolesText = (user?.roles ?? []).join(" ").toLowerCase();
+  const canViewSalesAdmin =
+    isWildcard || /sales|admin|manager|owner|executive|director|مبيعات|سيلز|مدير|مالك|تنفيذي/.test(rolesText);
+  const navGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => {
+      if (!canViewAi && AI_NAV_HREFS.has(item.href)) return false;
+      if (!canViewSalesAdmin && SALES_ADMIN_HREFS.has(item.href)) return false;
+      return true;
+    }),
+  }));
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};

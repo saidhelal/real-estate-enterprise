@@ -74,6 +74,7 @@ import {
   PlayCircle,
   FileX,
   UserCog,
+  ClipboardList,
 } from "lucide-react";
 
 const CLOSED_FOLLOWUP = new Set(["done", "completed", "closed", "cancelled"]);
@@ -549,6 +550,7 @@ export default function SalesAdministrationPage() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <AdminTile icon={UserCheck} title={ar ? "توزيع العملاء" : "Lead Distribution"} desc={ar ? "إسناد العملاء الجدد إلى الفريق" : "Assign new leads across the team"} href="/lead-assignments" />
           <AdminTile icon={ArrowRightLeft} title={ar ? "إعادة توزيع العملاء" : "Reassign Leads"} desc={ar ? "إعادة إسناد العملاء بين أعضاء الفريق" : "Redistribute leads between team members"} href="/lead-assignments" />
+          <AdminTile icon={ClipboardList} title={ar ? "المهام اليومية" : "Daily Tasks"} desc={ar ? "مهام الفريق اليومية والمتابعات المستحقة" : "Team daily tasks and due follow-ups"} href="/my-work" />
           <AdminTile icon={ListChecks} title={ar ? "متابعات العملاء" : "Follow-up Monitoring"} desc={ar ? "مراقبة المتابعات المستحقة والمتأخرة" : "Track due and overdue follow-ups"} href="/lead-follow-ups" />
           <AdminTile icon={ArrowRightLeft} title={ar ? "تحويل العملاء" : "Lead Conversions"} desc={ar ? "تحويل العملاء المحتملين إلى عملاء" : "Convert leads into customers"} href="/lead-conversions" />
           <AdminTile icon={Megaphone} title={ar ? "مصادر العملاء" : "Lead Sources"} desc={ar ? "إدارة مصادر وقنوات العملاء" : "Manage lead sources and channels"} href="/lead-sources" />
