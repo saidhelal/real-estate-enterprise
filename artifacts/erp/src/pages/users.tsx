@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListUsers, 
   useCreateUser, 
@@ -178,7 +179,8 @@ export default function UsersPage() {
                       {user.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-2">
+                    <DocumentsRowAction moduleKey="users" sourceId={user.id} />
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListCompanies, 
   useCreateCompany, 
@@ -150,6 +151,7 @@ export default function CompaniesPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
+                    <DocumentsRowAction moduleKey="companies" sourceId={company.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingCompany(company)}>
                       <Pencil className="h-4 w-4" />
                     </Button>

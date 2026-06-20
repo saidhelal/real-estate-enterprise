@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useToast } from "@/hooks/use-toast";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
@@ -425,6 +426,7 @@ export default function PaymentVouchersPage() {
                   <TableCell><Badge variant="outline">{enumLabel(r.paymentMethod, language)}</Badge></TableCell>
                   <TableCell><Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge></TableCell>
                   <TableCell className="text-right space-x-2 whitespace-nowrap">
+                    <DocumentsRowAction moduleKey="payment-vouchers" sourceId={r.id} />
                     {r.status === "draft" && (
                       <>
                         <Button variant="outline" size="sm" disabled={approveMutation.isPending} onClick={() => runAction(approveMutation, r.id, t("acc.approve"))}>{t("acc.approve")}</Button>

@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useToast } from "@/hooks/use-toast";
 import { enumLabel } from "@/lib/enums";
 
@@ -360,6 +361,7 @@ export default function CustomerInvoicesPage() {
                   <TableCell className="text-right">{r.paidAmount}</TableCell>
                   <TableCell><Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge></TableCell>
                   <TableCell className="text-right space-x-2 whitespace-nowrap">
+                    <DocumentsRowAction moduleKey="customer-invoices" sourceId={r.id} />
                     {r.status === "draft" && (
                       <>
                         <Button variant="outline" size="sm" disabled={postMutation.isPending} onClick={() => runAction(postMutation, r.id, t("acc.post"))}>{t("acc.post")}</Button>

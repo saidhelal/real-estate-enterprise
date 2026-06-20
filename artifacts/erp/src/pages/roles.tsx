@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListRoles, 
   useCreateRole, 
@@ -112,6 +113,7 @@ export default function RolesPage() {
                   </TableCell>
                   <TableCell>{role.userCount}</TableCell>
                   <TableCell className="text-right space-x-2">
+                    <DocumentsRowAction moduleKey="roles" sourceId={role.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingRole(role)}>
                       <Pencil className="h-4 w-4" />
                     </Button>

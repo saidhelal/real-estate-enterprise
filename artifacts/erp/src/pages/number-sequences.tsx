@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListNumberSequences, 
   useCreateNumberSequence, 
@@ -107,6 +108,7 @@ export default function NumberSequencesPage() {
                   <TableCell>{seq.nextNumber}</TableCell>
                   <TableCell className="font-mono text-xs bg-muted px-2 py-1 rounded w-fit">{seq.sample}</TableCell>
                   <TableCell className="text-right space-x-2">
+                    <DocumentsRowAction moduleKey="number-sequences" sourceId={seq.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingSequence(seq)}>
                       <Pencil className="h-4 w-4" />
                     </Button>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListFiscalYears, 
   useCreateFiscalYear, 
@@ -113,6 +114,7 @@ export default function FiscalYearsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
+                    <DocumentsRowAction moduleKey="fiscal-years" sourceId={fy.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingFiscalYear(fy)}>
                       <Pencil className="h-4 w-4" />
                     </Button>

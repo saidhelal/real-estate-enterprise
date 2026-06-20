@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListCurrencies, 
   useCreateCurrency, 
@@ -109,6 +110,7 @@ export default function CurrenciesPage() {
                     {currency.isBase && <Badge>{t("currencies.base")}</Badge>}
                   </TableCell>
                   <TableCell className="text-right space-x-2">
+                    <DocumentsRowAction moduleKey="currencies" sourceId={currency.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingCurrency(currency)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
