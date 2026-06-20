@@ -62,12 +62,10 @@ export default function ReservationsPage() {
     value: u.id,
     label: u.name,
     parentValue: u.floorId,
-    // Live CRM inventory = available status AND published for sale. Non-eligible
-    // units are hidden from the picker (kept only if already selected, for edit).
-    hidden: !(
-      (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available" &&
-      u.salesAvailable
-    ),
+    // Live CRM inventory = unit status code "available" (single source of truth).
+    // Non-eligible units are hidden from the picker (kept only if already
+    // selected, for edit).
+    hidden: (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) !== "available",
   }));
   const customerOptions = (customers?.data ?? []).map((c) => ({ value: c.id, label: c.fullName }));
 

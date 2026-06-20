@@ -866,6 +866,11 @@ const UNIT_STATUS_CATALOG = [
   { code: "blocked", name: "Blocked", nameAr: "محظورة" },
   { code: "maintenance", name: "Maintenance", nameAr: "صيانة" },
   { code: "cancelled", name: "Cancelled", nameAr: "ملغاة" },
+  // Business holds: technically available but temporarily withheld from sale.
+  { code: "marketing_hold", name: "Marketing Hold", nameAr: "حجز تسويقي" },
+  { code: "management_hold", name: "Management Hold", nameAr: "حجز إداري" },
+  { code: "legal_hold", name: "Legal Hold", nameAr: "حجز قانوني" },
+  { code: "internal_reservation", name: "Internal Reservation", nameAr: "حجز داخلي" },
 ];
 
 /**

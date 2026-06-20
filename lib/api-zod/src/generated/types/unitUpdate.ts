@@ -29,7 +29,6 @@ export interface UnitUpdate {
   minSellingPrice?: string;
   commission?: string;
   taxes?: string;
-  salesAvailable?: boolean;
   paymentOption?: string;
   collectionMethod?: string;
 }

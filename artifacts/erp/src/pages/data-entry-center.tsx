@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -279,7 +278,6 @@ export default function DataEntryCenterPage() {
                     ...(num(unit.minSellingPrice) ? { minSellingPrice: num(unit.minSellingPrice) } : {}),
                     ...(num(unit.commission) ? { commission: num(unit.commission) } : {}),
                     ...(num(unit.taxes) ? { taxes: num(unit.taxes) } : {}),
-                    salesAvailable: unit.salesAvailable,
                     paymentOption: unit.paymentOption,
                     collectionMethod: unit.collectionMethod,
                     ...(unit.unitStatusId || defaultStatusId
@@ -1166,7 +1164,6 @@ function PricingStep({
   const [minPrice, setMinPrice] = useState("");
   const [commission, setCommission] = useState("");
   const [taxes, setTaxes] = useState("");
-  const [salesAvailable, setSalesAvailable] = useState(true);
   const [paymentOption, setPaymentOption] = useState<PaymentOption>("cash");
   const [collectionMethod, setCollectionMethod] = useState<CollectionMethod>("cash");
 
@@ -1188,7 +1185,6 @@ function PricingStep({
           minSellingPrice: minPrice,
           commission,
           taxes,
-          salesAvailable,
           paymentOption,
           collectionMethod,
         })),
@@ -1268,11 +1264,6 @@ function PricingStep({
             </SelectContent>
           </Select>
         </Field>
-        <Field label={tr("Sales Available", "متاح للبيع")}>
-          <div className="flex h-9 items-center">
-            <Checkbox checked={salesAvailable} onCheckedChange={(c) => setSalesAvailable(c === true)} />
-          </div>
-        </Field>
         <Button onClick={applyToBuilding}>{tr("Apply to Building", "تطبيق على المبنى")}</Button>
       </div>
 
@@ -1295,7 +1286,6 @@ function PricingStep({
                     <TableHead>{tr("Taxes", "الضرائب")}</TableHead>
                     <TableHead>{tr("Total", "الإجمالي")}</TableHead>
                     <TableHead>{tr("Net", "الصافي")}</TableHead>
-                    <TableHead>{tr("Available", "متاح")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1361,12 +1351,6 @@ function PricingStep({
                         </TableCell>
                         <TableCell>{money(total, language)}</TableCell>
                         <TableCell className="font-medium">{money(net, language)}</TableCell>
-                        <TableCell>
-                          <Checkbox
-                            checked={u.salesAvailable}
-                            onCheckedChange={(c) => setU({ salesAvailable: c === true })}
-                          />
-                        </TableCell>
                       </TableRow>
                     );
                   })}

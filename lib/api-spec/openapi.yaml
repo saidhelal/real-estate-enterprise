@@ -26120,7 +26120,6 @@ components:
         minSellingPrice: { type: ["string", "null"] }
         commission: { type: ["string", "null"] }
         taxes: { type: ["string", "null"] }
-        salesAvailable: { type: boolean }
         paymentOption: { type: ["string", "null"] }
         collectionMethod: { type: ["string", "null"] }
         isActive: { type: boolean }
@@ -26152,7 +26151,6 @@ components:
         minSellingPrice: { type: string }
         commission: { type: string }
         taxes: { type: string }
-        salesAvailable: { type: boolean }
         paymentOption: { type: string }
         collectionMethod: { type: string }
 
@@ -26181,7 +26179,6 @@ components:
         minSellingPrice: { type: string }
         commission: { type: string }
         taxes: { type: string }
-        salesAvailable: { type: boolean }
         paymentOption: { type: string }
         collectionMethod: { type: string }
 
@@ -26191,7 +26188,7 @@ components:
       properties:
         statusCode:
           type: string
-          enum: [available, delivered, blocked, maintenance, cancelled]
+          enum: [available, delivered, blocked, maintenance, cancelled, marketing_hold, management_hold, legal_hold, internal_reservation]
 
     UnitListResponse:
       type: object

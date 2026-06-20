@@ -31,6 +31,13 @@ export const MANUAL_UNIT_STATUS_CODES = [
   "blocked",
   "maintenance",
   "cancelled",
+  // Business holds: a unit that is technically available but temporarily hidden
+  // from CRM/Sales. These are deliberate overrides, so the live-claim derivation
+  // must never silently flip them back to "available".
+  "marketing_hold",
+  "management_hold",
+  "legal_hold",
+  "internal_reservation",
 ] as const;
 
 /**

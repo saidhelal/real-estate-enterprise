@@ -46,7 +46,7 @@ export default function CrmDashboardPage() {
 
   const statusCodeById = new Map((unitStatuses?.data ?? []).map((s) => [s.id, s.code]));
   const availableUnits = (units?.data ?? []).filter(
-    (u) => (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available" && u.salesAvailable,
+    (u) => (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available",
   );
   const today = todayKey();
   const dueFollowUps = (followUps?.data ?? []).filter(

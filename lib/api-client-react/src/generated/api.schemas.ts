@@ -1346,7 +1346,6 @@ export interface Unit {
   commission?: string | null;
   /** @nullable */
   taxes?: string | null;
-  salesAvailable?: boolean;
   /** @nullable */
   paymentOption?: string | null;
   /** @nullable */
@@ -1378,7 +1377,6 @@ export interface UnitInput {
   minSellingPrice?: string;
   commission?: string;
   taxes?: string;
-  salesAvailable?: boolean;
   paymentOption?: string;
   collectionMethod?: string;
 }
@@ -1406,7 +1404,6 @@ export interface UnitUpdate {
   minSellingPrice?: string;
   commission?: string;
   taxes?: string;
-  salesAvailable?: boolean;
   paymentOption?: string;
   collectionMethod?: string;
 }
@@ -1420,6 +1417,10 @@ export const UnitStatusChangeStatusCode = {
   blocked: 'blocked',
   maintenance: 'maintenance',
   cancelled: 'cancelled',
+  marketing_hold: 'marketing_hold',
+  management_hold: 'management_hold',
+  legal_hold: 'legal_hold',
+  internal_reservation: 'internal_reservation',
 } as const;
 
 export interface UnitStatusChange {

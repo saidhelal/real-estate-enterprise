@@ -67,8 +67,6 @@ export interface DraftUnit {
   minSellingPrice: string;
   commission: string;
   taxes: string;
-  /** Offered to the CRM sales workflow when true (and status is available). */
-  salesAvailable: boolean;
   /** "cash" | "installments" | "mixed" */
   paymentOption: PaymentOption;
   /** "cash" | "bank_transfer" | "cheque" | "mixed" */
@@ -237,7 +235,6 @@ export function makeUnit(buildingCode: string, floorSegment: string, sequence: n
     minSellingPrice: "",
     commission: "",
     taxes: "",
-    salesAvailable: true,
     paymentOption: "cash",
     collectionMethod: "cash",
     unitStatusId: "",

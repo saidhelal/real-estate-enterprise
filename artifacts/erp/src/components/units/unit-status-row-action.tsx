@@ -21,7 +21,11 @@ type StatusCode =
   | "delivered"
   | "blocked"
   | "maintenance"
-  | "cancelled";
+  | "cancelled"
+  | "marketing_hold"
+  | "management_hold"
+  | "legal_hold"
+  | "internal_reservation";
 
 interface ActionDef {
   code: StatusCode;
@@ -36,6 +40,16 @@ const OVERRIDE_ACTIONS: ActionDef[] = [
   { code: "blocked", en: "Block", ar: "حظر" },
   { code: "maintenance", en: "Send to maintenance", ar: "إرسال للصيانة" },
   { code: "cancelled", en: "Cancel", ar: "إلغاء" },
+];
+
+// Business holds: keep a technically-available unit hidden from CRM/Sales
+// without selling/reserving it. Preserved by the status derivation until
+// released.
+const HOLD_ACTIONS: ActionDef[] = [
+  { code: "marketing_hold", en: "Marketing hold", ar: "حجز تسويقي" },
+  { code: "management_hold", en: "Management hold", ar: "حجز إداري" },
+  { code: "legal_hold", en: "Legal hold", ar: "حجز قانوني" },
+  { code: "internal_reservation", en: "Internal reservation", ar: "حجز داخلي" },
 ];
 
 const RELEASE_ACTION: ActionDef = {
@@ -97,6 +111,15 @@ export function UnitStatusRowAction({ unitId }: UnitStatusRowActionProps) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>{title}</DropdownMenuLabel>
         {OVERRIDE_ACTIONS.map((a) => (
+          <DropdownMenuItem key={a.code} onClick={() => apply(a.code)}>
+            {label(a)}
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel>
+          {language === "ar" ? "حجز مؤقت (إخفاء من البيع)" : "Hold (hide from sales)"}
+        </DropdownMenuLabel>
+        {HOLD_ACTIONS.map((a) => (
           <DropdownMenuItem key={a.code} onClick={() => apply(a.code)}>
             {label(a)}
           </DropdownMenuItem>

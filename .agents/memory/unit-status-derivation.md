@@ -14,15 +14,25 @@ description: units.unitStatusId is derived from the strongest live claim; sales 
 - Never set `unitStatusId` directly to model a sale step — change the contract/reservation and recompute.
 - A contract claim outranks a reservation, so reserving a unit that already has a contract correctly stays `sold` (verified).
 
+# Sales availability is status-only (no publish flag)
+
+There is NO `salesAvailable`/`sales_available` flag — it was removed end-to-end (DB column, OpenAPI Unit/UnitInput/UnitUpdate, POST /units auto-publish logic, and all CRM/Sales/reservation/data-entry frontends). A unit appears in CRM/Sales **iff its status code is `available`**; any other code auto-hides it. Frontend filters key on the status code string `"available"` only.
+
+**Why:** dual-source drift — a unit could be `available` by status but unpublished by flag (or vice-versa). Status is the single source of truth.
+
+**How to apply:** to temporarily hide an otherwise-available unit, set a business-hold status (below) — never re-introduce a publish boolean.
+
 # Manual lifecycle overrides survive recompute
 
-Four unit statuses are explicit user actions, NOT derived: `delivered`, `blocked`, `maintenance`, `cancelled` (`MANUAL_UNIT_STATUS_CODES` in integrations.ts). `recomputeUnitStatus` reads the unit's *current* status code (left-joins `unit_statuses`) and returns early if it's one of these — so a stray reservation/contract change can't silently flip a delivered/blocked unit back to available/reserved/sold. Pass `{ force: true }` to bypass.
+These unit statuses are explicit user actions, NOT derived: `delivered`, `blocked`, `maintenance`, `cancelled`, plus the business holds `marketing_hold`, `management_hold`, `legal_hold`, `internal_reservation` (`MANUAL_UNIT_STATUS_CODES` in integrations.ts). `recomputeUnitStatus` reads the unit's *current* status code (left-joins `unit_statuses`) and returns early if it's one of these — so a stray reservation/contract change can't silently flip a held/delivered/blocked unit back to available/reserved/sold. Pass `{ force: true }` to bypass.
 
-The lifecycle action is `POST /units/{id}/status` (operationId `setUnitStatus`, body `{ statusCode }`, gated by `units.update`): the four override codes set directly; `available` is a *release* that calls `recomputeUnitStatus(tx, id, { force: true })` to re-derive (may resolve to reserved/sold if a live claim exists). UI: `UnitStatusRowAction` dropdown on the Units page.
+The holds exist specifically to hide an available unit from sales without selling/reserving it (replacing the old publish flag). They are seeded per-company in `UNIT_STATUS_CATALOG` (seed.ts, EN/AR labels).
+
+The lifecycle action is `POST /units/{id}/status` (operationId `setUnitStatus`, body `{ statusCode }`, gated by `units.update`): any override/hold code is set directly (looked up in `unit_statuses` by code, 400 if not configured for the company); `available` is a *release* that calls `recomputeUnitStatus(tx, id, { force: true })` to re-derive (may resolve to reserved/sold if a live claim exists). UI: `UnitStatusRowAction` dropdown on the Units page (overrides + a "Hold (hide from sales)" group + Release).
 
 **Why:** the seed provisions 7 statuses but derivation only ever produced 3; without preservation the 4 manual states were only assignable by editing a unit and any recompute wiped them.
 
-**How to apply:** when adding new derived call sites, the early-return already protects overrides; to add a new manual/terminal status, append its code to `MANUAL_UNIT_STATUS_CODES` AND the `UnitStatusChange` enum in openapi.yaml.
+**How to apply:** when adding new derived call sites, the early-return already protects overrides; to add a new manual/terminal/hold status, append its code to `MANUAL_UNIT_STATUS_CODES` (integrations.ts), the `UNIT_STATUS_CATALOG` (seed.ts), the `UnitStatusChange` enum in openapi.yaml (then regenerate), and the `UnitStatusRowAction` UI list. Regenerating after an enum change: orval cleans the output folder first, so `lib/api-client-react/src/generated/api.ts` is briefly absent — Vite "Failed to load generated/api.ts" pre-transform errors mid-codegen are transient; restart the web workflows after codegen finishes to clear the stale module graph.
 
 # Single-claim invariant must be enforced by unit, not just by reservation
 

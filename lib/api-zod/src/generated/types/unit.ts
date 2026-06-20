@@ -45,7 +45,6 @@ export interface Unit {
   commission?: string | null;
   /** @nullable */
   taxes?: string | null;
-  salesAvailable?: boolean;
   /** @nullable */
   paymentOption?: string | null;
   /** @nullable */

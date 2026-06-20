@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,7 +33,6 @@ import {
   useListContracts,
   useListCustomers,
   useListCompanies,
-  useUpdateUnit,
   useUpdateCustomer,
   useCreateContractCancellation,
   getListUnitsQueryKey,
@@ -171,7 +169,6 @@ export default function SalesAdministrationPage() {
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
 
-  const updateUnit = useUpdateUnit();
   const updateCustomer = useUpdateCustomer();
   const cancelSale = useCreateContractCancellation();
 
@@ -195,11 +192,9 @@ export default function SalesAdministrationPage() {
   const overdueFollowUps = openFollowUps.filter((f) => f.dueDate < today);
   const dueTodayFollowUps = openFollowUps.filter((f) => f.dueDate === today);
 
-  // ---- Available units (mirror /available-units: status code "available" + salesAvailable) ----
+  // ---- Available units (single source of truth: status code "available") ----
   const availableUnits = units.filter(
-    (u) =>
-      u.salesAvailable === true &&
-      (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available",
+    (u) => (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available",
   );
 
   // ---- Active sales monitoring (read-only; management lives in the workflow board) ----
@@ -299,24 +294,6 @@ export default function SalesAdministrationPage() {
       },
     );
   };
-
-  // ---- Unit publishing controls (toggle salesAvailable) ----
-  const togglePublish = (unitId: string, next: boolean) => {
-    updateUnit.mutate(
-      { id: unitId, data: { salesAvailable: next } },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getListUnitsQueryKey() });
-          queryClient.invalidateQueries({ queryKey: getListUnitsQueryKey(p) });
-        },
-        onError: () => toast({ title: t("common.error"), variant: "destructive" }),
-      },
-    );
-  };
-  // Only units whose status is "available" can be published/unpublished for sale.
-  const publishable = units.filter(
-    (u) => (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available",
-  );
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -564,37 +541,6 @@ export default function SalesAdministrationPage() {
                   </div>
                 );
               })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Unit publishing controls */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Home className="h-4 w-4 text-muted-foreground" />
-            {ar ? "التحكم في نشر الوحدات" : "Unit Publishing Controls"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {publishable.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{ar ? "لا توجد وحدات بحالة متاحة للنشر." : "No units in available status to publish."}</p>
-          ) : (
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {publishable.map((u) => (
-                <div key={u.id} className="flex items-center justify-between gap-2 rounded-md border p-2.5 text-sm">
-                  <div className="min-w-0">
-                    <div className="truncate font-medium">{u.code}</div>
-                    <div className="truncate text-xs text-muted-foreground">{u.salesAvailable ? (ar ? "منشورة للبيع" : "Published for sale") : (ar ? "غير منشورة" : "Unpublished")}</div>
-                  </div>
-                  <Switch
-                    checked={u.salesAvailable === true}
-                    onCheckedChange={(v) => togglePublish(u.id, v)}
-                    aria-label={ar ? "نشر للبيع" : "Publish for sale"}
-                  />
-                </div>
-              ))}
             </div>
           )}
         </CardContent>

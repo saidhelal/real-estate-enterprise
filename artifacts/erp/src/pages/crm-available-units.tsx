@@ -23,7 +23,7 @@ export default function CrmAvailableUnitsPage() {
   const statusCodeById = new Map((unitStatuses?.data ?? []).map((s) => [s.id, s.code]));
 
   const available = (units?.data ?? []).filter(
-    (u) => (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available" && u.salesAvailable,
+    (u) => (u.unitStatusId ? statusCodeById.get(u.unitStatusId) : undefined) === "available",
   );
 
   const [saleUnit, setSaleUnit] = useState<Unit | null>(null);

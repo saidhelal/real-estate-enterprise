@@ -15,4 +15,8 @@ export const UnitStatusChangeStatusCode = {
   blocked: 'blocked',
   maintenance: 'maintenance',
   cancelled: 'cancelled',
+  marketing_hold: 'marketing_hold',
+  management_hold: 'management_hold',
+  legal_hold: 'legal_hold',
+  internal_reservation: 'internal_reservation',
 } as const;

@@ -2257,7 +2257,6 @@ export const ListUnitsResponse = zod.object({
   "minSellingPrice": zod.string().nullish(),
   "commission": zod.string().nullish(),
   "taxes": zod.string().nullish(),
-  "salesAvailable": zod.boolean().optional(),
   "paymentOption": zod.string().nullish(),
   "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
@@ -2295,7 +2294,6 @@ export const CreateUnitBody = zod.object({
   "minSellingPrice": zod.string().optional(),
   "commission": zod.string().optional(),
   "taxes": zod.string().optional(),
-  "salesAvailable": zod.boolean().optional(),
   "paymentOption": zod.string().optional(),
   "collectionMethod": zod.string().optional()
 })
@@ -2332,7 +2330,6 @@ export const GetUnitResponse = zod.object({
   "minSellingPrice": zod.string().nullish(),
   "commission": zod.string().nullish(),
   "taxes": zod.string().nullish(),
-  "salesAvailable": zod.boolean().optional(),
   "paymentOption": zod.string().nullish(),
   "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
@@ -2370,7 +2367,6 @@ export const UpdateUnitBody = zod.object({
   "minSellingPrice": zod.string().optional(),
   "commission": zod.string().optional(),
   "taxes": zod.string().optional(),
-  "salesAvailable": zod.boolean().optional(),
   "paymentOption": zod.string().optional(),
   "collectionMethod": zod.string().optional()
 })
@@ -2399,7 +2395,6 @@ export const UpdateUnitResponse = zod.object({
   "minSellingPrice": zod.string().nullish(),
   "commission": zod.string().nullish(),
   "taxes": zod.string().nullish(),
-  "salesAvailable": zod.boolean().optional(),
   "paymentOption": zod.string().nullish(),
   "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
@@ -2427,7 +2422,7 @@ export const SetUnitStatusParams = zod.object({
 })
 
 export const SetUnitStatusBody = zod.object({
-  "statusCode": zod.enum(['available', 'delivered', 'blocked', 'maintenance', 'cancelled'])
+  "statusCode": zod.enum(['available', 'delivered', 'blocked', 'maintenance', 'cancelled', 'marketing_hold', 'management_hold', 'legal_hold', 'internal_reservation'])
 })
 
 export const SetUnitStatusResponse = zod.object({
@@ -2454,7 +2449,6 @@ export const SetUnitStatusResponse = zod.object({
   "minSellingPrice": zod.string().nullish(),
   "commission": zod.string().nullish(),
   "taxes": zod.string().nullish(),
-  "salesAvailable": zod.boolean().optional(),
   "paymentOption": zod.string().nullish(),
   "collectionMethod": zod.string().nullish(),
   "isActive": zod.boolean(),
