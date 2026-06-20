@@ -10,9 +10,12 @@ import {
   LayoutGrid,
 } from "lucide-react";
 
+type PageNavItem = { href: string; labelKey: string };
+type PageNavSubGroup = { titleKey: string; items: PageNavItem[] };
 export type PageNavGroup = {
   titleKey: string;
-  items: { href: string; labelKey: string }[];
+  items: PageNavItem[];
+  subGroups?: PageNavSubGroup[];
 };
 
 // Authenticated routes that are not part of NAV_GROUPS still get a page crumb.
@@ -29,18 +32,22 @@ type NavMatch = {
 function findNav(path: string, navGroups: PageNavGroup[]): NavMatch | null {
   let best: NavMatch | null = null;
   let bestLen = -1;
+  const consider = (sectionTitleKey: string, sectionHref: string, item: PageNavItem) => {
+    if (item.href === "/") return;
+    if (path === item.href || path.startsWith(item.href + "/")) {
+      if (item.href.length > bestLen) {
+        bestLen = item.href.length;
+        best = { groupTitleKey: sectionTitleKey, sectionHref, labelKey: item.labelKey };
+      }
+    }
+  };
   for (const group of navGroups) {
     for (const item of group.items) {
-      if (item.href === "/") continue;
-      if (path === item.href || path.startsWith(item.href + "/")) {
-        if (item.href.length > bestLen) {
-          bestLen = item.href.length;
-          best = {
-            groupTitleKey: group.titleKey,
-            sectionHref: group.items[0].href,
-            labelKey: item.labelKey,
-          };
-        }
+      consider(group.titleKey, group.items[0]?.href ?? item.href, item);
+    }
+    for (const sub of group.subGroups ?? []) {
+      for (const item of sub.items) {
+        consider(sub.titleKey, sub.items[0]?.href ?? item.href, item);
       }
     }
   }

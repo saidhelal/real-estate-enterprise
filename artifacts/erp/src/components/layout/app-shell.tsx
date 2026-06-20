@@ -28,6 +28,7 @@ import {
   Inbox, PhoneCall, Star, Printer, FlaskConical,
   Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
   Share2, GitBranch,
+  type LucideIcon,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -40,7 +41,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const RAW_NAV_GROUPS = [
+type NavItem = { href: string; icon: LucideIcon; labelKey: string };
+type NavSubGroup = { titleKey: string; items: NavItem[] };
+type NavGroup = { titleKey: string; items: NavItem[]; subGroups?: NavSubGroup[] };
+
+const RAW_NAV_GROUPS: NavGroup[] = [
   { titleKey: "nav.group.general", items: [
     { href: "/", icon: Home, labelKey: "nav.home" },
     { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
@@ -78,64 +83,68 @@ const RAW_NAV_GROUPS = [
     { href: "/unit-pricing", icon: DollarSign, labelKey: "nav.unit_pricing" },
     { href: "/unit-discounts", icon: Percent, labelKey: "nav.unit_discounts" },
   ]},
-  { titleKey: "nav.group.acct_department", items: [
-    { href: "/accounting-dashboard", icon: Calculator, labelKey: "nav.accounting_dashboard" },
-    { href: "/accounts", icon: BookOpen, labelKey: "nav.accounts" },
-    { href: "/journal-entries", icon: BookText, labelKey: "nav.journal_entries" },
-    { href: "/general-ledger", icon: Library, labelKey: "nav.general_ledger" },
-    { href: "/cost-centers", icon: Network, labelKey: "nav.cost_centers" },
-    { href: "/profit-centers", icon: TrendingUp, labelKey: "nav.profit_centers" },
-    { href: "/fiscal-periods", icon: CalendarRange, labelKey: "nav.fiscal_periods" },
-    { href: "/year-end-closing", icon: CalendarDays, labelKey: "nav.year_end_closing" },
-    { href: "/financial-reports", icon: BarChart3, labelKey: "nav.financial_reports" },
-    { href: "/trial-balance", icon: Scale, labelKey: "nav.trial_balance" },
-    { href: "/balance-sheet", icon: GanttChartSquare, labelKey: "nav.balance_sheet" },
-    { href: "/income-statement", icon: TrendingUp, labelKey: "nav.income_statement" },
-    { href: "/cash-flow", icon: LineChart, labelKey: "nav.cash_flow" },
+  { titleKey: "nav.group.finance_parent", items: [], subGroups: [
+    { titleKey: "nav.group.acct_department", items: [
+      { href: "/accounting-dashboard", icon: Calculator, labelKey: "nav.accounting_dashboard" },
+      { href: "/accounts", icon: BookOpen, labelKey: "nav.accounts" },
+      { href: "/journal-entries", icon: BookText, labelKey: "nav.journal_entries" },
+      { href: "/general-ledger", icon: Library, labelKey: "nav.general_ledger" },
+      { href: "/cost-centers", icon: Network, labelKey: "nav.cost_centers" },
+      { href: "/profit-centers", icon: TrendingUp, labelKey: "nav.profit_centers" },
+      { href: "/fiscal-periods", icon: CalendarRange, labelKey: "nav.fiscal_periods" },
+      { href: "/year-end-closing", icon: CalendarDays, labelKey: "nav.year_end_closing" },
+      { href: "/financial-reports", icon: BarChart3, labelKey: "nav.financial_reports" },
+      { href: "/trial-balance", icon: Scale, labelKey: "nav.trial_balance" },
+      { href: "/balance-sheet", icon: GanttChartSquare, labelKey: "nav.balance_sheet" },
+      { href: "/income-statement", icon: TrendingUp, labelKey: "nav.income_statement" },
+      { href: "/cash-flow", icon: LineChart, labelKey: "nav.cash_flow" },
+    ]},
+    { titleKey: "nav.group.financial_management", items: [
+      { href: "/customer-invoices", icon: FileText, labelKey: "nav.customer_invoices" },
+      { href: "/ar-aging", icon: ClipboardList, labelKey: "nav.ar_aging" },
+      { href: "/supplier-invoices", icon: FileBox, labelKey: "nav.supplier_invoices" },
+      { href: "/ap-aging", icon: ClipboardList, labelKey: "nav.ap_aging" },
+      { href: "/receipts", icon: Receipt, labelKey: "nav.receipts" },
+      { href: "/payment-vouchers", icon: Wallet, labelKey: "nav.payment_vouchers" },
+      { href: "/installment-plans", icon: CalendarRange, labelKey: "nav.installment_plans" },
+      { href: "/installment-schedules", icon: ListOrdered, labelKey: "nav.installment_schedules" },
+      { href: "/installment-collections", icon: Receipt, labelKey: "nav.installment_collections" },
+      { href: "/penalties", icon: AlertTriangle, labelKey: "nav.penalties" },
+      { href: "/penalty-rules", icon: AlertTriangle, labelKey: "nav.penalty_rules" },
+      { href: "/cashboxes", icon: Wallet, labelKey: "nav.cashboxes" },
+      { href: "/treasury-transactions", icon: ArrowLeftRight, labelKey: "nav.treasury_transactions" },
+      { href: "/bank-accounts", icon: Banknote, labelKey: "nav.bank_accounts" },
+      { href: "/bank-transactions", icon: ArrowRightLeft, labelKey: "nav.bank_transactions" },
+    ]},
+    { titleKey: "nav.group.cheques_management", items: [
+      { href: "/cheques", icon: Banknote, labelKey: "nav.cheques" },
+      { href: "/cheque-status-history", icon: History, labelKey: "nav.cheque_status_history" },
+      { href: "/cheque-reports", icon: ClipboardList, labelKey: "nav.cheque_reports" },
+    ]},
+    { titleKey: "nav.group.tax_management", items: [
+      { href: "/tax-codes", icon: Percent, labelKey: "nav.tax_codes" },
+      { href: "/tax-report", icon: FileSpreadsheet, labelKey: "nav.tax_report" },
+      { href: "/account-mappings", icon: Link2, labelKey: "nav.account_mappings" },
+    ]},
+    { titleKey: "nav.group.budget_management", items: [
+      { href: "/budgets", icon: PiggyBank, labelKey: "nav.budgets" },
+      { href: "/budget-lines", icon: ListOrdered, labelKey: "nav.budget_lines" },
+      { href: "/budget-vs-actual", icon: Scale, labelKey: "nav.budget_vs_actual" },
+    ]},
+    { titleKey: "nav.group.fixed_assets_department", items: [
+      { href: "/fixed-assets-dashboard", icon: Package, labelKey: "nav.fixed_assets_dashboard" },
+      { href: "/asset-categories", icon: Boxes, labelKey: "nav.asset_categories" },
+      { href: "/fixed-assets", icon: FileBox, labelKey: "nav.fixed_assets" },
+      { href: "/asset-transfers", icon: Truck, labelKey: "nav.asset_transfers" },
+      { href: "/asset-depreciations", icon: Coins, labelKey: "nav.asset_depreciations" },
+      { href: "/asset-inventory-counts", icon: ClipboardCheck, labelKey: "nav.asset_inventory_counts" },
+      { href: "/asset-disposals", icon: PackageX, labelKey: "nav.asset_disposals" },
+      { href: "/fixed-assets-reports", icon: BarChart3, labelKey: "nav.fixed_assets_reports" },
+    ]},
+    { titleKey: "nav.group.finance_forms", items: [
+      { href: "/forms-printing/finance", icon: Printer, labelKey: "nav.forms_printing" },
+    ]},
   ]},
-  { titleKey: "nav.group.financial_management", items: [
-    { href: "/customer-invoices", icon: FileText, labelKey: "nav.customer_invoices" },
-    { href: "/ar-aging", icon: ClipboardList, labelKey: "nav.ar_aging" },
-    { href: "/supplier-invoices", icon: FileBox, labelKey: "nav.supplier_invoices" },
-    { href: "/ap-aging", icon: ClipboardList, labelKey: "nav.ap_aging" },
-    { href: "/receipts", icon: Receipt, labelKey: "nav.receipts" },
-    { href: "/payment-vouchers", icon: Wallet, labelKey: "nav.payment_vouchers" },
-    { href: "/installment-plans", icon: CalendarRange, labelKey: "nav.installment_plans" },
-    { href: "/installment-schedules", icon: ListOrdered, labelKey: "nav.installment_schedules" },
-    { href: "/installment-collections", icon: Receipt, labelKey: "nav.installment_collections" },
-    { href: "/penalties", icon: AlertTriangle, labelKey: "nav.penalties" },
-    { href: "/penalty-rules", icon: AlertTriangle, labelKey: "nav.penalty_rules" },
-    { href: "/cashboxes", icon: Wallet, labelKey: "nav.cashboxes" },
-    { href: "/treasury-transactions", icon: ArrowLeftRight, labelKey: "nav.treasury_transactions" },
-    { href: "/bank-accounts", icon: Banknote, labelKey: "nav.bank_accounts" },
-    { href: "/bank-transactions", icon: ArrowRightLeft, labelKey: "nav.bank_transactions" },
-  ]},
-  { titleKey: "nav.group.cheques_management", items: [
-    { href: "/cheques", icon: Banknote, labelKey: "nav.cheques" },
-    { href: "/cheque-status-history", icon: History, labelKey: "nav.cheque_status_history" },
-    { href: "/cheque-reports", icon: ClipboardList, labelKey: "nav.cheque_reports" },
-  ]},
-  { titleKey: "nav.group.tax_management", items: [
-    { href: "/tax-codes", icon: Percent, labelKey: "nav.tax_codes" },
-    { href: "/tax-report", icon: FileSpreadsheet, labelKey: "nav.tax_report" },
-    { href: "/account-mappings", icon: Link2, labelKey: "nav.account_mappings" },
-  ]},
-  { titleKey: "nav.group.budget_management", items: [
-    { href: "/budgets", icon: PiggyBank, labelKey: "nav.budgets" },
-    { href: "/budget-lines", icon: ListOrdered, labelKey: "nav.budget_lines" },
-    { href: "/budget-vs-actual", icon: Scale, labelKey: "nav.budget_vs_actual" },
-  ]},
-  { titleKey: "nav.group.fixed_assets_department", items: [
-    { href: "/fixed-assets-dashboard", icon: Package, labelKey: "nav.fixed_assets_dashboard" },
-    { href: "/asset-categories", icon: Boxes, labelKey: "nav.asset_categories" },
-    { href: "/fixed-assets", icon: FileBox, labelKey: "nav.fixed_assets" },
-    { href: "/asset-transfers", icon: Truck, labelKey: "nav.asset_transfers" },
-    { href: "/asset-depreciations", icon: Coins, labelKey: "nav.asset_depreciations" },
-    { href: "/asset-inventory-counts", icon: ClipboardCheck, labelKey: "nav.asset_inventory_counts" },
-    { href: "/asset-disposals", icon: PackageX, labelKey: "nav.asset_disposals" },
-    { href: "/fixed-assets-reports", icon: BarChart3, labelKey: "nav.fixed_assets_reports" },
-  ]},
-  { titleKey: "nav.group.finance_forms", items: [] },
   { titleKey: "nav.group.engineering", items: [
     { href: "/engineering-dashboard", icon: Compass, labelKey: "nav.engineering_dashboard" },
     { href: "/engineering-disciplines", icon: Ruler, labelKey: "nav.engineering_disciplines" },
@@ -386,7 +395,6 @@ const RAW_NAV_GROUPS = [
 const FORMS_MODULE_BY_GROUP: Record<string, string> = {
   "nav.group.sales_crm": "sales",
   "nav.group.real_estate": "realEstate",
-  "nav.group.finance_forms": "finance",
   "nav.group.engineering": "engineering",
   "nav.group.procurement": "procurement",
   "nav.group.hr": "hr",
@@ -482,11 +490,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
+    const matches = (item: NavItem) =>
+      location === item.href || (item.href !== "/" && location.startsWith(item.href));
     for (const group of NAV_GROUPS) {
-      const hasActive = group.items.some(
-        (item) => location === item.href || (item.href !== "/" && location.startsWith(item.href)),
-      );
-      if (hasActive) initial[group.titleKey] = true;
+      let groupActive = group.items.some(matches);
+      for (const sub of group.subGroups ?? []) {
+        if (sub.items.some(matches)) {
+          initial[sub.titleKey] = true;
+          groupActive = true;
+        }
+      }
+      if (groupActive) initial[group.titleKey] = true;
     }
     return initial;
   });
@@ -496,6 +510,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   if (!user) return <>{children}</>;
 
   const NavLinks = () => {
+    const renderItem = (item: NavItem) => {
+      const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+      return (
+        <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
+          <span
+            className={`flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors hover:bg-muted hover:text-primary ${
+              isActive ? "bg-muted text-primary font-medium" : "text-muted-foreground"
+            }`}
+          >
+            <item.icon className="h-4 w-4 shrink-0" />
+            <span className="truncate">{t(item.labelKey)}</span>
+          </span>
+        </Link>
+      );
+    };
     return (
       <>
         {navGroups.map((group) => {
@@ -513,22 +542,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                 />
               </button>
-              {isOpen &&
-                group.items.map((item) => {
-                  const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
-                  return (
-                    <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
-                      <span
-                        className={`flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors hover:bg-muted hover:text-primary ${
-                          isActive ? "bg-muted text-primary font-medium" : "text-muted-foreground"
-                        }`}
-                      >
-                        <item.icon className="h-4 w-4 shrink-0" />
-                        <span className="truncate">{t(item.labelKey)}</span>
-                      </span>
-                    </Link>
-                  );
-                })}
+              {isOpen && (
+                <>
+                  {group.items.map((item) => renderItem(item))}
+                  {group.subGroups?.map((sub) => {
+                    const subOpen = openGroups[sub.titleKey] ?? false;
+                    return (
+                      <div key={sub.titleKey} className="ms-2 border-s ps-1.5">
+                        <button
+                          type="button"
+                          onClick={() => toggleGroup(sub.titleKey)}
+                          aria-expanded={subOpen}
+                          className="flex w-full items-center justify-between gap-2 rounded-md px-2 pb-0.5 pt-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground/70 transition-colors hover:text-primary"
+                        >
+                          <span className="truncate">{t(sub.titleKey)}</span>
+                          <ChevronDown
+                            className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 ${subOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+                        {subOpen && sub.items.map((item) => renderItem(item))}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
           );
         })}
