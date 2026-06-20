@@ -14,38 +14,37 @@ const router: IRouter = Router();
 router.use(requireAuth);
 
 /**
- * Gate for resetting the shared demo sandbox. Reset is a super-admin action, but
- * since every session in Testing Mode is elevated to full super-admin inside the
- * demo (see requireAuth), this naturally allows any user currently testing to
- * reset the sandbox they are working in, while also allowing a production super
- * admin to reset it from outside Testing Mode. A non-super-admin who is not in
- * Testing Mode is rejected.
+ * Testing Mode is a super-admin-only capability; this guard enforces it on the
+ * server for every control-plane action (enter/exit/reset). Because requireAuth
+ * only ever elevates a session to "*" when the real production user is already a
+ * super admin (Testing Mode is gated on the production permission set), checking
+ * for "*" here cannot be satisfied by Testing Mode's own elevation — a
+ * non-super-admin can never pass, whether or not they hold a testing cookie.
  */
-function requireDemoAdmin(req: Request, res: Response, next: NextFunction): void {
+function requireSuperAdmin(req: Request, res: Response, next: NextFunction): void {
   if (!req.authUser?.permissions.includes("*")) {
-    res.status(403).json({ error: "Not allowed to reset the demo database." });
+    res.status(403).json({ error: "Super administrator access is required for Testing Mode." });
     return;
   }
   next();
 }
 
 // Current Testing Mode state for this session. Any authenticated user may read
-// it (to render the banner) and use the controls — entering Testing Mode only
-// ever affects the isolated demo sandbox, never production. testingMode is
+// it so the client can decide what to render, but canTest is true only for
+// super admins — matching the server-side guard on the actions below — so
+// non-super-admins never see or reach the Testing Mode controls. testingMode is
 // resolved by the auth middleware.
 router.get("/testing/status", (req, res): void => {
   res.json({
     testing: req.testingMode === true,
-    canTest: req.authUser !== undefined,
+    canTest: req.authUser?.permissions.includes("*") === true,
   });
 });
 
 // Enter Testing Mode: ensure the demo sandbox is provisioned + seeded, then set
-// the session cookie so every subsequent request routes to the demo schema. Open
-// to any authenticated user — while testing they are elevated to super-admin
-// inside the demo only, so they can exercise every module without their
-// production permissions ever changing.
-router.post("/testing/enter", async (req, res): Promise<void> => {
+// the session cookie so every subsequent request routes to the isolated demo
+// schema. Super-admin only; never affects production data.
+router.post("/testing/enter", requireSuperAdmin, async (req, res): Promise<void> => {
   await ensureDemoReady();
   setTestingCookie(res);
   await recordAudit(req, { action: "enter", entity: "testing_mode" });
@@ -53,14 +52,14 @@ router.post("/testing/enter", async (req, res): Promise<void> => {
 });
 
 // Exit Testing Mode: clear the cookie so requests route back to production.
-router.post("/testing/exit", async (req, res): Promise<void> => {
+router.post("/testing/exit", requireSuperAdmin, async (req, res): Promise<void> => {
   clearTestingCookie(res);
   res.json({ testing: false });
 });
 
 // Reset the demo sandbox back to freshly seeded sample data. Never touches
 // production. May take a few seconds while the full seed runs.
-router.post("/testing/reset", requireDemoAdmin, async (req, res): Promise<void> => {
+router.post("/testing/reset", requireSuperAdmin, async (req, res): Promise<void> => {
   await resetDemo();
   await recordAudit(req, { action: "reset", entity: "testing_mode" });
   res.json({ ok: true });

@@ -70,25 +70,28 @@ export async function requireAuth(
   }
 
   // Tenant routing: auth itself ran on production (loadAuthUser above). From here
-  // on, if the browser is in Testing Mode every db access in the downstream
-  // handlers resolves to the isolated demo schema. The selection is captured in
-  // AsyncLocalStorage for the rest of the request. A request is in Testing Mode
-  // purely by the presence of the testing cookie (set only via /testing/enter);
-  // this is safe because the demo schema is a fully isolated sandbox that can
-  // never reach production data, and the default/no-cookie path stays on
-  // production.
-  const testing = req.cookies?.[TESTING_COOKIE] === "1";
+  // on, if the request is in Testing Mode every db access in the downstream
+  // handlers resolves to the isolated demo schema, captured in AsyncLocalStorage
+  // for the rest of the request; the default/no-cookie path stays on production.
+  //
+  // Testing Mode is a super-admin-only capability. A request is routed to the
+  // isolated demo schema only when BOTH the testing cookie is present (set via
+  // /testing/enter) AND the real (production) user is a super admin. Gating on
+  // the production permission set — resolved above, before any elevation — means
+  // a non-super-admin can never reach the demo tenant or be elevated, even if
+  // they somehow hold a stale testing cookie. The /testing/* control plane
+  // enforces the same super-admin requirement on entering, exiting, resetting.
+  const isSuperAdmin = user.permissions.includes("*");
+  const testing = isSuperAdmin && req.cookies?.[TESTING_COOKIE] === "1";
   req.testingMode = testing;
 
   if (testing) {
-    // Demo permission elevation: while operating inside the isolated demo sandbox
-    // the session is granted full super-admin permissions across every module
-    // (and AI/BI), so any account — including a non-super-admin demo user — can
-    // exercise the entire product end-to-end. This is a request-scoped override
-    // of the in-memory user only: production role records and the user's stored
-    // permissions are never modified, and the elevation applies exclusively to
-    // these demo-routed requests. Outside Testing Mode the user keeps exactly
-    // their production permissions.
+    // Inside the isolated demo sandbox the session is given full super-admin
+    // permissions so every module can be exercised end-to-end. Because only a
+    // real super admin can ever reach this branch, this is not a privilege
+    // escalation — it is a request-scoped value on the in-memory user only.
+    // Production role records and stored permissions are never modified, and
+    // every db access in downstream handlers resolves to the demo schema.
     req.authUser = { ...user, permissions: ["*"] };
     runWithTenant("demo", () => next());
   } else {

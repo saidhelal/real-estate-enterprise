@@ -4,7 +4,7 @@ import request from "supertest";
 import { inArray } from "drizzle-orm";
 import { db, pool, usersTable, rolesTable, userRolesTable } from "@workspace/db";
 import app from "../app";
-import { ACCESS_COOKIE, signAccessToken, hashPassword } from "../lib/auth";
+import { ACCESS_COOKIE, TESTING_COOKIE, signAccessToken, hashPassword } from "../lib/auth";
 
 // Cross-module access boundary test ("can a normal role actually reach each
 // module?").
@@ -152,4 +152,51 @@ describe("a basic (non-'*') role can reach every module it's allowed to", () => 
       expect([200, 404]).toContain(res.status);
     },
   );
+});
+
+// Testing Mode is a super-admin-only capability. These probes assert that a
+// non-"*" user can NEITHER enter/reset the demo sandbox NOR be elevated by
+// merely presenting a forged testing cookie. The cookie alone must never grant
+// the demo tenant or "*" — the middleware gates Testing Mode on the real
+// production permission set, so the prior "any session in Testing Mode is
+// elevated" bypass cannot be reintroduced.
+describe("Testing Mode is super-admin only", () => {
+  // Reuse a probe user that holds zero permissions (definitely not "*").
+  const nonAdmin = probeIds.find((p) => p.module === "testing")!;
+
+  it("status reports canTest:false for a non-super-admin", async () => {
+    const res = await request(app)
+      .get("/api/testing/status")
+      .set("Cookie", authCookie(nonAdmin.userId));
+    expect(res.status).toBe(200);
+    expect(res.body.canTest).toBe(false);
+    expect(res.body.testing).toBe(false);
+  });
+
+  it("rejects /testing/enter for a non-super-admin", async () => {
+    const res = await request(app)
+      .post("/api/testing/enter")
+      .set("Cookie", authCookie(nonAdmin.userId));
+    expect(res.status).toBe(403);
+  });
+
+  it("rejects /testing/reset for a non-super-admin", async () => {
+    const res = await request(app)
+      .post("/api/testing/reset")
+      .set("Cookie", authCookie(nonAdmin.userId));
+    expect(res.status).toBe(403);
+  });
+
+  it("a forged testing cookie cannot elevate or route a non-super-admin", async () => {
+    const cookie = `${authCookie(nonAdmin.userId)}; ${TESTING_COOKIE}=1`;
+    const status = await request(app).get("/api/testing/status").set("Cookie", cookie);
+    expect(status.status).toBe(200);
+    // Cookie present but user is not "*": neither routed to demo nor elevated.
+    expect(status.body.testing).toBe(false);
+    expect(status.body.canTest).toBe(false);
+    const enter = await request(app).post("/api/testing/enter").set("Cookie", cookie);
+    expect(enter.status).toBe(403);
+    const reset = await request(app).post("/api/testing/reset").set("Cookie", cookie);
+    expect(reset.status).toBe(403);
+  });
 });
