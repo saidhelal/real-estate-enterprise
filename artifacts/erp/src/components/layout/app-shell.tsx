@@ -184,8 +184,6 @@ const RAW_NAV_GROUPS = [
     { href: "/purchase-return-items", icon: PackageX, labelKey: "nav.purchase_return_items" },
     { href: "/procurement-approvals", icon: CheckSquare, labelKey: "nav.procurement_approvals" },
     { href: "/procurement-reports", icon: BarChart3, labelKey: "nav.procurement_reports" },
-  ]},
-  { titleKey: "nav.group.inventory", items: [
     { href: "/inventory-dashboard", icon: Gauge, labelKey: "nav.inventory_dashboard" },
     { href: "/warehouses", icon: Store, labelKey: "nav.warehouses" },
     { href: "/warehouse-locations", icon: MapPin, labelKey: "nav.warehouse_locations" },
@@ -207,6 +205,7 @@ const RAW_NAV_GROUPS = [
     { href: "/stock-count-items", icon: ListOrdered, labelKey: "nav.stock_count_items" },
     { href: "/inventory-ledger", icon: BookOpen, labelKey: "nav.inventory_ledger" },
     { href: "/inventory-reports", icon: BarChart3, labelKey: "nav.inventory_reports" },
+    { href: "/forms-printing/inventory", icon: Printer, labelKey: "nav.forms_printing_inventory" },
   ]},
   { titleKey: "nav.group.hr", items: [
     { href: "/hr-dashboard", icon: Gauge, labelKey: "nav.hr_dashboard" },
@@ -385,7 +384,6 @@ const FORMS_MODULE_BY_GROUP: Record<string, string> = {
   "nav.group.engineering": "engineering",
   "nav.group.construction": "construction",
   "nav.group.procurement": "procurement",
-  "nav.group.inventory": "inventory",
   "nav.group.hr": "hr",
   "nav.group.legal": "legal",
   "nav.group.land_bank": "landBank",
