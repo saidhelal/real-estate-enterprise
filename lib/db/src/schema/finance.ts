@@ -125,9 +125,11 @@ export type ReceiptRow = typeof receiptsTable.$inferSelect;
 // Standalone cheque lifecycle (incoming from customers / outgoing to suppliers
 // & contractors). Distinct from the cheque attributes stored inline on a
 // receipt: a cheque here moves through a status lifecycle and posts to the
-// ledger on clearing (reversed on return/cancel). `direction` is incoming or
-// outgoing. `status` is received / post_dated / under_collection / deposited /
-// cleared / returned / cancelled.
+// ledger on collection (reversed on return/cancel). `direction` is incoming or
+// outgoing. `status` is received / under_collection / collected / returned /
+// cancelled / replaced. A replaced cheque keeps its history and links to its
+// replacement via `replacedByChequeId` (and the new cheque back-links via
+// `replacesChequeId`).
 export const chequesTable = pgTable("cheques", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyId: uuid("company_id").notNull(),
@@ -149,6 +151,8 @@ export const chequesTable = pgTable("cheques", {
   paymentVoucherId: uuid("payment_voucher_id"),
   payeeName: text("payee_name"),
   status: text("status").notNull().default("received"),
+  replacedByChequeId: uuid("replaced_by_cheque_id"),
+  replacesChequeId: uuid("replaces_cheque_id"),
   collectionDate: date("collection_date"),
   depositDate: date("deposit_date"),
   clearedDate: date("cleared_date"),

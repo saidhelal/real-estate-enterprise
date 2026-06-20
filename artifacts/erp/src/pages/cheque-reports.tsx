@@ -26,20 +26,20 @@ import { useLanguage } from "@/lib/language-provider";
 
 const STATUS_FILTERS = [
   "all",
-  "post_dated",
+  "received",
   "under_collection",
-  "deposited",
-  "cleared",
+  "collected",
   "returned",
   "cancelled",
+  "replaced",
 ] as const;
 
 const DIRECTION_FILTERS = ["all", "incoming", "outgoing"] as const;
 
 function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "cleared") return "default";
-  if (status === "returned" || status === "cancelled") return "destructive";
-  if (status === "deposited" || status === "under_collection") return "secondary";
+  if (status === "collected") return "default";
+  if (status === "returned" || status === "cancelled" || status === "replaced") return "destructive";
+  if (status === "under_collection") return "secondary";
   return "outline";
 }
 

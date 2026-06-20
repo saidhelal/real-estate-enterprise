@@ -46,10 +46,10 @@ export default function AccountingDashboardPage() {
     query: { enabled: !!companyId, queryKey: getListChequesQueryKey(chequeParams) },
   });
   const cheques = chequesData?.data ?? [];
-  const PENDING_STATUSES = new Set(["received", "post_dated", "under_collection", "deposited"]);
+  const PENDING_STATUSES = new Set(["received", "under_collection"]);
   const pendingCheques = cheques.filter((c) => PENDING_STATUSES.has(c.status));
   const chequesPendingCount = pendingCheques.length;
-  const chequesClearedCount = cheques.filter((c) => c.status === "cleared").length;
+  const chequesClearedCount = cheques.filter((c) => c.status === "collected").length;
   const chequesDueAmount = pendingCheques
     .reduce((sum, c) => sum + (Number(c.amount) || 0), 0)
     .toFixed(2);

@@ -33370,6 +33370,8 @@ components:
         paymentVoucherId: { type: ["string", "null"] }
         payeeName: { type: ["string", "null"] }
         status: { type: string }
+        replacedByChequeId: { type: ["string", "null"] }
+        replacesChequeId: { type: ["string", "null"] }
         collectionDate: { type: ["string", "null"] }
         depositDate: { type: ["string", "null"] }
         clearedDate: { type: ["string", "null"] }

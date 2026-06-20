@@ -39,13 +39,13 @@ import { enumLabel } from "@/lib/enums";
 import { Banknote, Wallet, Plus, CheckCircle2, Lock } from "lucide-react";
 
 // Lifecycle transitions for cheques, mirrored from the API ALLOWED_TRANSITIONS.
+// `replaced` is reached only via the dedicated /replace endpoint, never a plain
+// transition, so it is intentionally not a target here.
 const NEXT_STATUSES: Record<string, string[]> = {
-  received: ["under_collection", "deposited", "cancelled", "replaced"],
-  post_dated: ["under_collection", "deposited", "cancelled", "replaced"],
-  under_collection: ["cleared", "returned", "cancelled", "replaced"],
-  deposited: ["cleared", "returned", "cancelled", "replaced"],
-  cleared: ["returned"],
-  returned: ["replaced"],
+  received: ["under_collection", "cancelled"],
+  under_collection: ["collected", "returned", "cancelled"],
+  collected: ["returned"],
+  returned: [],
   cancelled: [],
   replaced: [],
 };
@@ -66,7 +66,7 @@ function itemTypeLabel(ref: string | null | undefined, ar: boolean): string {
 }
 
 function chequeStatusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "cleared") return "default";
+  if (status === "collected") return "default";
   if (status === "returned" || status === "cancelled" || status === "replaced") return "destructive";
   return "secondary";
 }

@@ -20,6 +20,7 @@ import {
   postAutomaticEntry,
   reverseAutomaticEntriesForSource,
 } from "../lib/posting";
+import { notify, recipientsByPermission } from "../lib/notify";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -28,37 +29,40 @@ function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-// Cheque lifecycle statuses. A cheque posts to the ledger when it reaches
-// `cleared`; transitioning to `returned`/`cancelled` reverses that posting.
+// Cheque lifecycle statuses (exactly six, mandatory per cheque). A cheque posts
+// to the ledger when it reaches `collected`; transitioning to `returned`/
+// `cancelled` reverses that posting. `replaced` is set only via the dedicated
+// /replace endpoint (which links the original to its replacement), never a plain
+// transition — so a replaced cheque is always traceable to its successor.
 const CHEQUE_STATUSES = new Set([
   "received",
-  "post_dated",
   "under_collection",
-  "deposited",
-  "cleared",
+  "collected",
   "returned",
   "cancelled",
   "replaced",
 ]);
-const CLEARED = "cleared";
-// `replaced` (a cheque swapped for a new one) reverses any posted collection leg,
-// same as return/cancel; it is only reachable before a cheque has cleared.
-const REVERSING_STATUSES = new Set(["returned", "cancelled", "replaced"]);
+const COLLECTED = "collected";
+const REPLACED = "replaced";
+// Return/cancel reverse any posted collection/clearing legs.
+const REVERSING_STATUSES = new Set(["returned", "cancelled"]);
 // Allowed lifecycle transitions, enforced server-side (the UI mirrors this, but
-// direct API callers must not be able to jump to an arbitrary status).
+// direct API callers must not be able to jump to an arbitrary status). `replaced`
+// is intentionally absent — replacement goes through POST /cheques/:id/replace.
 const ALLOWED_TRANSITIONS: Record<string, string[]> = {
-  received: ["under_collection", "deposited", "cancelled", "replaced"],
-  post_dated: ["under_collection", "deposited", "cancelled", "replaced"],
-  under_collection: ["cleared", "returned", "cancelled", "replaced"],
-  deposited: ["cleared", "returned", "cancelled", "replaced"],
-  cleared: ["returned"],
-  returned: ["replaced"],
+  received: ["under_collection", "cancelled"],
+  under_collection: ["collected", "returned", "cancelled"],
+  collected: ["returned"],
+  returned: [],
   cancelled: [],
   replaced: [],
 };
-// Statuses where a cheque is in the bank's hands pending clearance — the point at
+// A cheque may be swapped for a replacement only while it has not been collected
+// (received / under_collection) or after it bounced (returned).
+const REPLACEABLE_FROM = new Set(["received", "under_collection", "returned"]);
+// Status where a cheque is in the bank's hands pending clearance — the point at
 // which the "collection leg" of the two-phase posting is recognised.
-const COLLECTING_STATUSES = new Set(["under_collection", "deposited"]);
+const COLLECTING_STATUSES = new Set(["under_collection"]);
 
 // Two-phase ledger model. A cheque posts a "collection" leg when it goes under
 // collection / is deposited, then a "clearing" leg when it clears; together they
@@ -132,11 +136,10 @@ router.post("/cheques", requirePermission("cheques.create"), async (req, res): P
   const parsed = CreateChequeBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const data = parsed.data;
-  if (data.status && !CHEQUE_STATUSES.has(data.status)) {
-    res.status(400).json({ error: "Invalid cheque status" });
-    return;
-  }
-  const [row] = await db.insert(chequesTable).values({ ...data }).returning();
+  // Every cheque is born "Received" (requirement: default status). The lifecycle
+  // is advanced only through the guarded /transition and /replace endpoints, so a
+  // caller cannot create a cheque already past the start of its lifecycle.
+  const [row] = await db.insert(chequesTable).values({ ...data, status: "received" }).returning();
   await recordAudit(req, { action: "create", entity: "cheque", entityId: row.id, newValue: row });
   res.status(201).json(GetChequeResponse.parse(serializeRow(row)));
 });
@@ -164,7 +167,7 @@ router.patch("/cheques/:id", requirePermission("cheques.update"), async (req, re
   delete update.status;
   // Once cleared, the cheque has driven a ledger entry — its financial identity
   // is immutable. Only descriptive fields (notes, dates) may still change.
-  const cleared = existing.status === CLEARED;
+  const cleared = existing.status === COLLECTED;
   if (cleared) {
     for (const f of FROZEN_FIELDS) delete update[f];
   }
@@ -181,7 +184,7 @@ router.delete("/cheques/:id", requirePermission("cheques.delete"), async (req, r
   if (!existing) { res.status(404).json({ error: "Cheque not found" }); return; }
   // A cleared cheque cannot be deleted — it has posted to the ledger. It must be
   // returned or cancelled (which reverses the entry) instead.
-  if (existing.status === CLEARED) {
+  if (existing.status === COLLECTED) {
     res.status(409).json({ error: "A cleared cheque cannot be deleted; return or cancel it instead" });
     return;
   }
@@ -218,8 +221,7 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
 
     const set: Record<string, unknown> = { status: toStatus };
     if (toStatus === "under_collection" && !existing.collectionDate) set.collectionDate = actionDate;
-    if (toStatus === "deposited") set.depositDate = actionDate;
-    if (toStatus === CLEARED) set.clearedDate = actionDate;
+    if (toStatus === COLLECTED) set.clearedDate = actionDate;
     if (toStatus === "returned") {
       set.returnedDate = actionDate;
       if (returnReason) set.returnReason = returnReason;
@@ -271,12 +273,12 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
       });
     };
 
-    if (toStatus === CLEARED && fromStatus !== CLEARED) {
+    if (toStatus === COLLECTED && fromStatus !== COLLECTED) {
       // Ensure the collection leg exists (covers paths that skip under_collection),
       // then post the clearing leg that drains the bridge account.
       await postCollection();
       await postClearing();
-    } else if (COLLECTING_STATUSES.has(toStatus) && !COLLECTING_STATUSES.has(fromStatus) && fromStatus !== CLEARED) {
+    } else if (COLLECTING_STATUSES.has(toStatus) && !COLLECTING_STATUSES.has(fromStatus) && fromStatus !== COLLECTED) {
       await postCollection();
     } else if (REVERSING_STATUSES.has(toStatus)) {
       // Return/cancel reverses whatever legs were posted (collection and/or
@@ -296,6 +298,41 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
       actionDate,
       notes,
     });
+
+    // A returned (bounced) cheque is a financial red flag: alert Finance, the
+    // Sales Manager, the Executive Manager and the Owner. recipientsByPermission
+    // already includes "*" holders (Owner / Super Admin); the union of these
+    // permission audiences covers the required roles. notify() is idempotent per
+    // (recipient, sourceModule, sourceId, eventType), so re-returning is safe.
+    if (toStatus === "returned") {
+      const perms = [
+        "cheques.update",
+        "contracts.submitFinance",
+        "contracts.create",
+        "executiveOversight.view",
+        "executiveOversight.viewOwn",
+      ];
+      const lists = await Promise.all(
+        perms.map((p) => recipientsByPermission(tx, p, { companyId: existing.companyId })),
+      );
+      const audience = [...new Set(lists.flat())].filter((uid) => uid !== userId);
+      if (audience.length > 0) {
+        await notify(tx, {
+          recipientUserIds: audience,
+          companyId: existing.companyId,
+          actorUserId: userId,
+          category: "finance",
+          eventType: "cheque_returned",
+          priority: "urgent",
+          title: "شيك مرتجع / Returned cheque",
+          body: `${existing.code} (${existing.chequeNumber}) — ${existing.amount ?? ""}`,
+          sourceModule: "cheques",
+          sourceId: existing.id,
+          sourceRef: existing.code,
+          link: "/cheques",
+        });
+      }
+    }
     return { existing, updated };
   });
 
@@ -313,6 +350,114 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
     newValue: result.updated,
   });
   res.json(GetChequeResponse.parse(serializeRow(result.updated)));
+});
+
+// ===================== replace a cheque =====================
+// A replaced cheque is kept intact in history and linked to the new cheque that
+// supersedes it (and vice-versa). This reverses any posted legs on the original,
+// creates a fresh "received" cheque carrying over the original's links, flips the
+// original to status `replaced`, and records both sides in the status history.
+router.post("/cheques/:id/replace", requirePermission("cheques.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const actionDate = typeof body.actionDate === "string" && body.actionDate ? body.actionDate : today();
+  const userId = req.authUser?.id ?? null;
+  const actorName = req.authUser?.username ?? req.authUser?.id ?? null;
+  const str = (k: string): string | null => (typeof body[k] === "string" && body[k] ? (body[k] as string) : null);
+
+  const result = await db.transaction(async (tx) => {
+    const [orig] = await tx
+      .select()
+      .from(chequesTable)
+      .where(and(eq(chequesTable.id, id), eq(chequesTable.isDeleted, false)))
+      .for("update");
+    if (!orig) return { notFound: true as const };
+    if (!REPLACEABLE_FROM.has(orig.status)) return { invalid: true as const, status: orig.status };
+
+    // Reverse any posted legs on the original — it is being swapped out. Reversal
+    // is idempotent and a no-op for legs that never posted.
+    await reverseAutomaticEntriesForSource(tx, CLEARING_SOURCE, orig.id, userId);
+    await reverseAutomaticEntriesForSource(tx, COLLECTION_SOURCE, orig.id, userId);
+
+    const [replacement] = await tx
+      .insert(chequesTable)
+      .values({
+        companyId: orig.companyId,
+        branchId: orig.branchId,
+        code: str("code") ?? `${orig.code}-R`,
+        direction: orig.direction,
+        chequeNumber: str("chequeNumber") ?? orig.chequeNumber,
+        chequeDate: str("chequeDate") ?? orig.chequeDate,
+        dueDate: str("dueDate") ?? orig.dueDate,
+        amount: str("amount") ?? orig.amount,
+        bankName: str("bankName") ?? orig.bankName,
+        bankAccountId: orig.bankAccountId,
+        customerId: orig.customerId,
+        supplierId: orig.supplierId,
+        contractId: orig.contractId,
+        unitId: orig.unitId,
+        scheduleId: orig.scheduleId,
+        receiptId: orig.receiptId,
+        paymentVoucherId: orig.paymentVoucherId,
+        payeeName: orig.payeeName,
+        status: "received",
+        replacesChequeId: orig.id,
+        reference: orig.reference,
+        notes: str("notes"),
+        userId,
+      })
+      .returning();
+
+    const [updatedOrig] = await tx
+      .update(chequesTable)
+      .set({ status: REPLACED, replacedByChequeId: replacement.id })
+      .where(eq(chequesTable.id, orig.id))
+      .returning();
+
+    // History on both cheques: the original is marked replaced (linked forward),
+    // the replacement is recorded as received (linked back).
+    await tx.insert(chequeStatusHistoryTable).values([
+      {
+        companyId: orig.companyId,
+        code: historyCode(),
+        chequeId: orig.id,
+        action: REPLACED,
+        fromStatus: orig.status,
+        toStatus: REPLACED,
+        actorName,
+        actionDate,
+        notes: `Replaced by ${replacement.code}${str("notes") ? ` — ${str("notes")}` : ""}`,
+      },
+      {
+        companyId: orig.companyId,
+        code: historyCode(),
+        chequeId: replacement.id,
+        action: "received",
+        fromStatus: null,
+        toStatus: "received",
+        actorName,
+        actionDate,
+        notes: `Replaces ${orig.code}`,
+      },
+    ]);
+    return { original: updatedOrig, replacement };
+  });
+
+  if ("notFound" in result) { res.status(404).json({ error: "Cheque not found" }); return; }
+  if ("invalid" in result) {
+    res.status(409).json({ error: `Cannot replace a cheque in status ${result.status}` });
+    return;
+  }
+  await recordAudit(req, {
+    action: "update",
+    entity: "cheque",
+    entityId: id,
+    newValue: { original: result.original, replacement: result.replacement },
+  });
+  res.status(201).json({
+    original: serializeRow(result.original),
+    replacement: serializeRow(result.replacement),
+  });
 });
 
 // ===================== cheque status history (read-only listing) =====================

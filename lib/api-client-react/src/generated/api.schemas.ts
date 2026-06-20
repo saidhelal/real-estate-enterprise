@@ -8034,6 +8034,10 @@ export interface Cheque {
   payeeName?: string | null;
   status: string;
   /** @nullable */
+  replacedByChequeId?: string | null;
+  /** @nullable */
+  replacesChequeId?: string | null;
+  /** @nullable */
   collectionDate?: string | null;
   /** @nullable */
   depositDate?: string | null;

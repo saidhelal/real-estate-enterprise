@@ -21,7 +21,7 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumLabel, enumOptions } from "@/lib/enums";
+import { enumLabel } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,22 +43,26 @@ import {
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-// Allowed next statuses for the lifecycle, keyed by current status.
+// Allowed next statuses for the lifecycle, keyed by current status. `replaced` is
+// not a plain transition target — replacing a cheque uses the dedicated Replace
+// action so the original stays linked to its successor.
 const NEXT_STATUSES: Record<string, string[]> = {
-  received: ["under_collection", "deposited", "cancelled", "replaced"],
-  post_dated: ["under_collection", "deposited", "cancelled", "replaced"],
-  under_collection: ["cleared", "returned", "cancelled", "replaced"],
-  deposited: ["cleared", "returned", "cancelled", "replaced"],
-  cleared: ["returned"],
-  returned: ["replaced"],
+  received: ["under_collection", "cancelled"],
+  under_collection: ["collected", "returned", "cancelled"],
+  collected: ["returned"],
+  returned: [],
   cancelled: [],
   replaced: [],
 };
 
+// A cheque may be swapped for a replacement only while it has not been collected
+// (received / under_collection) or after it bounced (returned).
+const REPLACEABLE_FROM = new Set(["received", "under_collection", "returned"]);
+
 function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "cleared") return "default";
-  if (status === "returned" || status === "cancelled") return "destructive";
-  if (status === "deposited" || status === "under_collection") return "secondary";
+  if (status === "collected") return "default";
+  if (status === "returned" || status === "cancelled" || status === "replaced") return "destructive";
+  if (status === "under_collection") return "secondary";
   return "outline";
 }
 
@@ -69,7 +73,6 @@ export default function ChequesPage() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { options: DIRECTIONS } = useLookupOptions("cheque_direction", ["incoming", "outgoing"]);
-  const CREATE_STATUSES = enumOptions(["received", "post_dated"]);
 
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -95,6 +98,12 @@ export default function ChequesPage() {
   const [returnReason, setReturnReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [replaceTarget, setReplaceTarget] = useState<Cheque | null>(null);
+  const [replChequeNumber, setReplChequeNumber] = useState("");
+  const [replAmount, setReplAmount] = useState("");
+  const [replDueDate, setReplDueDate] = useState("");
+  const [replNotes, setReplNotes] = useState("");
+
   const invalidate = () => queryClient.invalidateQueries({ queryKey: getListChequesQueryKey() });
 
   const fields: ResourceField[] = [
@@ -113,7 +122,6 @@ export default function ChequesPage() {
     { name: "unitId", label: t("acc.related_unit"), type: "select", options: unitOptions },
     { name: "scheduleId", label: t("acc.related_installment"), type: "select", options: scheduleOptions },
     { name: "payeeName", label: t("acc.payee_name") },
-    { name: "status", label: t("common.status"), type: "select", options: CREATE_STATUSES },
     { name: "reference", label: t("acc.reference") },
     { name: "notes", label: t("acc.description"), type: "textarea" },
     { name: "attachments", label: t("acc.attachments"), type: "textarea" },
@@ -133,6 +141,40 @@ export default function ChequesPage() {
     setToStatus(NEXT_STATUSES[cheque.status]?.[0] ?? "");
     setActionDate(today());
     setReturnReason("");
+  };
+
+  const openReplace = (cheque: Cheque) => {
+    setReplaceTarget(cheque);
+    setReplChequeNumber("");
+    setReplAmount(cheque.amount ?? "");
+    setReplDueDate(cheque.dueDate ?? "");
+    setReplNotes("");
+  };
+
+  const submitReplace = async () => {
+    if (!replaceTarget) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/cheques/${replaceTarget.id}/replace`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chequeNumber: replChequeNumber || undefined,
+          amount: replAmount || undefined,
+          dueDate: replDueDate || undefined,
+          notes: replNotes || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      toast({ title: t("common.updated") });
+      setReplaceTarget(null);
+      invalidate();
+    } catch {
+      toast({ title: t("common.error"), variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const submitTransition = async () => {
@@ -172,13 +214,20 @@ export default function ChequesPage() {
         useDelete={useDeleteCheque}
         getListQueryKey={getListChequesQueryKey}
         companyId={companyId}
-        rowActions={(r) =>
-          (NEXT_STATUSES[r.status]?.length ?? 0) > 0 ? (
-            <Button variant="outline" size="sm" onClick={() => openTransition(r)}>
-              {t("acc.change_status")}
-            </Button>
-          ) : null
-        }
+        rowActions={(r) => (
+          <div className="flex gap-2">
+            {(NEXT_STATUSES[r.status]?.length ?? 0) > 0 ? (
+              <Button variant="outline" size="sm" onClick={() => openTransition(r)}>
+                {t("acc.change_status")}
+              </Button>
+            ) : null}
+            {REPLACEABLE_FROM.has(r.status) ? (
+              <Button variant="outline" size="sm" onClick={() => openReplace(r)}>
+                {t("acc.replace_cheque")}
+              </Button>
+            ) : null}
+          </div>
+        )}
       />
 
       <Dialog open={!!target} onOpenChange={(o) => { if (!o) setTarget(null); }}>
@@ -215,6 +264,36 @@ export default function ChequesPage() {
             <div className="flex justify-end gap-2 pt-2">
               <Button variant="outline" onClick={() => setTarget(null)}>{t("common.cancel")}</Button>
               <Button disabled={!toStatus || submitting} onClick={submitTransition}>{t("common.save")}</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!replaceTarget} onOpenChange={(o) => { if (!o) setReplaceTarget(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("acc.replace_cheque")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>{t("acc.cheque_number")}</Label>
+              <Input value={replChequeNumber} onChange={(e) => setReplChequeNumber(e.target.value)} placeholder={replaceTarget?.chequeNumber ?? ""} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("acc.amount")}</Label>
+              <Input value={replAmount} onChange={(e) => setReplAmount(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("acc.due_date")}</Label>
+              <Input type="date" value={replDueDate} onChange={(e) => setReplDueDate(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("acc.description")}</Label>
+              <Input value={replNotes} onChange={(e) => setReplNotes(e.target.value)} />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setReplaceTarget(null)}>{t("common.cancel")}</Button>
+              <Button disabled={submitting} onClick={submitReplace}>{t("common.save")}</Button>
             </div>
           </div>
         </DialogContent>
