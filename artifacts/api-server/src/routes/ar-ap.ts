@@ -1087,7 +1087,7 @@ router.get("/reports/ap-aging", requirePermission("supplierInvoices.view"), asyn
   res.json(GetApAgingResponse.parse({ rows, totals: bucketRow("", "Total", totals) }));
 });
 
-router.get("/reports/tax", requirePermission("taxCodes.view"), async (req, res): Promise<void> => {
+router.get("/reports/tax-report", requirePermission("taxCodes.view"), async (req, res): Promise<void> => {
   const q = req.query as Record<string, unknown>;
   const companyId = qStr(q, "companyId");
   const fromDate = qStr(q, "fromDate");

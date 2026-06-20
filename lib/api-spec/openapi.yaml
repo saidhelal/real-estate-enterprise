@@ -2207,6 +2207,7 @@ paths:
         - { name: sourceId, in: query, required: false, schema: { type: string } }
         - { name: assignedToUserId, in: query, required: false, schema: { type: string } }
         - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: unassigned, in: query, required: false, schema: { type: string } }
       responses:
         "200":
           description: Leads

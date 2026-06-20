@@ -2565,7 +2565,8 @@ export const ListLeadsQueryParams = zod.object({
   "branchId": zod.coerce.string().optional(),
   "sourceId": zod.coerce.string().optional(),
   "assignedToUserId": zod.coerce.string().optional(),
-  "status": zod.coerce.string().optional()
+  "status": zod.coerce.string().optional(),
+  "unassigned": zod.coerce.string().optional()
 })
 
 export const ListLeadsResponse = zod.object({
