@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { db, runWithTenant, DEMO_SCHEMA } from "@workspace/db";
-import { seedAll } from "../seed";
+import { seedAll, seedConfig } from "../seed";
 
 /**
  * Isolated Testing Environment ("demo") provisioning and lifecycle.
@@ -75,4 +75,22 @@ export async function resetDemo(): Promise<void> {
   });
   await provisionDemoSchema();
   await runWithTenant("demo", () => seedAll());
+}
+
+/**
+ * Owner "Reset Demo": rebuild the demo sandbox into a clean, fully-configured but
+ * EMPTY state — exactly like a brand-new installation. Drops the demo schema,
+ * recreates its structure from the current production schema, then runs the
+ * config-only seed (see seedConfig) so every setup surface is present and no
+ * business / transactional data remains. DDL is pinned to the production
+ * connection and seeding to the demo tenant, so this can never touch production
+ * data — it only ever rewrites the isolated `demo` schema.
+ */
+export async function resetDemoConfigOnly(): Promise<void> {
+  await runWithTenant("production", async () => {
+    await db.execute(sql.raw(`DROP SCHEMA IF EXISTS ${DEMO_SCHEMA} CASCADE`));
+    await db.execute(sql.raw(`CREATE SCHEMA ${DEMO_SCHEMA}`));
+  });
+  await provisionDemoSchema();
+  await runWithTenant("demo", () => seedConfig());
 }

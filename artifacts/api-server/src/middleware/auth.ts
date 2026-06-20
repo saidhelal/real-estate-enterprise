@@ -1,5 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
-import { ACCESS_COOKIE, TESTING_COOKIE, verifyAccessToken, type AuthUser } from "../lib/auth";
+import {
+  ACCESS_COOKIE,
+  TESTING_COOKIE,
+  OWNER_COOKIE,
+  verifyAccessToken,
+  verifyOwnerToken,
+  type AuthUser,
+} from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
 import { runWithTenant } from "@workspace/db";
 
@@ -114,4 +121,27 @@ export function requirePermission(...required: string[]) {
     }
     next();
   };
+}
+
+/**
+ * Require an active, step-up-verified Owner Mode session: a valid owner cookie
+ * whose subject matches the authenticated user, who must also hold full ("*")
+ * permissions. The owner cookie is only ever issued by /auth/owner-mode/verify
+ * to an owner-tier account, so this gates owner-exclusive actions without a
+ * second password prompt. Must be mounted after requireAuth. Responds 401 when
+ * unauthenticated, 403 when Owner Mode is not active.
+ */
+export function requireOwnerMode(req: Request, res: Response, next: NextFunction): void {
+  const user = req.authUser;
+  if (!user) {
+    res.status(401).json({ error: "Not authenticated" });
+    return;
+  }
+  const token = req.cookies?.[OWNER_COOKIE];
+  const ownerId = token ? verifyOwnerToken(token) : null;
+  if (!ownerId || ownerId !== user.id || !user.permissions.includes("*")) {
+    res.status(403).json({ error: "Owner Mode is required for this action." });
+    return;
+  }
+  next();
 }

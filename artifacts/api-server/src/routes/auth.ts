@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { and, eq } from "drizzle-orm";
-import { db, usersTable, sessionsTable, loginHistoryTable } from "@workspace/db";
+import { db, usersTable, sessionsTable, loginHistoryTable, runWithTenant } from "@workspace/db";
 import {
   LoginBody,
   ChangePasswordBody,
@@ -30,7 +30,8 @@ import {
 } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
 import { recordAudit } from "../lib/audit";
-import { requireAuth } from "../middleware/auth";
+import { requireAuth, requireOwnerMode } from "../middleware/auth";
+import { resetDemoConfigOnly } from "../lib/demo";
 
 const router: IRouter = Router();
 
@@ -324,5 +325,39 @@ router.post("/auth/owner-mode/exit", requireAuth, async (req, res): Promise<void
   });
   res.json({ active: false });
 });
+
+// Owner-only "Reset Demo": rebuild the isolated demo sandbox into a clean,
+// fully-configured but EMPTY state (like a brand-new installation). Gated behind
+// an active Owner Mode session (already step-up verified) — no extra password.
+// It only ever rewrites the `demo` schema and can never touch production data.
+router.post(
+  "/auth/owner-mode/reset-demo",
+  requireAuth,
+  requireOwnerMode,
+  async (req, res): Promise<void> => {
+    try {
+      await resetDemoConfigOnly();
+      // Pin the audit write to production so the owner action is recorded in the
+      // real audit trail regardless of whether the caller is also in Testing Mode
+      // (which would otherwise route the write into the just-rebuilt demo schema).
+      await runWithTenant("production", () =>
+        recordAudit(req, {
+          action: "owner-mode.reset-demo",
+          entity: "demo",
+          entityId: req.authUser!.id,
+          newValue: { result: "config-only", scope: "demo-schema" },
+        }),
+      );
+      req.log.warn(
+        { userId: req.authUser!.id },
+        "Owner reset the demo environment to a clean, configured, empty state",
+      );
+      res.json({ success: true });
+    } catch (err) {
+      req.log.error({ err }, "Owner reset-demo failed");
+      res.status(500).json({ error: "Reset Demo failed. Please try again." });
+    }
+  },
+);
 
 export default router;

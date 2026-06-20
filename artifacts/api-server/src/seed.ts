@@ -1173,7 +1173,7 @@ async function seedReservations(): Promise<void> {
   console.log("Seeded reservation demo data: 3 reservations, 2 notes, 2 documents, 2 corporate customers");
 }
 
-async function seedFinance(): Promise<void> {
+async function seedFinance(configOnly = false): Promise<void> {
   const [company] = await db.select().from(companiesTable).limit(1);
   if (!company) {
     console.log("Skipping finance seed: no company found");
@@ -1185,18 +1185,11 @@ async function seedFinance(): Promise<void> {
 
   const existing = await db.select().from(cashboxesTable).where(eq(cashboxesTable.code, "CB-001")).limit(1);
   if (existing.length) {
-    console.log("Finance demo data already seeded, skipping");
+    console.log("Finance config already seeded, skipping");
     return;
   }
 
-  const customers = await db.select().from(customersTable).where(eq(customersTable.companyId, companyId)).limit(3);
-  const units = await db.select().from(unitsTable).where(eq(unitsTable.companyId, companyId)).limit(1);
-  if (!customers.length || !units.length) {
-    console.log("Skipping finance seed: missing customers/units");
-    return;
-  }
-
-  // 2 cashboxes, 2 bank accounts
+  // 2 cashboxes, 2 bank accounts (financial setup / configuration)
   const [mainCashbox, branchCashbox] = await db.insert(cashboxesTable).values([
     { companyId, branchId, code: "CB-001", name: "Main Cashbox", nameAr: "الخزينة الرئيسية", openingBalance: "50000.00", currentBalance: "50000.00" },
     { companyId, branchId, code: "CB-002", name: "Branch Cashbox", nameAr: "خزينة الفرع", openingBalance: "10000.00", currentBalance: "10000.00" },
@@ -1207,11 +1200,27 @@ async function seedFinance(): Promise<void> {
     { companyId, branchId, code: "BA-002", bankName: "Saudi National Bank", bankNameAr: "البنك الأهلي السعودي", accountNumber: "SA-4000-5000-6000", iban: "SA4420000001234567891234", openingBalance: "150000.00", currentBalance: "150000.00" },
   ]).returning();
 
-  // penalty rules (fixed + percent)
+  // penalty rules (fixed + percent) — configuration
   await db.insert(penaltyRulesTable).values([
     { companyId, code: "PR-FIX", name: "Late fee (fixed)", nameAr: "غرامة تأخير (ثابتة)", daysAfterDue: 7, penaltyType: "fixed", penaltyValue: "500.00" },
     { companyId, code: "PR-PCT", name: "Late fee (2%)", nameAr: "غرامة تأخير (2%)", daysAfterDue: 30, penaltyType: "percent", penaltyValue: "2.00" },
   ]);
+
+  // Config-only stops here: cashboxes, bank accounts and penalty rules are
+  // financial setup; everything below is sample business data.
+  if (configOnly) {
+    void branchCashbox;
+    void mainBank;
+    console.log("Seeded finance config: 2 cashboxes, 2 bank accounts, 2 penalty rules");
+    return;
+  }
+
+  const customers = await db.select().from(customersTable).where(eq(customersTable.companyId, companyId)).limit(3);
+  const units = await db.select().from(unitsTable).where(eq(unitsTable.companyId, companyId)).limit(1);
+  if (!customers.length || !units.length) {
+    console.log("Skipping finance demo data: missing customers/units");
+    return;
+  }
 
   // 1 contract + installment plan with an overdue schedule
   const [contract] = await db.insert(contractsTable).values({
@@ -1461,7 +1470,7 @@ async function seedAccounting(): Promise<void> {
   );
 }
 
-async function seedHr(): Promise<void> {
+async function seedHr(configOnly = false): Promise<void> {
   const [company] = await db.select().from(companiesTable).where(eq(companiesTable.code, "HQ001"));
   if (!company) {
     console.log("No sample company found, skipping HR seed");
@@ -1512,28 +1521,31 @@ async function seedHr(): Promise<void> {
     { code: "EMP00002", firstName: "Sara", lastName: "Hassan", firstNameAr: "سارة", lastNameAr: "حسن", dept: "FIN", job: "ACC", salary: "9000", hireDate: "2023-03-01" },
     { code: "EMP00003", firstName: "Omar", lastName: "Khalid", firstNameAr: "عمر", lastNameAr: "خالد", dept: "OPS", job: "ENG", salary: "11000", hireDate: "2021-06-20" },
   ];
+  // Employees are sample business data — skipped for a config-only (empty) seed.
   const empIds: string[] = [];
-  for (const e of empDefs) {
-    const [row] = await db
-      .insert(employeesTable)
-      .values({
-        companyId,
-        branchId,
-        code: e.code,
-        firstName: e.firstName,
-        lastName: e.lastName,
-        firstNameAr: e.firstNameAr,
-        lastNameAr: e.lastNameAr,
-        departmentId: deptIds.get(e.dept),
-        sectionId: e.dept === "HR" ? hrSection.id : null,
-        jobTitleId: jobIds.get(e.job),
-        employmentType: "full_time",
-        hireDate: e.hireDate,
-        basicSalary: e.salary,
-        status: "active",
-      })
-      .returning();
-    empIds.push(row.id);
+  if (!configOnly) {
+    for (const e of empDefs) {
+      const [row] = await db
+        .insert(employeesTable)
+        .values({
+          companyId,
+          branchId,
+          code: e.code,
+          firstName: e.firstName,
+          lastName: e.lastName,
+          firstNameAr: e.firstNameAr,
+          lastNameAr: e.lastNameAr,
+          departmentId: deptIds.get(e.dept),
+          sectionId: e.dept === "HR" ? hrSection.id : null,
+          jobTitleId: jobIds.get(e.job),
+          employmentType: "full_time",
+          hireDate: e.hireDate,
+          basicSalary: e.salary,
+          status: "active",
+        })
+        .returning();
+      empIds.push(row.id);
+    }
   }
 
   await db.insert(shiftsTable).values({
@@ -2069,6 +2081,41 @@ export async function seedAll(): Promise<void> {
   await seedLegal();
   await seedPortal();
   console.log("Seed complete.");
+}
+
+/**
+ * Config-only seed: produce a fully-configured but EMPTY system — exactly like a
+ * brand-new installation, before any business has happened. Seeds every
+ * configuration / setup surface: permissions, roles, the super-admin user,
+ * currencies, company & branches & fiscal years, number sequences, settings,
+ * master-data lookups, the full chart of accounts + mappings + tax codes +
+ * fiscal periods, the financial setup (cashboxes, bank accounts, penalty rules),
+ * and the HR organisation structure (departments, sections, job titles, shifts,
+ * leave types, salary components, current payroll period). It seeds NO
+ * operational / sample records: no projects, units or customers; no
+ * reservations, contracts, receipts or vouchers; no employees; no journal
+ * entries; no legal or portal data.
+ *
+ * Like seedAll, every write goes through the `db` proxy, so the active
+ * AsyncLocalStorage tenant decides the target schema — callers wrap it in
+ * runWithTenant("demo", seedConfig). Powers the owner "Reset Demo" feature.
+ */
+export async function seedConfig(): Promise<void> {
+  await seedPermissions();
+  const roleId = await seedSuperAdminRole();
+  await seedSuperAdminUser(roleId);
+  await seedStandardRoles();
+  await seedCrmRoles();
+  await seedWorkflowRoles();
+  await seedCurrencies();
+  await seedCompany();
+  await seedNumberSequences();
+  await seedSettings();
+  await seedMasterData();
+  await seedAccounting();
+  await seedFinance(true);
+  await seedHr(true);
+  console.log("Config-only seed complete.");
 }
 
 // CLI entry only. The server build bundles this module (it imports `seedAll`),
