@@ -28177,6 +28177,7 @@ components:
         totalPrice: { type: string }
         downPayment: { type: string }
         notes: { type: string }
+        paymentMethod: { type: string }
 
     SubmitToFinanceInput:
       type: object

@@ -3167,6 +3167,7 @@ export interface ConvertReservationInput {
   totalPrice?: string;
   downPayment?: string;
   notes?: string;
+  paymentMethod?: string;
 }
 
 export interface SubmitToFinanceInput {

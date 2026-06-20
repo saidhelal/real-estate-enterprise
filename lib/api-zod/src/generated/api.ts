@@ -4004,7 +4004,8 @@ export const ConvertReservationBody = zod.object({
   "contractDate": zod.string().optional(),
   "totalPrice": zod.string().optional(),
   "downPayment": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "paymentMethod": zod.string().optional()
 })
 
 

@@ -1,71 +1,216 @@
+import { useEffect, useState } from "react";
 import {
-  useListReservations,
-  getListReservationsQueryKey,
   useListContracts,
   getListContractsQueryKey,
-  useListReservationPayments,
-  getListReservationPaymentsQueryKey,
+  useListUnits,
+  useListCustomers,
+  useListCheques,
+  useListCompanies,
+  type Contract,
 } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
-import { BookMarked, FileSignature, Wallet, ArrowRightLeft, FileX } from "lucide-react";
+import { useAuth } from "@/lib/auth-provider";
+import { ContractStageActions } from "@/components/sales/contract-stage-actions";
+import {
+  saleStage,
+  stageLabel,
+  isLiveStage,
+  trafficLight,
+  TRAFFIC_DOT,
+  TRAFFIC_RING,
+  formatElapsed,
+  formatRemaining,
+  isManagerial,
+  paymentMethodLabel,
+  type SaleStage,
+} from "@/lib/sale-workflow";
+import {
+  BookMarked,
+  FileSignature,
+  Wallet,
+  ArrowRightLeft,
+  FileX,
+  AlertTriangle,
+} from "lucide-react";
 
-function Tile({
-  icon: Icon,
-  title,
-  desc,
-  count,
-  href,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  desc: string;
-  count?: number;
-  href: string;
-}) {
-  return (
-    <Link href={href}>
-      <Card className="cursor-pointer transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center justify-between text-base">
-            <span className="flex items-center gap-2">
-              <Icon className="h-4 w-4 text-muted-foreground" />
-              {title}
-            </span>
-            {count != null ? <Badge variant="secondary">{count}</Badge> : null}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 text-sm text-muted-foreground">{desc}</CardContent>
-      </Card>
-    </Link>
-  );
+/** Ticks every 60s so elapsed/remaining timers stay live. */
+function useNow(intervalMs = 60_000) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), intervalMs);
+    return () => clearInterval(id);
+  }, [intervalMs]);
+  return now;
 }
+
+const PIPELINE: SaleStage[] = ["returned", "draft", "pending_finance", "finance_approved", "active"];
 
 export default function CrmSalesPage() {
   const { language, t } = useLanguage();
   const ar = language === "ar";
+  const { user } = useAuth();
+  const now = useNow();
+  const managerial = isManagerial(user);
 
   const p = { pageSize: 200 } as const;
-  const { data: reservations } = useListReservations(p, { query: { queryKey: getListReservationsQueryKey(p) } });
-  const { data: contracts } = useListContracts(p, { query: { queryKey: getListContractsQueryKey(p) } });
-  const { data: payments } = useListReservationPayments(p, { query: { queryKey: getListReservationPaymentsQueryKey(p) } });
+  const { data: contracts, isLoading } = useListContracts(p, { query: { queryKey: getListContractsQueryKey(p) } });
+  const { data: units } = useListUnits(p);
+  const { data: customers } = useListCustomers(p);
+  const { data: cheques } = useListCheques(p);
+  const { data: companies } = useListCompanies();
+  const companyId = companies?.[0]?.id;
+
+  const customerName = (id: string) => customers?.data.find((c) => c.id === id)?.fullName ?? id;
+  const unitCode = (id: string) => units?.data.find((u) => u.id === id)?.code ?? id;
+  const chequeList = cheques?.data ?? [];
+
+  const all = contracts?.data ?? [];
+  const byStage = (s: SaleStage) => all.filter((c) => saleStage(c) === s);
+
+  // Escalation: live contracts that are red/orange on the traffic light.
+  const alerts = all
+    .filter((c) => isLiveStage(saleStage(c)))
+    .filter((c) => {
+      const light = trafficLight(c, now);
+      return light === "red" || light === "orange";
+    });
+
+  const elapsedFrom = (c: Contract) => c.submittedToFinanceAt ?? c.contractDate;
+
+  const ContractRow = ({ c }: { c: Contract }) => {
+    const light = trafficLight(c, now);
+    const stage = saleStage(c);
+    return (
+      <div className={`rounded-md border p-3 space-y-2 ${TRAFFIC_RING[light]}`}>
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-center gap-2 font-medium">
+            <span className={`h-2.5 w-2.5 rounded-full ${TRAFFIC_DOT[light]}`} title={light} />
+            {c.code}
+          </span>
+          <Badge variant={stage === "active" ? "default" : stage === "returned" ? "destructive" : "outline"}>
+            {stageLabel(stage, ar)}
+          </Badge>
+        </div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+          <span>{ar ? "العميل" : "Customer"}: {customerName(c.customerId)}</span>
+          <span>{ar ? "الوحدة" : "Unit"}: {unitCode(c.unitId)}</span>
+          <span>{ar ? "القيمة" : "Total"}: {c.totalPrice}</span>
+          <span>{ar ? "الدفع" : "Payment"}: {paymentMethodLabel(c.paymentMethod, ar)}</span>
+        </div>
+        {isLiveStage(stage) ? (
+          <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs">
+            <span className="text-muted-foreground">
+              {ar ? "المنقضي" : "Elapsed"}: {formatElapsed(elapsedFrom(c), ar, now)}
+            </span>
+            {stage === "pending_finance" && c.financeSlaDueAt ? (
+              <span className={light === "red" ? "font-medium text-red-500" : "text-muted-foreground"}>
+                SLA: {formatRemaining(c.financeSlaDueAt, ar, now)}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
+        <ContractStageActions contract={c} companyId={companyId} cheques={chequeList} />
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{t("nav.crm_sales")}</h1>
         <p className="text-sm text-muted-foreground">
-          {ar ? "إدارة دورة المبيعات: الحجوزات والعقود والمدفوعات" : "Manage the sales cycle: reservations, contracts and payments"}
+          {ar
+            ? "لوحة سير عمليات البيع — تابع كل عقد عبر مراحله وفعّل الإجراء المطلوب لكل مرحلة."
+            : "Operational sales workflow — track every contract through its stages and act on each step."}
         </p>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Tile icon={BookMarked} title={ar ? "الحجوزات" : "Reservations"} desc={ar ? "إنشاء ومتابعة حجوزات الوحدات" : "Create and track unit reservations"} count={reservations?.total ?? reservations?.data.length} href="/reservations" />
-        <Tile icon={FileSignature} title={ar ? "العقود" : "Contracts"} desc={ar ? "عقود البيع ودورة الاعتماد" : "Sales contracts and approval cycle"} count={contracts?.total ?? contracts?.data.length} href="/contracts" />
-        <Tile icon={Wallet} title={ar ? "مدفوعات الحجز" : "Reservation Payments"} desc={ar ? "دفعات الحجز المستلمة" : "Received reservation payments"} count={payments?.total ?? payments?.data.length} href="/reservation-payments" />
-        <Tile icon={ArrowRightLeft} title={ar ? "تحويل الوحدات" : "Unit Transfers"} desc={ar ? "تحويل العقود بين الوحدات" : "Transfer contracts between units"} href="/unit-transfers" />
-        <Tile icon={FileX} title={ar ? "إلغاء العقود" : "Contract Cancellations"} desc={ar ? "طلبات إلغاء العقود" : "Contract cancellation requests"} href="/contract-cancellations" />
+
+      {/* Managerial escalation banner */}
+      {managerial && alerts.length > 0 ? (
+        <Card className="border-red-500/40 bg-red-500/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-base text-red-600 dark:text-red-400">
+              <AlertTriangle className="h-4 w-4" />
+              {ar ? `تنبيهات تأخير (${alerts.length})` : `Delayed alerts (${alerts.length})`}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1.5">
+            {alerts.map((c) => {
+              const light = trafficLight(c, now);
+              return (
+                <div key={c.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                  <span className="flex items-center gap-2">
+                    <span className={`h-2.5 w-2.5 rounded-full ${TRAFFIC_DOT[light]}`} />
+                    <span className="font-medium">{c.code}</span>
+                    <span className="text-muted-foreground">{unitCode(c.unitId)} · {customerName(c.customerId)}</span>
+                    <Badge variant="outline">{stageLabel(saleStage(c), ar)}</Badge>
+                  </span>
+                  <span className={light === "red" ? "text-red-500 font-medium" : "text-orange-500"}>
+                    {c.financeSlaDueAt
+                      ? formatRemaining(c.financeSlaDueAt, ar, now)
+                      : formatElapsed(elapsedFrom(c), ar, now)}
+                  </span>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* Pipeline */}
+      {isLoading ? (
+        <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+      ) : all.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          {ar
+            ? "لا توجد عقود بعد. ابدأ من صفحة الوحدات المتاحة بالضغط على ابدأ البيع."
+            : "No contracts yet. Start from Available Units by pressing Start Sale."}
+        </p>
+      ) : (
+        <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+          {PIPELINE.map((stage) => {
+            const rows = byStage(stage);
+            return (
+              <Card key={stage} className="flex flex-col">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center justify-between text-sm">
+                    <span>{stageLabel(stage, ar)}</span>
+                    <Badge variant="secondary">{rows.length}</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {rows.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">{ar ? "لا يوجد" : "None"}</p>
+                  ) : (
+                    rows.map((c) => <ContractRow key={c.id} c={c} />)
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Detail pages */}
+      <div className="grid gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-5">
+        {[
+          { icon: BookMarked, title: ar ? "الحجوزات" : "Reservations", href: "/reservations" },
+          { icon: FileSignature, title: ar ? "العقود" : "Contracts", href: "/contracts" },
+          { icon: Wallet, title: ar ? "مدفوعات الحجز" : "Reservation Payments", href: "/reservation-payments" },
+          { icon: ArrowRightLeft, title: ar ? "تحويل الوحدات" : "Unit Transfers", href: "/unit-transfers" },
+          { icon: FileX, title: ar ? "إلغاء العقود" : "Contract Cancellations", href: "/contract-cancellations" },
+        ].map(({ icon: Icon, title, href }) => (
+          <Link key={href} href={href}>
+            <Button variant="outline" size="sm" className="w-full justify-start">
+              <Icon className="h-4 w-4 me-1" />
+              {title}
+            </Button>
+          </Link>
+        ))}
       </div>
     </div>
   );

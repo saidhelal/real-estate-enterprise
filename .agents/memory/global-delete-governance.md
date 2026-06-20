@@ -31,3 +31,13 @@ look correct.
   `PATCH` passes through directly.
 - To smoke-test a real delete: `DELETE` with `x-change-reason` → expect `202` → POST
   `/change-requests/:id/approve` → expect status `executed` → GET the record → `404`.
+
+**Operational fields must NOT be set via a protected-resource PATCH.** A field a
+workflow needs to take effect *immediately* (e.g. a contract's `paymentMethod`
+chosen during Start Sale) cannot be written by `PATCH /contracts/:id` — that PATCH
+is parked as a pending approval and never applies in-line. Persist such fields at
+their create/convert moment instead (the create-flow endpoint isn't governed), or
+via a dedicated workflow endpoint that already accepts them (e.g.
+`submit-to-finance` takes `paymentMethod`). To wire a new field through an existing
+create/convert endpoint: add it to that endpoint's OpenAPI input schema, set it on
+the insert, regenerate codegen — then pass it from the client at create time.

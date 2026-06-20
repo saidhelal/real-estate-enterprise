@@ -992,6 +992,7 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
         downPayment: parsed.data.downPayment ?? reservation.amount,
         status: "draft",
         notes: parsed.data.notes ?? reservation.notes,
+        paymentMethod: parsed.data.paymentMethod ?? null,
       })
       .returning();
     await tx.update(reservationsTable).set({ status: "converted" }).where(eq(reservationsTable.id, id));
