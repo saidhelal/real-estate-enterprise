@@ -8002,6 +8002,8 @@ export interface CertificateApprovalLogListResponse {
 export interface Cheque {
   id: string;
   companyId: string;
+  /** @nullable */
+  branchId?: string | null;
   code: string;
   direction: string;
   chequeNumber: string;
@@ -8053,6 +8055,7 @@ export interface Cheque {
 
 export interface ChequeInput {
   companyId: string;
+  branchId?: string;
   code: string;
   direction: string;
   chequeNumber: string;
@@ -8081,6 +8084,7 @@ export interface ChequeInput {
 }
 
 export interface ChequeUpdate {
+  branchId?: string;
   code?: string;
   direction?: string;
   chequeNumber?: string;

@@ -33352,6 +33352,7 @@ components:
       properties:
         id: { type: string }
         companyId: { type: string }
+        branchId: { type: ["string", "null"] }
         code: { type: string }
         direction: { type: string }
         chequeNumber: { type: string }
@@ -33385,6 +33386,7 @@ components:
       required: [companyId, code, direction, chequeNumber]
       properties:
         companyId: { type: string }
+        branchId: { type: string }
         code: { type: string }
         direction: { type: string }
         chequeNumber: { type: string }
@@ -33414,6 +33416,7 @@ components:
     ChequeUpdate:
       type: object
       properties:
+        branchId: { type: string }
         code: { type: string }
         direction: { type: string }
         chequeNumber: { type: string }

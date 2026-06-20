@@ -13,6 +13,7 @@ import {
   useListContracts,
   useListUnits,
   useListInstallmentSchedules,
+  useListBranches,
   type Cheque,
 } from "@workspace/api-client-react";
 import {
@@ -44,13 +45,14 @@ import { useToast } from "@/hooks/use-toast";
 
 // Allowed next statuses for the lifecycle, keyed by current status.
 const NEXT_STATUSES: Record<string, string[]> = {
-  received: ["under_collection", "deposited", "cancelled"],
-  post_dated: ["under_collection", "deposited", "cancelled"],
-  under_collection: ["cleared", "returned", "cancelled"],
-  deposited: ["cleared", "returned", "cancelled"],
+  received: ["under_collection", "deposited", "cancelled", "replaced"],
+  post_dated: ["under_collection", "deposited", "cancelled", "replaced"],
+  under_collection: ["cleared", "returned", "cancelled", "replaced"],
+  deposited: ["cleared", "returned", "cancelled", "replaced"],
   cleared: ["returned"],
-  returned: [],
+  returned: ["replaced"],
   cancelled: [],
+  replaced: [],
 };
 
 function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
@@ -77,7 +79,9 @@ export default function ChequesPage() {
   const { data: contracts } = useListContracts({ pageSize: 200 });
   const { data: units } = useListUnits({ pageSize: 200 });
   const { data: schedules } = useListInstallmentSchedules({ pageSize: 200 });
+  const { data: branches } = useListBranches();
 
+  const branchOptions = (branches ?? []).map((b) => ({ value: b.id, label: b.name, labelAr: b.nameAr ?? b.name }));
   const customerOptions = (customers?.data ?? []).map((c) => ({ value: c.id, label: c.fullName, labelAr: c.nameAr ?? c.fullName }));
   const bankAccountOptions = (bankAccounts?.data ?? []).map((b) => ({ value: b.id, label: `${b.bankName} - ${b.accountNumber}`, labelAr: `${b.bankNameAr} - ${b.accountNumber}` }));
   const supplierOptions = (suppliers?.data ?? []).map((s) => ({ value: s.id, label: s.name, labelAr: s.nameAr ?? s.name }));
@@ -101,6 +105,7 @@ export default function ChequesPage() {
     { name: "chequeDate", label: t("acc.cheque_date"), type: "date" },
     { name: "dueDate", label: t("acc.due_date"), type: "date" },
     { name: "bankName", label: t("acc.bank_name") },
+    { name: "branchId", label: t("nav.branches"), type: "select", options: branchOptions },
     { name: "bankAccountId", label: t("nav.bank_accounts"), type: "select", options: bankAccountOptions },
     { name: "customerId", label: t("nav.customers"), type: "select", options: customerOptions },
     { name: "supplierId", label: t("nav.suppliers"), type: "select", options: supplierOptions },

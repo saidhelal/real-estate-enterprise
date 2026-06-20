@@ -17996,6 +17996,7 @@ export const ListChequesResponse = zod.object({
   "data": zod.array(zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
   "code": zod.string(),
   "direction": zod.string(),
   "chequeNumber": zod.string(),
@@ -18035,6 +18036,7 @@ export const ListChequesResponse = zod.object({
  */
 export const CreateChequeBody = zod.object({
   "companyId": zod.string(),
+  "branchId": zod.string().optional(),
   "code": zod.string(),
   "direction": zod.string(),
   "chequeNumber": zod.string(),
@@ -18073,6 +18075,7 @@ export const GetChequeParams = zod.object({
 export const GetChequeResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
   "code": zod.string(),
   "direction": zod.string(),
   "chequeNumber": zod.string(),
@@ -18111,6 +18114,7 @@ export const UpdateChequeParams = zod.object({
 })
 
 export const UpdateChequeBody = zod.object({
+  "branchId": zod.string().optional(),
   "code": zod.string().optional(),
   "direction": zod.string().optional(),
   "chequeNumber": zod.string().optional(),
@@ -18141,6 +18145,7 @@ export const UpdateChequeBody = zod.object({
 export const UpdateChequeResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
+  "branchId": zod.string().nullish(),
   "code": zod.string(),
   "direction": zod.string(),
   "chequeNumber": zod.string(),

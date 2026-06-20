@@ -28,6 +28,7 @@ import {
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import { saleStage } from "@/lib/sale-workflow";
+import { PaymentChequeManager } from "@/components/sales/payment-cheque-manager";
 import {
   Send,
   CheckCircle2,
@@ -157,6 +158,10 @@ export function ContractStageActions({
       ) : null}
 
       {stage === "active" ? btn("cancel", ar ? "إلغاء البيع" : "Cancel Sale", Ban, "destructive") : null}
+
+      {stage !== "cancelled" && stage !== "rejected" ? (
+        <PaymentChequeManager contract={contract} companyId={companyId} />
+      ) : null}
 
       <Dialog open={active != null} onOpenChange={(o) => { if (!o && !isPending) close(); }}>
         <DialogContent>

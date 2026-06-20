@@ -7,6 +7,7 @@
  */
 
 export interface ChequeUpdate {
+  branchId?: string;
   code?: string;
   direction?: string;
   chequeNumber?: string;

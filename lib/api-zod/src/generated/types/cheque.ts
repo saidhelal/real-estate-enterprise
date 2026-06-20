@@ -9,6 +9,8 @@
 export interface Cheque {
   id: string;
   companyId: string;
+  /** @nullable */
+  branchId?: string | null;
   code: string;
   direction: string;
   chequeNumber: string;

@@ -38,19 +38,23 @@ const CHEQUE_STATUSES = new Set([
   "cleared",
   "returned",
   "cancelled",
+  "replaced",
 ]);
 const CLEARED = "cleared";
-const REVERSING_STATUSES = new Set(["returned", "cancelled"]);
+// `replaced` (a cheque swapped for a new one) reverses any posted collection leg,
+// same as return/cancel; it is only reachable before a cheque has cleared.
+const REVERSING_STATUSES = new Set(["returned", "cancelled", "replaced"]);
 // Allowed lifecycle transitions, enforced server-side (the UI mirrors this, but
 // direct API callers must not be able to jump to an arbitrary status).
 const ALLOWED_TRANSITIONS: Record<string, string[]> = {
-  received: ["under_collection", "deposited", "cancelled"],
-  post_dated: ["under_collection", "deposited", "cancelled"],
-  under_collection: ["cleared", "returned", "cancelled"],
-  deposited: ["cleared", "returned", "cancelled"],
+  received: ["under_collection", "deposited", "cancelled", "replaced"],
+  post_dated: ["under_collection", "deposited", "cancelled", "replaced"],
+  under_collection: ["cleared", "returned", "cancelled", "replaced"],
+  deposited: ["cleared", "returned", "cancelled", "replaced"],
   cleared: ["returned"],
-  returned: [],
+  returned: ["replaced"],
   cancelled: [],
+  replaced: [],
 };
 // Statuses where a cheque is in the bank's hands pending clearance — the point at
 // which the "collection leg" of the two-phase posting is recognised.

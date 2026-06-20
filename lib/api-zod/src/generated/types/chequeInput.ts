@@ -8,6 +8,7 @@
 
 export interface ChequeInput {
   companyId: string;
+  branchId?: string;
   code: string;
   direction: string;
   chequeNumber: string;

@@ -137,6 +137,7 @@ export const LABELS: Record<string, LabelPair> = {
   deposited: { en: "Deposited", ar: "مودع" },
   cleared: { en: "Cleared", ar: "محصّل" },
   returned: { en: "Returned", ar: "مرتجع" },
+  replaced: { en: "Replaced", ar: "مستبدل" },
   // accounting: fiscal period / budget status
   open: { en: "Open", ar: "مفتوح" },
   // engineering: statuses / types
@@ -456,7 +457,7 @@ export const LOOKUP_CATEGORIES: LookupCategory[] = [
   { code: "fiscal_period_status", nameEn: "Fiscal Period Statuses", nameAr: "حالات الفترة المالية", module: "accounting", valueCodes: ["open", "closed"] },
   { code: "tax_type", nameEn: "Tax Types", nameAr: "أنواع الضريبة", module: "accounting", valueCodes: ["output", "input", "exempt"] },
   { code: "cheque_direction", nameEn: "Cheque Directions", nameAr: "اتجاه الشيك", module: "accounting", valueCodes: ["incoming", "outgoing"] },
-  { code: "cheque_status", nameEn: "Cheque Statuses", nameAr: "حالات الشيك", module: "accounting", valueCodes: ["post_dated", "under_collection", "deposited", "cleared", "returned", "cancelled"] },
+  { code: "cheque_status", nameEn: "Cheque Statuses", nameAr: "حالات الشيك", module: "accounting", valueCodes: ["received", "post_dated", "under_collection", "deposited", "cleared", "returned", "cancelled", "replaced"] },
   // Land Bank
   { code: "land_status", nameEn: "Land Statuses", nameAr: "حالات الأرض", module: "landBank", valueCodes: ["available", "acquired", "under_development", "developed", "sold"] },
   { code: "land_ownership_type", nameEn: "Land Ownership Types", nameAr: "أنواع ملكية الأرض", module: "landBank", valueCodes: ["freehold", "leasehold", "usufruct", "joint"] },
