@@ -193,7 +193,7 @@ router.get(
         sql`(
           select coalesce(sum(jel.debit - jel.credit), 0)
           from journal_entry_lines jel
-          join journal_entries je on je.id = jel.entry_id and je.is_deleted = false and je.status = 'posted'
+          join journal_entries je on je.id = jel.entry_id and je.is_deleted = false and je.status in ('posted', 'reversed')
           where jel.account_id = ${budgetLinesTable.accountId}
             and (${budgetLinesTable.costCenterId} is null or jel.cost_center_id = ${budgetLinesTable.costCenterId})
         ) > ${budgetLinesTable.amount}`,
