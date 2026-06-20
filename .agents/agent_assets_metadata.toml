@@ -6,3 +6,9 @@ id = "pkrC1XU8l-qZPVeLHSzWc"
 uri = "file://LEGAL_MIGRATION_REPORT.md"
 type = "text"
 title = "Legal Affairs — Migration & Validation Report"
+
+[[outputs]]
+id = "7GB5ulncan1Xi_t9BynxW"
+uri = "file://INTEGRATION_AUDIT.md"
+type = "text"
+title = "Real Estate ERP — Business Integration Audit"
