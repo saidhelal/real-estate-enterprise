@@ -10,7 +10,10 @@ import {
   getListUnitsQueryKey,
   getListContractsQueryKey,
   getListReservationsQueryKey,
+  getListChequesQueryKey,
+  getListChequeStatusHistorysQueryKey,
   type Unit,
+  type Contract,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -40,6 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -49,6 +53,8 @@ import {
   type Frequency,
   type ScheduleRow,
 } from "@/lib/sale-workflow";
+import { enumLabel } from "@/lib/enums";
+import { ChequeLifecyclePanel } from "@/components/sales/cheque-lifecycle-panel";
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 
 type PaymentMethod = "cash" | "installments" | "cash_installments";
@@ -93,6 +99,11 @@ export function StartSaleDialog({
   const [cheques, setCheques] = useState<Record<number, { chequeNumber: string; bankName: string }>>({});
   const [busy, setBusy] = useState(false);
 
+  // After a successful sale, keep the dialog open and switch to a cheque
+  // management view for the created contract so the sales user can change
+  // status, replace, and view history without leaving the screen.
+  const [createdContract, setCreatedContract] = useState<Contract | null>(null);
+
   // Initialise the price from the unit when the dialog opens for a new unit.
   const [pricedUnitId, setPricedUnitId] = useState<string | null>(null);
   if (unit && unit.id !== pricedUnitId) {
@@ -106,6 +117,7 @@ export function StartSaleDialog({
     setCount("12");
     setStartDate(today());
     setCheques({});
+    setCreatedContract(null);
   }
 
   const net = Math.max(0, (parseFloat(totalPrice) || 0) - (parseFloat(discount) || 0));
@@ -127,6 +139,8 @@ export function StartSaleDialog({
     queryClient.invalidateQueries({ queryKey: getListUnitsQueryKey({ pageSize: 200 }) });
     queryClient.invalidateQueries({ queryKey: getListContractsQueryKey() });
     queryClient.invalidateQueries({ queryKey: getListReservationsQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getListChequesQueryKey({ pageSize: 200 }) });
+    queryClient.invalidateQueries({ queryKey: getListChequeStatusHistorysQueryKey({ pageSize: 200 }) });
   };
 
   const submit = async () => {
@@ -210,7 +224,7 @@ export function StartSaleDialog({
 
       refresh();
       toast({ title: ar ? `بدأ البيع — ${contract.code}` : `Sale started — ${contract.code}` });
-      onOpenChange(false);
+      setCreatedContract(contract);
       onStarted?.();
     } catch {
       toast({ title: t("common.error"), variant: "destructive" });
@@ -224,11 +238,32 @@ export function StartSaleDialog({
       <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {ar ? "بدء البيع" : "Start Sale"}
-            {unit ? ` — ${unit.code}` : ""}
+            {createdContract
+              ? (ar ? "إدارة شيكات العقد" : "Manage Contract Cheques")
+              : (ar ? "بدء البيع" : "Start Sale")}
+            {createdContract ? ` — ${createdContract.code}` : unit ? ` — ${unit.code}` : ""}
           </DialogTitle>
         </DialogHeader>
 
+        {createdContract ? (
+          <>
+            <div className="rounded-md border border-emerald-300 bg-emerald-50 p-2 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+              {ar
+                ? "تم بدء البيع. يمكنك الآن إدارة حالة الشيكات: تغيير الحالة، الاستبدال، وعرض السجل."
+                : "Sale started. You can now manage cheque status: change status, replace, and view history."}
+            </div>
+            <ChequeLifecyclePanel
+              contractId={createdContract.id}
+              companyId={companyId}
+              customerId={createdContract.customerId}
+              unitId={createdContract.unitId}
+              canAdd
+            />
+            <DialogFooter>
+              <Button onClick={() => onOpenChange(false)}>{ar ? "تم" : "Done"}</Button>
+            </DialogFooter>
+          </>
+        ) : (
         <div className="space-y-4">
           {/* Customer */}
           <div className="space-y-1.5">
@@ -333,6 +368,7 @@ export function StartSaleDialog({
                         <TableHead>{ar ? "المبلغ" : "Amount"}</TableHead>
                         <TableHead>{ar ? "رقم الشيك" : "Cheque No."}</TableHead>
                         <TableHead>{ar ? "البنك" : "Bank"}</TableHead>
+                        <TableHead>{ar ? "حالة الشيك" : "Cheque Status"}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -371,6 +407,9 @@ export function StartSaleDialog({
                               }
                             />
                           </TableCell>
+                          <TableCell>
+                            <Badge variant="secondary">{enumLabel("received", language)}</Badge>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -384,17 +423,18 @@ export function StartSaleDialog({
               </p>
             </div>
           ) : null}
-        </div>
 
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={busy}>
-            {t("common.cancel")}
-          </Button>
-          <Button onClick={submit} disabled={!canSubmit}>
-            {busy ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : null}
-            {ar ? "بدء البيع" : "Start Sale"}
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={busy}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={submit} disabled={!canSubmit}>
+              {busy ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : null}
+              {ar ? "بدء البيع" : "Start Sale"}
+            </Button>
+          </DialogFooter>
+        </div>
+        )}
       </DialogContent>
     </Dialog>
   );

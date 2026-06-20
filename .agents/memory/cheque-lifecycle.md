@@ -36,3 +36,12 @@ ERP UI mirrors `ALLOWED_TRANSITIONS` in `NEXT_STATUSES` maps in
 
 **Schema:** `chequesTable.replacedByChequeId` + `replacesChequeId` (both nullable
 uuid) added; surfaced on the OpenAPI `Cheque` response as `["string","null"]`.
+
+**UI placement:** the reusable `ChequeLifecyclePanel` (sales/cheque-lifecycle-panel.tsx)
+is the single source of cheque controls; Change-status / Replace / History are
+**per-cheque** and only render when ≥1 cheque exists for the contract. The Start
+Sale dialog mounts it post-submit by keeping the dialog open (sets a `createdContract`
+state instead of closing) — available units have no contract until the sale is
+created, so the panel cannot exist until then. **Why:** users expect to manage the
+just-created sale's cheques without leaving the popup; verifying "controls present"
+on an empty contract fails because the per-row actions need a cheque first.
