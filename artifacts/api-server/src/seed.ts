@@ -1271,6 +1271,7 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["1080", "Employee Advances", "سلف الموظفين", "asset", "debit", "11", true],
   ["12", "Non-Current Assets", "الأصول غير المتداولة", "asset", "debit", "1", false],
   ["1210", "Property & Equipment", "الممتلكات والمعدات", "asset", "debit", "12", true],
+  ["1220", "Accumulated Depreciation", "مجمع الإهلاك", "asset", "credit", "12", true],
   ["2", "Liabilities", "الخصوم", "liability", "credit", null, false],
   ["21", "Current Liabilities", "الخصوم المتداولة", "liability", "credit", "2", false],
   ["2010", "Accounts Payable", "الذمم الدائنة", "liability", "credit", "21", true],
@@ -1288,11 +1289,14 @@ const DEFAULT_ACCOUNTS: Array<[string, string, string, string, string, string | 
   ["4010", "Property Sales Revenue", "إيرادات مبيعات العقارات", "revenue", "credit", "4", true],
   ["4020", "Rental Income", "إيرادات الإيجار", "revenue", "credit", "4", true],
   ["4030", "Penalty Income", "إيرادات الغرامات", "revenue", "credit", "4", true],
+  ["4040", "Gain on Asset Disposal", "أرباح بيع الأصول الثابتة", "revenue", "credit", "4", true],
   ["5", "Expenses", "المصروفات", "expense", "debit", null, false],
   ["5010", "Cost of Sales", "تكلفة المبيعات", "expense", "debit", "5", true],
   ["5020", "Salaries & Wages", "الرواتب والأجور", "expense", "debit", "5", true],
   ["5030", "General & Administrative", "مصروفات عمومية وإدارية", "expense", "debit", "5", true],
   ["5040", "Sales Commissions", "عمولات المبيعات", "expense", "debit", "5", true],
+  ["5050", "Depreciation Expense", "مصروف الإهلاك", "expense", "debit", "5", true],
+  ["5060", "Loss on Asset Disposal", "خسائر بيع الأصول الثابتة", "expense", "debit", "5", true],
 ];
 
 // Account mappings for automatic posting: [eventKey, debitCode, creditCode, description]
@@ -1328,6 +1332,10 @@ const DEFAULT_MAPPINGS: Array<[string, string, string, string]> = [
   ["loan.disbursement", "1070", "1020", "Employee loan disbursed from bank"],
   ["advance.payment", "1080", "1010", "Employee advance paid in cash"],
   ["legal.fees", "5030", "1010", "Legal fees expense paid in cash"],
+  ["asset.acquisition", "1210", "2010", "Fixed asset acquisition (Property & Equipment vs Accounts Payable)"],
+  ["asset.depreciation", "5050", "1220", "Asset depreciation (Depreciation Expense vs Accumulated Depreciation)"],
+  ["asset.disposal", "1010", "1210", "Asset disposal proceeds/cost (Cash debit, Property & Equipment credit)"],
+  ["asset.disposal.gainloss", "5060", "4040", "Asset disposal result (Loss on Disposal debit, Gain on Disposal credit)"],
 ];
 
 const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

@@ -1,8 +1,9 @@
 import { Router, type IRouter } from "express";
-import { and, desc, eq, ilike, or, type SQL } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, or, type SQL } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import {
   db,
+  accountsTable,
   assetCategoriesTable,
   fixedAssetsTable,
   assetTransfersTable,
@@ -40,6 +41,93 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import {
+  PostingError,
+  postAutomaticEntry,
+  postAutomaticLines,
+  reverseAutomaticEntriesForSource,
+  getCompanyMapping,
+  type Tx,
+  type EntryLineInput,
+} from "../lib/posting";
+import { toCents, fromCents } from "../lib/money";
+
+const today = (): string => new Date().toISOString().slice(0, 10);
+
+// Build and post the balanced disposal entry for an asset (best-effort: skips
+// cleanly when accounting is unconfigured). Mirrors the rest of the ERP's
+// automatic posting — idempotent per (sourceType, sourceId), reversible via
+// reverseAutomaticEntriesForSource.
+//   Dr Cash (proceeds) + Dr Accumulated Depreciation (written off)
+//   Cr Property & Equipment (gross cost)
+//   Cr Gain on Disposal  OR  Dr Loss on Disposal (the balancing result)
+async function postDisposalEntry(
+  tx: Tx,
+  disposal: typeof assetDisposalsTable.$inferSelect,
+  userId: string | null,
+): Promise<void> {
+  const disposalMap = await getCompanyMapping(tx, disposal.companyId, "asset.disposal");
+  const glMap = await getCompanyMapping(tx, disposal.companyId, "asset.disposal.gainloss");
+  const depMap = await getCompanyMapping(tx, disposal.companyId, "asset.depreciation");
+  const cashAccountId = disposalMap?.debitAccountId ?? null; // Cash
+  const assetAccountId = disposalMap?.creditAccountId ?? null; // Property & Equipment
+  const gainAccountId = glMap?.creditAccountId ?? null; // Gain on Disposal
+  const lossAccountId = glMap?.debitAccountId ?? null; // Loss on Disposal
+  const accumAccountId = depMap?.creditAccountId ?? null; // Accumulated Depreciation
+  if (!cashAccountId || !assetAccountId || !gainAccountId || !lossAccountId || !accumAccountId) return;
+
+  // Pre-check accounts (same guard postAutomaticEntry applies) so a
+  // misconfiguration skips posting cleanly rather than throwing from createEntry.
+  const ids = [cashAccountId, assetAccountId, gainAccountId, lossAccountId, accumAccountId];
+  const accts = await tx
+    .select({ id: accountsTable.id, isPostable: accountsTable.isPostable, companyId: accountsTable.companyId })
+    .from(accountsTable)
+    .where(and(inArray(accountsTable.id, ids), eq(accountsTable.isDeleted, false)));
+  const usable = (id: string) => {
+    const a = accts.find((x) => x.id === id);
+    return !!a && a.companyId === disposal.companyId && a.isPostable;
+  };
+  if (!ids.every(usable)) return;
+
+  const [asset] = await tx
+    .select({
+      branchId: fixedAssetsTable.branchId,
+      costCenterId: fixedAssetsTable.costCenterId,
+      acquisitionCost: fixedAssetsTable.acquisitionCost,
+      accumulatedDepreciation: fixedAssetsTable.accumulatedDepreciation,
+    })
+    .from(fixedAssetsTable)
+    .where(eq(fixedAssetsTable.id, disposal.assetId));
+  if (!asset) return;
+
+  const costC = toCents(asset.acquisitionCost) ?? 0n;
+  const accumC = toCents(asset.accumulatedDepreciation) ?? 0n;
+  const proceedsC = toCents(disposal.proceeds) ?? 0n;
+  if (costC <= 0n && proceedsC <= 0n) return; // nothing meaningful to post
+  const gainLossC = proceedsC - (costC - accumC); // >0 gain, <0 loss
+
+  const cc = asset.costCenterId ?? null;
+  const lines: EntryLineInput[] = [];
+  if (proceedsC > 0n) lines.push({ accountId: cashAccountId, costCenterId: cc, debit: fromCents(proceedsC), credit: "0", description: `Disposal proceeds ${disposal.code}` });
+  if (accumC > 0n) lines.push({ accountId: accumAccountId, costCenterId: cc, debit: fromCents(accumC), credit: "0", description: `Accumulated depreciation written off ${disposal.code}` });
+  if (costC > 0n) lines.push({ accountId: assetAccountId, costCenterId: cc, debit: "0", credit: fromCents(costC), description: `Asset cost written off ${disposal.code}` });
+  if (gainLossC > 0n) lines.push({ accountId: gainAccountId, costCenterId: cc, debit: "0", credit: fromCents(gainLossC), description: `Gain on disposal ${disposal.code}` });
+  else if (gainLossC < 0n) lines.push({ accountId: lossAccountId, costCenterId: cc, debit: fromCents(-gainLossC), credit: "0", description: `Loss on disposal ${disposal.code}` });
+  if (lines.length < 2) return;
+
+  await postAutomaticLines(tx, {
+    companyId: disposal.companyId,
+    branchId: asset.branchId,
+    entryDate: disposal.disposalDate ?? today(),
+    description: `Asset disposal ${disposal.code}`,
+    descriptionAr: `استبعاد أصل ${disposal.code}`,
+    reference: disposal.code,
+    sourceType: "assetDisposal",
+    sourceId: disposal.id,
+    userId,
+    lines,
+  });
+}
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -132,7 +220,26 @@ router.get("/fixed-assets", requirePermission("fixedAssets.view"), async (req, r
 router.post("/fixed-assets", requirePermission("fixedAssets.create"), async (req, res): Promise<void> => {
   const parsed = CreateFixedAssetBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(fixedAssetsTable).values({ ...parsed.data }).returning();
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(fixedAssetsTable).values({ ...parsed.data }).returning();
+    // Automatic ledger posting: Dr Property & Equipment / Cr Accounts Payable
+    // (best-effort; skipped if accounting is unconfigured or cost is zero).
+    await postAutomaticEntry(tx, {
+      companyId: created.companyId,
+      branchId: created.branchId,
+      costCenterId: created.costCenterId,
+      eventKey: "asset.acquisition",
+      amount: created.acquisitionCost,
+      entryDate: created.acquisitionDate ?? today(),
+      description: `Asset acquisition ${created.code}`,
+      descriptionAr: `اقتناء أصل ${created.code}`,
+      reference: created.code,
+      sourceType: "fixedAsset",
+      sourceId: created.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return created;
+  });
   await recordAudit(req, { action: "create", entity: "fixedAsset", entityId: row.id, newValue: row });
   res.status(201).json(GetFixedAssetResponse.parse(serializeRow(row)));
 });
@@ -160,7 +267,12 @@ router.patch("/fixed-assets/:id", requirePermission("fixedAssets.update"), async
 
 router.delete("/fixed-assets/:id", requirePermission("fixedAssets.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(fixedAssetsTable).set({ isDeleted: true, isActive: false }).where(and(eq(fixedAssetsTable.id, id), eq(fixedAssetsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [deleted] = await tx.update(fixedAssetsTable).set({ isDeleted: true, isActive: false }).where(and(eq(fixedAssetsTable.id, id), eq(fixedAssetsTable.isDeleted, false))).returning();
+    if (!deleted) return null;
+    await reverseAutomaticEntriesForSource(tx, "fixedAsset", deleted.id, req.authUser?.id ?? null);
+    return deleted;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "fixedAsset", entityId: id });
   res.json({ success: true });
@@ -296,7 +408,13 @@ router.patch("/asset-depreciations/:id", requirePermission("assetDepreciations.u
 
 router.delete("/asset-depreciations/:id", requirePermission("assetDepreciations.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(assetDepreciationsTable).set({ isDeleted: true, isActive: false }).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [deleted] = await tx.update(assetDepreciationsTable).set({ isDeleted: true, isActive: false }).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false))).returning();
+    if (!deleted) return null;
+    // Reverse the depreciation entry's GL if it had been posted.
+    await reverseAutomaticEntriesForSource(tx, "assetDepreciation", deleted.id, req.authUser?.id ?? null);
+    return deleted;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "assetDepreciation", entityId: id });
   res.json({ success: true });
@@ -304,22 +422,52 @@ router.delete("/asset-depreciations/:id", requirePermission("assetDepreciations.
 
 router.post("/asset-depreciations/:id/post", requirePermission("assetDepreciations.post"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [existing] = await db.select().from(assetDepreciationsTable).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false)));
-  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status !== "draft") { res.status(409).json({ error: "Only draft entries can be posted" }); return; }
-  const [row] = await db.update(assetDepreciationsTable).set({ status: "posted" }).where(eq(assetDepreciationsTable.id, id)).returning();
-  await recordAudit(req, { action: "post", entity: "assetDepreciation", entityId: id, oldValue: existing, newValue: row });
-  res.json(GetAssetDepreciationResponse.parse(serializeRow(row)));
+  const result = await db.transaction(async (tx) => {
+    const [existing] = await tx.select().from(assetDepreciationsTable).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false))).for("update");
+    if (!existing) return { notFound: true as const };
+    if (existing.status !== "draft") return { conflict: "Only draft entries can be posted" as const };
+    // Carry the asset's branch / cost center onto the depreciation expense entry.
+    const [asset] = await tx.select({ branchId: fixedAssetsTable.branchId, costCenterId: fixedAssetsTable.costCenterId }).from(fixedAssetsTable).where(eq(fixedAssetsTable.id, existing.assetId));
+    const [row] = await tx.update(assetDepreciationsTable).set({ status: "posted" }).where(eq(assetDepreciationsTable.id, id)).returning();
+    // Automatic ledger posting: Dr Depreciation Expense / Cr Accumulated Depreciation
+    // (best-effort; skipped if accounting is unconfigured or amount is zero).
+    await postAutomaticEntry(tx, {
+      companyId: existing.companyId,
+      branchId: asset?.branchId ?? null,
+      costCenterId: asset?.costCenterId ?? null,
+      eventKey: "asset.depreciation",
+      amount: existing.amount,
+      entryDate: existing.periodDate ?? today(),
+      description: `Asset depreciation ${existing.code}`,
+      descriptionAr: `إهلاك أصل ${existing.code}`,
+      reference: existing.code,
+      sourceType: "assetDepreciation",
+      sourceId: existing.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return { existing, row };
+  });
+  if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+  if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+  await recordAudit(req, { action: "post", entity: "assetDepreciation", entityId: id, oldValue: result.existing, newValue: result.row });
+  res.json(GetAssetDepreciationResponse.parse(serializeRow(result.row)));
 });
 
 router.post("/asset-depreciations/:id/reverse", requirePermission("assetDepreciations.reverse"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [existing] = await db.select().from(assetDepreciationsTable).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false)));
-  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status !== "posted") { res.status(409).json({ error: "Only posted entries can be reversed" }); return; }
-  const [row] = await db.update(assetDepreciationsTable).set({ status: "reversed" }).where(eq(assetDepreciationsTable.id, id)).returning();
-  await recordAudit(req, { action: "reverse", entity: "assetDepreciation", entityId: id, oldValue: existing, newValue: row });
-  res.json(GetAssetDepreciationResponse.parse(serializeRow(row)));
+  const result = await db.transaction(async (tx) => {
+    const [existing] = await tx.select().from(assetDepreciationsTable).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false))).for("update");
+    if (!existing) return { notFound: true as const };
+    if (existing.status !== "posted") return { conflict: "Only posted entries can be reversed" as const };
+    const [row] = await tx.update(assetDepreciationsTable).set({ status: "reversed" }).where(eq(assetDepreciationsTable.id, id)).returning();
+    // Reverse the depreciation entry's GL (mirror entry, original flipped to reversed).
+    await reverseAutomaticEntriesForSource(tx, "assetDepreciation", existing.id, req.authUser?.id ?? null);
+    return { existing, row };
+  });
+  if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+  if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+  await recordAudit(req, { action: "reverse", entity: "assetDepreciation", entityId: id, oldValue: result.existing, newValue: result.row });
+  res.json(GetAssetDepreciationResponse.parse(serializeRow(result.row)));
 });
 
 // ----- assetInventoryCounts -----
@@ -442,7 +590,13 @@ router.patch("/asset-disposals/:id", requirePermission("assetDisposals.update"),
 
 router.delete("/asset-disposals/:id", requirePermission("assetDisposals.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db.update(assetDisposalsTable).set({ isDeleted: true, isActive: false }).where(and(eq(assetDisposalsTable.id, id), eq(assetDisposalsTable.isDeleted, false))).returning();
+  const row = await db.transaction(async (tx) => {
+    const [deleted] = await tx.update(assetDisposalsTable).set({ isDeleted: true, isActive: false }).where(and(eq(assetDisposalsTable.id, id), eq(assetDisposalsTable.isDeleted, false))).returning();
+    if (!deleted) return null;
+    // Reverse the disposal's GL if it had been posted (on approval).
+    await reverseAutomaticEntriesForSource(tx, "assetDisposal", deleted.id, req.authUser?.id ?? null);
+    return deleted;
+  });
   if (!row) { res.status(404).json({ error: "Not found" }); return; }
   await recordAudit(req, { action: "delete", entity: "assetDisposal", entityId: id });
   res.json({ success: true });
@@ -450,12 +604,24 @@ router.delete("/asset-disposals/:id", requirePermission("assetDisposals.delete")
 
 router.post("/asset-disposals/:id/approve", requirePermission("assetDisposals.approve"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [existing] = await db.select().from(assetDisposalsTable).where(and(eq(assetDisposalsTable.id, id), eq(assetDisposalsTable.isDeleted, false)));
-  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status === "approved") { res.status(409).json({ error: "Already approved" }); return; }
-  const [row] = await db.update(assetDisposalsTable).set({ status: "approved" }).where(eq(assetDisposalsTable.id, id)).returning();
-  await recordAudit(req, { action: "approve", entity: "assetDisposal", entityId: id, oldValue: existing, newValue: row });
-  res.json(GetAssetDisposalResponse.parse(serializeRow(row)));
+  try {
+    const result = await db.transaction(async (tx) => {
+      const [existing] = await tx.select().from(assetDisposalsTable).where(and(eq(assetDisposalsTable.id, id), eq(assetDisposalsTable.isDeleted, false))).for("update");
+      if (!existing) return { notFound: true as const };
+      if (existing.status === "approved") return { conflict: "Already approved" as const };
+      const [row] = await tx.update(assetDisposalsTable).set({ status: "approved" }).where(eq(assetDisposalsTable.id, id)).returning();
+      // Automatic ledger posting for the disposal (best-effort; skips if unconfigured).
+      await postDisposalEntry(tx, existing, req.authUser?.id ?? null);
+      return { existing, row };
+    });
+    if ("notFound" in result) { res.status(404).json({ error: "Not found" }); return; }
+    if ("conflict" in result) { res.status(409).json({ error: result.conflict }); return; }
+    await recordAudit(req, { action: "approve", entity: "assetDisposal", entityId: id, oldValue: result.existing, newValue: result.row });
+    res.json(GetAssetDisposalResponse.parse(serializeRow(result.row)));
+  } catch (e) {
+    if (e instanceof PostingError) { res.status(e.status).json({ error: e.message }); return; }
+    throw e;
+  }
 });
 
 router.get("/fixed-assets-dashboard", requirePermission("fixedAssets.view"), async (req, res): Promise<void> => {
