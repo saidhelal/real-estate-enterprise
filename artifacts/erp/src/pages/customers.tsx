@@ -14,7 +14,6 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { Badge } from "@/components/ui/badge";
 import { enumLabel, CRM_CLASSIFICATIONS } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
@@ -83,7 +82,6 @@ export default function CustomersPage() {
       useDelete={useDeleteCustomer}
       getListQueryKey={getListCustomersQueryKey}
       companyId={companyId}
-      rowActions={(r) => <DocumentsRowAction moduleKey="customers" sourceId={r.id} />}
     />
   );
 }

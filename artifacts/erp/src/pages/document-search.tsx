@@ -54,6 +54,7 @@ const PAGE_SIZE = 20;
 
 interface Filters {
   search: string;
+  moduleKey: string;
   status: string;
   documentType: string;
   classification: string;
@@ -70,6 +71,7 @@ interface Filters {
 
 const EMPTY: Filters = {
   search: "",
+  moduleKey: "",
   status: ALL,
   documentType: ALL,
   classification: ALL,
@@ -117,6 +119,7 @@ export default function DocumentSearchPage() {
     page,
     pageSize: PAGE_SIZE,
     search: applied.search || undefined,
+    moduleKey: applied.moduleKey || undefined,
     status: v(applied.status),
     documentType: v(applied.documentType),
     classification: v(applied.classification),
@@ -241,6 +244,18 @@ export default function DocumentSearchPage() {
             )}
             {renderSelect(t("edms.filter.branch"), draft.branchId, (x) => set({ branchId: x }), branchOptions)}
             {renderSelect(t("edms.filter.owner"), draft.ownerUserId, (x) => set({ ownerUserId: x }), userOptions)}
+            <div className="grid gap-1.5">
+              <Label>{t("edms.filter.screen")}</Label>
+              <Input
+                className="w-[160px]"
+                placeholder="units"
+                value={draft.moduleKey}
+                onChange={(e) => set({ moduleKey: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") apply();
+                }}
+              />
+            </div>
             <div className="grid gap-1.5">
               <Label>{t("edms.filter.file_format")}</Label>
               <Input

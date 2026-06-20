@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FolderArchive } from "lucide-react";
+import { Paperclip } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -35,13 +35,13 @@ export function DocumentsRowAction({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" title={t("edms.documents_panel")}>
-          <FolderArchive className="h-4 w-4" />
+        <Button variant="ghost" size="icon" title={t("edms.attachments")}>
+          <Paperclip className="h-4 w-4" />
         </Button>
       </SheetTrigger>
       <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
         <SheetHeader>
-          <SheetTitle>{t("edms.documents_panel")}</SheetTitle>
+          <SheetTitle>{t("edms.attachments")}</SheetTitle>
         </SheetHeader>
         <div className="mt-4">
           {open && (

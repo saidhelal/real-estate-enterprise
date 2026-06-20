@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { setNextChangeReason } from "@workspace/api-client-react";
+import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -172,6 +173,14 @@ export interface ResourceManagerProps<T extends { id: string }> {
   canDelete?: boolean | ((row: T) => boolean);
   /** Extra per-row action buttons rendered before edit/delete. */
   rowActions?: (row: T) => React.ReactNode;
+  /**
+   * Module key for the per-row Attachments action (links uploads to this record
+   * in the central Document Management repository). Defaults to the resource
+   * path derived from `getListQueryKey` (e.g. `/api/units` -> `units`).
+   */
+  attachmentsModuleKey?: string;
+  /** Show the per-row Attachments action. Defaults to true. */
+  attachments?: boolean;
   /** Toolbar select filters injected into the list query (server-side). */
   filters?: ResourceFilter[];
   pageSize?: number;
@@ -203,9 +212,20 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     canEdit = true,
     canDelete = true,
     rowActions,
+    attachmentsModuleKey,
+    attachments = true,
     filters,
     pageSize = 10,
   } = props;
+
+  const attachmentsKey = (() => {
+    if (!attachments) return "";
+    if (attachmentsModuleKey) return attachmentsModuleKey;
+    const first = getListQueryKey()?.[0];
+    return typeof first === "string"
+      ? first.replace(/^\/api\//, "").replace(/^\//, "")
+      : "";
+  })();
 
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
@@ -365,6 +385,9 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                     <TableCell key={i}>{c.render(row)}</TableCell>
                   ))}
                   <TableCell className="text-right space-x-2 whitespace-nowrap">
+                    {attachmentsKey && (
+                      <DocumentsRowAction moduleKey={attachmentsKey} sourceId={row.id} />
+                    )}
                     {rowActions?.(row)}
                     {(typeof canEdit === "function" ? canEdit(row) : canEdit) && (
                       <Button variant="ghost" size="icon" onClick={() => setEditing(row)}>

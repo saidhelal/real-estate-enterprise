@@ -74,12 +74,9 @@ export type PreviewKind = "image" | "pdf" | "text" | "none";
 export function previewKind(mimeType?: string | null, fileName?: string | null): PreviewKind {
   const mime = (mimeType ?? "").toLowerCase();
   const ext = (fileName ?? "").toLowerCase().split(".").pop() ?? "";
-  if (mime.startsWith("image/") || ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp"].includes(ext)) {
-    return "image";
-  }
-  if (mime === "application/pdf" || ext === "pdf") return "pdf";
   // Active content (HTML, SVG, XML, scripts) must never be previewed inline —
-  // it would execute in the app's same origin. Treat it as non-previewable.
+  // it would execute in the app's same origin. Evaluate this FIRST so an
+  // SVG (image/svg+xml) is never classified as a previewable image.
   const dangerous =
     mime === "text/html" ||
     mime === "application/xhtml+xml" ||
@@ -90,6 +87,10 @@ export function previewKind(mimeType?: string | null, fileName?: string | null):
     mime === "text/xml" ||
     ["html", "htm", "xhtml", "svg", "xml", "js", "mjs"].includes(ext);
   if (dangerous) return "none";
+  if (mime.startsWith("image/") || ["png", "jpg", "jpeg", "gif", "webp", "bmp"].includes(ext)) {
+    return "image";
+  }
+  if (mime === "application/pdf" || ext === "pdf") return "pdf";
   if (mime.startsWith("text/") || ["txt", "csv", "json", "md", "log"].includes(ext)) {
     return "text";
   }

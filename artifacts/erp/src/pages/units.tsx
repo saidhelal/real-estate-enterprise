@@ -19,7 +19,6 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { UnitStatusRowAction } from "@/components/units/unit-status-row-action";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
@@ -97,12 +96,7 @@ export default function UnitsPage() {
           options: unitStatusOptions,
         },
       ]}
-      rowActions={(r) => (
-        <>
-          <UnitStatusRowAction unitId={r.id} />
-          <DocumentsRowAction moduleKey="units" sourceId={r.id} />
-        </>
-      )}
+      rowActions={(r) => <UnitStatusRowAction unitId={r.id} />}
     />
   );
 }

@@ -22,7 +22,6 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -156,7 +155,6 @@ export default function ContractsPage() {
               <FileText className="h-4 w-4" />
             </Link>
           </Button>
-          <DocumentsRowAction moduleKey="contracts" sourceId={r.id} />
         </div>
       )}
     />
