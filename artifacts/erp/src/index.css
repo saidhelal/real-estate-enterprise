@@ -39,6 +39,27 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-destructive-border: hsl(var(--destructive-border));
 
+  /* Semantic action tokens (operational buttons) */
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-success-border: hsl(var(--success-border));
+
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-warning-border: hsl(var(--warning-border));
+
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+  --color-info-border: hsl(var(--info-border));
+
+  --color-report: hsl(var(--report));
+  --color-report-foreground: hsl(var(--report-foreground));
+  --color-report-border: hsl(var(--report-border));
+
+  --color-neutral: hsl(var(--neutral));
+  --color-neutral-foreground: hsl(var(--neutral-foreground));
+  --color-neutral-border: hsl(var(--neutral-border));
+
   --color-sidebar: hsl(var(--sidebar));
   --color-sidebar-foreground: hsl(var(--sidebar-foreground));
   --color-sidebar-border: hsl(var(--sidebar-border));
@@ -100,6 +121,27 @@
   --destructive-foreground: 210 40% 98%;
   --destructive-border: 0 84% 60%;
 
+  /* Semantic action tokens */
+  --success: 142 71% 38%;
+  --success-foreground: 0 0% 100%;
+  --success-border: 142 71% 38%;
+
+  --warning: 32 95% 44%;
+  --warning-foreground: 0 0% 100%;
+  --warning-border: 32 95% 44%;
+
+  --info: 211 100% 43%;
+  --info-foreground: 0 0% 100%;
+  --info-border: 211 100% 43%;
+
+  --report: 271 76% 53%;
+  --report-foreground: 0 0% 100%;
+  --report-border: 271 76% 53%;
+
+  --neutral: 215 14% 47%;
+  --neutral-foreground: 0 0% 100%;
+  --neutral-border: 215 14% 47%;
+
   /* Sidebar styling */
   --sidebar: 0 0% 100%;
   --sidebar-foreground: 222 47% 11%;
@@ -156,6 +198,27 @@
   --destructive: 0 63% 31%;
   --destructive-foreground: 210 40% 98%;
   --destructive-border: 0 63% 31%;
+
+  /* Semantic action tokens (dark) */
+  --success: 142 60% 42%;
+  --success-foreground: 0 0% 100%;
+  --success-border: 142 60% 42%;
+
+  --warning: 32 90% 50%;
+  --warning-foreground: 222 47% 11%;
+  --warning-border: 32 90% 50%;
+
+  --info: 211 90% 55%;
+  --info-foreground: 222 47% 11%;
+  --info-border: 211 90% 55%;
+
+  --report: 271 70% 64%;
+  --report-foreground: 222 47% 11%;
+  --report-border: 271 70% 64%;
+
+  --neutral: 215 14% 55%;
+  --neutral-foreground: 222 47% 11%;
+  --neutral-border: 215 14% 55%;
 
   --sidebar: 222 47% 11%;
   --sidebar-foreground: 210 40% 98%;

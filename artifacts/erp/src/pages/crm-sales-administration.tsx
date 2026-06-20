@@ -75,6 +75,8 @@ import {
   FileX,
   UserCog,
   ClipboardList,
+  UserPlus,
+  RefreshCw,
 } from "lucide-react";
 
 const CLOSED_FOLLOWUP = new Set(["done", "completed", "closed", "cancelled"]);
@@ -253,6 +255,17 @@ export default function SalesAdministrationPage() {
     queryClient.invalidateQueries({ queryKey: getListUnitsQueryKey() });
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshDashboard = async () => {
+    setRefreshing(true);
+    try {
+      await queryClient.invalidateQueries();
+      toast({ title: ar ? "تم تحديث اللوحة" : "Dashboard refreshed" });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   const submitCancel = () => {
     if (!dialog || !companyId) return;
     setBusy(true);
@@ -315,6 +328,51 @@ export default function SalesAdministrationPage() {
             : "Operational sales management console: lead distribution, team monitoring, performance KPIs, follow-ups, available units, reports, and permissions."}
         </p>
       </div>
+
+      {/* Operational quick actions — semantic ERP colors (design tokens only) */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            {ar ? "إجراءات تشغيلية" : "Operational Actions"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="success" size="sm">
+              <Link href="/lead-assignments"><UserPlus className="h-3.5 w-3.5 me-1" />{ar ? "إسناد عميل" : "Assign Lead"}</Link>
+            </Button>
+            <Button asChild variant="warning" size="sm">
+              <Link href="/lead-assignments"><UserCog className="h-3.5 w-3.5 me-1" />{ar ? "إعادة إسناد عميل" : "Reassign Lead"}</Link>
+            </Button>
+            <Button asChild variant="info" size="sm">
+              <Link href="/available-units"><Home className="h-3.5 w-3.5 me-1" />{ar ? "الوحدات المتاحة" : "Open Available Units"}</Link>
+            </Button>
+            <Button asChild variant="success" size="sm">
+              <Link href="/available-units"><Rocket className="h-3.5 w-3.5 me-1" />{ar ? "بدء بيع" : "Start Sale"}</Link>
+            </Button>
+            <Button asChild variant="info" size="sm">
+              <Link href="/crm-sales"><PlayCircle className="h-3.5 w-3.5 me-1" />{ar ? "متابعة بيع معلّق" : "Resume Pending Sale"}</Link>
+            </Button>
+            <Button asChild variant="warning" size="sm">
+              <Link href="/my-work"><ClipboardList className="h-3.5 w-3.5 me-1" />{ar ? "مهام اليوم" : "Today's Tasks"}</Link>
+            </Button>
+            <Button asChild variant="destructive" size="sm">
+              <Link href="/lead-follow-ups"><CalendarClock className="h-3.5 w-3.5 me-1" />{ar ? `متابعات متأخرة (${overdueFollowUps.length})` : `Overdue Follow-ups (${overdueFollowUps.length})`}</Link>
+            </Button>
+            {managerial ? (
+              <Button asChild variant="destructive" size="sm">
+                <Link href="/crm-sales"><AlertTriangle className="h-3.5 w-3.5 me-1" />{ar ? `تصعيد الحالات المتأخرة (${overdueSales.length})` : `Escalate Delayed Cases (${overdueSales.length})`}</Link>
+              </Button>
+            ) : null}
+            <Button asChild variant="report" size="sm">
+              <Link href="/crm-reports"><BarChart3 className="h-3.5 w-3.5 me-1" />{ar ? "تقرير أداء المبيعات" : "Sales Performance Report"}</Link>
+            </Button>
+            <Button variant="neutral" size="sm" onClick={refreshDashboard} disabled={refreshing}>
+              <RefreshCw className={`h-3.5 w-3.5 me-1 ${refreshing ? "animate-spin" : ""}`} />{ar ? "تحديث اللوحة" : "Refresh Dashboard"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Managerial overdue-sales alert (red) */}
       {managerial && slaAlerts.length > 0 ? (
