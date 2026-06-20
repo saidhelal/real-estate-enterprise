@@ -1474,6 +1474,8 @@ export interface Lead {
   /** @nullable */
   phone?: string | null;
   /** @nullable */
+  nationalId?: string | null;
+  /** @nullable */
   email?: string | null;
   /** @nullable */
   sourceId?: string | null;
@@ -1498,6 +1500,7 @@ export interface LeadInput {
   code: string;
   fullName: string;
   phone?: string;
+  nationalId?: string;
   email?: string;
   sourceId?: string;
   campaignId?: string;
@@ -1514,6 +1517,7 @@ export interface LeadUpdate {
   code?: string;
   fullName?: string;
   phone?: string;
+  nationalId?: string;
   email?: string;
   sourceId?: string;
   campaignId?: string;
@@ -1640,6 +1644,7 @@ export interface LeadAssignmentInput {
   companyId: string;
   leadId: string;
   assignedToUserId: string;
+  branchId?: string;
   assignedByUserId?: string;
   notes?: string;
 }
@@ -1648,6 +1653,7 @@ export interface LeadAssignmentUpdate {
   companyId?: string;
   leadId?: string;
   assignedToUserId?: string;
+  branchId?: string;
   assignedByUserId?: string;
   notes?: string;
 }

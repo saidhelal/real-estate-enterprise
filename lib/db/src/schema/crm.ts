@@ -36,6 +36,7 @@ export const leadsTable = pgTable("leads", {
   code: text("code").notNull(),
   fullName: text("full_name").notNull(),
   phone: text("phone"),
+  nationalId: text("national_id"),
   email: text("email"),
   sourceId: uuid("source_id"),
   // Marketing attribution (Phase 2). Nullable + additive: existing leads keep

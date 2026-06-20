@@ -26253,6 +26253,7 @@ components:
         code: { type: string }
         fullName: { type: string }
         phone: { type: ["string", "null"] }
+        nationalId: { type: ["string", "null"] }
         email: { type: ["string", "null"] }
         sourceId: { type: ["string", "null"] }
         campaignId: { type: ["string", "null"] }
@@ -26273,6 +26274,7 @@ components:
         code: { type: string }
         fullName: { type: string }
         phone: { type: string }
+        nationalId: { type: string }
         email: { type: string }
         sourceId: { type: string }
         campaignId: { type: string }
@@ -26290,6 +26292,7 @@ components:
         code: { type: string }
         fullName: { type: string }
         phone: { type: string }
+        nationalId: { type: string }
         email: { type: string }
         sourceId: { type: string }
         campaignId: { type: string }
@@ -26431,6 +26434,7 @@ components:
         companyId: { type: string }
         leadId: { type: string }
         assignedToUserId: { type: string }
+        branchId: { type: string }
         assignedByUserId: { type: string }
         notes: { type: string }
 
@@ -26440,6 +26444,7 @@ components:
         companyId: { type: string }
         leadId: { type: string }
         assignedToUserId: { type: string }
+        branchId: { type: string }
         assignedByUserId: { type: string }
         notes: { type: string }
 

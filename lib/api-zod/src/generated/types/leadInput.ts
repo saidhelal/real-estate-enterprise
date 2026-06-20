@@ -12,6 +12,7 @@ export interface LeadInput {
   code: string;
   fullName: string;
   phone?: string;
+  nationalId?: string;
   email?: string;
   sourceId?: string;
   campaignId?: string;

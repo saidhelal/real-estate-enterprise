@@ -10,6 +10,7 @@ export interface LeadAssignmentUpdate {
   companyId?: string;
   leadId?: string;
   assignedToUserId?: string;
+  branchId?: string;
   assignedByUserId?: string;
   notes?: string;
 }

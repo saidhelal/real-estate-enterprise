@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, desc, eq, ilike, or, type SQL } from "drizzle-orm";
+import { and, desc, eq, ilike, isNull, or, type SQL } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import {
   db,
@@ -50,7 +50,12 @@ router.get("/leads", requirePermission("leads.view"), async (req, res): Promise<
   const search = qStr(q, "search");
   const filters: SQL[] = [eq(leadsTable.isDeleted, false)];
   if (search) {
-    const s = or(ilike(leadsTable.code, `%${search}%`), ilike(leadsTable.fullName, `%${search}%`));
+    const s = or(
+      ilike(leadsTable.code, `%${search}%`),
+      ilike(leadsTable.fullName, `%${search}%`),
+      ilike(leadsTable.phone, `%${search}%`),
+      ilike(leadsTable.nationalId, `%${search}%`),
+    );
     if (s) filters.push(s);
   }
   const companyId = qStr(q, "companyId");
@@ -61,6 +66,8 @@ router.get("/leads", requirePermission("leads.view"), async (req, res): Promise<
   if (sourceId) filters.push(eq(leadsTable.sourceId, sourceId));
   const assignedToUserId = qStr(q, "assignedToUserId");
   if (assignedToUserId) filters.push(eq(leadsTable.assignedToUserId, assignedToUserId));
+  // Unassigned queue for the Assign Customer screen: leads with no sales user yet.
+  if (qStr(q, "unassigned") === "true") filters.push(isNull(leadsTable.assignedToUserId));
   const status = qStr(q, "status");
   if (status) filters.push(eq(leadsTable.status, status));
   const where = and(...filters);
@@ -81,7 +88,35 @@ router.get("/leads", requirePermission("leads.view"), async (req, res): Promise<
 router.post("/leads", requirePermission("leads.create"), async (req, res): Promise<void> => {
   const parsed = CreateLeadBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(leadsTable).values({ ...parsed.data }).returning();
+  const data = parsed.data;
+  // Duplicate detection: National ID first, then Mobile (phone). Company-scoped,
+  // ignoring soft-deleted leads. Blank values never count as duplicates.
+  const nationalId = data.nationalId?.trim();
+  const phone = data.phone?.trim();
+  const dupConds: SQL[] = [];
+  if (nationalId) dupConds.push(eq(leadsTable.nationalId, nationalId));
+  if (phone) dupConds.push(eq(leadsTable.phone, phone));
+  const dupOr = dupConds.length ? or(...dupConds) : undefined;
+  if (dupOr) {
+    const existing = await db
+      .select()
+      .from(leadsTable)
+      .where(and(eq(leadsTable.companyId, data.companyId), eq(leadsTable.isDeleted, false), dupOr));
+    const byNationalId = nationalId ? existing.find((l) => l.nationalId === nationalId) : undefined;
+    const byPhone = phone ? existing.find((l) => l.phone === phone) : undefined;
+    const match = byNationalId ?? byPhone;
+    if (match) {
+      res.status(409).json({
+        error: byNationalId
+          ? "A lead with this National ID already exists."
+          : "A lead with this Mobile already exists.",
+        duplicateField: byNationalId ? "nationalId" : "phone",
+        existingLeadId: match.id,
+      });
+      return;
+    }
+  }
+  const [row] = await db.insert(leadsTable).values({ ...data }).returning();
   await recordAudit(req, { action: "create", entity: "lead", entityId: row.id, newValue: row });
   res.status(201).json(GetLeadResponse.parse(serializeRow(row)));
 });
@@ -349,7 +384,20 @@ router.get("/lead-assignments", requirePermission("leadAssignments.view"), async
 router.post("/lead-assignments", requirePermission("leadAssignments.create"), async (req, res): Promise<void> => {
   const parsed = CreateLeadAssignmentBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(leadAssignmentsTable).values({ ...parsed.data }).returning();
+  // branchId is not stored on the assignment history row; it is applied to the
+  // lead itself (leads already own branchId). Keep it out of the insert.
+  const { branchId, ...assignment } = parsed.data;
+  const [row] = await db.insert(leadAssignmentsTable).values({ ...assignment }).returning();
+  // The assignment must actually take effect on the lead so it leaves the
+  // "unassigned" queue: set the sales user (and branch when provided).
+  const leadUpdate: { assignedToUserId: string; branchId?: string } = {
+    assignedToUserId: assignment.assignedToUserId,
+  };
+  if (branchId) leadUpdate.branchId = branchId;
+  await db
+    .update(leadsTable)
+    .set(leadUpdate)
+    .where(and(eq(leadsTable.id, assignment.leadId), eq(leadsTable.isDeleted, false)));
   await recordAudit(req, { action: "create", entity: "leadAssignment", entityId: row.id, newValue: row });
   res.status(201).json(GetLeadAssignmentResponse.parse(serializeRow(row)));
 });

@@ -2576,6 +2576,7 @@ export const ListLeadsResponse = zod.object({
   "code": zod.string(),
   "fullName": zod.string(),
   "phone": zod.string().nullish(),
+  "nationalId": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
   "campaignId": zod.string().nullish(),
@@ -2602,6 +2603,7 @@ export const CreateLeadBody = zod.object({
   "code": zod.string(),
   "fullName": zod.string(),
   "phone": zod.string().optional(),
+  "nationalId": zod.string().optional(),
   "email": zod.string().optional(),
   "sourceId": zod.string().optional(),
   "campaignId": zod.string().optional(),
@@ -2627,6 +2629,7 @@ export const GetLeadResponse = zod.object({
   "code": zod.string(),
   "fullName": zod.string(),
   "phone": zod.string().nullish(),
+  "nationalId": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
   "campaignId": zod.string().nullish(),
@@ -2653,6 +2656,7 @@ export const UpdateLeadBody = zod.object({
   "code": zod.string().optional(),
   "fullName": zod.string().optional(),
   "phone": zod.string().optional(),
+  "nationalId": zod.string().optional(),
   "email": zod.string().optional(),
   "sourceId": zod.string().optional(),
   "campaignId": zod.string().optional(),
@@ -2670,6 +2674,7 @@ export const UpdateLeadResponse = zod.object({
   "code": zod.string(),
   "fullName": zod.string(),
   "phone": zod.string().nullish(),
+  "nationalId": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
   "campaignId": zod.string().nullish(),
@@ -2955,6 +2960,7 @@ export const CreateLeadAssignmentBody = zod.object({
   "companyId": zod.string(),
   "leadId": zod.string(),
   "assignedToUserId": zod.string(),
+  "branchId": zod.string().optional(),
   "assignedByUserId": zod.string().optional(),
   "notes": zod.string().optional()
 })
@@ -2990,6 +2996,7 @@ export const UpdateLeadAssignmentBody = zod.object({
   "companyId": zod.string().optional(),
   "leadId": zod.string().optional(),
   "assignedToUserId": zod.string().optional(),
+  "branchId": zod.string().optional(),
   "assignedByUserId": zod.string().optional(),
   "notes": zod.string().optional()
 })
@@ -29893,6 +29900,7 @@ export const DistributeMarketingLeadResponse = zod.object({
   "code": zod.string(),
   "fullName": zod.string(),
   "phone": zod.string().nullish(),
+  "nationalId": zod.string().nullish(),
   "email": zod.string().nullish(),
   "sourceId": zod.string().nullish(),
   "campaignId": zod.string().nullish(),

@@ -16,6 +16,8 @@ export interface Lead {
   /** @nullable */
   phone?: string | null;
   /** @nullable */
+  nationalId?: string | null;
+  /** @nullable */
   email?: string | null;
   /** @nullable */
   sourceId?: string | null;
