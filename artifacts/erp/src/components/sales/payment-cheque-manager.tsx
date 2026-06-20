@@ -7,6 +7,8 @@ import {
   useCreateReceipt,
   useApproveReceipt,
   getListReceiptsQueryKey,
+  useListChequeStatusHistorys,
+  getListChequeStatusHistorysQueryKey,
   type Contract,
   type Cheque,
   type Receipt,
@@ -36,7 +38,7 @@ import { useAuth } from "@/lib/auth-provider";
 import { useToast } from "@/hooks/use-toast";
 import { saleStage, isManagerial, genCode } from "@/lib/sale-workflow";
 import { enumLabel } from "@/lib/enums";
-import { Banknote, Wallet, Plus, CheckCircle2, Lock } from "lucide-react";
+import { Banknote, Wallet, Plus, CheckCircle2, Lock, History } from "lucide-react";
 
 // Lifecycle transitions for cheques, mirrored from the API ALLOWED_TRANSITIONS.
 // `replaced` is reached only via the dedicated /replace endpoint, never a plain
@@ -49,6 +51,10 @@ const NEXT_STATUSES: Record<string, string[]> = {
   cancelled: [],
   replaced: [],
 };
+
+// A cheque may be swapped for a replacement only while it has not been collected
+// or already terminated. Mirrors the API REPLACEABLE_FROM set.
+const REPLACEABLE_FROM = new Set(["received", "under_collection", "returned"]);
 
 const PAYMENT_METHODS = ["cash", "bank_transfer", "cheque", "card"];
 
@@ -97,8 +103,13 @@ export function PaymentChequeManager({
 
   const chequesQ = useListCheques({ pageSize: 200 }, { query: { queryKey: getListChequesQueryKey({ pageSize: 200 }) } });
   const receiptsQ = useListReceipts({ pageSize: 200 }, { query: { queryKey: getListReceiptsQueryKey({ pageSize: 200 }) } });
+  const historyQ = useListChequeStatusHistorys(
+    { pageSize: 200 },
+    { query: { queryKey: getListChequeStatusHistorysQueryKey({ pageSize: 200 }) } },
+  );
 
   const cheques = (chequesQ.data?.data ?? []).filter((c) => c.contractId === contract.id);
+  const historyRows = historyQ.data?.data ?? [];
   const receipts = (receiptsQ.data?.data ?? []).filter(
     (r) => r.contractId === contract.id && PAYMENT_ITEM_TYPES.some((it) => it.code === r.reference),
   );
@@ -107,9 +118,15 @@ export function PaymentChequeManager({
   const createReceipt = useCreateReceipt();
   const approveReceipt = useApproveReceipt();
 
-  const refreshCheques = () => queryClient.invalidateQueries({ queryKey: getListChequesQueryKey({ pageSize: 200 }) });
+  const refreshCheques = () => {
+    queryClient.invalidateQueries({ queryKey: getListChequesQueryKey({ pageSize: 200 }) });
+    queryClient.invalidateQueries({ queryKey: getListChequeStatusHistorysQueryKey({ pageSize: 200 }) });
+  };
   const refreshReceipts = () => queryClient.invalidateQueries({ queryKey: getListReceiptsQueryKey({ pageSize: 200 }) });
   const onError = () => toast({ title: t("common.error"), variant: "destructive" });
+
+  // Which cheque's status history is currently expanded inline.
+  const [historyOpen, setHistoryOpen] = useState<string | null>(null);
 
   // ---- Cheque add form state ----
   const [showChequeForm, setShowChequeForm] = useState(false);
@@ -163,6 +180,48 @@ export function PaymentChequeManager({
   const [txnBusy, setTxnBusy] = useState(false);
 
   const openTxn = (ch: Cheque) => { setTxnTarget(ch); setTxnStatus(""); setTxnDate(today()); setTxnReason(""); };
+
+  // ---- Cheque replace state ----
+  const [replaceTarget, setReplaceTarget] = useState<Cheque | null>(null);
+  const [replChequeNumber, setReplChequeNumber] = useState("");
+  const [replAmount, setReplAmount] = useState("");
+  const [replDueDate, setReplDueDate] = useState("");
+  const [replNotes, setReplNotes] = useState("");
+  const [replBusy, setReplBusy] = useState(false);
+
+  const openReplace = (ch: Cheque) => {
+    setReplaceTarget(ch);
+    setReplChequeNumber("");
+    setReplAmount(ch.amount ?? "");
+    setReplDueDate(ch.dueDate ?? "");
+    setReplNotes("");
+  };
+
+  const submitReplace = async () => {
+    if (!replaceTarget) return;
+    setReplBusy(true);
+    try {
+      const res = await fetch(`/api/cheques/${replaceTarget.id}/replace`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chequeNumber: replChequeNumber || undefined,
+          amount: replAmount || undefined,
+          dueDate: replDueDate || undefined,
+          notes: replNotes || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      toast({ title: ar ? "تم استبدال الشيك" : "Cheque replaced" });
+      setReplaceTarget(null);
+      refreshCheques();
+    } catch {
+      onError();
+    } finally {
+      setReplBusy(false);
+    }
+  };
   const submitTxn = async () => {
     if (!txnTarget || !txnStatus) return;
     setTxnBusy(true);
@@ -315,17 +374,62 @@ export function PaymentChequeManager({
               <div className="space-y-1">
                 {cheques.map((ch) => {
                   const next = NEXT_STATUSES[ch.status] ?? [];
+                  const canReplace = REPLACEABLE_FROM.has(ch.status);
+                  const isHistoryOpen = historyOpen === ch.id;
+                  const rows = historyRows
+                    .filter((h) => h.chequeId === ch.id)
+                    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
                   return (
-                    <div key={ch.id} className="flex flex-wrap items-center gap-2 rounded-md border p-2 text-sm">
-                      <span className="font-medium">{ch.chequeNumber}</span>
-                      <span className="text-muted-foreground">{ch.amount}</span>
-                      {ch.bankName ? <span className="text-muted-foreground">{ch.bankName}</span> : null}
-                      {ch.dueDate ? <span className="text-muted-foreground">{ch.dueDate}</span> : null}
-                      <Badge variant={chequeStatusVariant(ch.status)}>{enumLabel(ch.status, language)}</Badge>
-                      {next.length > 0 ? (
-                        <Button size="sm" variant="outline" className="ms-auto" onClick={() => openTxn(ch)}>
-                          {ar ? "تغيير الحالة" : "Change status"}
-                        </Button>
+                    <div key={ch.id} className="rounded-md border p-2 text-sm">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-medium">{ch.chequeNumber}</span>
+                        <span className="text-muted-foreground">{ch.amount}</span>
+                        {ch.bankName ? <span className="text-muted-foreground">{ch.bankName}</span> : null}
+                        {ch.dueDate ? <span className="text-muted-foreground">{ch.dueDate}</span> : null}
+                        <Badge variant={chequeStatusVariant(ch.status)}>{enumLabel(ch.status, language)}</Badge>
+                        <div className="ms-auto flex flex-wrap items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setHistoryOpen((v) => (v === ch.id ? null : ch.id))}
+                          >
+                            <History className="h-4 w-4 me-1" />
+                            {ar ? "السجل" : "History"}
+                          </Button>
+                          {canReplace ? (
+                            <Button size="sm" variant="outline" onClick={() => openReplace(ch)}>
+                              {t("acc.replace_cheque")}
+                            </Button>
+                          ) : null}
+                          {next.length > 0 ? (
+                            <Button size="sm" variant="outline" onClick={() => openTxn(ch)}>
+                              {ar ? "تغيير الحالة" : "Change status"}
+                            </Button>
+                          ) : null}
+                        </div>
+                      </div>
+                      {isHistoryOpen ? (
+                        <div className="mt-2 space-y-1 rounded-md bg-muted/40 p-2">
+                          <p className="text-xs font-semibold text-muted-foreground">
+                            {ar ? "سجل حالة الشيك" : "Cheque status history"}
+                          </p>
+                          {rows.length === 0 ? (
+                            <p className="text-xs text-muted-foreground">{ar ? "لا يوجد سجل" : "No history"}</p>
+                          ) : (
+                            rows.map((h) => (
+                              <div key={h.id} className="flex flex-wrap items-center gap-2 text-xs">
+                                <span className="text-muted-foreground">{(h.actionDate ?? h.createdAt ?? "").slice(0, 10)}</span>
+                                <span>
+                                  {h.fromStatus ? enumLabel(h.fromStatus, language) : "—"}
+                                  {" → "}
+                                  {h.toStatus ? enumLabel(h.toStatus, language) : "—"}
+                                </span>
+                                {h.actorName ? <span className="text-muted-foreground">· {h.actorName}</span> : null}
+                                {h.notes ? <span className="text-muted-foreground">· {h.notes}</span> : null}
+                              </div>
+                            ))
+                          )}
+                        </div>
                       ) : null}
                     </div>
                   );
@@ -450,6 +554,41 @@ export function PaymentChequeManager({
           <DialogFooter>
             <Button variant="ghost" onClick={() => setTxnTarget(null)} disabled={txnBusy}>{t("common.cancel")}</Button>
             <Button onClick={submitTxn} disabled={!txnStatus || txnBusy}>{t("common.save")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Cheque replace dialog */}
+      <Dialog open={replaceTarget != null} onOpenChange={(o) => { if (!o && !replBusy) setReplaceTarget(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("acc.replace_cheque")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label>{t("acc.cheque_number")}</Label>
+              <Input
+                value={replChequeNumber}
+                onChange={(e) => setReplChequeNumber(e.target.value)}
+                placeholder={replaceTarget?.chequeNumber ?? ""}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>{t("acc.amount")}</Label>
+              <Input type="number" value={replAmount} onChange={(e) => setReplAmount(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>{t("acc.due_date")}</Label>
+              <Input type="date" value={replDueDate} onChange={(e) => setReplDueDate(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>{t("acc.description")}</Label>
+              <Textarea rows={2} value={replNotes} onChange={(e) => setReplNotes(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setReplaceTarget(null)} disabled={replBusy}>{t("common.cancel")}</Button>
+            <Button onClick={submitReplace} disabled={replBusy}>{t("common.save")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
