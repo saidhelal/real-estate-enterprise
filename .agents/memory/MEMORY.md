@@ -61,3 +61,4 @@
 - [Data Entry Center wizard](data-entry-center.md) — guided bulk master-data entry ONLY (no sales/reservation/contract/installment); resumable serverId-skip commit.
 - [Approval-workflow status integrity](workflow-status-integrity.md) — status owns authz: server-force initial status on create; live-claim guards include ALL pre-terminal statuses; side-effect rows born non-active; escalation unions acting+originating audiences.
 - [Sales Admin page scope](sales-admin-scope.md) — /sales-administration is CRM-ops only (leads/team/follow-ups/available-units+Start Sale/reports/roles); no contract/finance/cheque/legal — those stay in Finance/Legal/contract board.
+- [Cheque status lifecycle](cheque-lifecycle.md) — canonical 6-status enum (received default → under_collection → collected; returned/cancelled/replaced); replace via dedicated endpoint (keeps original + links); returned fires urgent finance alert.
