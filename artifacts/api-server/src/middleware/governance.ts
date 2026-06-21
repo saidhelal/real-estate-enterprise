@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import type { Request, Response, NextFunction } from "express";
 import { db, changeRequestsTable } from "@workspace/db";
-import { ACCESS_COOKIE, verifyAccessToken } from "../lib/auth";
+import { ACCESS_COOKIE, verifyAccessToken, OWNER_COOKIE, verifyOwnerToken } from "../lib/auth";
 import { loadAuthUser } from "../lib/access";
 import { toChangeRequest } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
@@ -107,6 +107,21 @@ export async function governanceMiddleware(
     return;
   }
   req.authUser = user;
+
+  // Owner-in-Owner-Mode bypass: an owner-tier account ("*") with an active,
+  // step-up-verified Owner Mode session deletes directly, skipping the approval
+  // workflow entirely. This is deliberately narrow — it requires BOTH full
+  // permissions AND a valid owner cookie bound to this same user — so ordinary
+  // users, and even a super admin who is NOT currently in Owner Mode, still go
+  // through governance. Scoped to DELETE only; protected edits stay governed.
+  if (requestType === "delete" && user.permissions.includes("*")) {
+    const ownerToken = req.cookies?.[OWNER_COOKIE];
+    const ownerId = ownerToken ? verifyOwnerToken(ownerToken) : null;
+    if (ownerId && ownerId === user.id) {
+      next();
+      return;
+    }
+  }
 
   // Authorize the REQUESTER before parking a change request. The governance
   // middleware runs ahead of the route's own requirePermission guard, so

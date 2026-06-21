@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { setNextChangeReason } from "@workspace/api-client-react";
+import { useOwnerMode } from "@/lib/owner-mode-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
@@ -230,6 +231,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { active: ownerMode } = useOwnerMode();
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -262,8 +264,13 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
   const confirmDelete = () => {
     if (!deleteTarget) return;
     const reason = deleteReason.trim();
-    if (!reason) return;
-    setNextChangeReason(reason, heading);
+    // In Owner Mode the server bypasses the approval workflow and deletes
+    // immediately, so no justification is required. Otherwise a reason is
+    // mandatory and is sent as the change-request header.
+    if (!ownerMode) {
+      if (!reason) return;
+      setNextChangeReason(reason, heading);
+    }
     deleteMutation.mutate(
       { id: deleteTarget.id },
       {
@@ -456,15 +463,19 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
             <DialogTitle>{t("common.delete")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">{t("governance.delete_hint")}</p>
-            <div className="space-y-2">
-              <Label>{t("governance.reason")}</Label>
-              <Textarea
-                value={deleteReason}
-                onChange={(e) => setDeleteReason(e.target.value)}
-                placeholder={t("governance.reason_placeholder")}
-              />
-            </div>
+            <p className="text-sm text-muted-foreground">
+              {ownerMode ? t("governance.delete_hint_owner") : t("governance.delete_hint")}
+            </p>
+            {!ownerMode && (
+              <div className="space-y-2">
+                <Label>{t("governance.reason")}</Label>
+                <Textarea
+                  value={deleteReason}
+                  onChange={(e) => setDeleteReason(e.target.value)}
+                  placeholder={t("governance.reason_placeholder")}
+                />
+              </div>
+            )}
             <div className="flex justify-end gap-2 pt-2">
               <Button
                 type="button"
@@ -478,7 +489,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
               </Button>
               <Button
                 variant="destructive"
-                disabled={deleteMutation.isPending || !deleteReason.trim()}
+                disabled={deleteMutation.isPending || (!ownerMode && !deleteReason.trim())}
                 onClick={confirmDelete}
               >
                 {t("common.delete")}

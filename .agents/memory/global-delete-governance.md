@@ -32,6 +32,17 @@ look correct.
 - To smoke-test a real delete: `DELETE` with `x-change-reason` → expect `202` → POST
   `/change-requests/:id/approve` → expect status `executed` → GET the record → `404`.
 
+**Owner-in-Owner-Mode DELETE bypass (the one sanctioned exception).** The
+governance middleware skips parking and calls `next()` (real handler runs in-line)
+ONLY when the resolved requester holds `*` AND presents a valid `OWNER_COOKIE`
+(`verifyOwnerToken`) whose subject equals their own user id — the exact triple
+`requireOwnerMode` enforces. It is DELETE-only; protected PATCH stays governed.
+A super admin NOT currently in Owner Mode, and every non-owner, still go through
+approval. Client `ResourceManager` drops the mandatory-reason prompt when
+`useOwnerMode().active` (server ignores the reason anyway on bypass). Note: the
+real DELETE handler's integrity guards (child-row checks) still apply, so an owner
+can't orphan records this way — that is correct, not a bug.
+
 **Operational fields must NOT be set via a protected-resource PATCH.** A field a
 workflow needs to take effect *immediately* (e.g. a contract's `paymentMethod`
 chosen during Start Sale) cannot be written by `PATCH /contracts/:id` — that PATCH
