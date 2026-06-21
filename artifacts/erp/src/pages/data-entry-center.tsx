@@ -453,6 +453,9 @@ export default function DataEntryCenterPage() {
               committedUnits={committedUnits}
               commitError={commitError}
               canConfirm={canConfirm}
+              projectReady={projectReady}
+              hasUnits={counts.units > 0}
+              hasCompany={!!companyId}
               onConfirm={commit}
               language={language}
               tr={tr}
@@ -1485,6 +1488,9 @@ function ReviewStep({
   committedUnits,
   commitError,
   canConfirm,
+  projectReady,
+  hasUnits,
+  hasCompany,
   onConfirm,
   language,
   tr,
@@ -1495,6 +1501,9 @@ function ReviewStep({
   committedUnits: number;
   commitError: string | null;
   canConfirm: boolean;
+  projectReady: boolean;
+  hasUnits: boolean;
+  hasCompany: boolean;
   onConfirm: () => void;
   language: "en" | "ar";
   tr: Tr;
@@ -1550,18 +1559,40 @@ function ReviewStep({
 
       <Separator />
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {canConfirm
-            ? tr(
-                "Confirm to create all records in the existing modules.",
-                "أكّد لإنشاء جميع السجلات في الوحدات الحالية.",
-              )
-            : tr(
-                "Add a project and at least one unit to confirm.",
-                "أضف مشروعاً ووحدة واحدة على الأقل للتأكيد.",
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {canConfirm ? (
+          <p className="text-sm text-muted-foreground">
+            {tr(
+              "Confirm to create all records in the existing modules.",
+              "أكّد لإنشاء جميع السجلات في الوحدات الحالية.",
+            )}
+          </p>
+        ) : (
+          <div className="space-y-1 text-sm">
+            <p className="font-medium text-muted-foreground">
+              {tr("Complete the following to confirm:", "أكمل ما يلي للتأكيد:")}
+            </p>
+            <ul className="space-y-0.5">
+              <li className={projectReady ? "text-muted-foreground" : "text-destructive"}>
+                {projectReady ? "✓" : "•"}{" "}
+                {tr("Choose or create a project", "اختر أو أنشئ مشروعاً")}
+              </li>
+              <li className={hasUnits ? "text-muted-foreground" : "text-destructive"}>
+                {hasUnits ? "✓" : "•"}{" "}
+                {tr("Add at least one unit", "أضف وحدة واحدة على الأقل")}
+              </li>
+              {!hasCompany && (
+                <li className="text-destructive">
+                  •{" "}
+                  {tr(
+                    "No company is available for this session — reload the page or re-enter Testing Mode.",
+                    "لا توجد شركة متاحة لهذه الجلسة — أعد تحميل الصفحة أو ادخل وضع الاختبار من جديد.",
+                  )}
+                </li>
               )}
-        </p>
+            </ul>
+          </div>
+        )}
         <Button disabled={!canConfirm || committing} onClick={onConfirm}>
           {committing ? tr("Creating…", "جارٍ الإنشاء…") : tr("Confirm Project Setup", "تأكيد إعداد المشروع")}
         </Button>
