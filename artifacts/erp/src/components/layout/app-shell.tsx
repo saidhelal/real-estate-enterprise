@@ -57,6 +57,7 @@ const RAW_NAV_GROUPS: NavGroup[] = [
     { href: "/documents", icon: FolderArchive, labelKey: "nav.documents" },
     { href: "/document-search", icon: Search, labelKey: "nav.document_search" },
     { href: "/document-approvals", icon: Inbox, labelKey: "nav.document_approvals" },
+    { href: "/document-transfers", icon: Share2, labelKey: "nav.document_transfers" },
   ]},
   { titleKey: "nav.group.sales_crm", items: [
     { href: "/sales-administration", icon: SlidersHorizontal, labelKey: "nav.sales_administration" },

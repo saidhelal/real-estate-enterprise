@@ -8,6 +8,7 @@ import {
   date,
   jsonb,
   timestamp,
+  index,
 } from "drizzle-orm/pg-core";
 
 const audit = {
@@ -170,3 +171,82 @@ export const documentObjectOwnersTable = pgTable("document_object_owners", {
   ...audit,
 });
 export type DocumentObjectOwnerRow = typeof documentObjectOwnersTable.$inferSelect;
+
+/* ------------------------------------------------------------------ */
+/* Internal Document Transfer ("Send Document")                       */
+/* تحويل / إرسال المستندات داخلياً                                     */
+/*                                                                    */
+/* Extends the central EDMS into an internal document-communication   */
+/* layer. A "transfer" is an envelope: one sender routes an EXISTING  */
+/* document (referenced by documentId — never copied) to one or more  */
+/* recipients (specific users and/or whole departments). Each         */
+/* resolved recipient gets its own row in document_transfer_recipients*/
+/* so delivery is tracked per person (sent -> received -> viewed).    */
+/* Recipients are notified through the shared Notification Center with */
+/* a direct link; opening the actual file still goes through the       */
+/* permission-guarded documents endpoints (no access backdoor).       */
+/* ------------------------------------------------------------------ */
+
+// The send envelope: one row per "send" action. Holds the sender, the routed
+// document, the optional subject/note, and a denormalized recipient summary for
+// quick list rendering. The file itself is NOT duplicated — documentId points at
+// the single central document.
+export const documentTransfersTable = pgTable(
+  "document_transfers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    companyId: uuid("company_id").notNull(),
+    documentId: uuid("document_id").notNull(),
+    senderUserId: uuid("sender_user_id").notNull(),
+    senderUserName: text("sender_user_name"),
+    subject: text("subject"),
+    note: text("note"),
+    // normal | medium | high | urgent (mirrors the notification priority scale).
+    priority: text("priority").notNull().default("normal"),
+    // Denormalized human list of recipients (names / department names) for list views.
+    recipientSummary: text("recipient_summary"),
+    // Count of resolved recipients at send time (display convenience).
+    recipientCount: integer("recipient_count").notNull().default(0),
+    ...audit,
+  },
+  (t) => [
+    index("document_transfers_company_idx").on(t.companyId, t.isDeleted),
+    index("document_transfers_sender_idx").on(t.senderUserId, t.isDeleted),
+    index("document_transfers_document_idx").on(t.documentId),
+  ],
+);
+export type DocumentTransferRow = typeof documentTransfersTable.$inferSelect;
+
+// One row per resolved recipient user. Status walks sent -> received -> viewed.
+// `viaDepartmentId` records the department targeted that put this user on the
+// list (null when the user was addressed directly). documentId is denormalized
+// so a recipient's inbox can be queried without joining the envelope.
+export const documentTransferRecipientsTable = pgTable(
+  "document_transfer_recipients",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    companyId: uuid("company_id").notNull(),
+    transferId: uuid("transfer_id").notNull(),
+    documentId: uuid("document_id").notNull(),
+    recipientUserId: uuid("recipient_user_id").notNull(),
+    recipientUserName: text("recipient_user_name"),
+    // Set when the user was reached because a department was targeted (fan-out).
+    viaDepartmentId: uuid("via_department_id"),
+    viaDepartmentName: text("via_department_name"),
+    // sent | received | viewed
+    status: text("status").notNull().default("sent"),
+    receivedAt: timestamp("received_at", { withTimezone: true }),
+    viewedAt: timestamp("viewed_at", { withTimezone: true }),
+    ...audit,
+  },
+  (t) => [
+    index("document_transfer_recipients_recipient_idx").on(
+      t.recipientUserId,
+      t.isDeleted,
+    ),
+    index("document_transfer_recipients_transfer_idx").on(t.transferId),
+    index("document_transfer_recipients_document_idx").on(t.documentId),
+  ],
+);
+export type DocumentTransferRecipientRow =
+  typeof documentTransferRecipientsTable.$inferSelect;

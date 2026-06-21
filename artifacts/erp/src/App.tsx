@@ -19,6 +19,7 @@ const DocumentDetailPage = lazy(() => import("@/pages/document-detail"));
 const DocumentsDashboardPage = lazy(() => import("@/pages/documents-dashboard"));
 const DocumentApprovalsPage = lazy(() => import("@/pages/document-approvals"));
 const DocumentSearchPage = lazy(() => import("@/pages/document-search"));
+const DocumentTransfersPage = lazy(() => import("@/pages/document-transfers"));
 const UsersPage = lazy(() => import("@/pages/users"));
 const RolesPage = lazy(() => import("@/pages/roles"));
 const MasterDataPage = lazy(() => import("@/pages/master-data"));
@@ -382,6 +383,7 @@ function Router() {
             <Route path="/documents-dashboard" component={DocumentsDashboardPage} />
             <Route path="/document-approvals" component={DocumentApprovalsPage} />
             <Route path="/document-search" component={DocumentSearchPage} />
+            <Route path="/document-transfers" component={DocumentTransfersPage} />
             <Route path="/documents/:id" component={DocumentDetailPage} />
             <Route path="/documents" component={DocumentsPage} />
 

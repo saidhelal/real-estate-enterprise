@@ -43,6 +43,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
 import { useToast } from "@/hooks/use-toast";
+import { DocumentSendDialog } from "@/components/documents/document-send-dialog";
+import { Send } from "lucide-react";
 
 const STATUSES = ["draft", "review", "approved", "active", "archived", "expired"];
 const TYPES = [
@@ -102,6 +104,7 @@ export default function DocumentsPage() {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [form, setForm] = useState<NewDoc>(EMPTY_DOC);
+  const [sendDoc, setSendDoc] = useState<Document | null>(null);
 
   const statusOptions = useMemo(() => enumOptions(STATUSES), []);
   const typeOptions = useMemo(() => enumOptions(TYPES), []);
@@ -429,6 +432,15 @@ export default function DocumentsPage() {
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/documents/${d.id}`}>{t("common.view")}</Link>
                         </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSendDoc(d)}
+                          title={t("transfers.send")}
+                        >
+                          <Send className="me-1 h-4 w-4" />
+                          {t("transfers.send")}
+                        </Button>
                         {d.status === "draft" && (
                           <Button
                             variant="outline"
@@ -492,6 +504,15 @@ export default function DocumentsPage() {
           </div>
         </CardContent>
       </Card>
+
+      {sendDoc && (
+        <DocumentSendDialog
+          documentId={sendDoc.id}
+          documentName={language === "ar" ? (sendDoc.nameAr ?? sendDoc.name) : sendDoc.name}
+          open={!!sendDoc}
+          onOpenChange={(o) => !o && setSendDoc(null)}
+        />
+      )}
     </div>
   );
 }

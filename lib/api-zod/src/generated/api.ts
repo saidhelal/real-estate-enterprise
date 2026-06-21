@@ -36155,3 +36155,231 @@ export const ScanDocumentExpiryResponse = zod.object({
 })
 
 
+/**
+ * @summary Send (route) an existing document to users and/or departments
+ */
+
+
+
+export const SendDocumentBody = zod.object({
+  "documentId": zod.string().min(1),
+  "recipientUserIds": zod.array(zod.string()).optional(),
+  "recipientDepartmentIds": zod.array(zod.string()).optional(),
+  "subject": zod.string().optional(),
+  "note": zod.string().optional(),
+  "priority": zod.string().optional()
+})
+
+
+/**
+ * @summary List documents sent to the current user (their inbox)
+ */
+export const ListDocumentInboxQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "status": zod.coerce.string().optional(),
+  "search": zod.coerce.string().optional()
+})
+
+export const ListDocumentInboxResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "transferId": zod.string(),
+  "documentId": zod.string(),
+  "documentNumber": zod.string().nullish(),
+  "documentName": zod.string().nullish(),
+  "documentNameAr": zod.string().nullish(),
+  "documentType": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "currentVersionId": zod.string().nullish(),
+  "senderUserId": zod.string().nullish(),
+  "senderUserName": zod.string().nullish(),
+  "subject": zod.string().nullish(),
+  "note": zod.string().nullish(),
+  "priority": zod.string().nullish(),
+  "viaDepartmentId": zod.string().nullish(),
+  "viaDepartmentName": zod.string().nullish(),
+  "status": zod.string(),
+  "receivedAt": zod.string().nullish(),
+  "viewedAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary List documents the current user has sent
+ */
+export const ListSentDocumentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional()
+})
+
+export const ListSentDocumentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "documentNumber": zod.string().nullish(),
+  "documentName": zod.string().nullish(),
+  "documentNameAr": zod.string().nullish(),
+  "documentType": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "senderUserId": zod.string(),
+  "senderUserName": zod.string().nullish(),
+  "subject": zod.string().nullish(),
+  "note": zod.string().nullish(),
+  "priority": zod.string(),
+  "recipientSummary": zod.string().nullish(),
+  "recipientCount": zod.number(),
+  "sentCount": zod.number().nullish(),
+  "receivedCount": zod.number().nullish(),
+  "viewedCount": zod.number().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Get a transfer with its document and per-recipient delivery status
+ */
+export const GetDocumentTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDocumentTransferResponse = zod.object({
+  "transfer": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentId": zod.string(),
+  "documentNumber": zod.string().nullish(),
+  "documentName": zod.string().nullish(),
+  "documentNameAr": zod.string().nullish(),
+  "documentType": zod.string().nullish(),
+  "fileFormat": zod.string().nullish(),
+  "senderUserId": zod.string(),
+  "senderUserName": zod.string().nullish(),
+  "subject": zod.string().nullish(),
+  "note": zod.string().nullish(),
+  "priority": zod.string(),
+  "recipientSummary": zod.string().nullish(),
+  "recipientCount": zod.number(),
+  "sentCount": zod.number().nullish(),
+  "receivedCount": zod.number().nullish(),
+  "viewedCount": zod.number().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}),
+  "document": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "documentNumber": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "documentType": zod.string(),
+  "classification": zod.string(),
+  "moduleKey": zod.string().nullish(),
+  "sourceId": zod.string().nullish(),
+  "sourceRef": zod.string().nullish(),
+  "projectId": zod.string().nullish(),
+  "customerId": zod.string().nullish(),
+  "unitId": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "status": zod.string(),
+  "currentVersionId": zod.string().nullish(),
+  "currentVersionNumber": zod.number().nullish(),
+  "currentFileObjectPath": zod.string().nullish(),
+  "currentFileName": zod.string().nullish(),
+  "currentFileFormat": zod.string().nullish(),
+  "currentMimeType": zod.string().nullish(),
+  "currentFileSize": zod.number().nullish(),
+  "versionCount": zod.number().nullish(),
+  "creationDate": zod.string().nullish(),
+  "expiryDate": zod.string().nullish(),
+  "tags": zod.array(zod.string()).nullish(),
+  "qrValue": zod.string().nullish(),
+  "barcodeValue": zod.string().nullish(),
+  "signatureObjectPath": zod.string().nullish(),
+  "signerName": zod.string().nullish(),
+  "signedAt": zod.string().nullish(),
+  "stampObjectPath": zod.string().nullish(),
+  "stampLabel": zod.string().nullish(),
+  "ownerUserId": zod.string().nullish(),
+  "createdByUserId": zod.string().nullish(),
+  "createdByUserName": zod.string().nullish(),
+  "lastEditedByUserId": zod.string().nullish(),
+  "lastEditedByUserName": zod.string().nullish(),
+  "submittedByUserName": zod.string().nullish(),
+  "submittedAt": zod.string().nullish(),
+  "endorsedByUserName": zod.string().nullish(),
+  "endorsedAt": zod.string().nullish(),
+  "approvedByUserName": zod.string().nullish(),
+  "approvedAt": zod.string().nullish(),
+  "rejectedByUserName": zod.string().nullish(),
+  "rejectedAt": zod.string().nullish(),
+  "rejectReason": zod.string().nullish(),
+  "archivedAt": zod.string().nullish(),
+  "deleteRequestedAt": zod.string().nullish(),
+  "deleteReason": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "isDeleted": zod.boolean(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}),
+  "recipients": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "transferId": zod.string(),
+  "documentId": zod.string(),
+  "recipientUserId": zod.string(),
+  "recipientUserName": zod.string().nullish(),
+  "viaDepartmentId": zod.string().nullish(),
+  "viaDepartmentName": zod.string().nullish(),
+  "status": zod.string(),
+  "receivedAt": zod.string().nullish(),
+  "viewedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "myStatus": zod.string().nullish()
+})
+
+
+/**
+ * @summary Recipient acknowledges receipt of a transferred document
+ */
+export const MarkDocumentTransferReceivedParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const MarkDocumentTransferReceivedResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Recipient marks a transferred document as viewed (implies received)
+ */
+export const MarkDocumentTransferViewedParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const MarkDocumentTransferViewedResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

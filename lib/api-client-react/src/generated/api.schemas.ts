@@ -15109,6 +15109,134 @@ export interface DocumentExpiryScanResult {
   notified: number;
 }
 
+export interface SendDocumentInput {
+  /** @minLength 1 */
+  documentId: string;
+  recipientUserIds?: string[];
+  recipientDepartmentIds?: string[];
+  subject?: string;
+  note?: string;
+  priority?: string;
+}
+
+export interface DocumentTransfer {
+  id: string;
+  companyId: string;
+  documentId: string;
+  /** @nullable */
+  documentNumber?: string | null;
+  /** @nullable */
+  documentName?: string | null;
+  /** @nullable */
+  documentNameAr?: string | null;
+  /** @nullable */
+  documentType?: string | null;
+  /** @nullable */
+  fileFormat?: string | null;
+  senderUserId: string;
+  /** @nullable */
+  senderUserName?: string | null;
+  /** @nullable */
+  subject?: string | null;
+  /** @nullable */
+  note?: string | null;
+  priority: string;
+  /** @nullable */
+  recipientSummary?: string | null;
+  recipientCount: number;
+  /** @nullable */
+  sentCount?: number | null;
+  /** @nullable */
+  receivedCount?: number | null;
+  /** @nullable */
+  viewedCount?: number | null;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DocumentTransferRecipient {
+  id: string;
+  companyId: string;
+  transferId: string;
+  documentId: string;
+  recipientUserId: string;
+  /** @nullable */
+  recipientUserName?: string | null;
+  /** @nullable */
+  viaDepartmentId?: string | null;
+  /** @nullable */
+  viaDepartmentName?: string | null;
+  status: string;
+  /** @nullable */
+  receivedAt?: string | null;
+  /** @nullable */
+  viewedAt?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DocumentInboxItem {
+  id: string;
+  transferId: string;
+  documentId: string;
+  /** @nullable */
+  documentNumber?: string | null;
+  /** @nullable */
+  documentName?: string | null;
+  /** @nullable */
+  documentNameAr?: string | null;
+  /** @nullable */
+  documentType?: string | null;
+  /** @nullable */
+  fileFormat?: string | null;
+  /** @nullable */
+  currentVersionId?: string | null;
+  /** @nullable */
+  senderUserId?: string | null;
+  /** @nullable */
+  senderUserName?: string | null;
+  /** @nullable */
+  subject?: string | null;
+  /** @nullable */
+  note?: string | null;
+  /** @nullable */
+  priority?: string | null;
+  /** @nullable */
+  viaDepartmentId?: string | null;
+  /** @nullable */
+  viaDepartmentName?: string | null;
+  status: string;
+  /** @nullable */
+  receivedAt?: string | null;
+  /** @nullable */
+  viewedAt?: string | null;
+  createdAt: string;
+}
+
+export interface DocumentInboxListResponse {
+  data: DocumentInboxItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DocumentTransferListResponse {
+  data: DocumentTransfer[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DocumentTransferDetail {
+  transfer: DocumentTransfer;
+  document: Document;
+  recipients: DocumentTransferRecipient[];
+  /** @nullable */
+  myStatus?: string | null;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -17372,5 +17500,18 @@ companyId?: string;
 
 export type GetDocumentsDashboardParams = {
 companyId?: string;
+};
+
+export type ListDocumentInboxParams = {
+page?: number;
+pageSize?: number;
+status?: string;
+search?: string;
+};
+
+export type ListSentDocumentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
 };
 

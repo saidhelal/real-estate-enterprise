@@ -315,12 +315,16 @@ import type {
   DocumentDetail,
   DocumentExpiryScanInput,
   DocumentExpiryScanResult,
+  DocumentInboxListResponse,
   DocumentInput,
   DocumentLink,
   DocumentLinkInput,
   DocumentLinkListResponse,
   DocumentListResponse,
   DocumentSignatureInput,
+  DocumentTransfer,
+  DocumentTransferDetail,
+  DocumentTransferListResponse,
   DocumentUpdate,
   DocumentUploadInput,
   DocumentUploadResponse,
@@ -825,6 +829,7 @@ import type {
   ListDefectsParams,
   ListDepartmentsParams,
   ListDesignPackagesParams,
+  ListDocumentInboxParams,
   ListDocumentsParams,
   ListDrawingCategorysParams,
   ListDrawingRevisionsParams,
@@ -957,6 +962,7 @@ import type {
   ListRfqsParams,
   ListSalaryComponentsParams,
   ListSectionsParams,
+  ListSentDocumentsParams,
   ListServiceEscalationsParams,
   ListServiceTerminationsParams,
   ListShiftsParams,
@@ -1223,6 +1229,7 @@ import type {
   SectionInput,
   SectionListResponse,
   SectionUpdate,
+  SendDocumentInput,
   ServiceEscalation,
   ServiceEscalationInput,
   ServiceEscalationListResponse,
@@ -104622,5 +104629,461 @@ export const useScanDocumentExpiry = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getScanDocumentExpiryMutationOptions(options));
+    }
+
+export const getSendDocumentUrl = () => {
+
+
+
+
+  return `/api/document-transfers`
+}
+
+/**
+ * @summary Send (route) an existing document to users and/or departments
+ */
+export const sendDocument = async (sendDocumentInput: SendDocumentInput, options?: RequestInit): Promise<DocumentTransfer> => {
+
+  return customFetch<DocumentTransfer>(getSendDocumentUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      sendDocumentInput,)
+  }
+);}
+
+
+
+
+export const getSendDocumentMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendDocument>>, TError,{data: BodyType<SendDocumentInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendDocument>>, TError,{data: BodyType<SendDocumentInput>}, TContext> => {
+
+const mutationKey = ['sendDocument'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendDocument>>, {data: BodyType<SendDocumentInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  sendDocument(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendDocumentMutationResult = NonNullable<Awaited<ReturnType<typeof sendDocument>>>
+    export type SendDocumentMutationBody = BodyType<SendDocumentInput>
+    export type SendDocumentMutationError = ErrorType<void>
+
+    /**
+ * @summary Send (route) an existing document to users and/or departments
+ */
+export const useSendDocument = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendDocument>>, TError,{data: BodyType<SendDocumentInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendDocument>>,
+        TError,
+        {data: BodyType<SendDocumentInput>},
+        TContext
+      > => {
+      return useMutation(getSendDocumentMutationOptions(options));
+    }
+
+export const getListDocumentInboxUrl = (params?: ListDocumentInboxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/document-transfers/inbox?${stringifiedParams}` : `/api/document-transfers/inbox`
+}
+
+/**
+ * @summary List documents sent to the current user (their inbox)
+ */
+export const listDocumentInbox = async (params?: ListDocumentInboxParams, options?: RequestInit): Promise<DocumentInboxListResponse> => {
+
+  return customFetch<DocumentInboxListResponse>(getListDocumentInboxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListDocumentInboxQueryKey = (params?: ListDocumentInboxParams,) => {
+    return [
+    `/api/document-transfers/inbox`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListDocumentInboxQueryOptions = <TData = Awaited<ReturnType<typeof listDocumentInbox>>, TError = ErrorType<unknown>>(params?: ListDocumentInboxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listDocumentInbox>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListDocumentInboxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listDocumentInbox>>> = ({ signal }) => listDocumentInbox(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listDocumentInbox>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListDocumentInboxQueryResult = NonNullable<Awaited<ReturnType<typeof listDocumentInbox>>>
+export type ListDocumentInboxQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List documents sent to the current user (their inbox)
+ */
+
+export function useListDocumentInbox<TData = Awaited<ReturnType<typeof listDocumentInbox>>, TError = ErrorType<unknown>>(
+ params?: ListDocumentInboxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listDocumentInbox>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListDocumentInboxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListSentDocumentsUrl = (params?: ListSentDocumentsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/document-transfers/sent?${stringifiedParams}` : `/api/document-transfers/sent`
+}
+
+/**
+ * @summary List documents the current user has sent
+ */
+export const listSentDocuments = async (params?: ListSentDocumentsParams, options?: RequestInit): Promise<DocumentTransferListResponse> => {
+
+  return customFetch<DocumentTransferListResponse>(getListSentDocumentsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSentDocumentsQueryKey = (params?: ListSentDocumentsParams,) => {
+    return [
+    `/api/document-transfers/sent`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSentDocumentsQueryOptions = <TData = Awaited<ReturnType<typeof listSentDocuments>>, TError = ErrorType<unknown>>(params?: ListSentDocumentsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSentDocuments>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSentDocumentsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSentDocuments>>> = ({ signal }) => listSentDocuments(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSentDocuments>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSentDocumentsQueryResult = NonNullable<Awaited<ReturnType<typeof listSentDocuments>>>
+export type ListSentDocumentsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List documents the current user has sent
+ */
+
+export function useListSentDocuments<TData = Awaited<ReturnType<typeof listSentDocuments>>, TError = ErrorType<unknown>>(
+ params?: ListSentDocumentsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSentDocuments>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSentDocumentsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetDocumentTransferUrl = (id: string,) => {
+
+
+
+
+  return `/api/document-transfers/${id}`
+}
+
+/**
+ * @summary Get a transfer with its document and per-recipient delivery status
+ */
+export const getDocumentTransfer = async (id: string, options?: RequestInit): Promise<DocumentTransferDetail> => {
+
+  return customFetch<DocumentTransferDetail>(getGetDocumentTransferUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDocumentTransferQueryKey = (id: string,) => {
+    return [
+    `/api/document-transfers/${id}`
+    ] as const;
+    }
+
+
+export const getGetDocumentTransferQueryOptions = <TData = Awaited<ReturnType<typeof getDocumentTransfer>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDocumentTransfer>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDocumentTransferQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDocumentTransfer>>> = ({ signal }) => getDocumentTransfer(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDocumentTransfer>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDocumentTransferQueryResult = NonNullable<Awaited<ReturnType<typeof getDocumentTransfer>>>
+export type GetDocumentTransferQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a transfer with its document and per-recipient delivery status
+ */
+
+export function useGetDocumentTransfer<TData = Awaited<ReturnType<typeof getDocumentTransfer>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDocumentTransfer>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDocumentTransferQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getMarkDocumentTransferReceivedUrl = (id: string,) => {
+
+
+
+
+  return `/api/document-transfers/${id}/received`
+}
+
+/**
+ * @summary Recipient acknowledges receipt of a transferred document
+ */
+export const markDocumentTransferReceived = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getMarkDocumentTransferReceivedUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getMarkDocumentTransferReceivedMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markDocumentTransferReceived>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markDocumentTransferReceived>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['markDocumentTransferReceived'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markDocumentTransferReceived>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  markDocumentTransferReceived(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarkDocumentTransferReceivedMutationResult = NonNullable<Awaited<ReturnType<typeof markDocumentTransferReceived>>>
+
+    export type MarkDocumentTransferReceivedMutationError = ErrorType<void>
+
+    /**
+ * @summary Recipient acknowledges receipt of a transferred document
+ */
+export const useMarkDocumentTransferReceived = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markDocumentTransferReceived>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof markDocumentTransferReceived>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getMarkDocumentTransferReceivedMutationOptions(options));
+    }
+
+export const getMarkDocumentTransferViewedUrl = (id: string,) => {
+
+
+
+
+  return `/api/document-transfers/${id}/viewed`
+}
+
+/**
+ * @summary Recipient marks a transferred document as viewed (implies received)
+ */
+export const markDocumentTransferViewed = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getMarkDocumentTransferViewedUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getMarkDocumentTransferViewedMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markDocumentTransferViewed>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markDocumentTransferViewed>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['markDocumentTransferViewed'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markDocumentTransferViewed>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  markDocumentTransferViewed(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarkDocumentTransferViewedMutationResult = NonNullable<Awaited<ReturnType<typeof markDocumentTransferViewed>>>
+
+    export type MarkDocumentTransferViewedMutationError = ErrorType<void>
+
+    /**
+ * @summary Recipient marks a transferred document as viewed (implies received)
+ */
+export const useMarkDocumentTransferViewed = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markDocumentTransferViewed>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof markDocumentTransferViewed>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getMarkDocumentTransferViewedMutationOptions(options));
     }
 

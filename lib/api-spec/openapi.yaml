@@ -24829,6 +24829,123 @@ paths:
               schema:
                 $ref: "#/components/schemas/DocumentExpiryScanResult"
 
+  /document-transfers:
+    post:
+      operationId: sendDocument
+      tags: [documentTransfers]
+      summary: Send (route) an existing document to users and/or departments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendDocumentInput"
+      responses:
+        "201":
+          description: Sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentTransfer"
+        "400":
+          description: Invalid request
+        "403":
+          description: Forbidden
+        "404":
+          description: Document not found
+
+  /document-transfers/inbox:
+    get:
+      operationId: listDocumentInbox
+      tags: [documentTransfers]
+      summary: List documents sent to the current user (their inbox)
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Inbox
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentInboxListResponse"
+
+  /document-transfers/sent:
+    get:
+      operationId: listSentDocuments
+      tags: [documentTransfers]
+      summary: List documents the current user has sent
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Sent items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentTransferListResponse"
+
+  /document-transfers/{id}:
+    get:
+      operationId: getDocumentTransfer
+      tags: [documentTransfers]
+      summary: Get a transfer with its document and per-recipient delivery status
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Transfer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentTransferDetail"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+
+  /document-transfers/{id}/received:
+    post:
+      operationId: markDocumentTransferReceived
+      tags: [documentTransfers]
+      summary: Recipient acknowledges receipt of a transferred document
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Acknowledged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+
+  /document-transfers/{id}/viewed:
+    post:
+      operationId: markDocumentTransferViewed
+      tags: [documentTransfers]
+      summary: Recipient marks a transferred document as viewed (implies received)
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Viewed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+
 components:
   parameters:
     IdParam:
@@ -40486,3 +40603,117 @@ components:
         expired: { type: integer }
         nearExpiry: { type: integer }
         notified: { type: integer }
+
+    SendDocumentInput:
+      type: object
+      required: [documentId]
+      properties:
+        documentId: { type: string, minLength: 1 }
+        recipientUserIds: { type: array, items: { type: string } }
+        recipientDepartmentIds: { type: array, items: { type: string } }
+        subject: { type: string }
+        note: { type: string }
+        priority: { type: string }
+
+    DocumentTransfer:
+      type: object
+      required: [id, companyId, documentId, senderUserId, priority, recipientCount, isActive, isDeleted, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        documentId: { type: string }
+        documentNumber: { type: ["string", "null"] }
+        documentName: { type: ["string", "null"] }
+        documentNameAr: { type: ["string", "null"] }
+        documentType: { type: ["string", "null"] }
+        fileFormat: { type: ["string", "null"] }
+        senderUserId: { type: string }
+        senderUserName: { type: ["string", "null"] }
+        subject: { type: ["string", "null"] }
+        note: { type: ["string", "null"] }
+        priority: { type: string }
+        recipientSummary: { type: ["string", "null"] }
+        recipientCount: { type: integer }
+        sentCount: { type: ["integer", "null"] }
+        receivedCount: { type: ["integer", "null"] }
+        viewedCount: { type: ["integer", "null"] }
+        isActive: { type: boolean }
+        isDeleted: { type: boolean }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    DocumentTransferRecipient:
+      type: object
+      required: [id, companyId, transferId, documentId, recipientUserId, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        transferId: { type: string }
+        documentId: { type: string }
+        recipientUserId: { type: string }
+        recipientUserName: { type: ["string", "null"] }
+        viaDepartmentId: { type: ["string", "null"] }
+        viaDepartmentName: { type: ["string", "null"] }
+        status: { type: string }
+        receivedAt: { type: ["string", "null"] }
+        viewedAt: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    DocumentInboxItem:
+      type: object
+      required: [id, transferId, documentId, status, createdAt]
+      properties:
+        id: { type: string }
+        transferId: { type: string }
+        documentId: { type: string }
+        documentNumber: { type: ["string", "null"] }
+        documentName: { type: ["string", "null"] }
+        documentNameAr: { type: ["string", "null"] }
+        documentType: { type: ["string", "null"] }
+        fileFormat: { type: ["string", "null"] }
+        currentVersionId: { type: ["string", "null"] }
+        senderUserId: { type: ["string", "null"] }
+        senderUserName: { type: ["string", "null"] }
+        subject: { type: ["string", "null"] }
+        note: { type: ["string", "null"] }
+        priority: { type: ["string", "null"] }
+        viaDepartmentId: { type: ["string", "null"] }
+        viaDepartmentName: { type: ["string", "null"] }
+        status: { type: string }
+        receivedAt: { type: ["string", "null"] }
+        viewedAt: { type: ["string", "null"] }
+        createdAt: { type: string }
+
+    DocumentInboxListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentInboxItem" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    DocumentTransferListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentTransfer" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    DocumentTransferDetail:
+      type: object
+      required: [transfer, document, recipients]
+      properties:
+        transfer: { $ref: "#/components/schemas/DocumentTransfer" }
+        document: { $ref: "#/components/schemas/Document" }
+        recipients:
+          type: array
+          items: { $ref: "#/components/schemas/DocumentTransferRecipient" }
+        myStatus: { type: ["string", "null"] }

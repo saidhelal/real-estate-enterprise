@@ -33,7 +33,8 @@ import {
   previewKind,
 } from "@/lib/document-files";
 import { cn } from "@/lib/utils";
-import { Upload, FileText, Download, Trash2, Eye } from "lucide-react";
+import { Upload, FileText, Download, Trash2, Eye, Send } from "lucide-react";
+import { DocumentSendDialog } from "./document-send-dialog";
 
 interface DocumentsPanelProps {
   moduleKey: string;
@@ -78,6 +79,7 @@ export function DocumentsPanel({
   const [previewDoc, setPreviewDoc] = useState<Document | null>(null);
   const [deleteDoc, setDeleteDoc] = useState<Document | null>(null);
   const [deleteReason, setDeleteReason] = useState("");
+  const [sendDoc, setSendDoc] = useState<Document | null>(null);
 
   const params = { moduleKey, sourceId, companyId };
   const { data, isLoading } = useListModuleDocuments(params, {
@@ -226,6 +228,14 @@ export function DocumentsPanel({
                     <Button
                       variant="ghost"
                       size="icon"
+                      title={t("transfers.send")}
+                      onClick={() => setSendDoc(d)}
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="text-destructive"
                       title={t("edms.delete_file")}
                       onClick={() => {
@@ -309,6 +319,15 @@ export function DocumentsPanel({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {sendDoc && (
+        <DocumentSendDialog
+          documentId={sendDoc.id}
+          documentName={language === "ar" ? (sendDoc.nameAr ?? sendDoc.name) : sendDoc.name}
+          open={!!sendDoc}
+          onOpenChange={(o) => !o && setSendDoc(null)}
+        />
+      )}
     </Card>
   );
 }

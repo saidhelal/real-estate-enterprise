@@ -17,6 +17,9 @@ export const LABELS: Record<string, LabelPair> = {
   review: { en: "Under Review", ar: "قيد المراجعة" },
   public: { en: "Public", ar: "عام" },
   confidential: { en: "Confidential", ar: "سري" },
+  // Document transfer (Send Document) — per-recipient delivery status + priority.
+  viewed: { en: "Viewed", ar: "تمت المشاهدة" },
+  normal: { en: "Normal", ar: "عادي" },
   invoice: { en: "Invoice", ar: "فاتورة" },
   report: { en: "Report", ar: "تقرير" },
   correspondence: { en: "Correspondence", ar: "مراسلات" },

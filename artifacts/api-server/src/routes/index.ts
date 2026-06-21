@@ -45,6 +45,7 @@ import formTemplatesRouter from "./form-templates";
 import printJobsRouter from "./print-jobs";
 import portalRouter from "./portal";
 import documentsRouter from "./documents";
+import documentTransfersRouter from "./document-transfers";
 import testingRouter from "./testing";
 
 const router: IRouter = Router();
@@ -101,6 +102,7 @@ mountModule(router, "changeRequests", changeRequestsRouter);
 mountModule(router, "notifications", notificationsRouter);
 mountModule(router, "executiveOversight", executiveOversightRouter);
 mountModule(router, "documents", documentsRouter);
+mountModule(router, "documentTransfers", documentTransfersRouter);
 mountModule(router, "formTemplates", formTemplatesRouter);
 mountModule(router, "printJobs", printJobsRouter);
 mountModule(router, "testing", testingRouter);

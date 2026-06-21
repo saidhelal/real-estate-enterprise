@@ -351,6 +351,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   // Electronic Document Management System (EDMS) — central document repository
   // surfaced across every module. viewAll bypasses the per-document scope filter.
   { module: "documents", label: "Document Management (EDMS)", extraActions: ["submit", "endorse", "approve", "reject", "activate", "archive", "restore", "requestDelete", "viewAll"] },
+  { module: "documentTransfers", label: "Document Transfer (Send Document)", extraActions: ["send"] },
   // Insurance Management (standalone module)
   { module: "employeeInsurances", label: "Employee Insurances" },
   { module: "insuranceForms", label: "Insurance Forms" },
