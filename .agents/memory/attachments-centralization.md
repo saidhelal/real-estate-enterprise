@@ -28,6 +28,15 @@ the historical document key is `legal_contracts`).
   units) derive their original keys; legal-contracts uses the explicit override. Keep
   those keys stable or existing linked docs stop showing.
 
+**Empty-list false alarm:** the paperclip is a **per-row** action (rendered in each
+row's actions cell). An empty `ResourceManager` list (total 0 — e.g. a freshly-built
+module or one after Owner "Reset to Empty") shows only the "no results" row, so there
+is NO paperclip anywhere on screen. This reads as "this module has no Attachments
+action" during acceptance testing even though it is fully wired. Verify wiring at the
+API layer instead: `GET /api/documents?moduleKey=<key>&sourceId=<uuid>` returns 200
+(any moduleKey is accepted — no server-side module allowlist). The icon appears as
+soon as one record exists, identically to every other module.
+
 ## Inline preview safety ordering
 
 `previewKind()` in `lib/document-files.ts` MUST evaluate the dangerous-content set
