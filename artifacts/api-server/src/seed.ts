@@ -894,6 +894,23 @@ async function ensureUnitStatuses(companyId: string): Promise<void> {
 }
 
 /**
+ * Provision the unit-status catalog for the sample company as part of the
+ * config-only seed. The catalog is configuration (not sample data), so a
+ * configured-but-empty installation (and every demo config reset) must have it
+ * — otherwise units have no resolvable status and CRM/Sales cannot show or set
+ * availability. Idempotent: resolves the company by code and inserts only the
+ * missing statuses. (seedAll covers this separately via seedRealEstate.)
+ */
+async function seedUnitStatusCatalog(): Promise<void> {
+  const [company] = await db
+    .select()
+    .from(companiesTable)
+    .where(eq(companiesTable.code, "HQ001"));
+  if (!company) return;
+  await ensureUnitStatuses(company.id);
+}
+
+/**
  * Backfill the unified hierarchy columns: floors inherit projectId/phaseId from
  * their building; units inherit phaseId from their building (only when the
  * building actually has a phase, leaving genuinely phase-less units null).
@@ -2119,6 +2136,7 @@ export async function seedConfig(): Promise<void> {
   await seedNumberSequences();
   await seedSettings();
   await seedMasterData();
+  await seedUnitStatusCatalog();
   await seedAccounting();
   await seedFinance(true);
   await seedHr(true);
