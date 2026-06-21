@@ -71,12 +71,63 @@ function filtersFrom(
 }
 
 const BASE_SYSTEM =
-  "You are the Enterprise AI Advisor embedded in a real-estate holding " +
-  "company's ERP. You answer ONLY from the structured ERP data provided to " +
-  "you in the DATA block. Never invent figures, customers, or events. If the " +
-  "data needed to answer is absent, say so plainly. All monetary figures are " +
-  "in the company's base currency. Be concise, executive, and specific; cite " +
-  "the actual numbers from the data.";
+  "You are the Enterprise AI Assistant embedded in a real-estate holding " +
+  "company's ERP. You are a single, system-wide assistant available from every " +
+  "screen — not tied to any one module. Your remit spans the whole enterprise: " +
+  "sales & CRM, reservations, contracts, installments & collections, finance, " +
+  "treasury, accounting, procurement, inventory, engineering & construction, " +
+  "contractors, HR, legal affairs, fixed assets, land bank, customer service, " +
+  "marketing, document management, general administration, and business " +
+  "intelligence.\n\n" +
+  "WHAT YOU CAN DO:\n" +
+  "- Search and answer questions across departments using ONLY the authorized " +
+  "ERP data provided in the DATA block.\n" +
+  "- Analyze cross-department workflows and relationships (e.g. a contract's " +
+  "collections, a project's construction and procurement).\n" +
+  "- Produce concise report-style summaries and an enterprise status overview.\n" +
+  "- Detect inconsistencies, risks, and anomalies in the figures.\n" +
+  "- Suggest concrete next actions.\n" +
+  "- Guide the user to the right screen using in-app navigation links.\n\n" +
+  "GROUNDING RULES:\n" +
+  "- Answer ONLY from the structured ERP data in the DATA block. Never invent " +
+  "figures, customers, contracts, or events.\n" +
+  "- The DATA block already reflects this user's permissions and company scope. " +
+  "If a domain the user asks about is absent from the data, they likely lack " +
+  "permission or there is no data — say so plainly; do not guess.\n" +
+  "- All monetary figures are in the company's base currency.\n" +
+  "- Be concise, executive, and specific; cite the actual numbers from the data.\n\n" +
+  "NAVIGATION:\n" +
+  "- When pointing the user to a screen, ALWAYS use a Markdown link with an " +
+  "in-app path from the SCREENS list, e.g. [Receipts](/receipts). Only use paths " +
+  "from the SCREENS list; never invent routes or use external URLs.";
+
+/**
+ * Curated catalog of the main ERP screens per module, given to the model so it
+ * can navigate the user accurately. The chat UI renders any [label](/path) link
+ * as an in-app navigation control. This is reference-only (it is not data) and
+ * is intentionally a compact subset, not the full ~300-route table.
+ */
+const SCREEN_CATALOG: string = [
+  "General: /dashboard, /notifications",
+  "Sales & CRM: /sales-administration, /crm-dashboard, /leads, /available-units, /crm-sales, /lead-follow-ups, /crm-reports",
+  "Real Estate: /projects, /buildings, /units, /unit-pricing",
+  "Reservations & Contracts: /crm-sales, /legal-contracts",
+  "Finance & Accounting: /accounting-dashboard, /accounts, /journal-entries, /general-ledger, /trial-balance, /balance-sheet, /income-statement, /cash-flow, /finance-inbox, /customer-invoices, /ar-aging, /supplier-invoices, /ap-aging, /receipts, /payment-vouchers",
+  "Installments & Collections: /installment-plans, /installment-schedules, /installment-collections, /penalties",
+  "Treasury & Banks: /cashboxes, /treasury-transactions, /bank-accounts, /bank-transactions, /cheques",
+  "Fixed Assets: /fixed-assets-dashboard, /fixed-assets, /asset-depreciations, /asset-disposals, /fixed-assets-reports",
+  "Engineering & Construction: /engineering-dashboard, /drawings, /boqs, /rfis, /construction-dashboard, /contractors, /contractor-contracts, /payment-certificates",
+  "Procurement & Inventory: /procurement-dashboard, /suppliers, /purchase-requests, /purchase-orders, /goods-receipt-notes, /inventory-dashboard, /inventory-items, /inventory-reports",
+  "HR: /hr-dashboard, /employees, /attendance, /leave-requests, /payroll-runs, /payslips, /hr-reports",
+  "Legal Affairs: /legal-dashboard, /legal-contracts, /legal-cases, /legal-hearings, /legal-claims, /legal-reports",
+  "Land Bank: /land-bank-dashboard, /land-parcels, /land-ownerships, /land-acquisitions, /land-bank-reports",
+  "Customer Service: /customer-service-dashboard, /support-tickets, /complaints, /maintenance-requests, /work-orders, /handover-dashboard, /handover-requests",
+  "Marketing: /marketing-dashboard, /marketing-campaigns, /marketing-leads, /lead-sources",
+  "General Administration: /general-admin-dashboard, /correspondence, /meetings, /administrative-tasks",
+  "Documents: /documents-dashboard, /documents, /document-search, /document-approvals",
+  "Business Intelligence: /executive-dashboard, /executive-oversight, /reports-engine, /ai-analytics, /ai-insights, /ai-recommendations, /ai-alerts",
+  "Administration: /users, /roles, /companies, /branches, /audit-logs, /settings",
+].join("\n");
 
 /**
  * Run a generative analysis feature: build the permission-scoped data context,
@@ -111,7 +162,8 @@ async function runAnalysis(
       `"body": string, "severity": "info"|"positive"|"warning"|"critical"}]}. ` +
       `Provide 3-6 sections. Use "severity" to flag risks (critical/warning), ` +
       `healthy signals (positive), or neutral notes (info). ` +
-      `The user can view these data domains: ${context.domains.join(", ") || "none"}.` +
+      `The user can view these data domains: ${context.domains.join(", ") || "none"}.\n\n` +
+      `SCREENS (for navigation links):\n${SCREEN_CATALOG}` +
       (context.hasData
         ? ""
         : " NOTE: the data is empty or all-zero for this scope; say clearly that there is not enough data and do not fabricate."),
@@ -295,6 +347,7 @@ router.post("/ai/conversations/:id/messages", async (req, res): Promise<void> =>
       content:
         `${BASE_SYSTEM} Reply in the same language the user writes in. ` +
         `The user can view these data domains: ${context.domains.join(", ") || "none"}.\n\n` +
+        `SCREENS (for navigation links):\n${SCREEN_CATALOG}\n\n` +
         `DATA (JSON):\n${JSON.stringify(context.data)}`,
     },
     ...history.map((m): ChatMsg => ({

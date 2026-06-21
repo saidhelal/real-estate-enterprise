@@ -6,6 +6,7 @@ import { useLanguage } from "@/lib/language-provider";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/components/theme-provider";
 import { PageNav } from "@/components/layout/page-nav";
+import { EnterpriseAssistant } from "@/components/ai/enterprise-assistant";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -66,7 +67,6 @@ const RAW_NAV_GROUPS: NavGroup[] = [
     { href: "/crm-sales", icon: FileSign, labelKey: "nav.crm_sales" },
     { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
     { href: "/crm-reports", icon: BarChart3, labelKey: "nav.crm_reports" },
-    { href: "/ai-assistant", icon: Bot, labelKey: "nav.ai_sales_assistant" },
   ]},
   { titleKey: "nav.group.real_estate", items: [
     { href: "/data-entry-center", icon: SlidersHorizontal, labelKey: "nav.data_entry_center" },
@@ -730,6 +730,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       </div>
+      {canViewAi && <EnterpriseAssistant />}
     </div>
   );
 }

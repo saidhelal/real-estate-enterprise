@@ -21,6 +21,15 @@ import {
   employeesTable,
   departmentsTable,
   payrollRunsTable,
+  fixedAssetsTable,
+  landParcelsTable,
+  legalContractsTable,
+  treasuryTransactionsTable,
+  documentsTable,
+  administrativeTasksTable,
+  complaintsTable,
+  handoverRequestsTable,
+  marketingCampaignsTable,
 } from "@workspace/db";
 import type { AuthUser } from "./auth";
 
@@ -356,6 +365,211 @@ export async function buildErpContext(
           totalContractValue: cc[0]?.value ?? "0",
         };
         domains.push("construction");
+      })(),
+    );
+  }
+
+  if (has(user, "fixedAssets.view")) {
+    const faScope: SQL[] = [eq(fixedAssetsTable.isDeleted, false)];
+    if (f.companyId) faScope.push(eq(fixedAssetsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const fa = await db
+          .select({
+            count: count(),
+            cost: moneySum(fixedAssetsTable.acquisitionCost),
+            bookValue: moneySum(fixedAssetsTable.bookValue),
+          })
+          .from(fixedAssetsTable)
+          .where(and(...faScope));
+        data.fixedAssets = {
+          totalAssets: fa[0]?.count ?? 0,
+          acquisitionCost: fa[0]?.cost ?? "0",
+          netBookValue: fa[0]?.bookValue ?? "0",
+        };
+        domains.push("fixedAssets");
+      })(),
+    );
+  }
+
+  if (has(user, "landParcels.view")) {
+    const lpScope: SQL[] = [eq(landParcelsTable.isDeleted, false)];
+    if (f.companyId) lpScope.push(eq(landParcelsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const [totals, byStatus] = await Promise.all([
+          db
+            .select({
+              count: count(),
+              area: moneySum(landParcelsTable.area),
+              value: moneySum(landParcelsTable.marketValue),
+            })
+            .from(landParcelsTable)
+            .where(and(...lpScope)),
+          db
+            .select({ key: landParcelsTable.status, count: count() })
+            .from(landParcelsTable)
+            .where(and(...lpScope))
+            .groupBy(landParcelsTable.status),
+        ]);
+        data.landBank = {
+          totalParcels: totals[0]?.count ?? 0,
+          totalArea: totals[0]?.area ?? "0",
+          marketValue: totals[0]?.value ?? "0",
+          parcelsByStatus: byStatus,
+        };
+        domains.push("landBank");
+      })(),
+    );
+  }
+
+  if (has(user, "legalContracts.view")) {
+    const lcScope: SQL[] = [eq(legalContractsTable.isDeleted, false)];
+    if (f.companyId) lcScope.push(eq(legalContractsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const [totals, byStatus] = await Promise.all([
+          db
+            .select({ count: count(), value: moneySum(legalContractsTable.value) })
+            .from(legalContractsTable)
+            .where(and(...lcScope)),
+          db
+            .select({ key: legalContractsTable.status, count: count() })
+            .from(legalContractsTable)
+            .where(and(...lcScope))
+            .groupBy(legalContractsTable.status),
+        ]);
+        data.legal = {
+          legalContracts: totals[0]?.count ?? 0,
+          legalContractValue: totals[0]?.value ?? "0",
+          contractsByStatus: byStatus,
+        };
+        domains.push("legal");
+      })(),
+    );
+  }
+
+  if (has(user, "treasuryTransactions.view")) {
+    const ttScope: SQL[] = [eq(treasuryTransactionsTable.isDeleted, false)];
+    if (f.companyId) ttScope.push(eq(treasuryTransactionsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const tt = await db
+          .select({ count: count(), value: moneySum(treasuryTransactionsTable.amount) })
+          .from(treasuryTransactionsTable)
+          .where(and(...ttScope));
+        data.treasury = {
+          treasuryTransactions: tt[0]?.count ?? 0,
+          treasuryVolume: tt[0]?.value ?? "0",
+        };
+        domains.push("treasury");
+      })(),
+    );
+  }
+
+  if (has(user, "documents.view")) {
+    const docScope: SQL[] = [eq(documentsTable.isDeleted, false)];
+    if (f.companyId) docScope.push(eq(documentsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const [totals, byStatus] = await Promise.all([
+          db.select({ count: count() }).from(documentsTable).where(and(...docScope)),
+          db
+            .select({ key: documentsTable.status, count: count() })
+            .from(documentsTable)
+            .where(and(...docScope))
+            .groupBy(documentsTable.status),
+        ]);
+        data.documents = {
+          totalDocuments: totals[0]?.count ?? 0,
+          documentsByStatus: byStatus,
+        };
+        domains.push("documents");
+      })(),
+    );
+  }
+
+  if (has(user, "administrativeTasks.view")) {
+    const atScope: SQL[] = [eq(administrativeTasksTable.isDeleted, false)];
+    if (f.companyId) atScope.push(eq(administrativeTasksTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const [totals, byStatus] = await Promise.all([
+          db.select({ count: count() }).from(administrativeTasksTable).where(and(...atScope)),
+          db
+            .select({ key: administrativeTasksTable.status, count: count() })
+            .from(administrativeTasksTable)
+            .where(and(...atScope))
+            .groupBy(administrativeTasksTable.status),
+        ]);
+        data.generalAdmin = {
+          administrativeTasks: totals[0]?.count ?? 0,
+          tasksByStatus: byStatus,
+        };
+        domains.push("generalAdmin");
+      })(),
+    );
+  }
+
+  if (canAny(user, ["complaints.view", "handoverRequests.view"])) {
+    const cmpScope: SQL[] = [eq(complaintsTable.isDeleted, false)];
+    if (f.companyId) cmpScope.push(eq(complaintsTable.companyId, f.companyId));
+    const hoScope: SQL[] = [eq(handoverRequestsTable.isDeleted, false)];
+    if (f.companyId) hoScope.push(eq(handoverRequestsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const customerService: Record<string, unknown> = {};
+        if (has(user, "complaints.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(complaintsTable).where(and(...cmpScope)),
+            db
+              .select({ key: complaintsTable.status, count: count() })
+              .from(complaintsTable)
+              .where(and(...cmpScope))
+              .groupBy(complaintsTable.status),
+          ]);
+          customerService.complaints = totals[0]?.count ?? 0;
+          customerService.complaintsByStatus = byStatus;
+        }
+        if (has(user, "handoverRequests.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(handoverRequestsTable).where(and(...hoScope)),
+            db
+              .select({ key: handoverRequestsTable.status, count: count() })
+              .from(handoverRequestsTable)
+              .where(and(...hoScope))
+              .groupBy(handoverRequestsTable.status),
+          ]);
+          customerService.handoverRequests = totals[0]?.count ?? 0;
+          customerService.handoversByStatus = byStatus;
+        }
+        if (Object.keys(customerService).length > 0) {
+          data.customerService = customerService;
+          domains.push("customerService");
+        }
+      })(),
+    );
+  }
+
+  if (has(user, "marketing.view")) {
+    const mcScope: SQL[] = [eq(marketingCampaignsTable.isDeleted, false)];
+    if (f.companyId) mcScope.push(eq(marketingCampaignsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const mc = await db
+          .select({
+            count: count(),
+            budget: moneySum(marketingCampaignsTable.budget),
+            spend: moneySum(marketingCampaignsTable.actualCost),
+          })
+          .from(marketingCampaignsTable)
+          .where(and(...mcScope));
+        data.marketing = {
+          campaigns: mc[0]?.count ?? 0,
+          campaignBudget: mc[0]?.budget ?? "0",
+          campaignSpend: mc[0]?.spend ?? "0",
+        };
+        domains.push("marketing");
       })(),
     );
   }
