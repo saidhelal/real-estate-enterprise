@@ -1,5 +1,6 @@
 - [Seed runner](seed-runner.md) — DB seed can't run under raw node; bundle with esbuild CJS first (directory-import barrel).
 - [Auth model](auth-model.md) — cookie-based JWT, web sends cookies via customFetch, presenters convert Date→ISO for z.string() fields.
+- [Session refresh-on-401](session-refresh-on-401.md) — web mutator must refresh+replay on 401 (deduped, loop-guarded) or 15-min access token = silent logout; all-endpoints-401 = expired session.
 - [Lib declaration staleness](lib-staleness.md) — run typecheck:libs after editing lib/* or artifacts see phantom "no exported member".
 - [Cookie-auth login redirect](cookie-auth-login-redirect.md) — login 200 but stuck on /login: invalidate current-user query before navigating.
 - [RBAC enforcement](rbac-enforcement.md) — requireAuth is not authorization; add requirePermission per-handler and smoke-test with a role-less user.

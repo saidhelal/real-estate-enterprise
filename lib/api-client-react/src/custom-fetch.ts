@@ -8,6 +8,14 @@ export type BodyType<T> = T;
 
 export type AuthTokenGetter = () => Promise<string | null> | string | null;
 
+/**
+ * Attempts to renew the session (e.g. by calling the server's token-refresh
+ * endpoint with the current credentials). Resolves `true` when the session was
+ * successfully renewed and the failed request should be replayed, `false` when
+ * the caller is genuinely unauthenticated.
+ */
+export type TokenRefresher = () => Promise<boolean>;
+
 const NO_BODY_STATUS = new Set([204, 205, 304]);
 const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 
@@ -18,6 +26,8 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 let _baseUrl: string | null = null;
 let _authTokenGetter: AuthTokenGetter | null = null;
 let _nextChangeReason: { reason: string; entityLabel?: string } | null = null;
+let _tokenRefresher: TokenRefresher | null = null;
+let _refreshInFlight: Promise<boolean> | null = null;
 
 /**
  * Governance: queue a human-readable reason (and optional entity label) to be
@@ -54,6 +64,42 @@ export function setBaseUrl(url: string | null): void {
  */
 export function setAuthTokenGetter(getter: AuthTokenGetter | null): void {
   _authTokenGetter = getter;
+}
+
+/**
+ * Register a handler that renews the session when a request fails with `401`.
+ * When set, a 401 from any non-auth endpoint triggers a single refresh attempt;
+ * if it succeeds the original request is replayed transparently, so users with
+ * a valid long-lived refresh token are never bounced to the login screen just
+ * because their short-lived access token expired.
+ *
+ * Pass `null` to clear the handler (restores plain throw-on-401 behaviour).
+ */
+export function setTokenRefresher(refresher: TokenRefresher | null): void {
+  _tokenRefresher = refresher;
+}
+
+// True unless the URL is itself an auth lifecycle endpoint. Refreshing on a 401
+// from login/logout/refresh would loop or mask genuine "logged out" responses.
+function shouldAttemptRefresh(url: string): boolean {
+  return !/\/(auth|portal)\/(refresh|login|logout)\b/.test(url);
+}
+
+// Run the registered refresher, de-duplicating concurrent calls so a burst of
+// simultaneous 401s triggers exactly one refresh (the server rotates the
+// refresh token, so overlapping refreshes would race and revoke each other).
+function runRefresh(): Promise<boolean> {
+  const refresher = _tokenRefresher;
+  if (!refresher) return Promise.resolve(false);
+  if (!_refreshInFlight) {
+    _refreshInFlight = Promise.resolve()
+      .then(() => refresher())
+      .catch(() => false)
+      .finally(() => {
+        _refreshInFlight = null;
+      });
+  }
+  return _refreshInFlight;
 }
 
 function isRequest(input: RequestInfo | URL): input is Request {
@@ -338,7 +384,19 @@ export async function customFetch<T = unknown>(
   input: RequestInfo | URL,
   options: CustomFetchOptions = {},
 ): Promise<T> {
-  input = applyBaseUrl(input);
+  return runFetch<T>(input, options, true);
+}
+
+async function runFetch<T>(
+  originalInput: RequestInfo | URL,
+  options: CustomFetchOptions,
+  allowRefresh: boolean,
+  // `undefined` = first attempt (consume the queued reason from module state);
+  // any other value = a refresh replay carrying the reason captured earlier so
+  // a governed mutation keeps its `x-change-reason` header across the retry.
+  carriedChangeReason?: { reason: string; entityLabel?: string } | null,
+): Promise<T> {
+  const input = applyBaseUrl(originalInput);
   const { responseType = "auto", headers: headersInit, ...init } = options;
 
   const method = resolveMethod(input, init.method);
@@ -361,14 +419,22 @@ export async function customFetch<T = unknown>(
     headers.set("accept", DEFAULT_JSON_ACCEPT);
   }
 
-  // Governance: attach a queued change reason to this single request, then
-  // clear it so it cannot bleed onto subsequent calls.
-  if (_nextChangeReason && (method === "DELETE" || method === "PATCH" || method === "PUT")) {
-    headers.set("x-change-reason", _nextChangeReason.reason);
-    if (_nextChangeReason.entityLabel) {
-      headers.set("x-change-entity-label", _nextChangeReason.entityLabel);
-    }
+  // Governance: attach a queued change reason to this request. On the first
+  // attempt we consume the module-level value so it cannot bleed onto unrelated
+  // calls; on a refresh replay we reuse the captured value so the governed
+  // mutation keeps its reason even though the original token had expired.
+  let changeReason: { reason: string; entityLabel?: string } | null;
+  if (carriedChangeReason !== undefined) {
+    changeReason = carriedChangeReason;
+  } else {
+    changeReason = _nextChangeReason;
     _nextChangeReason = null;
+  }
+  if (changeReason && (method === "DELETE" || method === "PATCH" || method === "PUT")) {
+    headers.set("x-change-reason", changeReason.reason);
+    if (changeReason.entityLabel) {
+      headers.set("x-change-entity-label", changeReason.entityLabel);
+    }
   }
 
   // Attach bearer token when an auth getter is configured and no
@@ -385,6 +451,16 @@ export async function customFetch<T = unknown>(
   const response = await fetch(input, { ...init, method, headers });
 
   if (!response.ok) {
+    // Transparent session renewal: a 401 from a normal API call usually means
+    // the short-lived access token expired. Try to refresh once and replay the
+    // request so the user stays signed in until they explicitly log out (or the
+    // long-lived refresh token itself expires).
+    if (response.status === 401 && allowRefresh && shouldAttemptRefresh(requestInfo.url)) {
+      const refreshed = await runRefresh();
+      if (refreshed) {
+        return runFetch<T>(originalInput, options, false, changeReason);
+      }
+    }
     const errorData = await parseErrorBody(response, method);
     throw new ApiError(response, errorData, requestInfo);
   }
