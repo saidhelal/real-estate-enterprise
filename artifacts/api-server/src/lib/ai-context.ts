@@ -24,12 +24,30 @@ import {
   fixedAssetsTable,
   landParcelsTable,
   legalContractsTable,
+  legalCasesTable,
   treasuryTransactionsTable,
   documentsTable,
   administrativeTasksTable,
   complaintsTable,
   handoverRequestsTable,
   marketingCampaignsTable,
+  accountsTable,
+  journalEntriesTable,
+  drawingsTable,
+  boqsTable,
+  rfisTable,
+  changeRequestsTable,
+  auditLogsTable,
+  usersTable,
+  rolesTable,
+  companiesTable,
+  branchesTable,
+  customersTable,
+  supportTicketsTable,
+  maintenanceRequestsTable,
+  workOrdersTable,
+  chequesTable,
+  assessedPenaltiesTable,
 } from "@workspace/db";
 import type { AuthUser } from "./auth";
 
@@ -236,7 +254,7 @@ export async function buildErpContext(
     );
   }
 
-  if (canAny(user, ["cashboxes.view", "bankAccounts.view", "customerInvoices.view", "supplierInvoices.view"])) {
+  if (canAny(user, ["cashboxes.view", "bankAccounts.view", "customerInvoices.view", "supplierInvoices.view", "cheques.view", "penalties.view"])) {
     const cashScope: SQL[] = [eq(cashboxesTable.isDeleted, false)];
     if (f.companyId) cashScope.push(eq(cashboxesTable.companyId, f.companyId));
     const bankScope: SQL[] = [eq(bankAccountsTable.isDeleted, false)];
@@ -245,6 +263,10 @@ export async function buildErpContext(
     if (f.companyId) ciScope.push(eq(customerInvoicesTable.companyId, f.companyId));
     const siScope: SQL[] = [eq(supplierInvoicesTable.isDeleted, false), ne(supplierInvoicesTable.status, "cancelled")];
     if (f.companyId) siScope.push(eq(supplierInvoicesTable.companyId, f.companyId));
+    const chqScope: SQL[] = [eq(chequesTable.isDeleted, false)];
+    if (f.companyId) chqScope.push(eq(chequesTable.companyId, f.companyId));
+    const penScope: SQL[] = [eq(assessedPenaltiesTable.isDeleted, false)];
+    if (f.companyId) penScope.push(eq(assessedPenaltiesTable.companyId, f.companyId));
 
     tasks.push(
       (async () => {
@@ -270,6 +292,20 @@ export async function buildErpContext(
             .from(supplierInvoicesTable)
             .where(and(...siScope));
           finance.apOutstanding = ap[0]?.value ?? "0";
+        }
+        if (has(user, "cheques.view")) {
+          const [chq, byStatus] = await Promise.all([
+            db.select({ count: count(), value: moneySum(chequesTable.amount) }).from(chequesTable).where(and(...chqScope)),
+            db.select({ key: chequesTable.status, count: count(), value: moneySum(chequesTable.amount) }).from(chequesTable).where(and(...chqScope)).groupBy(chequesTable.status),
+          ]);
+          finance.chequesCount = chq[0]?.count ?? 0;
+          finance.chequesValue = chq[0]?.value ?? "0";
+          finance.chequesByStatus = byStatus;
+        }
+        if (has(user, "penalties.view")) {
+          const pen = await db.select({ count: count(), value: moneySum(assessedPenaltiesTable.amount) }).from(assessedPenaltiesTable).where(and(...penScope));
+          finance.penaltiesAssessed = pen[0]?.count ?? 0;
+          finance.penaltiesValue = pen[0]?.value ?? "0";
         }
         if (Object.keys(finance).length > 0) {
           data.finance = finance;
@@ -423,28 +459,55 @@ export async function buildErpContext(
     );
   }
 
-  if (has(user, "legalContracts.view")) {
+  if (canAny(user, ["legalContracts.view", "legalCases.view"])) {
     const lcScope: SQL[] = [eq(legalContractsTable.isDeleted, false)];
     if (f.companyId) lcScope.push(eq(legalContractsTable.companyId, f.companyId));
+    const caseScope: SQL[] = [eq(legalCasesTable.isDeleted, false)];
+    if (f.companyId) caseScope.push(eq(legalCasesTable.companyId, f.companyId));
     tasks.push(
       (async () => {
-        const [totals, byStatus] = await Promise.all([
-          db
-            .select({ count: count(), value: moneySum(legalContractsTable.value) })
-            .from(legalContractsTable)
-            .where(and(...lcScope)),
-          db
-            .select({ key: legalContractsTable.status, count: count() })
-            .from(legalContractsTable)
-            .where(and(...lcScope))
-            .groupBy(legalContractsTable.status),
-        ]);
-        data.legal = {
-          legalContracts: totals[0]?.count ?? 0,
-          legalContractValue: totals[0]?.value ?? "0",
-          contractsByStatus: byStatus,
-        };
-        domains.push("legal");
+        const legal: Record<string, unknown> = {};
+        if (has(user, "legalContracts.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db
+              .select({ count: count(), value: moneySum(legalContractsTable.value) })
+              .from(legalContractsTable)
+              .where(and(...lcScope)),
+            db
+              .select({ key: legalContractsTable.status, count: count() })
+              .from(legalContractsTable)
+              .where(and(...lcScope))
+              .groupBy(legalContractsTable.status),
+          ]);
+          legal.legalContracts = totals[0]?.count ?? 0;
+          legal.legalContractValue = totals[0]?.value ?? "0";
+          legal.contractsByStatus = byStatus;
+        }
+        if (has(user, "legalCases.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db
+              .select({
+                count: count(),
+                claimAmount: moneySum(legalCasesTable.claimAmount),
+                outcomeAmount: moneySum(legalCasesTable.outcomeAmount),
+              })
+              .from(legalCasesTable)
+              .where(and(...caseScope)),
+            db
+              .select({ key: legalCasesTable.status, count: count() })
+              .from(legalCasesTable)
+              .where(and(...caseScope))
+              .groupBy(legalCasesTable.status),
+          ]);
+          legal.legalCases = totals[0]?.count ?? 0;
+          legal.legalCaseClaimAmount = totals[0]?.claimAmount ?? "0";
+          legal.legalCaseOutcomeAmount = totals[0]?.outcomeAmount ?? "0";
+          legal.casesByStatus = byStatus;
+        }
+        if (Object.keys(legal).length > 0) {
+          data.legal = legal;
+          domains.push("legal");
+        }
       })(),
     );
   }
@@ -570,6 +633,215 @@ export async function buildErpContext(
           campaignSpend: mc[0]?.spend ?? "0",
         };
         domains.push("marketing");
+      })(),
+    );
+  }
+
+  if (canAny(user, ["accounts.view", "journalEntries.view"])) {
+    const accScope: SQL[] = [eq(accountsTable.isDeleted, false)];
+    if (f.companyId) accScope.push(eq(accountsTable.companyId, f.companyId));
+    const jeScope: SQL[] = [eq(journalEntriesTable.isDeleted, false)];
+    if (f.companyId) jeScope.push(eq(journalEntriesTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const accounting: Record<string, unknown> = {};
+        if (has(user, "accounts.view")) {
+          const [totals, byType] = await Promise.all([
+            db.select({ count: count() }).from(accountsTable).where(and(...accScope)),
+            db.select({ key: accountsTable.type, count: count() }).from(accountsTable).where(and(...accScope)).groupBy(accountsTable.type),
+          ]);
+          accounting.totalAccounts = totals[0]?.count ?? 0;
+          accounting.accountsByType = byType;
+        }
+        if (has(user, "journalEntries.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db
+              .select({
+                count: count(),
+                totalDebit: moneySum(journalEntriesTable.totalDebit),
+                totalCredit: moneySum(journalEntriesTable.totalCredit),
+              })
+              .from(journalEntriesTable)
+              .where(and(...jeScope)),
+            db.select({ key: journalEntriesTable.status, count: count() }).from(journalEntriesTable).where(and(...jeScope)).groupBy(journalEntriesTable.status),
+          ]);
+          accounting.journalEntries = totals[0]?.count ?? 0;
+          accounting.totalDebit = totals[0]?.totalDebit ?? "0";
+          accounting.totalCredit = totals[0]?.totalCredit ?? "0";
+          accounting.entriesByStatus = byStatus;
+        }
+        if (Object.keys(accounting).length > 0) {
+          data.accounting = accounting;
+          domains.push("accounting");
+        }
+      })(),
+    );
+  }
+
+  if (canAny(user, ["drawings.view", "boqs.view", "rfis.view"])) {
+    const drScope: SQL[] = [eq(drawingsTable.isDeleted, false)];
+    if (f.companyId) drScope.push(eq(drawingsTable.companyId, f.companyId));
+    const boqScope: SQL[] = [eq(boqsTable.isDeleted, false)];
+    if (f.companyId) boqScope.push(eq(boqsTable.companyId, f.companyId));
+    const rfiScope: SQL[] = [eq(rfisTable.isDeleted, false)];
+    if (f.companyId) rfiScope.push(eq(rfisTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const engineering: Record<string, unknown> = {};
+        if (has(user, "drawings.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(drawingsTable).where(and(...drScope)),
+            db.select({ key: drawingsTable.approvalStatus, count: count() }).from(drawingsTable).where(and(...drScope)).groupBy(drawingsTable.approvalStatus),
+          ]);
+          engineering.drawings = totals[0]?.count ?? 0;
+          engineering.drawingsByApprovalStatus = byStatus;
+        }
+        if (has(user, "boqs.view")) {
+          const boq = await db.select({ count: count(), value: moneySum(boqsTable.totalAmount) }).from(boqsTable).where(and(...boqScope));
+          engineering.boqs = boq[0]?.count ?? 0;
+          engineering.boqsValue = boq[0]?.value ?? "0";
+        }
+        if (has(user, "rfis.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(rfisTable).where(and(...rfiScope)),
+            db.select({ key: rfisTable.status, count: count() }).from(rfisTable).where(and(...rfiScope)).groupBy(rfisTable.status),
+          ]);
+          engineering.rfis = totals[0]?.count ?? 0;
+          engineering.rfisByStatus = byStatus;
+        }
+        if (Object.keys(engineering).length > 0) {
+          data.engineering = engineering;
+          domains.push("engineering");
+        }
+      })(),
+    );
+  }
+
+  if (has(user, "approvals.view")) {
+    // change_requests has companyId (nullable) + isDeleted, defined manually.
+    const crScope: SQL[] = [eq(changeRequestsTable.isDeleted, false)];
+    if (f.companyId) crScope.push(eq(changeRequestsTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const [totals, byStatus] = await Promise.all([
+          db.select({ count: count() }).from(changeRequestsTable).where(and(...crScope)),
+          db.select({ key: changeRequestsTable.status, count: count() }).from(changeRequestsTable).where(and(...crScope)).groupBy(changeRequestsTable.status),
+        ]);
+        data.approvals = {
+          changeRequests: totals[0]?.count ?? 0,
+          requestsByStatus: byStatus,
+        };
+        domains.push("approvals");
+      })(),
+    );
+  }
+
+  if (has(user, "audit.view")) {
+    // audit_logs has neither companyId nor isDeleted; it is an append-only trail.
+    // Optional date filtering is applied on createdAt only. createdAt is a
+    // timestamptz, so compare against day boundaries (not the bare YYYY-MM-DD
+    // string) — the upper bound is exclusive of the day after `to` so events on
+    // the `to` day are included rather than truncated to its midnight.
+    const alScope: SQL[] = [];
+    if (f.from) alScope.push(sql`${auditLogsTable.createdAt} >= ${f.from}::date`);
+    if (f.to) alScope.push(sql`${auditLogsTable.createdAt} < (${f.to}::date + interval '1 day')`);
+    tasks.push(
+      (async () => {
+        const where = alScope.length > 0 ? and(...alScope) : undefined;
+        const [totals, byAction] = await Promise.all([
+          db.select({ count: count() }).from(auditLogsTable).where(where),
+          db.select({ key: auditLogsTable.action, count: count() }).from(auditLogsTable).where(where).groupBy(auditLogsTable.action),
+        ]);
+        data.audit = {
+          auditLogEntries: totals[0]?.count ?? 0,
+          entriesByAction: byAction,
+        };
+        domains.push("audit");
+      })(),
+    );
+  }
+
+  if (canAny(user, ["users.view", "roles.view", "companies.view", "branches.view"])) {
+    // companies is the tenant root (no companyId); roles is global (no companyId).
+    const userScope: SQL[] = [eq(usersTable.isDeleted, false)];
+    if (f.companyId) userScope.push(eq(usersTable.companyId, f.companyId));
+    const branchScope: SQL[] = [eq(branchesTable.isDeleted, false)];
+    if (f.companyId) branchScope.push(eq(branchesTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const administration: Record<string, unknown> = {};
+        if (has(user, "users.view")) {
+          const [totals, active] = await Promise.all([
+            db.select({ count: count() }).from(usersTable).where(and(...userScope)),
+            db.select({ count: count() }).from(usersTable).where(and(...userScope, eq(usersTable.status, "active"))),
+          ]);
+          administration.totalUsers = totals[0]?.count ?? 0;
+          administration.activeUsers = active[0]?.count ?? 0;
+        }
+        if (has(user, "roles.view")) {
+          const roles = await db.select({ count: count() }).from(rolesTable).where(eq(rolesTable.isDeleted, false));
+          administration.roles = roles[0]?.count ?? 0;
+        }
+        if (has(user, "companies.view")) {
+          const companies = await db.select({ count: count() }).from(companiesTable).where(eq(companiesTable.isDeleted, false));
+          administration.companies = companies[0]?.count ?? 0;
+        }
+        if (has(user, "branches.view")) {
+          const branches = await db.select({ count: count() }).from(branchesTable).where(and(...branchScope));
+          administration.branches = branches[0]?.count ?? 0;
+        }
+        if (Object.keys(administration).length > 0) {
+          data.administration = administration;
+          domains.push("administration");
+        }
+      })(),
+    );
+  }
+
+  if (canAny(user, ["customers.view", "supportTickets.view", "maintenanceRequests.view", "workOrders.view"])) {
+    const custScope: SQL[] = [eq(customersTable.isDeleted, false)];
+    if (f.companyId) custScope.push(eq(customersTable.companyId, f.companyId));
+    const stScope: SQL[] = [eq(supportTicketsTable.isDeleted, false)];
+    if (f.companyId) stScope.push(eq(supportTicketsTable.companyId, f.companyId));
+    const mrScope: SQL[] = [eq(maintenanceRequestsTable.isDeleted, false)];
+    if (f.companyId) mrScope.push(eq(maintenanceRequestsTable.companyId, f.companyId));
+    const woScope: SQL[] = [eq(workOrdersTable.isDeleted, false)];
+    if (f.companyId) woScope.push(eq(workOrdersTable.companyId, f.companyId));
+    tasks.push(
+      (async () => {
+        const customerPortal: Record<string, unknown> = {};
+        if (has(user, "customers.view")) {
+          const customers = await db.select({ count: count() }).from(customersTable).where(and(...custScope));
+          customerPortal.totalCustomers = customers[0]?.count ?? 0;
+        }
+        if (has(user, "supportTickets.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(supportTicketsTable).where(and(...stScope)),
+            db.select({ key: supportTicketsTable.status, count: count() }).from(supportTicketsTable).where(and(...stScope)).groupBy(supportTicketsTable.status),
+          ]);
+          customerPortal.supportTickets = totals[0]?.count ?? 0;
+          customerPortal.ticketsByStatus = byStatus;
+        }
+        if (has(user, "maintenanceRequests.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(maintenanceRequestsTable).where(and(...mrScope)),
+            db.select({ key: maintenanceRequestsTable.status, count: count() }).from(maintenanceRequestsTable).where(and(...mrScope)).groupBy(maintenanceRequestsTable.status),
+          ]);
+          customerPortal.maintenanceRequests = totals[0]?.count ?? 0;
+          customerPortal.maintenanceByStatus = byStatus;
+        }
+        if (has(user, "workOrders.view")) {
+          const [totals, byStatus] = await Promise.all([
+            db.select({ count: count() }).from(workOrdersTable).where(and(...woScope)),
+            db.select({ key: workOrdersTable.status, count: count() }).from(workOrdersTable).where(and(...woScope)).groupBy(workOrdersTable.status),
+          ]);
+          customerPortal.workOrders = totals[0]?.count ?? 0;
+          customerPortal.workOrdersByStatus = byStatus;
+        }
+        if (Object.keys(customerPortal).length > 0) {
+          data.customerPortal = customerPortal;
+          domains.push("customerPortal");
+        }
       })(),
     );
   }
