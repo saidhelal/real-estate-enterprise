@@ -9,6 +9,7 @@ import {
   leadFollowUpsTable,
   leadAssignmentsTable,
   leadConversionsTable,
+  customersTable,
 } from "@workspace/db";
 import {
   ListLeadsResponse,
@@ -42,6 +43,10 @@ import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
 router.use(requireAuth);
+
+// Thrown inside the lead-conversion transaction to roll it back and surface a
+// 404 when the lead/customer don't exist or belong to another company.
+class ConversionNotFound extends Error {}
 
 // ----- leads -----
 router.get("/leads", requirePermission("leads.view"), async (req, res): Promise<void> => {
@@ -461,9 +466,61 @@ router.get("/lead-conversions", requirePermission("leadConversions.view"), async
 router.post("/lead-conversions", requirePermission("leadConversions.create"), async (req, res): Promise<void> => {
   const parsed = CreateLeadConversionBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(leadConversionsTable).values({ ...parsed.data }).returning();
-  await recordAudit(req, { action: "create", entity: "leadConversion", entityId: row.id, newValue: row });
-  res.status(201).json(GetLeadConversionResponse.parse(serializeRow(row)));
+  const { companyId, leadId, customerId } = parsed.data;
+  try {
+    const row = await db.transaction(async (tx) => {
+      // Validate (and lock) that both the lead and customer exist and belong to
+      // the requested company before applying any side effects. This prevents a
+      // cross-tenant conversion from retiring/re-pointing another company's rows.
+      const [lead] = await tx
+        .select({ id: leadsTable.id })
+        .from(leadsTable)
+        .where(and(eq(leadsTable.id, leadId), eq(leadsTable.companyId, companyId), eq(leadsTable.isDeleted, false)))
+        .for("update");
+      const [customer] = await tx
+        .select({ id: customersTable.id })
+        .from(customersTable)
+        .where(and(eq(customersTable.id, customerId), eq(customersTable.companyId, companyId), eq(customersTable.isDeleted, false)))
+        .for("update");
+      if (!lead || !customer) throw new ConversionNotFound();
+
+      const [conversion] = await tx.insert(leadConversionsTable).values({ ...parsed.data }).returning();
+      // Retire the converted lead so it drops out of open-lead queries/distribution.
+      await tx
+        .update(leadsTable)
+        .set({ status: "converted" })
+        .where(and(eq(leadsTable.id, leadId), eq(leadsTable.companyId, companyId), eq(leadsTable.isDeleted, false)));
+      // Carry the lead's interaction history onto the new customer so it isn't
+      // orphaned on the lead after conversion.
+      await tx
+        .update(leadActivitiesTable)
+        .set({ customerId })
+        .where(and(
+          eq(leadActivitiesTable.leadId, leadId),
+          eq(leadActivitiesTable.companyId, companyId),
+          eq(leadActivitiesTable.isDeleted, false),
+          isNull(leadActivitiesTable.customerId),
+        ));
+      await tx
+        .update(leadFollowUpsTable)
+        .set({ customerId })
+        .where(and(
+          eq(leadFollowUpsTable.leadId, leadId),
+          eq(leadFollowUpsTable.companyId, companyId),
+          eq(leadFollowUpsTable.isDeleted, false),
+          isNull(leadFollowUpsTable.customerId),
+        ));
+      return conversion;
+    });
+    await recordAudit(req, { action: "create", entity: "leadConversion", entityId: row.id, newValue: row });
+    res.status(201).json(GetLeadConversionResponse.parse(serializeRow(row)));
+  } catch (err) {
+    if (err instanceof ConversionNotFound) {
+      res.status(404).json({ error: "Lead or customer not found for this company" });
+      return;
+    }
+    throw err;
+  }
 });
 
 router.get("/lead-conversions/:id", requirePermission("leadConversions.view"), async (req, res): Promise<void> => {
