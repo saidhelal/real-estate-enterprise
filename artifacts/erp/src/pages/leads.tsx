@@ -10,6 +10,9 @@ import {
   useListLeadSources,
   useListUsers,
   useListCompanies,
+  useCreateCustomer,
+  useCreateLeadConversion,
+  getListCustomersQueryKey,
   type Lead,
   type LeadInput,
 } from "@workspace/api-client-react";
@@ -31,9 +34,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Upload } from "lucide-react";
+import { Upload, UserPlus, Loader2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
+import { genCode } from "@/lib/sale-workflow";
 
 /** Excel header aliases (English + Arabic) mapped to lead fields. */
 const HEADER_ALIASES: Record<keyof LeadInput | "mobile", string[]> = {
@@ -99,6 +103,9 @@ export default function LeadsPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const createLead = useCreateLead();
+  const createCustomer = useCreateCustomer();
+  const createConversion = useCreateLeadConversion();
+  const [convertingId, setConvertingId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [importOpen, setImportOpen] = useState(false);
@@ -226,6 +233,52 @@ export default function LeadsPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
+  // Convert a lead into a real (assigned) customer in one click: create the
+  // customer from the lead's data, then record the conversion. The conversion
+  // endpoint transactionally flips the lead to "converted" and re-points its
+  // activities/follow-ups onto the new customer, so its history is preserved.
+  async function convertToCustomer(lead: Lead) {
+    if (!companyId || convertingId) return;
+    setConvertingId(lead.id);
+    try {
+      const customer = await createCustomer.mutateAsync({
+        data: {
+          companyId,
+          code: genCode("CUST"),
+          fullName: lead.fullName,
+          ...(lead.branchId ? { branchId: lead.branchId } : {}),
+          ...(lead.phone ? { phone: lead.phone } : {}),
+          ...(lead.nationalId ? { nationalId: lead.nationalId } : {}),
+          ...(lead.email ? { email: lead.email } : {}),
+          ...(lead.assignedToUserId ? { assignedToUserId: lead.assignedToUserId } : {}),
+        },
+      });
+      await createConversion.mutateAsync({
+        data: { companyId, leadId: lead.id, customerId: customer.id },
+      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: getListLeadsQueryKey() }),
+        queryClient.invalidateQueries({ queryKey: getListCustomersQueryKey() }),
+        queryClient.invalidateQueries({ queryKey: getListCustomersQueryKey({ pageSize: 200 }) }),
+      ]);
+      toast({
+        title: language === "ar"
+          ? `تم تحويل "${lead.fullName}" إلى عميل — يمكنك الآن بدء البيع وإنشاء الحجز`
+          : `Converted "${lead.fullName}" to a customer — you can now start a sale and create a reservation`,
+      });
+    } catch (err) {
+      const status = (err as { status?: number })?.status;
+      toast({
+        title: status === 409
+          ? (language === "ar" ? "رمز العميل مستخدم، حاول مرة أخرى" : "Customer code already in use, try again")
+          : t("common.error"),
+        variant: "destructive",
+      });
+    } finally {
+      setConvertingId(null);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
@@ -246,6 +299,26 @@ export default function LeadsPage() {
         useDelete={useDeleteLead}
         getListQueryKey={getListLeadsQueryKey}
         companyId={companyId}
+        rowActions={(lead) =>
+          lead.status === "converted" ? (
+            <Badge variant="secondary">{enumLabel("converted", language)}</Badge>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={convertingId !== null}
+              onClick={() => void convertToCustomer(lead)}
+              data-testid={`button-convert-lead-${lead.id}`}
+            >
+              {convertingId === lead.id ? (
+                <Loader2 className="h-4 w-4 animate-spin me-1" />
+              ) : (
+                <UserPlus className="h-4 w-4 me-1" />
+              )}
+              {language === "ar" ? "تحويل إلى عميل" : "Convert to Customer"}
+            </Button>
+          )
+        }
       />
 
       <Dialog
