@@ -56,6 +56,41 @@ function registerProcessHandlers(server: Server): void {
   });
 }
 
+/**
+ * Bind the HTTP port, tolerating a transient EADDRINUSE.
+ *
+ * On a workspace reopen the previous session's process can still hold the port
+ * while it drains (graceful shutdown allows up to 10s). Node surfaces bind
+ * failures as an `error` event on the server — NOT via the `listen` callback —
+ * so without this handler an EADDRINUSE escalates to `uncaughtException` and the
+ * process exits permanently, leaving the API dead until a manual restart.
+ * Retrying gives the old process time to release the port so a cold start
+ * becomes ready on its own.
+ */
+function startServerWithRetry(attempt = 1): void {
+  const maxAttempts = 6;
+  const retryDelayMs = 2000;
+  const server = app.listen(port);
+
+  server.once("listening", () => {
+    logger.info({ port, attempt }, "Server listening");
+    registerProcessHandlers(server);
+  });
+
+  server.once("error", (err: NodeJS.ErrnoException) => {
+    if (err.code === "EADDRINUSE" && attempt < maxAttempts) {
+      logger.warn(
+        { port, attempt, maxAttempts, retryDelayMs },
+        "Port in use (a previous process is likely still shutting down); retrying",
+      );
+      setTimeout(() => startServerWithRetry(attempt + 1), retryDelayMs).unref();
+      return;
+    }
+    logger.error({ err, port, attempt }, "Failed to bind port; aborting startup");
+    process.exit(1);
+  });
+}
+
 async function main(): Promise<void> {
   const report = await runStartupDiagnostics();
   if (!report.ok) {
@@ -73,15 +108,7 @@ async function main(): Promise<void> {
     logger.info(modules, `All ${modules.total} modules mounted`);
   }
 
-  const server = app.listen(port, (err) => {
-    if (err) {
-      logger.error({ err }, "Error listening on port");
-      process.exit(1);
-    }
-    logger.info({ port }, "Server listening");
-  });
-
-  registerProcessHandlers(server);
+  startServerWithRetry();
 }
 
 main().catch((err) => {
