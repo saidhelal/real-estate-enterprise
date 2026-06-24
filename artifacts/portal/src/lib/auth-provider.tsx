@@ -20,7 +20,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetPortalMe({
     query: {
-      retry: false,
+      // On a cold/parallel startup (pressing Run boots the web and API
+      // services at the same time) the API may not be listening yet, so this
+      // first current-user check can fail with a network error or a 5xx before
+      // the API finishes coming up. A genuine 401 is authoritative ("not logged
+      // in") and must fall through to /login immediately; any other failure
+      // means "API not ready yet" and should be retried so a still-valid
+      // session is restored automatically once the API is up.
+      retry: (failureCount, err) => {
+        if (failureCount >= 6) return false;
+        const status = (err as { status?: number } | null)?.status;
+        if (status === 401) return false;
+        return true;
+      },
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
       queryKey: getGetPortalMeQueryKey(),
     },
   });

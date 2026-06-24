@@ -20,7 +20,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const { data: user, isLoading, error } = useGetCurrentUser({
     query: {
-      retry: false,
+      // The very first request the app makes on load is this current-user
+      // check. On a cold/parallel startup (e.g. pressing Run, which boots the
+      // web and API services at the same time) the API may not be listening
+      // yet, so this call can fail with a network error or a 5xx before the
+      // API finishes coming up. A genuine 401 is authoritative ("not logged
+      // in") and must fall through to /login immediately; any other failure
+      // means "API not ready yet" and should be retried so a still-valid
+      // session is restored automatically once the API is up — without the
+      // user being kicked to /login and forced to sign in again.
+      retry: (failureCount, err) => {
+        if (failureCount >= 6) return false;
+        const status = (err as { status?: number } | null)?.status;
+        if (status === 401) return false;
+        return true;
+      },
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
       queryKey: getGetCurrentUserQueryKey(),
     },
   });
