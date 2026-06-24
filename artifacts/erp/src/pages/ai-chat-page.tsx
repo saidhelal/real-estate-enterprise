@@ -43,21 +43,31 @@ export function AiChatPage({
   const [error, setError] = useState<string | null>(null);
   const [noAccess, setNoAccess] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // Tracks the conversation whose messages are currently reflected in `lines`.
+  // Guards the history-sync effect so a stale/empty server snapshot can never
+  // overwrite locally authoritative (just-streamed or optimistic) messages.
+  const loadedConvoRef = useRef<number | null>(null);
 
   const { data: history } = useListAiMessages(activeId ?? 0, {
     query: { enabled: !!activeId, queryKey: getListAiMessagesQueryKey(activeId ?? 0) },
   });
 
   useEffect(() => {
-    if (activeId && history) {
+    // Only hydrate from server history when opening a DIFFERENT conversation
+    // than the one already loaded. This prevents two clobbers: (1) the new
+    // conversation's id is set mid-send, and (2) after a stream ends `history`
+    // may still be a stale/empty snapshot — in both cases re-running this would
+    // drop the live/streamed assistant reply.
+    if (activeId && history && !streaming && loadedConvoRef.current !== activeId) {
       setLines(
         history.map((m: AiMessage) => ({
           role: m.role === "assistant" ? "assistant" : "user",
           content: m.content,
         })),
       );
+      loadedConvoRef.current = activeId;
     }
-  }, [activeId, history]);
+  }, [activeId, history, streaming]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -67,6 +77,7 @@ export function AiChatPage({
     setActiveId(null);
     setLines([]);
     setError(null);
+    loadedConvoRef.current = null;
   }
 
   function isForbidden(err: unknown): boolean {
@@ -96,6 +107,9 @@ export function AiChatPage({
     setStreaming(true);
     try {
       const id = await ensureConversation();
+      // These optimistic + streamed lines are now authoritative for this
+      // conversation, so the history-sync effect must not overwrite them.
+      loadedConvoRef.current = id;
       const res = await fetch(`/api/ai/conversations/${id}/messages`, {
         method: "POST",
         credentials: "include",
@@ -138,10 +152,19 @@ export function AiChatPage({
             if (payload.delta) {
               setLines((prev) => {
                 const next = [...prev];
-                next[next.length - 1] = {
-                  role: "assistant",
-                  content: next[next.length - 1].content + payload.delta,
-                };
+                const last = next[next.length - 1];
+                if (last && last.role === "assistant") {
+                  next[next.length - 1] = {
+                    role: "assistant",
+                    content: last.content + payload.delta,
+                  };
+                } else {
+                  // The streaming placeholder was lost (e.g. the history sync
+                  // effect replaced `lines` after a new conversation's id was
+                  // set). Re-create an assistant line so deltas keep appending
+                  // instead of crashing on an undefined entry.
+                  next.push({ role: "assistant", content: payload.delta });
+                }
                 return next;
               });
             } else if (payload.error) {
@@ -155,9 +178,11 @@ export function AiChatPage({
       if (streamErr) {
         setError(t("ai.error"));
       }
-      if (activeId) {
-        queryClient.invalidateQueries({ queryKey: getListAiConversationsQueryKey(convoParams) });
-      }
+      queryClient.invalidateQueries({ queryKey: getListAiConversationsQueryKey(convoParams) });
+      // Refetch the now-persisted messages so a later revisit shows the
+      // server-authoritative thread. `loadedConvoRef` keeps the refetch from
+      // clobbering the lines we just streamed for this same conversation.
+      queryClient.invalidateQueries({ queryKey: getListAiMessagesQueryKey(id) });
     } catch (err) {
       if (isForbidden(err)) {
         setNoAccess(true);

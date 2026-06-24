@@ -36,8 +36,9 @@ provider; the OpenAI integration env vars were present and fine.)
   body as a string, so this is replay-safe); a consumed `Request` stream body
   would not be.
 
-**Recovering superadmin:** the documented default password
-(`superadmin`/`Admin@123456`) can drift; re-run `pnpm --filter @workspace/api-server run seed`
-(idempotent) to reset it and clear lockout. A login returning "Invalid username
-or password" (not "locked") means the account is unlocked but the password
-differs — do not brute force (5 attempts → 15-min lockout).
+**Recovering the super admin:** the documented default credentials (see
+`replit.md`) can drift; re-run `pnpm --filter @workspace/api-server run seed`
+(idempotent) to reset the super-admin password to that documented default and
+clear lockout. A login returning "Invalid username or password" (not "locked")
+means the account is unlocked but the password differs — do not brute force
+(5 attempts → 15-min lockout).
