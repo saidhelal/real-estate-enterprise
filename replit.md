@@ -52,6 +52,7 @@ Super-admin console: dashboard, user/role/permission management (RBAC), companie
 
 - No emojis anywhere in the UI.
 - The user originally asked for Next.js/Prisma; this workspace is a pnpm monorepo (Express + Drizzle + React/Vite), so the stack was adapted (agreed with the user).
+- Optimize for development cost / minimize runtime. Default workflow: (1) implement all requested changes, batching edits; (2) run a single final typecheck; (3) restart services only if actually required; (4) do one final verification. Do NOT restart services, run full typechecks, regenerate codegen, or run architect reviews after every small change — batch and validate once at the end. Avoid repeated build/test cycles unless required to verify functionality.
 
 ## Gotchas
 
