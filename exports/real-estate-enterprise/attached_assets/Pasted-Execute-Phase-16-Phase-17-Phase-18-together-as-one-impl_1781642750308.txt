@@ -1,0 +1,222 @@
+Execute Phase 16 + Phase 17 + Phase 18 together as one implementation batch.
+
+PHASE 16 — BUSINESS INTELLIGENCE & REPORTING
+
+Create a complete executive reporting module integrated with all ERP modules.
+
+Required sections:
+
+1. Executive Dashboard
+
+* Total sales
+* Total collections
+* Outstanding installments
+* Available inventory
+* Reserved units
+* Sold units
+* Construction progress
+* Cash position
+* Profitability indicators
+
+2. Sales Analytics
+
+* Sales by project
+* Sales by branch
+* Sales by salesperson
+* Sales by unit type
+* Monthly sales trends
+* Quarterly comparisons
+* Annual comparisons
+
+3. Collection Analytics
+
+* Collections by project
+* Collections by period
+* Delayed payments
+* Aging analysis
+* Collection efficiency
+* Customer balances
+
+4. Construction Analytics
+
+* Project progress %
+* Contractor performance
+* Delayed activities
+* Budget vs actual
+* Planned vs actual schedules
+
+5. Procurement Analytics
+
+* Purchase volume
+* Supplier performance
+* Open purchase orders
+* Procurement costs
+* Material consumption
+
+6. Inventory Analytics
+
+* Current stock
+* Stock movement
+* Slow moving items
+* Fast moving items
+* Reorder alerts
+* Warehouse valuation
+
+7. HR Analytics
+
+* Employee count
+* Attendance statistics
+* Payroll costs
+* Department analysis
+* Leave balances
+
+8. Financial Analytics
+
+* Revenue analysis
+* Expense analysis
+* Cash flow
+* Profit & loss indicators
+* Budget performance
+
+9. Reports Engine
+
+* Dynamic filters
+* Date ranges
+* Multi-project filters
+* Multi-branch filters
+* Export PDF
+* Export Excel
+* Print reports
+
+10. Charts
+
+* Line charts
+* Bar charts
+* Pie charts
+* Area charts
+* Comparative charts
+
+---
+
+PHASE 17 — CUSTOMER PORTAL
+
+Create a complete customer self-service portal.
+
+Required modules:
+
+1. Customer Authentication
+
+* Login
+* Forgot password
+* OTP support
+* Secure session management
+
+2. Customer Dashboard
+
+* Customer profile
+* Owned units
+* Reserved units
+* Contract summary
+* Financial summary
+
+3. Units
+
+* Unit details
+* Floor plans
+* Project information
+* Unit documents
+
+4. Contracts
+
+* Contract details
+* Contract history
+* Amendments
+* Attachments
+
+5. Installments
+
+* Installment schedule
+* Paid installments
+* Pending installments
+* Overdue installments
+
+6. Collections
+
+* Payment history
+* Receipts
+* Statements
+* Account balances
+
+7. Documents Center
+
+* Contracts
+* Receipts
+* Unit documents
+* Project documents
+
+8. Maintenance Requests
+
+* Create request
+* Track request
+* Request history
+* Attach files
+
+9. Complaints
+
+* Submit complaint
+* Follow status
+* Communication log
+
+10. Notifications
+
+* Payment reminders
+* Contract alerts
+* Project updates
+* System notifications
+
+11. Customer Support
+
+* Contact center
+* Ticketing system
+* Internal messaging
+
+---
+
+PHASE 18 — MOBILE APPLICATION READINESS
+
+Prepare the ERP for mobile applications.
+
+Required APIs and mobile services:
+
+1. Mobile Authentication APIs
+2. Customer Dashboard APIs
+3. Units APIs
+4. Contracts APIs
+5. Installments APIs
+6. Collections APIs
+7. Documents APIs
+8. Notifications APIs
+9. Maintenance APIs
+10. Complaints APIs
+
+Mobile requirements:
+
+* Responsive design
+* Mobile optimized layouts
+* Push notification support
+* File upload support
+* Image upload support
+* Secure token authentication
+* Arabic support
+* English support
+
+Implementation requirements:
+
+* Do not remove existing functionality.
+* Keep all existing database records.
+* Preserve all integrations.
+* Create migrations if needed.
+* Build production-ready implementation.
+* Run validations and smoke tests.
+* Fix all compilation issues.
+* Provide final implementation report after completion.

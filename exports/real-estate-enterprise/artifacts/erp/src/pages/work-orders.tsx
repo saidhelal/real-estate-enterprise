@@ -1,0 +1,65 @@
+import {
+  useListWorkOrders,
+  useCreateWorkOrder,
+  useUpdateWorkOrder,
+  useDeleteWorkOrder,
+  getListWorkOrdersQueryKey,
+  useListCompanies,
+  type WorkOrder,
+} from "@workspace/api-client-react";
+import {
+  ResourceManager,
+  type ResourceField,
+  type ResourceColumn,
+} from "@/components/resource/resource-manager";
+import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLanguage } from "@/lib/language-provider";
+
+export default function WorkOrdersPage() {
+  const { language } = useLanguage();
+  const { data: companies } = useListCompanies();
+  const companyId = companies?.[0]?.id;
+
+  const fields: ResourceField[] = [
+    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    { name: "customerId", label: "Customer ID", labelAr: "معرّف العميل" },
+    { name: "unitId", label: "Unit ID", labelAr: "معرّف الوحدة" },
+    { name: "sourceType", label: "Source Type", labelAr: "نوع المصدر", type: "select", options: enumOptions(["manual", "complaint", "maintenance", "handover"]) },
+    { name: "sourceId", label: "Source ID", labelAr: "معرّف المصدر" },
+    { name: "title", label: "Title", labelAr: "العنوان", required: true },
+    { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "critical"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "on_hold", "done", "cancelled"]) },
+    { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
+    { name: "scheduledDate", label: "Scheduled Date", labelAr: "تاريخ الجدولة", type: "date" },
+    { name: "completedDate", label: "Completed Date", labelAr: "تاريخ الإنجاز", type: "date" },
+    { name: "progressPercent", label: "Progress %", labelAr: "نسبة الإنجاز %", type: "money" },
+    { name: "estimatedCost", label: "Estimated Cost", labelAr: "التكلفة المقدّرة", type: "money" },
+    { name: "actualCost", label: "Actual Cost", labelAr: "التكلفة الفعلية", type: "money" },
+    { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
+  ];
+
+  const columns: ResourceColumn<WorkOrder>[] = [
+    { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
+    { header: "Title", headerAr: "العنوان", render: (r) => r.title },
+    { header: "Priority", headerAr: "الأولوية", render: (r) => <Badge variant="secondary">{enumLabel(r.priority, language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
+    { header: "Progress %", headerAr: "نسبة الإنجاز %", render: (r) => `${r.progressPercent ?? "0"}%` },
+  ];
+
+  return (
+    <ResourceManager
+      title="Work Orders"
+      titleAr="أوامر العمل"
+      columns={columns}
+      fields={fields}
+      useList={useListWorkOrders}
+      useCreate={useCreateWorkOrder}
+      useUpdate={useUpdateWorkOrder}
+      useDelete={useDeleteWorkOrder}
+      getListQueryKey={getListWorkOrdersQueryKey}
+      companyId={companyId}
+    />
+  );
+}

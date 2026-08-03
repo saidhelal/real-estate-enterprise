@@ -1,0 +1,303 @@
+ERP HOME DASHBOARD – FINAL UI REFINEMENT
+
+IMPORTANT:
+
+- Keep the ERP fully integrated.
+- Do NOT break any existing links, routes, permissions, APIs or database relations.
+- Do NOT create duplicate modules.
+- Do NOT create duplicate pages.
+- Reorganize and improve only the Executive Home Dashboard.
+
+====================================================
+VISUAL DESIGN
+====================================================
+
+1. Change all module cards to a lighter premium navy blue.
+
+Current color is too dark.
+
+Use a luxury enterprise navy color that is:
+- 3 to 4 shades lighter than current
+- Close to black
+- Modern corporate style
+- Consistent across all cards
+
+2. Card Layout
+
+Desktop:
+- 4 cards per row
+
+Tablet:
+- 2 cards per row
+
+Mobile:
+- 1 card per row
+
+3. Increase card size
+
+- Wider cards
+- Taller cards
+- More internal spacing
+- More spacing between cards
+
+4. Typography
+
+Main Module Title:
+- Font Size: 24px to 28px
+- Font Weight: 800
+- White
+- Center aligned
+
+Sub Modules:
+- Font Size: 16px to 18px
+- Font Weight: 700
+- Light gray
+- Clear spacing
+- Easy to read
+
+5. Uniform Cards
+
+All cards must have:
+- Same width
+- Same height
+- Same spacing
+- Same alignment
+
+Even if one card contains more items.
+
+6. Hover Effect
+
+Add professional hover effects:
+
+- Slight scale effect
+- Soft shadow
+- Smooth transition
+
+No bright colors.
+
+====================================================
+MODULE RESTRUCTURING
+====================================================
+
+Create the following executive modules only:
+
+1. العقارات والمشروعات
+
+Contains:
+- المشروعات
+- المراحل
+- المباني
+- الطوابق
+- الوحدات
+- أنواع الوحدات
+- حالات الوحدات
+- التسعير
+- قوائم الأسعار
+
+----------------------------------------------------
+
+2. المبيعات والعملاء
+
+Contains:
+- CRM
+- العملاء
+- جهات الاتصال
+- العملاء المحتملون
+- الحجوزات
+- العقود
+- التعديلات
+- الإلغاءات
+- التحويلات
+
+----------------------------------------------------
+
+3. الإدارة المالية والحسابات
+
+IMPORTANT:
+
+Merge the following completely inside Finance:
+
+- Accounting
+- Installments & Collections
+- Treasury
+- Banks
+
+Finance contains:
+
+- دليل الحسابات
+- القيود اليومية
+- الحسابات العامة
+- الذمم المدينة
+- الذمم الدائنة
+- العملاء
+- الموردون
+- مراكز التكلفة
+- الموازنات
+- التقارير المالية
+- الأقساط
+- جداول الأقساط
+- التحصيلات
+- إيصالات القبض
+- سندات الصرف
+- الخزائن
+- البنوك
+- الشيكات
+- التحويلات البنكية
+- التسويات البنكية
+
+Remove separate cards for:
+- الأقساط والتحصيلات
+- الخزينة والبنوك
+
+----------------------------------------------------
+
+4. المشتريات والمخازن
+
+Contains:
+- الموردون
+- طلبات الشراء
+- RFQ
+- أوامر الشراء
+- العقود
+- المستودعات
+- الأصناف
+- الجرد
+- حركات المخزون
+
+----------------------------------------------------
+
+5. الهندسة والتنفيذ
+
+Contains:
+- BOQ
+- بنود الكميات
+- التقديرات
+- طلبات الفحص
+- تقارير الفحص
+- العيوب
+- الإجراءات التصحيحية
+- RFI
+- التقديمات الفنية
+
+----------------------------------------------------
+
+6. المقاولون والتنفيذ
+
+Contains:
+- المقاولون
+- عقود المقاولين
+- المستخلصات
+- أوامر التغيير
+- الدفعات المقدمة
+- الفواتير
+- تقارير التنفيذ
+
+----------------------------------------------------
+
+7. الموارد البشرية
+
+Contains:
+- الإدارات
+- الأقسام
+- الموظفون
+- الحضور
+- الإجازات
+- الرواتب
+- السلف
+- القروض
+- التقييمات
+
+----------------------------------------------------
+
+8. الشؤون القانونية
+
+Contains:
+- العقود القانونية
+- القضايا
+- الجلسات
+- المطالبات
+- الإشعارات
+- المستشارون
+- مكاتب المحاماة
+
+----------------------------------------------------
+
+9. خدمة العملاء
+
+Contains:
+- الشكاوى
+- التذاكر
+- الطلبات
+- الصيانة
+- الدعم الفني
+
+----------------------------------------------------
+
+10. بنك الأراضي
+
+Contains:
+- الأراضي
+- الملكيات
+- الموقف القانوني
+- الاستغلال
+- المستندات
+
+----------------------------------------------------
+
+11. التسليم وخدمة ما بعد البيع
+
+Contains:
+- طلبات التسليم
+- الفحص النهائي
+- النواقص
+- محاضر التسليم
+- إغلاق التسليم
+
+----------------------------------------------------
+
+12. التقارير وذكاء الأعمال
+
+Contains:
+- Executive Dashboard
+- KPI
+- Financial Analytics
+- Sales Analytics
+- Project Analytics
+- HR Analytics
+
+----------------------------------------------------
+
+13. الإدارة والإعدادات
+
+Contains:
+- المستخدمون
+- الصلاحيات
+- الفروع
+- الشركات
+- العملات
+- السنوات المالية
+- الإعدادات العامة
+
+====================================================
+NAVIGATION
+====================================================
+
+Clicking anywhere on a card opens the corresponding module.
+
+Do not require clicking individual submenus.
+
+====================================================
+DATA INTEGRITY
+====================================================
+
+Keep the ERP fully integrated.
+
+All modules must remain connected.
+
+Do not change database relationships.
+
+Do not change accounting integrations.
+
+Do not change permissions.
+
+Only improve organization, navigation and visual presentation.

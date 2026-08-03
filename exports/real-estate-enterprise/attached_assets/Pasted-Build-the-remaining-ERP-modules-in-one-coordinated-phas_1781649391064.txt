@@ -1,0 +1,111 @@
+Build the remaining ERP modules in one coordinated phase using the existing architecture and database.
+
+Modules:
+
+1. Customer Service
+2. Land Bank Management
+3. Unit Handover Management
+4. Fixed Assets
+
+Important Rules:
+
+* Do NOT create duplicate functionality.
+* Reuse existing tables, APIs, permissions, audit trail, attachments, numbering, workflows and accounting engine whenever possible.
+* Extend existing modules before creating new entities.
+* Follow the current ERP architecture and naming conventions.
+
+Module 1: Customer Service
+
+Reuse Customer Portal complaints, maintenance requests, support tickets and notifications.
+
+Add ERP-side management screens for:
+
+* Customer Service Dashboard
+* Complaints Management
+* Support Tickets
+* Maintenance Requests
+* SLA Tracking
+* Escalation Workflow
+* Customer Service Reports
+
+Module 2: Land Bank Management
+
+Create:
+
+* Land Bank Dashboard
+* Land Parcels
+* Ownership Records
+* Legal Status
+* Land Utilization
+* Land Documents
+* Land Acquisition Records
+
+Integrate with:
+
+* Projects
+* Legal Affairs
+* Documents
+* Audit Trail
+
+Module 3: Unit Handover Management
+
+Reuse:
+
+* Units
+* Unit Statuses
+* Engineering Inspections
+* Defects
+* Corrective Actions
+* Documents
+* Customer Portal
+
+Create:
+
+* Handover Requests
+* Handover Scheduling
+* Handover Checklists
+* Handover Minutes
+* Snag Lists
+* Handover Approval
+* Handover Closure
+* Handover Reports
+
+Module 4: Fixed Assets
+
+Reuse:
+
+* Accounting
+* Chart of Accounts
+* Cost Centers
+* Branches
+* Audit Trail
+
+Create:
+
+* Asset Categories
+* Fixed Asset Register
+* Asset Transfers
+* Asset Depreciation
+* Asset Inventory Count
+* Asset Disposal
+* Asset Reports
+
+Requirements:
+
+* Arabic and English support.
+* RTL support.
+* Permissions integrated with existing role system.
+* Dashboard widgets and reports.
+* Full CRUD pages.
+* Responsive UI.
+* No mock data.
+* Use real database tables.
+* Run migrations safely.
+* Produce a final implementation report showing:
+
+  * Added tables
+  * Added APIs
+  * Added pages
+  * Reused components
+  * Completion percentage per module
+  * Any remaining gaps

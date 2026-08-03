@@ -1,0 +1,323 @@
+Continue implementation.
+
+IMPORTANT
+
+The discovery phase is COMPLETE.
+
+Do NOT inspect the repository again.
+
+Do NOT re-read files already explored.
+
+Reuse the existing ERP implementation.
+
+Do NOT waste time.
+
+Implement only the workflow described below.
+
+No duplicate modules.
+
+No duplicate tables.
+
+No duplicate APIs.
+
+No redesign.
+
+========================================================
+
+SALES → FINANCE → LEGAL APPROVAL WORKFLOW
+
+========================================================
+
+This workflow extends the existing ERP.
+
+Reuse all existing modules.
+
+Sales
+
+Finance
+
+Treasury
+
+Legal Affairs
+
+Contracts
+
+Accounting
+
+Audit Trail
+
+Notifications
+
+========================================================
+
+STEP 1
+
+Sales completes:
+
+Customer
+
+Unit
+
+Payment Method
+
+Cash or Installments
+
+Installment Schedule
+
+Cheque Details
+
+Then presses:
+
+Submit To Finance
+
+NOT Approve Contract.
+
+NOT Issue Contract.
+
+========================================================
+
+SYSTEM STATUS
+
+Immediately after submission:
+
+Transaction Status
+
+Pending Finance Verification
+
+Unit Status
+
+Pending Sale
+
+Contract Status
+
+Pending Finance Approval
+
+The unit must NOT become Sold yet.
+
+========================================================
+
+STEP 2
+
+Finance Queue
+
+Automatically send the transaction to the existing Finance module.
+
+Do NOT create a new module.
+
+Create a Finance Inbox inside the existing Finance workflow.
+
+Finance users only.
+
+========================================================
+
+Finance reviews:
+
+Customer
+
+Unit
+
+Sale
+
+Installments
+
+Cheque Details
+
+========================================================
+
+Finance Actions
+
+Received All Cheques
+
+Received Partial Cheques
+
+Rejected
+
+Returned To Sales
+
+========================================================
+
+If Returned
+
+The transaction returns to Sales with comments.
+
+Sales may edit.
+
+Resubmit.
+
+========================================================
+
+If Approved
+
+Finance confirms physical receipt of all required cheques.
+
+System updates:
+
+Cheque Status
+
+Received
+
+Transaction Status
+
+Finance Approved
+
+========================================================
+
+STEP 3
+
+Legal Affairs
+
+Only AFTER Finance Approved.
+
+Legal automatically receives the transaction.
+
+========================================================
+
+Legal may now:
+
+Generate Final Contract
+
+Generate Verification ID
+
+Generate QR
+
+Generate Locked PDF
+
+Approve Contract
+
+Activate Contract
+
+========================================================
+
+Before Finance Approval
+
+Only Draft Contract is allowed.
+
+Every printed draft must contain:
+
+DRAFT
+
+Pending Finance Approval
+
+Watermark
+
+========================================================
+
+STEP 4
+
+After Legal Approval
+
+Automatically:
+
+Unit Status
+
+Sold
+
+Contract Status
+
+Active
+
+Installment Plan
+
+Active
+
+Customer Ledger
+
+Active
+
+Treasury Workflow
+
+Ready
+
+Accounting Workflow
+
+Ready
+
+========================================================
+
+SECURITY
+
+Sales cannot issue contracts.
+
+Sales cannot activate contracts.
+
+Sales cannot mark Finance Approved.
+
+Finance cannot edit sales data.
+
+Legal cannot bypass Finance.
+
+Owner and System Administrator retain full permissions.
+
+========================================================
+
+NOTIFICATIONS
+
+Automatically notify:
+
+Sales
+
+Finance
+
+Legal
+
+Owner
+
+at every workflow transition.
+
+========================================================
+
+AUDIT
+
+Record every action.
+
+User
+
+Date
+
+Time
+
+Previous Status
+
+New Status
+
+IP
+
+Device
+
+========================================================
+
+TIMEOUT CONTROL
+
+If Finance does not review within the configured SLA,
+
+Automatically notify:
+
+Finance Manager
+
+Sales Manager
+
+Owner
+
+========================================================
+
+ARCHITECTURE
+
+Reuse all existing ERP modules.
+
+Reuse existing database.
+
+Reuse existing APIs.
+
+Reuse existing permissions.
+
+Reuse existing workflow engine.
+
+Do NOT duplicate anything.
+
+Validate only modified workflow.
+
+Run targeted smoke tests only.
+
+Create one checkpoint after successful validation.
+
+Do NOT spend time exploring files already explored.

@@ -1,0 +1,58 @@
+import {
+  useListCsSupportTickets,
+  useCreateCsSupportTicket,
+  useUpdateCsSupportTicket,
+  useDeleteCsSupportTicket,
+  getListCsSupportTicketsQueryKey,
+  useListCompanies,
+  type CsSupportTicket,
+} from "@workspace/api-client-react";
+import {
+  ResourceManager,
+  type ResourceField,
+  type ResourceColumn,
+} from "@/components/resource/resource-manager";
+import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
+import { useLanguage } from "@/lib/language-provider";
+
+export default function SupportTicketsPage() {
+  const { language } = useLanguage();
+  const { options: CATEGORY } = useLookupOptions("support_ticket_category", ["general", "billing", "technical", "account"]);
+  const { data: companies } = useListCompanies();
+  const companyId = companies?.[0]?.id;
+
+  const fields: ResourceField[] = [
+    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    { name: "customerId", label: "Customer ID", labelAr: "معرّف العميل", required: true },
+    { name: "category", label: "Category", labelAr: "الفئة", type: "select", options: CATEGORY },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "critical"]) },
+    { name: "subject", label: "Subject", labelAr: "الموضوع", required: true },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "resolved", "closed"]) },
+    { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
+    { name: "escalationLevel", label: "Escalation Level", labelAr: "مستوى التصعيد", type: "money" },
+  ];
+
+  const columns: ResourceColumn<CsSupportTicket>[] = [
+    { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
+    { header: "Subject", headerAr: "الموضوع", render: (r) => r.subject },
+    { header: "Priority", headerAr: "الأولوية", render: (r) => <Badge variant="secondary">{enumLabel(r.priority, language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
+  ];
+
+  return (
+    <ResourceManager
+      title="Customer Requests"
+      titleAr="طلبات العملاء"
+      columns={columns}
+      fields={fields}
+      useList={useListCsSupportTickets}
+      useCreate={useCreateCsSupportTicket}
+      useUpdate={useUpdateCsSupportTicket}
+      useDelete={useDeleteCsSupportTicket}
+      getListQueryKey={getListCsSupportTicketsQueryKey}
+      companyId={companyId}
+    />
+  );
+}

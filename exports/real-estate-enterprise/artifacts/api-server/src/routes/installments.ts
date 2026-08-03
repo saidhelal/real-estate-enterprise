@@ -1,0 +1,442 @@
+import { Router, type IRouter } from "express";
+import { and, desc, eq, ilike, lt, ne, or, type SQL } from "drizzle-orm";
+import { sql } from "drizzle-orm";
+import {
+  db,
+  installmentPlansTable,
+  installmentSchedulesTable,
+  installmentCollectionsTable,
+  penaltyRulesTable,
+} from "@workspace/db";
+import {
+  ListInstallmentPlansResponse,
+  CreateInstallmentPlanBody,
+  GetInstallmentPlanResponse,
+  UpdateInstallmentPlanBody,
+  ListInstallmentSchedulesResponse,
+  CreateInstallmentScheduleBody,
+  GetInstallmentScheduleResponse,
+  UpdateInstallmentScheduleBody,
+  ListInstallmentCollectionsResponse,
+  CreateInstallmentCollectionBody,
+  GetInstallmentCollectionResponse,
+  UpdateInstallmentCollectionBody,
+  ListPenaltyRulesResponse,
+  CreatePenaltyRuleBody,
+  GetPenaltyRuleResponse,
+  UpdatePenaltyRuleBody,
+  ListOverdueInstallmentsResponse,
+} from "@workspace/api-zod";
+import { serializeRow, pageParams, qStr } from "../lib/serialize";
+import { recordAudit } from "../lib/audit";
+import { requireAuth, requirePermission } from "../middleware/auth";
+import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
+import { notify, recipientsByPermission } from "../lib/notify";
+
+const router: IRouter = Router();
+router.use(requireAuth);
+
+// ----- installmentPlans -----
+router.get("/installment-plans", requirePermission("installmentPlans.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(installmentPlansTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(installmentPlansTable.code, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(installmentPlansTable.companyId, companyId));
+  const contractId = qStr(q, "contractId");
+  if (contractId) filters.push(eq(installmentPlansTable.contractId, contractId));
+  const where = and(...filters);
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(installmentPlansTable)
+    .where(where);
+  const rows = await db
+    .select()
+    .from(installmentPlansTable)
+    .where(where)
+    .orderBy(desc(installmentPlansTable.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+  res.json(ListInstallmentPlansResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/installment-plans", requirePermission("installmentPlans.create"), async (req, res): Promise<void> => {
+  const parsed = CreateInstallmentPlanBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(installmentPlansTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "installmentPlan", entityId: row.id, newValue: row });
+  res.status(201).json(GetInstallmentPlanResponse.parse(serializeRow(row)));
+});
+
+router.get("/installment-plans/:id", requirePermission("installmentPlans.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(installmentPlansTable).where(and(eq(installmentPlansTable.id, id), eq(installmentPlansTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetInstallmentPlanResponse.parse(serializeRow(row)));
+});
+
+router.patch("/installment-plans/:id", requirePermission("installmentPlans.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateInstallmentPlanBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(installmentPlansTable).where(and(eq(installmentPlansTable.id, id), eq(installmentPlansTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(installmentPlansTable).set(update).where(eq(installmentPlansTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "installmentPlan", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetInstallmentPlanResponse.parse(serializeRow(row)));
+});
+
+router.delete("/installment-plans/:id", requirePermission("installmentPlans.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(installmentPlansTable).set({ isDeleted: true, isActive: false }).where(and(eq(installmentPlansTable.id, id), eq(installmentPlansTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "installmentPlan", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- installmentSchedules -----
+router.get("/installment-schedules", requirePermission("installmentSchedules.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const filters: SQL[] = [eq(installmentSchedulesTable.isDeleted, false)];
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(installmentSchedulesTable.companyId, companyId));
+  const planId = qStr(q, "planId");
+  if (planId) filters.push(eq(installmentSchedulesTable.planId, planId));
+  const where = and(...filters);
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(installmentSchedulesTable)
+    .where(where);
+  const rows = await db
+    .select()
+    .from(installmentSchedulesTable)
+    .where(where)
+    .orderBy(desc(installmentSchedulesTable.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+  res.json(ListInstallmentSchedulesResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/installment-schedules", requirePermission("installmentSchedules.create"), async (req, res): Promise<void> => {
+  const parsed = CreateInstallmentScheduleBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(installmentSchedulesTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "installmentSchedule", entityId: row.id, newValue: row });
+  res.status(201).json(GetInstallmentScheduleResponse.parse(serializeRow(row)));
+});
+
+router.get("/installment-schedules/:id", requirePermission("installmentSchedules.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(installmentSchedulesTable).where(and(eq(installmentSchedulesTable.id, id), eq(installmentSchedulesTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetInstallmentScheduleResponse.parse(serializeRow(row)));
+});
+
+router.patch("/installment-schedules/:id", requirePermission("installmentSchedules.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateInstallmentScheduleBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(installmentSchedulesTable).where(and(eq(installmentSchedulesTable.id, id), eq(installmentSchedulesTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(installmentSchedulesTable).set(update).where(eq(installmentSchedulesTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "installmentSchedule", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetInstallmentScheduleResponse.parse(serializeRow(row)));
+});
+
+router.delete("/installment-schedules/:id", requirePermission("installmentSchedules.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(installmentSchedulesTable).set({ isDeleted: true, isActive: false }).where(and(eq(installmentSchedulesTable.id, id), eq(installmentSchedulesTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "installmentSchedule", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- installmentCollections -----
+router.get("/installment-collections", requirePermission("installmentCollections.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(installmentCollectionsTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(installmentCollectionsTable.reference, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(installmentCollectionsTable.companyId, companyId));
+  const scheduleId = qStr(q, "scheduleId");
+  if (scheduleId) filters.push(eq(installmentCollectionsTable.scheduleId, scheduleId));
+  const where = and(...filters);
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(installmentCollectionsTable)
+    .where(where);
+  const rows = await db
+    .select()
+    .from(installmentCollectionsTable)
+    .where(where)
+    .orderBy(desc(installmentCollectionsTable.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+  res.json(ListInstallmentCollectionsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/installment-collections", requirePermission("installmentCollections.create"), async (req, res): Promise<void> => {
+  const parsed = CreateInstallmentCollectionBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const data = parsed.data;
+  const row = await db.transaction(async (tx) => {
+    const [created] = await tx.insert(installmentCollectionsTable).values({ ...data, userId: req.authUser?.id ?? null }).returning();
+    // Automatic ledger posting (best-effort; skipped if accounting is unconfigured).
+    await postAutomaticEntry(tx, {
+      companyId: created.companyId,
+      eventKey: "installment.collection",
+      amount: created.amount,
+      entryDate: created.collectionDate,
+      description: `Installment collection${created.reference ? ` ${created.reference}` : ""}`,
+      reference: created.reference ?? null,
+      sourceType: "installmentCollection",
+      sourceId: created.id,
+      userId: req.authUser?.id ?? null,
+    });
+    return created;
+  });
+  await recordAudit(req, { action: "create", entity: "installmentCollection", entityId: row.id, newValue: row });
+  res.status(201).json(GetInstallmentCollectionResponse.parse(serializeRow(row)));
+});
+
+router.get("/installment-collections/:id", requirePermission("installmentCollections.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(installmentCollectionsTable).where(and(eq(installmentCollectionsTable.id, id), eq(installmentCollectionsTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetInstallmentCollectionResponse.parse(serializeRow(row)));
+});
+
+router.patch("/installment-collections/:id", requirePermission("installmentCollections.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdateInstallmentCollectionBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(installmentCollectionsTable).where(and(eq(installmentCollectionsTable.id, id), eq(installmentCollectionsTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(installmentCollectionsTable).set(update).where(eq(installmentCollectionsTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "installmentCollection", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetInstallmentCollectionResponse.parse(serializeRow(row)));
+});
+
+router.delete("/installment-collections/:id", requirePermission("installmentCollections.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const row = await db.transaction(async (tx) => {
+    const [deleted] = await tx.update(installmentCollectionsTable).set({ isDeleted: true, isActive: false }).where(and(eq(installmentCollectionsTable.id, id), eq(installmentCollectionsTable.isDeleted, false))).returning();
+    if (!deleted) return null;
+    await reverseAutomaticEntriesForSource(tx, "installmentCollection", deleted.id, req.authUser?.id ?? null);
+    return deleted;
+  });
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "installmentCollection", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- penaltyRules -----
+router.get("/penalty-rules", requirePermission("penaltyRules.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const search = qStr(q, "search");
+  const filters: SQL[] = [eq(penaltyRulesTable.isDeleted, false)];
+  if (search) {
+    const s = or(ilike(penaltyRulesTable.code, `%${search}%`), ilike(penaltyRulesTable.name, `%${search}%`));
+    if (s) filters.push(s);
+  }
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(penaltyRulesTable.companyId, companyId));
+  const where = and(...filters);
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(penaltyRulesTable)
+    .where(where);
+  const rows = await db
+    .select()
+    .from(penaltyRulesTable)
+    .where(where)
+    .orderBy(desc(penaltyRulesTable.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+  res.json(ListPenaltyRulesResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+router.post("/penalty-rules", requirePermission("penaltyRules.create"), async (req, res): Promise<void> => {
+  const parsed = CreatePenaltyRuleBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [row] = await db.insert(penaltyRulesTable).values({ ...parsed.data }).returning();
+  await recordAudit(req, { action: "create", entity: "penaltyRule", entityId: row.id, newValue: row });
+  res.status(201).json(GetPenaltyRuleResponse.parse(serializeRow(row)));
+});
+
+router.get("/penalty-rules/:id", requirePermission("penaltyRules.view"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.select().from(penaltyRulesTable).where(and(eq(penaltyRulesTable.id, id), eq(penaltyRulesTable.isDeleted, false)));
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  res.json(GetPenaltyRuleResponse.parse(serializeRow(row)));
+});
+
+router.patch("/penalty-rules/:id", requirePermission("penaltyRules.update"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const parsed = UpdatePenaltyRuleBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+  const [existing] = await db.select().from(penaltyRulesTable).where(and(eq(penaltyRulesTable.id, id), eq(penaltyRulesTable.isDeleted, false)));
+  if (!existing) { res.status(404).json({ error: "Not found" }); return; }
+  const update = { ...parsed.data };
+  const [row] = Object.keys(update).length
+    ? await db.update(penaltyRulesTable).set(update).where(eq(penaltyRulesTable.id, id)).returning()
+    : [existing];
+  await recordAudit(req, { action: "update", entity: "penaltyRule", entityId: id, oldValue: existing, newValue: row });
+  res.json(GetPenaltyRuleResponse.parse(serializeRow(row)));
+});
+
+router.delete("/penalty-rules/:id", requirePermission("penaltyRules.delete"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  const [row] = await db.update(penaltyRulesTable).set({ isDeleted: true, isActive: false }).where(and(eq(penaltyRulesTable.id, id), eq(penaltyRulesTable.isDeleted, false))).returning();
+  if (!row) { res.status(404).json({ error: "Not found" }); return; }
+  await recordAudit(req, { action: "delete", entity: "penaltyRule", entityId: id });
+  res.json({ success: true });
+});
+
+// ----- generate installment schedules from a plan -----
+router.post("/installment-plans/:id/generate", requirePermission("installmentSchedules.create"), async (req, res): Promise<void> => {
+  const id = String(req.params.id);
+  let conflict: string | null = null;
+  const created = await db.transaction(async (tx) => {
+    const [plan] = await tx
+      .select()
+      .from(installmentPlansTable)
+      .where(and(eq(installmentPlansTable.id, id), eq(installmentPlansTable.isDeleted, false)))
+      .for("update");
+    if (!plan) { conflict = "404"; return []; }
+    const [existing] = await tx
+      .select({ count: sql<number>`count(*)::int` })
+      .from(installmentSchedulesTable)
+      .where(and(eq(installmentSchedulesTable.planId, id), eq(installmentSchedulesTable.isDeleted, false)));
+    if (existing && existing.count > 0) { conflict = "Schedules already generated for this plan"; return []; }
+
+    const n = Math.max(1, plan.numberOfInstallments);
+    const total = Number(plan.totalAmount);
+    const down = plan.downPayment != null ? Number(plan.downPayment) : 0;
+    const financed = Math.max(0, total - down);
+    const base = Math.floor((financed / n) * 100) / 100;
+    const monthsStep =
+      plan.frequency === "quarterly" ? 3 :
+      plan.frequency === "semi_annual" ? 6 :
+      plan.frequency === "annual" ? 12 : 1;
+
+    const start = new Date(`${plan.startDate}T00:00:00Z`);
+    const values = [] as (typeof installmentSchedulesTable.$inferInsert)[];
+    let allocated = 0;
+    for (let i = 0; i < n; i++) {
+      const amount = i === n - 1 ? Math.round((financed - allocated) * 100) / 100 : base;
+      allocated = Math.round((allocated + base) * 100) / 100;
+      const due = new Date(start);
+      due.setUTCMonth(due.getUTCMonth() + monthsStep * (i + 1));
+      values.push({
+        companyId: plan.companyId,
+        planId: plan.id,
+        installmentNumber: i + 1,
+        dueDate: due.toISOString().slice(0, 10),
+        amount: amount.toFixed(2),
+        paidAmount: "0",
+        status: "pending",
+      });
+    }
+    return tx.insert(installmentSchedulesTable).values(values).returning();
+  });
+  if (conflict === "404") { res.status(404).json({ error: "Not found" }); return; }
+  if (conflict) { res.status(409).json({ error: conflict }); return; }
+  await recordAudit(req, { action: "generate", entity: "installmentPlan", entityId: id, newValue: { created: created.length } });
+  res.status(201).json({ created: created.length, planId: id });
+});
+
+// ----- overdue installments (special read) -----
+router.get("/overdue-installments", requirePermission("installmentSchedules.view"), async (req, res): Promise<void> => {
+  const q = req.query as Record<string, unknown>;
+  const { page, pageSize, offset } = pageParams(q);
+  const today = new Date().toISOString().slice(0, 10);
+  const filters: SQL[] = [
+    eq(installmentSchedulesTable.isDeleted, false),
+    ne(installmentSchedulesTable.status, "paid"),
+    lt(installmentSchedulesTable.dueDate, today),
+  ];
+  const companyId = qStr(q, "companyId");
+  if (companyId) filters.push(eq(installmentSchedulesTable.companyId, companyId));
+  const planId = qStr(q, "planId");
+  if (planId) filters.push(eq(installmentSchedulesTable.planId, planId));
+  const where = and(...filters);
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(installmentSchedulesTable)
+    .where(where);
+  const rows = await db
+    .select()
+    .from(installmentSchedulesTable)
+    .where(where)
+    .orderBy(desc(installmentSchedulesTable.dueDate))
+    .limit(pageSize)
+    .offset(offset);
+
+  // There is no scheduler in this environment, so overdue installments are
+  // detected lazily here (on the canonical overdue scan) and a notification is
+  // raised for the collections team. The emitter is idempotent per
+  // (installments, schedule id, installment_overdue), so repeated scans never
+  // duplicate — each overdue schedule yields at most one notification. This is
+  // best-effort: a failure must never break the read.
+  try {
+    const overdue = rows.filter((r) => !r.isDeleted);
+    if (overdue.length > 0) {
+      // Resolve collectors per company so notifications never cross company
+      // boundaries (an overdue schedule must only reach that company's team).
+      const collectorsByCompany = new Map<string, string[]>();
+      for (const r of overdue) {
+        if (!collectorsByCompany.has(r.companyId)) {
+          collectorsByCompany.set(
+            r.companyId,
+            await recipientsByPermission(db, "installmentCollections.create", {
+              companyId: r.companyId,
+            }),
+          );
+        }
+        const collectors = collectorsByCompany.get(r.companyId)!;
+        if (collectors.length === 0) continue;
+        await notify(db, {
+          recipientUserIds: collectors,
+          companyId: r.companyId,
+          category: "installments",
+          eventType: "installment_overdue",
+          priority: "high",
+          title: "قسط متأخر / Overdue installment",
+          body: `#${r.installmentNumber} · ${r.dueDate} · ${r.amount}`,
+          sourceModule: "installments",
+          sourceId: r.id,
+          sourceRef: `#${r.installmentNumber}`,
+          link: "/installment-schedules",
+        });
+      }
+    }
+  } catch (err) {
+    req.log.error({ err }, "Failed to emit overdue-installment notifications");
+  }
+
+  res.json(ListOverdueInstallmentsResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
+});
+
+export default router;
