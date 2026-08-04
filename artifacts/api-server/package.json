@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "export NODE_ENV=development && pnpm run build && pnpm run start",
+    "dev": "node -e \"process.env.NODE_ENV='development';require('child_process').execSync('pnpm run build && pnpm run start',{stdio:'inherit'})\"",
     "build": "node ./build.mjs",
-    "start": "node --enable-source-maps ./dist/index.mjs",
-    "seed": "esbuild src/seed.ts --bundle --platform=node --format=cjs --external:pg-native --external:*.node --outfile=dist/seed.cjs && SEED_CLI=1 node dist/seed.cjs",
+    "start": "node --enable-source-maps --env-file-if-exists=../../.env ./dist/index.mjs",
+    "seed": "esbuild src/seed.ts --bundle --platform=node --format=cjs --external:pg-native --external:*.node --outfile=dist/seed.cjs && node --env-file-if-exists=../../.env -e \"process.env.SEED_CLI='1';require('./dist/seed.cjs')\"",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

@@ -445,7 +445,7 @@ async function seedSuperAdminUser(roleId: string): Promise<void> {
     .insert(usersTable)
     .values({
       username: "superadmin",
-      fullName: "Super Administrator",
+      fullName: "System Administrator",
       email: "superadmin@erp.local",
       passwordHash,
       status: "active",
@@ -1842,6 +1842,19 @@ async function seedLegal(): Promise<void> {
 const PORTAL_USER_PASSWORD = "Customer@123456";
 
 async function seedPortal(): Promise<void> {
+  // Opt-in only. This block mints a demo portal login (`customer1`) plus the
+  // maintenance request / complaint / support ticket that belong to it. Local
+  // development runs with exactly one real ERP account and no portal logins, so
+  // re-running the seed must not resurrect a demo account. Nothing in the ERP
+  // depends on a portal account existing — the portal routes simply have no one
+  // to authenticate. Set SEED_DEMO_PORTAL=1 to seed the demo portal again.
+  if (process.env.SEED_DEMO_PORTAL !== "1") {
+    console.log(
+      "Skipped customer portal demo account (set SEED_DEMO_PORTAL=1 to seed it)",
+    );
+    return;
+  }
+
   const [company] = await db
     .select()
     .from(companiesTable)

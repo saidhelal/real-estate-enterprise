@@ -66,6 +66,18 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    // Local development only. On Replit an external router served the API and
+    // this app from one origin, so the app calls `/api/...` relatively and the
+    // session cookies (HttpOnly, SameSite=lax) ride along automatically. Running
+    // the two as separate localhost ports would make those calls cross-origin,
+    // and the generated client sends no `credentials`, so the cookies would be
+    // dropped and every request would 401. Proxying restores the single origin.
+    proxy: {
+      "/api": {
+        target: process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8080",
+        changeOrigin: false,
+      },
+    },
   },
   preview: {
     port,
