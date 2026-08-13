@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
@@ -39,7 +40,7 @@ function Section({ title, rows, total, language }: { title: string; rows: Statem
             <TableRow>
               <TableHead className="w-24">{"#"}</TableHead>
               <TableHead>{language === "ar" ? "الحساب" : "Account"}</TableHead>
-              <TableHead className="text-right">{language === "ar" ? "المبلغ" : "Amount"}</TableHead>
+              <TableHead className="text-end">{language === "ar" ? "المبلغ" : "Amount"}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -47,12 +48,12 @@ function Section({ title, rows, total, language }: { title: string; rows: Statem
               <TableRow key={r.accountId}>
                 <TableCell className="font-medium">{r.code}</TableCell>
                 <TableCell>{language === "ar" ? r.nameAr : r.name}</TableCell>
-                <TableCell className="text-right">{r.amount}</TableCell>
+                <TableCell className="text-end">{r.amount}</TableCell>
               </TableRow>
             ))}
             <TableRow>
               <TableCell colSpan={2} className="font-semibold">{language === "ar" ? "الإجمالي" : "Total"}</TableCell>
-              <TableCell className="text-right font-semibold">{total}</TableCell>
+              <TableCell className="text-end font-semibold">{total}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -103,7 +104,7 @@ export default function IncomeStatementPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.income_statement")}</h2>
+        <PageHeader title={t("nav.income_statement")} bordered={false} />
         <ReportExportButton
           build={buildReport}
           baseFilename="income-statement"

@@ -163,7 +163,7 @@ function ActionCard({ action, onNavigate }: { action: ErpAction; onNavigate?: ()
             <p className="mt-0.5 text-xs text-muted-foreground">{action.note}</p>
           )}
           {dataChanging && confirming && (
-            <p className="mt-1.5 flex items-start gap-1 text-xs text-amber-600 dark:text-amber-400">
+            <p className="mt-1.5 flex items-start gap-1 text-xs text-warning-subtle-foreground">
               <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               {t("ai.action.confirm_hint")}
             </p>

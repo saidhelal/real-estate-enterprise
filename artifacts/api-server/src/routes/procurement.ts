@@ -65,169 +65,47 @@ interface FinancialConfig {
   dateField?: string;
 }
 
-interface CrudConfig {
-  path: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  table: any;
-  module: string;
-  entity: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createBody: { safeParse(v: unknown): any };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateBody: { safeParse(v: unknown): any };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  listResponse: { parse(v: unknown): any };
-  search: string[];
-  financial?: FinancialConfig;
-}
+import { registerCrud, type CrudConfig as SharedCrudConfig, type Tx } from "../lib/register-crud";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function registerCrud(cfg: CrudConfig): void {
-  const t = cfg.table;
+/**
+ * Accounting stays owned by procurement. The shared factory only supplies the
+ * transaction; what gets posted, and from which fields, is decided here.
+ */
+type CrudConfig = SharedCrudConfig & { financial?: FinancialConfig };
 
-  router.get(`/${cfg.path}`, requirePermission(`${cfg.module}.view`), async (req, res): Promise<void> => {
-    const query = req.query as Record<string, unknown>;
-    const { page, pageSize, offset } = pageParams(query);
-    const search = qStr(query, "search");
-    const companyId = qStr(query, "companyId");
-    const conds: SQL[] = [eq(t.isDeleted, false)];
-    if (companyId) conds.push(eq(t.companyId, companyId));
-    if (search && cfg.search.length) {
-      const like = `%${search}%`;
-      const ors = cfg.search.map((c) => ilike(t[c], like));
-      const combined = or(...ors);
-      if (combined) conds.push(combined);
-    }
-    const where = and(...conds);
-    const rows = (await db
-      .select()
-      .from(t)
-      .where(where)
-      .orderBy(desc(t.createdAt))
-      .limit(pageSize)
-      .offset(offset)) as Record<string, unknown>[];
-    const countRows = (await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(t)
-      .where(where)) as { count: number }[];
-    const count = countRows[0].count;
-    res.json(cfg.listResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
-  });
-
-  router.post(`/${cfg.path}`, requirePermission(`${cfg.module}.create`), async (req, res): Promise<void> => {
-    const parsed = cfg.createBody.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: parsed.error.message });
-      return;
-    }
-    const data = parsed.data as Record<string, unknown>;
-    const fin = cfg.financial;
-    const row = await db.transaction(async (tx) => {
-      const inserted = (await tx.insert(t).values(data).returning()) as Record<string, unknown>[];
-      const created = inserted[0];
-      if (fin) {
-        const amount = created[fin.amountField];
-        if (typeof amount === "string" && amount.trim() !== "") {
-          const entryDate = (fin.dateField && typeof created[fin.dateField] === "string"
+function financialHooks(cfg: CrudConfig) {
+  const fin = cfg.financial;
+  if (!fin) return {};
+  return {
+    inCreateTx: async (tx: Tx, created: Record<string, unknown>, req: import("express").Request) => {
+      const amount = created[fin.amountField];
+      if (typeof amount === "string" && amount.trim() !== "") {
+        const entryDate =
+          (fin.dateField && typeof created[fin.dateField] === "string"
             ? (created[fin.dateField] as string)
             : null) ?? today();
-          await postAutomaticEntry(tx, {
-            companyId: created.companyId as string,
-            eventKey: fin.eventKey,
-            amount,
-            entryDate,
-            description: `${cfg.entity} ${created.code ?? created.id}`,
-            sourceType: cfg.entity,
-            sourceId: created.id as string,
-            userId: req.authUser?.id ?? null,
-          });
-        }
+        await postAutomaticEntry(tx, {
+          companyId: created.companyId as string,
+          eventKey: fin.eventKey,
+          amount,
+          entryDate,
+          description: `${cfg.entity} ${created.code ?? created.id}`,
+          sourceType: cfg.entity,
+          sourceId: created.id as string,
+          userId: req.authUser?.id ?? null,
+        });
       }
-      return created;
-    });
-    await recordAudit(req, { action: "create", entity: cfg.entity, entityId: row.id as string, newValue: row });
-    res.status(201).json(serializeRow(row));
-  });
-
-  router.get(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.view`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const rows = (await db
-      .select()
-      .from(t)
-      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
-    const row = rows[0];
-    if (!row) {
-      res.status(404).json({ error: `${cfg.entity} not found` });
-      return;
-    }
-    res.json(serializeRow(row));
-  });
-
-  router.patch(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.update`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const parsed = cfg.updateBody.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: parsed.error.message });
-      return;
-    }
-    const existingRows = (await db
-      .select()
-      .from(t)
-      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
-    const existing = existingRows[0];
-    if (!existing) {
-      res.status(404).json({ error: `${cfg.entity} not found` });
-      return;
-    }
-    const update: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(parsed.data as Record<string, unknown>)) {
-      if (v !== undefined) update[k] = v;
-    }
-    // Financial resources: the posted amount is immutable once it has driven a
-    // ledger entry, to keep accounting in sync.
-    if (cfg.financial) delete update[cfg.financial.amountField];
-    let row = existing;
-    if (Object.keys(update).length) {
-      const updated = (await db.update(t).set(update).where(eq(t.id, id)).returning()) as Record<string, unknown>[];
-      row = updated[0];
-    }
-    await recordAudit(req, {
-      action: "update",
-      entity: cfg.entity,
-      entityId: id,
-      oldValue: existing,
-      newValue: row,
-    });
-    res.json(serializeRow(row));
-  });
-
-  router.delete(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.delete`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const fin = cfg.financial;
-    const row = await db.transaction(async (tx) => {
-      const existingRows = (await tx
-        .select()
-        .from(t)
-        .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
-      const existing = existingRows[0];
-      if (!existing) return null;
-      await tx.update(t).set({ isDeleted: true, isActive: false }).where(eq(t.id, id));
-      if (fin) {
-        await reverseAutomaticEntriesForSource(tx, cfg.entity, id, req.authUser?.id ?? null);
-      }
-      return existing;
-    });
-    if (!row) {
-      res.status(404).json({ error: `${cfg.entity} not found` });
-      return;
-    }
-    await recordAudit(req, { action: "delete", entity: cfg.entity, entityId: id, oldValue: row });
-    res.json({ success: true });
-  });
+    },
+    inDeleteTx: async (tx: Tx, _row: Record<string, unknown>, req: import("express").Request) => {
+      await reverseAutomaticEntriesForSource(tx, cfg.entity, String(_row.id), req.authUser?.id ?? null);
+    },
+  };
 }
+
 
 const resources: CrudConfig[] = [
   // Supplier management
@@ -303,7 +181,16 @@ const resources: CrudConfig[] = [
     search: ["code", "approverName"] },
 ];
 
-for (const cfg of resources) registerCrud(cfg);
+for (const cfg of resources) {
+  const { financial, ...rest } = cfg;
+  registerCrud(router, {
+    ...rest,
+    getOne: true,
+    // The posted amount is immutable once it has driven a ledger entry.
+    immutableFields: financial ? [financial.amountField] : undefined,
+    hooks: financialHooks(cfg),
+  });
+}
 
 /* ------------------------------------------------------------------ */
 /* Procurement dashboard KPIs                                          */

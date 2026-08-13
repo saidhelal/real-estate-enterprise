@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { 
   useListAuditLogs, 
   getListAuditLogsQueryKey
 } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { format } from "date-fns";
 
 export default function AuditLogsPage() {
@@ -28,7 +31,7 @@ export default function AuditLogsPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("audit_logs.title")}</h2>
+        <PageHeader title={t("audit_logs.title")} bordered={false} />
       </div>
 
       <div className="flex gap-4 max-w-lg">
@@ -44,7 +47,7 @@ export default function AuditLogsPage() {
         />
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -57,13 +60,9 @@ export default function AuditLogsPage() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : logs?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               logs?.map((log) => (
                 <TableRow key={log.id}>
@@ -89,7 +88,7 @@ export default function AuditLogsPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

@@ -12,17 +12,21 @@ import {
   type JournalEntryDetail,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import {
   Dialog,
   DialogContent,
@@ -41,7 +45,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useToast } from "@/hooks/use-toast";
-import { enumLabel } from "@/lib/enums";
+import { enumLabel, statusTone } from "@/lib/enums";
 
 interface LineDraft {
   accountId: string;
@@ -52,13 +56,6 @@ interface LineDraft {
 
 const emptyLine = (): LineDraft => ({ accountId: "", debit: "", credit: "", description: "" });
 const today = () => new Date().toISOString().slice(0, 10);
-
-function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "posted") return "default";
-  if (status === "reversed") return "destructive";
-  if (status === "approved") return "secondary";
-  return "outline";
-}
 
 export default function JournalEntriesPage() {
   const { language, t } = useLanguage();
@@ -200,11 +197,11 @@ export default function JournalEntriesPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.journal_entries")}</h2>
+        <PageHeader title={t("nav.journal_entries")} bordered={false} />
         <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("acc.new_entry")}
             </Button>
           </DialogTrigger>
@@ -290,7 +287,7 @@ export default function JournalEntriesPage() {
                   </Table>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => setLines((prev) => [...prev, emptyLine()])}>
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="me-2 h-4 w-4" />
                   {t("acc.add_line")}
                 </Button>
               </div>
@@ -329,43 +326,39 @@ export default function JournalEntriesPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("common.code")}</TableHead>
               <TableHead>{t("acc.entry_date")}</TableHead>
               <TableHead>{t("acc.description")}</TableHead>
-              <TableHead className="text-right">{t("acc.total_debit")}</TableHead>
+              <TableHead className="text-end">{t("acc.total_debit")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={6} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={6} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-medium">
                     {r.number}
                     {r.isAutomatic && (
-                      <Badge variant="outline" className="ml-2">{t("acc.automatic")}</Badge>
+                      <Badge variant="outline" className="ms-2">{t("acc.automatic")}</Badge>
                     )}
                   </TableCell>
                   <TableCell>{r.entryDate}</TableCell>
                   <TableCell>{language === "ar" ? r.descriptionAr || r.description : r.description}</TableCell>
-                  <TableCell className="text-right">{r.totalDebit}</TableCell>
+                  <TableCell className="text-end">{r.totalDebit}</TableCell>
                   <TableCell>
-                    <Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge>
+                    <StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot />
                   </TableCell>
-                  <TableCell className="text-right space-x-2 whitespace-nowrap">
+                  <TableCell className="text-end space-x-2 whitespace-nowrap">
                     <DocumentsRowAction moduleKey="journal-entries" sourceId={r.id} />
                     {r.status === "draft" && (
                       <>
@@ -388,7 +381,7 @@ export default function JournalEntriesPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">{t("common.total")}: {total}</p>

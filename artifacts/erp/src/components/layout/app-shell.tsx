@@ -598,8 +598,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       )}
       <div className="flex w-full flex-1 min-h-0">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-60 flex-col border-r bg-sidebar md:flex">
-        <div className="flex h-12 items-center border-b px-4">
+      <aside className="hidden w-[var(--layout-sidebar-width)] flex-col border-e bg-sidebar md:flex">
+        <div className="flex h-[var(--layout-header-height)] items-center border-b px-4">
           <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
             <Building2 className="h-5 w-5 text-primary" />
             <span>ERP System</span>
@@ -614,7 +614,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="flex h-12 items-center gap-4 border-b bg-background px-4 lg:px-6">
+        <header className="flex h-[var(--layout-header-height)] items-center gap-4 border-b bg-background px-4 lg:px-6">
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -623,8 +623,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Button>
             </SheetTrigger>
             <SheetContent side={dir === "rtl" ? "right" : "left"} className="flex flex-col w-64 p-0">
-              <div className="flex h-14 items-center border-b px-4 font-semibold">
-                <Building2 className="h-6 w-6 mr-2" />
+              <div className="flex h-[var(--layout-header-height)] items-center border-b px-4 font-semibold">
+                <Building2 className="h-6 w-6 me-2" />
                 <span>ERP System</span>
               </div>
               <ScrollArea className="flex-1 overflow-auto py-4">
@@ -711,13 +711,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href="/change-password" className="cursor-pointer flex items-center w-full">
-                    <KeyRound className="mr-2 h-4 w-4" />
+                    <KeyRound className="me-2 h-4 w-4" />
                     <span>{t("nav.change_password")}</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => logout()} className="text-destructive cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="me-2 h-4 w-4" />
                   <span>{t("nav.logout")}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

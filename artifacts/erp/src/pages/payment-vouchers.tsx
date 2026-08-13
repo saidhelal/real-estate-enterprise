@@ -17,17 +17,21 @@ import {
   useListBankAccounts,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import {
   Dialog,
   DialogContent,
@@ -46,7 +50,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useToast } from "@/hooks/use-toast";
-import { enumOptions, enumLabel } from "@/lib/enums";
+import { enumOptions, enumLabel, statusTone } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
 
 const PAYEE_TYPES = enumOptions(["supplier", "contractor", "other"]);
@@ -56,13 +60,6 @@ const NONE = "__none__";
 interface AllocDraft {
   supplierInvoiceId: string;
   amount: string;
-}
-
-function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "posted") return "default";
-  if (status === "reversed" || status === "cancelled") return "destructive";
-  if (status === "approved") return "secondary";
-  return "outline";
 }
 
 export default function PaymentVouchersPage() {
@@ -210,11 +207,11 @@ export default function PaymentVouchersPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.payment_vouchers")}</h2>
+        <PageHeader title={t("nav.payment_vouchers")} bordered={false} />
         <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("pv.new_voucher")}
             </Button>
           </DialogTrigger>
@@ -345,7 +342,7 @@ export default function PaymentVouchersPage() {
                   <div className="flex items-center justify-between">
                     <Label>{t("pv.allocations")}</Label>
                     <Button variant="outline" size="sm" onClick={() => setAllocations((p) => [...p, { supplierInvoiceId: "", amount: "" }])}>
-                      <Plus className="mr-2 h-4 w-4" />
+                      <Plus className="me-2 h-4 w-4" />
                       {t("pv.add_allocation")}
                     </Button>
                   </div>
@@ -398,34 +395,34 @@ export default function PaymentVouchersPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("common.code")}</TableHead>
               <TableHead>{t("pv.payee")}</TableHead>
               <TableHead>{t("pv.payment_date")}</TableHead>
-              <TableHead className="text-right">{t("acc.amount")}</TableHead>
+              <TableHead className="text-end">{t("acc.amount")}</TableHead>
               <TableHead>{t("pv.payment_method")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={7} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+              <TableState colSpan={7} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow><TableCell colSpan={7} className="text-center h-24">{t("common.no_results")}</TableCell></TableRow>
+              <TableState colSpan={7} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-medium">{r.code}</TableCell>
                   <TableCell>{voucherPayee(r)}</TableCell>
                   <TableCell>{r.paymentDate}</TableCell>
-                  <TableCell className="text-right">{r.amount}</TableCell>
+                  <TableCell className="text-end">{r.amount}</TableCell>
                   <TableCell><Badge variant="outline">{enumLabel(r.paymentMethod, language)}</Badge></TableCell>
-                  <TableCell><Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge></TableCell>
-                  <TableCell className="text-right space-x-2 whitespace-nowrap">
+                  <TableCell><StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot /></TableCell>
+                  <TableCell className="text-end space-x-2 whitespace-nowrap">
                     <DocumentsRowAction moduleKey="payment-vouchers" sourceId={r.id} />
                     {r.status === "draft" && (
                       <>
@@ -449,7 +446,7 @@ export default function PaymentVouchersPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">{t("common.total")}: {total}</p>

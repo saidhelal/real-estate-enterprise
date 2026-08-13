@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,11 +50,13 @@ import {
   trafficLight,
   TRAFFIC_DOT,
   TRAFFIC_RING,
+  TRAFFIC_TEXT,
   formatElapsed,
   formatRemaining,
   isManagerial,
   paymentMethodLabel,
 } from "@/lib/sale-workflow";
+import { TONE_TEXT } from "@/lib/design-tokens";
 import {
   UserCheck,
   ArrowRightLeft,
@@ -106,19 +110,18 @@ function Kpi({
   hint?: string;
   alert?: boolean;
 }) {
+  // `alert` only means something once the count is above zero — "0 overdue" is
+  // good news and must not be dressed as a warning.
+  const raised = Boolean(alert) && Number(value) > 0;
   return (
-    <Card className={alert && Number(value) > 0 ? "border-amber-400/60" : undefined}>
-      <CardHeader className="pb-1">
-        <CardTitle className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          <Icon className={`h-4 w-4 ${alert && Number(value) > 0 ? "text-amber-500" : ""}`} />
-          {label}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="text-2xl font-semibold tabular-nums">{value}</div>
-        {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
-      </CardContent>
-    </Card>
+    <KpiCard
+      icon={Icon}
+      label={label}
+      value={value}
+      hint={hint}
+      tone={raised ? "warning" : "neutral"}
+      className={raised ? "border-warning-border/60" : undefined}
+    />
   );
 }
 
@@ -135,7 +138,7 @@ function AdminTile({
 }) {
   return (
     <Link href={href}>
-      <Card className="cursor-pointer transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+      <Card interactive>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-base">
             <Icon className="h-4 w-4 text-muted-foreground" />
@@ -297,14 +300,13 @@ export default function SalesAdministrationPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("nav.sales_administration")}</h1>
-        <p className="text-sm text-muted-foreground">
-          {ar
-            ? "مركز إدارة المبيعات التشغيلي: توزيع العملاء، متابعة الفريق، مؤشرات الأداء، المتابعات، الوحدات المتاحة، التقارير، والصلاحيات."
-            : "Operational sales management console: lead distribution, team monitoring, performance KPIs, follow-ups, available units, reports, and permissions."}
-        </p>
-      </div>
+      <PageHeader
+        title={t("nav.sales_administration")}
+        description={ar
+          ? "مركز إدارة المبيعات التشغيلي: توزيع العملاء، متابعة الفريق، مؤشرات الأداء، المتابعات، الوحدات المتاحة، التقارير، والصلاحيات."
+          : "Operational sales management console: lead distribution, team monitoring, performance KPIs, follow-ups, available units, reports, and permissions."}
+        bordered={false}
+      />
 
       {/* Operational quick actions — semantic ERP colors (design tokens only) */}
       <Card>
@@ -353,9 +355,9 @@ export default function SalesAdministrationPage() {
 
       {/* Managerial overdue-sales alert (red) */}
       {managerial && slaAlerts.length > 0 ? (
-        <Card className="border-red-500/40 bg-red-500/5">
+        <Card className="border-destructive-border/50 bg-destructive-subtle/40">
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base text-red-600 dark:text-red-400">
+            <CardTitle className="flex items-center gap-2 text-base text-destructive-subtle-foreground">
               <AlertTriangle className="h-4 w-4" />
               {ar ? `تنبيهات بيع متأخرة (${slaAlerts.length})` : `Delayed sale alerts (${slaAlerts.length})`}
             </CardTitle>
@@ -371,7 +373,7 @@ export default function SalesAdministrationPage() {
                     <span className="text-muted-foreground">{unitCode(c.unitId)} · {customerName(c.customerId)}</span>
                     <Badge variant="outline">{stageLabel(saleStage(c), ar)}</Badge>
                   </span>
-                  <span className={light === "red" ? "font-medium text-red-500" : "text-orange-500"}>
+                  <span className={light === "red" ? `font-medium ${TRAFFIC_TEXT.red}` : TRAFFIC_TEXT.orange}>
                     {c.financeSlaDueAt ? formatRemaining(c.financeSlaDueAt, ar, now) : formatElapsed(c.submittedToFinanceAt ?? c.contractDate, ar, now)}
                   </span>
                 </div>
@@ -400,9 +402,9 @@ export default function SalesAdministrationPage() {
               {ar ? "المبيعات الجارية — مؤشرات SLA" : "Active Sales — SLA Traffic Lights"}
             </CardTitle>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />{ar ? "في الوقت" : "On time"}</span>
-              <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />{ar ? "قريب من الحد" : "Near limit"}</span>
-              <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-red-500" />{ar ? "متأخر" : "Overdue"}</span>
+              <span className="flex items-center gap-1"><span className={`h-2.5 w-2.5 rounded-full ${TRAFFIC_DOT.green}`} />{ar ? "في الوقت" : "On time"}</span>
+              <span className="flex items-center gap-1"><span className={`h-2.5 w-2.5 rounded-full ${TRAFFIC_DOT.yellow}`} />{ar ? "قريب من الحد" : "Near limit"}</span>
+              <span className="flex items-center gap-1"><span className={`h-2.5 w-2.5 rounded-full ${TRAFFIC_DOT.red}`} />{ar ? "متأخر" : "Overdue"}</span>
             </div>
           </div>
         </CardHeader>
@@ -423,7 +425,7 @@ export default function SalesAdministrationPage() {
                     <span className="text-xs text-muted-foreground">{unitCode(c.unitId)} · {customerName(c.customerId)}</span>
                     <Badge variant={stage === "returned" ? "destructive" : "outline"}>{stageLabel(stage, ar)}</Badge>
                     <span className="text-xs text-muted-foreground">{paymentMethodLabel(c.paymentMethod, ar)}</span>
-                    <span className={`text-xs ${light === "red" ? "font-medium text-red-500" : "text-muted-foreground"}`}>
+                    <span className={`text-xs ${light === "red" ? `font-medium ${TRAFFIC_TEXT.red}` : "text-muted-foreground"}`}>
                       {c.financeSlaDueAt ? `SLA: ${formatRemaining(c.financeSlaDueAt, ar, now)}` : `${ar ? "المنقضي" : "Elapsed"}: ${formatElapsed(c.submittedToFinanceAt ?? c.contractDate, ar, now)}`}
                     </span>
                     <div className="ms-auto flex flex-wrap items-center gap-1.5">
@@ -477,7 +479,7 @@ export default function SalesAdministrationPage() {
                     <span className="truncate font-medium">{r.name}</span>
                     <span className="text-end tabular-nums">{r.assignedLeads}</span>
                     <span className="text-end tabular-nums">{r.openFollowUps}</span>
-                    <span className={`text-end tabular-nums ${r.overdue > 0 ? "font-medium text-amber-500" : "text-muted-foreground"}`}>{r.overdue}</span>
+                    <span className={`text-end tabular-nums ${r.overdue > 0 ? `font-medium ${TONE_TEXT.warning}` : "text-muted-foreground"}`}>{r.overdue}</span>
                   </div>
                 ))}
               </div>
@@ -532,7 +534,7 @@ export default function SalesAdministrationPage() {
               {[...overdueFollowUps, ...dueTodayFollowUps].slice(0, 12).map((f) => {
                 const overdue = f.dueDate < today;
                 return (
-                  <div key={f.id} className={`flex flex-wrap items-center gap-2 rounded-md border p-2 text-sm ${overdue ? "border-amber-400/50" : ""}`}>
+                  <div key={f.id} className={`flex flex-wrap items-center gap-2 rounded-md border p-2 text-sm ${overdue ? "border-warning-border/50" : ""}`}>
                     <Badge variant={overdue ? "destructive" : "secondary"}>{overdue ? (ar ? "متأخر" : "Overdue") : (ar ? "اليوم" : "Today")}</Badge>
                     <span className="text-muted-foreground">{f.dueDate}</span>
                     <span className="font-medium">{userName(f.userId)}</span>

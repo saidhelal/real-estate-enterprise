@@ -18,6 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -327,10 +329,11 @@ export default function ConstructionReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("con.reports")}</h2>
-        <p className="text-muted-foreground">{t("con.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("con.reports")}
+        description={t("con.reports_subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader>
@@ -343,21 +346,21 @@ export default function ConstructionReportsPage() {
                 <TableHead>{t("con.contract")}</TableHead>
                 <TableHead>{t("con.contractor")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
-                <TableHead className="text-right">{t("con.total_contract_value")}</TableHead>
-                <TableHead className="text-right">{t("con.certified")}</TableHead>
+                <TableHead className="text-end">{t("con.total_contract_value")}</TableHead>
+                <TableHead className="text-end">{t("con.certified")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {contractRows.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center h-24">{t("con.no_data")}</TableCell></TableRow>
+                <TableState colSpan={5} isEmpty emptyTitle={t("con.no_data")} />
               ) : (
                 contractRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.contractor}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
-                    <TableCell className="text-right">{fmt(r.value)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.certified)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.value)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.certified)}</TableCell>
                   </TableRow>
                 ))
               )}
@@ -366,8 +369,8 @@ export default function ConstructionReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>{t("con.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalContractValue)}</TableCell>
-                  <TableCell className="text-right">{fmt(totalCertified)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalContractValue)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalCertified)}</TableCell>
                 </TableRow>
               </TableFooter>
             )}
@@ -385,15 +388,15 @@ export default function ConstructionReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("con.count")}</TableCell>
-                  <TableCell className="text-right">{certs.length}</TableCell>
+                  <TableCell className="text-end">{certs.length}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("con.gross")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalGross)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalGross)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("con.net")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalNet)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalNet)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -409,15 +412,15 @@ export default function ConstructionReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("con.count")}</TableCell>
-                  <TableCell className="text-right">{retentions.length}</TableCell>
+                  <TableCell className="text-end">{retentions.length}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("con.retained")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalRetained)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalRetained)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("con.released")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalReleased)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalReleased)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -433,15 +436,15 @@ export default function ConstructionReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("con.count")}</TableCell>
-                  <TableCell className="text-right">{advances.length}</TableCell>
+                  <TableCell className="text-end">{advances.length}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("con.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalAdvance)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalAdvance)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("con.recovered")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalRecovered)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalRecovered)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -462,22 +465,22 @@ export default function ConstructionReportsPage() {
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("con.contract")}</TableHead>
                 <TableHead>{t("con.date")}</TableHead>
-                <TableHead className="text-right">{t("con.gross")}</TableHead>
-                <TableHead className="text-right">{t("con.net")}</TableHead>
+                <TableHead className="text-end">{t("con.gross")}</TableHead>
+                <TableHead className="text-end">{t("con.net")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {registerRows.length === 0 ? (
-                <TableRow><TableCell colSpan={6} className="text-center h-24">{t("con.no_data")}</TableCell></TableRow>
+                <TableState colSpan={6} isEmpty emptyTitle={t("con.no_data")} />
               ) : (
                 registerRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.contract}</TableCell>
                     <TableCell>{r.date}</TableCell>
-                    <TableCell className="text-right">{fmt(r.gross)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.net)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.gross)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.net)}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
                   </TableRow>
                 ))
@@ -487,8 +490,8 @@ export default function ConstructionReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>{t("con.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(registerGross)}</TableCell>
-                  <TableCell className="text-right">{fmt(registerNet)}</TableCell>
+                  <TableCell className="text-end">{fmt(registerGross)}</TableCell>
+                  <TableCell className="text-end">{fmt(registerNet)}</TableCell>
                   <TableCell />
                 </TableRow>
               </TableFooter>
@@ -510,20 +513,20 @@ export default function ConstructionReportsPage() {
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("con.contract")}</TableHead>
                 <TableHead>{t("con.date")}</TableHead>
-                <TableHead className="text-right">{t("con.net")}</TableHead>
+                <TableHead className="text-end">{t("con.net")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {outstandingRows.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center h-24">{t("con.no_data")}</TableCell></TableRow>
+                <TableState colSpan={5} isEmpty emptyTitle={t("con.no_data")} />
               ) : (
                 outstandingRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.contract}</TableCell>
                     <TableCell>{r.date}</TableCell>
-                    <TableCell className="text-right">{fmt(r.net)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.net)}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
                   </TableRow>
                 ))
@@ -533,7 +536,7 @@ export default function ConstructionReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>{t("con.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(outstandingNet)}</TableCell>
+                  <TableCell className="text-end">{fmt(outstandingNet)}</TableCell>
                   <TableCell />
                 </TableRow>
               </TableFooter>
@@ -554,23 +557,23 @@ export default function ConstructionReportsPage() {
               <TableRow>
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("con.contract")}</TableHead>
-                <TableHead className="text-right">{t("con.retained")}</TableHead>
-                <TableHead className="text-right">{t("con.released")}</TableHead>
-                <TableHead className="text-right">{t("con.outstanding")}</TableHead>
+                <TableHead className="text-end">{t("con.retained")}</TableHead>
+                <TableHead className="text-end">{t("con.released")}</TableHead>
+                <TableHead className="text-end">{t("con.outstanding")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {retentionRows.length === 0 ? (
-                <TableRow><TableCell colSpan={6} className="text-center h-24">{t("con.no_data")}</TableCell></TableRow>
+                <TableState colSpan={6} isEmpty emptyTitle={t("con.no_data")} />
               ) : (
                 retentionRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.contract}</TableCell>
-                    <TableCell className="text-right">{fmt(r.retained)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.released)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.outstanding)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.retained)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.released)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.outstanding)}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
                   </TableRow>
                 ))
@@ -580,9 +583,9 @@ export default function ConstructionReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={2}>{t("con.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(retRetained)}</TableCell>
-                  <TableCell className="text-right">{fmt(retReleased)}</TableCell>
-                  <TableCell className="text-right">{fmt(retOutstanding)}</TableCell>
+                  <TableCell className="text-end">{fmt(retRetained)}</TableCell>
+                  <TableCell className="text-end">{fmt(retReleased)}</TableCell>
+                  <TableCell className="text-end">{fmt(retOutstanding)}</TableCell>
                   <TableCell />
                 </TableRow>
               </TableFooter>
@@ -603,23 +606,23 @@ export default function ConstructionReportsPage() {
               <TableRow>
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("con.contract")}</TableHead>
-                <TableHead className="text-right">{t("con.amount")}</TableHead>
-                <TableHead className="text-right">{t("con.recovered")}</TableHead>
-                <TableHead className="text-right">{t("con.outstanding")}</TableHead>
+                <TableHead className="text-end">{t("con.amount")}</TableHead>
+                <TableHead className="text-end">{t("con.recovered")}</TableHead>
+                <TableHead className="text-end">{t("con.outstanding")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {advanceRows.length === 0 ? (
-                <TableRow><TableCell colSpan={6} className="text-center h-24">{t("con.no_data")}</TableCell></TableRow>
+                <TableState colSpan={6} isEmpty emptyTitle={t("con.no_data")} />
               ) : (
                 advanceRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.contract}</TableCell>
-                    <TableCell className="text-right">{fmt(r.amount)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.recovered)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.outstanding)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.amount)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.recovered)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.outstanding)}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
                   </TableRow>
                 ))
@@ -629,9 +632,9 @@ export default function ConstructionReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={2}>{t("con.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(advAmount)}</TableCell>
-                  <TableCell className="text-right">{fmt(advRecovered)}</TableCell>
-                  <TableCell className="text-right">{fmt(advOutstanding)}</TableCell>
+                  <TableCell className="text-end">{fmt(advAmount)}</TableCell>
+                  <TableCell className="text-end">{fmt(advRecovered)}</TableCell>
+                  <TableCell className="text-end">{fmt(advOutstanding)}</TableCell>
                   <TableCell />
                 </TableRow>
               </TableFooter>

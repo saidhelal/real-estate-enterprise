@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   useCreateMarketingLead,
   useListCompanies,
@@ -100,7 +101,7 @@ export default function MarketingLeadsPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-3xl">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.marketing_leads")}</h2>
+        <PageHeader title={t("nav.marketing_leads")} bordered={false} />
         <Button onClick={handleSubmit} disabled={createLead.isPending}>
           {t("leadintake.submit")}
         </Button>

@@ -13,23 +13,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function AccountingDashboardPage() {
   const { language, t } = useLanguage();
@@ -65,28 +55,28 @@ export default function AccountingDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.accounting_dashboard")}</h2>
+      <PageHeader title={t("nav.accounting_dashboard")} bordered={false} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Stat label={t("acc.assets")} value={data.totalAssets} />
-        <Stat label={t("acc.liabilities")} value={data.totalLiabilities} />
-        <Stat label={t("acc.equity")} value={data.totalEquity} />
-        <Stat label={t("acc.revenue")} value={data.totalRevenue} />
-        <Stat label={t("acc.expenses")} value={data.totalExpenses} />
-        <Stat label={t("acc.net_income")} value={data.netIncome} />
+        <KpiCard label={t("acc.assets")} value={data.totalAssets} />
+        <KpiCard label={t("acc.liabilities")} value={data.totalLiabilities} />
+        <KpiCard label={t("acc.equity")} value={data.totalEquity} />
+        <KpiCard label={t("acc.revenue")} value={data.totalRevenue} />
+        <KpiCard label={t("acc.expenses")} value={data.totalExpenses} />
+        <KpiCard label={t("acc.net_income")} value={data.netIncome} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label={t("acc.entry_count")} value={data.journalEntryCount ?? 0} />
-        <Stat label={t("acc.draft_entries")} value={data.draftCount ?? 0} />
-        <Stat label={t("acc.posted_entries")} value={data.postedCount ?? 0} />
-        <Stat label={t("acc.open_periods")} value={data.openPeriodCount ?? 0} />
+        <KpiCard label={t("acc.entry_count")} value={data.journalEntryCount ?? 0} />
+        <KpiCard label={t("acc.draft_entries")} value={data.draftCount ?? 0} />
+        <KpiCard label={t("acc.posted_entries")} value={data.postedCount ?? 0} />
+        <KpiCard label={t("acc.open_periods")} value={data.openPeriodCount ?? 0} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Stat label={t("acc.cheques_pending")} value={chequesPendingCount} />
-        <Stat label={t("acc.cheques_cleared")} value={chequesClearedCount} />
-        <Stat label={t("acc.cheques_due")} value={chequesDueAmount} />
+        <KpiCard label={t("acc.cheques_pending")} value={chequesPendingCount} />
+        <KpiCard label={t("acc.cheques_cleared")} value={chequesClearedCount} />
+        <KpiCard label={t("acc.cheques_due")} value={chequesDueAmount} />
       </div>
 
       <Card>
@@ -100,20 +90,20 @@ export default function AccountingDashboardPage() {
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("acc.entry_date")}</TableHead>
                 <TableHead>{t("acc.description")}</TableHead>
-                <TableHead className="text-right">{t("acc.total_debit")}</TableHead>
+                <TableHead className="text-end">{t("acc.total_debit")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {recent.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center h-24">{t("acc.no_data")}</TableCell></TableRow>
+                <TableState colSpan={5} isEmpty emptyTitle={t("acc.no_data")} />
               ) : (
                 recent.map((r) => (
                   <TableRow key={r.id}>
                     <TableCell className="font-medium">{r.number}</TableCell>
                     <TableCell>{r.entryDate}</TableCell>
                     <TableCell>{language === "ar" ? r.descriptionAr || r.description : r.description}</TableCell>
-                    <TableCell className="text-right">{r.totalDebit}</TableCell>
+                    <TableCell className="text-end">{r.totalDebit}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
                   </TableRow>
                 ))

@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Dialog,
   DialogContent,
@@ -29,18 +30,13 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/lib/language-provider";
-import { enumLabel } from "@/lib/enums";
+import { enumLabel, statusTone } from "@/lib/enums";
 import { Download } from "lucide-react";
 import { documentFileUrl } from "@/lib/document-files";
-
-function statusVariant(status: string): "default" | "secondary" | "outline" {
-  if (status === "viewed") return "default";
-  if (status === "received") return "secondary";
-  return "outline";
-}
 
 function fmtDate(v: string | null | undefined): string {
   if (!v) return "-";
@@ -94,10 +90,11 @@ export default function DocumentTransfersPage() {
 
   return (
     <div className="space-y-6 p-1">
-      <div>
-        <h1 className="text-2xl font-bold">{t("transfers.title")}</h1>
-        <p className="text-sm text-muted-foreground">{t("transfers.subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("transfers.title")}
+        description={t("transfers.subtitle")}
+        bordered={false}
+      />
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
@@ -123,7 +120,7 @@ export default function DocumentTransfersPage() {
                     <TableHead>{t("transfers.priority")}</TableHead>
                     <TableHead>{t("common.status")}</TableHead>
                     <TableHead>{t("transfers.received_on")}</TableHead>
-                    <TableHead className="text-right">{t("common.actions")}</TableHead>
+                    <TableHead className="text-end">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -154,14 +151,12 @@ export default function DocumentTransfersPage() {
                           <Badge variant="outline">{enumLabel(r.priority, language)}</Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={statusVariant(r.status)}>
-                            {enumLabel(r.status, language)}
-                          </Badge>
+                          <StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot />
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground">
                           {fmtDate(r.receivedAt)}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-end">
                           <Button
                             variant="outline"
                             size="sm"
@@ -196,7 +191,7 @@ export default function DocumentTransfersPage() {
                     <TableHead>{t("transfers.subject")}</TableHead>
                     <TableHead>{t("transfers.progress")}</TableHead>
                     <TableHead>{t("transfers.sent_on")}</TableHead>
-                    <TableHead className="text-right">{t("common.actions")}</TableHead>
+                    <TableHead className="text-end">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -234,7 +229,7 @@ export default function DocumentTransfersPage() {
                         <TableCell className="text-xs text-muted-foreground">
                           {fmtDate(r.createdAt)}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-end">
                           <Button
                             variant="outline"
                             size="sm"
@@ -354,9 +349,7 @@ function TransferDetailDialog({
                         {rc.viaDepartmentName ?? "-"}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={statusVariant(rc.status)}>
-                          {enumLabel(rc.status, language)}
-                        </Badge>
+                        <StatusBadge tone={statusTone(rc.status)} label={enumLabel(rc.status, language)} withDot />
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground">
                         {fmtDate(rc.viewedAt)}

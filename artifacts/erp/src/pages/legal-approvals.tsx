@@ -10,6 +10,7 @@ import {
   type Contract,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -70,16 +71,15 @@ export default function LegalApprovalsPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">
-          {language === "ar" ? "اعتمادات الشؤون القانونية" : "Legal Approvals"}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {language === "ar"
+      <PageHeader
+        title={language === "ar" ? "اعتمادات الشؤون القانونية" : "Legal Approvals"}
+        description={
+          language === "ar"
             ? "العقود المعتمدة من المالية بانتظار الاعتماد القانوني والتفعيل"
-            : "Finance-approved contracts awaiting legal approval and activation"}
-        </p>
-      </div>
+            : "Finance-approved contracts awaiting legal approval and activation"
+        }
+        bordered={false}
+      />
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
@@ -111,12 +111,12 @@ export default function LegalApprovalsPage() {
                 ) : null}
                 <div className="flex flex-wrap gap-2 pt-1">
                   <Button size="sm" onClick={() => { setActive(c); setNotes(""); }}>
-                    <ShieldCheck className="h-4 w-4 mr-1" />
+                    <ShieldCheck className="h-4 w-4 me-1" />
                     {language === "ar" ? "اعتماد وتفعيل" : "Approve & activate"}
                   </Button>
                   <Button asChild size="sm" variant="outline">
                     <Link href={`/contracts/${c.id}/document`}>
-                      <FileText className="h-4 w-4 mr-1" />
+                      <FileText className="h-4 w-4 me-1" />
                       {language === "ar" ? "المستند" : "Document"}
                     </Link>
                   </Button>

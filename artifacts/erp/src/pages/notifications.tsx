@@ -13,12 +13,17 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
+import { Toolbar, ToolbarStart, ToolbarEnd } from "@/components/ui/toolbar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { type StatusTone } from "@/lib/design-tokens";
 import {
   Table,
   TableBody,
+  TableFrame,
   TableCell,
   TableHead,
   TableHeader,
@@ -60,11 +65,13 @@ const VIEWS: { key: ViewKey; labelKey: string; icon: LucideIcon }[] = [
   { key: "trash", labelKey: "nc.view.trash", icon: Trash2 },
 ];
 
-const PRIORITY_VARIANT: Record<string, { badge: string; key: string }> = {
-  normal: { badge: "bg-slate-500/10 text-slate-600 dark:text-slate-300", key: "nc.priority.normal" },
-  medium: { badge: "bg-sky-500/10 text-sky-600 dark:text-sky-400", key: "nc.priority.medium" },
-  high: { badge: "bg-amber-500/10 text-amber-600 dark:text-amber-400", key: "nc.priority.high" },
-  urgent: { badge: "bg-red-500/10 text-red-600 dark:text-red-400", key: "nc.priority.urgent" },
+// Priority maps onto the shared tone scale rather than to colours of its own,
+// so an urgent notification reads the same red as an overdue installment.
+const PRIORITY_VARIANT: Record<string, { tone: StatusTone; key: string }> = {
+  normal: { tone: "neutral", key: "nc.priority.normal" },
+  medium: { tone: "info", key: "nc.priority.medium" },
+  high: { tone: "warning", key: "nc.priority.high" },
+  urgent: { tone: "error", key: "nc.priority.urgent" },
 };
 
 function formatCount(value?: number): string {
@@ -113,43 +120,47 @@ export default function NotificationsPage() {
 
   const rows = list?.data ?? [];
 
-  const kpis: { labelKey: string; value?: number; icon: LucideIcon; accent: string }[] = [
-    { labelKey: "nc.kpi.total", value: dash?.total, icon: Inbox, accent: "text-slate-600 dark:text-slate-300" },
-    { labelKey: "nc.kpi.unread", value: dash?.unread, icon: Bell, accent: "text-sky-600 dark:text-sky-400" },
-    { labelKey: "nc.kpi.urgent", value: dash?.urgent, icon: AlertTriangle, accent: "text-red-600 dark:text-red-400" },
-    { labelKey: "nc.kpi.today", value: dash?.today, icon: CalendarDays, accent: "text-emerald-600 dark:text-emerald-400" },
-    { labelKey: "nc.kpi.week", value: dash?.week, icon: CalendarRange, accent: "text-amber-600 dark:text-amber-400" },
-    { labelKey: "nc.kpi.month", value: dash?.month, icon: CalendarRange, accent: "text-violet-600 dark:text-violet-400" },
+  const kpis: { labelKey: string; value?: number; icon: LucideIcon; tone: StatusTone }[] = [
+    // Only three of these carry a judgement. Total and the two time windows are
+    // plain counts, so they stay neutral instead of borrowing green and amber
+    // and implying a health reading that is not there.
+    { labelKey: "nc.kpi.total", value: dash?.total, icon: Inbox, tone: "neutral" },
+    { labelKey: "nc.kpi.unread", value: dash?.unread, icon: Bell, tone: "info" },
+    { labelKey: "nc.kpi.urgent", value: dash?.urgent, icon: AlertTriangle, tone: "error" },
+    { labelKey: "nc.kpi.today", value: dash?.today, icon: CalendarDays, tone: "neutral" },
+    { labelKey: "nc.kpi.week", value: dash?.week, icon: CalendarRange, tone: "neutral" },
+    { labelKey: "nc.kpi.month", value: dash?.month, icon: CalendarRange, tone: "neutral" },
   ];
 
   const dateLocale = language === "ar" ? "ar-EG" : "en-US";
 
   return (
     <div className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="flex flex-col gap-1">
-        <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
-          <Bell className="h-5 w-5" />
-          {t("nc.title")}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t("nc.subtitle")}</p>
-      </div>
+      <PageHeader
+        icon={Bell}
+        title={t("nc.title")}
+        description={t("nc.subtitle")}
+        bordered={false}
+      />
 
       {/* Dashboard KPI strip (item 19) */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {kpis.map((kpi) => (
-          <div key={kpi.labelKey} className="rounded-lg border bg-card p-3 shadow-sm">
-            <div className="mb-1.5 flex items-center justify-between gap-2">
-              <span className="truncate text-xs font-medium text-muted-foreground">{t(kpi.labelKey)}</span>
-              <kpi.icon className={`h-4 w-4 shrink-0 ${kpi.accent}`} />
-            </div>
-            <div className="text-xl font-semibold tabular-nums tracking-tight">{formatCount(kpi.value)}</div>
-          </div>
+          <KpiCard
+            key={kpi.labelKey}
+            label={t(kpi.labelKey)}
+            value={formatCount(kpi.value)}
+            icon={kpi.icon}
+            tone={kpi.tone}
+          />
         ))}
       </div>
 
-      {/* View tabs + search + mark-all */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-wrap gap-1.5">
+      {/* The list and the controls that drive it share one frame, so the strip
+          reads as belonging to this list — the same shape ResourceManager uses. */}
+      <TableFrame>
+        <Toolbar transparent className="border-b border-border">
+          <ToolbarStart>
           {VIEWS.map((v) => {
             const active = v.key === view;
             return (
@@ -165,15 +176,15 @@ export default function NotificationsPage() {
               </Button>
             );
           })}
-        </div>
-        <div className="flex items-center gap-2">
+          </ToolbarStart>
+          <ToolbarEnd>
           <div className="relative w-full sm:w-64">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground rtl:left-auto rtl:right-3" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("nc.search_placeholder")}
-              className="h-9 pl-9 rtl:pl-3 rtl:pr-9"
+              className="h-9 ps-9 rtl:ps-3 rtl:pe-9"
             />
           </div>
           <Button
@@ -186,11 +197,9 @@ export default function NotificationsPage() {
             <CheckCheck className="h-4 w-4" />
             {t("nc.mark_all_read")}
           </Button>
-        </div>
-      </div>
+          </ToolbarEnd>
+        </Toolbar>
 
-      {/* List */}
-      <div className="rounded-lg border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -221,14 +230,12 @@ export default function NotificationsPage() {
                 return (
                   <TableRow key={n.id} className={n.isRead ? "" : "bg-muted/30"}>
                     <TableCell>
-                      <Badge variant="secondary" className={prio.badge}>
-                        {t(prio.key)}
-                      </Badge>
+                      <StatusBadge tone={prio.tone} label={t(prio.key)} />
                     </TableCell>
                     <TableCell>
                       <div className="flex items-start gap-2">
                         {n.isFavorite ? (
-                          <Star className="mt-0.5 h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400" />
+                          <Star className="mt-0.5 h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
                         ) : null}
                         <div className="min-w-0">
                           <div className={`truncate ${n.isRead ? "font-normal" : "font-semibold"}`}>
@@ -266,41 +273,41 @@ export default function NotificationsPage() {
                         <DropdownMenuContent align="end">
                           {inTrash ? (
                             <DropdownMenuItem onClick={() => restore(n.id)}>
-                              <RotateCcw className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                              <RotateCcw className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                               {t("nc.action.restore")}
                             </DropdownMenuItem>
                           ) : (
                             <>
                               <DropdownMenuItem onClick={() => patch(n.id, { isRead: !n.isRead })}>
                                 {n.isRead ? (
-                                  <Bell className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                  <Bell className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                 ) : (
-                                  <CheckCheck className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                  <CheckCheck className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                 )}
                                 {n.isRead ? t("nc.action.mark_unread") : t("nc.action.mark_read")}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => patch(n.id, { isFavorite: !n.isFavorite })}>
-                                <Star className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                <Star className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                 {n.isFavorite ? t("nc.action.unfavorite") : t("nc.action.favorite")}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => patch(n.id, { isArchived: !n.isArchived })}>
                                 {n.isArchived ? (
-                                  <ArchiveRestore className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                  <ArchiveRestore className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                 ) : (
-                                  <Archive className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                  <Archive className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                 )}
                                 {n.isArchived ? t("nc.action.unarchive") : t("nc.action.archive")}
                               </DropdownMenuItem>
                               {n.link ? (
                                 <DropdownMenuItem asChild>
                                   <a href={n.link}>
-                                    <ExternalLink className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                    <ExternalLink className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                     {t("nc.action.open_link")}
                                   </a>
                                 </DropdownMenuItem>
                               ) : null}
                               <DropdownMenuItem onClick={() => remove(n.id)} className="text-destructive focus:text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4 rtl:ml-2 rtl:mr-0" />
+                                <Trash2 className="me-2 h-4 w-4 rtl:ms-2 rtl:me-0" />
                                 {t("nc.action.delete")}
                               </DropdownMenuItem>
                             </>
@@ -314,7 +321,7 @@ export default function NotificationsPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

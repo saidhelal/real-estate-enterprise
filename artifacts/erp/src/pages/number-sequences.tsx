@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListNumberSequences, 
@@ -13,14 +14,16 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -63,11 +66,11 @@ export default function NumberSequencesPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("number_sequences.title")}</h2>
+        <PageHeader title={t("number_sequences.title")} bordered={false} />
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("number_sequences.create")}
             </Button>
           </DialogTrigger>
@@ -80,7 +83,7 @@ export default function NumberSequencesPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -88,18 +91,14 @@ export default function NumberSequencesPage() {
               <TableHead>{t("number_sequences.prefix")}</TableHead>
               <TableHead>{t("number_sequences.next")}</TableHead>
               <TableHead>{t("number_sequences.sample")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : sequences?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               sequences?.map((seq) => (
                 <TableRow key={seq.id}>
@@ -107,7 +106,7 @@ export default function NumberSequencesPage() {
                   <TableCell>{seq.prefix}</TableCell>
                   <TableCell>{seq.nextNumber}</TableCell>
                   <TableCell className="font-mono text-xs bg-muted px-2 py-1 rounded w-fit">{seq.sample}</TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-end space-x-2">
                     <DocumentsRowAction moduleKey="number-sequences" sourceId={seq.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingSequence(seq)}>
                       <Pencil className="h-4 w-4" />
@@ -121,7 +120,7 @@ export default function NumberSequencesPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={!!editingSequence} onOpenChange={(open) => !open && setEditingSequence(null)}>
         <DialogContent>

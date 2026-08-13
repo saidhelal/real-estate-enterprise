@@ -11,24 +11,9 @@ import {
   useListLeadFollowUps,
   getListLeadFollowUpsQueryKey,
 } from "@workspace/api-client-react";
-import { Link } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { PageHeader } from "@/components/ui/page-header";
 import { useLanguage } from "@/lib/language-provider";
-
-function Stat({ label, value, href }: { label: string; value: string | number; href: string }) {
-  return (
-    <Link href={href}>
-      <Card className="cursor-pointer transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-2xl font-bold">{value}</p>
-        </CardContent>
-      </Card>
-    </Link>
-  );
-}
 
 const todayKey = () => new Date().toISOString().slice(0, 10);
 
@@ -64,20 +49,19 @@ export default function CrmDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("nav.crm_dashboard")}</h1>
-        <p className="text-sm text-muted-foreground">
-          {ar ? "نظرة عامة على نشاط المبيعات وإدارة العلاقات" : "Overview of sales activity and relationship management"}
-        </p>
-      </div>
+      <PageHeader
+        title={t("nav.crm_dashboard")}
+        description={ar ? "نظرة عامة على نشاط المبيعات وإدارة العلاقات" : "Overview of sales activity and relationship management"}
+        bordered={false}
+      />
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        <Stat label={ar ? "العملاء المحتملون" : "Leads"} value={leads?.total ?? leads?.data.length ?? 0} href="/leads" />
-        <Stat label={ar ? "وحدات متاحة" : "Available Units"} value={availableUnits.length} href="/available-units" />
-        <Stat label={ar ? "الحجوزات" : "Reservations"} value={reservations?.total ?? reservations?.data.length ?? 0} href="/reservations" />
-        <Stat label={ar ? "العقود" : "Contracts"} value={contracts?.total ?? contracts?.data.length ?? 0} href="/contracts" />
-        <Stat label={ar ? "متابعات مستحقة" : "Follow-ups Due"} value={dueFollowUps.length} href="/lead-follow-ups" />
-        <Stat label={ar ? "بانتظار المالية" : "Pending Finance"} value={pendingFinance.length} href="/finance-inbox" />
-        <Stat label={ar ? "بانتظار القانونية" : "Pending Legal"} value={pendingLegal.length} href="/legal-approvals" />
+        <KpiCard label={ar ? "العملاء المحتملون" : "Leads"} value={leads?.total ?? leads?.data.length ?? 0} href="/leads" />
+        <KpiCard label={ar ? "وحدات متاحة" : "Available Units"} value={availableUnits.length} href="/available-units" />
+        <KpiCard label={ar ? "الحجوزات" : "Reservations"} value={reservations?.total ?? reservations?.data.length ?? 0} href="/reservations" />
+        <KpiCard label={ar ? "العقود" : "Contracts"} value={contracts?.total ?? contracts?.data.length ?? 0} href="/contracts" />
+        <KpiCard label={ar ? "متابعات مستحقة" : "Follow-ups Due"} value={dueFollowUps.length} href="/lead-follow-ups" />
+        <KpiCard label={ar ? "بانتظار المالية" : "Pending Finance"} value={pendingFinance.length} href="/finance-inbox" />
+        <KpiCard label={ar ? "بانتظار القانونية" : "Pending Legal"} value={pendingLegal.length} href="/legal-approvals" />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListRoles, 
@@ -14,14 +15,16 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -66,11 +69,11 @@ export default function RolesPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("roles.title")}</h2>
+        <PageHeader title={t("roles.title")} bordered={false} />
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("roles.create")}
             </Button>
           </DialogTrigger>
@@ -83,7 +86,7 @@ export default function RolesPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -91,18 +94,14 @@ export default function RolesPage() {
               <TableHead>{t("common.description")}</TableHead>
               <TableHead>{t("roles.system")}</TableHead>
               <TableHead>{t("roles.users")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : roles?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               roles?.map((role) => (
                 <TableRow key={role.id}>
@@ -112,7 +111,7 @@ export default function RolesPage() {
                     {role.isSystem && <Badge variant="secondary">{t("roles.system")}</Badge>}
                   </TableCell>
                   <TableCell>{role.userCount}</TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-end space-x-2">
                     <DocumentsRowAction moduleKey="roles" sourceId={role.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingRole(role)}>
                       <Pencil className="h-4 w-4" />
@@ -128,7 +127,7 @@ export default function RolesPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={!!editingRole} onOpenChange={(open) => !open && setEditingRole(null)}>
         <DialogContent className="max-w-2xl">

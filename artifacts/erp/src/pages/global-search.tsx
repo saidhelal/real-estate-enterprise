@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -81,10 +82,11 @@ export default function GlobalSearchPage() {
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight">{t("global_search.title")}</h2>
-        <p className="text-sm text-muted-foreground">{t("global_search.subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("global_search.title")}
+        description={t("global_search.subtitle")}
+        bordered={false}
+      />
 
       <div className="relative max-w-xl">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground rtl:left-auto rtl:right-3" />
@@ -93,7 +95,7 @@ export default function GlobalSearchPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("global_search.placeholder")}
-          className="pl-9 rtl:pl-3 rtl:pr-9"
+          className="ps-9 rtl:ps-3 rtl:pe-9"
         />
       </div>
 

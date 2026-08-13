@@ -9,10 +9,13 @@ import {
   TableBody,
   TableCell,
   TableFooter,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/lib/language-provider";
@@ -73,7 +76,7 @@ export default function ApAgingPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.ap_aging")}</h2>
+        <PageHeader title={t("nav.ap_aging")} bordered={false} />
         <ReportExportButton
           build={buildReport}
           baseFilename="ap-aging"
@@ -89,34 +92,34 @@ export default function ApAgingPage() {
         </div>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("aging.party")}</TableHead>
-              <TableHead className="text-right">{t("aging.current")}</TableHead>
-              <TableHead className="text-right">{t("aging.days30")}</TableHead>
-              <TableHead className="text-right">{t("aging.days60")}</TableHead>
-              <TableHead className="text-right">{t("aging.days90")}</TableHead>
-              <TableHead className="text-right">{t("aging.days120")}</TableHead>
-              <TableHead className="text-right">{t("common.total")}</TableHead>
+              <TableHead className="text-end">{t("aging.current")}</TableHead>
+              <TableHead className="text-end">{t("aging.days30")}</TableHead>
+              <TableHead className="text-end">{t("aging.days60")}</TableHead>
+              <TableHead className="text-end">{t("aging.days90")}</TableHead>
+              <TableHead className="text-end">{t("aging.days120")}</TableHead>
+              <TableHead className="text-end">{t("common.total")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={7} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+              <TableState colSpan={7} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow><TableCell colSpan={7} className="text-center h-24">{t("acc.no_data")}</TableCell></TableRow>
+              <TableState colSpan={7} isEmpty emptyTitle={t("acc.no_data")} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.partyId}>
                   <TableCell className="font-medium">{r.partyName}</TableCell>
-                  <TableCell className="text-right">{r.current}</TableCell>
-                  <TableCell className="text-right">{r.days30}</TableCell>
-                  <TableCell className="text-right">{r.days60}</TableCell>
-                  <TableCell className="text-right">{r.days90}</TableCell>
-                  <TableCell className="text-right">{r.days120plus}</TableCell>
-                  <TableCell className="text-right">{r.total}</TableCell>
+                  <TableCell className="text-end">{r.current}</TableCell>
+                  <TableCell className="text-end">{r.days30}</TableCell>
+                  <TableCell className="text-end">{r.days60}</TableCell>
+                  <TableCell className="text-end">{r.days90}</TableCell>
+                  <TableCell className="text-end">{r.days120plus}</TableCell>
+                  <TableCell className="text-end">{r.total}</TableCell>
                 </TableRow>
               ))
             )}
@@ -125,17 +128,17 @@ export default function ApAgingPage() {
             <TableFooter>
               <TableRow>
                 <TableCell className="font-semibold">{t("common.total")}</TableCell>
-                <TableCell className="text-right font-semibold">{totals.current}</TableCell>
-                <TableCell className="text-right font-semibold">{totals.days30}</TableCell>
-                <TableCell className="text-right font-semibold">{totals.days60}</TableCell>
-                <TableCell className="text-right font-semibold">{totals.days90}</TableCell>
-                <TableCell className="text-right font-semibold">{totals.days120plus}</TableCell>
-                <TableCell className="text-right font-semibold">{totals.total}</TableCell>
+                <TableCell className="text-end font-semibold">{totals.current}</TableCell>
+                <TableCell className="text-end font-semibold">{totals.days30}</TableCell>
+                <TableCell className="text-end font-semibold">{totals.days60}</TableCell>
+                <TableCell className="text-end font-semibold">{totals.days90}</TableCell>
+                <TableCell className="text-end font-semibold">{totals.days120plus}</TableCell>
+                <TableCell className="text-end font-semibold">{totals.total}</TableCell>
               </TableRow>
             </TableFooter>
           )}
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

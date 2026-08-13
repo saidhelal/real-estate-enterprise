@@ -13,23 +13,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function CustomerServiceDashboardPage() {
   const { language, t } = useLanguage();
@@ -53,7 +43,7 @@ export default function CustomerServiceDashboardPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.customer_service_dashboard")}</h2>
+      <PageHeader title={t("nav.customer_service_dashboard")} bordered={false} />
 
       <section className="space-y-4">
         <h3 className="text-lg font-semibold tracking-tight">{t("cs.overview_section")}</h3>
@@ -61,16 +51,16 @@ export default function CustomerServiceDashboardPage() {
           <p className="text-muted-foreground">{t("lb.no_data")}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            <Stat label={t("cs.ov_customers")} value={cs.customers} />
-            <Stat label={t("cs.ov_contracts")} value={cs.contracts} />
-            <Stat label={t("cs.ov_reservations")} value={cs.reservations} />
-            <Stat label={t("cs.ov_installment_plans")} value={cs.installmentPlans} />
-            <Stat label={t("cs.ov_installment_schedules")} value={cs.installmentSchedules} />
-            <Stat label={t("cs.ov_delivered_units")} value={cs.deliveredUnits} />
-            <Stat label={t("cs.ov_service_requests")} value={cs.totalEscalations} />
-            <Stat label={t("cs.ov_complaints")} value={cs.complaints} />
-            <Stat label={t("cs.ov_follow_ups")} value={cs.followUps} />
-            <Stat label={t("cs.ov_leads")} value={cs.leads} />
+            <KpiCard label={t("cs.ov_customers")} value={cs.customers} />
+            <KpiCard label={t("cs.ov_contracts")} value={cs.contracts} />
+            <KpiCard label={t("cs.ov_reservations")} value={cs.reservations} />
+            <KpiCard label={t("cs.ov_installment_plans")} value={cs.installmentPlans} />
+            <KpiCard label={t("cs.ov_installment_schedules")} value={cs.installmentSchedules} />
+            <KpiCard label={t("cs.ov_delivered_units")} value={cs.deliveredUnits} />
+            <KpiCard label={t("cs.ov_service_requests")} value={cs.totalEscalations} />
+            <KpiCard label={t("cs.ov_complaints")} value={cs.complaints} />
+            <KpiCard label={t("cs.ov_follow_ups")} value={cs.followUps} />
+            <KpiCard label={t("cs.ov_leads")} value={cs.leads} />
           </div>
         )}
       </section>
@@ -82,9 +72,9 @@ export default function CustomerServiceDashboardPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <Stat label={t("cs.total_escalations")} value={cs.totalEscalations} />
-              <Stat label={t("cs.open_escalations")} value={cs.openEscalations} />
-              <Stat label={t("cs.sla_policies")} value={cs.slaPolicies} />
+              <KpiCard label={t("cs.total_escalations")} value={cs.totalEscalations} />
+              <KpiCard label={t("cs.open_escalations")} value={cs.openEscalations} />
+              <KpiCard label={t("cs.sla_policies")} value={cs.slaPolicies} />
             </div>
             <Card>
               <CardHeader>
@@ -95,17 +85,17 @@ export default function CustomerServiceDashboardPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t("common.status")}</TableHead>
-                      <TableHead className="text-right">{t("common.count")}</TableHead>
+                      <TableHead className="text-end">{t("common.count")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {csByStatus.length === 0 ? (
-                      <TableRow><TableCell colSpan={2} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                      <TableState colSpan={2} isEmpty emptyTitle={t("lb.no_data")} />
                     ) : (
                       csByStatus.map((r) => (
                         <TableRow key={r.status}>
                           <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
-                          <TableCell className="text-right">{r.count}</TableCell>
+                          <TableCell className="text-end">{r.count}</TableCell>
                         </TableRow>
                       ))
                     )}
@@ -124,10 +114,10 @@ export default function CustomerServiceDashboardPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Stat label={t("hov.total_requests")} value={hov.totalRequests} />
-              <Stat label={t("hov.scheduled")} value={hov.scheduledCount} />
-              <Stat label={t("hov.completed")} value={hov.completedCount} />
-              <Stat label={t("hov.open_snags")} value={hov.openSnags} />
+              <KpiCard label={t("hov.total_requests")} value={hov.totalRequests} />
+              <KpiCard label={t("hov.scheduled")} value={hov.scheduledCount} />
+              <KpiCard label={t("hov.completed")} value={hov.completedCount} />
+              <KpiCard label={t("hov.open_snags")} value={hov.openSnags} />
             </div>
             <Card>
               <CardHeader>
@@ -138,17 +128,17 @@ export default function CustomerServiceDashboardPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t("common.status")}</TableHead>
-                      <TableHead className="text-right">{t("common.count")}</TableHead>
+                      <TableHead className="text-end">{t("common.count")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {hovByStatus.length === 0 ? (
-                      <TableRow><TableCell colSpan={2} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                      <TableState colSpan={2} isEmpty emptyTitle={t("lb.no_data")} />
                     ) : (
                       hovByStatus.map((r) => (
                         <TableRow key={r.status}>
                           <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
-                          <TableCell className="text-right">{r.count}</TableCell>
+                          <TableCell className="text-end">{r.count}</TableCell>
                         </TableRow>
                       ))
                     )}

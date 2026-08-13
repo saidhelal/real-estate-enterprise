@@ -14,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -175,10 +177,11 @@ export default function LandBankReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("lb.reports")}</h2>
-        <p className="text-muted-foreground">{t("lb.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("lb.reports")}
+        description={t("lb.reports_subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-4">
@@ -192,21 +195,21 @@ export default function LandBankReportsPage() {
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("common.name")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
-                <TableHead className="text-right">{t("lb.area")}</TableHead>
-                <TableHead className="text-right">{t("lb.market_value")}</TableHead>
+                <TableHead className="text-end">{t("lb.area")}</TableHead>
+                <TableHead className="text-end">{t("lb.market_value")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {parcelRows.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                <TableState colSpan={5} isEmpty emptyTitle={t("lb.no_data")} />
               ) : (
                 parcelRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.name}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
-                    <TableCell className="text-right">{fmt(r.area)}</TableCell>
-                    <TableCell className="text-right">{fmt(r.marketValue)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.area)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.marketValue)}</TableCell>
                   </TableRow>
                 ))
               )}
@@ -215,8 +218,8 @@ export default function LandBankReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>{t("lb.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalArea)}</TableCell>
-                  <TableCell className="text-right">{fmt(totalMarketValue)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalArea)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalMarketValue)}</TableCell>
                 </TableRow>
               </TableFooter>
             )}
@@ -236,20 +239,20 @@ export default function LandBankReportsPage() {
                 <TableHead>{t("lb.parcel")}</TableHead>
                 <TableHead>{t("lb.type")}</TableHead>
                 <TableHead>{t("lb.date")}</TableHead>
-                <TableHead className="text-right">{t("lb.cost")}</TableHead>
+                <TableHead className="text-end">{t("lb.cost")}</TableHead>
                 <TableHead>{t("lb.payment_status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {acqRows.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                <TableState colSpan={5} isEmpty emptyTitle={t("lb.no_data")} />
               ) : (
                 acqRows.map((r, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">{r.parcel}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.type, language)}</Badge></TableCell>
                     <TableCell>{r.date}</TableCell>
-                    <TableCell className="text-right">{fmt(r.cost)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.cost)}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.paymentStatus, language)}</Badge></TableCell>
                   </TableRow>
                 ))
@@ -259,7 +262,7 @@ export default function LandBankReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>{t("lb.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalCost)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalCost)}</TableCell>
                   <TableCell />
                 </TableRow>
               </TableFooter>

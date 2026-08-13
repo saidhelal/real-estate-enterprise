@@ -8,6 +8,7 @@ import {
 } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 import { useAuth } from "@/lib/auth-provider";
@@ -41,11 +42,11 @@ function Section({
     tone === "danger"
       ? "border-destructive/40"
       : tone === "warning"
-        ? "border-amber-500/40"
+        ? "border-warning-border/50"
         : "";
   return (
     <Link href={href}>
-      <Card className={`cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-md ${toneClass}`}>
+      <Card interactive className={toneClass}>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center justify-between text-sm font-medium">
             <span className="flex items-center gap-2">
@@ -103,14 +104,13 @@ export default function MyWorkPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("nav.my_work")}</h1>
-        <p className="text-sm text-muted-foreground">
-          {ar
-            ? "مهامك اليومية — تابع كل بند مباشرة من شاشته"
-            : "Your daily work — open each item directly on its screen"}
-        </p>
-      </div>
+      <PageHeader
+        title={t("nav.my_work")}
+        description={ar
+          ? "مهامك اليومية — تابع كل بند مباشرة من شاشته"
+          : "Your daily work — open each item directly on its screen"}
+        bordered={false}
+      />
 
       {leadsLoading ? (
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>

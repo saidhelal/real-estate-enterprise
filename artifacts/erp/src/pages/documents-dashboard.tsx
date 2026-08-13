@@ -14,23 +14,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function DocumentsDashboardPage() {
   const { language, t } = useLanguage();
@@ -48,22 +37,23 @@ export default function DocumentsDashboardPage() {
   return (
     <div className="space-y-6 p-1">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{t("edms.dashboard.title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("edms.subtitle")}</p>
-        </div>
+        <PageHeader
+          title={t("edms.dashboard.title")}
+          description={t("edms.subtitle")}
+          bordered={false}
+        />
         <Button asChild>
           <Link href="/documents">{t("nav.documents")}</Link>
         </Button>
       </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-        <Stat label={t("edms.kpi.total")} value={isLoading ? "…" : (totals?.total ?? 0)} />
-        <Stat label={t("edms.kpi.active")} value={isLoading ? "…" : (totals?.active ?? 0)} />
-        <Stat label={t("edms.kpi.pending")} value={isLoading ? "…" : (totals?.pendingApproval ?? 0)} />
-        <Stat label={t("edms.kpi.archived")} value={isLoading ? "…" : (totals?.archived ?? 0)} />
-        <Stat label={t("edms.kpi.expired")} value={isLoading ? "…" : (totals?.expired ?? 0)} />
-        <Stat label={t("edms.kpi.recent")} value={isLoading ? "…" : (totals?.recentlyAdded ?? 0)} />
+        <KpiCard label={t("edms.kpi.total")} value={isLoading ? "…" : (totals?.total ?? 0)} />
+        <KpiCard label={t("edms.kpi.active")} value={isLoading ? "…" : (totals?.active ?? 0)} />
+        <KpiCard label={t("edms.kpi.pending")} value={isLoading ? "…" : (totals?.pendingApproval ?? 0)} />
+        <KpiCard label={t("edms.kpi.archived")} value={isLoading ? "…" : (totals?.archived ?? 0)} />
+        <KpiCard label={t("edms.kpi.expired")} value={isLoading ? "…" : (totals?.expired ?? 0)} />
+        <KpiCard label={t("edms.kpi.recent")} value={isLoading ? "…" : (totals?.recentlyAdded ?? 0)} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -76,7 +66,7 @@ export default function DocumentsDashboardPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("edms.module")}</TableHead>
-                  <TableHead className="text-right">{t("edms.kpi.total")}</TableHead>
+                  <TableHead className="text-end">{t("edms.kpi.total")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -92,7 +82,7 @@ export default function DocumentsDashboardPage() {
                       <TableCell>
                         <Badge variant="secondary">{enumLabel(m.moduleKey, language)}</Badge>
                       </TableCell>
-                      <TableCell className="text-right">{m.count}</TableCell>
+                      <TableCell className="text-end">{m.count}</TableCell>
                     </TableRow>
                   ))
                 )}

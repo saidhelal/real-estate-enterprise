@@ -13,6 +13,7 @@ import {
   type Contract,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -120,16 +121,15 @@ export default function FinanceInboxPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">
-          {language === "ar" ? "صندوق المالية" : "Finance Inbox"}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {language === "ar"
+      <PageHeader
+        title={language === "ar" ? "صندوق المالية" : "Finance Inbox"}
+        description={
+          language === "ar"
             ? "العقود المرسلة من المبيعات بانتظار اعتماد المالية"
-            : "Contracts submitted by sales awaiting finance approval"}
-        </p>
-      </div>
+            : "Contracts submitted by sales awaiting finance approval"
+        }
+        bordered={false}
+      />
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
@@ -164,19 +164,19 @@ export default function FinanceInboxPage() {
                 </div>
                 <div className="flex flex-wrap gap-2 pt-1">
                   <Button size="sm" onClick={() => openAction(c, "approve")}>
-                    <CheckCircle2 className="h-4 w-4 mr-1" />
+                    <CheckCircle2 className="h-4 w-4 me-1" />
                     {language === "ar" ? "اعتماد" : "Approve"}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => openAction(c, "partial")}>
-                    <Banknote className="h-4 w-4 mr-1" />
+                    <Banknote className="h-4 w-4 me-1" />
                     {language === "ar" ? "استلام شيكات" : "Record cheques"}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => openAction(c, "return")}>
-                    <Undo2 className="h-4 w-4 mr-1" />
+                    <Undo2 className="h-4 w-4 me-1" />
                     {language === "ar" ? "إرجاع" : "Return"}
                   </Button>
                   <Button size="sm" variant="destructive" onClick={() => openAction(c, "reject")}>
-                    <XCircle className="h-4 w-4 mr-1" />
+                    <XCircle className="h-4 w-4 me-1" />
                     {language === "ar" ? "رفض" : "Reject"}
                   </Button>
                 </div>

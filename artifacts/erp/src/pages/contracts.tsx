@@ -22,8 +22,8 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumOptions, enumLabel } from "@/lib/enums";
-import { Badge } from "@/components/ui/badge";
+import { enumOptions, enumLabel, statusTone } from "@/lib/enums";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Send, FileText } from "lucide-react";
 import { Link } from "wouter";
@@ -104,7 +104,7 @@ export default function ContractsPage() {
     { header: "Code", headerAr: "الرمز", render: (r) => <span className="font-medium">{r.code}</span> },
     { header: "Date", headerAr: "التاريخ", render: (r) => r.contractDate },
     { header: "Total Price", headerAr: "السعر الإجمالي", render: (r) => r.totalPrice ?? "-" },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot /> },
   ];
 
   const handleSubmit = (r: Contract) => {
@@ -146,7 +146,7 @@ export default function ContractsPage() {
               onClick={() => handleSubmit(r)}
               title={language === "ar" ? "إرسال إلى المالية" : "Submit to Finance"}
             >
-              <Send className="h-4 w-4 mr-1" />
+              <Send className="h-4 w-4 me-1" />
               {language === "ar" ? "إلى المالية" : "To Finance"}
             </Button>
           ) : null}
@@ -159,19 +159,4 @@ export default function ContractsPage() {
       )}
     />
   );
-}
-
-function statusVariant(status: string | null | undefined): "default" | "secondary" | "destructive" | "outline" {
-  switch (status) {
-    case "active":
-      return "default";
-    case "rejected":
-    case "cancelled":
-      return "destructive";
-    case "pending_finance":
-    case "finance_approved":
-      return "outline";
-    default:
-      return "secondary";
-  }
 }

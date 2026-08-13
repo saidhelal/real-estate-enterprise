@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -121,10 +122,11 @@ export default function InventoryReportsPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("inv.reports")}</h2>
-          <p className="text-muted-foreground">{t("inv.reports_subtitle")}</p>
-        </div>
+        <PageHeader
+          title={t("inv.reports")}
+          description={t("inv.reports_subtitle")}
+          bordered={false}
+        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" disabled={!enabled}>
@@ -154,16 +156,16 @@ export default function InventoryReportsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("inv.reports")}</TableHead>
-                <TableHead className="text-right">{t("inv.count")}</TableHead>
-                <TableHead className="text-right">{t("inv.total")}</TableHead>
+                <TableHead className="text-end">{t("inv.count")}</TableHead>
+                <TableHead className="text-end">{t("inv.total")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {rows.map((r) => (
                 <TableRow key={r.labelKey}>
                   <TableCell className="font-medium">{t(r.labelKey)}</TableCell>
-                  <TableCell className="text-right">{r.count}</TableCell>
-                  <TableCell className="text-right">{fmt(r.total)}</TableCell>
+                  <TableCell className="text-end">{r.count}</TableCell>
+                  <TableCell className="text-end">{fmt(r.total)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

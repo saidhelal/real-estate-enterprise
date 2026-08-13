@@ -1,4 +1,5 @@
 import { useAuth } from "@/lib/auth-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { useLanguage } from "@/lib/language-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Building2, MapPin, ShieldCheck, Activity, CalendarDays, Banknote, History, Building, Home, BadgeCheck, BookMarked, FileSignature, UserPlus, AlertTriangle, Banknote as BanknoteIcon, Wallet, Receipt, TrendingUp, Landmark, CircleDollarSign } from "lucide-react";
@@ -20,12 +21,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight">{t("dashboard.title")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t("dashboard.welcome")}, {user.fullName}
-        </p>
-      </div>
+      <PageHeader
+        title={t("dashboard.title")}
+        description={`${t("dashboard.welcome")}, ${user.fullName}`}
+        bordered={false}
+      />
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         <StatCard

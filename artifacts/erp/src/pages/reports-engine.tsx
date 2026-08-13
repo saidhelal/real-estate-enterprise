@@ -21,6 +21,7 @@ import {
   useListBranches,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -311,6 +312,9 @@ export default function ReportsEnginePage() {
     const html = `<!doctype html><html dir="${dir}" lang="${ar ? "ar" : "en"}"><head><meta charset="utf-8"><title>${escapeHtml(model.title)}</title>
       <style>
         * { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; box-sizing: border-box; }
+        /* Standalone print document: this stylesheet ships inside a new window
+           with none of the app CSS loaded, so design tokens would resolve to
+           nothing. The literal colours below are correct and intentional. */
         body { margin: 0; padding: 40px; color: #1a1a1a; }
         .head { border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 20px; }
         .company { font-size: 20px; font-weight: 700; }
@@ -376,10 +380,11 @@ export default function ReportsEnginePage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("bi.reports_engine")}</h2>
-        <p className="text-muted-foreground">{t("bi.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("bi.reports_engine")}
+        description={t("bi.reports_subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader>

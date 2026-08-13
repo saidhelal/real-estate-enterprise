@@ -7,11 +7,13 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
 import { enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
@@ -27,11 +29,9 @@ export default function ChequeStatusHistorysPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.cheque_status_history")}</h2>
-      </div>
+      <PageHeader title={t("nav.cheque_status_history")} bordered={false} />
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -84,7 +84,7 @@ export default function ChequeStatusHistorysPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

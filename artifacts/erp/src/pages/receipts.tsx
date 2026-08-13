@@ -22,19 +22,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
-import { enumLabel } from "@/lib/enums";
+import { enumLabel, statusTone } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
-
-function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "posted") return "default";
-  if (status === "reversed" || status === "cancelled") return "destructive";
-  if (status === "approved") return "secondary";
-  return "outline";
-}
 
 export default function ReceiptsPage() {
   const { language, t } = useLanguage();
@@ -77,7 +71,7 @@ export default function ReceiptsPage() {
     { header: "Date", headerAr: "التاريخ", render: (r) => r.receiptDate },
     { header: "Amount", headerAr: "المبلغ", render: (r) => r.amount },
     { header: "Method", headerAr: "الطريقة", render: (r) => <Badge variant="outline">{enumLabel(r.paymentMethod, language)}</Badge> },
-    { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant={statusVariant(r.status ?? "")}>{enumLabel(r.status ?? "", language)}</Badge> },
+    { header: "Status", headerAr: "الحالة", render: (r) => <StatusBadge tone={statusTone(r.status ?? "")} label={enumLabel(r.status ?? "", language)} withDot /> },
   ];
 
   const approveMutation = useApproveReceipt();
@@ -130,6 +124,9 @@ export default function ReceiptsPage() {
     const html = `<!doctype html><html dir="${ar ? "rtl" : "ltr"}" lang="${ar ? "ar" : "en"}"><head><meta charset="utf-8"><title>${L.title} ${esc(r.code)}</title>
       <style>
         * { font-family: ${ar ? "'Segoe UI', Tahoma, sans-serif" : "'Segoe UI', Arial, sans-serif"}; box-sizing: border-box; }
+        /* Standalone print document: this stylesheet ships inside a new window
+           with none of the app CSS loaded, so design tokens would resolve to
+           nothing. The literal colours below are correct and intentional. */
         body { margin: 0; padding: 40px; color: #1a1a1a; }
         .voucher { max-width: 640px; margin: 0 auto; border: 1px solid #ddd; border-radius: 12px; padding: 32px; }
         .head { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 24px; }
@@ -204,7 +201,7 @@ export default function ReceiptsPage() {
             onClick={() => printVoucher(r)}
             title={language === "ar" ? "طباعة السند" : "Print voucher"}
           >
-            <Printer className="h-4 w-4 mr-1" />
+            <Printer className="h-4 w-4 me-1" />
             {language === "ar" ? "طباعة" : "Print"}
           </Button>
         </>

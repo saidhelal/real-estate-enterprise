@@ -9,10 +9,13 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -96,7 +99,7 @@ export default function GeneralLedgerPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.general_ledger")}</h2>
+        <PageHeader title={t("nav.general_ledger")} bordered={false} />
         <ReportExportButton
           build={buildReport}
           baseFilename="general-ledger"
@@ -141,38 +144,38 @@ export default function GeneralLedgerPage() {
               <span>{t("acc.closing_balance")}: <strong>{data.closingBalance}</strong></span>
             </div>
           )}
-          <div className="rounded-md border bg-card">
+          <TableFrame>
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("common.code")}</TableHead>
                   <TableHead>{t("acc.entry_date")}</TableHead>
                   <TableHead>{t("acc.description")}</TableHead>
-                  <TableHead className="text-right">{t("acc.debit")}</TableHead>
-                  <TableHead className="text-right">{t("acc.credit")}</TableHead>
-                  <TableHead className="text-right">{t("acc.balance")}</TableHead>
+                  <TableHead className="text-end">{t("acc.debit")}</TableHead>
+                  <TableHead className="text-end">{t("acc.credit")}</TableHead>
+                  <TableHead className="text-end">{t("acc.balance")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
-                  <TableRow><TableCell colSpan={6} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+                  <TableState colSpan={6} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
                 ) : rows.length === 0 ? (
-                  <TableRow><TableCell colSpan={6} className="text-center h-24">{t("acc.no_data")}</TableCell></TableRow>
+                  <TableState colSpan={6} isEmpty emptyTitle={t("acc.no_data")} />
                 ) : (
                   rows.map((r, i) => (
                     <TableRow key={`${r.entryId}-${i}`}>
                       <TableCell className="font-medium">{r.entryNumber}</TableCell>
                       <TableCell>{r.entryDate}</TableCell>
                       <TableCell>{r.description}</TableCell>
-                      <TableCell className="text-right">{r.debit}</TableCell>
-                      <TableCell className="text-right">{r.credit}</TableCell>
-                      <TableCell className="text-right">{r.balance}</TableCell>
+                      <TableCell className="text-end">{r.debit}</TableCell>
+                      <TableCell className="text-end">{r.credit}</TableCell>
+                      <TableCell className="text-end">{r.balance}</TableCell>
                     </TableRow>
                   ))
                 )}
               </TableBody>
             </Table>
-          </div>
+          </TableFrame>
         </>
       )}
     </div>

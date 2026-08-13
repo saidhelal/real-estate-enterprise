@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
   TableBody,
+  TableFrame,
   TableCell,
   TableHead,
   TableHeader,
@@ -44,6 +45,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PageHeader } from "@/components/ui/page-header";
+import { Toolbar, ToolbarStart } from "@/components/ui/toolbar";
+import { EmptyState, LoadingState, ErrorState } from "@/components/ui/states";
 import { cn } from "@/lib/utils";
 import { NONE, resetDescendants, visibleOptions } from "./cascade";
 import {
@@ -54,6 +58,8 @@ import {
   ChevronRight,
   ChevronsUpDown,
   Check,
+  Inbox,
+  X,
 } from "lucide-react";
 
 /** Sentinel value for the "All" (cleared) state of a toolbar filter select. */
@@ -149,6 +155,11 @@ interface MutationLike {
 interface ListLike<T> {
   data?: { data: T[]; total: number };
   isLoading: boolean;
+  // Optional so the many existing `useList` hooks keep type-checking; every
+  // generated TanStack query supplies both, which is what lets the table tell a
+  // failed request apart from a genuinely empty one.
+  isError?: boolean;
+  refetch?: () => unknown;
 }
 
 export interface ResourceManagerProps<T extends { id: string }> {
@@ -247,9 +258,29 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     if (v) params[k] = v;
   }
 
-  const { data, isLoading } = useList(params);
+  const { data, isLoading, isError, refetch } = useList(params);
   const rows = data?.data ?? [];
   const total = data?.total ?? 0;
+
+  // Whether the user narrowed the list themselves. Used only to decide what an
+  // empty result should offer them — clear the filters, or create the first
+  // record.
+  const hasActiveQuery =
+    search.trim() !== "" || Object.values(filterValues).some((v) => v !== "" && v !== ALL);
+
+  const clearQuery = () => {
+    setSearch("");
+    setFilterValues({});
+    setPage(1);
+  };
+
+  // Which records this page is actually showing, so the pager answers "where am
+  // I in the set" rather than only "which page number".
+  const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const rangeEnd = Math.min(page * pageSize, total);
+
+  const PrevIcon = language === "ar" ? ChevronRight : ChevronLeft;
+  const NextIcon = language === "ar" ? ChevronLeft : ChevronRight;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const deleteMutation = useDelete();
@@ -291,37 +322,54 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="flex flex-col sm:flex-row justify-between gap-3 items-start sm:items-center">
-        <h2 className="flex-1 text-center text-xl font-semibold tracking-tight">{heading}</h2>
-        {canCreate && (
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                {t("common.create")}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>{t("common.create")}</DialogTitle>
-              </DialogHeader>
-              <ResourceForm
-                fields={fields}
-                companyId={companyId}
-                useCreate={useCreate}
-                useUpdate={useUpdate}
-                onSuccess={() => {
-                  setIsCreateOpen(false);
-                  invalidate();
-                }}
-              />
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
+      <PageHeader
+        title={heading}
+        // The record count belongs next to the title, not buried by the pager:
+        // it is the first thing anyone checks after filtering. Hidden while the
+        // first page loads so it never flashes a stale or zero count.
+        meta={
+          !isLoading && !isError ? (
+            <span className="text-sm text-muted-foreground tabular-nums">
+              {t("common.total")}: {total}
+            </span>
+          ) : null
+        }
+        actions={
+          canCreate && (
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="me-2 h-4 w-4" />
+                  {t("common.create")}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>{t("common.create")}</DialogTitle>
+                </DialogHeader>
+                <ResourceForm
+                  fields={fields}
+                  companyId={companyId}
+                  useCreate={useCreate}
+                  useUpdate={useUpdate}
+                  onSuccess={() => {
+                    setIsCreateOpen(false);
+                    invalidate();
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          )
+        }
+      />
 
-      {(searchable || (filters && filters.length > 0)) && (
-        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+      <TableFrame>
+        {/* Search and filters sit inside the table's own frame rather than
+            floating above it, so the controls read as belonging to this list
+            and the table header starts at the same offset on every screen. */}
+        {(searchable || (filters && filters.length > 0)) && (
+          <Toolbar transparent className="border-b border-border">
+            <ToolbarStart>
           {searchable && (
             <Input
               placeholder={t("common.search")}
@@ -330,7 +378,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="max-w-sm"
+              className="h-8 w-full sm:max-w-xs"
             />
           )}
           {filters?.map((filter) => {
@@ -345,7 +393,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectTrigger className="h-8 w-full sm:w-45">
                   <SelectValue placeholder={filterLabel} />
                 </SelectTrigger>
                 <SelectContent>
@@ -359,30 +407,78 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
               </Select>
             );
           })}
-        </div>
-      )}
+              {hasActiveQuery && (
+                <Button variant="ghost" size="sm" className="h-8" onClick={clearQuery}>
+                  <X className="me-1.5 h-3.5 w-3.5" />
+                  {t("common.clear_filters")}
+                </Button>
+              )}
+            </ToolbarStart>
+          </Toolbar>
+        )}
 
-      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             <TableRow>
               {columns.map((c, i) => (
                 <TableHead key={i}>{colHeader(c)}</TableHead>
               ))}
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length + 1} className="text-center h-24">
-                  {t("common.loading")}
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={columns.length + 1} className="p-3">
+                  {/* Skeleton rows rather than a one-line "Loading…" so the
+                      table keeps its height and the page does not jump when
+                      the data arrives. */}
+                  <LoadingState
+                    variant="table"
+                    count={Math.min(pageSize, 6)}
+                    label={t("common.loading")}
+                  />
+                </TableCell>
+              </TableRow>
+            ) : isError ? (
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={columns.length + 1} className="p-0">
+                  {/* A failed request used to render as "No records found",
+                      which reads as "there is nothing here" — the opposite of
+                      the truth, and it hid the fact that retrying would work. */}
+                  <ErrorState
+                    compact
+                    title={t("common.error")}
+                    description={t("common.load_failed")}
+                    onRetry={refetch ? () => refetch() : undefined}
+                    retryLabel={t("common.retry")}
+                  />
                 </TableCell>
               </TableRow>
             ) : rows.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={columns.length + 1} className="text-center h-24">
-                  {t("common.no_results")}
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={columns.length + 1} className="p-0">
+                  <EmptyState
+                    compact
+                    icon={Inbox}
+                    title={t("common.no_results")}
+                    // An empty list after filtering and an empty list because
+                    // nothing exists yet need different next steps, so say
+                    // which one this is.
+                    description={hasActiveQuery ? t("common.empty_filtered") : undefined}
+                    action={
+                      hasActiveQuery ? (
+                        <Button variant="outline" size="sm" onClick={clearQuery}>
+                          {t("common.clear_filters")}
+                        </Button>
+                      ) : canCreate ? (
+                        <Button size="sm" onClick={() => setIsCreateOpen(true)}>
+                          <Plus className="me-2 h-4 w-4" />
+                          {t("common.create")}
+                        </Button>
+                      ) : undefined
+                    }
+                  />
                 </TableCell>
               </TableRow>
             ) : (
@@ -391,7 +487,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                   {columns.map((c, i) => (
                     <TableCell key={i}>{c.render(row)}</TableCell>
                   ))}
-                  <TableCell className="text-right space-x-2 whitespace-nowrap">
+                  <TableCell className="text-end space-x-2 whitespace-nowrap">
                     {attachmentsKey && (
                       <DocumentsRowAction moduleKey={attachmentsKey} sourceId={row.id} />
                     )}
@@ -420,34 +516,44 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
             )}
           </TableBody>
         </Table>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {t("common.total")}: {total}
-        </p>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            disabled={page <= 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm">
-            {page} / {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="icon"
-            disabled={page >= totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+        {/* Pager is part of the table frame, not a detached strip below it —
+            it belongs to this list and moves with it. Hidden on a single page,
+            where it is only noise. */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2">
+            <p className="text-sm text-muted-foreground tabular-nums">
+              {rangeStart}–{rangeEnd} / {total}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                aria-label={t("common.previous")}
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                {/* The arrow follows reading direction: "previous" points to
+                    the start of the line, which is the right in Arabic. */}
+                <PrevIcon className="h-4 w-4" />
+              </Button>
+              <span className="text-sm tabular-nums">
+                {page} / {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                aria-label={t("common.next")}
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              >
+                <NextIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+      </TableFrame>
 
       <Dialog
         open={!!deleteTarget}
@@ -825,7 +931,7 @@ function SearchableSelect({
           )}
         >
           <span className="truncate">{selected ? optLabel(selected) : placeholder}</span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
@@ -843,7 +949,7 @@ function SearchableSelect({
                   }}
                 >
                   <Check
-                    className={cn("mr-2 h-4 w-4", value ? "opacity-0" : "opacity-100")}
+                    className={cn("me-2 h-4 w-4", value ? "opacity-0" : "opacity-100")}
                   />
                   —
                 </CommandItem>
@@ -861,7 +967,7 @@ function SearchableSelect({
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "me-2 h-4 w-4",
                       value === o.value ? "opacity-100" : "opacity-0",
                     )}
                   />

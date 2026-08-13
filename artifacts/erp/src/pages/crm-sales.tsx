@@ -9,6 +9,7 @@ import {
 } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
@@ -21,6 +22,7 @@ import {
   trafficLight,
   TRAFFIC_DOT,
   TRAFFIC_RING,
+  TRAFFIC_TEXT,
   formatElapsed,
   formatRemaining,
   isManagerial,
@@ -104,7 +106,7 @@ export default function CrmSalesPage() {
               {ar ? "المنقضي" : "Elapsed"}: {formatElapsed(elapsedFrom(c), ar, now)}
             </span>
             {stage === "pending_finance" && c.financeSlaDueAt ? (
-              <span className={light === "red" ? "font-medium text-red-500" : "text-muted-foreground"}>
+              <span className={light === "red" ? `font-medium ${TRAFFIC_TEXT.red}` : "text-muted-foreground"}>
                 SLA: {formatRemaining(c.financeSlaDueAt, ar, now)}
               </span>
             ) : null}
@@ -117,20 +119,19 @@ export default function CrmSalesPage() {
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("nav.crm_sales")}</h1>
-        <p className="text-sm text-muted-foreground">
-          {ar
-            ? "لوحة سير عمليات البيع — تابع حالة كل عقد عبر مراحله. تتم اعتمادات المالية داخل وحدة المالية والاعتمادات القانونية داخل وحدة الشؤون القانونية."
-            : "Operational sales workflow — track each contract's status through its stages. Finance approvals happen in the Finance module and legal approvals in the Legal Affairs module."}
-        </p>
-      </div>
+      <PageHeader
+        title={t("nav.crm_sales")}
+        description={ar
+          ? "لوحة سير عمليات البيع — تابع حالة كل عقد عبر مراحله. تتم اعتمادات المالية داخل وحدة المالية والاعتمادات القانونية داخل وحدة الشؤون القانونية."
+          : "Operational sales workflow — track each contract's status through its stages. Finance approvals happen in the Finance module and legal approvals in the Legal Affairs module."}
+        bordered={false}
+      />
 
       {/* Managerial escalation banner */}
       {managerial && alerts.length > 0 ? (
-        <Card className="border-red-500/40 bg-red-500/5">
+        <Card className="border-destructive-border/50 bg-destructive-subtle/40">
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base text-red-600 dark:text-red-400">
+            <CardTitle className="flex items-center gap-2 text-base text-destructive-subtle-foreground">
               <AlertTriangle className="h-4 w-4" />
               {ar ? `تنبيهات تأخير (${alerts.length})` : `Delayed alerts (${alerts.length})`}
             </CardTitle>
@@ -146,7 +147,7 @@ export default function CrmSalesPage() {
                     <span className="text-muted-foreground">{unitCode(c.unitId)} · {customerName(c.customerId)}</span>
                     <Badge variant="outline">{stageLabel(saleStage(c), ar)}</Badge>
                   </span>
-                  <span className={light === "red" ? "text-red-500 font-medium" : "text-orange-500"}>
+                  <span className={light === "red" ? `font-medium ${TRAFFIC_TEXT.red}` : TRAFFIC_TEXT.orange}>
                     {c.financeSlaDueAt
                       ? formatRemaining(c.financeSlaDueAt, ar, now)
                       : formatElapsed(elapsedFrom(c), ar, now)}

@@ -9,6 +9,7 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -211,10 +212,11 @@ export function AiChatPage({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t(titleKey)}</h2>
-          <p className="text-muted-foreground">{t(subtitleKey)}</p>
-        </div>
+        <PageHeader
+          title={t(titleKey)}
+          description={t(subtitleKey)}
+          bordered={false}
+        />
         {!noAccess && (
           <Button variant="outline" size="sm" onClick={startNew}>
             <Plus className="h-4 w-4 me-2" />
@@ -224,10 +226,10 @@ export function AiChatPage({
       </div>
 
       {noAccess && (
-        <Card className="border-amber-500/40">
+        <Card className="border-warning-border/50">
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
-              <ShieldAlert className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-warning-subtle">
+              <ShieldAlert className="h-6 w-6 text-warning-subtle-foreground" />
             </div>
             <h3 className="text-lg font-semibold">{t("ai.no_access.title")}</h3>
             <p className="max-w-md text-sm text-muted-foreground">{t("ai.no_access.body")}</p>

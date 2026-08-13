@@ -12,23 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function HrDashboardPage() {
   const { language, t } = useLanguage();
@@ -59,17 +49,17 @@ export default function HrDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.hr_dashboard")}</h2>
+      <PageHeader title={t("nav.hr_dashboard")} bordered={false} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label={t("hr.employees_count")} value={data.employeesCount} />
-        <Stat label={t("hr.active_employees")} value={data.activeEmployees} />
-        <Stat label={t("hr.departments_count")} value={data.departmentsCount} />
-        <Stat label={t("hr.pending_leave_requests")} value={data.pendingLeaveRequests} />
-        <Stat label={t("hr.open_loans")} value={data.openLoans} />
-        <Stat label={t("hr.pending_payroll_runs")} value={data.pendingPayrollRuns} />
-        <Stat label={t("hr.payroll_posted")} value={data.payrollPosted} />
-        <Stat label={t("hr.loan_outstanding")} value={data.loanOutstanding} />
+        <KpiCard label={t("hr.employees_count")} value={data.employeesCount} />
+        <KpiCard label={t("hr.active_employees")} value={data.activeEmployees} />
+        <KpiCard label={t("hr.departments_count")} value={data.departmentsCount} />
+        <KpiCard label={t("hr.pending_leave_requests")} value={data.pendingLeaveRequests} />
+        <KpiCard label={t("hr.open_loans")} value={data.openLoans} />
+        <KpiCard label={t("hr.pending_payroll_runs")} value={data.pendingPayrollRuns} />
+        <KpiCard label={t("hr.payroll_posted")} value={data.payrollPosted} />
+        <KpiCard label={t("hr.loan_outstanding")} value={data.loanOutstanding} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -82,17 +72,17 @@ export default function HrDashboardPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("common.status")}</TableHead>
-                  <TableHead className="text-right">{t("common.count")}</TableHead>
+                  <TableHead className="text-end">{t("common.count")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {byStatus.length === 0 ? (
-                  <TableRow><TableCell colSpan={2} className="text-center h-24">{t("hr.no_data")}</TableCell></TableRow>
+                  <TableState colSpan={2} isEmpty emptyTitle={t("hr.no_data")} />
                 ) : (
                   byStatus.map((r) => (
                     <TableRow key={r.key ?? "none"}>
                       <TableCell><Badge variant="secondary">{enumLabel(r.key, language)}</Badge></TableCell>
-                      <TableCell className="text-right">{r.count}</TableCell>
+                      <TableCell className="text-end">{r.count}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -110,17 +100,17 @@ export default function HrDashboardPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("nav.departments")}</TableHead>
-                  <TableHead className="text-right">{t("common.count")}</TableHead>
+                  <TableHead className="text-end">{t("common.count")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {byDepartment.length === 0 ? (
-                  <TableRow><TableCell colSpan={2} className="text-center h-24">{t("hr.no_data")}</TableCell></TableRow>
+                  <TableState colSpan={2} isEmpty emptyTitle={t("hr.no_data")} />
                 ) : (
                   byDepartment.map((r) => (
                     <TableRow key={r.key ?? "none"}>
                       <TableCell>{departmentName(r.key)}</TableCell>
-                      <TableCell className="text-right">{r.count}</TableCell>
+                      <TableCell className="text-end">{r.count}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -138,17 +128,17 @@ export default function HrDashboardPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("hr.employment_type")}</TableHead>
-                  <TableHead className="text-right">{t("common.count")}</TableHead>
+                  <TableHead className="text-end">{t("common.count")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {byType.length === 0 ? (
-                  <TableRow><TableCell colSpan={2} className="text-center h-24">{t("hr.no_data")}</TableCell></TableRow>
+                  <TableState colSpan={2} isEmpty emptyTitle={t("hr.no_data")} />
                 ) : (
                   byType.map((r) => (
                     <TableRow key={r.key ?? "none"}>
                       <TableCell>{enumLabel(r.key, language)}</TableCell>
-                      <TableCell className="text-right">{r.count}</TableCell>
+                      <TableCell className="text-end">{r.count}</TableCell>
                     </TableRow>
                   ))
                 )}

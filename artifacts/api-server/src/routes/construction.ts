@@ -76,32 +76,12 @@ interface WorkflowConfig {
   sourceField: string;
 }
 
-interface CrudConfig {
-  path: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  table: any;
-  module: string;
-  entity: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createBody: { safeParse(v: unknown): any };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateBody: { safeParse(v: unknown): any };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  listResponse: { parse(v: unknown): any };
-  search: string[];
-  financial?: FinancialConfig;
-  workflow?: WorkflowConfig;
-  // Recompute derived fields (e.g. net payable) from component columns.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  derive?: (row: Record<string, unknown>) => void;
-}
+import { registerCrud, type CrudConfig as SharedCrudConfig, type Tx } from "../lib/register-crud";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-// Statuses at/after which a certificate's financial total is frozen because it
-// has driven (or will drive) a ledger entry.
 const POSTED_STATUSES = new Set(["posted", "paid", "closed"]);
 
 function moneyToCents(v: unknown): number {
@@ -110,8 +90,6 @@ function moneyToCents(v: unknown): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-// Net payable = current certified + additions - retention - advance recovery
-// - deductions. Integer-cent math (no float drift), mirrors lib/posting.ts.
 function computeCertificateNet(row: Record<string, unknown>): void {
   const net =
     moneyToCents(row.currentAmount) +
@@ -122,206 +100,17 @@ function computeCertificateNet(row: Record<string, unknown>): void {
   row.netAmount = (net / 100).toFixed(2);
 }
 
-function registerCrud(cfg: CrudConfig): void {
-  const t = cfg.table;
+/**
+ * Construction keeps every rule below. The shared factory supplies the CRUD
+ * routes and the transaction; what may change, what gets posted and what is
+ * logged stays here.
+ */
+type CrudConfig = SharedCrudConfig & {
+  financial?: FinancialConfig;
+  workflow?: WorkflowConfig;
+  derive?: (row: Record<string, unknown>) => void;
+};
 
-  router.get(`/${cfg.path}`, requirePermission(`${cfg.module}.view`), async (req, res): Promise<void> => {
-    const query = req.query as Record<string, unknown>;
-    const { page, pageSize, offset } = pageParams(query);
-    const search = qStr(query, "search");
-    const companyId = qStr(query, "companyId");
-    const conds: SQL[] = [eq(t.isDeleted, false)];
-    if (companyId) conds.push(eq(t.companyId, companyId));
-    if (search && cfg.search.length) {
-      const like = `%${search}%`;
-      const ors = cfg.search.map((c) => ilike(t[c], like));
-      const combined = or(...ors);
-      if (combined) conds.push(combined);
-    }
-    const where = and(...conds);
-    const rows = (await db
-      .select()
-      .from(t)
-      .where(where)
-      .orderBy(desc(t.createdAt))
-      .limit(pageSize)
-      .offset(offset)) as Record<string, unknown>[];
-    const countRows = (await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(t)
-      .where(where)) as { count: number }[];
-    const count = countRows[0].count;
-    res.json(cfg.listResponse.parse({ data: rows.map(serializeRow), total: count, page, pageSize }));
-  });
-
-  router.post(`/${cfg.path}`, requirePermission(`${cfg.module}.create`), async (req, res): Promise<void> => {
-    const parsed = cfg.createBody.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: parsed.error.message });
-      return;
-    }
-    const data = parsed.data as Record<string, unknown>;
-    if (cfg.derive) cfg.derive(data);
-    const fin = cfg.financial;
-    const row = await db.transaction(async (tx) => {
-      const inserted = (await tx.insert(t).values(data).returning()) as Record<string, unknown>[];
-      const created = inserted[0];
-      const shouldPost = fin && (!fin.postOnStatus || created.status === fin.postOnStatus);
-      if (fin && shouldPost) {
-        const amount = created[fin.amountField];
-        if (typeof amount === "string" && amount.trim() !== "") {
-          const entryDate = (fin.dateField && typeof created[fin.dateField] === "string"
-            ? (created[fin.dateField] as string)
-            : null) ?? today();
-          await postAutomaticEntry(tx, {
-            companyId: created.companyId as string,
-            eventKey: fin.eventKey,
-            amount,
-            entryDate,
-            description: `${cfg.entity} ${created.code ?? created.id}`,
-            sourceType: cfg.entity,
-            sourceId: created.id as string,
-            userId: req.authUser?.id ?? null,
-          });
-        }
-      }
-      return created;
-    });
-    await recordAudit(req, { action: "create", entity: cfg.entity, entityId: row.id as string, newValue: row });
-    res.status(201).json(serializeRow(row));
-  });
-
-  router.get(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.view`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const rows = (await db
-      .select()
-      .from(t)
-      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
-    const row = rows[0];
-    if (!row) {
-      res.status(404).json({ error: `${cfg.entity} not found` });
-      return;
-    }
-    res.json(serializeRow(row));
-  });
-
-  router.patch(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.update`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const parsed = cfg.updateBody.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: parsed.error.message });
-      return;
-    }
-    const existingRows = (await db
-      .select()
-      .from(t)
-      .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
-    const existing = existingRows[0];
-    if (!existing) {
-      res.status(404).json({ error: `${cfg.entity} not found` });
-      return;
-    }
-    const update: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(parsed.data as Record<string, unknown>)) {
-      if (v !== undefined) update[k] = v;
-    }
-    const fin = cfg.financial;
-    const alreadyPosted = fin?.postOnStatus
-      ? POSTED_STATUSES.has(existing.status as string)
-      : Boolean(fin);
-    if (fin) {
-      if (cfg.derive && !alreadyPosted) {
-        // Recompute the derived total from the merged components while the row
-        // is still mutable (draft/under review).
-        const merged = { ...existing, ...update };
-        cfg.derive(merged);
-        update[fin.amountField] = merged[fin.amountField];
-      } else {
-        // Once the row has driven (or will drive) a ledger entry, both the
-        // posted amount and the components that derive it are immutable.
-        delete update[fin.amountField];
-        for (const f of fin.componentFields ?? []) delete update[f];
-      }
-    }
-    const newStatus = update.status as string | undefined;
-    const statusChanged = newStatus !== undefined && newStatus !== existing.status;
-    const transitionsToPosted =
-      fin?.postOnStatus !== undefined &&
-      newStatus === fin.postOnStatus &&
-      existing.status !== fin.postOnStatus;
-
-    const row = await db.transaction(async (tx) => {
-      let updated = existing;
-      if (Object.keys(update).length) {
-        const rows = (await tx.update(t).set(update).where(eq(t.id, id)).returning()) as Record<string, unknown>[];
-        updated = rows[0];
-      }
-      if (fin && transitionsToPosted) {
-        const amount = updated[fin.amountField];
-        if (typeof amount === "string" && amount.trim() !== "") {
-          const entryDate = (fin.dateField && typeof updated[fin.dateField] === "string"
-            ? (updated[fin.dateField] as string)
-            : null) ?? today();
-          await postAutomaticEntry(tx, {
-            companyId: updated.companyId as string,
-            eventKey: fin.eventKey,
-            amount,
-            entryDate,
-            description: `${cfg.entity} ${updated.code ?? updated.id}`,
-            sourceType: cfg.entity,
-            sourceId: updated.id as string,
-            userId: req.authUser?.id ?? null,
-          });
-        }
-      }
-      if (cfg.workflow && statusChanged) {
-        await tx.insert(cfg.workflow.logTable).values({
-          companyId: updated.companyId as string,
-          code: `CAL-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-          [cfg.workflow.sourceField]: id,
-          action: newStatus,
-          fromStatus: (existing.status as string) ?? null,
-          toStatus: newStatus,
-          actorName: req.authUser?.username ?? req.authUser?.id ?? null,
-          actionDate: today(),
-        });
-      }
-      return updated;
-    });
-    await recordAudit(req, {
-      action: "update",
-      entity: cfg.entity,
-      entityId: id,
-      oldValue: existing,
-      newValue: row,
-    });
-    res.json(serializeRow(row));
-  });
-
-  router.delete(`/${cfg.path}/:id`, requirePermission(`${cfg.module}.delete`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const fin = cfg.financial;
-    const row = await db.transaction(async (tx) => {
-      const existingRows = (await tx
-        .select()
-        .from(t)
-        .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Record<string, unknown>[];
-      const existing = existingRows[0];
-      if (!existing) return null;
-      await tx.update(t).set({ isDeleted: true, isActive: false }).where(eq(t.id, id));
-      if (fin) {
-        await reverseAutomaticEntriesForSource(tx, cfg.entity, id, req.authUser?.id ?? null);
-      }
-      return existing;
-    });
-    if (!row) {
-      res.status(404).json({ error: `${cfg.entity} not found` });
-      return;
-    }
-    await recordAudit(req, { action: "delete", entity: cfg.entity, entityId: id, oldValue: row });
-    res.json({ success: true });
-  });
-}
 
 const resources: CrudConfig[] = [
   // Contractors & contracts
@@ -394,7 +183,105 @@ const resources: CrudConfig[] = [
     search: ["code", "action"] },
 ];
 
-for (const cfg of resources) registerCrud(cfg);
+/**
+ * Construction-owned rules, expressed as the shared factory's generic hooks.
+ * Copied verbatim from the module's previous CRUD body — no accounting or
+ * workflow semantics were changed.
+ */
+function constructionHooks(cfg: CrudConfig) {
+  const fin = cfg.financial;
+  const wf = cfg.workflow;
+  return {
+    derive: cfg.derive,
+    prepareUpdate: (update: Record<string, unknown>, existing: Record<string, unknown>) => {
+      if (!fin) return;
+      const alreadyPosted = fin.postOnStatus
+        ? POSTED_STATUSES.has(existing.status as string)
+        : Boolean(fin);
+      if (cfg.derive && !alreadyPosted) {
+        const merged = { ...existing, ...update };
+        cfg.derive(merged);
+        update[fin.amountField] = merged[fin.amountField];
+      } else {
+        delete update[fin.amountField];
+        for (const f of fin.componentFields ?? []) delete update[f];
+      }
+    },
+    inCreateTx: async (tx: Tx, created: Record<string, unknown>, req: import("express").Request) => {
+      if (!fin || fin.postOnStatus) return;
+      const amount = created[fin.amountField];
+      if (typeof amount !== "string" || amount.trim() === "") return;
+      const entryDate =
+        (fin.dateField && typeof created[fin.dateField] === "string"
+          ? (created[fin.dateField] as string)
+          : null) ?? today();
+      await postAutomaticEntry(tx, {
+        companyId: created.companyId as string,
+        eventKey: fin.eventKey,
+        amount,
+        entryDate,
+        description: `${cfg.entity} ${created.code ?? created.id}`,
+        sourceType: cfg.entity,
+        sourceId: created.id as string,
+        userId: req.authUser?.id ?? null,
+      });
+    },
+    inUpdateTx: async (
+      tx: Tx,
+      updated: Record<string, unknown>,
+      existing: Record<string, unknown>,
+      req: import("express").Request,
+    ) => {
+      const newStatus = updated.status as string | undefined;
+      const statusChanged = newStatus !== undefined && newStatus !== existing.status;
+      const transitionsToPosted =
+        fin?.postOnStatus !== undefined &&
+        newStatus === fin.postOnStatus &&
+        existing.status !== fin.postOnStatus;
+      if (fin && transitionsToPosted) {
+        const amount = updated[fin.amountField];
+        if (typeof amount === "string" && amount.trim() !== "") {
+          const entryDate =
+            (fin.dateField && typeof updated[fin.dateField] === "string"
+              ? (updated[fin.dateField] as string)
+              : null) ?? today();
+          await postAutomaticEntry(tx, {
+            companyId: updated.companyId as string,
+            eventKey: fin.eventKey,
+            amount,
+            entryDate,
+            description: `${cfg.entity} ${updated.code ?? updated.id}`,
+            sourceType: cfg.entity,
+            sourceId: updated.id as string,
+            userId: req.authUser?.id ?? null,
+          });
+        }
+      }
+      if (wf && statusChanged) {
+        await tx.insert(wf.logTable).values({
+          companyId: updated.companyId as string,
+          code: `CAL-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          [wf.sourceField]: String(updated.id),
+          action: newStatus,
+          fromStatus: (existing.status as string) ?? null,
+          toStatus: newStatus,
+          actorName: req.authUser?.username ?? req.authUser?.id ?? null,
+          actionDate: today(),
+        });
+      }
+    },
+    inDeleteTx: async (tx: Tx, row: Record<string, unknown>, req: import("express").Request) => {
+      if (!fin) return;
+      await reverseAutomaticEntriesForSource(tx, cfg.entity, String(row.id), req.authUser?.id ?? null);
+    },
+  };
+}
+
+for (const cfg of resources) {
+  const { financial, workflow, derive, ...rest } = cfg;
+  void financial; void workflow; void derive;
+  registerCrud(router, { ...rest, getOne: true, hooks: constructionHooks(cfg) });
+}
 
 /* ------------------------------------------------------------------ */
 /* Construction execution dashboard KPIs                               */

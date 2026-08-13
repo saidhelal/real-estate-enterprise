@@ -4,6 +4,7 @@ import {
   useListCompanies,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Package, AlertTriangle, PackageX, TrendingUp } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
 import { BiBarChart } from "@/components/charts/BiBarChart";
@@ -29,10 +30,11 @@ export default function InventoryAnalyticsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("bi.inventory_analytics")}</h2>
-        <p className="text-muted-foreground">{t("bi.inventory_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("bi.inventory_analytics")}
+        description={t("bi.inventory_subtitle")}
+        bordered={false}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title={t("bi.total_items")} value={data?.totalItems} icon={Package} isLoading={isLoading} />

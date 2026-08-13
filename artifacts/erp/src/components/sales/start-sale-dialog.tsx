@@ -247,7 +247,7 @@ export function StartSaleDialog({
 
         {createdContract ? (
           <>
-            <div className="rounded-md border border-emerald-300 bg-emerald-50 p-2 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+            <div className="rounded-md border border-success-border/40 bg-success-subtle p-2 text-sm text-success-subtle-foreground">
               {ar
                 ? "تم بدء البيع. يمكنك الآن إدارة حالة الشيكات: تغيير الحالة، الاستبدال، وعرض السجل."
                 : "Sale started. You can now manage cheque status: change status, replace, and view history."}
@@ -336,7 +336,9 @@ export function StartSaleDialog({
           {/* Installments config */}
           {usesInstallments ? (
             <div className="space-y-3 rounded-md border p-3">
-              <div className="grid grid-cols-3 gap-3">
+              {/* Three selects side by side leave no room for their labels on a
+                  phone, so they stack until there is width for them. */}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="space-y-1.5">
                   <Label>{ar ? "التكرار" : "Frequency"}</Label>
                   <Select value={frequency} onValueChange={(v) => setFrequency(v as Frequency)}>

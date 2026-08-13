@@ -9,10 +9,13 @@ import {
   TableBody,
   TableCell,
   TableFooter,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -72,7 +75,7 @@ export default function TrialBalancePage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.trial_balance")}</h2>
+        <PageHeader title={t("nav.trial_balance")} bordered={false} />
         <div className="flex items-center gap-3">
           {data && (
             <Badge variant={balanced ? "default" : "destructive"}>
@@ -99,30 +102,30 @@ export default function TrialBalancePage() {
         </div>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("common.code")}</TableHead>
               <TableHead>{t("common.name")}</TableHead>
               <TableHead>{t("acc.type")}</TableHead>
-              <TableHead className="text-right">{t("acc.debit")}</TableHead>
-              <TableHead className="text-right">{t("acc.credit")}</TableHead>
+              <TableHead className="text-end">{t("acc.debit")}</TableHead>
+              <TableHead className="text-end">{t("acc.credit")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow><TableCell colSpan={5} className="text-center h-24">{t("acc.no_data")}</TableCell></TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("acc.no_data")} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.accountId}>
                   <TableCell className="font-medium">{r.code}</TableCell>
                   <TableCell>{language === "ar" ? r.nameAr : r.name}</TableCell>
                   <TableCell>{enumLabel(r.type, language)}</TableCell>
-                  <TableCell className="text-right">{r.debit}</TableCell>
-                  <TableCell className="text-right">{r.credit}</TableCell>
+                  <TableCell className="text-end">{r.debit}</TableCell>
+                  <TableCell className="text-end">{r.credit}</TableCell>
                 </TableRow>
               ))
             )}
@@ -131,13 +134,13 @@ export default function TrialBalancePage() {
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={3} className="font-semibold">{t("common.total")}</TableCell>
-                <TableCell className="text-right font-semibold">{data.totalDebit}</TableCell>
-                <TableCell className="text-right font-semibold">{data.totalCredit}</TableCell>
+                <TableCell className="text-end font-semibold">{data.totalDebit}</TableCell>
+                <TableCell className="text-end font-semibold">{data.totalCredit}</TableCell>
               </TableRow>
             </TableFooter>
           )}
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

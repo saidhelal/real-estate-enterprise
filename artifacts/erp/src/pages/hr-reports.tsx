@@ -20,6 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
@@ -45,17 +47,17 @@ function GroupTable({
       <TableHeader>
         <TableRow>
           <TableHead>{keyHeader}</TableHead>
-          <TableHead className="text-right">{countHeader}</TableHead>
+          <TableHead className="text-end">{countHeader}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows.length === 0 ? (
-          <TableRow><TableCell colSpan={2} className="text-center h-24">{noData}</TableCell></TableRow>
+          <TableState colSpan={2} isEmpty emptyTitle={noData} />
         ) : (
           rows.map((r) => (
             <TableRow key={r.key ?? "none"}>
               <TableCell>{render(r.key)}</TableCell>
-              <TableCell className="text-right">{r.count}</TableCell>
+              <TableCell className="text-end">{r.count}</TableCell>
             </TableRow>
           ))
         )}
@@ -97,10 +99,11 @@ export default function HrReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("hr.reports")}</h2>
-        <p className="text-muted-foreground">{t("hr.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("hr.reports")}
+        description={t("hr.reports_subtitle")}
+        bordered={false}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
@@ -157,15 +160,15 @@ export default function HrReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("hr.total_earnings")}</TableCell>
-                  <TableCell className="text-right">{payrollReport?.totalEarnings ?? "0"}</TableCell>
+                  <TableCell className="text-end">{payrollReport?.totalEarnings ?? "0"}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("hr.total_deductions")}</TableCell>
-                  <TableCell className="text-right">{payrollReport?.totalDeductions ?? "0"}</TableCell>
+                  <TableCell className="text-end">{payrollReport?.totalDeductions ?? "0"}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("hr.total_net")}</TableCell>
-                  <TableCell className="text-right">{payrollReport?.totalNet ?? "0"}</TableCell>
+                  <TableCell className="text-end">{payrollReport?.totalNet ?? "0"}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -181,15 +184,15 @@ export default function HrReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("hr.hires")}</TableCell>
-                  <TableCell className="text-right">{turnoverReport?.hires ?? 0}</TableCell>
+                  <TableCell className="text-end">{turnoverReport?.hires ?? 0}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("hr.terminations")}</TableCell>
-                  <TableCell className="text-right">{turnoverReport?.terminations ?? 0}</TableCell>
+                  <TableCell className="text-end">{turnoverReport?.terminations ?? 0}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("hr.active_employees")}</TableCell>
-                  <TableCell className="text-right">{turnoverReport?.active ?? 0}</TableCell>
+                  <TableCell className="text-end">{turnoverReport?.active ?? 0}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

@@ -2,6 +2,30 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * The frame a data table sits in.
+ *
+ * Twenty-five screens had each written `rounded-md border bg-card` around their
+ * table, plus the ResourceManager's own copy — so the radius, the border and
+ * whether a toolbar could sit flush at the top were decided twenty-six times.
+ * It lives here rather than in a component of its own because a table's frame
+ * is part of how a table is presented, not a separate thing.
+ *
+ * `overflow-hidden` is the point: it clips a toolbar or a pager placed inside
+ * so they meet the rounded corners instead of poking through them.
+ */
+const TableFrame = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("overflow-hidden rounded-md border bg-card", className)}
+    {...props}
+  />
+))
+TableFrame.displayName = "TableFrame"
+
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
@@ -73,7 +97,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-9 px-3 text-left align-middle text-xs font-semibold uppercase tracking-wide text-muted-foreground/80 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "h-9 px-3 text-start align-middle text-xs font-semibold uppercase tracking-wide text-muted-foreground/80 [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props}
@@ -88,7 +112,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "px-3 py-1.5 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "px-3 py-1.5 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props}
@@ -110,6 +134,7 @@ TableCaption.displayName = "TableCaption"
 
 export {
   Table,
+  TableFrame,
   TableHeader,
   TableBody,
   TableFooter,

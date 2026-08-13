@@ -133,7 +133,7 @@ export function PaymentChequeManager({
           </DialogHeader>
 
           {financeOnly ? (
-            <div className="flex items-center gap-2 rounded-md border border-amber-300 bg-amber-50 p-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+            <div className="flex items-center gap-2 rounded-md border border-warning-border/40 bg-warning-subtle p-2 text-sm text-warning-subtle-foreground">
               <Lock className="h-4 w-4" />
               {ar
                 ? "العقد مُفعّل — إضافة الشيكات والدفعات المستقبلية مقتصرة على المالية."

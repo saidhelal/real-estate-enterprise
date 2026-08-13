@@ -196,8 +196,8 @@ export function EnterpriseAssistant() {
 
           {noAccess ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
-                <ShieldAlert className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-warning-subtle">
+                <ShieldAlert className="h-6 w-6 text-warning-subtle-foreground" />
               </div>
               <h3 className="text-base font-semibold">{t("ai.no_access.title")}</h3>
               <p className="max-w-xs text-sm text-muted-foreground">{t("ai.no_access.body")}</p>

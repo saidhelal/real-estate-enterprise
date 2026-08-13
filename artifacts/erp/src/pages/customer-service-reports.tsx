@@ -13,6 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -151,10 +153,11 @@ export default function CustomerServiceReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("cs.reports")}</h2>
-        <p className="text-muted-foreground">{t("cs.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("cs.reports")}
+        description={t("cs.reports_subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-4">
@@ -175,7 +178,7 @@ export default function CustomerServiceReportsPage() {
             </TableHeader>
             <TableBody>
               {policyRows.length === 0 ? (
-                <TableRow><TableCell colSpan={6} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                <TableState colSpan={6} isEmpty emptyTitle={t("lb.no_data")} />
               ) : (
                 policyRows.map((r) => (
                   <TableRow key={r.code}>
@@ -210,7 +213,7 @@ export default function CustomerServiceReportsPage() {
             </TableHeader>
             <TableBody>
               {escalationRows.length === 0 ? (
-                <TableRow><TableCell colSpan={4} className="text-center h-24">{t("lb.no_data")}</TableCell></TableRow>
+                <TableState colSpan={4} isEmpty emptyTitle={t("lb.no_data")} />
               ) : (
                 escalationRows.map((r) => (
                   <TableRow key={r.code}>

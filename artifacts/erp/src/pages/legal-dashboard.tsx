@@ -11,23 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
 type Group = { key?: string | null; count: number };
 
@@ -55,17 +45,17 @@ function GroupCard({
           <TableHeader>
             <TableRow>
               <TableHead>{keyHeader}</TableHead>
-              <TableHead className="text-right">{countHeader}</TableHead>
+              <TableHead className="text-end">{countHeader}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.length === 0 ? (
-              <TableRow><TableCell colSpan={2} className="text-center h-24">{noData}</TableCell></TableRow>
+              <TableState colSpan={2} isEmpty emptyTitle={noData} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.key ?? "none"}>
                   <TableCell><Badge variant="secondary">{enumLabel(r.key, language)}</Badge></TableCell>
-                  <TableCell className="text-right">{r.count}</TableCell>
+                  <TableCell className="text-end">{r.count}</TableCell>
                 </TableRow>
               ))
             )}
@@ -99,16 +89,16 @@ export default function LegalDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold tracking-tight">{t("nav.legal_dashboard")}</h2>
+      <PageHeader title={t("nav.legal_dashboard")} bordered={false} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label={t("legal.contracts_count")} value={data.contractsCount} />
-        <Stat label={t("legal.active_contracts")} value={data.activeContracts} />
-        <Stat label={t("legal.expiring_soon")} value={data.expiringSoon} />
-        <Stat label={t("legal.cases_count")} value={data.casesCount} />
-        <Stat label={t("legal.open_cases")} value={data.openCases} />
-        <Stat label={t("legal.pending_notices")} value={data.pendingNotices} />
-        <Stat label={t("legal.total_claim_amount")} value={data.totalClaimAmount} />
+        <KpiCard label={t("legal.contracts_count")} value={data.contractsCount} />
+        <KpiCard label={t("legal.active_contracts")} value={data.activeContracts} />
+        <KpiCard label={t("legal.expiring_soon")} value={data.expiringSoon} />
+        <KpiCard label={t("legal.cases_count")} value={data.casesCount} />
+        <KpiCard label={t("legal.open_cases")} value={data.openCases} />
+        <KpiCard label={t("legal.pending_notices")} value={data.pendingNotices} />
+        <KpiCard label={t("legal.total_claim_amount")} value={data.totalClaimAmount} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

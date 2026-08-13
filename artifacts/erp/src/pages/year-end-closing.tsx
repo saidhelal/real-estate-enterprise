@@ -14,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -90,9 +91,7 @@ export default function YearEndClosingPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">{t("nav.year_end_closing")}</h1>
-      </div>
+      <PageHeader title={t("nav.year_end_closing")} bordered={false} />
 
       <div className="rounded-md border">
         <Table>

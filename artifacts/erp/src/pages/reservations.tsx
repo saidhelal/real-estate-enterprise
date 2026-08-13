@@ -133,7 +133,7 @@ export default function ReservationsPage() {
             onClick={() => handleConvert(r)}
             title={language === "ar" ? "تحويل إلى عقد" : "Convert to contract"}
           >
-            <FileSignature className="h-4 w-4 mr-1" />
+            <FileSignature className="h-4 w-4 me-1" />
             {language === "ar" ? "تحويل" : "Convert"}
           </Button>
         ) : null

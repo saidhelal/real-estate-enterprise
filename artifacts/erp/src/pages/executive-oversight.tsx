@@ -4,8 +4,11 @@ import {
   useListCompanies,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { TONE_TEXT, type StatusTone } from "@/lib/design-tokens";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -61,16 +64,19 @@ const DEPT_ICONS: Record<string, LucideIcon> = {
   insurance: ShieldCheck,
 };
 
-const TONE_TEXT: Record<string, string> = {
-  warning: "text-amber-600 dark:text-amber-400",
-  danger: "text-red-600 dark:text-red-400",
-  success: "text-emerald-600 dark:text-emerald-400",
+// The oversight API speaks in warning/danger/success; the design system speaks
+// in warning/error/success. Translate once here, at the boundary, rather than
+// letting the API's vocabulary reach into the styling.
+const TONE_CLASS: Record<string, string> = {
+  warning: TONE_TEXT.warning,
+  danger: TONE_TEXT.error,
+  success: TONE_TEXT.success,
 };
 
-const STATUS_BADGE: Record<string, string> = {
-  healthy: "border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  attention: "border-transparent bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  critical: "border-transparent bg-red-500/15 text-red-700 dark:text-red-400",
+const DEPARTMENT_STATUS_TONE: Record<string, StatusTone> = {
+  healthy: "success",
+  attention: "warning",
+  critical: "error",
 };
 
 export default function ExecutiveOversightPage() {
@@ -102,17 +108,19 @@ export default function ExecutiveOversightPage() {
 
   const dtFmt = new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" });
 
-  // Compact KPI tile used across the section grids.
+  // Compact KPI tile used across the section grids. Delegates to the canonical
+  // metric tile so an oversight figure and a dashboard figure are the same
+  // object; only the tone translation is local to this screen.
   const KpiTile = ({ kpi, scope }: { kpi: Kpi; scope: string }) => (
-    <div
-      className="rounded-lg border bg-card p-4"
+    <KpiCard
       data-testid={`kpi-${scope}-${kpi.key}`}
-    >
-      <div className="text-xs text-muted-foreground">{t(`eo.kpi.${kpi.key}`)}</div>
-      <div className={`mt-1 text-xl font-bold tabular-nums ${kpi.tone ? TONE_TEXT[kpi.tone] ?? "" : ""}`}>
-        {formatValue(kpi.value, kpi.kind)}
-      </div>
-    </div>
+      label={t(`eo.kpi.${kpi.key}`)}
+      value={
+        <span className={kpi.tone ? TONE_CLASS[kpi.tone] ?? "" : ""}>
+          {formatValue(kpi.value, kpi.kind)}
+        </span>
+      }
+    />
   );
 
   const KpiGrid = ({ kpis, scope }: { kpis: Kpi[]; scope: string }) => (
@@ -163,10 +171,13 @@ export default function ExecutiveOversightPage() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("eo.title")}</h2>
-          <p className="text-muted-foreground">{t("eo.subtitle")}</p>
+          <PageHeader
+            title={t("eo.title")}
+            description={t("eo.subtitle")}
+            bordered={false}
+          />
           {data?.scope?.level === "department" ? (
-            <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">{t("eo.scope.department_note")}</p>
+            <p className={`mt-1 text-xs ${TONE_CLASS.warning}`}>{t("eo.scope.department_note")}</p>
           ) : null}
         </div>
         <div className="flex items-center gap-3">
@@ -258,9 +269,12 @@ export default function ExecutiveOversightPage() {
                           </span>
                           {t(`eo.dept.${dept.key}`)}
                         </span>
-                        <Badge className={STATUS_BADGE[dept.status] ?? ""} data-testid={`status-${dept.key}`}>
-                          {t(`eo.status.${dept.status}`)}
-                        </Badge>
+                        <StatusBadge
+                          tone={DEPARTMENT_STATUS_TONE[dept.status] ?? "neutral"}
+                          label={t(`eo.status.${dept.status}`)}
+                          data-testid={`status-${dept.key}`}
+                          withDot
+                        />
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
@@ -277,7 +291,7 @@ export default function ExecutiveOversightPage() {
                         </div>
                         <div className="rounded-md bg-muted/50 p-2">
                           <div
-                            className={`text-base font-bold tabular-nums ${dept.overdueTasks > 0 ? TONE_TEXT.warning : ""}`}
+                            className={`text-base font-bold tabular-nums ${dept.overdueTasks > 0 ? TONE_CLASS.warning : ""}`}
                           >
                             {countFmt.format(dept.overdueTasks)}
                           </div>
@@ -292,7 +306,7 @@ export default function ExecutiveOversightPage() {
                             data-testid={`kpi-${dept.key}-${kpi.key}`}
                           >
                             <dt className="text-sm text-muted-foreground">{t(`eo.kpi.${kpi.key}`)}</dt>
-                            <dd className={`text-sm font-semibold tabular-nums ${kpi.tone ? TONE_TEXT[kpi.tone] ?? "" : ""}`}>
+                            <dd className={`text-sm font-semibold tabular-nums ${kpi.tone ? TONE_CLASS[kpi.tone] ?? "" : ""}`}>
                               {formatValue(kpi.value, kpi.kind)}
                             </dd>
                           </div>
@@ -326,7 +340,7 @@ export default function ExecutiveOversightPage() {
                         <TableCell className="font-medium">{p.name}</TableCell>
                         <TableCell>{t(`eo.projectStatus.${p.status}`)}</TableCell>
                         <TableCell>
-                          <span className={p.tone ? TONE_TEXT[p.tone] ?? "" : ""}>{t(`eo.issue.${p.issue}`)}</span>
+                          <span className={p.tone ? TONE_CLASS[p.tone] ?? "" : ""}>{t(`eo.issue.${p.issue}`)}</span>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -360,7 +374,7 @@ export default function ExecutiveOversightPage() {
           <TabsContent value="alerts">
             <SectionCard title={t("eo.section.alerts")} icon={AlertTriangle}>
               {data.criticalAlerts.length === 0 ? (
-                <p className="py-6 text-center text-sm text-emerald-600 dark:text-emerald-400">
+                <p className={`py-6 text-center text-sm ${TONE_CLASS.success}`}>
                   {t("eo.alerts.none")}
                 </p>
               ) : (
@@ -373,7 +387,7 @@ export default function ExecutiveOversightPage() {
                     >
                       <div className="flex items-center gap-3">
                         <AlertTriangle
-                          className={`h-4 w-4 ${a.severity === "danger" ? TONE_TEXT.danger : TONE_TEXT.warning}`}
+                          className={`h-4 w-4 ${a.severity === "danger" ? TONE_CLASS.danger : TONE_CLASS.warning}`}
                         />
                         <div>
                           <div className="text-sm font-medium">{t(`eo.alert.${a.key}`)}</div>
@@ -382,7 +396,7 @@ export default function ExecutiveOversightPage() {
                       </div>
                       <div className="text-end">
                         <div
-                          className={`text-sm font-bold tabular-nums ${a.severity === "danger" ? TONE_TEXT.danger : TONE_TEXT.warning}`}
+                          className={`text-sm font-bold tabular-nums ${a.severity === "danger" ? TONE_CLASS.danger : TONE_CLASS.warning}`}
                         >
                           {a.value != null && a.kind
                             ? formatValue(a.value, a.kind)

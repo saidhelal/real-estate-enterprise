@@ -99,18 +99,36 @@ export function trafficLight(c: SlaContract, now: number = Date.now()): TrafficL
   return "green";
 }
 
+/**
+ * The four SLA levels, drawn from the theme's status tokens.
+ *
+ * The scale has one more step than the token set does, because `orange` means
+ * "under six hours left" and needs to read as more urgent than `yellow` without
+ * yet claiming the breach that `red` reports. Rather than introduce a fifth
+ * colour that nothing else in the app uses, `orange` is a lighter destructive —
+ * so the ladder still runs success → warning → breach-imminent → breached, and
+ * it still recolours correctly when the theme changes.
+ */
 export const TRAFFIC_DOT: Record<TrafficLight, string> = {
-  green: "bg-emerald-500",
-  yellow: "bg-yellow-400",
-  orange: "bg-orange-500",
-  red: "bg-red-500",
+  green: "bg-success",
+  yellow: "bg-warning",
+  orange: "bg-destructive/70",
+  red: "bg-destructive",
 };
 
 export const TRAFFIC_RING: Record<TrafficLight, string> = {
-  green: "border-emerald-500/30",
-  yellow: "border-yellow-400/40",
-  orange: "border-orange-500/40",
-  red: "border-red-500/50",
+  green: "border-success-border/40",
+  yellow: "border-warning-border/50",
+  orange: "border-destructive-border/40",
+  red: "border-destructive-border/60",
+};
+
+/** Text/icon tint for the same four levels, for use on the page background. */
+export const TRAFFIC_TEXT: Record<TrafficLight, string> = {
+  green: "text-success-subtle-foreground",
+  yellow: "text-warning-subtle-foreground",
+  orange: "text-destructive-subtle-foreground/80",
+  red: "text-destructive-subtle-foreground",
 };
 
 /** Format an elapsed duration (since `fromISO`) as days / hours / minutes. */

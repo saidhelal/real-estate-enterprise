@@ -77,7 +77,7 @@ export default function ChangePasswordPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {user?.mustChangePassword && (
-              <div className="bg-amber-500/10 text-amber-700 dark:text-amber-400 px-3 py-2 rounded text-sm font-medium">
+              <div className="bg-warning-subtle text-warning-subtle-foreground px-3 py-2 rounded text-sm font-medium">
                 {t("change_password.forced_notice")}
               </div>
             )}

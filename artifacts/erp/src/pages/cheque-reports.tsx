@@ -8,6 +8,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,8 +21,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Label } from "@/components/ui/label";
-import { enumLabel } from "@/lib/enums";
+import { enumLabel, statusTone } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 
 const STATUS_FILTERS = [
@@ -35,13 +38,6 @@ const STATUS_FILTERS = [
 ] as const;
 
 const DIRECTION_FILTERS = ["all", "incoming", "outgoing"] as const;
-
-function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "collected") return "default";
-  if (status === "returned" || status === "cancelled" || status === "replaced") return "destructive";
-  if (status === "under_collection") return "secondary";
-  return "outline";
-}
 
 export default function ChequeReportsPage() {
   const { language, t } = useLanguage();
@@ -83,10 +79,11 @@ export default function ChequeReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.cheque_reports")}</h2>
-        <p className="text-sm text-muted-foreground">{t("acc.cheque_reports_desc")}</p>
-      </div>
+      <PageHeader
+        title={t("nav.cheque_reports")}
+        description={t("acc.cheque_reports_desc")}
+        bordered={false}
+      />
 
       <div className="flex flex-wrap items-end gap-4">
         <div className="space-y-2">
@@ -125,7 +122,7 @@ export default function ChequeReportsPage() {
         </div>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -163,14 +160,14 @@ export default function ChequeReportsPage() {
                   <TableCell>{r.amount ?? "-"}</TableCell>
                   <TableCell>{r.dueDate ?? "-"}</TableCell>
                   <TableCell>
-                    <Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge>
+                    <StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot />
                   </TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

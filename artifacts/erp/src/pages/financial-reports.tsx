@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { useLanguage } from "@/lib/language-provider";
 
 interface ReportLink {
@@ -27,10 +28,11 @@ export default function FinancialReportsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">{t("nav.financial_reports")}</h1>
-        <p className="text-muted-foreground">{t("acc.reports_hub_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("nav.financial_reports")}
+        description={t("acc.reports_hub_subtitle")}
+        bordered={false}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {REPORTS.map((r) => (

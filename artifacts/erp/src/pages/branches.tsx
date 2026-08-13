@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListBranches, 
@@ -15,14 +16,16 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -114,7 +117,7 @@ export default function BranchesPage() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl font-bold tracking-tight">{t("branches.title")}</h2>
+          <PageHeader title={t("branches.title")} bordered={false} />
           <Select value={selectedCompany} onValueChange={setSelectedCompany}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder={t("branches.filter_company")} />
@@ -130,7 +133,7 @@ export default function BranchesPage() {
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("branches.create")}
             </Button>
           </DialogTrigger>
@@ -143,7 +146,7 @@ export default function BranchesPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -152,18 +155,14 @@ export default function BranchesPage() {
               <TableHead>{t("common.company")}</TableHead>
               <TableHead>{t("common.manager")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={6} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : branches?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={6} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               branches?.map((branch) => (
                 <TableRow key={branch.id}>
@@ -176,7 +175,7 @@ export default function BranchesPage() {
                       {branch.isActive ? t("common.active") : t("common.inactive")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-end space-x-2">
                     <DocumentsRowAction moduleKey="branches" sourceId={branch.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingBranch(branch)}>
                       <Pencil className="h-4 w-4" />
@@ -190,7 +189,7 @@ export default function BranchesPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={!!editingBranch} onOpenChange={(open) => !open && setEditingBranch(null)}>
         <DialogContent>

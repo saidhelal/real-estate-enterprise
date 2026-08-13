@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   useListChangeRequests,
   useApproveChangeRequest,
@@ -18,10 +19,12 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import {
   Dialog,
   DialogContent,
@@ -111,10 +114,11 @@ export default function ApprovalsPage() {
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="flex flex-col sm:flex-row justify-between gap-3 items-start sm:items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("approvals.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("approvals.subtitle")}</p>
-        </div>
+        <PageHeader
+          title={t("approvals.title")}
+          description={t("approvals.subtitle")}
+          bordered={false}
+        />
         <Select
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as ListChangeRequestsStatus)}
@@ -132,7 +136,7 @@ export default function ApprovalsPage() {
         </Select>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -142,22 +146,14 @@ export default function ApprovalsPage() {
               <TableHead>{t("approvals.col.requested_by")}</TableHead>
               <TableHead>{t("approvals.col.requested_at")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center h-24">
-                  {t("common.loading")}
-                </TableCell>
-              </TableRow>
+              <TableState colSpan={7} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center h-24">
-                  {t("common.no_results")}
-                </TableCell>
-              </TableRow>
+              <TableState colSpan={7} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               rows.map((req) => (
                 <TableRow key={req.id}>
@@ -178,7 +174,7 @@ export default function ApprovalsPage() {
                       {t(`approvals.status.${req.status}`)}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right space-x-1 whitespace-nowrap">
+                  <TableCell className="text-end space-x-1 whitespace-nowrap">
                     <Button variant="ghost" size="icon" onClick={() => setViewing(req)}>
                       <Eye className="h-4 w-4" />
                     </Button>
@@ -187,7 +183,7 @@ export default function ApprovalsPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-green-600"
+                          className="text-success-subtle-foreground"
                           onClick={() => {
                             setReviewNotes("");
                             setActing({ req, mode: "approve" });
@@ -214,7 +210,7 @@ export default function ApprovalsPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={!!viewing} onOpenChange={(open) => !open && setViewing(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -246,7 +242,7 @@ export default function ApprovalsPage() {
                   </p>
                   <pre
                     dir="ltr"
-                    className="rounded bg-muted p-2 text-xs overflow-auto max-h-48 text-left"
+                    className="rounded bg-muted p-2 text-xs overflow-auto max-h-48 text-start"
                   >
                     {JSON.stringify(viewing.payload, null, 2)}
                   </pre>

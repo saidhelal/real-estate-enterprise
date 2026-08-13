@@ -14,17 +14,20 @@ import {
   useListAccounts,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +46,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useToast } from "@/hooks/use-toast";
-import { enumLabel } from "@/lib/enums";
+import { enumLabel, statusTone } from "@/lib/enums";
 
 interface LineDraft {
   description: string;
@@ -56,13 +59,6 @@ interface LineDraft {
 const emptyLine = (): LineDraft => ({ description: "", quantity: "1", unitPrice: "", taxCodeId: "", expenseAccountId: "" });
 const today = () => new Date().toISOString().slice(0, 10);
 const NONE = "__none__";
-
-function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "posted" || status === "paid") return "default";
-  if (status === "reversed" || status === "cancelled") return "destructive";
-  if (status === "partially_paid") return "secondary";
-  return "outline";
-}
 
 export default function SupplierInvoicesPage() {
   const { language, t } = useLanguage();
@@ -193,11 +189,11 @@ export default function SupplierInvoicesPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.supplier_invoices")}</h2>
+        <PageHeader title={t("nav.supplier_invoices")} bordered={false} />
         <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("inv.new_supplier_invoice")}
             </Button>
           </DialogTrigger>
@@ -253,7 +249,7 @@ export default function SupplierInvoicesPage() {
                         <TableHead className="w-24">{t("inv.unit_price")}</TableHead>
                         <TableHead className="w-32">{t("tax.code")}</TableHead>
                         <TableHead className="w-36">{t("inv.expense_account")}</TableHead>
-                        <TableHead className="w-24 text-right">{t("inv.line_total")}</TableHead>
+                        <TableHead className="w-24 text-end">{t("inv.line_total")}</TableHead>
                         <TableHead className="w-10" />
                       </TableRow>
                     </TableHeader>
@@ -291,7 +287,7 @@ export default function SupplierInvoicesPage() {
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell className="text-right">{(lineSubtotal(line) + lineTax(line)).toFixed(2)}</TableCell>
+                          <TableCell className="text-end">{(lineSubtotal(line) + lineTax(line)).toFixed(2)}</TableCell>
                           <TableCell>
                             <Button variant="ghost" size="icon" className="text-destructive" disabled={lines.length <= 1} onClick={() => setLines((prev) => prev.filter((_, idx) => idx !== i))}>
                               <Trash2 className="h-4 w-4" />
@@ -303,7 +299,7 @@ export default function SupplierInvoicesPage() {
                   </Table>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => setLines((prev) => [...prev, emptyLine()])}>
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="me-2 h-4 w-4" />
                   {t("inv.add_line")}
                 </Button>
               </div>
@@ -323,34 +319,34 @@ export default function SupplierInvoicesPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("common.code")}</TableHead>
               <TableHead>{t("inv.supplier")}</TableHead>
               <TableHead>{t("inv.invoice_date")}</TableHead>
-              <TableHead className="text-right">{t("common.total")}</TableHead>
-              <TableHead className="text-right">{t("inv.paid")}</TableHead>
+              <TableHead className="text-end">{t("common.total")}</TableHead>
+              <TableHead className="text-end">{t("inv.paid")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={7} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+              <TableState colSpan={7} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow><TableCell colSpan={7} className="text-center h-24">{t("common.no_results")}</TableCell></TableRow>
+              <TableState colSpan={7} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-medium">{r.number}</TableCell>
                   <TableCell>{supplierName(r.supplierId)}</TableCell>
                   <TableCell>{r.invoiceDate}</TableCell>
-                  <TableCell className="text-right">{r.total}</TableCell>
-                  <TableCell className="text-right">{r.paidAmount}</TableCell>
-                  <TableCell><Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge></TableCell>
-                  <TableCell className="text-right space-x-2 whitespace-nowrap">
+                  <TableCell className="text-end">{r.total}</TableCell>
+                  <TableCell className="text-end">{r.paidAmount}</TableCell>
+                  <TableCell><StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot /></TableCell>
+                  <TableCell className="text-end space-x-2 whitespace-nowrap">
                     <DocumentsRowAction moduleKey="supplier-invoices" sourceId={r.id} />
                     {r.status === "draft" && (
                       <>
@@ -368,7 +364,7 @@ export default function SupplierInvoicesPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">{t("common.total")}: {total}</p>

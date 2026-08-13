@@ -1,15 +1,18 @@
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { 
   useListLoginHistory
 } from "@workspace/api-client-react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
@@ -21,10 +24,10 @@ export default function LoginHistoryPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("login_history.title")}</h2>
+        <PageHeader title={t("login_history.title")} bordered={false} />
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -37,13 +40,9 @@ export default function LoginHistoryPage() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : history?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               history?.map((entry) => (
                 <TableRow key={entry.id}>
@@ -65,7 +64,7 @@ export default function LoginHistoryPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

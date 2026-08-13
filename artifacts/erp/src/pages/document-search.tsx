@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -203,10 +204,11 @@ export default function DocumentSearchPage() {
 
   return (
     <div className="space-y-6 p-1">
-      <div>
-        <h1 className="text-2xl font-bold">{t("edms.advanced_search.title")}</h1>
-        <p className="text-sm text-muted-foreground">{t("edms.advanced_search.subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("edms.advanced_search.title")}
+        description={t("edms.advanced_search.subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader>
@@ -301,7 +303,7 @@ export default function DocumentSearchPage() {
                 <TableHead>{t("edms.type")}</TableHead>
                 <TableHead>{t("edms.classification")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
-                <TableHead className="text-right">{t("common.actions")}</TableHead>
+                <TableHead className="text-end">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -333,7 +335,7 @@ export default function DocumentSearchPage() {
                     <TableCell>
                       <Badge variant="secondary">{enumLabel(d.status, language)}</Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-end">
                       <Button variant="outline" size="sm" asChild>
                         <Link href={`/documents/${d.id}`}>{t("common.view")}</Link>
                       </Button>

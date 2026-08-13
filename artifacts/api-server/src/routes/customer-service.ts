@@ -275,83 +275,10 @@ interface CrudSchema {
     | { success: false; error: { message: string } };
 }
 
-function registerCrud(opts: {
-  base: string;
-  module: string;
-  entity: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  table: any;
-  searchCols: string[];
-  filterCols: string[];
-  listResp: CrudSchema;
-  createBody: CrudSchema;
-  getResp: CrudSchema;
-  updateBody: CrudSchema;
-}): void {
-  const { base, module, entity, table, searchCols, filterCols, listResp, createBody, getResp, updateBody } = opts;
-  type Row = Record<string, unknown>;
+import { registerCrud } from "../lib/register-crud";
 
-  router.get(base, requirePermission(`${module}.view`), async (req, res): Promise<void> => {
-    const q = req.query as Record<string, unknown>;
-    const { page, pageSize, offset } = pageParams(q);
-    const filters: SQL[] = [eq(table.isDeleted, false)];
-    const search = qStr(q, "search");
-    if (search) {
-      const s = or(...searchCols.map((c) => ilike(table[c], `%${search}%`)));
-      if (s) filters.push(s);
-    }
-    for (const c of filterCols) {
-      const v = qStr(q, c);
-      if (v) filters.push(eq(table[c], v));
-    }
-    const where = and(...filters);
-    const countRes = (await db.select({ count: sql<number>`count(*)::int` }).from(table).where(where)) as { count: number }[];
-    const rows = (await db.select().from(table).where(where).orderBy(desc(table.createdAt)).limit(pageSize).offset(offset)) as Row[];
-    res.json(listResp.parse({ data: rows.map(serializeRow), total: countRes[0].count, page, pageSize }));
-  });
 
-  router.post(base, requirePermission(`${module}.create`), async (req, res): Promise<void> => {
-    const parsed = createBody.safeParse(req.body);
-    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-    const inserted = (await db.insert(table).values({ ...parsed.data }).returning()) as Row[];
-    const row = inserted[0];
-    await recordAudit(req, { action: "create", entity, entityId: String(row.id), newValue: row });
-    res.status(201).json(getResp.parse(serializeRow(row)));
-  });
-
-  router.get(`${base}/:id`, requirePermission(`${module}.view`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const found = (await db.select().from(table).where(and(eq(table.id, id), eq(table.isDeleted, false)))) as Row[];
-    const row = found[0];
-    if (!row) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(getResp.parse(serializeRow(row)));
-  });
-
-  router.patch(`${base}/:id`, requirePermission(`${module}.update`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const parsed = updateBody.safeParse(req.body);
-    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-    const found = (await db.select().from(table).where(and(eq(table.id, id), eq(table.isDeleted, false)))) as Row[];
-    const existing = found[0];
-    if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-    const update = { ...parsed.data };
-    const row = Object.keys(update).length
-      ? ((await db.update(table).set(update).where(eq(table.id, id)).returning()) as Row[])[0]
-      : existing;
-    await recordAudit(req, { action: "update", entity, entityId: id, oldValue: existing, newValue: row });
-    res.json(getResp.parse(serializeRow(row)));
-  });
-
-  router.delete(`${base}/:id`, requirePermission(`${module}.delete`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const updated = (await db.update(table).set({ isDeleted: true, isActive: false }).where(and(eq(table.id, id), eq(table.isDeleted, false))).returning()) as Row[];
-    if (!updated[0]) { res.status(404).json({ error: "Not found" }); return; }
-    await recordAudit(req, { action: "delete", entity, entityId: id });
-    res.json({ success: true });
-  });
-}
-
-registerCrud({
+registerCrud(router, {
   base: "/complaints",
   module: "complaints",
   entity: "complaint",
@@ -364,7 +291,7 @@ registerCrud({
   updateBody: UpdateCsComplaintBody,
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/maintenance-requests",
   module: "maintenanceRequests",
   entity: "maintenanceRequest",
@@ -377,7 +304,7 @@ registerCrud({
   updateBody: UpdateCsMaintenanceRequestBody,
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/support-tickets",
   module: "supportTickets",
   entity: "supportTicket",
@@ -390,7 +317,7 @@ registerCrud({
   updateBody: UpdateCsSupportTicketBody,
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/call-logs",
   module: "callLogs",
   entity: "callLog",
@@ -403,7 +330,7 @@ registerCrud({
   updateBody: UpdateCallLogBody,
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/work-orders",
   module: "workOrders",
   entity: "workOrder",
@@ -416,7 +343,7 @@ registerCrud({
   updateBody: UpdateWorkOrderBody,
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/customer-satisfaction-surveys",
   module: "customerSatisfactionSurveys",
   entity: "customerSatisfactionSurvey",

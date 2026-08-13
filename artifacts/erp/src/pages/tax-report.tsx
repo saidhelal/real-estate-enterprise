@@ -8,10 +8,13 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,7 +66,7 @@ export default function TaxReportPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.tax_report")}</h2>
+        <PageHeader title={t("nav.tax_report")} bordered={false} />
         <ReportExportButton
           build={buildReport}
           baseFilename="tax-report"
@@ -100,38 +103,38 @@ export default function TaxReportPage() {
         </div>
       )}
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("common.code")}</TableHead>
               <TableHead>{t("tax.name")}</TableHead>
               <TableHead>{t("tax.type")}</TableHead>
-              <TableHead className="text-right">{t("tax.rate")}</TableHead>
-              <TableHead className="text-right">{t("tax.base")}</TableHead>
-              <TableHead className="text-right">{t("tax.tax")}</TableHead>
+              <TableHead className="text-end">{t("tax.rate")}</TableHead>
+              <TableHead className="text-end">{t("tax.base")}</TableHead>
+              <TableHead className="text-end">{t("tax.tax")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={6} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+              <TableState colSpan={6} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : rows.length === 0 ? (
-              <TableRow><TableCell colSpan={6} className="text-center h-24">{t("acc.no_data")}</TableCell></TableRow>
+              <TableState colSpan={6} isEmpty emptyTitle={t("acc.no_data")} />
             ) : (
               rows.map((r) => (
                 <TableRow key={r.taxCodeId}>
                   <TableCell className="font-medium">{r.code}</TableCell>
                   <TableCell>{r.name}</TableCell>
                   <TableCell>{enumLabel(r.taxType, language)}</TableCell>
-                  <TableCell className="text-right">{r.rate}%</TableCell>
-                  <TableCell className="text-right">{r.base}</TableCell>
-                  <TableCell className="text-right">{r.tax}</TableCell>
+                  <TableCell className="text-end">{r.rate}%</TableCell>
+                  <TableCell className="text-end">{r.base}</TableCell>
+                  <TableCell className="text-end">{r.tax}</TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
     </div>
   );
 }

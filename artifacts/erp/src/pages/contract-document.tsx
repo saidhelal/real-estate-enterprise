@@ -8,6 +8,7 @@ import {
   useListCompanies,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
 import { Printer, ArrowLeft } from "lucide-react";
@@ -37,7 +38,7 @@ export default function ContractDocumentPage() {
   const row = (label: string, value: ReactNode) => (
     <div className="flex justify-between gap-4 border-b border-dashed py-1.5">
       <span className="text-muted-foreground">{label}</span>
-      <span className="font-medium text-right">{value ?? "-"}</span>
+      <span className="font-medium text-end">{value ?? "-"}</span>
     </div>
   );
 
@@ -46,16 +47,23 @@ export default function ContractDocumentPage() {
       <div className="flex items-center justify-between print:hidden">
         <Button asChild variant="ghost" size="sm">
           <Link href="/contracts">
-            <ArrowLeft className="h-4 w-4 mr-1" />
+            <ArrowLeft className="h-4 w-4 me-1" />
             {ar ? "العقود" : "Contracts"}
           </Link>
         </Button>
         <Button size="sm" onClick={() => window.print()}>
-          <Printer className="h-4 w-4 mr-1" />
+          <Printer className="h-4 w-4 me-1" />
           {ar ? "طباعة" : "Print"}
         </Button>
       </div>
 
+      {/*
+        Everything inside this element is deliberately outside the theme.
+        It is a sheet of paper: it renders white in dark mode too, and it is
+        what the printer puts on A4. The literal greens and greys below are
+        therefore correct and must NOT be swapped for design tokens — a token
+        would flip with the theme and leave light-grey text on a white page.
+      */}
       <div
         dir={ar ? "rtl" : "ltr"}
         className="relative mx-auto w-full max-w-[800px] rounded-lg border bg-white p-10 text-black shadow-sm dark:bg-white"
@@ -70,7 +78,7 @@ export default function ContractDocumentPage() {
 
         <div className="relative">
           <div className="mb-6 text-center">
-            <h1 className="text-2xl font-bold">{companyName}</h1>
+            <PageHeader title={companyName} bordered={false} />
             <p className="text-sm text-gray-600">{ar ? "عقد بيع وحدة عقارية" : "Real Estate Unit Sale Contract"}</p>
           </div>
 

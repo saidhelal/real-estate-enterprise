@@ -5,6 +5,7 @@ import {
   type LookupType,
 } from "@workspace/api-client-react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -37,10 +38,11 @@ export default function MasterDataPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("master_data.title")}</h2>
-        <p className="text-muted-foreground">{t("master_data.subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("master_data.title")}
+        description={t("master_data.subtitle")}
+        bordered={false}
+      />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[320px_1fr]">
         <div className="space-y-3">

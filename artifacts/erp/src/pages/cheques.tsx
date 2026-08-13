@@ -21,9 +21,10 @@ import {
   type ResourceField,
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
-import { enumLabel } from "@/lib/enums";
+import { enumLabel, statusTone } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,13 +59,6 @@ const NEXT_STATUSES: Record<string, string[]> = {
 // A cheque may be swapped for a replacement only while it has not been collected
 // (received / under_collection) or after it bounced (returned).
 const REPLACEABLE_FROM = new Set(["received", "under_collection", "returned"]);
-
-function statusVariant(status: string): "default" | "secondary" | "outline" | "destructive" {
-  if (status === "collected") return "default";
-  if (status === "returned" || status === "cancelled" || status === "replaced") return "destructive";
-  if (status === "under_collection") return "secondary";
-  return "outline";
-}
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -133,7 +127,7 @@ export default function ChequesPage() {
     { header: t("acc.direction"), render: (r) => <Badge variant="outline">{enumLabel(r.direction, language)}</Badge> },
     { header: t("acc.amount"), render: (r) => r.amount ?? "-" },
     { header: t("acc.due_date"), render: (r) => r.dueDate ?? "-" },
-    { header: t("common.status"), render: (r) => <Badge variant={statusVariant(r.status)}>{enumLabel(r.status, language)}</Badge> },
+    { header: t("common.status"), render: (r) => <StatusBadge tone={statusTone(r.status)} label={enumLabel(r.status, language)} withDot /> },
   ];
 
   const openTransition = (cheque: Cheque) => {

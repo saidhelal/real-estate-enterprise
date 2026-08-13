@@ -52,7 +52,7 @@ export default function BudgetLinesPage() {
   const columns: ResourceColumn<BudgetLine>[] = [
     { header: t("acc.budget"), render: (r) => budgetName(r.budgetId) },
     { header: t("acc.account"), render: (r) => accountName(r.accountId) },
-    { header: t("acc.budgeted"), render: (r) => <span className="text-right font-medium">{r.amount}</span> },
+    { header: t("acc.budgeted"), render: (r) => <span className="text-end font-medium">{r.amount}</span> },
     { header: t("acc.description"), render: (r) => r.notes ?? "" },
   ];
 

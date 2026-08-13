@@ -16,6 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
@@ -107,10 +109,11 @@ export default function ProcurementReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("proc.reports")}</h2>
-        <p className="text-muted-foreground">{t("proc.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("proc.reports")}
+        description={t("proc.reports_subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader>
@@ -123,19 +126,19 @@ export default function ProcurementReportsPage() {
                 <TableHead>{t("common.code")}</TableHead>
                 <TableHead>{t("proc.supplier")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
-                <TableHead className="text-right">{t("proc.purchase_volume")}</TableHead>
+                <TableHead className="text-end">{t("proc.purchase_volume")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {supplierRows.length === 0 ? (
-                <TableRow><TableCell colSpan={4} className="text-center h-24">{t("proc.no_data")}</TableCell></TableRow>
+                <TableState colSpan={4} isEmpty emptyTitle={t("proc.no_data")} />
               ) : (
                 supplierRows.map((r) => (
                   <TableRow key={r.code}>
                     <TableCell className="font-medium">{r.code}</TableCell>
                     <TableCell>{r.name}</TableCell>
                     <TableCell><Badge variant="secondary">{enumLabel(r.status, language)}</Badge></TableCell>
-                    <TableCell className="text-right">{fmt(r.volume)}</TableCell>
+                    <TableCell className="text-end">{fmt(r.volume)}</TableCell>
                   </TableRow>
                 ))
               )}
@@ -144,7 +147,7 @@ export default function ProcurementReportsPage() {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={3}>{t("proc.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalVolume)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalVolume)}</TableCell>
                 </TableRow>
               </TableFooter>
             )}
@@ -162,15 +165,15 @@ export default function ProcurementReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("proc.count")}</TableCell>
-                  <TableCell className="text-right">{orders.length}</TableCell>
+                  <TableCell className="text-end">{orders.length}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("proc.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalOrders)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalOrders)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("proc.total_contract_value")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalContractValue)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalContractValue)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -186,11 +189,11 @@ export default function ProcurementReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("proc.count")}</TableCell>
-                  <TableCell className="text-right">{grns.length}</TableCell>
+                  <TableCell className="text-end">{grns.length}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("proc.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalReceived)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalReceived)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -206,11 +209,11 @@ export default function ProcurementReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("proc.count")}</TableCell>
-                  <TableCell className="text-right">{returns.length}</TableCell>
+                  <TableCell className="text-end">{returns.length}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("proc.total")}</TableCell>
-                  <TableCell className="text-right">{fmt(totalReturned)}</TableCell>
+                  <TableCell className="text-end">{fmt(totalReturned)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

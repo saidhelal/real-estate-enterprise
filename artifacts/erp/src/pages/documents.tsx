@@ -35,6 +35,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -187,10 +188,11 @@ export default function DocumentsPage() {
   return (
     <div className="space-y-6 p-1">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">{t("edms.title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("edms.subtitle")}</p>
-        </div>
+        <PageHeader
+          title={t("edms.title")}
+          description={t("edms.subtitle")}
+          bordered={false}
+        />
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
             <Button>{t("common.create")}</Button>
@@ -395,7 +397,7 @@ export default function DocumentsPage() {
                 <TableHead>{t("edms.type")}</TableHead>
                 <TableHead>{t("edms.classification")}</TableHead>
                 <TableHead>{t("common.status")}</TableHead>
-                <TableHead className="text-right">{t("common.actions")}</TableHead>
+                <TableHead className="text-end">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -427,7 +429,7 @@ export default function DocumentsPage() {
                     <TableCell>
                       <Badge variant="secondary">{enumLabel(d.status, language)}</Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-end">
                       <div className="flex justify-end gap-2">
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/documents/${d.id}`}>{t("common.view")}</Link>

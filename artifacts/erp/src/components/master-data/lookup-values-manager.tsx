@@ -24,10 +24,12 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFrame,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import {
   Dialog,
   DialogContent,
@@ -114,12 +116,12 @@ export function LookupValuesManager({ typeId }: { typeId: string }) {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button size="sm" onClick={() => setIsCreateOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="me-2 h-4 w-4" />
           {t("master_data.add_value")}
         </Button>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -128,14 +130,14 @@ export function LookupValuesManager({ typeId }: { typeId: string }) {
               <TableHead>{t("master_data.label_en")}</TableHead>
               <TableHead>{t("master_data.label_ar")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={6} className="text-center h-24">{t("common.loading")}</TableCell></TableRow>
+              <TableState colSpan={6} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : values.length === 0 ? (
-              <TableRow><TableCell colSpan={6} className="text-center h-24">{t("common.no_results")}</TableCell></TableRow>
+              <TableState colSpan={6} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               values.map((row, index) => (
                 <TableRow key={row.id} className={row.isArchived ? "opacity-60" : undefined}>
@@ -159,7 +161,7 @@ export function LookupValuesManager({ typeId }: { typeId: string }) {
                     {row.isArchived && <Badge variant="outline">{t("master_data.archived")}</Badge>}
                     {row.isSystem && <Badge variant="outline">{t("master_data.system")}</Badge>}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-end">
                     <div className="flex justify-end gap-1">
                       <Button variant="ghost" size="icon" className="h-8 w-8" title={row.isActive ? t("master_data.deactivate") : t("master_data.activate")} onClick={() => handleToggleActive(row)}>
                         {row.isActive ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
@@ -182,7 +184,7 @@ export function LookupValuesManager({ typeId }: { typeId: string }) {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>

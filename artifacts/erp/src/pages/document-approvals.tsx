@@ -26,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -90,10 +91,11 @@ export default function DocumentApprovalsPage() {
 
   return (
     <div className="space-y-6 p-1">
-      <div>
-        <h1 className="text-2xl font-bold">{t("edms.approvals.title")}</h1>
-        <p className="text-sm text-muted-foreground">{t("edms.subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("edms.approvals.title")}
+        description={t("edms.subtitle")}
+        bordered={false}
+      />
 
       <Card>
         <CardHeader>
@@ -107,7 +109,7 @@ export default function DocumentApprovalsPage() {
                 <TableHead>{t("edms.name")}</TableHead>
                 <TableHead>{t("edms.type")}</TableHead>
                 <TableHead>{t("edms.classification")}</TableHead>
-                <TableHead className="text-right">{t("common.actions")}</TableHead>
+                <TableHead className="text-end">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -136,7 +138,7 @@ export default function DocumentApprovalsPage() {
                     <TableCell>
                       <Badge variant="secondary">{enumLabel(d.classification, language)}</Badge>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-end">
                       <div className="flex justify-end gap-2">
                         <Button
                           variant="outline"

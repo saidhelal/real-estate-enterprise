@@ -19,6 +19,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
@@ -44,17 +46,17 @@ function GroupTable({
       <TableHeader>
         <TableRow>
           <TableHead>{keyHeader}</TableHead>
-          <TableHead className="text-right">{countHeader}</TableHead>
+          <TableHead className="text-end">{countHeader}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows.length === 0 ? (
-          <TableRow><TableCell colSpan={2} className="text-center h-24">{noData}</TableCell></TableRow>
+          <TableState colSpan={2} isEmpty emptyTitle={noData} />
         ) : (
           rows.map((r) => (
             <TableRow key={r.key ?? "none"}>
               <TableCell>{render(r.key)}</TableCell>
-              <TableCell className="text-right">{r.count}</TableCell>
+              <TableCell className="text-end">{r.count}</TableCell>
             </TableRow>
           ))
         )}
@@ -100,10 +102,11 @@ export default function LegalReportsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("legal.reports")}</h2>
-        <p className="text-muted-foreground">{t("legal.reports_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("legal.reports")}
+        description={t("legal.reports_subtitle")}
+        bordered={false}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
@@ -115,15 +118,15 @@ export default function LegalReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("common.total")}</TableCell>
-                  <TableCell className="text-right">{contractReport?.total ?? 0}</TableCell>
+                  <TableCell className="text-end">{contractReport?.total ?? 0}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("legal.expiring_soon")}</TableCell>
-                  <TableCell className="text-right">{contractReport?.expiringSoon ?? 0}</TableCell>
+                  <TableCell className="text-end">{contractReport?.expiringSoon ?? 0}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("legal.expired")}</TableCell>
-                  <TableCell className="text-right">{contractReport?.expired ?? 0}</TableCell>
+                  <TableCell className="text-end">{contractReport?.expired ?? 0}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -160,11 +163,11 @@ export default function LegalReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("common.total")}</TableCell>
-                  <TableCell className="text-right">{litigationReport?.total ?? 0}</TableCell>
+                  <TableCell className="text-end">{litigationReport?.total ?? 0}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("legal.claim_amount")}</TableCell>
-                  <TableCell className="text-right">{litigationReport?.totalClaimAmount ?? "0"}</TableCell>
+                  <TableCell className="text-end">{litigationReport?.totalClaimAmount ?? "0"}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -194,11 +197,11 @@ export default function LegalReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("common.total")}</TableCell>
-                  <TableCell className="text-right">{claimReport?.total ?? 0}</TableCell>
+                  <TableCell className="text-end">{claimReport?.total ?? 0}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>{t("legal.amount")}</TableCell>
-                  <TableCell className="text-right">{claimReport?.totalAmount ?? "0"}</TableCell>
+                  <TableCell className="text-end">{claimReport?.totalAmount ?? "0"}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -228,7 +231,7 @@ export default function LegalReportsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>{t("legal.cases_count")}</TableCell>
-                  <TableCell className="text-right">{advisorReport?.totalCases ?? 0}</TableCell>
+                  <TableCell className="text-end">{advisorReport?.totalCases ?? 0}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

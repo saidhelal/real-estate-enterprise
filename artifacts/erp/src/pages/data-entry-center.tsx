@@ -12,6 +12,7 @@ import {
   useCreateUnit,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -374,15 +375,14 @@ export default function DataEntryCenterPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-1">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{tr("Data Entry Center", "مركز إدخال البيانات")}</h1>
-          <p className="text-sm text-muted-foreground">
-            {tr(
-              "Guided bulk setup that writes directly into the existing master-data modules.",
-              "إعداد مجمّع موجّه يكتب مباشرة في وحدات البيانات الرئيسية الحالية.",
-            )}
-          </p>
-        </div>
+        <PageHeader
+          title={tr("Data Entry Center", "مركز إدخال البيانات")}
+          description={tr(
+            "Guided bulk setup that writes directly into the existing master-data modules.",
+            "إعداد مجمّع موجّه يكتب مباشرة في وحدات البيانات الرئيسية الحالية.",
+          )}
+          bordered={false}
+        />
         <div className="text-sm text-muted-foreground">
           {tr("Draft saved automatically", "يتم حفظ المسودة تلقائياً")}
         </div>

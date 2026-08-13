@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListCompanies, 
@@ -14,14 +15,16 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -100,13 +103,11 @@ export default function CompaniesPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("companies.title")}</h2>
-        </div>
+        <PageHeader title={t("companies.title")} bordered={false} />
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("companies.create")}
             </Button>
           </DialogTrigger>
@@ -119,7 +120,7 @@ export default function CompaniesPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -127,18 +128,14 @@ export default function CompaniesPage() {
               <TableHead>{t("common.name")}</TableHead>
               <TableHead>{t("common.name_ar")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : companies?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               companies?.map((company) => (
                 <TableRow key={company.id}>
@@ -150,7 +147,7 @@ export default function CompaniesPage() {
                       {company.isActive ? t("common.active") : t("common.inactive")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-end space-x-2">
                     <DocumentsRowAction moduleKey="companies" sourceId={company.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingCompany(company)}>
                       <Pencil className="h-4 w-4" />
@@ -164,7 +161,7 @@ export default function CompaniesPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={!!editingCompany} onOpenChange={(open) => !open && setEditingCompany(null)}>
         <DialogContent>

@@ -7,6 +7,7 @@ import {
 } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
@@ -33,14 +34,13 @@ export default function CrmAvailableUnitsPage() {
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("nav.available_units")}</h1>
-          <p className="text-sm text-muted-foreground">
-            {ar
-              ? "الوحدات المتاحة للبيع. اضغط ابدأ البيع لبدء دورة البيع الكاملة."
-              : "Units available for sale. Press Start Sale to launch the full sales workflow."}
-          </p>
-        </div>
+        <PageHeader
+          title={t("nav.available_units")}
+          description={ar
+            ? "الوحدات المتاحة للبيع. اضغط ابدأ البيع لبدء دورة البيع الكاملة."
+            : "Units available for sale. Press Start Sale to launch the full sales workflow."}
+          bordered={false}
+        />
         <div className="flex items-center gap-2">
           <Link href="/crm-sales">
             <Button variant="outline" size="sm">

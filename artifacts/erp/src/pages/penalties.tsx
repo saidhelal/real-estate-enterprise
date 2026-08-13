@@ -89,6 +89,9 @@ export default function PenaltiesPage() {
     const html = `<!doctype html><html dir="${ar ? "rtl" : "ltr"}" lang="${ar ? "ar" : "en"}"><head><meta charset="utf-8"><title>${L.title}</title>
       <style>
         * { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; box-sizing: border-box; }
+        /* Standalone print document: this stylesheet ships inside a new window
+           with none of the app CSS loaded, so design tokens would resolve to
+           nothing. The literal colours below are correct and intentional. */
         body { margin: 0; padding: 40px; color: #1a1a1a; }
         .head { border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 24px; display:flex; justify-content:space-between; align-items:flex-end; }
         .company { font-size: 20px; font-weight: 700; }
@@ -120,11 +123,11 @@ export default function PenaltiesPage() {
     <div className="space-y-4">
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={printReport}>
-          <Printer className="mr-2 h-4 w-4" />
+          <Printer className="me-2 h-4 w-4" />
           {language === "ar" ? "تقرير الغرامات" : "Penalty Report"}
         </Button>
         <Button variant="outline" onClick={handleCalculate} disabled={calculate.isPending}>
-          <Calculator className="mr-2 h-4 w-4" />
+          <Calculator className="me-2 h-4 w-4" />
           {language === "ar" ? "احتساب الغرامات" : "Calculate Penalties"}
         </Button>
       </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { 
   useListSettings, 
   useUpdateSettings,
@@ -95,7 +96,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("settings.title")}</h2>
+        <PageHeader title={t("settings.title")} bordered={false} />
         <Button onClick={handleSave} disabled={updateSettings.isPending}>
           {t("common.save")}
         </Button>

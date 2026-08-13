@@ -14,6 +14,9 @@ import { AppShell } from "@/components/layout/app-shell";
 import Login from "@/pages/login";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
+// Living style guide for the design system. Lazy like every other secondary
+// route, so it costs nothing until someone opens it.
+const DesignSystemPage = lazy(() => import("@/pages/design-system"));
 const DocumentsPage = lazy(() => import("@/pages/documents"));
 const DocumentDetailPage = lazy(() => import("@/pages/document-detail"));
 const DocumentsDashboardPage = lazy(() => import("@/pages/documents-dashboard"));
@@ -366,6 +369,7 @@ function Router() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/design-system" component={DesignSystemPage} />
             <Route path="/users" component={UsersPage} />
             <Route path="/roles" component={RolesPage} />
             <Route path="/companies" component={CompaniesPage} />

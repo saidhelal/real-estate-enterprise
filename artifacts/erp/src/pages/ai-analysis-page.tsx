@@ -6,6 +6,7 @@ import {
   type AiAnalysisInput,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,6 +19,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
+import { TONE_TEXT } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 type AnalysisMutation = {
@@ -37,10 +39,10 @@ function getErrorStatus(error: unknown): number | undefined {
 }
 
 const SEVERITY_STYLES: Record<string, { border: string; icon: typeof Info; tone: string }> = {
-  info: { border: "border-l-muted-foreground/40", icon: Info, tone: "text-muted-foreground" },
-  positive: { border: "border-l-emerald-500", icon: CheckCircle2, tone: "text-emerald-500" },
-  warning: { border: "border-l-amber-500", icon: AlertTriangle, tone: "text-amber-500" },
-  critical: { border: "border-l-destructive", icon: ShieldAlert, tone: "text-destructive" },
+  info: { border: "border-s-muted-foreground/40", icon: Info, tone: "text-muted-foreground" },
+  positive: { border: "border-s-success", icon: CheckCircle2, tone: TONE_TEXT.success },
+  warning: { border: "border-s-warning", icon: AlertTriangle, tone: TONE_TEXT.warning },
+  critical: { border: "border-s-destructive", icon: ShieldAlert, tone: "text-destructive" },
 };
 
 export function AiAnalysisPage({
@@ -74,17 +76,18 @@ export function AiAnalysisPage({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t(titleKey)}</h2>
-          <p className="text-muted-foreground">{t(subtitleKey)}</p>
-        </div>
+        <PageHeader
+          title={t(titleKey)}
+          description={t(subtitleKey)}
+          bordered={false}
+        />
       </div>
 
       {noAccess ? (
-        <Card className="border-amber-500/40">
+        <Card className="border-warning-border/50">
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
-              <ShieldAlert className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-warning-subtle">
+              <ShieldAlert className={`h-6 w-6 ${TONE_TEXT.warning}`} />
             </div>
             <h3 className="text-lg font-semibold">{t("ai.no_access.title")}</h3>
             <p className="max-w-md text-sm text-muted-foreground">{t("ai.no_access.body")}</p>
@@ -152,7 +155,7 @@ export function AiAnalysisPage({
           </Card>
 
           {!result.dataAvailable && (
-            <div className="rounded-lg border border-amber-500/40 bg-amber-500/5 px-4 py-3 text-sm text-amber-600 dark:text-amber-400">
+            <div className={`rounded-lg border border-warning-border/50 bg-warning-subtle/40 px-4 py-3 text-sm ${TONE_TEXT.warning}`}>
               {t("ai.no_data")}
             </div>
           )}
@@ -162,7 +165,7 @@ export function AiAnalysisPage({
               const style = SEVERITY_STYLES[s.severity ?? "info"] ?? SEVERITY_STYLES.info;
               const Icon = style.icon;
               return (
-                <Card key={i} className={cn("border-l-4", style.border)}>
+                <Card key={i} className={cn("border-s-4", style.border)}>
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <Icon className={cn("h-4 w-4", style.tone)} />

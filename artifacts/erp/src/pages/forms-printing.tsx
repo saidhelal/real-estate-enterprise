@@ -32,6 +32,7 @@ import {
   type FormTemplateVersion,
 } from "@workspace/api-client-react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -181,6 +182,10 @@ async function enhanceForPrint(html: string): Promise<string> {
       /* leave placeholder */
     }
   }
+  // Standalone print document — a complete HTML file handed to the printer with
+  // none of the app stylesheet loaded, so design tokens would resolve to
+  // nothing. The literal colours here and in the snippet buttons below are
+  // intentional and must stay literal.
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;padding:24px;color:#111}img{max-width:100%}</style></head><body>${doc.body.innerHTML}</body></html>`;
 }
 
@@ -235,13 +240,12 @@ export default function FormsPrintingPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <FileText className="h-5 w-5 text-primary" />
-        <h1 className="text-xl font-semibold">
-          {lang === "ar" ? "النماذج والطباعة" : "Forms & Printing"}
-          <span className="text-muted-foreground"> — {moduleLabel}</span>
-        </h1>
-      </div>
+      <PageHeader
+        icon={FileText}
+        title={lang === "ar" ? "النماذج والطباعة" : "Forms & Printing"}
+        meta={<span className="text-sm text-muted-foreground">{moduleLabel}</span>}
+        bordered={false}
+      />
 
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         <TemplateList
@@ -830,7 +834,7 @@ function VersionsTab({
                 <TableCell className="font-medium">
                   v{v.versionNumber}
                   {isCurrent && (
-                    <Badge variant="default" className="ml-2 text-[10px]">
+                    <Badge variant="default" className="ms-2 text-[10px]">
                       {lang === "ar" ? "حالي" : "Current"}
                     </Badge>
                   )}

@@ -4,6 +4,8 @@ import { pool } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { runStartupDiagnostics } from "./lib/startup";
 import { getModuleSummary } from "./lib/module-registry";
+import { startScheduler, stopScheduler } from "./lib/scheduler";
+import { registerScheduledTasks } from "./lib/scheduled-tasks";
 
 const rawPort = process.env["PORT"];
 
@@ -25,6 +27,9 @@ function registerProcessHandlers(server: Server): void {
     if (shuttingDown) return;
     shuttingDown = true;
     logger.info({ signal, code }, "Graceful shutdown started");
+    // Stop the tick before draining so no new task run starts against a pool
+    // that is about to close. In-flight handlers finish on their own.
+    stopScheduler();
     server.close(() => {
       pool
         .end()
@@ -75,6 +80,10 @@ function startServerWithRetry(attempt = 1): void {
   server.once("listening", () => {
     logger.info({ port, attempt }, "Server listening");
     registerProcessHandlers(server);
+    // Started only after the port is open, and non-blocking by construction:
+    // boot replay runs detached inside startScheduler, so a slow sweep can
+    // never delay readiness and make a supervisor think startup failed.
+    startScheduler();
   });
 
   server.once("error", (err: NodeJS.ErrnoException) => {
@@ -97,6 +106,10 @@ async function main(): Promise<void> {
     logger.error("Startup diagnostics failed; aborting startup");
     process.exit(1);
   }
+
+  // Registry is built before the server starts listening so the scheduler has a
+  // complete task set the moment it starts.
+  registerScheduledTasks();
 
   const modules = getModuleSummary();
   if (modules.failed > 0) {

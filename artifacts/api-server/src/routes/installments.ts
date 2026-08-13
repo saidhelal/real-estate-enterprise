@@ -32,6 +32,7 @@ import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 import { notify, recipientsByPermission } from "../lib/notify";
+import { notifyOverdueSchedules } from "../lib/installments-overdue";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -394,44 +395,18 @@ router.get("/overdue-installments", requirePermission("installmentSchedules.view
     .limit(pageSize)
     .offset(offset);
 
-  // There is no scheduler in this environment, so overdue installments are
-  // detected lazily here (on the canonical overdue scan) and a notification is
-  // raised for the collections team. The emitter is idempotent per
-  // (installments, schedule id, installment_overdue), so repeated scans never
-  // duplicate — each overdue schedule yields at most one notification. This is
-  // best-effort: a failure must never break the read.
+  // Overdue schedules raise a notification for the collections team. The rule
+  // (who counts as a collector, what the message says, company scoping) lives in
+  // `lib/installments-overdue.ts` because the scheduler's nightly sweep needs
+  // the same rule — two copies would be two definitions of "overdue".
+  //
+  // Still emitted on this read as well: a collector opening the screen should
+  // see current state without waiting for the next sweep. The emitter is
+  // idempotent per (installments, schedule id, installment_overdue), so the read
+  // and the sweep cannot double-notify. Best-effort: a failure must never break
+  // the read.
   try {
-    const overdue = rows.filter((r) => !r.isDeleted);
-    if (overdue.length > 0) {
-      // Resolve collectors per company so notifications never cross company
-      // boundaries (an overdue schedule must only reach that company's team).
-      const collectorsByCompany = new Map<string, string[]>();
-      for (const r of overdue) {
-        if (!collectorsByCompany.has(r.companyId)) {
-          collectorsByCompany.set(
-            r.companyId,
-            await recipientsByPermission(db, "installmentCollections.create", {
-              companyId: r.companyId,
-            }),
-          );
-        }
-        const collectors = collectorsByCompany.get(r.companyId)!;
-        if (collectors.length === 0) continue;
-        await notify(db, {
-          recipientUserIds: collectors,
-          companyId: r.companyId,
-          category: "installments",
-          eventType: "installment_overdue",
-          priority: "high",
-          title: "قسط متأخر / Overdue installment",
-          body: `#${r.installmentNumber} · ${r.dueDate} · ${r.amount}`,
-          sourceModule: "installments",
-          sourceId: r.id,
-          sourceRef: `#${r.installmentNumber}`,
-          link: "/installment-schedules",
-        });
-      }
-    }
+    await notifyOverdueSchedules(rows);
   } catch (err) {
     req.log.error({ err }, "Failed to emit overdue-installment notifications");
   }

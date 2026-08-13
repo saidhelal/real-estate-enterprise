@@ -114,116 +114,40 @@ interface PostConfig {
   label: string;
 }
 
-function registerCrud(opts: {
-  base: string;
-  module: string;
-  entity: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  table: any;
-  searchCols: string[];
-  filterCols: string[];
-  listResp: CrudSchema;
-  createBody: CrudSchema;
-  getResp: CrudSchema;
-  updateBody: CrudSchema;
-  post?: PostConfig;
-}): void {
-  const { base, module, entity, table, searchCols, filterCols, listResp, createBody, getResp, updateBody, post } = opts;
-  type Row = Record<string, unknown>;
+import { registerCrud, type Tx } from "../lib/register-crud";
 
-  router.get(base, requirePermission(`${module}.view`), async (req, res): Promise<void> => {
-    const q = req.query as Record<string, unknown>;
-    const { page, pageSize, offset } = pageParams(q);
-    const filters: SQL[] = [eq(table.isDeleted, false)];
-    const search = qStr(q, "search");
-    if (search) {
-      const s = or(...searchCols.map((c) => ilike(table[c], `%${search}%`)));
-      if (s) filters.push(s);
-    }
-    for (const c of filterCols) {
-      const v = qStr(q, c);
-      if (v) filters.push(eq(table[c], v));
-    }
-    const where = and(...filters);
-    const countRes = (await db.select({ count: sql<number>`count(*)::int` }).from(table).where(where)) as { count: number }[];
-    const rows = (await db.select().from(table).where(where).orderBy(desc(table.createdAt)).limit(pageSize).offset(offset)) as Row[];
-    res.json(listResp.parse({ data: rows.map(serializeRow), total: countRes[0].count, page, pageSize }));
-  });
-
-  router.post(base, requirePermission(`${module}.create`), async (req, res): Promise<void> => {
-    const parsed = createBody.safeParse(req.body);
-    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-    let row: Row;
-    if (post) {
-      row = await db.transaction(async (tx) => {
-        const inserted = (await tx.insert(table).values({ ...parsed.data }).returning()) as Row[];
-        const created = inserted[0];
-        const entryDate = (created[post.dateField] as string | null) || new Date().toISOString().slice(0, 10);
-        await postAutomaticEntry(tx, {
-          companyId: String(created.companyId),
-          eventKey: post.eventKey,
-          amount: (created[post.amountField] as string | null) ?? "0",
-          entryDate,
-          description: created.code ? `${post.label} ${String(created.code)}` : post.label,
-          reference: (created.code as string | null) ?? null,
-          sourceType: post.sourceType,
-          sourceId: String(created.id),
-          userId: req.authUser?.id ?? null,
-        });
-        return created;
+/**
+ * Insurance keeps ownership of its GL posting. The shared factory supplies the
+ * transaction only; the event key, amount source and reversal target are
+ * decided here, exactly as before.
+ */
+function postingHooks(post: PostConfig | undefined) {
+  if (!post) return {};
+  return {
+    inCreateTx: async (tx: Tx, created: Record<string, unknown>, req: import("express").Request) => {
+      const entryDate =
+        (created[post.dateField] as string | null) || new Date().toISOString().slice(0, 10);
+      await postAutomaticEntry(tx, {
+        companyId: String(created.companyId),
+        eventKey: post.eventKey,
+        amount: (created[post.amountField] as string | null) ?? "0",
+        entryDate,
+        description: created.code ? `${post.label} ${String(created.code)}` : post.label,
+        reference: (created.code as string | null) ?? null,
+        sourceType: post.sourceType,
+        sourceId: String(created.id),
+        userId: req.authUser?.id ?? null,
       });
-    } else {
-      const inserted = (await db.insert(table).values({ ...parsed.data }).returning()) as Row[];
-      row = inserted[0];
-    }
-    await recordAudit(req, { action: "create", entity, entityId: String(row.id), newValue: row });
-    res.status(201).json(getResp.parse(serializeRow(row)));
-  });
-
-  router.get(`${base}/:id`, requirePermission(`${module}.view`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const found = (await db.select().from(table).where(and(eq(table.id, id), eq(table.isDeleted, false)))) as Row[];
-    const row = found[0];
-    if (!row) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(getResp.parse(serializeRow(row)));
-  });
-
-  router.patch(`${base}/:id`, requirePermission(`${module}.update`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    const parsed = updateBody.safeParse(req.body);
-    if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-    const found = (await db.select().from(table).where(and(eq(table.id, id), eq(table.isDeleted, false)))) as Row[];
-    const existing = found[0];
-    if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-    const update = { ...parsed.data };
-    const row = Object.keys(update).length
-      ? ((await db.update(table).set(update).where(eq(table.id, id)).returning()) as Row[])[0]
-      : existing;
-    await recordAudit(req, { action: "update", entity, entityId: id, oldValue: existing, newValue: row });
-    res.json(getResp.parse(serializeRow(row)));
-  });
-
-  router.delete(`${base}/:id`, requirePermission(`${module}.delete`), async (req, res): Promise<void> => {
-    const id = String(req.params.id);
-    let ok = false;
-    if (post) {
-      ok = await db.transaction(async (tx) => {
-        const updated = (await tx.update(table).set({ isDeleted: true, isActive: false }).where(and(eq(table.id, id), eq(table.isDeleted, false))).returning()) as Row[];
-        if (!updated[0]) return false;
-        await reverseAutomaticEntriesForSource(tx, post.sourceType, id, req.authUser?.id ?? null);
-        return true;
-      });
-    } else {
-      const updated = (await db.update(table).set({ isDeleted: true, isActive: false }).where(and(eq(table.id, id), eq(table.isDeleted, false))).returning()) as Row[];
-      ok = !!updated[0];
-    }
-    if (!ok) { res.status(404).json({ error: "Not found" }); return; }
-    await recordAudit(req, { action: "delete", entity, entityId: id });
-    res.json({ success: true });
-  });
+    },
+    inDeleteTx: async (tx: Tx, row: Record<string, unknown>, req: import("express").Request) => {
+      // Reversal targets post.sourceType, not the entity name — preserved verbatim.
+      await reverseAutomaticEntriesForSource(tx, post.sourceType, String(row.id), req.authUser?.id ?? null);
+    },
+  };
 }
 
-registerCrud({
+
+registerCrud(router, {
   base: "/employee-insurances",
   module: "employeeInsurances",
   entity: "employeeInsurance",
@@ -234,9 +158,10 @@ registerCrud({
   createBody: CreateEmployeeInsuranceBody,
   getResp: GetEmployeeInsuranceResponse,
   updateBody: UpdateEmployeeInsuranceBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-forms",
   module: "insuranceForms",
   entity: "insuranceForm",
@@ -247,9 +172,10 @@ registerCrud({
   createBody: CreateInsuranceFormBody,
   getResp: GetInsuranceFormResponse,
   updateBody: UpdateInsuranceFormBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-additions",
   module: "insuranceAdditions",
   entity: "insuranceAddition",
@@ -260,9 +186,10 @@ registerCrud({
   createBody: CreateInsuranceAdditionBody,
   getResp: GetInsuranceAdditionResponse,
   updateBody: UpdateInsuranceAdditionBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-exclusions",
   module: "insuranceExclusions",
   entity: "insuranceExclusion",
@@ -273,9 +200,10 @@ registerCrud({
   createBody: CreateInsuranceExclusionBody,
   getResp: GetInsuranceExclusionResponse,
   updateBody: UpdateInsuranceExclusionBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-data-amendments",
   module: "insuranceDataAmendments",
   entity: "insuranceDataAmendment",
@@ -286,9 +214,10 @@ registerCrud({
   createBody: CreateInsuranceDataAmendmentBody,
   getResp: GetInsuranceDataAmendmentResponse,
   updateBody: UpdateInsuranceDataAmendmentBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-subscriptions",
   module: "insuranceSubscriptions",
   entity: "insuranceSubscription",
@@ -299,10 +228,11 @@ registerCrud({
   createBody: CreateInsuranceSubscriptionBody,
   getResp: GetInsuranceSubscriptionResponse,
   updateBody: UpdateInsuranceSubscriptionBody,
-  post: { eventKey: "insurance.subscription", sourceType: "insuranceSubscription", amountField: "totalAmount", dateField: "dueDate", label: "Insurance subscription" },
+  notFoundMessage: "Not found",
+  hooks: postingHooks({ eventKey: "insurance.subscription", sourceType: "insuranceSubscription", amountField: "totalAmount", dateField: "dueDate", label: "Insurance subscription" }),
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-payment-notices",
   module: "insurancePaymentNotices",
   entity: "insurancePaymentNotice",
@@ -313,9 +243,10 @@ registerCrud({
   createBody: CreateInsurancePaymentNoticeBody,
   getResp: GetInsurancePaymentNoticeResponse,
   updateBody: UpdateInsurancePaymentNoticeBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-reconciliations",
   module: "insuranceReconciliations",
   entity: "insuranceReconciliation",
@@ -326,9 +257,10 @@ registerCrud({
   createBody: CreateInsuranceReconciliationBody,
   getResp: GetInsuranceReconciliationResponse,
   updateBody: UpdateInsuranceReconciliationBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-arrears",
   module: "insuranceArrears",
   entity: "insuranceArrear",
@@ -339,9 +271,10 @@ registerCrud({
   createBody: CreateInsuranceArrearBody,
   getResp: GetInsuranceArrearResponse,
   updateBody: UpdateInsuranceArrearBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-penalties",
   module: "insurancePenalties",
   entity: "insurancePenalty",
@@ -352,10 +285,11 @@ registerCrud({
   createBody: CreateInsurancePenaltyBody,
   getResp: GetInsurancePenaltyResponse,
   updateBody: UpdateInsurancePenaltyBody,
-  post: { eventKey: "insurance.penalty", sourceType: "insurancePenalty", amountField: "amount", dateField: "penaltyDate", label: "Insurance penalty" },
+  notFoundMessage: "Not found",
+  hooks: postingHooks({ eventKey: "insurance.penalty", sourceType: "insurancePenalty", amountField: "amount", dateField: "penaltyDate", label: "Insurance penalty" }),
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/service-terminations",
   module: "serviceTerminations",
   entity: "serviceTermination",
@@ -366,9 +300,10 @@ registerCrud({
   createBody: CreateServiceTerminationBody,
   getResp: GetServiceTerminationResponse,
   updateBody: UpdateServiceTerminationBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-settlements",
   module: "insuranceSettlements",
   entity: "insuranceSettlement",
@@ -379,9 +314,10 @@ registerCrud({
   createBody: CreateInsuranceSettlementBody,
   getResp: GetInsuranceSettlementResponse,
   updateBody: UpdateInsuranceSettlementBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/insurance-clearances",
   module: "insuranceClearances",
   entity: "insuranceClearance",
@@ -392,9 +328,10 @@ registerCrud({
   createBody: CreateInsuranceClearanceBody,
   getResp: GetInsuranceClearanceResponse,
   updateBody: UpdateInsuranceClearanceBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/subcontractor-insurances",
   module: "subcontractorInsurances",
   entity: "subcontractorInsurance",
@@ -405,9 +342,10 @@ registerCrud({
   createBody: CreateSubcontractorInsuranceBody,
   getResp: GetSubcontractorInsuranceResponse,
   updateBody: UpdateSubcontractorInsuranceBody,
+  notFoundMessage: "Not found",
 });
 
-registerCrud({
+registerCrud(router, {
   base: "/project-labor-insurances",
   module: "projectLaborInsurances",
   entity: "projectLaborInsurance",
@@ -418,6 +356,7 @@ registerCrud({
   createBody: CreateProjectLaborInsuranceBody,
   getResp: GetProjectLaborInsuranceResponse,
   updateBody: UpdateProjectLaborInsuranceBody,
+  notFoundMessage: "Not found",
 });
 
 // Dashboard: auth-only by the top-level *-dashboard convention (mirrors other

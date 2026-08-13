@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   useListSettings,
   useUpdateSettings,
@@ -68,7 +69,7 @@ export default function MarketingSettingsPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-3xl">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-tight">{t("nav.marketing_settings")}</h2>
+        <PageHeader title={t("nav.marketing_settings")} bordered={false} />
         <Button onClick={handleSave} disabled={updateSettings.isPending}>
           {t("common.save")}
         </Button>

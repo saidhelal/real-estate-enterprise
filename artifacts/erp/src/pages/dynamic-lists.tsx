@@ -10,6 +10,7 @@ import {
   type LookupTypeInput,
 } from "@workspace/api-client-react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,12 +72,13 @@ export default function DynamicListsPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("dynamic_lists.title")}</h2>
-          <p className="text-muted-foreground">{t("dynamic_lists.subtitle")}</p>
-        </div>
+        <PageHeader
+          title={t("dynamic_lists.title")}
+          description={t("dynamic_lists.subtitle")}
+          bordered={false}
+        />
         <Button onClick={() => setIsCreateOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="me-2 h-4 w-4" />
           {t("dynamic_lists.create")}
         </Button>
       </div>

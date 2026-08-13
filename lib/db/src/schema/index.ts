@@ -40,3 +40,5 @@ export * from "./printing";
 export * from "./documents";
 export * from "./conversations";
 export * from "./messages";
+export * from "./scheduler";
+export * from "./operations";

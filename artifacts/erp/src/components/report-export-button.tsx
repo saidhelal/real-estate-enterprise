@@ -74,17 +74,17 @@ export function ReportExportButton({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" disabled={disabled}>
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="me-2 h-4 w-4" />
           {t("acc.export")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={dir === "rtl" ? "start" : "end"}>
         <DropdownMenuItem onClick={handleExcel}>
-          <FileSpreadsheet className="mr-2 h-4 w-4" />
+          <FileSpreadsheet className="me-2 h-4 w-4" />
           {t("acc.export_excel")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handlePdf}>
-          <FileText className="mr-2 h-4 w-4" />
+          <FileText className="me-2 h-4 w-4" />
           {t("acc.export_pdf")}
         </DropdownMenuItem>
       </DropdownMenuContent>

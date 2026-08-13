@@ -4,6 +4,7 @@ import {
   useListCompanies,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { FileSignature, TrendingUp, Wallet, BadgeCheck, BookMarked, UserPlus } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
 import { BiBarChart } from "@/components/charts/BiBarChart";
@@ -33,10 +34,11 @@ export default function SalesAnalyticsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("bi.sales_analytics")}</h2>
-        <p className="text-muted-foreground">{t("bi.sales_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("bi.sales_analytics")}
+        description={t("bi.sales_subtitle")}
+        bordered={false}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title={t("bi.total_contracts")} value={data?.totalContracts} icon={FileSignature} isLoading={isLoading} />

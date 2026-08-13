@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language-provider";
+import { PageHeader } from "@/components/ui/page-header";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { 
   useListUsers, 
@@ -22,14 +23,16 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFrame,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { TableState } from "@/components/ui/states";
 import { Plus, Search, Pencil, Trash2, KeyRound, UserCheck, UserX, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -120,13 +123,11 @@ export default function UsersPage() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("users.title")}</h2>
-        </div>
+        <PageHeader title={t("users.title")} bordered={false} />
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t("users.create")}
             </Button>
           </DialogTrigger>
@@ -148,7 +149,7 @@ export default function UsersPage() {
         />
       </div>
 
-      <div className="rounded-md border bg-card">
+      <TableFrame>
         <Table>
           <TableHeader>
             <TableRow>
@@ -156,18 +157,14 @@ export default function UsersPage() {
               <TableHead>{t("common.username")}</TableHead>
               <TableHead>{t("common.email")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
-              <TableHead className="text-right">{t("common.actions")}</TableHead>
+              <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.loading")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : users?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">{t("common.no_results")}</TableCell>
-              </TableRow>
+              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               users?.map((user) => (
                 <TableRow key={user.id}>
@@ -179,7 +176,7 @@ export default function UsersPage() {
                       {user.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-end space-x-2">
                     <DocumentsRowAction moduleKey="users" sourceId={user.id} />
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -189,26 +186,26 @@ export default function UsersPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setEditingUser(user)}>
-                          <Pencil className="mr-2 h-4 w-4" />
+                          <Pencil className="me-2 h-4 w-4" />
                           {t("common.edit")}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setResettingUser(user)}>
-                          <KeyRound className="mr-2 h-4 w-4" />
+                          <KeyRound className="me-2 h-4 w-4" />
                           {t("users.reset_password")}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setScopingUser(user)}>
-                          <ShieldCheck className="mr-2 h-4 w-4" />
+                          <ShieldCheck className="me-2 h-4 w-4" />
                           {t("users.scopes")}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleToggleStatus(user)}>
                           {user.isActive ? (
                             <>
-                              <UserX className="mr-2 h-4 w-4" />
+                              <UserX className="me-2 h-4 w-4" />
                               {t("users.deactivate")}
                             </>
                           ) : (
                             <>
-                              <UserCheck className="mr-2 h-4 w-4" />
+                              <UserCheck className="me-2 h-4 w-4" />
                               {t("users.activate")}
                             </>
                           )}
@@ -217,7 +214,7 @@ export default function UsersPage() {
                           className="text-destructive focus:text-destructive"
                           onClick={() => handleDelete(user.id)}
                         >
-                          <Trash2 className="mr-2 h-4 w-4" />
+                          <Trash2 className="me-2 h-4 w-4" />
                           {t("common.delete")}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -228,7 +225,7 @@ export default function UsersPage() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </TableFrame>
 
       <Dialog open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)}>
         <DialogContent>

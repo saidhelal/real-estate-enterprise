@@ -4,6 +4,7 @@ import {
   useListCompanies,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   TrendingUp,
   CircleDollarSign,
@@ -45,10 +46,11 @@ export default function ExecutiveDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t("bi.executive_dashboard")}</h2>
-        <p className="text-muted-foreground">{t("bi.executive_subtitle")}</p>
-      </div>
+      <PageHeader
+        title={t("bi.executive_dashboard")}
+        description={t("bi.executive_subtitle")}
+        bordered={false}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title={t("bi.total_sales_value")} value={data?.totalSalesValue} icon={TrendingUp} isLoading={isLoading} />

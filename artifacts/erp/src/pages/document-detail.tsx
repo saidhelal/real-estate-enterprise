@@ -25,6 +25,7 @@ import {
   type DocumentLink,
 } from "@workspace/api-client-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Table,
   TableBody,
@@ -285,7 +286,7 @@ export default function DocumentDetailPage() {
               <Link href="/documents">{t("nav.documents")}</Link>
             </Button>
           </div>
-          <h1 className="text-2xl font-bold">{name}</h1>
+          <PageHeader title={name} bordered={false} />
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm text-muted-foreground">{doc.documentNumber}</span>
             <Badge variant="secondary">{enumLabel(doc.status, language)}</Badge>
@@ -446,7 +447,7 @@ export default function DocumentDetailPage() {
                     <TableHead>{t("edms.file_size")}</TableHead>
                     <TableHead>{t("edms.change_summary")}</TableHead>
                     <TableHead>{t("edms.uploaded_by")}</TableHead>
-                    <TableHead className="text-right">{t("common.actions")}</TableHead>
+                    <TableHead className="text-end">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -469,7 +470,7 @@ export default function DocumentDetailPage() {
                         <TableCell>{formatFileSize(v.fileSize)}</TableCell>
                         <TableCell>{v.changeSummary ?? "-"}</TableCell>
                         <TableCell>{v.uploadedByUserName ?? "-"}</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-end">
                           <div className="flex justify-end gap-2">
                             <Button asChild size="sm" variant="outline">
                               <a href={documentFileUrl(id, v.id)} target="_blank" rel="noreferrer">
@@ -555,7 +556,7 @@ export default function DocumentDetailPage() {
                       <dl className="space-y-1 text-sm">
                         <div className="flex justify-between gap-4">
                           <dt className="text-muted-foreground">{t("edms.file_name")}</dt>
-                          <dd className="truncate text-right">{v.fileName ?? "-"}</dd>
+                          <dd className="truncate text-end">{v.fileName ?? "-"}</dd>
                         </div>
                         <div className="flex justify-between gap-4">
                           <dt className="text-muted-foreground">{t("edms.file_size")}</dt>
@@ -563,7 +564,7 @@ export default function DocumentDetailPage() {
                         </div>
                         <div className="flex justify-between gap-4">
                           <dt className="text-muted-foreground">{t("edms.change_summary")}</dt>
-                          <dd className="truncate text-right">{v.changeSummary ?? "-"}</dd>
+                          <dd className="truncate text-end">{v.changeSummary ?? "-"}</dd>
                         </div>
                         <div className="flex justify-between gap-4">
                           <dt className="text-muted-foreground">{t("edms.uploaded_by")}</dt>
@@ -582,7 +583,7 @@ export default function DocumentDetailPage() {
                         </Button>
                         <Button asChild size="sm" variant="outline">
                           <a href={documentFileUrl(id, v.id, true)}>
-                            <Download className="mr-2 h-4 w-4" />
+                            <Download className="me-2 h-4 w-4" />
                             {t("edms.download")}
                           </a>
                         </Button>
@@ -623,7 +624,7 @@ export default function DocumentDetailPage() {
                     <TableHead>{t("edms.module")}</TableHead>
                     <TableHead>{t("edms.source_id")}</TableHead>
                     <TableHead>{t("edms.linked_by")}</TableHead>
-                    <TableHead className="text-right">{t("common.actions")}</TableHead>
+                    <TableHead className="text-end">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -641,7 +642,7 @@ export default function DocumentDetailPage() {
                         </TableCell>
                         <TableCell className="font-mono text-xs">{l.sourceRef ?? l.sourceId}</TableCell>
                         <TableCell>{l.linkedByUserName ?? "-"}</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-end">
                           <Button
                             size="sm"
                             variant="ghost"
@@ -706,7 +707,7 @@ export default function DocumentDetailPage() {
                     disabled={imageUploading}
                     onClick={() => signatureInputRef.current?.click()}
                   >
-                    <Upload className="mr-2 h-4 w-4" />
+                    <Upload className="me-2 h-4 w-4" />
                     {signatureObjectPath ? t("edms.replace_image") : t("edms.upload_image")}
                   </Button>
                   {(signatureObjectPath || doc.signatureObjectPath) && (
@@ -739,7 +740,7 @@ export default function DocumentDetailPage() {
                     disabled={imageUploading}
                     onClick={() => stampInputRef.current?.click()}
                   >
-                    <Upload className="mr-2 h-4 w-4" />
+                    <Upload className="me-2 h-4 w-4" />
                     {stampObjectPath ? t("edms.replace_image") : t("edms.upload_image")}
                   </Button>
                   {(stampObjectPath || doc.stampObjectPath) && (

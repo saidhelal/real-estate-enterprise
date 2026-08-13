@@ -100,7 +100,7 @@ export default function InstallmentPlansPage() {
           onClick={() => handleGenerate(r)}
           title={language === "ar" ? "إنشاء الأقساط" : "Generate schedules"}
         >
-          <ListPlus className="h-4 w-4 mr-1" />
+          <ListPlus className="h-4 w-4 me-1" />
           {language === "ar" ? "إنشاء" : "Generate"}
         </Button>
       )}
