@@ -8,7 +8,7 @@
 
 export interface AdvancePaymentInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   amount?: string;
   paymentDate?: string;

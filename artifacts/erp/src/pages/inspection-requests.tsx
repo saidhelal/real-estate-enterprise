@@ -31,7 +31,17 @@ export default function InspectionRequestsPage() {
   const buildingOptions = (buildingData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "inspectionRequest",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", options: projectOptions },
     { name: "phaseId", label: "Phase", labelAr: "المرحلة", type: "select", options: phaseOptions },
     { name: "buildingId", label: "Building", labelAr: "المبنى", type: "select", options: buildingOptions },

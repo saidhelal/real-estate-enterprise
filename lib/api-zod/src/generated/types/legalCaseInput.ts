@@ -9,7 +9,7 @@
 export interface LegalCaseInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr?: string;
   caseType?: string;

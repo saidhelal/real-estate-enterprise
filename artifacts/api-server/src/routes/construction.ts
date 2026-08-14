@@ -1,3 +1,4 @@
+import { nextNumber } from "../lib/doc-number";
 import { Router, type IRouter } from "express";
 import { and, eq, ne, or, ilike, sql, desc, type SQL } from "drizzle-orm";
 import {
@@ -115,9 +116,12 @@ type CrudConfig = SharedCrudConfig & {
 const resources: CrudConfig[] = [
   // Contractors & contracts
   { path: "contractors", table: contractorsTable, module: "contractors", entity: "contractor",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "contractor" },
     createBody: CreateContractorBody, updateBody: UpdateContractorBody, listResponse: ListContractorsResponse,
     search: ["code", "name", "nameAr", "email"] },
   { path: "contractor-contracts", table: contractorContractsTable, module: "contractorContracts", entity: "contractorContract",
+    generatedCode: { documentType: "contractorContract" },
     createBody: CreateContractorContractBody, updateBody: UpdateContractorContractBody, listResponse: ListContractorContractsResponse,
     search: ["code", "title", "titleAr"] },
   { path: "contract-boq-items", table: contractBoqItemsTable, module: "contractBoqItems", entity: "contractBoqItem",
@@ -125,12 +129,14 @@ const resources: CrudConfig[] = [
     search: ["description", "unit"] },
   // Work progress
   { path: "work-progress-updates", table: workProgressUpdatesTable, module: "workProgressUpdates", entity: "workProgressUpdate",
+    generatedCode: { documentType: "workProgressUpdate" },
     createBody: CreateWorkProgressUpdateBody, updateBody: UpdateWorkProgressUpdateBody, listResponse: ListWorkProgressUpdatesResponse,
     search: ["code", "description"] },
   // IPC (مستخلصات المقاولين): net payable is derived from its components,
   // posting is gated on the `posted` status, and each status transition is
   // logged to certificate_approval_logs.
   { path: "payment-certificates", table: paymentCertificatesTable, module: "paymentCertificates", entity: "paymentCertificate",
+    generatedCode: { documentType: "paymentCertificate" },
     createBody: CreatePaymentCertificateBody, updateBody: UpdatePaymentCertificateBody, listResponse: ListPaymentCertificatesResponse,
     search: ["code", "certificateNumber"],
     financial: { eventKey: "engineering.payment_certificate", amountField: "netAmount", dateField: "certificateDate", postOnStatus: "posted",
@@ -142,43 +148,55 @@ const resources: CrudConfig[] = [
     search: ["description", "unit"] },
   // Variations
   { path: "variation-orders", table: variationOrdersTable, module: "variationOrders", entity: "variationOrder",
+    generatedCode: { documentType: "variationOrder" },
     createBody: CreateVariationOrderBody, updateBody: UpdateVariationOrderBody, listResponse: ListVariationOrdersResponse,
     search: ["code", "title", "titleAr"] },
   // Deductions / additions
   { path: "contractor-deductions", table: contractorDeductionsTable, module: "contractorDeductions", entity: "contractorDeduction",
+    generatedCode: { documentType: "contractorDeduction" },
     createBody: CreateContractorDeductionBody, updateBody: UpdateContractorDeductionBody, listResponse: ListContractorDeductionsResponse,
     search: ["code", "description"] },
   { path: "contractor-additions", table: contractorAdditionsTable, module: "contractorAdditions", entity: "contractorAddition",
+    generatedCode: { documentType: "contractorAddition" },
     createBody: CreateContractorAdditionBody, updateBody: UpdateContractorAdditionBody, listResponse: ListContractorAdditionsResponse,
     search: ["code", "description"] },
   // Retention / advance
   { path: "retentions", table: retentionsTable, module: "retentions", entity: "retention",
+    generatedCode: { documentType: "retention" },
     createBody: CreateRetentionBody, updateBody: UpdateRetentionBody, listResponse: ListRetentionsResponse,
     search: ["code"] },
   { path: "advance-payments", table: advancePaymentsTable, module: "advancePayments", entity: "advancePayment",
+    generatedCode: { documentType: "advancePayment" },
     createBody: CreateAdvancePaymentBody, updateBody: UpdateAdvancePaymentBody, listResponse: ListAdvancePaymentsResponse,
     search: ["code"],
     financial: { eventKey: "engineering.advance_payment", amountField: "amount", dateField: "paymentDate" } },
   { path: "advance-recoveries", table: advanceRecoveriesTable, module: "advanceRecoveries", entity: "advanceRecovery",
+    generatedCode: { documentType: "advanceRecovery" },
     createBody: CreateAdvanceRecoveryBody, updateBody: UpdateAdvanceRecoveryBody, listResponse: ListAdvanceRecoverysResponse,
     search: ["code"] },
   // Invoices
   { path: "contractor-invoices", table: contractorInvoicesTable, module: "contractorInvoices", entity: "contractorInvoice",
+    generatedCode: { documentType: "contractorInvoice" },
     createBody: CreateContractorInvoiceBody, updateBody: UpdateContractorInvoiceBody, listResponse: ListContractorInvoicesResponse,
     search: ["code", "invoiceNumber"],
     financial: { eventKey: "engineering.contractor_invoice", amountField: "amount", dateField: "invoiceDate" } },
   // Approval workflow
   { path: "contract-approvals", table: contractApprovalsTable, module: "contractApprovals", entity: "contractApproval",
+    generatedCode: { documentType: "contractApproval" },
     createBody: CreateContractApprovalBody, updateBody: UpdateContractApprovalBody, listResponse: ListContractApprovalsResponse,
     search: ["code", "approverName"] },
   // Certificate workflow (Module #13): statuses, approvals, transition log
   { path: "certificate-statuses", table: certificateStatusesTable, module: "certificateStatuses", entity: "certificateStatus",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "certificateStatus" },
     createBody: CreateCertificateStatusBody, updateBody: UpdateCertificateStatusBody, listResponse: ListCertificateStatussResponse,
     search: ["code", "name", "nameAr"] },
   { path: "certificate-approvals", table: certificateApprovalsTable, module: "certificateApprovals", entity: "certificateApproval",
+    generatedCode: { documentType: "certificateApproval" },
     createBody: CreateCertificateApprovalBody, updateBody: UpdateCertificateApprovalBody, listResponse: ListCertificateApprovalsResponse,
     search: ["code", "approverName"] },
   { path: "certificate-approval-logs", table: certificateApprovalLogsTable, module: "certificateApprovalLogs", entity: "certificateApprovalLog",
+    generatedCode: { documentType: "certificateApprovalLog" },
     createBody: CreateCertificateApprovalLogBody, updateBody: UpdateCertificateApprovalLogBody, listResponse: ListCertificateApprovalLogsResponse,
     search: ["code", "action"] },
 ];
@@ -260,7 +278,8 @@ function constructionHooks(cfg: CrudConfig) {
       if (wf && statusChanged) {
         await tx.insert(wf.logTable).values({
           companyId: updated.companyId as string,
-          code: `CAL-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          // Approval-log reference from the central sequence, not a timestamp.
+          code: (await nextNumber("approvalLog", (updated.companyId as string) ?? null)).value,
           [wf.sourceField]: String(updated.id),
           action: newStatus,
           fromStatus: (existing.status as string) ?? null,

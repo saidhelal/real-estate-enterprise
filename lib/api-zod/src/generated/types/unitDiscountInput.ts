@@ -8,7 +8,7 @@
 
 export interface UnitDiscountInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   discountType?: string;

@@ -8,7 +8,7 @@
 
 export interface InstallmentPlanInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId: string;
   totalAmount?: string;
   downPayment?: string;

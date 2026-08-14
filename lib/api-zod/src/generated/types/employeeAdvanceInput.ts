@@ -8,7 +8,7 @@
 
 export interface EmployeeAdvanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   amount?: string;
   requestDate?: string;

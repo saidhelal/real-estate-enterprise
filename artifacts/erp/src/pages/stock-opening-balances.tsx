@@ -31,7 +31,16 @@ export default function StockOpeningBalancesPage() {
   const locationOptions = (locationData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      generated: true,
+      generatorKey: "stockOpeningBalance",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "itemId", label: "Item", labelAr: "الصنف", type: "select", options: itemOptions },
     { name: "warehouseId", label: "Warehouse", labelAr: "المستودع", type: "select", options: warehouseOptions },
     { name: "locationId", label: "Location", labelAr: "الموقع", type: "select", options: locationOptions },

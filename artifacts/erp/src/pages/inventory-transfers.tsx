@@ -26,7 +26,17 @@ export default function InventoryTransfersPage() {
   const toWarehouseOptions = (fromWarehouseData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "inventoryTransfer",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "transferDate", label: "Transfer Date", labelAr: "تاريخ التحويل", type: "date" },
     { name: "fromWarehouseId", label: "From Warehouse", labelAr: "من مستودع", type: "select", options: fromWarehouseOptions },
     { name: "toWarehouseId", label: "To Warehouse", labelAr: "إلى مستودع", type: "select", options: toWarehouseOptions },

@@ -34,7 +34,17 @@ export default function ContractorContractsPage() {
   const boqOptions = (boqData?.data ?? []).map((o) => ({ value: o.id, label: o.title }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "contractorContract",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "title", label: "Title", labelAr: "العنوان", required: true },
     { name: "titleAr", label: "Title (Arabic)", labelAr: "العنوان بالعربية", required: true, rtl: true },
     { name: "contractorId", label: "Contractor", labelAr: "المقاول", type: "select", options: contractorOptions },

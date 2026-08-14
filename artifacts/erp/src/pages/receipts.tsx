@@ -51,7 +51,18 @@ export default function ReceiptsPage() {
   const bankOptions = (banks?.data ?? []).map((b) => ({ value: b.id, label: `${b.code} - ${b.bankName}` }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Code",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "Receipt",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "customerId", label: "Customer", labelAr: "العميل", type: "select", required: true, options: customerOptions, createOnly: true },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions, createOnly: true },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money", required: true, createOnly: true },

@@ -25,7 +25,17 @@ export default function GoodsIssuesPage() {
   const warehouseOptions = (warehouseData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "goodsIssue",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "issueDate", label: "Issue Date", labelAr: "تاريخ الصرف", type: "date" },
     { name: "issueType", label: "Issue Type", labelAr: "نوع الصرف", type: "select", options: enumOptions(["consumption", "sale", "transfer", "return", "disposal"]) },
     { name: "warehouseId", label: "Warehouse", labelAr: "المستودع", type: "select", options: warehouseOptions },

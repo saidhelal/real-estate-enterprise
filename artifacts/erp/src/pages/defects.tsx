@@ -28,7 +28,17 @@ export default function DefectsPage() {
   const projectOptions = (projectData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "defect",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "inspectionReportId", label: "Inspection Report", labelAr: "تقرير الفحص", type: "select", options: inspectionReportOptions },
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", options: projectOptions },
     { name: "description", label: "Description", labelAr: "الوصف", required: true },

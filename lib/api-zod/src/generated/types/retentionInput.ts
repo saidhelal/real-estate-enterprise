@@ -8,7 +8,7 @@
 
 export interface RetentionInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   retentionPercent?: string;

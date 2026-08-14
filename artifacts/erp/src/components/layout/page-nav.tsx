@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/lib/language-provider";
+import { departmentPath, navGroupTitleKeyForSlug } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -35,22 +36,30 @@ type NavMatch = {
 function findNav(path: string, navGroups: PageNavGroup[]): NavMatch | null {
   let best: NavMatch | null = null;
   let bestLen = -1;
-  const consider = (sectionTitleKey: string, sectionHref: string, item: PageNavItem) => {
+  const consider = (sectionTitleKey: string, item: PageNavItem) => {
     if (item.href === "/") return;
     if (path === item.href || path.startsWith(item.href + "/")) {
       if (item.href.length > bestLen) {
         bestLen = item.href.length;
-        best = { groupTitleKey: sectionTitleKey, sectionHref, labelKey: item.labelKey };
+        // The middle crumb is the department itself, not whichever screen the
+        // department happens to list first. It used to be the latter, so
+        // "back to section" from a journal entry landed on the accounting
+        // dashboard — a sibling screen dressed up as the level above it.
+        best = {
+          groupTitleKey: sectionTitleKey,
+          sectionHref: departmentPath(sectionTitleKey),
+          labelKey: item.labelKey,
+        };
       }
     }
   };
   for (const group of navGroups) {
     for (const item of group.items) {
-      consider(group.titleKey, group.items[0]?.href ?? item.href, item);
+      consider(group.titleKey, item);
     }
     for (const sub of group.subGroups ?? []) {
       for (const item of sub.items) {
-        consider(sub.titleKey, sub.items[0]?.href ?? item.href, item);
+        consider(sub.titleKey, item);
       }
     }
   }
@@ -64,8 +73,14 @@ export function PageNav({ navGroups }: { navGroups: PageNavGroup[] }) {
   // Home is the executive landing / breadcrumb root — no nav bar there.
   if (location === "/") return null;
 
-  const match = findNav(location, navGroups);
-  const pageLabelKey = match ? match.labelKey : FALLBACK_LABELS[location];
+  // A department workspace is the middle of the chain, not a screen in it, so
+  // it has no navigation entry to match. Its own name is the last crumb.
+  const departmentCrumb = navGroupTitleKeyForSlug(
+    location.startsWith("/department/") ? location.slice("/department/".length) : "",
+  );
+
+  const match = departmentCrumb ? null : findNav(location, navGroups);
+  const pageLabelKey = departmentCrumb ?? (match ? match.labelKey : FALLBACK_LABELS[location]);
   const Sep = dir === "rtl" ? ChevronLeft : ChevronRight;
   const BackIcon = dir === "rtl" ? ArrowRight : ArrowLeft;
 

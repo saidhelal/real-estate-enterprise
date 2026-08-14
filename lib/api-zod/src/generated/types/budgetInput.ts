@@ -9,7 +9,7 @@
 export interface BudgetInput {
   companyId: string;
   fiscalYearId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   status?: string;

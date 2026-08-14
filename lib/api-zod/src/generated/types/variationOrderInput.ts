@@ -8,7 +8,7 @@
 
 export interface VariationOrderInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   title: string;
   titleAr?: string;

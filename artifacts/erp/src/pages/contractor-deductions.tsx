@@ -28,7 +28,17 @@ export default function ContractorDeductionsPage() {
   const certificateOptions = (certificateData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "contractorDeduction",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
     { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "deductionType", label: "Deduction Type", labelAr: "نوع الخصم", type: "select", options: enumOptions(["penalty", "delay_penalty", "quality_penalty", "other"]) },

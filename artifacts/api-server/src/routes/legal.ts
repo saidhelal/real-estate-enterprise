@@ -92,6 +92,7 @@ type CrudConfig = SharedCrudConfig & {
 
 const resources: CrudConfig[] = [
   { path: "legal-contracts", table: legalContractsTable, module: "legalContracts", entity: "legalContract",
+    generatedCode: { documentType: "legalContract" },
     createBody: CreateLegalContractBody, updateBody: UpdateLegalContractBody, listResponse: ListLegalContractsResponse,
     search: ["code", "title", "titleAr", "counterpartyName"], editableStatuses: LEGAL_CONTRACT_EDITABLE_STATUSES,
     onCreate: async (req, row) => {
@@ -107,9 +108,11 @@ const resources: CrudConfig[] = [
     createBody: CreateContractTemplateBody, updateBody: UpdateContractTemplateBody, listResponse: ListContractTemplatesResponse,
     search: ["code", "name", "nameAr"] },
   { path: "contract-versions", table: contractVersionsTable, module: "contractVersions", entity: "contractVersion",
+    generatedCode: { documentType: "contractVersion" },
     createBody: CreateContractVersionBody, updateBody: UpdateContractVersionBody, listResponse: ListContractVersionsResponse,
     search: ["changeSummary"] },
   { path: "legal-contract-amendments", table: legalContractAmendmentsTable, module: "legalContractAmendments", entity: "legalContractAmendment",
+    generatedCode: { documentType: "legalContractAmendment" },
     createBody: CreateLegalContractAmendmentBody, updateBody: UpdateLegalContractAmendmentBody, listResponse: ListLegalContractAmendmentsResponse,
     search: ["code", "description", "descriptionAr"],
     onCreate: async (req, row) => {
@@ -137,6 +140,7 @@ const resources: CrudConfig[] = [
       });
     } },
   { path: "contract-addendums", table: contractAddendumsTable, module: "contractAddendums", entity: "contractAddendum",
+    generatedCode: { documentType: "contractAddendum" },
     createBody: CreateContractAddendumBody, updateBody: UpdateContractAddendumBody, listResponse: ListContractAddendumsResponse,
     search: ["code", "title"] },
   { path: "legal-contract-attachments", table: legalContractAttachmentsTable, module: "legalContractAttachments", entity: "legalContractAttachment",
@@ -146,21 +150,29 @@ const resources: CrudConfig[] = [
     createBody: CreateContractEventBody, updateBody: UpdateContractEventBody, listResponse: ListContractEventsResponse,
     search: ["eventType", "description"] },
   { path: "law-firms", table: lawFirmsTable, module: "lawFirms", entity: "lawFirm",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "lawFirm" },
     createBody: CreateLawFirmBody, updateBody: UpdateLawFirmBody, listResponse: ListLawFirmsResponse,
     search: ["code", "name", "nameAr", "contactPerson"] },
   { path: "legal-advisors", table: legalAdvisorsTable, module: "legalAdvisors", entity: "legalAdvisor",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "legalAdvisor" },
     createBody: CreateLegalAdvisorBody, updateBody: UpdateLegalAdvisorBody, listResponse: ListLegalAdvisorsResponse,
     search: ["code", "name", "nameAr", "specialization"] },
   { path: "legal-cases", table: legalCasesTable, module: "legalCases", entity: "legalCase",
+    generatedCode: { documentType: "legalCase" },
     createBody: CreateLegalCaseBody, updateBody: UpdateLegalCaseBody, listResponse: ListLegalCasesResponse,
     search: ["code", "title", "titleAr", "courtCaseNumber", "opponentName"] },
   { path: "legal-hearings", table: legalHearingsTable, module: "legalHearings", entity: "legalHearing",
+    generatedCode: { documentType: "legalHearing" },
     createBody: CreateLegalHearingBody, updateBody: UpdateLegalHearingBody, listResponse: ListLegalHearingsResponse,
     search: ["code", "location", "summary"] },
   { path: "legal-claims", table: legalClaimsTable, module: "legalClaims", entity: "legalClaim",
+    generatedCode: { documentType: "legalClaim" },
     createBody: CreateLegalClaimBody, updateBody: UpdateLegalClaimBody, listResponse: ListLegalClaimsResponse,
     search: ["code", "description"] },
   { path: "legal-notices", table: legalNoticesTable, module: "legalNotices", entity: "legalNotice",
+    generatedCode: { documentType: "legalNotice" },
     createBody: CreateLegalNoticeBody, updateBody: UpdateLegalNoticeBody, listResponse: ListLegalNoticesResponse,
     search: ["code", "subject", "recipientName"] },
   { path: "legal-case-links", table: legalCaseLinksTable, module: "legalCaseLinks", entity: "legalCaseLink",

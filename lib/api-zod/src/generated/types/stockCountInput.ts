@@ -8,7 +8,7 @@
 
 export interface StockCountInput {
   companyId: string;
-  code: string;
+  code?: string;
   countDate?: string;
   warehouseId?: string;
   countType?: string;

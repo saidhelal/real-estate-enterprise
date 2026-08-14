@@ -1,3 +1,4 @@
+import { nextNumber } from "../lib/doc-number";
 import { Router, type IRouter } from "express";
 import { and, eq, ne, lt, gte, inArray, desc, asc, sql } from "drizzle-orm";
 import {
@@ -84,12 +85,16 @@ function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function genCode(prefix: string): string {
-  return `${prefix}-${Date.now().toString(36).toUpperCase()}-${Math.floor(
-    Math.random() * 1000,
-  )
-    .toString()
-    .padStart(3, "0")}`;
+/**
+ * Portal request references.
+ *
+ * Was a base-36 timestamp plus three random digits — unique by luck, and
+ * unreadable to the customer quoting it back over the phone. Comes from the
+ * central sequence like every other issued identifier; the prefix names the
+ * sequence rather than being pasted into the string.
+ */
+async function genCode(prefix: string, companyId: string | null = null): Promise<string> {
+  return (await nextNumber(prefix, companyId)).value;
 }
 
 // Verify that an attachment path supplied on a write was minted by
@@ -894,7 +899,7 @@ router.post(
         companyId,
         customerId,
         customerUserId,
-        code: genCode("MR"),
+        code: await genCode("portalMaintenanceRequest", companyId),
         unitId: d.unitId ?? null,
         contractId: d.contractId ?? null,
         category: d.category ?? "general",
@@ -984,7 +989,7 @@ router.post(
         companyId,
         customerId,
         customerUserId,
-        code: genCode("CMP"),
+        code: await genCode("portalComplaint", companyId),
         category: d.category ?? "general",
         subject: d.subject,
         description: d.description ?? null,
@@ -1126,7 +1131,7 @@ router.post(
           companyId,
           customerId,
           customerUserId,
-          code: genCode("TKT"),
+          code: await genCode("portalTicket", companyId),
           subject: d.subject,
           category: d.category ?? "general",
           priority: d.priority ?? "medium",

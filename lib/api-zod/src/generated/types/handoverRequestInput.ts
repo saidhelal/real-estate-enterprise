@@ -8,7 +8,7 @@
 
 export interface HandoverRequestInput {
   companyId: string;
-  code: string;
+  code?: string;
   unitId: string;
   customerId?: string;
   contractId?: string;

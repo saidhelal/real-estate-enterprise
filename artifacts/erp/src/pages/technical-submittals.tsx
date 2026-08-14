@@ -30,7 +30,17 @@ export default function TechnicalSubmittalsPage() {
   const consultantOptions = (consultantData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "technicalSubmittal",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", options: projectOptions },
     { name: "title", label: "Title", labelAr: "العنوان", required: true },
     { name: "submittalType", label: "Submittal Type", labelAr: "نوع التقديم" },

@@ -8,7 +8,7 @@
 
 export interface MaterialSubmittalInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   materialName: string;
   manufacturer?: string;

@@ -8,7 +8,7 @@
 
 export interface SupplierEvaluationInput {
   companyId: string;
-  code: string;
+  code?: string;
   supplierId?: string;
   evaluationDate?: string;
   period?: string;

@@ -8,7 +8,7 @@
 
 export interface TechnicalSubmittalInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   title: string;
   submittalType?: string;

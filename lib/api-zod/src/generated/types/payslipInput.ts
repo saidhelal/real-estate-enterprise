@@ -8,7 +8,7 @@
 
 export interface PayslipInput {
   companyId: string;
-  code: string;
+  code?: string;
   payrollRunId?: string;
   employeeId?: string;
   basicSalary?: string;

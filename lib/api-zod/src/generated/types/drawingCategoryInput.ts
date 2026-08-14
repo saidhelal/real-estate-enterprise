@@ -8,7 +8,7 @@
 
 export interface DrawingCategoryInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   disciplineId?: string;

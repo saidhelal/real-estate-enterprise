@@ -25,7 +25,17 @@ export default function CorrectiveActionsPage() {
   const defectOptions = (defectData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "correctiveAction",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "defectId", label: "Defect", labelAr: "العيب", type: "select", options: defectOptions },
     { name: "action", label: "Action", labelAr: "الإجراء", type: "textarea", required: true },
     { name: "assignedTo", label: "Assigned To", labelAr: "مُسند إلى" },

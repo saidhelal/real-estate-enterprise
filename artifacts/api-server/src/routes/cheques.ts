@@ -1,3 +1,4 @@
+import { nextNumber } from "../lib/doc-number";
 import { Router, type IRouter } from "express";
 import { and, desc, eq, ilike, or, sql, type SQL } from "drizzle-orm";
 import {
@@ -100,8 +101,15 @@ const FROZEN_FIELDS = [
   "paymentVoucherId",
 ];
 
-function historyCode(): string {
-  return `CHQH-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+/**
+ * The reference for a cheque-history entry.
+ *
+ * Was a timestamp plus a random number, which is not a business reference: it
+ * is unsortable, unreadable and only unique by luck. It comes from the central
+ * sequence like every other system-issued identifier.
+ */
+async function historyCode(companyId: string | null): Promise<string> {
+  return (await nextNumber("chequeHistory", companyId)).value;
 }
 
 // ===================== cheques =====================
@@ -139,7 +147,7 @@ router.post("/cheques", requirePermission("cheques.create"), async (req, res): P
   // Every cheque is born "Received" (requirement: default status). The lifecycle
   // is advanced only through the guarded /transition and /replace endpoints, so a
   // caller cannot create a cheque already past the start of its lifecycle.
-  const [row] = await db.insert(chequesTable).values({ ...data, status: "received" }).returning();
+  const [row] = await db.insert(chequesTable).values({ ...data, code: (await nextNumber("cheque", req.authUser?.companyId ?? null)).value, status: "received" }).returning();
   await recordAudit(req, { action: "create", entity: "cheque", entityId: row.id, newValue: row });
   res.status(201).json(GetChequeResponse.parse(serializeRow(row)));
 });
@@ -165,6 +173,9 @@ router.patch("/cheques/:id", requirePermission("cheques.update"), async (req, re
   // Governance: status is only changed through the transition endpoint, never a
   // plain PATCH (which would bypass history logging and ledger posting).
   delete update.status;
+  // The cheque's own code is issued by the central sequence; an edit that could
+  // rewrite it would let one cheque take another's number.
+  delete update.code;
   // Once cleared, the cheque has driven a ledger entry — its financial identity
   // is immutable. Only descriptive fields (notes, dates) may still change.
   const cleared = existing.status === COLLECTED;
@@ -289,7 +300,7 @@ router.patch("/cheques/:id/transition", requirePermission("cheques.update"), asy
 
     await tx.insert(chequeStatusHistoryTable).values({
       companyId: existing.companyId,
-      code: historyCode(),
+      code: await historyCode(req.authUser?.companyId ?? null),
       chequeId: id,
       action: toStatus,
       fromStatus,
@@ -419,7 +430,7 @@ router.post("/cheques/:id/replace", requirePermission("cheques.update"), async (
     await tx.insert(chequeStatusHistoryTable).values([
       {
         companyId: orig.companyId,
-        code: historyCode(),
+        code: await historyCode(req.authUser?.companyId ?? null),
         chequeId: orig.id,
         action: REPLACED,
         fromStatus: orig.status,
@@ -430,7 +441,7 @@ router.post("/cheques/:id/replace", requirePermission("cheques.update"), async (
       },
       {
         companyId: orig.companyId,
-        code: historyCode(),
+        code: await historyCode(req.authUser?.companyId ?? null),
         chequeId: replacement.id,
         action: "received",
         fromStatus: null,

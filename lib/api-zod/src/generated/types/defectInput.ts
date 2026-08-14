@@ -8,7 +8,7 @@
 
 export interface DefectInput {
   companyId: string;
-  code: string;
+  code?: string;
   inspectionReportId?: string;
   projectId?: string;
   description: string;

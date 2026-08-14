@@ -8,7 +8,7 @@
 
 export interface StockOpeningBalanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   itemId?: string;
   warehouseId?: string;
   locationId?: string;

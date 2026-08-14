@@ -22,7 +22,17 @@ export default function ProcurementApprovalsPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "procurementApproval",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "entityType", label: "Entity Type", labelAr: "نوع الكيان" },
     { name: "entityId", label: "Entity ID", labelAr: "معرّف الكيان" },
     { name: "level", label: "Level", labelAr: "المستوى", type: "select", options: enumOptions(["department_head", "procurement_manager", "general_manager", "finance"]) },

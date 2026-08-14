@@ -9,7 +9,7 @@
 export interface EmployeeInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   firstName: string;
   lastName: string;
   firstNameAr?: string;

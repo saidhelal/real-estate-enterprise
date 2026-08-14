@@ -587,6 +587,14 @@ export const NAV_GROUPS: NavGroup[] = RAW_NAV_GROUPS.map((group) => {
   };
 });
 
+/**
+ * The product's name, in one place.
+ *
+ * It was written out at both brand marks and was about to be written a third
+ * time in the footer. Three copies of a name is how a rename half-lands.
+ */
+export const BRAND_NAME = "ERP System";
+
 /** What the filter needs to know about the signed-in user. */
 export interface NavViewer {
   permissions?: string[];
@@ -644,15 +652,71 @@ export function filterNavGroups(user: NavViewer | null | undefined): NavGroup[] 
  * department's own items — so a caller gets "the things this department is
  * made of" without having to know which shape it happens to use, and without
  * keeping its own list of what those things are.
+ *
+ * A sub-group key resolves too, to that sub-group alone. Finance and
+ * Engineering are the departments that carry sub-groups, and their screens
+ * report the sub-group as their section — so without this, the breadcrumb for
+ * a journal entry would offer an Accounting workspace that came back empty.
  */
 export function navSectionsFor(
   groups: NavGroup[],
   titleKey: string,
 ): Array<{ titleKey: string; items: NavItem[] }> {
   const group = groups.find((g) => g.titleKey === titleKey);
-  if (!group) return [];
-  if (group.subGroups?.length) return group.subGroups;
-  return group.items.length ? [{ titleKey: group.titleKey, items: group.items }] : [];
+  if (group) {
+    if (group.subGroups?.length) return group.subGroups;
+    return group.items.length ? [{ titleKey: group.titleKey, items: group.items }] : [];
+  }
+  for (const parent of groups) {
+    const sub = parent.subGroups?.find((s) => s.titleKey === titleKey);
+    if (sub) return sub.items.length ? [sub] : [];
+  }
+  return [];
+}
+
+/**
+ * Where a department's own workspace lives.
+ *
+ * A department is not a screen, so it does not get a hand-written route: the
+ * one `/department/:slug` page renders whatever `navSectionsFor` reports. This
+ * is the only place the URL shape is written, and `navGroupTitleKeyForSlug`
+ * below is its exact inverse — so Home's tiles, the breadcrumb and the page
+ * itself all agree by construction rather than by three matching lists.
+ *
+ * The slug is the key's last segment: `nav.group.general_admin` →
+ * `/department/general_admin`.
+ *
+ * The last segment rather than "everything after a known prefix", because the
+ * tree uses two: departments are `nav.group.*` and their sections are
+ * `nav.section.*`. Assuming one prefix silently mangled all thirty-seven
+ * sections into dead links — Procurement, Inventory, HR, Customer Service,
+ * General Administration, Insurance and Business Intelligence, every screen in
+ * them. All sixty-eight last segments are distinct, and the test below keeps
+ * them that way.
+ */
+function departmentSlug(titleKey: string): string {
+  return titleKey.slice(titleKey.lastIndexOf(".") + 1);
+}
+
+export function departmentPath(groupTitleKey: string): string {
+  return `/department/${departmentSlug(groupTitleKey)}`;
+}
+
+/**
+ * The department a slug names, or null if it names nothing.
+ *
+ * Resolved by searching the real tree rather than by rebuilding the key from
+ * the string. That makes it a true inverse of `departmentPath` whatever the
+ * key's prefix happens to be, and means a typed or stale URL cannot conjure an
+ * empty department that looks real.
+ */
+export function navGroupTitleKeyForSlug(slug: string): string | null {
+  for (const group of NAV_GROUPS) {
+    if (departmentSlug(group.titleKey) === slug) return group.titleKey;
+    const sub = group.subGroups?.find((s) => departmentSlug(s.titleKey) === slug);
+    if (sub) return sub.titleKey;
+  }
+  return null;
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -668,6 +732,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // the shell adds no request on a cold start.
   const { data: companies } = useListCompanies();
   const notifParams = { companyId: companies?.[0]?.id };
+  // The company this session works in, named for the footer. Read off the list
+  // the shell already holds, in the reading language, and left undefined while
+  // it loads so the footer shows nothing rather than a stand-in name.
+  const activeCompany = companies?.[0];
+  const activeCompanyName = activeCompany
+    ? (language === "ar" ? (activeCompany.nameAr ?? activeCompany.name) : activeCompany.name)
+    : undefined;
   const { data: notifDash } = useGetNotificationsDashboard(notifParams, {
     query: {
       enabled: !!notifParams.companyId,
@@ -708,6 +779,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // One filtered tree, shared by the horizontal bar, the mobile drawer and the
   // breadcrumb below. Nothing here re-derives it.
   const navGroups = filterNavGroups(user);
+
+  // The assistant follows the same AI gate the navigation uses: if the AI
+  // screens are hidden, the assistant is too. Asked of the filtered tree
+  // rather than re-deriving the rule here.
+  const showAssistant = navGroups.some((g) =>
+    [...g.items, ...(g.subGroups ?? []).flatMap((s) => s.items)].some((i) =>
+      AI_NAV_HREFS.has(i.href),
+    ),
+  );
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -812,7 +892,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           is reached through the menu button below on every viewport instead of
           being pinned open on large ones. */}
       <div className="flex w-full flex-1 min-h-0">
-      <div className="flex flex-col flex-1 min-w-0">
+      {/* `min-h-0` as well as `min-w-0`: a flex child defaults to min-height
+          auto, which lets it grow past its parent instead of letting <main>
+          scroll inside it. Without it the footer below would be pushed off the
+          bottom of a long page rather than sitting at the edge of the shell. */}
+      <div className="flex flex-col flex-1 min-w-0 min-h-0">
         <header className="flex h-[var(--layout-header-height)] items-center gap-3 border-b bg-background px-4 lg:px-6">
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
@@ -824,7 +908,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <SheetContent side={dir === "rtl" ? "right" : "left"} className="flex flex-col w-64 p-0">
               <div className="flex h-[var(--layout-header-height)] items-center border-b px-4 font-semibold">
                 <Building2 className="h-6 w-6 me-2" />
-                <span>ERP System</span>
+                <span>{BRAND_NAME}</span>
               </div>
               <ScrollArea className="flex-1 overflow-auto py-4">
                 <nav className="grid items-start px-4 text-sm font-medium space-y-1">
@@ -838,7 +922,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               rail gone it belongs here, and it keeps a one-click route home. */}
           <Link href="/" className="flex shrink-0 items-center gap-2 text-sm font-semibold">
             <Building2 className="h-5 w-5 text-primary" />
-            <span className="hidden sm:inline">ERP System</span>
+            <span className="hidden sm:inline">{BRAND_NAME}</span>
           </Link>
 
           <div className="flex flex-1 items-center justify-end gap-2">
@@ -881,6 +965,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Button>
               ))}
             <HeaderActions />
+
+            {/* The assistant sits beside the language toggle. One component,
+                mounted once: it renders this trigger and owns its own panel,
+                which portals out of the header when opened. */}
+            {showAssistant && <EnterpriseAssistant />}
 
             <Button
               variant="ghost"
@@ -972,16 +1061,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <PageNav navGroups={navGroups} />
           {children}
         </main>
+
+        {/* The footer takes the header's own height token rather than a second
+            number that happens to match today, so the two stay equal through
+            any change to the shell's scale. It sits outside <main>, which is
+            the scrolling region, so it stays put instead of arriving only at
+            the bottom of a long table. */}
+        <footer className="flex h-[var(--layout-header-height)] shrink-0 items-center justify-between gap-3 border-t bg-background px-4 text-xs text-muted-foreground lg:px-6">
+          {/* Which company the session is writing to. The same value the rest
+              of the shell already loaded — this asks nothing extra of the API,
+              and shows nothing at all until it arrives rather than a
+              placeholder that could be mistaken for a real company. */}
+          <span className="min-w-0 truncate">
+            {activeCompanyName ? (
+              <>
+                <Building2 className="me-1.5 inline h-3.5 w-3.5 align-[-2px]" />
+                {activeCompanyName}
+              </>
+            ) : null}
+          </span>
+          <span className="shrink-0 whitespace-nowrap">
+            {BRAND_NAME} · {new Date().getFullYear()}
+          </span>
+        </footer>
       </div>
       </div>
-      {/* The floating assistant follows the same AI gate the navigation uses:
-          if the AI screens are hidden, the assistant is too. Asked of the
-          filtered tree rather than re-deriving the rule here. */}
-      {navGroups.some((g) =>
-        [...g.items, ...(g.subGroups ?? []).flatMap((s) => s.items)].some((i) =>
-          AI_NAV_HREFS.has(i.href),
-        ),
-      ) && <EnterpriseAssistant />}
     </div>
   );
 }

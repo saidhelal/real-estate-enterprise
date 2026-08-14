@@ -63,7 +63,17 @@ export default function EmployeeLoansPage() {
   };
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "employeeLoan",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "employeeId", label: t("nav.employees"), type: "select", options: employeeOptions, required: true },
     { name: "loanType", label: t("hr.loan_type"), type: "select", options: LOAN_TYPE },
     { name: "amount", label: t("hr.amount"), type: "money", required: true },

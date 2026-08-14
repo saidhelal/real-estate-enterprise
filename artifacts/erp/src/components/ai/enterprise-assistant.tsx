@@ -155,10 +155,15 @@ export function EnterpriseAssistant() {
 
   return (
     <>
+      {/* The launcher lives in the header beside the language toggle, so it
+          reads as one of the shell's controls and takes the same ghost icon
+          shape as its neighbours. It used to float over the bottom corner,
+          where it covered whatever the page put there — pagination, a save
+          bar, the last row of a table. */}
       <Button
         onClick={() => setOpen(true)}
+        variant="ghost"
         size="icon"
-        className="fixed bottom-5 z-40 h-12 w-12 rounded-full shadow-lg end-5"
         title={t("ai.enterprise.open")}
       >
         <Sparkles className="h-5 w-5" />

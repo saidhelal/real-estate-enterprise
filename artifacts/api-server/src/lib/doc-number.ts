@@ -1,4 +1,4 @@
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, isNull, or, sql } from "drizzle-orm";
 import { db, numberSequencesTable } from "@workspace/db";
 import { formatSequenceSample } from "./presenters";
 
@@ -34,12 +34,87 @@ export interface GeneratedNumber {
   companyId: string | null;
 }
 
-/** Default shape for a sequence created on first use. */
-function defaultPrefix(documentType: string): string {
-  // Letters only, upper-cased, capped — a readable stem rather than the whole
-  // entity name: `securityIncident` becomes `SEC`, `Contract` becomes `CON`.
-  const letters = documentType.replace(/[^A-Za-z]/g, "");
-  return (letters.slice(0, 3) || "DOC").toUpperCase();
+/**
+ * The prefixes to try for a type nobody has configured, shortest first.
+ *
+ * Built from the initial of each word, then filled from the last word:
+ * `purchaseOrder` → `POR`, `purchaseRequest` → `PRE`, `paymentCertificate` →
+ * `PCE`. Taking the first three letters of the whole name instead — the obvious
+ * approach — gave `purchaseOrder` and `purchaseRequest` the same `PUR`.
+ *
+ * A configured sequence keeps whatever prefix it was given; this only decides
+ * the starting point for a type nobody has configured.
+ *
+ * Three characters is the house style, but three characters is not always
+ * available: `consultant` and `contractor` both start `CON`, which the contract
+ * register already uses. So each step keeps the word initials and takes one
+ * more letter from the last word — `CON`, `CONS`, `CONSU` — and the caller
+ * walks the list until it finds one no other document type has taken.
+ *
+ * The numeric tail exists only so the function always terminates; a type that
+ * needs it is a naming problem worth fixing by configuring the sequence.
+ */
+function prefixCandidates(documentType: string): string[] {
+  const words = documentType
+    .replace(/[^A-Za-z]+/g, " ")
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0) return ["DOC"];
+
+  const initials = words.map((w) => w[0]).join("");
+  const last = words[words.length - 1];
+  const out: string[] = [];
+  for (let width = 3; width <= 6; width++) {
+    let stem = initials;
+    for (let i = 1; stem.length < width && i < last.length; i++) stem += last[i];
+    const candidate = stem.slice(0, width).toUpperCase().padEnd(3, "X");
+    if (!out.includes(candidate)) out.push(candidate);
+  }
+  const base = out[0];
+  for (let n = 2; n <= 9; n++) out.push(`${base}${n}`);
+  return out;
+}
+
+/**
+ * Pick a prefix for a sequence being created on first use, avoiding one that
+ * another document type already answers to.
+ *
+ * Two counters sharing a prefix never duplicate a number — they are separate
+ * rows — but `PUR-2026-000001` printed on both a purchase order and a purchase
+ * request is indistinguishable from a bug to whoever is holding the two pieces
+ * of paper. That collision was found and fixed once by hand; resolving it here
+ * means the next new document type cannot reintroduce it.
+ *
+ * Only prefixes visible to the same reader are considered: this company's own
+ * sequences plus the global ones. Another tenant's choices neither constrain
+ * this one nor leak into it.
+ *
+ * Preview and issue both go through here, so the number a form displays for a
+ * type that has never been used is the number that type will actually get.
+ */
+async function resolvePrefix(
+  runner: Pick<typeof db, "select">,
+  documentType: string,
+  companyId: string | null,
+): Promise<string> {
+  const candidates = prefixCandidates(documentType);
+  const rows = await runner
+    .select({ prefix: numberSequencesTable.prefix, documentType: numberSequencesTable.documentType })
+    .from(numberSequencesTable)
+    .where(
+      and(
+        eq(numberSequencesTable.isDeleted, false),
+        companyId
+          ? or(eq(numberSequencesTable.companyId, companyId), isNull(numberSequencesTable.companyId))
+          : isNull(numberSequencesTable.companyId),
+      ),
+    );
+  const taken = new Set(
+    rows.filter((r) => r.documentType !== documentType).map((r) => r.prefix.toUpperCase()),
+  );
+  return candidates.find((c) => !taken.has(c)) ?? candidates[candidates.length - 1];
 }
 
 /**
@@ -107,7 +182,9 @@ export async function nextNumber(
         .insert(numberSequencesTable)
         .values({
           documentType,
-          prefix: defaultPrefix(documentType),
+          // Resolved inside the advisory lock, so two types created at the same
+          // moment cannot both claim the same free prefix.
+          prefix: await resolvePrefix(tx, documentType, companyId),
           nextNumber: 1,
           padding: 6,
           resetYearly: true,
@@ -187,7 +264,9 @@ export async function sequenceShapeFor(
       ),
     );
   const year = new Date().getFullYear();
-  if (!seq) return { prefix: defaultPrefix(documentType), nextNumber: 1, periodYear: year };
+  if (!seq) {
+    return { prefix: await resolvePrefix(db, documentType, companyId), nextNumber: 1, periodYear: year };
+  }
   const rolledOver = seq.resetYearly && seq.periodYear !== year;
   return {
     prefix: seq.prefix,
@@ -215,7 +294,9 @@ export async function previewNumber(
       ),
     );
   if (!seq) {
-    return formatSequenceSample(defaultPrefix(documentType), 1, 6, true);
+    // Same resolution the create path will run, so the form's forecast for a
+    // never-used type matches the number that type is actually given.
+    return formatSequenceSample(await resolvePrefix(db, documentType, companyId), 1, 6, true);
   }
   const year = new Date().getFullYear();
   const counter = seq.resetYearly && seq.periodYear !== year ? 1 : seq.nextNumber;

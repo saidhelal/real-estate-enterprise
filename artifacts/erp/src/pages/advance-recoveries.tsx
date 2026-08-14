@@ -26,7 +26,17 @@ export default function AdvanceRecoverysPage() {
   const certificateOptions = (certificateData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "advanceRecovery",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "advanceId", label: "Advance Payment", labelAr: "الدفعة المقدمة", type: "select", options: advanceOptions },
     { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },

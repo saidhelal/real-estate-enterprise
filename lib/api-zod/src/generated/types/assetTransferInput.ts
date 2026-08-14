@@ -8,7 +8,7 @@
 
 export interface AssetTransferInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId: string;
   fromBranchId?: string;
   toBranchId?: string;

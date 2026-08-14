@@ -24,7 +24,17 @@ export default function PayrollPeriodsPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "payrollPeriod",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "name", label: t("common.name"), required: true },
     { name: "year", label: t("hr.year"), type: "number", required: true },
     { name: "month", label: t("hr.month"), type: "number", required: true },

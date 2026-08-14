@@ -24,7 +24,18 @@ export default function AssetCategoriesPage() {
   const { options: DEPRECIATION_METHODS } = useLookupOptions("asset_depreciation_method", ["straight_line", "declining_balance"]);
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Code",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "assetCategory",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },
     { name: "usefulLifeYears", label: "Useful Life (Years)", labelAr: "العمر الإنتاجي (سنوات)", type: "money" },

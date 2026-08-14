@@ -27,7 +27,18 @@ export default function AssetInventoryCountsPage() {
   const { options: COUNT_RESULTS } = useLookupOptions("asset_count_result", ["found", "missing", "damaged"]);
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Code",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "assetInventoryCount",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "assetId", label: "Asset", labelAr: "الأصل", type: "select", options: assetIdOptions },
     { name: "branchId", label: "Branch ID", labelAr: "معرّف الفرع" },
     { name: "countDate", label: "Count Date", labelAr: "تاريخ الجرد", type: "date" },

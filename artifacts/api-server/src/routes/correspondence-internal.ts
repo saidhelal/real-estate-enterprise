@@ -9,7 +9,7 @@ import {
 import { requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
 import { notify } from "../lib/notify";
-import { nextDocumentNumber } from "../lib/doc-number";
+import { nextNumber } from "../lib/doc-number";
 import {
   addressableFor,
   assertAddressable,
@@ -471,7 +471,7 @@ router.post(
       }
     }
 
-    const code = (await nextDocumentNumber("correspondence")) ?? `CORR-${Date.now()}`;
+    const code = (await nextNumber("correspondence", req.authUser?.companyId ?? null)).value;
     const now = new Date();
 
     const created: Row = await db.transaction(async (tx): Promise<Row> => {
@@ -691,7 +691,7 @@ router.post(
       return;
     }
 
-    const code = (await nextDocumentNumber("correspondence")) ?? `CORR-${Date.now()}`;
+    const code = (await nextNumber("correspondence", req.authUser?.companyId ?? null)).value;
     const now = new Date();
     const threadId = String(row.threadId ?? row.id);
 

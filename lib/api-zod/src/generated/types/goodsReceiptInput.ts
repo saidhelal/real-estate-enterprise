@@ -8,7 +8,7 @@
 
 export interface GoodsReceiptInput {
   companyId: string;
-  code: string;
+  code?: string;
   receiptDate?: string;
   receiptType?: string;
   warehouseId?: string;

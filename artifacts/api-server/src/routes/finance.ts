@@ -50,6 +50,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import {
   postAutomaticEntry,
@@ -577,7 +578,7 @@ router.post("/receipts", requirePermission("receipts.create"), async (req, res):
   if (amount === null) { res.status(400).json({ error: "Invalid amount" }); return; }
   const { allocations: allocInput, status: _ignoredStatus, ...receiptFields } = data;
   const result = await db.transaction(async (tx) => {
-    const [created] = await tx.insert(receiptsTable).values({ ...receiptFields, status: "draft", userId: req.authUser?.id ?? null }).returning();
+    const [created] = await tx.insert(receiptsTable).values({ ...receiptFields, code: (await nextNumber("Receipt", req.authUser?.companyId ?? null)).value, status: "draft", userId: req.authUser?.id ?? null }).returning();
     const allocations = allocInput?.length
       ? await tx.insert(receiptAllocationsTable).values(allocInput.map((a) => ({
           companyId: data.companyId, receiptId: created.id, customerInvoiceId: a.customerInvoiceId ?? null,
@@ -605,7 +606,9 @@ router.patch("/receipts/:id", requirePermission("receipts.update"), async (req, 
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   // Governance: only a draft voucher can be edited; once posted it is immutable.
   if (existing.status !== "draft") { res.status(409).json({ error: "Only a draft receipt can be edited" }); return; }
-  const update = omit(parsed.data, ["companyId", "status"]);
+  // `code` joins the list: the receipt number belongs to the sequence that
+  // issued it, so an edit cannot rewrite it into another voucher's number.
+  const update = omit(parsed.data, ["companyId", "status", "code"]);
   const [row] = Object.keys(update).length
     ? await db.update(receiptsTable).set(update).where(eq(receiptsTable.id, id)).returning()
     : [existing];

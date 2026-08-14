@@ -8,7 +8,7 @@
 
 export interface BoqInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   projectId?: string;

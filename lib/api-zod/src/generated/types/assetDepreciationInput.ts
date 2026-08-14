@@ -8,7 +8,7 @@
 
 export interface AssetDepreciationInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId: string;
   periodDate?: string;
   amount?: string;

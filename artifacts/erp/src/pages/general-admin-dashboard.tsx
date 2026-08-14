@@ -8,7 +8,6 @@ import {
 import { KpiCard } from "@/components/ui/kpi-card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLanguage } from "@/lib/language-provider";
-import { DepartmentSections } from "@/components/layout/department-sections";
 
 /**
  * General Administration.
@@ -40,16 +39,12 @@ export default function GeneralAdminDashboardPage() {
         bordered={false}
       />
 
-      {/* The department's contents, read from the navigation SSOT. This page
-          keeps no list of its own sections — the menu and this page can no
-          longer disagree about what General Administration contains. */}
-      <section className="space-y-4">
-        <h3 className="text-lg font-semibold tracking-tight">{t("ga.sections_heading")}</h3>
-        <DepartmentSections
-          groupTitleKey="nav.group.general_admin"
-          excludeHrefs={["/general-admin-dashboard"]}
-        />
-      </section>
+      {/* The department's contents are not listed here any more. They live on
+          the department's workspace at /department/general_admin, which every
+          department now has and which reads the same navigation SSOT this
+          section used to. Keeping both would have put the same cards on two
+          screens — this page is the department's dashboard, one of the screens
+          that workspace offers. */}
 
       <section className="space-y-4">
         <h3 className="text-lg font-semibold tracking-tight">{t("ga.overview_section")}</h3>

@@ -8,7 +8,7 @@
 
 export interface LeaveTypeInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   daysPerYear?: string;

@@ -9,7 +9,7 @@
 export interface ReservationInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   unitId: string;
   customerId: string;
   reservationDate: string;

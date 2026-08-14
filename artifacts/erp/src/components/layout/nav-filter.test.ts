@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { NAV_GROUPS, filterNavGroups, navSectionsFor } from "./app-shell";
+import {
+  NAV_GROUPS,
+  filterNavGroups,
+  navSectionsFor,
+  departmentPath,
+  navGroupTitleKeyForSlug,
+} from "./app-shell";
+import { MODULES } from "@/pages/home";
 
 /**
  * The navigation filter is what every surface trusts.
@@ -85,5 +92,95 @@ describe("navigation filter", () => {
 
   it("returns nothing for a department that does not exist", () => {
     expect(navSectionsFor(filterNavGroups(WILDCARD), "nav.group.nope")).toEqual([]);
+  });
+
+  it("resolves a sub-group key, so a breadcrumb inside Finance has a workspace", () => {
+    const sections = navSectionsFor(filterNavGroups(WILDCARD), "nav.group.acct_department");
+    expect(sections).toHaveLength(1);
+    expect(sections[0].items.map((i) => i.href)).toContain("/accounts");
+  });
+});
+
+/**
+ * The home launcher.
+ *
+ * A department tile is meant to open the department's workspace — Home →
+ * department → its screens → the screen. Before this, most tiles opened the
+ * department's dashboard instead, which is one screen inside the department
+ * rather than the way in to it, and nothing caught the difference because
+ * nothing asserted it. These do.
+ */
+describe("home launcher", () => {
+  it("has no tile back to home", () => {
+    expect(MODULES.some((m) => m.href === "/")).toBe(false);
+  });
+
+  it("leads with General Administration", () => {
+    expect(MODULES[0].group).toBe("nav.group.general_admin");
+  });
+
+  it("names a real department on every department tile", () => {
+    const departments = MODULES.filter((m) => m.group);
+    expect(departments.length).toBeGreaterThan(10);
+    for (const mod of departments) {
+      const slug = departmentPath(mod.group!).slice("/department/".length);
+      expect(navGroupTitleKeyForSlug(slug), `${mod.titleKey} names no department`).toBe(mod.group);
+    }
+  });
+
+  it("opens a workspace that actually has cards on it", () => {
+    const groups = filterNavGroups(WILDCARD);
+    for (const mod of MODULES.filter((m) => m.group)) {
+      const sections = navSectionsFor(groups, mod.group!);
+      const items = sections.flatMap((s) => s.items).filter((i) => i.href !== "/");
+      expect(items.length, `${mod.group} workspace is empty`).toBeGreaterThan(0);
+    }
+  });
+
+  it("never sends a department tile straight to a screen", () => {
+    // The regression this whole change exists for: a tile whose href is a
+    // route rather than a department is a tile that skips the workspace.
+    for (const mod of MODULES.filter((m) => m.group)) {
+      expect(mod.href, `${mod.titleKey} still carries a direct href`).toBeUndefined();
+    }
+  });
+
+  it("keeps every tile's destination inside the app", () => {
+    const routable = new Set([...hrefsOf(NAV_GROUPS), "/dashboard"]);
+    for (const mod of MODULES) {
+      const href = mod.group ? departmentPath(mod.group) : mod.href!;
+      const ok = href.startsWith("/department/") || routable.has(href);
+      expect(ok, `${mod.titleKey} points at ${href}, which nothing serves`).toBe(true);
+    }
+  });
+
+  it("gives each tile a distinct destination", () => {
+    const hrefs = MODULES.map((m) => (m.group ? departmentPath(m.group) : m.href!));
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+  });
+
+  it("gives every department and section its own URL", () => {
+    // Two keys sharing a slug would put two departments on one address, and
+    // whichever the lookup found first would answer for both.
+    const keys = NAV_GROUPS.flatMap((g) => [
+      g.titleKey,
+      ...(g.subGroups ?? []).map((s) => s.titleKey),
+    ]);
+    const paths = keys.map(departmentPath);
+    expect(new Set(paths).size).toBe(keys.length);
+  });
+
+  it("makes every breadcrumb department a live link", () => {
+    // The breadcrumb builds its middle crumb with departmentPath() from
+    // whichever group or sub-group owns the screen. If any of those did not
+    // resolve back, that crumb would be a dead link on every screen in it.
+    const keys = NAV_GROUPS.flatMap((g) => [
+      g.titleKey,
+      ...(g.subGroups ?? []).map((s) => s.titleKey),
+    ]);
+    for (const key of keys) {
+      const slug = departmentPath(key).slice("/department/".length);
+      expect(navGroupTitleKeyForSlug(slug), `${key} has no workspace`).toBe(key);
+    }
   });
 });

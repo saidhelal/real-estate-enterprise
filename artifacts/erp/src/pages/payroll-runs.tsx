@@ -56,7 +56,17 @@ export default function PayrollRunsPage() {
   };
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "payrollRun",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "payrollPeriodId", label: t("nav.payroll_periods"), type: "select", options: periodOptions },
     { name: "runDate", label: t("hr.run_date"), type: "date", required: true },
     { name: "description", label: t("common.description"), type: "textarea" },

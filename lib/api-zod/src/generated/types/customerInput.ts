@@ -9,7 +9,7 @@
 export interface CustomerInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   fullName: string;
   nameAr?: string;
   type?: string;

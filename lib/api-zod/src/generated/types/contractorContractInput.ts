@@ -8,7 +8,7 @@
 
 export interface ContractorContractInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   contractorId?: string;

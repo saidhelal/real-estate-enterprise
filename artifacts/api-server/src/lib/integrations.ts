@@ -9,7 +9,7 @@ import {
 } from "@workspace/db";
 import type { ContractRow } from "@workspace/db";
 import type { Tx } from "./posting";
-import { nextDocumentNumber } from "./doc-number";
+import { nextNumber } from "./doc-number";
 
 // ---------------------------------------------------------------------------
 // Cross-module integration side effects. These keep the canonical shared
@@ -205,7 +205,7 @@ export async function ensureLegalContractForContract(
       .where(eq(customersTable.id, contract.customerId))
       .limit(1);
     const code =
-      (await nextDocumentNumber("LegalContract")) || `LC-${contract.code}`;
+      (await nextNumber("LegalContract", contract.companyId ?? null)).value;
     const [created] = await tx
       .insert(legalContractsTable)
       .values({

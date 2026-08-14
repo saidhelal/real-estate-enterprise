@@ -8,7 +8,7 @@
 
 export interface EmployeeEvaluationInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   evaluatorEmployeeId?: string;
   evaluationPeriod?: string;

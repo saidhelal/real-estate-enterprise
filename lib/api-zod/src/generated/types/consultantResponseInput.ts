@@ -8,7 +8,7 @@
 
 export interface ConsultantResponseInput {
   companyId: string;
-  code: string;
+  code?: string;
   referenceType?: string;
   referenceId?: string;
   consultantId?: string;

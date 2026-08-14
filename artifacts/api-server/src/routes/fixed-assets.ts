@@ -40,6 +40,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import {
   PostingError,
@@ -155,7 +156,7 @@ router.get("/asset-categories", requirePermission("assetCategories.view"), async
 router.post("/asset-categories", requirePermission("assetCategories.create"), async (req, res): Promise<void> => {
   const parsed = CreateAssetCategoryBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(assetCategoriesTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(assetCategoriesTable).values({ ...parsed.data, code: (await nextNumber("assetCategory", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "assetCategory", entityId: row.id, newValue: row });
   res.status(201).json(GetAssetCategoryResponse.parse(serializeRow(row)));
 });
@@ -174,6 +175,8 @@ router.patch("/asset-categories/:id", requirePermission("assetCategories.update"
   const [existing] = await db.select().from(assetCategoriesTable).where(and(eq(assetCategoriesTable.id, id), eq(assetCategoriesTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(assetCategoriesTable).set(update).where(eq(assetCategoriesTable.id, id)).returning()
     : [existing];
@@ -221,7 +224,7 @@ router.post("/fixed-assets", requirePermission("fixedAssets.create"), async (req
   const parsed = CreateFixedAssetBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const row = await db.transaction(async (tx) => {
-    const [created] = await tx.insert(fixedAssetsTable).values({ ...parsed.data }).returning();
+    const [created] = await tx.insert(fixedAssetsTable).values({ ...parsed.data, code: (await nextNumber("fixedAsset", req.authUser?.companyId ?? null)).value }).returning();
     // Automatic ledger posting: Dr Property & Equipment / Cr Accounts Payable
     // (best-effort; skipped if accounting is unconfigured or cost is zero).
     await postAutomaticEntry(tx, {
@@ -258,6 +261,8 @@ router.patch("/fixed-assets/:id", requirePermission("fixedAssets.update"), async
   const [existing] = await db.select().from(fixedAssetsTable).where(and(eq(fixedAssetsTable.id, id), eq(fixedAssetsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(fixedAssetsTable).set(update).where(eq(fixedAssetsTable.id, id)).returning()
     : [existing];
@@ -303,7 +308,7 @@ router.get("/asset-transfers", requirePermission("assetTransfers.view"), async (
 router.post("/asset-transfers", requirePermission("assetTransfers.create"), async (req, res): Promise<void> => {
   const parsed = CreateAssetTransferBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(assetTransfersTable).values({ ...parsed.data, status: "pending" }).returning();
+  const [row] = await db.insert(assetTransfersTable).values({ ...parsed.data, code: (await nextNumber("assetTransfer", req.authUser?.companyId ?? null)).value, status: "pending" }).returning();
   await recordAudit(req, { action: "create", entity: "assetTransfer", entityId: row.id, newValue: row });
   res.status(201).json(GetAssetTransferResponse.parse(serializeRow(row)));
 });
@@ -326,6 +331,8 @@ router.patch("/asset-transfers/:id", requirePermission("assetTransfers.update"),
   const [existing] = await db.select().from(assetTransfersTable).where(and(eq(assetTransfersTable.id, id), eq(assetTransfersTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(assetTransfersTable).set(update).where(eq(assetTransfersTable.id, id)).returning()
     : [existing];
@@ -376,7 +383,7 @@ router.get("/asset-depreciations", requirePermission("assetDepreciations.view"),
 router.post("/asset-depreciations", requirePermission("assetDepreciations.create"), async (req, res): Promise<void> => {
   const parsed = CreateAssetDepreciationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(assetDepreciationsTable).values({ ...parsed.data, status: "draft" }).returning();
+  const [row] = await db.insert(assetDepreciationsTable).values({ ...parsed.data, code: (await nextNumber("assetDepreciation", req.authUser?.companyId ?? null)).value, status: "draft" }).returning();
   await recordAudit(req, { action: "create", entity: "assetDepreciation", entityId: row.id, newValue: row });
   res.status(201).json(GetAssetDepreciationResponse.parse(serializeRow(row)));
 });
@@ -399,6 +406,8 @@ router.patch("/asset-depreciations/:id", requirePermission("assetDepreciations.u
   const [existing] = await db.select().from(assetDepreciationsTable).where(and(eq(assetDepreciationsTable.id, id), eq(assetDepreciationsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(assetDepreciationsTable).set(update).where(eq(assetDepreciationsTable.id, id)).returning()
     : [existing];
@@ -497,7 +506,7 @@ router.get("/asset-inventory-counts", requirePermission("assetInventoryCounts.vi
 router.post("/asset-inventory-counts", requirePermission("assetInventoryCounts.create"), async (req, res): Promise<void> => {
   const parsed = CreateAssetInventoryCountBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(assetInventoryCountsTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(assetInventoryCountsTable).values({ ...parsed.data, code: (await nextNumber("assetInventoryCount", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "assetInventoryCount", entityId: row.id, newValue: row });
   res.status(201).json(GetAssetInventoryCountResponse.parse(serializeRow(row)));
 });
@@ -516,6 +525,8 @@ router.patch("/asset-inventory-counts/:id", requirePermission("assetInventoryCou
   const [existing] = await db.select().from(assetInventoryCountsTable).where(and(eq(assetInventoryCountsTable.id, id), eq(assetInventoryCountsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(assetInventoryCountsTable).set(update).where(eq(assetInventoryCountsTable.id, id)).returning()
     : [existing];
@@ -558,7 +569,7 @@ router.get("/asset-disposals", requirePermission("assetDisposals.view"), async (
 router.post("/asset-disposals", requirePermission("assetDisposals.create"), async (req, res): Promise<void> => {
   const parsed = CreateAssetDisposalBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(assetDisposalsTable).values({ ...parsed.data, status: "pending" }).returning();
+  const [row] = await db.insert(assetDisposalsTable).values({ ...parsed.data, code: (await nextNumber("assetDisposal", req.authUser?.companyId ?? null)).value, status: "pending" }).returning();
   await recordAudit(req, { action: "create", entity: "assetDisposal", entityId: row.id, newValue: row });
   res.status(201).json(GetAssetDisposalResponse.parse(serializeRow(row)));
 });
@@ -581,6 +592,8 @@ router.patch("/asset-disposals/:id", requirePermission("assetDisposals.update"),
   const [existing] = await db.select().from(assetDisposalsTable).where(and(eq(assetDisposalsTable.id, id), eq(assetDisposalsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(assetDisposalsTable).set(update).where(eq(assetDisposalsTable.id, id)).returning()
     : [existing];

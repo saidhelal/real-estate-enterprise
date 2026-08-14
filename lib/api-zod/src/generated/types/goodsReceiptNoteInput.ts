@@ -8,7 +8,7 @@
 
 export interface GoodsReceiptNoteInput {
   companyId: string;
-  code: string;
+  code?: string;
   poId?: string;
   supplierId?: string;
   receiptDate?: string;

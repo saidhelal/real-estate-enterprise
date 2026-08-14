@@ -31,7 +31,17 @@ export default function GoodsReceiptsPage() {
   const poOptions = (poData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "goodsReceipt",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "receiptDate", label: "Receipt Date", labelAr: "تاريخ الاستلام", type: "date" },
     { name: "receiptType", label: "Receipt Type", labelAr: "نوع الاستلام", type: "select", options: enumOptions(["purchase", "return", "transfer", "production", "opening"]) },
     { name: "warehouseId", label: "Warehouse", labelAr: "المستودع", type: "select", options: warehouseOptions },

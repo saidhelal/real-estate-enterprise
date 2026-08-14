@@ -72,7 +72,7 @@ import { recordAudit } from "../lib/audit";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 import { recomputeUnitStatus, ensureLegalContractForContract } from "../lib/integrations";
 import { notify, recipientsByPermission } from "../lib/notify";
-import { nextDocumentNumber } from "../lib/doc-number";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -155,7 +155,7 @@ router.post("/reservations", requirePermission("reservations.create"), async (re
     .limit(1);
   if (liveContract) { res.status(400).json({ error: "Unit is already under a contract" }); return; }
   const row = await db.transaction(async (tx) => {
-    const [created] = await tx.insert(reservationsTable).values({ ...parsed.data }).returning();
+    const [created] = await tx.insert(reservationsTable).values({ ...parsed.data, code: (await nextNumber("reservation", req.authUser?.companyId ?? null)).value }).returning();
     await recomputeUnitStatus(tx, created.unitId);
     return created;
   });
@@ -177,6 +177,8 @@ router.patch("/reservations/:id", requirePermission("reservations.update"), asyn
   const [existing] = await db.select().from(reservationsTable).where(and(eq(reservationsTable.id, id), eq(reservationsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const row = await db.transaction(async (tx) => {
     const [updated] = Object.keys(update).length
       ? await tx.update(reservationsTable).set(update).where(eq(reservationsTable.id, id)).returning()
@@ -404,9 +406,15 @@ router.post("/contracts", requirePermission("contracts.create"), async (req, res
     // the cancellation flow — never set by the client at create — so a caller
     // cannot inject status:"active"/"finance_approved" to skip Finance/Legal and
     // sell a unit without the required approvals.
+    // The contract number is the system's. This path used to take whatever the
+    // client sent, which is how two forms could submit the same number.
     const [created] = await tx
       .insert(contractsTable)
-      .values({ ...parsed.data, status: "draft" })
+      .values({
+        ...parsed.data,
+        code: (await nextNumber("Contract", req.authUser?.companyId ?? null)).value,
+        status: "draft",
+      })
       .returning();
     // No GL posting at create: a contract is born as a draft and recognizes the
     // sale on the ledger only when Legal activates it (see legal-approve). The
@@ -517,7 +525,7 @@ router.get("/contract-amendments", requirePermission("contractAmendments.view"),
 router.post("/contract-amendments", requirePermission("contractAmendments.create"), async (req, res): Promise<void> => {
   const parsed = CreateContractAmendmentBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(contractAmendmentsTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(contractAmendmentsTable).values({ ...parsed.data, code: (await nextNumber("contractAmendment", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "contractAmendment", entityId: row.id, newValue: row });
   res.status(201).json(GetContractAmendmentResponse.parse(serializeRow(row)));
 });
@@ -536,6 +544,8 @@ router.patch("/contract-amendments/:id", requirePermission("contractAmendments.u
   const [existing] = await db.select().from(contractAmendmentsTable).where(and(eq(contractAmendmentsTable.id, id), eq(contractAmendmentsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(contractAmendmentsTable).set(update).where(eq(contractAmendmentsTable.id, id)).returning()
     : [existing];
@@ -977,7 +987,10 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
       )
       .limit(1);
     if (liveUnitContract) { conflict = "Unit is already under a contract"; return null; }
-    const code = parsed.data.code || (await nextDocumentNumber("Contract")) || `CON-${Date.now()}`;
+    // The contract number is the system's, not the caller's. It used to accept
+    // whatever the form sent and only fall back to the sequence, so two forms
+    // could submit the same number and a timestamp code could reach the books.
+    const code = (await nextNumber("Contract", req.authUser?.companyId ?? null)).value;
     const [created] = await tx
       .insert(contractsTable)
       .values({

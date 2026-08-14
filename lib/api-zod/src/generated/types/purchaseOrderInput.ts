@@ -8,7 +8,7 @@
 
 export interface PurchaseOrderInput {
   companyId: string;
-  code: string;
+  code?: string;
   supplierId?: string;
   quotationId?: string;
   requestId?: string;

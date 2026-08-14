@@ -8,7 +8,7 @@
 
 export interface ProcurementApprovalInput {
   companyId: string;
-  code: string;
+  code?: string;
   entityType?: string;
   entityId?: string;
   level?: string;

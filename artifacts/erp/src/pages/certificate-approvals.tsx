@@ -25,7 +25,17 @@ export default function CertificateApprovalsPage() {
   const certificateOptions = (certificateData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "certificateApproval",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "certificateId", label: "Certificate", labelAr: "المستخلص", type: "select", options: certificateOptions },
     { name: "level", label: "Level", labelAr: "المستوى", type: "select", options: enumOptions(["site_engineer", "project_manager", "engineering_manager", "finance"]) },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["pending", "approved", "rejected"]) },

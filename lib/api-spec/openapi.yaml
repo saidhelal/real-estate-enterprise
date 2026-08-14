@@ -26878,7 +26878,7 @@ components:
         createdAt: { type: string }
     DelegationInput:
       type: object
-      required: [companyId, code, delegateUserId, permissions, reason, startDate, endDate]
+      required: [companyId, delegateUserId, permissions, reason, startDate, endDate]
       properties:
         companyId: { type: string }
         code: { type: string, minLength: 1 }
@@ -27654,7 +27654,7 @@ components:
 
     UnitTypeInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -27697,7 +27697,7 @@ components:
 
     UnitStatusInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -28058,7 +28058,7 @@ components:
 
     LeadSourceInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -28369,7 +28369,7 @@ components:
 
     CustomerInput:
       type: object
-      required: [companyId, code, fullName]
+      required: [companyId, fullName]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -28577,7 +28577,7 @@ components:
 
     ReservationInput:
       type: object
-      required: [companyId, code, unitId, customerId, reservationDate]
+      required: [companyId, unitId, customerId, reservationDate]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -28693,7 +28693,7 @@ components:
 
     ContractInput:
       type: object
-      required: [companyId, code, unitId, customerId, contractDate]
+      required: [companyId, unitId, customerId, contractDate]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -28753,7 +28753,7 @@ components:
 
     ContractAmendmentInput:
       type: object
-      required: [companyId, code, contractId, amendmentDate, description]
+      required: [companyId, contractId, amendmentDate, description]
       properties:
         companyId: { type: string }
         contractId: { type: string }
@@ -28907,7 +28907,7 @@ components:
 
     InstallmentPlanInput:
       type: object
-      required: [companyId, code, contractId, startDate]
+      required: [companyId, contractId, startDate]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -29058,7 +29058,7 @@ components:
 
     PenaltyRuleInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -29107,7 +29107,7 @@ components:
 
     UnitPriceListInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -29200,7 +29200,7 @@ components:
 
     UnitDiscountInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -29695,7 +29695,7 @@ components:
 
     ReceiptInput:
       type: object
-      required: [companyId, code, customerId, receiptDate]
+      required: [companyId, customerId, receiptDate]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -30305,7 +30305,7 @@ components:
 
     BudgetInput:
       type: object
-      required: [companyId, code, fiscalYearId, name, nameAr]
+      required: [companyId, fiscalYearId, name, nameAr]
       properties:
         companyId: { type: string }
         fiscalYearId: { type: string }
@@ -30689,7 +30689,7 @@ components:
 
     EngineeringDisciplineInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -30736,7 +30736,7 @@ components:
 
     ConsultantInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -30792,7 +30792,7 @@ components:
 
     DesignPackageInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -30843,7 +30843,7 @@ components:
 
     DrawingCategoryInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -30890,7 +30890,7 @@ components:
 
     TechnicalSpecificationInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -30949,7 +30949,7 @@ components:
 
     DrawingInput:
       type: object
-      required: [companyId, code, title, titleAr]
+      required: [companyId, title, titleAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31069,7 +31069,7 @@ components:
 
     BoqInput:
       type: object
-      required: [companyId, code, title, titleAr]
+      required: [companyId, title, titleAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31225,7 +31225,7 @@ components:
 
     CostEstimateInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31282,7 +31282,7 @@ components:
 
     InspectionRequestInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31336,7 +31336,7 @@ components:
 
     InspectionReportInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31385,7 +31385,7 @@ components:
 
     DefectInput:
       type: object
-      required: [companyId, code, description]
+      required: [companyId, description]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31445,7 +31445,7 @@ components:
 
     CorrectiveActionInput:
       type: object
-      required: [companyId, code, action]
+      required: [companyId, action]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31515,7 +31515,7 @@ components:
 
     RfiInput:
       type: object
-      required: [companyId, code, subject]
+      required: [companyId, subject]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31574,7 +31574,7 @@ components:
 
     TechnicalSubmittalInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31630,7 +31630,7 @@ components:
 
     MaterialSubmittalInput:
       type: object
-      required: [companyId, code, materialName]
+      required: [companyId, materialName]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31683,7 +31683,7 @@ components:
 
     ConsultantResponseInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31736,7 +31736,7 @@ components:
 
     EngineeringProgressInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31823,7 +31823,7 @@ components:
 
     ContractorInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -31888,7 +31888,7 @@ components:
 
     ContractorContractInput:
       type: object
-      required: [companyId, code, title, titleAr]
+      required: [companyId, title, titleAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32009,7 +32009,7 @@ components:
 
     WorkProgressUpdateInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32075,7 +32075,7 @@ components:
 
     PaymentCertificateInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32219,7 +32219,7 @@ components:
 
     VariationOrderInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32277,7 +32277,7 @@ components:
 
     ContractorDeductionInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32331,7 +32331,7 @@ components:
 
     ContractorAdditionInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32385,7 +32385,7 @@ components:
 
     RetentionInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32439,7 +32439,7 @@ components:
 
     AdvancePaymentInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32490,7 +32490,7 @@ components:
 
     AdvanceRecoveryInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32540,7 +32540,7 @@ components:
 
     ContractorInvoiceInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32599,7 +32599,7 @@ components:
 
     ContractApprovalInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32683,7 +32683,7 @@ components:
 
     SupplierCategoryInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32737,7 +32737,7 @@ components:
 
     SupplierInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32858,7 +32858,7 @@ components:
 
     SupplierEvaluationInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -32925,7 +32925,7 @@ components:
 
     PurchaseRequestInput:
       type: object
-      required: [companyId, code, title, titleAr]
+      required: [companyId, title, titleAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33046,7 +33046,7 @@ components:
 
     RfqInput:
       type: object
-      required: [companyId, code, title, titleAr]
+      required: [companyId, title, titleAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33145,7 +33145,7 @@ components:
 
     RfqSupplierInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         rfqId: { type: string }
@@ -33196,7 +33196,7 @@ components:
 
     SupplierQuotationInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33310,7 +33310,7 @@ components:
 
     PurchaseOrderInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33429,7 +33429,7 @@ components:
 
     PurchaseContractInput:
       type: object
-      required: [companyId, code, title, titleAr]
+      required: [companyId, title, titleAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33486,7 +33486,7 @@ components:
 
     PurchaseContractAmendmentInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33541,7 +33541,7 @@ components:
 
     GoodsReceiptNoteInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33665,7 +33665,7 @@ components:
 
     PurchaseReturnInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33775,7 +33775,7 @@ components:
 
     ProcurementApprovalInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34061,7 +34061,7 @@ components:
 
     ItemCategoryInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34109,7 +34109,7 @@ components:
 
     ItemGroupInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34348,7 +34348,7 @@ components:
 
     StockOpeningBalanceInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34411,7 +34411,7 @@ components:
 
     GoodsReceiptInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34530,7 +34530,7 @@ components:
 
     GoodsIssueInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34644,7 +34644,7 @@ components:
 
     InventoryTransferInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34757,7 +34757,7 @@ components:
 
     StockAdjustmentInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -34870,7 +34870,7 @@ components:
 
     StockCountInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -35078,7 +35078,7 @@ components:
 
     CertificateStatusInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -35127,7 +35127,7 @@ components:
 
     CertificateApprovalInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -35180,7 +35180,7 @@ components:
 
     CertificateApprovalLogInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -35256,7 +35256,7 @@ components:
 
     ChequeInput:
       type: object
-      required: [companyId, code, direction, chequeNumber]
+      required: [companyId, direction, chequeNumber]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -36025,7 +36025,7 @@ components:
         createdAt: { type: string }
     JobTitleInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36096,7 +36096,7 @@ components:
         createdAt: { type: string }
     EmployeeInput:
       type: object
-      required: [companyId, code, firstName, lastName]
+      required: [companyId, firstName, lastName]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -36194,7 +36194,7 @@ components:
         createdAt: { type: string }
     EmployeeDocumentInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         employeeId: { type: string }
@@ -36292,7 +36292,7 @@ components:
         createdAt: { type: string }
     ShiftInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36398,7 +36398,7 @@ components:
         createdAt: { type: string }
     LeaveTypeInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36496,7 +36496,7 @@ components:
         createdAt: { type: string }
     LeaveRequestInput:
       type: object
-      required: [companyId, code, startDate, endDate]
+      required: [companyId, startDate, endDate]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36550,7 +36550,7 @@ components:
         createdAt: { type: string }
     SalaryComponentInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36604,7 +36604,7 @@ components:
         createdAt: { type: string }
     PayrollPeriodInput:
       type: object
-      required: [companyId, code, name, year, startDate, endDate]
+      required: [companyId, name, year, startDate, endDate]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36662,7 +36662,7 @@ components:
         createdAt: { type: string }
     PayrollRunInput:
       type: object
-      required: [companyId, code, runDate]
+      required: [companyId, runDate]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -36718,7 +36718,7 @@ components:
         createdAt: { type: string }
     PayslipInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36823,7 +36823,7 @@ components:
         createdAt: { type: string }
     EmployeeLoanInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -36942,7 +36942,7 @@ components:
         createdAt: { type: string }
     EmployeeAdvanceInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -37051,7 +37051,7 @@ components:
         createdAt: { type: string }
     EmployeeEvaluationInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -37188,7 +37188,7 @@ components:
         createdAt: { type: string }
     LegalContractInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -37368,7 +37368,7 @@ components:
         createdAt: { type: string }
     ContractVersionInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -37417,7 +37417,7 @@ components:
         createdAt: { type: string }
     LegalContractAmendmentInput:
       type: object
-      required: [companyId, code, description]
+      required: [companyId, description]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -37471,7 +37471,7 @@ components:
         createdAt: { type: string }
     ContractAddendumInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -37604,7 +37604,7 @@ components:
         createdAt: { type: string }
     LawFirmInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -37662,7 +37662,7 @@ components:
         createdAt: { type: string }
     LegalAdvisorInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -37737,7 +37737,7 @@ components:
         createdAt: { type: string }
     LegalCaseInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -37823,7 +37823,7 @@ components:
         createdAt: { type: string }
     LegalHearingInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         legalCaseId: { type: string }
@@ -37878,7 +37878,7 @@ components:
         createdAt: { type: string }
     LegalClaimInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         legalCaseId: { type: string }
@@ -37935,7 +37935,7 @@ components:
         createdAt: { type: string }
     LegalNoticeInput:
       type: object
-      required: [companyId, code, subject]
+      required: [companyId, subject]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38493,7 +38493,7 @@ components:
 
     HandoverRequestInput:
       type: object
-      required: [companyId, code, unitId]
+      required: [companyId, unitId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38838,7 +38838,7 @@ components:
 
     SlaPolicyInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38896,7 +38896,7 @@ components:
 
     ServiceEscalationInput:
       type: object
-      required: [companyId, code, sourceType, sourceId]
+      required: [companyId, sourceType, sourceId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39405,7 +39405,7 @@ components:
 
     AssetCategoryInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39474,7 +39474,7 @@ components:
 
     FixedAssetInput:
       type: object
-      required: [companyId, code, name, nameAr, categoryId]
+      required: [companyId, name, nameAr, categoryId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39552,7 +39552,7 @@ components:
 
     AssetTransferInput:
       type: object
-      required: [companyId, code, assetId]
+      required: [companyId, assetId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39614,7 +39614,7 @@ components:
 
     AssetDepreciationInput:
       type: object
-      required: [companyId, code, assetId]
+      required: [companyId, assetId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39671,7 +39671,7 @@ components:
 
     AssetInventoryCountInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39728,7 +39728,7 @@ components:
 
     AssetDisposalInput:
       type: object
-      required: [companyId, code, assetId]
+      required: [companyId, assetId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39819,7 +39819,7 @@ components:
         createdAt: { type: string }
     MarketingCampaignInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         branchId: { type: string }

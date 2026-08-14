@@ -255,7 +255,6 @@ function CreateDelegationDialog({
   const { data: users } = useListUsers();
 
   const [form, setForm] = useState({
-    code: "",
     delegateUserId: "",
     reason: "",
     startDate: new Date().toISOString().slice(0, 10),
@@ -283,7 +282,6 @@ function CreateDelegationDialog({
       {
         data: {
           companyId,
-          code: form.code.trim(),
           delegateUserId: form.delegateUserId,
           permissions: picked,
           reason: form.reason.trim(),
@@ -298,7 +296,6 @@ function CreateDelegationDialog({
           onClose();
           setPicked([]);
           setForm({
-            code: "",
             delegateUserId: "",
             reason: "",
             startDate: new Date().toISOString().slice(0, 10),
@@ -325,10 +322,8 @@ function CreateDelegationDialog({
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="dlg-code">{t("common.code")}</Label>
-              <Input id="dlg-code" required value={form.code} onChange={(e) => set("code", e.target.value)} />
-            </div>
+            {/* No code field: the delegation's reference is issued by the
+                central sequence on save, so there is nothing here to type. */}
             <div className="space-y-2">
               <Label>{t("dlg.delegate")}</Label>
               <Select value={form.delegateUserId} onValueChange={(v) => set("delegateUserId", v)}>

@@ -57,6 +57,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { notify, recipientsByPermission } from "../lib/notify";
 
@@ -88,7 +89,7 @@ router.get("/sla-policies", requirePermission("slaPolicies.view"), async (req, r
 router.post("/sla-policies", requirePermission("slaPolicies.create"), async (req, res): Promise<void> => {
   const parsed = CreateSlaPolicyBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(slaPoliciesTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(slaPoliciesTable).values({ ...parsed.data, code: (await nextNumber("slaPolicy", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "slaPolicy", entityId: row.id, newValue: row });
   res.status(201).json(GetSlaPolicyResponse.parse(serializeRow(row)));
 });
@@ -107,6 +108,8 @@ router.patch("/sla-policies/:id", requirePermission("slaPolicies.update"), async
   const [existing] = await db.select().from(slaPoliciesTable).where(and(eq(slaPoliciesTable.id, id), eq(slaPoliciesTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(slaPoliciesTable).set(update).where(eq(slaPoliciesTable.id, id)).returning()
     : [existing];
@@ -152,7 +155,7 @@ router.post("/service-escalations", requirePermission("serviceEscalations.create
   const parsed = CreateServiceEscalationBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const row = await db.transaction(async (tx) => {
-    const [created] = await tx.insert(serviceEscalationsTable).values({ ...parsed.data, status: "open", resolvedAt: null }).returning();
+    const [created] = await tx.insert(serviceEscalationsTable).values({ ...parsed.data, code: (await nextNumber("serviceEscalation", req.authUser?.companyId ?? null)).value, status: "open", resolvedAt: null }).returning();
     // Notify the person it was escalated to (owner) plus anyone who can resolve
     // escalations. Idempotent per (customer_service, escalation id, complaint_escalated).
     const resolvers = await recipientsByPermission(tx, "serviceEscalations.resolve", {
@@ -196,6 +199,8 @@ router.patch("/service-escalations/:id", requirePermission("serviceEscalations.u
   const [existing] = await db.select().from(serviceEscalationsTable).where(and(eq(serviceEscalationsTable.id, id), eq(serviceEscalationsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(serviceEscalationsTable).set(update).where(eq(serviceEscalationsTable.id, id)).returning()
     : [existing];

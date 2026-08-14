@@ -8,7 +8,7 @@
 
 export interface AssetDisposalInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId: string;
   disposalDate?: string;
   disposalType?: string;

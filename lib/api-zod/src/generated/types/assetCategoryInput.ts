@@ -8,7 +8,7 @@
 
 export interface AssetCategoryInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   usefulLifeYears?: string;

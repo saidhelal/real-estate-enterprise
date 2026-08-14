@@ -1115,7 +1115,7 @@ export interface Delegation {
 export interface DelegationInput {
   companyId: string;
   /** @minLength 1 */
-  code: string;
+  code?: string;
   /** @minLength 1 */
   delegateUserId: string;
   /** @minItems 1 */
@@ -1933,7 +1933,7 @@ export interface UnitType {
 
 export interface UnitTypeInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   description?: string;
@@ -1968,7 +1968,7 @@ export interface UnitStatus {
 
 export interface UnitStatusInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   color?: string;
@@ -2313,7 +2313,7 @@ export interface LeadSource {
 
 export interface LeadSourceInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
 }
@@ -2606,7 +2606,7 @@ export interface Customer {
 export interface CustomerInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   fullName: string;
   nameAr?: string;
   type?: string;
@@ -2790,7 +2790,7 @@ export interface Reservation {
 export interface ReservationInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   unitId: string;
   customerId: string;
   reservationDate: string;
@@ -2902,7 +2902,7 @@ export interface Contract {
 export interface ContractInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   reservationId?: string;
   unitId: string;
   customerId: string;
@@ -2957,7 +2957,7 @@ export interface ContractAmendment {
 export interface ContractAmendmentInput {
   companyId: string;
   contractId: string;
-  code: string;
+  code?: string;
   amendmentDate: string;
   description: string;
   oldValue?: string;
@@ -3091,7 +3091,7 @@ export interface InstallmentPlan {
 
 export interface InstallmentPlanInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId: string;
   totalAmount?: string;
   downPayment?: string;
@@ -3217,7 +3217,7 @@ export interface PenaltyRule {
 
 export interface PenaltyRuleInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   daysAfterDue?: number;
@@ -3260,7 +3260,7 @@ export interface UnitPriceList {
 
 export interface UnitPriceListInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   projectId?: string;
@@ -3338,7 +3338,7 @@ export interface UnitDiscount {
 
 export interface UnitDiscountInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   discountType?: string;
@@ -3762,7 +3762,7 @@ export interface ReceiptAllocationInput {
 export interface ReceiptInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   customerId: string;
   contractId?: string;
   scheduleId?: string;
@@ -4285,7 +4285,7 @@ export type BudgetDetail = Budget;
 export interface BudgetInput {
   companyId: string;
   fiscalYearId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   status?: string;
@@ -4621,7 +4621,7 @@ export interface EngineeringDiscipline {
 
 export interface EngineeringDisciplineInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   description?: string;
@@ -4665,7 +4665,7 @@ export interface Consultant {
 
 export interface ConsultantInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   disciplineId?: string;
@@ -4716,7 +4716,7 @@ export interface DesignPackage {
 
 export interface DesignPackageInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   projectId?: string;
@@ -4760,7 +4760,7 @@ export interface DrawingCategory {
 
 export interface DrawingCategoryInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   disciplineId?: string;
@@ -4802,7 +4802,7 @@ export interface TechnicalSpecification {
 
 export interface TechnicalSpecificationInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   disciplineId?: string;
@@ -4861,7 +4861,7 @@ export interface Drawing {
 
 export interface DrawingInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   drawingType?: string;
@@ -4972,7 +4972,7 @@ export interface Boq {
 
 export interface BoqInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   projectId?: string;
@@ -5116,7 +5116,7 @@ export interface CostEstimate {
 
 export interface CostEstimateInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr?: string;
   projectId?: string;
@@ -5171,7 +5171,7 @@ export interface InspectionRequest {
 
 export interface InspectionRequestInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   phaseId?: string;
   buildingId?: string;
@@ -5220,7 +5220,7 @@ export interface InspectionReport {
 
 export interface InspectionReportInput {
   companyId: string;
-  code: string;
+  code?: string;
   inspectionRequestId?: string;
   reportDate?: string;
   inspector?: string;
@@ -5263,7 +5263,7 @@ export interface Defect {
 
 export interface DefectInput {
   companyId: string;
-  code: string;
+  code?: string;
   inspectionReportId?: string;
   projectId?: string;
   description: string;
@@ -5325,7 +5325,7 @@ export interface CorrectiveAction {
 
 export interface CorrectiveActionInput {
   companyId: string;
-  code: string;
+  code?: string;
   defectId?: string;
   action: string;
   assignedTo?: string;
@@ -5393,7 +5393,7 @@ export interface Rfi {
 
 export interface RfiInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   subject: string;
   question?: string;
@@ -5449,7 +5449,7 @@ export interface TechnicalSubmittal {
 
 export interface TechnicalSubmittalInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   title: string;
   submittalType?: string;
@@ -5501,7 +5501,7 @@ export interface MaterialSubmittal {
 
 export interface MaterialSubmittalInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   materialName: string;
   manufacturer?: string;
@@ -5549,7 +5549,7 @@ export interface ConsultantResponse {
 
 export interface ConsultantResponseInput {
   companyId: string;
-  code: string;
+  code?: string;
   referenceType?: string;
   referenceId?: string;
   consultantId?: string;
@@ -5600,7 +5600,7 @@ export interface EngineeringProgress {
 
 export interface EngineeringProgressInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   phaseId?: string;
   buildingId?: string;
@@ -5678,7 +5678,7 @@ export interface Contractor {
 
 export interface ContractorInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   classification?: string;
@@ -5745,7 +5745,7 @@ export interface ContractorContract {
 
 export interface ContractorContractInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   contractorId?: string;
@@ -5861,7 +5861,7 @@ export interface WorkProgressUpdate {
 
 export interface WorkProgressUpdateInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   asOfDate?: string;
   progressPercent?: number;
@@ -5938,7 +5938,7 @@ export interface PaymentCertificate {
 
 export interface PaymentCertificateInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   projectId?: string;
   boqItemId?: string;
@@ -6080,7 +6080,7 @@ export interface VariationOrder {
 
 export interface VariationOrderInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   title: string;
   titleAr?: string;
@@ -6134,7 +6134,7 @@ export interface ContractorDeduction {
 
 export interface ContractorDeductionInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   deductionType?: string;
@@ -6184,7 +6184,7 @@ export interface ContractorAddition {
 
 export interface ContractorAdditionInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   additionType?: string;
@@ -6235,7 +6235,7 @@ export interface Retention {
 
 export interface RetentionInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   retentionPercent?: string;
@@ -6286,7 +6286,7 @@ export interface AdvancePayment {
 
 export interface AdvancePaymentInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   amount?: string;
   paymentDate?: string;
@@ -6332,7 +6332,7 @@ export interface AdvanceRecovery {
 
 export interface AdvanceRecoveryInput {
   companyId: string;
-  code: string;
+  code?: string;
   advanceId?: string;
   certificateId?: string;
   amount?: string;
@@ -6381,7 +6381,7 @@ export interface ContractorInvoice {
 
 export interface ContractorInvoiceInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   invoiceNumber?: string;
@@ -6437,7 +6437,7 @@ export interface ContractApproval {
 
 export interface ContractApprovalInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   entityType?: string;
   entityId?: string;
@@ -6507,7 +6507,7 @@ export interface SupplierCategory {
 
 export interface SupplierCategoryInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   description?: string;
@@ -6562,7 +6562,7 @@ export interface Supplier {
 
 export interface SupplierInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   categoryId?: string;
@@ -6681,7 +6681,7 @@ export interface SupplierEvaluation {
 
 export interface SupplierEvaluationInput {
   companyId: string;
-  code: string;
+  code?: string;
   supplierId?: string;
   evaluationDate?: string;
   period?: string;
@@ -6746,7 +6746,7 @@ export interface PurchaseRequest {
 
 export interface PurchaseRequestInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   department?: string;
@@ -6862,7 +6862,7 @@ export interface Rfq {
 
 export interface RfqInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   requestId?: string;
@@ -7004,7 +7004,7 @@ export interface SupplierQuotation {
 
 export interface SupplierQuotationInput {
   companyId: string;
-  code: string;
+  code?: string;
   rfqId?: string;
   supplierId?: string;
   quotationNumber?: string;
@@ -7116,7 +7116,7 @@ export interface PurchaseOrder {
 
 export interface PurchaseOrderInput {
   companyId: string;
-  code: string;
+  code?: string;
   supplierId?: string;
   quotationId?: string;
   requestId?: string;
@@ -7232,7 +7232,7 @@ export interface PurchaseContract {
 
 export interface PurchaseContractInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   supplierId?: string;
@@ -7285,7 +7285,7 @@ export interface PurchaseContractAmendment {
 
 export interface PurchaseContractAmendmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   amendmentNumber?: string;
   amendmentDate?: string;
@@ -7338,7 +7338,7 @@ export interface GoodsReceiptNote {
 
 export interface GoodsReceiptNoteInput {
   companyId: string;
-  code: string;
+  code?: string;
   poId?: string;
   supplierId?: string;
   receiptDate?: string;
@@ -7462,7 +7462,7 @@ export interface PurchaseReturn {
 
 export interface PurchaseReturnInput {
   companyId: string;
-  code: string;
+  code?: string;
   grnId?: string;
   supplierId?: string;
   returnDate?: string;
@@ -7567,7 +7567,7 @@ export interface ProcurementApproval {
 
 export interface ProcurementApprovalInput {
   companyId: string;
-  code: string;
+  code?: string;
   entityType?: string;
   entityId?: string;
   level?: string;
@@ -7799,7 +7799,7 @@ export interface ItemCategory {
 
 export interface ItemCategoryInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   parentId?: string;
@@ -7840,7 +7840,7 @@ export interface ItemGroup {
 
 export interface ItemGroupInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   categoryId?: string;
@@ -8073,7 +8073,7 @@ export interface StockOpeningBalance {
 
 export interface StockOpeningBalanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   itemId?: string;
   warehouseId?: string;
   locationId?: string;
@@ -8135,7 +8135,7 @@ export interface GoodsReceipt {
 
 export interface GoodsReceiptInput {
   companyId: string;
-  code: string;
+  code?: string;
   receiptDate?: string;
   receiptType?: string;
   warehouseId?: string;
@@ -8252,7 +8252,7 @@ export interface GoodsIssue {
 
 export interface GoodsIssueInput {
   companyId: string;
-  code: string;
+  code?: string;
   issueDate?: string;
   issueType?: string;
   warehouseId?: string;
@@ -8363,7 +8363,7 @@ export interface InventoryTransfer {
 
 export interface InventoryTransferInput {
   companyId: string;
-  code: string;
+  code?: string;
   transferDate?: string;
   fromWarehouseId?: string;
   toWarehouseId?: string;
@@ -8472,7 +8472,7 @@ export interface StockAdjustment {
 
 export interface StockAdjustmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   adjustmentDate?: string;
   warehouseId?: string;
   adjustmentType?: string;
@@ -8581,7 +8581,7 @@ export interface StockCount {
 
 export interface StockCountInput {
   companyId: string;
-  code: string;
+  code?: string;
   countDate?: string;
   warehouseId?: string;
   countType?: string;
@@ -8779,7 +8779,7 @@ export interface CertificateStatus {
 
 export interface CertificateStatusInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   sequence?: number;
@@ -8823,7 +8823,7 @@ export interface CertificateApproval {
 
 export interface CertificateApprovalInput {
   companyId: string;
-  code: string;
+  code?: string;
   certificateId?: string;
   level?: string;
   status?: string;
@@ -8875,7 +8875,7 @@ export interface CertificateApprovalLog {
 
 export interface CertificateApprovalLogInput {
   companyId: string;
-  code: string;
+  code?: string;
   certificateId?: string;
   approvalId?: string;
   action?: string;
@@ -8966,7 +8966,7 @@ export interface Cheque {
 export interface ChequeInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   direction: string;
   chequeNumber: string;
   chequeDate?: string;
@@ -9683,7 +9683,7 @@ export interface JobTitle {
 
 export interface JobTitleInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   departmentId?: string;
@@ -9775,7 +9775,7 @@ export interface Employee {
 export interface EmployeeInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   firstName: string;
   lastName: string;
   firstNameAr?: string;
@@ -9875,7 +9875,7 @@ export interface EmployeeDocument {
 export interface EmployeeDocumentInput {
   companyId: string;
   employeeId?: string;
-  code: string;
+  code?: string;
   documentType?: string;
   title: string;
   documentNumber?: string;
@@ -9969,7 +9969,7 @@ export interface Shift {
 
 export interface ShiftInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   startTime?: string;
@@ -10071,7 +10071,7 @@ export interface LeaveType {
 
 export interface LeaveTypeInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   daysPerYear?: string;
@@ -10168,7 +10168,7 @@ export interface LeaveRequest {
 
 export interface LeaveRequestInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   leaveTypeId?: string;
   startDate: string;
@@ -10218,7 +10218,7 @@ export interface SalaryComponent {
 
 export interface SalaryComponentInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   componentType?: string;
@@ -10268,7 +10268,7 @@ export interface PayrollPeriod {
 
 export interface PayrollPeriodInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   year: number;
   month?: number;
@@ -10331,7 +10331,7 @@ export interface PayrollRun {
 export interface PayrollRunInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   payrollPeriodId?: string;
   runDate: string;
   description?: string;
@@ -10384,7 +10384,7 @@ export interface Payslip {
 
 export interface PayslipInput {
   companyId: string;
-  code: string;
+  code?: string;
   payrollRunId?: string;
   employeeId?: string;
   basicSalary?: string;
@@ -10492,7 +10492,7 @@ export interface EmployeeLoan {
 
 export interface EmployeeLoanInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   loanType?: string;
   amount?: string;
@@ -10616,7 +10616,7 @@ export interface EmployeeAdvance {
 
 export interface EmployeeAdvanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   amount?: string;
   requestDate?: string;
@@ -10725,7 +10725,7 @@ export interface EmployeeEvaluation {
 
 export interface EmployeeEvaluationInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   evaluatorEmployeeId?: string;
   evaluationPeriod?: string;
@@ -10888,7 +10888,7 @@ export interface LegalContract {
 export interface LegalContractInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr?: string;
   contractType?: string;
@@ -11123,7 +11123,7 @@ export interface LegalContractAmendment {
 export interface LegalContractAmendmentInput {
   companyId: string;
   legalContractId?: string;
-  code: string;
+  code?: string;
   amendmentDate?: string;
   description: string;
   descriptionAr?: string;
@@ -11176,7 +11176,7 @@ export interface ContractAddendum {
 export interface ContractAddendumInput {
   companyId: string;
   legalContractId?: string;
-  code: string;
+  code?: string;
   title: string;
   addendumDate?: string;
   content?: string;
@@ -11307,7 +11307,7 @@ export interface LawFirm {
 
 export interface LawFirmInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr?: string;
   contactPerson?: string;
@@ -11368,7 +11368,7 @@ export interface LegalAdvisor {
 
 export interface LegalAdvisorInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr?: string;
   advisorType?: string;
@@ -11459,7 +11459,7 @@ export interface LegalCase {
 export interface LegalCaseInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr?: string;
   caseType?: string;
@@ -11549,7 +11549,7 @@ export interface LegalHearing {
 export interface LegalHearingInput {
   companyId: string;
   legalCaseId?: string;
-  code: string;
+  code?: string;
   hearingDate?: string;
   hearingTime?: string;
   location?: string;
@@ -11604,7 +11604,7 @@ export interface LegalClaim {
 export interface LegalClaimInput {
   companyId: string;
   legalCaseId?: string;
-  code: string;
+  code?: string;
   claimType?: string;
   direction?: string;
   amount?: string;
@@ -11664,7 +11664,7 @@ export interface LegalNotice {
 
 export interface LegalNoticeInput {
   companyId: string;
-  code: string;
+  code?: string;
   noticeType?: string;
   legalCaseId?: string;
   legalContractId?: string;
@@ -12149,7 +12149,7 @@ export interface HandoverRequest {
 
 export interface HandoverRequestInput {
   companyId: string;
-  code: string;
+  code?: string;
   unitId: string;
   customerId?: string;
   contractId?: string;
@@ -12459,7 +12459,7 @@ export interface SlaPolicy {
 
 export interface SlaPolicyInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   channel?: string;
@@ -12513,7 +12513,7 @@ export interface ServiceEscalation {
 
 export interface ServiceEscalationInput {
   companyId: string;
-  code: string;
+  code?: string;
   sourceType: string;
   sourceId: string;
   level?: string;
@@ -13010,7 +13010,7 @@ export interface AssetCategory {
 
 export interface AssetCategoryInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   usefulLifeYears?: string;
@@ -13077,7 +13077,7 @@ export interface FixedAsset {
 
 export interface FixedAssetInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   categoryId: string;
@@ -13154,7 +13154,7 @@ export interface AssetTransfer {
 
 export interface AssetTransferInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId: string;
   fromBranchId?: string;
   toBranchId?: string;
@@ -13210,7 +13210,7 @@ export interface AssetDepreciation {
 
 export interface AssetDepreciationInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId: string;
   periodDate?: string;
   amount?: string;
@@ -13264,7 +13264,7 @@ export interface AssetInventoryCount {
 
 export interface AssetInventoryCountInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId?: string;
   branchId?: string;
   countDate?: string;
@@ -13315,7 +13315,7 @@ export interface AssetDisposal {
 
 export interface AssetDisposalInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId: string;
   disposalDate?: string;
   disposalType?: string;
@@ -13402,7 +13402,7 @@ export interface MarketingCampaignInput {
   companyId: string;
   branchId?: string;
   projectId?: string;
-  code: string;
+  code?: string;
   name: string;
   campaignType?: string;
   startDate?: string;

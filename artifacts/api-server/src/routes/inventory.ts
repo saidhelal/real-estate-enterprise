@@ -114,9 +114,13 @@ const resources: CrudConfig[] = [
     createBody: CreateWarehouseLocationBody, updateBody: UpdateWarehouseLocationBody, listResponse: ListWarehouseLocationsResponse,
     search: ["code", "name", "nameAr"] },
   { path: "item-categories", table: itemCategoriesTable, module: "itemCategories", entity: "itemCategory",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "itemCategory" },
     createBody: CreateItemCategoryBody, updateBody: UpdateItemCategoryBody, listResponse: ListItemCategorysResponse,
     search: ["code", "name", "nameAr"] },
   { path: "item-groups", table: itemGroupsTable, module: "itemGroups", entity: "itemGroup",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "itemGroup" },
     createBody: CreateItemGroupBody, updateBody: UpdateItemGroupBody, listResponse: ListItemGroupsResponse,
     search: ["code", "name", "nameAr"] },
   { path: "units-of-measure", table: unitsOfMeasureTable, module: "unitsOfMeasure", entity: "unitOfMeasure",
@@ -130,10 +134,12 @@ const resources: CrudConfig[] = [
     search: [] },
   // Transactions
   { path: "stock-opening-balances", table: stockOpeningBalancesTable, module: "stockOpeningBalances", entity: "stockOpeningBalance",
+    generatedCode: { documentType: "stockOpeningBalance" },
     createBody: CreateStockOpeningBalanceBody, updateBody: UpdateStockOpeningBalanceBody, listResponse: ListStockOpeningBalancesResponse,
     search: ["code", "batchNumber"] },
   // Goods receipts (financial: post on receipt)
   { path: "goods-receipts", table: goodsReceiptsTable, module: "goodsReceipts", entity: "goodsReceipt",
+    generatedCode: { documentType: "goodsReceipt" },
     createBody: CreateGoodsReceiptBody, updateBody: UpdateGoodsReceiptBody, listResponse: ListGoodsReceiptsResponse,
     search: ["code", "referenceNumber"],
     financial: { eventKey: "inventory.goods_receipt", amountField: "totalValue", dateField: "receiptDate" } },
@@ -142,6 +148,7 @@ const resources: CrudConfig[] = [
     search: ["batchNumber"] },
   // Goods issues (financial: post on issue)
   { path: "goods-issues", table: goodsIssuesTable, module: "goodsIssues", entity: "goodsIssue",
+    generatedCode: { documentType: "goodsIssue" },
     createBody: CreateGoodsIssueBody, updateBody: UpdateGoodsIssueBody, listResponse: ListGoodsIssuesResponse,
     search: ["code"],
     financial: { eventKey: "inventory.goods_issue", amountField: "totalValue", dateField: "issueDate" } },
@@ -150,6 +157,7 @@ const resources: CrudConfig[] = [
     search: ["batchNumber"] },
   // Transfers
   { path: "inventory-transfers", table: inventoryTransfersTable, module: "inventoryTransfers", entity: "inventoryTransfer",
+    generatedCode: { documentType: "inventoryTransfer" },
     createBody: CreateInventoryTransferBody, updateBody: UpdateInventoryTransferBody, listResponse: ListInventoryTransfersResponse,
     search: ["code"] },
   { path: "inventory-transfer-items", table: inventoryTransferItemsTable, module: "inventoryTransferItems", entity: "inventoryTransferItem",
@@ -157,6 +165,7 @@ const resources: CrudConfig[] = [
     search: [] },
   // Adjustments (financial: post on adjustment)
   { path: "stock-adjustments", table: stockAdjustmentsTable, module: "stockAdjustments", entity: "stockAdjustment",
+    generatedCode: { documentType: "stockAdjustment" },
     createBody: CreateStockAdjustmentBody, updateBody: UpdateStockAdjustmentBody, listResponse: ListStockAdjustmentsResponse,
     search: ["code", "reason"],
     financial: { eventKey: "inventory.stock_adjustment", amountField: "totalValue", dateField: "adjustmentDate" } },
@@ -165,6 +174,7 @@ const resources: CrudConfig[] = [
     search: [] },
   // Stock counts
   { path: "stock-counts", table: stockCountsTable, module: "stockCounts", entity: "stockCount",
+    generatedCode: { documentType: "stockCount" },
     createBody: CreateStockCountBody, updateBody: UpdateStockCountBody, listResponse: ListStockCountsResponse,
     search: ["code"] },
   { path: "stock-count-items", table: stockCountItemsTable, module: "stockCountItems", entity: "stockCountItem",
@@ -172,6 +182,7 @@ const resources: CrudConfig[] = [
     search: [] },
   // Ledger
   { path: "inventory-ledger", table: inventoryLedgerTable, module: "inventoryLedger", entity: "inventoryLedger",
+    generatedCode: { documentType: "inventoryLedger" },
     createBody: CreateInventoryLedgerBody, updateBody: UpdateInventoryLedgerBody, listResponse: ListInventoryLedgersResponse,
     search: ["referenceNumber", "referenceType"] },
 ];

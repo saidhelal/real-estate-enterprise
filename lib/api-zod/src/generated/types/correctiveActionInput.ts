@@ -8,7 +8,7 @@
 
 export interface CorrectiveActionInput {
   companyId: string;
-  code: string;
+  code?: string;
   defectId?: string;
   action: string;
   assignedTo?: string;

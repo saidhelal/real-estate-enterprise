@@ -9,7 +9,7 @@
 export interface ContractInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   reservationId?: string;
   unitId: string;
   customerId: string;

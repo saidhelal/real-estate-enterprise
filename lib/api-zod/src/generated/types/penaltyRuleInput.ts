@@ -8,7 +8,7 @@
 
 export interface PenaltyRuleInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   daysAfterDue?: number;

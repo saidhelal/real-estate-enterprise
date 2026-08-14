@@ -8,7 +8,7 @@
 
 export interface AssetInventoryCountInput {
   companyId: string;
-  code: string;
+  code?: string;
   assetId?: string;
   branchId?: string;
   countDate?: string;

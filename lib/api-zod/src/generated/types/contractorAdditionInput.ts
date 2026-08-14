@@ -8,7 +8,7 @@
 
 export interface ContractorAdditionInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   additionType?: string;

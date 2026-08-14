@@ -8,7 +8,7 @@
 
 export interface PurchaseContractAmendmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   amendmentNumber?: string;
   amendmentDate?: string;

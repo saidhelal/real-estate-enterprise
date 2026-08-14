@@ -8,7 +8,7 @@
 
 export interface SalaryComponentInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   componentType?: string;

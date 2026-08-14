@@ -29,6 +29,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 import { notify, recipientsByPermission } from "../lib/notify";
@@ -69,7 +70,7 @@ router.get("/installment-plans", requirePermission("installmentPlans.view"), asy
 router.post("/installment-plans", requirePermission("installmentPlans.create"), async (req, res): Promise<void> => {
   const parsed = CreateInstallmentPlanBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(installmentPlansTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(installmentPlansTable).values({ ...parsed.data, code: (await nextNumber("installmentPlan", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "installmentPlan", entityId: row.id, newValue: row });
   res.status(201).json(GetInstallmentPlanResponse.parse(serializeRow(row)));
 });
@@ -88,6 +89,8 @@ router.patch("/installment-plans/:id", requirePermission("installmentPlans.updat
   const [existing] = await db.select().from(installmentPlansTable).where(and(eq(installmentPlansTable.id, id), eq(installmentPlansTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(installmentPlansTable).set(update).where(eq(installmentPlansTable.id, id)).returning()
     : [existing];
@@ -281,7 +284,7 @@ router.get("/penalty-rules", requirePermission("penaltyRules.view"), async (req,
 router.post("/penalty-rules", requirePermission("penaltyRules.create"), async (req, res): Promise<void> => {
   const parsed = CreatePenaltyRuleBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(penaltyRulesTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(penaltyRulesTable).values({ ...parsed.data, code: (await nextNumber("penaltyRule", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "penaltyRule", entityId: row.id, newValue: row });
   res.status(201).json(GetPenaltyRuleResponse.parse(serializeRow(row)));
 });
@@ -300,6 +303,8 @@ router.patch("/penalty-rules/:id", requirePermission("penaltyRules.update"), asy
   const [existing] = await db.select().from(penaltyRulesTable).where(and(eq(penaltyRulesTable.id, id), eq(penaltyRulesTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(penaltyRulesTable).set(update).where(eq(penaltyRulesTable.id, id)).returning()
     : [existing];

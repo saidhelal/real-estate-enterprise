@@ -8,7 +8,7 @@
 
 export interface PurchaseContractInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   supplierId?: string;

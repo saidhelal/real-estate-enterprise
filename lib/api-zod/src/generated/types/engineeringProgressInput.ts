@@ -8,7 +8,7 @@
 
 export interface EngineeringProgressInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   phaseId?: string;
   buildingId?: string;

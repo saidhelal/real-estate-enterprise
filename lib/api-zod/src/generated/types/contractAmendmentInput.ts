@@ -9,7 +9,7 @@
 export interface ContractAmendmentInput {
   companyId: string;
   contractId: string;
-  code: string;
+  code?: string;
   amendmentDate: string;
   description: string;
   oldValue?: string;

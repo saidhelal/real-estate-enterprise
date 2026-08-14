@@ -70,7 +70,18 @@ export default function ReservationsPage() {
   const customerOptions = (customers?.data ?? []).map((c) => ({ value: c.id, label: c.fullName }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Code",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "reservation",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "branchId", label: "Branch", labelAr: "الفرع", type: "select", options: branchOptions },
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", searchable: true, filterOnly: true, options: projectOptions },
     { name: "phaseId", label: "Phase", labelAr: "المرحلة", type: "select", searchable: true, filterOnly: true, dependsOn: "projectId", options: phaseOptions },

@@ -8,7 +8,7 @@
 
 export interface UnitStatusInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   color?: string;

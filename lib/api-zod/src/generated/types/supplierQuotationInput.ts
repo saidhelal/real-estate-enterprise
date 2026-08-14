@@ -8,7 +8,7 @@
 
 export interface SupplierQuotationInput {
   companyId: string;
-  code: string;
+  code?: string;
   rfqId?: string;
   supplierId?: string;
   quotationNumber?: string;

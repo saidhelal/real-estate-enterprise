@@ -38,7 +38,17 @@ export default function EmployeesPage() {
   };
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "employee",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "firstName", label: t("hr.first_name"), required: true },
     { name: "lastName", label: t("hr.last_name"), required: true },
     { name: "firstNameAr", label: t("hr.first_name_ar"), rtl: true },

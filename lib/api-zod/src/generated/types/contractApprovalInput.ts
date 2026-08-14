@@ -8,7 +8,7 @@
 
 export interface ContractApprovalInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   entityType?: string;
   entityId?: string;

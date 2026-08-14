@@ -35,7 +35,17 @@ export default function ContractAddendumsPage() {
 
   const fields: ResourceField[] = [
     { name: "legalContractId", label: t("nav.legal_contracts"), type: "select", options: contractOptions, required: true },
-    { name: "code", label: t("common.code") },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "contractAddendum",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "title", label: t("legal.title"), required: true },
     { name: "addendumDate", label: t("legal.addendum_date"), type: "date" },
     { name: "content", label: t("legal.content"), type: "textarea" },

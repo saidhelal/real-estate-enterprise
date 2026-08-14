@@ -8,7 +8,7 @@
 
 export interface ContractorInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   classification?: string;

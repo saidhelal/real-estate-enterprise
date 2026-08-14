@@ -10,7 +10,7 @@ import type { ReceiptAllocationInput } from './receiptAllocationInput';
 export interface ReceiptInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   customerId: string;
   contractId?: string;
   scheduleId?: string;

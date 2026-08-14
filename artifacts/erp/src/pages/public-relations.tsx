@@ -114,7 +114,6 @@ function personName(e: EmployeeLite | undefined, ar: boolean): string {
 }
 
 const EMPTY_PARTY = {
-  code: "",
   name: "",
   nameAr: "",
   partyType: "company",
@@ -368,7 +367,9 @@ function PartyDialog({
     setForm(
       party
         ? {
-            code: party.code,
+            // `code` is deliberately absent: it is issued by the engine and
+            // rejected on update, so carrying it in the form would only send
+            // back a value the server ignores.
             name: party.name,
             nameAr: party.nameAr ?? "",
             partyType: party.partyType,
@@ -449,15 +450,8 @@ function PartyDialog({
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="pr-code">{t("common.code")}</Label>
-              <Input
-                id="pr-code"
-                required
-                value={form.code ?? ""}
-                onChange={(e) => set("code", e.target.value)}
-              />
-            </div>
+            {/* No code field: the party's code is issued by the central
+                sequence on save, so it cannot be typed or collide. */}
             <div className="space-y-2">
               <Label htmlFor="pr-name">{t("pr.name_en")}</Label>
               <Input
@@ -555,7 +549,6 @@ function LogInteractionDialog({
   const queryClient = useQueryClient();
   const create = useCreatePrInteraction();
   const [form, setForm] = useState({
-    code: "",
     interactionType: "meeting",
     interactionDate: new Date().toISOString().slice(0, 10),
     subject: "",
@@ -589,7 +582,6 @@ function LogInteractionDialog({
         data: {
           companyId,
           partyId: party.id,
-          code: form.code.trim(),
           interactionType: form.interactionType,
           interactionDate: form.interactionDate,
           subject: form.subject.trim(),
@@ -631,15 +623,7 @@ function LogInteractionDialog({
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="pri-code">{t("common.code")}</Label>
-              <Input
-                id="pri-code"
-                required
-                value={form.code}
-                onChange={(e) => set("code", e.target.value)}
-              />
-            </div>
+            {/* No code field: the interaction's code is issued on save. */}
             <div className="space-y-2">
               <Label>{t("pr.interaction_type")}</Label>
               <Select value={form.interactionType} onValueChange={(v) => set("interactionType", v)}>

@@ -25,7 +25,17 @@ export default function SupplierEvaluationsPage() {
   const supplierOptions = (supplierData?.data ?? []).map((o) => ({ value: o.id, label: o.name }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "supplierEvaluation",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "supplierId", label: "Supplier", labelAr: "المورد", type: "select", options: supplierOptions },
     { name: "evaluationDate", label: "Evaluation Date", labelAr: "تاريخ التقييم", type: "date" },
     { name: "period", label: "Period", labelAr: "الفترة" },

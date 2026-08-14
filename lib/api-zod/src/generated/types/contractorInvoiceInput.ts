@@ -8,7 +8,7 @@
 
 export interface ContractorInvoiceInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   invoiceNumber?: string;

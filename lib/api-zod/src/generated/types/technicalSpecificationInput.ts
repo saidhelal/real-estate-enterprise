@@ -8,7 +8,7 @@
 
 export interface TechnicalSpecificationInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   disciplineId?: string;

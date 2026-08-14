@@ -8,7 +8,7 @@
 
 export interface PurchaseReturnInput {
   companyId: string;
-  code: string;
+  code?: string;
   grnId?: string;
   supplierId?: string;
   returnDate?: string;

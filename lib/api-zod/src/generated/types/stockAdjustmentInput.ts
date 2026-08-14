@@ -8,7 +8,7 @@
 
 export interface StockAdjustmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   adjustmentDate?: string;
   warehouseId?: string;
   adjustmentType?: string;

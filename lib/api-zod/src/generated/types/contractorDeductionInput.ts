@@ -8,7 +8,7 @@
 
 export interface ContractorDeductionInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   certificateId?: string;
   deductionType?: string;

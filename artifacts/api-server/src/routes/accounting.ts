@@ -58,6 +58,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { toCents, fromCents } from "../lib/money";
 import {
@@ -457,7 +458,7 @@ router.get("/budgets", requirePermission("budgets.view"), async (req, res): Prom
 router.post("/budgets", requirePermission("budgets.create"), async (req, res): Promise<void> => {
   const parsed = CreateBudgetBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(budgetsTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(budgetsTable).values({ ...parsed.data, code: (await nextNumber("budget", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "budget", entityId: row.id, newValue: row });
   res.status(201).json(GetBudgetResponse.parse(serializeRow(row)));
 });
@@ -476,6 +477,8 @@ router.patch("/budgets/:id", requirePermission("budgets.update"), async (req, re
   const [existing] = await db.select().from(budgetsTable).where(and(eq(budgetsTable.id, id), eq(budgetsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(budgetsTable).set(update).where(eq(budgetsTable.id, id)).returning()
     : [existing];

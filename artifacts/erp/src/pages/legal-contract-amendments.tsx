@@ -35,7 +35,17 @@ export default function LegalContractAmendmentsPage() {
 
   const fields: ResourceField[] = [
     { name: "legalContractId", label: t("nav.legal_contracts"), type: "select", options: contractOptions, required: true },
-    { name: "code", label: t("common.code") },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "legalContractAmendment",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "amendmentDate", label: t("legal.amendment_date"), type: "date" },
     { name: "description", label: t("legal.description"), type: "textarea", required: true },
     { name: "descriptionAr", label: `${t("legal.description")} (${t("legal.title_ar")})`, type: "textarea", rtl: true },

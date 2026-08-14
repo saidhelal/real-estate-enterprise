@@ -8,7 +8,7 @@
 
 export interface AdvanceRecoveryInput {
   companyId: string;
-  code: string;
+  code?: string;
   advanceId?: string;
   certificateId?: string;
   amount?: string;

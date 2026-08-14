@@ -8,7 +8,7 @@
 
 export interface ServiceEscalationInput {
   companyId: string;
-  code: string;
+  code?: string;
   sourceType: string;
   sourceId: string;
   level?: string;

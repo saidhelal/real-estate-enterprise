@@ -8,7 +8,7 @@
 
 export interface RfiInput {
   companyId: string;
-  code: string;
+  code?: string;
   projectId?: string;
   subject: string;
   question?: string;

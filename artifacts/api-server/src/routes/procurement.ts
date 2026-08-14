@@ -110,19 +110,25 @@ function financialHooks(cfg: CrudConfig) {
 const resources: CrudConfig[] = [
   // Supplier management
   { path: "supplier-categories", table: supplierCategoriesTable, module: "supplierCategories", entity: "supplierCategory",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "supplierCategory" },
     createBody: CreateSupplierCategoryBody, updateBody: UpdateSupplierCategoryBody, listResponse: ListSupplierCategorysResponse,
     search: ["code", "name", "nameAr"] },
   { path: "suppliers", table: suppliersTable, module: "suppliers", entity: "supplier",
+    // Issued by the central sequence engine; the client cannot choose it.
+    generatedCode: { documentType: "supplier" },
     createBody: CreateSupplierBody, updateBody: UpdateSupplierBody, listResponse: ListSuppliersResponse,
     search: ["code", "name", "nameAr", "email", "phone"] },
   { path: "supplier-contacts", table: supplierContactsTable, module: "supplierContacts", entity: "supplierContact",
     createBody: CreateSupplierContactBody, updateBody: UpdateSupplierContactBody, listResponse: ListSupplierContactsResponse,
     search: ["name", "email", "phone"] },
   { path: "supplier-evaluations", table: supplierEvaluationsTable, module: "supplierEvaluations", entity: "supplierEvaluation",
+    generatedCode: { documentType: "supplierEvaluation" },
     createBody: CreateSupplierEvaluationBody, updateBody: UpdateSupplierEvaluationBody, listResponse: ListSupplierEvaluationsResponse,
     search: ["code", "period"] },
   // Purchase requests
   { path: "purchase-requests", table: purchaseRequestsTable, module: "purchaseRequests", entity: "purchaseRequest",
+    generatedCode: { documentType: "purchaseRequest" },
     createBody: CreatePurchaseRequestBody, updateBody: UpdatePurchaseRequestBody, listResponse: ListPurchaseRequestsResponse,
     search: ["code", "title", "titleAr"] },
   { path: "purchase-request-items", table: purchaseRequestItemsTable, module: "purchaseRequestItems", entity: "purchaseRequestItem",
@@ -130,16 +136,19 @@ const resources: CrudConfig[] = [
     search: ["itemCode", "description"] },
   // RFQ
   { path: "rfqs", table: rfqsTable, module: "rfqs", entity: "rfq",
+    generatedCode: { documentType: "rfq" },
     createBody: CreateRfqBody, updateBody: UpdateRfqBody, listResponse: ListRfqsResponse,
     search: ["code", "title", "titleAr"] },
   { path: "rfq-items", table: rfqItemsTable, module: "rfqItems", entity: "rfqItem",
     createBody: CreateRfqItemBody, updateBody: UpdateRfqItemBody, listResponse: ListRfqItemsResponse,
     search: ["description"] },
   { path: "rfq-suppliers", table: rfqSuppliersTable, module: "rfqSuppliers", entity: "rfqSupplier",
+    generatedCode: { documentType: "rfqSupplier" },
     createBody: CreateRfqSupplierBody, updateBody: UpdateRfqSupplierBody, listResponse: ListRfqSuppliersResponse,
     search: ["notes"] },
   // Supplier quotations
   { path: "supplier-quotations", table: supplierQuotationsTable, module: "supplierQuotations", entity: "supplierQuotation",
+    generatedCode: { documentType: "supplierQuotation" },
     createBody: CreateSupplierQuotationBody, updateBody: UpdateSupplierQuotationBody, listResponse: ListSupplierQuotationsResponse,
     search: ["code", "quotationNumber"] },
   { path: "quotation-items", table: quotationItemsTable, module: "quotationItems", entity: "quotationItem",
@@ -147,6 +156,7 @@ const resources: CrudConfig[] = [
     search: ["description"] },
   // Purchase orders
   { path: "purchase-orders", table: purchaseOrdersTable, module: "purchaseOrders", entity: "purchaseOrder",
+    generatedCode: { documentType: "purchaseOrder" },
     createBody: CreatePurchaseOrderBody, updateBody: UpdatePurchaseOrderBody, listResponse: ListPurchaseOrdersResponse,
     search: ["code"] },
   { path: "purchase-order-items", table: purchaseOrderItemsTable, module: "purchaseOrderItems", entity: "purchaseOrderItem",
@@ -154,13 +164,16 @@ const resources: CrudConfig[] = [
     search: ["description"] },
   // Purchase contracts
   { path: "purchase-contracts", table: purchaseContractsTable, module: "purchaseContracts", entity: "purchaseContract",
+    generatedCode: { documentType: "purchaseContract" },
     createBody: CreatePurchaseContractBody, updateBody: UpdatePurchaseContractBody, listResponse: ListPurchaseContractsResponse,
     search: ["code", "title", "titleAr"] },
   { path: "purchase-contract-amendments", table: purchaseContractAmendmentsTable, module: "purchaseContractAmendments", entity: "purchaseContractAmendment",
+    generatedCode: { documentType: "purchaseContractAmendment" },
     createBody: CreatePurchaseContractAmendmentBody, updateBody: UpdatePurchaseContractAmendmentBody, listResponse: ListPurchaseContractAmendmentsResponse,
     search: ["code", "amendmentNumber"] },
   // Goods receipt notes (financial: post on receipt)
   { path: "goods-receipt-notes", table: goodsReceiptNotesTable, module: "goodsReceiptNotes", entity: "goodsReceiptNote",
+    generatedCode: { documentType: "goodsReceiptNote" },
     createBody: CreateGoodsReceiptNoteBody, updateBody: UpdateGoodsReceiptNoteBody, listResponse: ListGoodsReceiptNotesResponse,
     search: ["code"],
     financial: { eventKey: "procurement.goods_receipt", amountField: "totalAmount", dateField: "receiptDate" } },
@@ -169,6 +182,7 @@ const resources: CrudConfig[] = [
     search: ["description"] },
   // Purchase returns (financial: reverse-style on receipt)
   { path: "purchase-returns", table: purchaseReturnsTable, module: "purchaseReturns", entity: "purchaseReturn",
+    generatedCode: { documentType: "purchaseReturn" },
     createBody: CreatePurchaseReturnBody, updateBody: UpdatePurchaseReturnBody, listResponse: ListPurchaseReturnsResponse,
     search: ["code"],
     financial: { eventKey: "procurement.purchase_return", amountField: "totalAmount", dateField: "returnDate" } },
@@ -177,6 +191,7 @@ const resources: CrudConfig[] = [
     search: ["description"] },
   // Approval workflow
   { path: "procurement-approvals", table: procurementApprovalsTable, module: "procurementApprovals", entity: "procurementApproval",
+    generatedCode: { documentType: "procurementApproval" },
     createBody: CreateProcurementApprovalBody, updateBody: UpdateProcurementApprovalBody, listResponse: ListProcurementApprovalsResponse,
     search: ["code", "approverName"] },
 ];

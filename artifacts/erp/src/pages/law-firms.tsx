@@ -22,7 +22,17 @@ export default function LawFirmsPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: t("common.code"),
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "lawFirm",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "name", label: t("legal.name"), required: true },
     { name: "nameAr", label: t("legal.name_ar"), rtl: true },
     { name: "contactPerson", label: t("legal.contact_person") },

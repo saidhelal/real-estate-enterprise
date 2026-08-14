@@ -8,7 +8,7 @@
 
 export interface CostEstimateInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr?: string;
   projectId?: string;

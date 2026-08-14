@@ -64,7 +64,17 @@ export default function LegalNoticesPage() {
   };
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "legalNotice",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "noticeType", label: t("legal.notice_type"), type: "select", options: NOTICE_TYPE, required: true },
     { name: "legalCaseId", label: t("legal.case"), type: "select", options: caseOptions },
     { name: "legalContractId", label: t("nav.legal_contracts"), type: "select", options: contractOptions },

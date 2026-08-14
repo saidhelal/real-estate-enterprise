@@ -13,6 +13,7 @@ import { requireAuth, requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
 import { notify } from "../lib/notify";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
+import { nextNumber } from "../lib/doc-number";
 import { effectivePermissionsFor } from "../lib/delegation-access";
 
 /**
@@ -218,7 +219,9 @@ router.post("/delegations", requirePermission("delegations.create"), async (req,
     .insert(delegationsTable)
     .values({
       companyId,
-      code: body.code,
+      // A delegation is a system document, not a business key someone names.
+      // Its reference comes from the central sequence like every other one.
+      code: (await nextNumber("delegation", me.companyId ?? null)).value,
       delegatorUserId: me.id,
       delegateUserId: body.delegateUserId,
       permissions: body.permissions,

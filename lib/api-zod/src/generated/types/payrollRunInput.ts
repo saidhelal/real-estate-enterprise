@@ -9,7 +9,7 @@
 export interface PayrollRunInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   payrollPeriodId?: string;
   runDate: string;
   description?: string;

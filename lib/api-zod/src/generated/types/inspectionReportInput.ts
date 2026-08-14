@@ -8,7 +8,7 @@
 
 export interface InspectionReportInput {
   companyId: string;
-  code: string;
+  code?: string;
   inspectionRequestId?: string;
   reportDate?: string;
   inspector?: string;

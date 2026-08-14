@@ -39,6 +39,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -183,7 +184,7 @@ router.get("/lead-sources", requirePermission("leadSources.view"), async (req, r
 router.post("/lead-sources", requirePermission("leadSources.create"), async (req, res): Promise<void> => {
   const parsed = CreateLeadSourceBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(leadSourcesTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(leadSourcesTable).values({ ...parsed.data, code: (await nextNumber("leadSource", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "leadSource", entityId: row.id, newValue: row });
   res.status(201).json(GetLeadSourceResponse.parse(serializeRow(row)));
 });
@@ -202,6 +203,8 @@ router.patch("/lead-sources/:id", requirePermission("leadSources.update"), async
   const [existing] = await db.select().from(leadSourcesTable).where(and(eq(leadSourcesTable.id, id), eq(leadSourcesTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(leadSourcesTable).set(update).where(eq(leadSourcesTable.id, id)).returning()
     : [existing];

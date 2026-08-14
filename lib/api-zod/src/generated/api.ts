@@ -1669,7 +1669,7 @@ export const ListUnitTypesResponse = zod.object({
  */
 export const CreateUnitTypeBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "description": zod.string().optional()
@@ -1766,7 +1766,7 @@ export const ListUnitStatusesResponse = zod.object({
  */
 export const CreateUnitStatusBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "color": zod.string().optional()
@@ -2562,7 +2562,7 @@ export const ListLeadSourcesResponse = zod.object({
  */
 export const CreateLeadSourceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string()
 })
@@ -3240,7 +3240,7 @@ export const ListCustomersResponse = zod.object({
 export const CreateCustomerBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "fullName": zod.string(),
   "nameAr": zod.string().optional(),
   "type": zod.string().optional(),
@@ -4360,7 +4360,7 @@ export const ListReservationsResponse = zod.object({
 export const CreateReservationBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "unitId": zod.string(),
   "customerId": zod.string(),
   "reservationDate": zod.string(),
@@ -4605,7 +4605,7 @@ export const ListContractsResponse = zod.object({
 export const CreateContractBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "reservationId": zod.string().optional(),
   "unitId": zod.string(),
   "customerId": zod.string(),
@@ -4748,7 +4748,7 @@ export const ListContractAmendmentsResponse = zod.object({
 export const CreateContractAmendmentBody = zod.object({
   "companyId": zod.string(),
   "contractId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "amendmentDate": zod.string(),
   "description": zod.string(),
   "oldValue": zod.string().optional(),
@@ -5084,7 +5084,7 @@ export const ListInstallmentPlansResponse = zod.object({
  */
 export const CreateInstallmentPlanBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string(),
   "totalAmount": zod.string().optional(),
   "downPayment": zod.string().optional(),
@@ -5418,7 +5418,7 @@ export const ListPenaltyRulesResponse = zod.object({
  */
 export const CreatePenaltyRuleBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "daysAfterDue": zod.number().optional(),
@@ -5526,7 +5526,7 @@ export const ListUnitPriceListsResponse = zod.object({
  */
 export const CreateUnitPriceListBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "projectId": zod.string().optional(),
@@ -5734,7 +5734,7 @@ export const ListUnitDiscountsResponse = zod.object({
  */
 export const CreateUnitDiscountBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "discountType": zod.string().optional(),
@@ -7001,7 +7001,7 @@ export const ListReceiptsResponse = zod.object({
 export const CreateReceiptBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "customerId": zod.string(),
   "contractId": zod.string().optional(),
   "scheduleId": zod.string().optional(),
@@ -7795,7 +7795,7 @@ export const ListBudgetsResponse = zod.object({
 export const CreateBudgetBody = zod.object({
   "companyId": zod.string(),
   "fiscalYearId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "status": zod.string().optional(),
@@ -8818,7 +8818,7 @@ export const ListEngineeringDisciplinesResponse = zod.object({
  */
 export const CreateEngineeringDisciplineBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "description": zod.string().optional()
@@ -8919,7 +8919,7 @@ export const ListConsultantsResponse = zod.object({
  */
 export const CreateConsultantBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "disciplineId": zod.string().optional(),
@@ -9039,7 +9039,7 @@ export const ListDesignPackagesResponse = zod.object({
  */
 export const CreateDesignPackageBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "projectId": zod.string().optional(),
@@ -9152,7 +9152,7 @@ export const ListDrawingCategorysResponse = zod.object({
  */
 export const CreateDrawingCategoryBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "disciplineId": zod.string().optional(),
@@ -9255,7 +9255,7 @@ export const ListTechnicalSpecificationsResponse = zod.object({
  */
 export const CreateTechnicalSpecificationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "disciplineId": zod.string().optional(),
@@ -9374,7 +9374,7 @@ export const ListDrawingsResponse = zod.object({
  */
 export const CreateDrawingBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string(),
   "drawingType": zod.string().optional(),
@@ -9630,7 +9630,7 @@ export const ListBoqsResponse = zod.object({
  */
 export const CreateBoqBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string(),
   "projectId": zod.string().optional(),
@@ -9968,7 +9968,7 @@ export const ListCostEstimatesResponse = zod.object({
  */
 export const CreateCostEstimateBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string().optional(),
   "projectId": zod.string().optional(),
@@ -10089,7 +10089,7 @@ export const ListInspectionRequestsResponse = zod.object({
  */
 export const CreateInspectionRequestBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "projectId": zod.string().optional(),
   "phaseId": zod.string().optional(),
   "buildingId": zod.string().optional(),
@@ -10207,7 +10207,7 @@ export const ListInspectionReportsResponse = zod.object({
  */
 export const CreateInspectionReportBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "inspectionRequestId": zod.string().optional(),
   "reportDate": zod.string().optional(),
   "inspector": zod.string().optional(),
@@ -10314,7 +10314,7 @@ export const ListDefectsResponse = zod.object({
  */
 export const CreateDefectBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "inspectionReportId": zod.string().optional(),
   "projectId": zod.string().optional(),
   "description": zod.string(),
@@ -10434,7 +10434,7 @@ export const ListCorrectiveActionsResponse = zod.object({
  */
 export const CreateCorrectiveActionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "defectId": zod.string().optional(),
   "action": zod.string(),
   "assignedTo": zod.string().optional(),
@@ -10582,7 +10582,7 @@ export const ListRfisResponse = zod.object({
  */
 export const CreateRfiBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "projectId": zod.string().optional(),
   "subject": zod.string(),
   "question": zod.string().optional(),
@@ -10707,7 +10707,7 @@ export const ListTechnicalSubmittalsResponse = zod.object({
  */
 export const CreateTechnicalSubmittalBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "projectId": zod.string().optional(),
   "title": zod.string(),
   "submittalType": zod.string().optional(),
@@ -10827,7 +10827,7 @@ export const ListMaterialSubmittalsResponse = zod.object({
  */
 export const CreateMaterialSubmittalBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "projectId": zod.string().optional(),
   "materialName": zod.string(),
   "manufacturer": zod.string().optional(),
@@ -10942,7 +10942,7 @@ export const ListConsultantResponsesResponse = zod.object({
  */
 export const CreateConsultantResponseBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "referenceType": zod.string().optional(),
   "referenceId": zod.string().optional(),
   "consultantId": zod.string().optional(),
@@ -11055,7 +11055,7 @@ export const ListEngineeringProgresssResponse = zod.object({
  */
 export const CreateEngineeringProgressBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "projectId": zod.string().optional(),
   "phaseId": zod.string().optional(),
   "buildingId": zod.string().optional(),
@@ -11204,7 +11204,7 @@ export const ListContractorsResponse = zod.object({
  */
 export const CreateContractorBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "classification": zod.string().optional(),
@@ -11335,7 +11335,7 @@ export const ListContractorContractsResponse = zod.object({
  */
 export const CreateContractorContractBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string(),
   "contractorId": zod.string().optional(),
@@ -11594,7 +11594,7 @@ export const ListWorkProgressUpdatesResponse = zod.object({
  */
 export const CreateWorkProgressUpdateBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "asOfDate": zod.string().optional(),
   "progressPercent": zod.number().optional(),
@@ -11720,7 +11720,7 @@ export const ListPaymentCertificatesResponse = zod.object({
  */
 export const CreatePaymentCertificateBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "projectId": zod.string().optional(),
   "boqItemId": zod.string().optional(),
@@ -12020,7 +12020,7 @@ export const ListVariationOrdersResponse = zod.object({
  */
 export const CreateVariationOrderBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string().optional(),
@@ -12144,7 +12144,7 @@ export const ListContractorDeductionsResponse = zod.object({
  */
 export const CreateContractorDeductionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "deductionType": zod.string().optional(),
@@ -12260,7 +12260,7 @@ export const ListContractorAdditionsResponse = zod.object({
  */
 export const CreateContractorAdditionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "additionType": zod.string().optional(),
@@ -12376,7 +12376,7 @@ export const ListRetentionsResponse = zod.object({
  */
 export const CreateRetentionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "retentionPercent": zod.string().optional(),
@@ -12492,7 +12492,7 @@ export const ListAdvancePaymentsResponse = zod.object({
  */
 export const CreateAdvancePaymentBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "amount": zod.string().optional(),
   "paymentDate": zod.string().optional(),
@@ -12605,7 +12605,7 @@ export const ListAdvanceRecoverysResponse = zod.object({
  */
 export const CreateAdvanceRecoveryBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "advanceId": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "amount": zod.string().optional(),
@@ -12711,7 +12711,7 @@ export const ListContractorInvoicesResponse = zod.object({
  */
 export const CreateContractorInvoiceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "invoiceNumber": zod.string().optional(),
@@ -12836,7 +12836,7 @@ export const ListContractApprovalsResponse = zod.object({
  */
 export const CreateContractApprovalBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "entityType": zod.string().optional(),
   "entityId": zod.string().optional(),
@@ -12982,7 +12982,7 @@ export const ListSupplierCategorysResponse = zod.object({
  */
 export const CreateSupplierCategoryBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "description": zod.string().optional(),
@@ -13092,7 +13092,7 @@ export const ListSuppliersResponse = zod.object({
  */
 export const CreateSupplierBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "categoryId": zod.string().optional(),
@@ -13347,7 +13347,7 @@ export const ListSupplierEvaluationsResponse = zod.object({
  */
 export const CreateSupplierEvaluationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "evaluationDate": zod.string().optional(),
   "period": zod.string().optional(),
@@ -13484,7 +13484,7 @@ export const ListPurchaseRequestsResponse = zod.object({
  */
 export const CreatePurchaseRequestBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string(),
   "department": zod.string().optional(),
@@ -13741,7 +13741,7 @@ export const ListRfqsResponse = zod.object({
  */
 export const CreateRfqBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string(),
   "requestId": zod.string().optional(),
@@ -14067,7 +14067,7 @@ export const ListSupplierQuotationsResponse = zod.object({
  */
 export const CreateSupplierQuotationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "rfqId": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "quotationNumber": zod.string().optional(),
@@ -14309,7 +14309,7 @@ export const ListPurchaseOrdersResponse = zod.object({
  */
 export const CreatePurchaseOrderBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "quotationId": zod.string().optional(),
   "requestId": zod.string().optional(),
@@ -14560,7 +14560,7 @@ export const ListPurchaseContractsResponse = zod.object({
  */
 export const CreatePurchaseContractBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string(),
   "supplierId": zod.string().optional(),
@@ -14683,7 +14683,7 @@ export const ListPurchaseContractAmendmentsResponse = zod.object({
  */
 export const CreatePurchaseContractAmendmentBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractId": zod.string().optional(),
   "amendmentNumber": zod.string().optional(),
   "amendmentDate": zod.string().optional(),
@@ -14798,7 +14798,7 @@ export const ListGoodsReceiptNotesResponse = zod.object({
  */
 export const CreateGoodsReceiptNoteBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "poId": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "receiptDate": zod.string().optional(),
@@ -15058,7 +15058,7 @@ export const ListPurchaseReturnsResponse = zod.object({
  */
 export const CreatePurchaseReturnBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "grnId": zod.string().optional(),
   "supplierId": zod.string().optional(),
   "returnDate": zod.string().optional(),
@@ -15294,7 +15294,7 @@ export const ListProcurementApprovalsResponse = zod.object({
  */
 export const CreateProcurementApprovalBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "entityType": zod.string().optional(),
   "entityId": zod.string().optional(),
   "level": zod.string().optional(),
@@ -15683,7 +15683,7 @@ export const ListItemCategorysResponse = zod.object({
  */
 export const CreateItemCategoryBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "parentId": zod.string().optional(),
@@ -15789,7 +15789,7 @@ export const ListItemGroupsResponse = zod.object({
  */
 export const CreateItemGroupBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "categoryId": zod.string().optional(),
@@ -16288,7 +16288,7 @@ export const ListStockOpeningBalancesResponse = zod.object({
  */
 export const CreateStockOpeningBalanceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "itemId": zod.string().optional(),
   "warehouseId": zod.string().optional(),
   "locationId": zod.string().optional(),
@@ -16419,7 +16419,7 @@ export const ListGoodsReceiptsResponse = zod.object({
  */
 export const CreateGoodsReceiptBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "receiptDate": zod.string().optional(),
   "receiptType": zod.string().optional(),
   "warehouseId": zod.string().optional(),
@@ -16670,7 +16670,7 @@ export const ListGoodsIssuesResponse = zod.object({
  */
 export const CreateGoodsIssueBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "issueDate": zod.string().optional(),
   "issueType": zod.string().optional(),
   "warehouseId": zod.string().optional(),
@@ -16912,7 +16912,7 @@ export const ListInventoryTransfersResponse = zod.object({
  */
 export const CreateInventoryTransferBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "transferDate": zod.string().optional(),
   "fromWarehouseId": zod.string().optional(),
   "toWarehouseId": zod.string().optional(),
@@ -17153,7 +17153,7 @@ export const ListStockAdjustmentsResponse = zod.object({
  */
 export const CreateStockAdjustmentBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "adjustmentDate": zod.string().optional(),
   "warehouseId": zod.string().optional(),
   "adjustmentType": zod.string().optional(),
@@ -17394,7 +17394,7 @@ export const ListStockCountsResponse = zod.object({
  */
 export const CreateStockCountBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "countDate": zod.string().optional(),
   "warehouseId": zod.string().optional(),
   "countType": zod.string().optional(),
@@ -17798,7 +17798,7 @@ export const ListCertificateStatussResponse = zod.object({
  */
 export const CreateCertificateStatusBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "sequence": zod.number().optional(),
@@ -17905,7 +17905,7 @@ export const ListCertificateApprovalsResponse = zod.object({
  */
 export const CreateCertificateApprovalBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "level": zod.string().optional(),
   "status": zod.string().optional(),
@@ -18018,7 +18018,7 @@ export const ListCertificateApprovalLogsResponse = zod.object({
  */
 export const CreateCertificateApprovalLogBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "certificateId": zod.string().optional(),
   "approvalId": zod.string().optional(),
   "action": zod.string().optional(),
@@ -18159,7 +18159,7 @@ export const ListChequesResponse = zod.object({
 export const CreateChequeBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "direction": zod.string(),
   "chequeNumber": zod.string(),
   "chequeDate": zod.string().optional(),
@@ -20349,7 +20349,7 @@ export const ListJobTitlesResponse = zod.object({
  */
 export const CreateJobTitleBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "departmentId": zod.string().optional(),
@@ -20485,7 +20485,7 @@ export const ListEmployeesResponse = zod.object({
 export const CreateEmployeeBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "firstName": zod.string(),
   "lastName": zod.string(),
   "firstNameAr": zod.string().optional(),
@@ -20695,7 +20695,7 @@ export const ListEmployeeDocumentsResponse = zod.object({
 export const CreateEmployeeDocumentBody = zod.object({
   "companyId": zod.string(),
   "employeeId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "documentType": zod.string().optional(),
   "title": zod.string(),
   "documentNumber": zod.string().optional(),
@@ -20924,7 +20924,7 @@ export const ListShiftsResponse = zod.object({
  */
 export const CreateShiftBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "startTime": zod.string().optional(),
@@ -21166,7 +21166,7 @@ export const ListLeaveTypesResponse = zod.object({
  */
 export const CreateLeaveTypeBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "daysPerYear": zod.string().optional(),
@@ -21392,7 +21392,7 @@ export const ListLeaveRequestsResponse = zod.object({
  */
 export const CreateLeaveRequestBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string().optional(),
   "leaveTypeId": zod.string().optional(),
   "startDate": zod.string(),
@@ -21520,7 +21520,7 @@ export const ListSalaryComponentsResponse = zod.object({
  */
 export const CreateSalaryComponentBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "componentType": zod.string().optional(),
@@ -21644,7 +21644,7 @@ export const ListPayrollPeriodsResponse = zod.object({
  */
 export const CreatePayrollPeriodBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "year": zod.number(),
   "month": zod.number().optional(),
@@ -21769,7 +21769,7 @@ export const ListPayrollRunsResponse = zod.object({
 export const CreatePayrollRunBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "payrollPeriodId": zod.string().optional(),
   "runDate": zod.string(),
   "description": zod.string().optional(),
@@ -21906,7 +21906,7 @@ export const ListPayslipsResponse = zod.object({
  */
 export const CreatePayslipBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "payrollRunId": zod.string().optional(),
   "employeeId": zod.string().optional(),
   "basicSalary": zod.string().optional(),
@@ -22141,7 +22141,7 @@ export const ListEmployeeLoansResponse = zod.object({
  */
 export const CreateEmployeeLoanBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string().optional(),
   "loanType": zod.string().optional(),
   "amount": zod.string().optional(),
@@ -22412,7 +22412,7 @@ export const ListEmployeeAdvancesResponse = zod.object({
  */
 export const CreateEmployeeAdvanceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string().optional(),
   "amount": zod.string().optional(),
   "requestDate": zod.string().optional(),
@@ -22667,7 +22667,7 @@ export const ListEmployeeEvaluationsResponse = zod.object({
  */
 export const CreateEmployeeEvaluationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string().optional(),
   "evaluatorEmployeeId": zod.string().optional(),
   "evaluationPeriod": zod.string().optional(),
@@ -23390,7 +23390,7 @@ export const ListLegalContractsResponse = zod.object({
 export const CreateLegalContractBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string().optional(),
   "contractType": zod.string().optional(),
@@ -23875,7 +23875,7 @@ export const ListLegalContractAmendmentsResponse = zod.object({
 export const CreateLegalContractAmendmentBody = zod.object({
   "companyId": zod.string(),
   "legalContractId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "amendmentDate": zod.string().optional(),
   "description": zod.string(),
   "descriptionAr": zod.string().optional(),
@@ -24001,7 +24001,7 @@ export const ListContractAddendumsResponse = zod.object({
 export const CreateContractAddendumBody = zod.object({
   "companyId": zod.string(),
   "legalContractId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "addendumDate": zod.string().optional(),
   "content": zod.string().optional(),
@@ -24317,7 +24317,7 @@ export const ListLawFirmsResponse = zod.object({
  */
 export const CreateLawFirmBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string().optional(),
   "contactPerson": zod.string().optional(),
@@ -24445,7 +24445,7 @@ export const ListLegalAdvisorsResponse = zod.object({
  */
 export const CreateLegalAdvisorBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string().optional(),
   "advisorType": zod.string().optional(),
@@ -24595,7 +24595,7 @@ export const ListLegalCasesResponse = zod.object({
 export const CreateLegalCaseBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "titleAr": zod.string().optional(),
   "caseType": zod.string().optional(),
@@ -24781,7 +24781,7 @@ export const ListLegalHearingsResponse = zod.object({
 export const CreateLegalHearingBody = zod.object({
   "companyId": zod.string(),
   "legalCaseId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "hearingDate": zod.string().optional(),
   "hearingTime": zod.string().optional(),
   "location": zod.string().optional(),
@@ -24906,7 +24906,7 @@ export const ListLegalClaimsResponse = zod.object({
 export const CreateLegalClaimBody = zod.object({
   "companyId": zod.string(),
   "legalCaseId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "claimType": zod.string().optional(),
   "direction": zod.string().optional(),
   "amount": zod.string().optional(),
@@ -25030,7 +25030,7 @@ export const ListLegalNoticesResponse = zod.object({
  */
 export const CreateLegalNoticeBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "noticeType": zod.string().optional(),
   "legalCaseId": zod.string().optional(),
   "legalContractId": zod.string().optional(),
@@ -26642,7 +26642,7 @@ export const ListHandoverRequestsResponse = zod.object({
  */
 export const CreateHandoverRequestBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "unitId": zod.string(),
   "customerId": zod.string().optional(),
   "contractId": zod.string().optional(),
@@ -27367,7 +27367,7 @@ export const ListSlaPoliciesResponse = zod.object({
  */
 export const CreateSlaPolicyBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "channel": zod.string().optional(),
@@ -27491,7 +27491,7 @@ export const ListServiceEscalationsResponse = zod.object({
  */
 export const CreateServiceEscalationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "sourceType": zod.string(),
   "sourceId": zod.string(),
   "level": zod.string().optional(),
@@ -28545,7 +28545,7 @@ export const ListAssetCategoriesResponse = zod.object({
  */
 export const CreateAssetCategoryBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "usefulLifeYears": zod.string().optional(),
@@ -28685,7 +28685,7 @@ export const ListFixedAssetsResponse = zod.object({
  */
 export const CreateFixedAssetBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "categoryId": zod.string(),
@@ -28847,7 +28847,7 @@ export const ListAssetTransfersResponse = zod.object({
  */
 export const CreateAssetTransferBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "assetId": zod.string(),
   "fromBranchId": zod.string().optional(),
   "toBranchId": zod.string().optional(),
@@ -28979,7 +28979,7 @@ export const ListAssetDepreciationsResponse = zod.object({
  */
 export const CreateAssetDepreciationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "assetId": zod.string(),
   "periodDate": zod.string().optional(),
   "amount": zod.string().optional(),
@@ -29103,7 +29103,7 @@ export const ListAssetInventoryCountsResponse = zod.object({
  */
 export const CreateAssetInventoryCountBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "assetId": zod.string().optional(),
   "branchId": zod.string().optional(),
   "countDate": zod.string().optional(),
@@ -29225,7 +29225,7 @@ export const ListAssetDisposalsResponse = zod.object({
  */
 export const CreateAssetDisposalBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "assetId": zod.string(),
   "disposalDate": zod.string().optional(),
   "disposalType": zod.string().optional(),
@@ -29775,7 +29775,7 @@ export const CreateMarketingCampaignBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
   "projectId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "campaignType": zod.string().optional(),
   "startDate": zod.string().optional(),
@@ -36999,7 +36999,7 @@ export const ListDelegationsResponse = zod.object({
 
 export const CreateDelegationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string().min(1),
+  "code": zod.string().min(1).optional(),
   "delegateUserId": zod.string().min(1),
   "permissions": zod.array(zod.string()).min(1),
   "reason": zod.string().min(1),

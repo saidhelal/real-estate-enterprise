@@ -25,7 +25,17 @@ export default function AdvancePaymentsPage() {
   const contractOptions = (contractData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "advancePayment",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },
     { name: "paymentDate", label: "Payment Date", labelAr: "تاريخ الدفع", type: "date" },

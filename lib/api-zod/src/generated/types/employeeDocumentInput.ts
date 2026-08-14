@@ -9,7 +9,7 @@
 export interface EmployeeDocumentInput {
   companyId: string;
   employeeId?: string;
-  code: string;
+  code?: string;
   documentType?: string;
   title: string;
   documentNumber?: string;

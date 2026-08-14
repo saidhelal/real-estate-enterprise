@@ -8,7 +8,7 @@
 
 export interface PaymentCertificateInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   projectId?: string;
   boqItemId?: string;

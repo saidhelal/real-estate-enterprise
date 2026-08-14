@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { accentChipClass, accentBarClass, accentSurfaceClass } from "@/lib/design-tokens";
+import { departmentPath } from "@/components/layout/app-shell";
 import {
   useGetRealEstateDashboard,
   useGetFinanceDashboard,
@@ -76,7 +77,6 @@ type CountKey =
 type ModuleCard = {
   titleKey: string;
   icon: LucideIcon;
-  href: string;
   /**
    * Which entry of the shared categorical ramp this module owns. Declared per
    * module rather than derived from array position, so inserting or reordering
@@ -86,49 +86,75 @@ type ModuleCard = {
    */
   accent: number;
   countKey?: CountKey;
+  /**
+   * A department. The tile opens the department's workspace, which lists the
+   * department's screens as cards — read from the navigation SSOT, so this
+   * file names the department and never its contents.
+   */
+  group?: string;
+  /**
+   * A single screen rather than a department, opened directly. Kept for the
+   * few tiles that are genuinely one screen; a department must use `group` so
+   * its tile cannot silently become a shortcut to one of its screens again.
+   */
+  href?: string;
 };
 
-const MODULES: ModuleCard[] = [
-  // Home and Dashboard used to be the two entries of the navigation general
-  // group. With the rail gone they are cards like everything else, pointing at
-  // the same existing routes and reusing the same labels and icons the
-  // navigation already declared — no new route, no second dashboard.
-  //
-  // Both take accent 0, the identity blue: they are system entries rather than
-  // departments, and giving them one shared accent says so. A department's
-  // accent still means "this department".
-  { titleKey: "nav.home", icon: HomeIcon, href: "/", accent: 0 },
+/**
+ * Where a tile goes.
+ *
+ * A department's URL is derived, never written here — `departmentPath` is the
+ * one place that shape exists, shared with the breadcrumb, so a tile cannot
+ * point somewhere the rest of the app does not recognise.
+ */
+function moduleHref(mod: ModuleCard): string {
+  return mod.group ? departmentPath(mod.group) : (mod.href ?? "/");
+}
+
+/**
+ * The launcher grid.
+ *
+ * Every department tile now names its department and nothing else. It used to
+ * carry a hand-written href, and each one had drifted to whichever screen the
+ * department happened to open with — usually its dashboard. That answered "how
+ * is this department doing" when the question a launcher asks is "what can I
+ * do here", and it made the dashboard the department's only visible screen.
+ * The tile opens the department's workspace instead, which lists the
+ * department's screens from the navigation SSOT; the dashboard is one of them.
+ *
+ * The home tile is gone from this grid. Home is the grid — a tile leading back
+ * to the page you are on is not a way in to anything. Its route and its place
+ * in the top navigation are untouched.
+ *
+ * General Administration leads, taking the slot the home tile held.
+ */
+export const MODULES: ModuleCard[] = [
+  { titleKey: "home.mod.general_admin", icon: Briefcase, group: "nav.group.general_admin", accent: 9, countKey: "general_admin" },
+  // The cross-company dashboard: one screen, not a department, so it opens
+  // directly. Accent 0, the identity blue, marks it as a system entry.
   { titleKey: "nav.dashboard", icon: LayoutDashboard, href: "/dashboard", accent: 0 },
-  { titleKey: "home.mod.real_estate", icon: Building, href: "/projects", accent: 0, countKey: "real_estate" },
-  { titleKey: "home.mod.sales", icon: Users, href: "/customers", accent: 1, countKey: "crm" },
-  { titleKey: "home.mod.finance", icon: Calculator, href: "/accounting-dashboard", accent: 2, countKey: "finance" },
-  { titleKey: "home.mod.procurement", icon: ShoppingCart, href: "/procurement-dashboard", accent: 3, countKey: "procurement" },
-  { titleKey: "home.mod.engineering", icon: Compass, href: "/engineering-dashboard", accent: 4 },
-  { titleKey: "home.mod.hr", icon: UserCog, href: "/hr-dashboard", accent: 5, countKey: "hr" },
-  // Contract Management — the department that owns the contract register. It
-  // lands on the contract list rather than a dashboard of its own: the register
-  // IS the department's front door, and inventing a second dashboard for it
-  // would be a screen with nothing on it that the list does not already say.
-  { titleKey: "nav.group.contracts", icon: FileSignature, href: "/contracts", accent: 3 },
-  { titleKey: "home.mod.legal", icon: Scale, href: "/legal-dashboard", accent: 6, countKey: "legal" },
-  { titleKey: "home.mod.customer_service", icon: MessageSquare, href: "/customer-service-dashboard", accent: 7, countKey: "customer_service" },
-  { titleKey: "home.mod.land_bank", icon: LandPlot, href: "/land-bank-dashboard", accent: 8 },
-  // General Administration owns the Chairman and Executive Director
-  // workspaces and internal correspondence. They had tiles of their own here
-  // as well, which made this launcher a second, hand-kept way in to three
-  // screens that already have one — and the two lists could disagree.
-  // Their canonical entries live in the navigation SSOT, under the
-  // department's Leadership and Secretariat sections, and the department
-  // page renders them from that same source. Reached through this tile.
-  { titleKey: "home.mod.general_admin", icon: Briefcase, href: "/general-admin-dashboard", accent: 9, countKey: "general_admin" },
-  { titleKey: "home.mod.marketing", icon: Megaphone, href: "/marketing-dashboard", accent: 10, countKey: "marketing" },
-  { titleKey: "home.mod.insurance", icon: ShieldCheck, href: "/insurance-dashboard", accent: 11, countKey: "insurance" },
+  { titleKey: "home.mod.real_estate", icon: Building, group: "nav.group.real_estate", accent: 0, countKey: "real_estate" },
+  { titleKey: "home.mod.sales", icon: Users, group: "nav.group.sales_crm", accent: 1, countKey: "crm" },
+  { titleKey: "home.mod.finance", icon: Calculator, group: "nav.group.finance_parent", accent: 2, countKey: "finance" },
+  { titleKey: "home.mod.procurement", icon: ShoppingCart, group: "nav.group.procurement", accent: 3, countKey: "procurement" },
+  { titleKey: "home.mod.engineering", icon: Compass, group: "nav.group.engineering", accent: 4 },
+  { titleKey: "home.mod.hr", icon: UserCog, group: "nav.group.hr", accent: 5, countKey: "hr" },
+  { titleKey: "nav.group.contracts", icon: FileSignature, group: "nav.group.contracts", accent: 3 },
+  { titleKey: "home.mod.legal", icon: Scale, group: "nav.group.legal", accent: 6, countKey: "legal" },
+  { titleKey: "home.mod.customer_service", icon: MessageSquare, group: "nav.group.customer_service", accent: 7, countKey: "customer_service" },
+  { titleKey: "home.mod.land_bank", icon: LandPlot, group: "nav.group.land_bank", accent: 8 },
+  { titleKey: "home.mod.marketing", icon: Megaphone, group: "nav.group.marketing", accent: 10, countKey: "marketing" },
+  { titleKey: "home.mod.insurance", icon: ShieldCheck, group: "nav.group.insurance", accent: 11, countKey: "insurance" },
+  // Two screens that earn a tile of their own without being departments. Each
+  // also appears inside the department that owns it — Administration and
+  // Business Intelligence — so this is a shortcut to one screen, not a second
+  // copy of it.
   { titleKey: "home.mod.notifications", icon: Bell, href: "/notifications", accent: 12, countKey: "notifications" },
   { titleKey: "home.mod.executive_oversight", icon: Gauge, href: "/executive-oversight", accent: 13 },
-  { titleKey: "home.mod.reports", icon: BarChart3, href: "/executive-dashboard", accent: 14 },
-  { titleKey: "home.mod.administration", icon: Settings, href: "/settings", accent: 15 },
-  { titleKey: "home.mod.edms", icon: FolderArchive, href: "/documents-dashboard", accent: 16 },
-  { titleKey: "home.mod.system_administration", icon: Database, href: "/master-data", accent: 17 },
+  { titleKey: "home.mod.reports", icon: BarChart3, group: "nav.group.business_intelligence", accent: 14 },
+  { titleKey: "home.mod.administration", icon: Settings, group: "nav.group.administration", accent: 15 },
+  { titleKey: "home.mod.edms", icon: FolderArchive, group: "nav.group.edms", accent: 16 },
+  { titleKey: "home.mod.system_administration", icon: Database, group: "nav.group.system_administration", accent: 17 },
 ];
 
 function formatCount(value?: number | string): string {
@@ -211,6 +237,7 @@ export default function Home() {
     // colour no matter what order it is rendered in.
     const mapped = MODULES.map((mod) => ({
       ...mod,
+      href: moduleHref(mod),
       label: t(mod.titleKey),
       chipClassName: accentChipClass(mod.accent),
       barClassName: accentBarClass(mod.accent),

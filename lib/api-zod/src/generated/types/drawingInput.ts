@@ -8,7 +8,7 @@
 
 export interface DrawingInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr: string;
   drawingType?: string;

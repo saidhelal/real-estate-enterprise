@@ -39,6 +39,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -73,7 +74,7 @@ router.get("/handover-requests", requirePermission("handoverRequests.view"), asy
 router.post("/handover-requests", requirePermission("handoverRequests.create"), async (req, res): Promise<void> => {
   const parsed = CreateHandoverRequestBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(handoverRequestsTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(handoverRequestsTable).values({ ...parsed.data, code: (await nextNumber("handoverRequest", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "handoverRequest", entityId: row.id, newValue: row });
   res.status(201).json(GetHandoverRequestResponse.parse(serializeRow(row)));
 });
@@ -92,6 +93,8 @@ router.patch("/handover-requests/:id", requirePermission("handoverRequests.updat
   const [existing] = await db.select().from(handoverRequestsTable).where(and(eq(handoverRequestsTable.id, id), eq(handoverRequestsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(handoverRequestsTable).set(update).where(eq(handoverRequestsTable.id, id)).returning()
     : [existing];

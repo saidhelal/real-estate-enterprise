@@ -330,7 +330,6 @@ function RegisterMailDialog({
   const create = useCreateCorrespondence();
   const [form, setForm] = useState({
     direction: "incoming",
-    code: "",
     subject: "",
     senderName: "",
     recipientName: "",
@@ -350,7 +349,6 @@ function RegisterMailDialog({
       {
         data: {
           companyId,
-          code: form.code.trim(),
           direction: form.direction,
           subject: form.subject.trim(),
           priority: form.priority,
@@ -367,7 +365,6 @@ function RegisterMailDialog({
           onOpenChange(false);
           setForm({
             direction: "incoming",
-            code: "",
             subject: "",
             senderName: "",
             recipientName: "",
@@ -419,15 +416,8 @@ function RegisterMailDialog({
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="sec-code">{t("common.code")}</Label>
-              <Input
-                id="sec-code"
-                required
-                value={form.code}
-                onChange={(e) => set("code", e.target.value)}
-              />
-            </div>
+            {/* No code field: the correspondence register issues the letter's
+                reference from the central sequence when it is saved. */}
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="sec-subject">{t("sec.subject")}</Label>
               <Input

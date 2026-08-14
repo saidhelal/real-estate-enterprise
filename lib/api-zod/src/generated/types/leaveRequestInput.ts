@@ -8,7 +8,7 @@
 
 export interface LeaveRequestInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   leaveTypeId?: string;
   startDate: string;

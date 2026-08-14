@@ -9,7 +9,7 @@
 export interface LegalClaimInput {
   companyId: string;
   legalCaseId?: string;
-  code: string;
+  code?: string;
   claimType?: string;
   direction?: string;
   amount?: string;

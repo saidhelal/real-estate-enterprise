@@ -171,13 +171,14 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
 
     // ----- 4. Convert reservation -> draft contract (CRM/Sales queue) ----
     const convert = await client.post(`/api/reservations/${reservationId}/convert`, {
-      code: `CON-${tag}`,
       contractDate: today(),
       totalPrice: "500000.00",
       downPayment: "50000.00",
       paymentMethod: "cheque",
     });
     expect(convert.status, JSON.stringify(convert.json)).toBe(201);
+    // Issued by the central sequence; the client no longer chooses it.
+    const contractCode = convert.json.code as string;
     const contractId = convert.json.id as string;
     expect(convert.json.status).toBe("draft");
     // Legal registry row is auto-created (back-linked) but still a draft.
@@ -215,7 +216,7 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
     expect(await contractIdsWithStatus("pending_finance")).not.toContain(contractId);
     expect(await contractIdsWithStatus("finance_approved")).toContain(contractId);
     // Finance approval alone must NOT yet recognize the sale on the ledger.
-    expect(await journalCount("contract", `CON-${tag}`)).toBe(0);
+    expect(await journalCount("contract", contractCode)).toBe(0);
 
     // ----- 7. Legal activate: GL recognition + registry promotion -------
     const legal = await client.post(`/api/contracts/${contractId}/legal-approve`, {
@@ -224,7 +225,7 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
     expect(legal.status, JSON.stringify(legal.json)).toBe(200);
     expect(legal.json.status).toBe("active");
     // The sale is now recognized on the ledger (idempotent, exactly one entry).
-    expect(await journalCount("contract", `CON-${tag}`)).toBe(1);
+    expect(await journalCount("contract", contractCode)).toBe(1);
     // The Legal Affairs registry row is promoted to active.
     const legalRowActive = await client.get(`/api/legal-contracts/${legalContractId}`);
     expect(legalRowActive.json.status).toBe("active");
@@ -265,21 +266,23 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
     });
     expect(reservation.status, JSON.stringify(reservation.json)).toBe(201);
     const convert = await client.post(`/api/reservations/${reservation.json.id}/convert`, {
-      code: `CON-${tag}`, contractDate: today(), totalPrice: "300000.00", downPayment: "30000.00",
+      contractDate: today(), totalPrice: "300000.00", downPayment: "30000.00",
     });
     expect(convert.status, JSON.stringify(convert.json)).toBe(201);
+    // Issued by the central sequence; the client no longer chooses it.
+    const contractCode = convert.json.code as string;
     const contractId = convert.json.id as string;
 
     await client.post(`/api/contracts/${contractId}/submit-to-finance`, {});
     await client.post(`/api/contracts/${contractId}/finance-approve`, {});
     const first = await client.post(`/api/contracts/${contractId}/legal-approve`, {});
     expect(first.status).toBe(200);
-    expect(await journalCount("contract", `CON-${tag}`)).toBe(1);
+    expect(await journalCount("contract", contractCode)).toBe(1);
 
     // A second activation is a no-op conflict — never a second ledger entry.
     const second = await client.post(`/api/contracts/${contractId}/legal-approve`, {});
     expect(second.status).toBe(409);
-    expect(await journalCount("contract", `CON-${tag}`)).toBe(1);
+    expect(await journalCount("contract", contractCode)).toBe(1);
   });
 
   it("a finance-rejected contract frees the unit and never posts to the ledger", async () => {
@@ -290,9 +293,11 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
     });
     expect(reservation.status, JSON.stringify(reservation.json)).toBe(201);
     const convert = await client.post(`/api/reservations/${reservation.json.id}/convert`, {
-      code: `CON-${tag}`, contractDate: today(), totalPrice: "250000.00",
+      contractDate: today(), totalPrice: "250000.00",
     });
     expect(convert.status, JSON.stringify(convert.json)).toBe(201);
+    // Issued by the central sequence; the client no longer chooses it.
+    const contractCode = convert.json.code as string;
     const contractId = convert.json.id as string;
 
     await client.post(`/api/contracts/${contractId}/submit-to-finance`, {});
@@ -301,7 +306,7 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
     expect(reject.json.status).toBe("rejected");
     // Rejection frees the unit (no live reservation remains -> available).
     expect(await unitStatusOf(unitId)).toBe("available");
-    expect(await journalCount("contract", `CON-${tag}`)).toBe(0);
+    expect(await journalCount("contract", contractCode)).toBe(0);
     // Legal must never see a rejected contract.
     expect(await contractIdsWithStatus("finance_approved")).not.toContain(contractId);
   });

@@ -32,7 +32,17 @@ export default function BudgetsPage() {
   }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: t("common.code"),
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "budget",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "name", label: t("common.name"), required: true },
     { name: "nameAr", label: t("common.name_ar"), required: true, rtl: true },
     { name: "fiscalYearId", label: t("acc.fiscal_year"), type: "select", required: true, options: yearOptions },

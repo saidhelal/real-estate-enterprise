@@ -9,7 +9,7 @@
 export interface DelegationInput {
   companyId: string;
   /** @minLength 1 */
-  code: string;
+  code?: string;
   /** @minLength 1 */
   delegateUserId: string;
   /** @minItems 1 */

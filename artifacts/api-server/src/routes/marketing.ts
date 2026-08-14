@@ -35,7 +35,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
-import { nextDocumentNumber } from "../lib/doc-number";
+import { nextNumber } from "../lib/doc-number";
 import { distributeLead } from "../lib/lead-distribution";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
@@ -92,7 +92,7 @@ router.post("/marketing-campaigns", requirePermission("marketing.create"), async
   const parsed = CreateMarketingCampaignBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const data = parsed.data as Record<string, unknown>;
-  const code = (data.code as string | undefined) || (await nextDocumentNumber("MarketingCampaign")) || `MKC-${Date.now()}`;
+  const code = (await nextNumber("MarketingCampaign", req.authUser?.companyId ?? null)).value;
   const values = { ...data, code } as unknown as typeof marketingCampaignsTable.$inferInsert;
   const inserted = (await db.insert(marketingCampaignsTable).values(values).returning()) as Row[];
   const row = inserted[0];
@@ -209,7 +209,7 @@ router.post("/marketing-leads", requirePermission("leads.create"), async (req, r
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const data = parsed.data as Record<string, unknown>;
   const autoDistribute = data.autoDistribute !== false;
-  const code = (await nextDocumentNumber("Lead")) || `LEAD-${Date.now()}`;
+  const code = (await nextNumber("Lead", req.authUser?.companyId ?? null)).value;
   const values = {
     companyId: data.companyId,
     branchId: data.branchId,

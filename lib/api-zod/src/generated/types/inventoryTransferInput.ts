@@ -8,7 +8,7 @@
 
 export interface InventoryTransferInput {
   companyId: string;
-  code: string;
+  code?: string;
   transferDate?: string;
   fromWarehouseId?: string;
   toWarehouseId?: string;

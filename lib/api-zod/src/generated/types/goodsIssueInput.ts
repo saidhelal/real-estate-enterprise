@@ -8,7 +8,7 @@
 
 export interface GoodsIssueInput {
   companyId: string;
-  code: string;
+  code?: string;
   issueDate?: string;
   issueType?: string;
   warehouseId?: string;

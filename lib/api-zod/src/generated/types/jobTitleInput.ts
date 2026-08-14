@@ -8,7 +8,7 @@
 
 export interface JobTitleInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   departmentId?: string;

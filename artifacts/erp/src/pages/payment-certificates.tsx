@@ -43,7 +43,17 @@ export default function PaymentCertificatesPage() {
   const advanceRecoveryOptions = (advanceRecoveryData?.data ?? []).map((o) => ({ value: o.id, label: o.code }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "paymentCertificate",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "contractId", label: "Contract", labelAr: "العقد", type: "select", options: contractOptions },
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", options: projectOptions },
     { name: "boqItemId", label: "BOQ Item", labelAr: "بند الجدول", type: "select", options: boqItemOptions },

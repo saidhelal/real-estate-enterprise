@@ -8,7 +8,7 @@
 
 export interface PayrollPeriodInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   year: number;
   month?: number;

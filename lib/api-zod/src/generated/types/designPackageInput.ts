@@ -8,7 +8,7 @@
 
 export interface DesignPackageInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   projectId?: string;

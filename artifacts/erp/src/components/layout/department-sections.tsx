@@ -41,7 +41,10 @@ export function DepartmentSections({
   const { t } = useLanguage();
   const { user } = useAuth();
 
-  const skip = new Set(excludeHrefs);
+  // Home is the root every department hangs off, never one of its functions —
+  // a card leading back out of the department reads as a mistake. The
+  // breadcrumb skips it for the same reason.
+  const skip = new Set([...excludeHrefs, "/"]);
   const sections = navSectionsFor(filterNavGroups(user), groupTitleKey)
     .map((section) => ({
       ...section,

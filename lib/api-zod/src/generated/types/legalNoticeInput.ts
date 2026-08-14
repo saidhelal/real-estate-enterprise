@@ -8,7 +8,7 @@
 
 export interface LegalNoticeInput {
   companyId: string;
-  code: string;
+  code?: string;
   noticeType?: string;
   legalCaseId?: string;
   legalContractId?: string;

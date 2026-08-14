@@ -48,7 +48,17 @@ export default function MarketingCampaignsPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code (auto)", labelAr: "الرمز (تلقائي)", createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown before saving.
+      generated: true,
+      generatorKey: "MarketingCampaign",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "campaignType", label: "Type", labelAr: "النوع", type: "select", options: CAMPAIGN_TYPES },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: CAMPAIGN_STATUSES },

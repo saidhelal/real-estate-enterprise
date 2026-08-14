@@ -8,7 +8,7 @@
 
 export interface ShiftInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   startTime?: string;

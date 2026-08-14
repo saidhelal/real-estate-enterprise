@@ -28,6 +28,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -70,7 +71,7 @@ router.get("/customers", requirePermission("customers.view"), async (req, res): 
 router.post("/customers", requirePermission("customers.create"), async (req, res): Promise<void> => {
   const parsed = CreateCustomerBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(customersTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(customersTable).values({ ...parsed.data, code: (await nextNumber("customer", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "customer", entityId: row.id, newValue: row });
   res.status(201).json(GetCustomerResponse.parse(serializeRow(row)));
 });
@@ -89,6 +90,8 @@ router.patch("/customers/:id", requirePermission("customers.update"), async (req
   const [existing] = await db.select().from(customersTable).where(and(eq(customersTable.id, id), eq(customersTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(customersTable).set(update).where(eq(customersTable.id, id)).returning()
     : [existing];

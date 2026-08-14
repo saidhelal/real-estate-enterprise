@@ -8,7 +8,7 @@
 
 export interface FixedAssetInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   categoryId: string;

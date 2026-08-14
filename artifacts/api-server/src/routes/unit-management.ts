@@ -26,6 +26,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -63,7 +64,7 @@ router.get("/unit-price-lists", requirePermission("unitPriceLists.view"), async 
 router.post("/unit-price-lists", requirePermission("unitPriceLists.create"), async (req, res): Promise<void> => {
   const parsed = CreateUnitPriceListBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(unitPriceListsTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(unitPriceListsTable).values({ ...parsed.data, code: (await nextNumber("unitPriceList", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "unitPriceList", entityId: row.id, newValue: row });
   res.status(201).json(GetUnitPriceListResponse.parse(serializeRow(row)));
 });
@@ -82,6 +83,8 @@ router.patch("/unit-price-lists/:id", requirePermission("unitPriceLists.update")
   const [existing] = await db.select().from(unitPriceListsTable).where(and(eq(unitPriceListsTable.id, id), eq(unitPriceListsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(unitPriceListsTable).set(update).where(eq(unitPriceListsTable.id, id)).returning()
     : [existing];
@@ -190,7 +193,7 @@ router.get("/unit-discounts", requirePermission("unitDiscounts.view"), async (re
 router.post("/unit-discounts", requirePermission("unitDiscounts.create"), async (req, res): Promise<void> => {
   const parsed = CreateUnitDiscountBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
-  const [row] = await db.insert(unitDiscountsTable).values({ ...parsed.data }).returning();
+  const [row] = await db.insert(unitDiscountsTable).values({ ...parsed.data, code: (await nextNumber("unitDiscount", req.authUser?.companyId ?? null)).value }).returning();
   await recordAudit(req, { action: "create", entity: "unitDiscount", entityId: row.id, newValue: row });
   res.status(201).json(GetUnitDiscountResponse.parse(serializeRow(row)));
 });
@@ -209,6 +212,8 @@ router.patch("/unit-discounts/:id", requirePermission("unitDiscounts.update"), a
   const [existing] = await db.select().from(unitDiscountsTable).where(and(eq(unitDiscountsTable.id, id), eq(unitDiscountsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(unitDiscountsTable).set(update).where(eq(unitDiscountsTable.id, id)).returning()
     : [existing];

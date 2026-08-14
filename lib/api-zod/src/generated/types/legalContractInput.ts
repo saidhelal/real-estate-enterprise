@@ -9,7 +9,7 @@
 export interface LegalContractInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   title: string;
   titleAr?: string;
   contractType?: string;

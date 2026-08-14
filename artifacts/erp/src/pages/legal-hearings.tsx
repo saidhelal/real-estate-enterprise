@@ -36,7 +36,17 @@ export default function LegalHearingsPage() {
 
   const fields: ResourceField[] = [
     { name: "legalCaseId", label: t("legal.case"), type: "select", options: caseOptions, required: true },
-    { name: "code", label: t("common.code") },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "legalHearing",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "hearingDate", label: t("legal.hearing_date"), type: "date" },
     { name: "hearingTime", label: t("legal.hearing_time") },
     { name: "location", label: t("legal.location") },

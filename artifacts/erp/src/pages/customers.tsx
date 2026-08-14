@@ -35,7 +35,18 @@ export default function CustomersPage() {
     id ? userOptions.find((u) => u.value === id)?.label ?? "-" : "-";
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Code",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "customer",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "fullName", label: "Full Name", labelAr: "الاسم الكامل", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", rtl: true },
     { name: "type", label: "Type", labelAr: "النوع", type: "select", required: true, options: TYPE },

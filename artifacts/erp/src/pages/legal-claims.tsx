@@ -40,7 +40,17 @@ export default function LegalClaimsPage() {
 
   const fields: ResourceField[] = [
     { name: "legalCaseId", label: t("legal.case"), type: "select", options: caseOptions, required: true },
-    { name: "code", label: t("common.code"), required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown here beforehand.
+      generated: true,
+      generatorKey: "legalClaim",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "claimType", label: t("legal.claim_type"), type: "select", options: CLAIM_TYPE, required: true },
     { name: "direction", label: t("legal.direction"), type: "select", options: DIRECTION, required: true },
     { name: "amount", label: t("legal.amount"), type: "money" },

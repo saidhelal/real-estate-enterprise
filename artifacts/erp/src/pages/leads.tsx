@@ -133,7 +133,17 @@ export default function LeadsPage() {
   const userOptions = (users ?? []).map((u) => ({ value: u.id, label: u.fullName ?? u.username }));
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence on save; shown before saving.
+      generated: true,
+      generatorKey: "Lead",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "fullName", label: "Full Name", labelAr: "الاسم الكامل", required: true },
     { name: "phone", label: "Mobile", labelAr: "الجوال" },
     { name: "nationalId", label: "National ID", labelAr: "الرقم القومي" },

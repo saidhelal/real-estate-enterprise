@@ -10,7 +10,7 @@ export interface MarketingCampaignInput {
   companyId: string;
   branchId?: string;
   projectId?: string;
-  code: string;
+  code?: string;
   name: string;
   campaignType?: string;
   startDate?: string;

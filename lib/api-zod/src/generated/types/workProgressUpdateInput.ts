@@ -8,7 +8,7 @@
 
 export interface WorkProgressUpdateInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractId?: string;
   asOfDate?: string;
   progressPercent?: number;

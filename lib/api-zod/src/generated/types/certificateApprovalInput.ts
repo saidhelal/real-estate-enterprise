@@ -8,7 +8,7 @@
 
 export interface CertificateApprovalInput {
   companyId: string;
-  code: string;
+  code?: string;
   certificateId?: string;
   level?: string;
   status?: string;

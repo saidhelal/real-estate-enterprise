@@ -714,7 +714,7 @@ function ResourceForm<T extends { id: string }>({
         const entries = await Promise.all(
           generatedFields.map(async (f) => {
             const res = await customFetch<{ code: string }>(
-              `/number-preview?documentType=${encodeURIComponent(f.generatorKey!)}`,
+              `/api/number-preview?documentType=${encodeURIComponent(f.generatorKey!)}`,
             );
             return [f.name, res.code] as const;
           }),
@@ -852,7 +852,10 @@ function ResourceForm<T extends { id: string }>({
             <div key={f.name} className="space-y-2">
               <Label>
                 {fieldLabel(f)}
-                {f.required ? (
+                {/* A generated field is neither required of the user nor
+                    optional to supply — labelling it "(optional)" invites them
+                    to think they could type one. */}
+                {f.generated ? null : f.required ? (
                   <span className="text-destructive"> *</span>
                 ) : (
                   <span className="text-muted-foreground text-xs font-normal">

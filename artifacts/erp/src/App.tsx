@@ -15,6 +15,8 @@ import { ScreenContextProvider } from "@/lib/screen-context";
 import Login from "@/pages/login";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
+// One route serves every department workspace; the slug names which one.
+import DepartmentPage from "@/pages/department";
 // Living style guide for the design system. Lazy like every other secondary
 // route, so it costs nothing until someone opens it.
 const DesignSystemPage = lazy(() => import("@/pages/design-system"));
@@ -385,6 +387,7 @@ function Router() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/department/:slug" component={DepartmentPage} />
             <Route path="/design-system" component={DesignSystemPage} />
             <Route path="/users" component={UsersPage} />
             <Route path="/roles" component={RolesPage} />
