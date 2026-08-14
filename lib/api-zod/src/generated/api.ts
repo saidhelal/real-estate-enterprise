@@ -527,6 +527,7 @@ export const ListUsersResponseItem = zod.object({
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
   "roles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -582,6 +583,7 @@ export const GetUserResponse = zod.object({
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
   "roles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -626,6 +628,7 @@ export const UpdateUserResponse = zod.object({
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
   "roles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -675,6 +678,7 @@ export const SetUserStatusResponse = zod.object({
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
   "roles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -717,6 +721,7 @@ export const ResetUserPasswordResponse = zod.object({
   "lastLoginAt": zod.string().nullish(),
   "failedAttempts": zod.number().optional(),
   "companyId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
   "roles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1012,6 +1017,20 @@ export const ListCompaniesResponseItem = zod.object({
   "phone": zod.string().nullish(),
   "address": zod.string().nullish(),
   "baseCurrency": zod.string().nullish(),
+  "legalName": zod.string().nullish(),
+  "legalNameAr": zod.string().nullish(),
+  "tradeName": zod.string().nullish(),
+  "legalForm": zod.string().nullish(),
+  "commercialRegister": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "logoUrl": zod.string().nullish(),
+  "officialEmail": zod.string().nullish(),
+  "fax": zod.string().nullish(),
+  "poBox": zod.string().nullish(),
+  "representativeName": zod.string().nullish(),
+  "representativeTitle": zod.string().nullish(),
+  "printHeader": zod.string().nullish(),
+  "printFooter": zod.string().nullish(),
   "branchCount": zod.number().optional(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
@@ -1035,7 +1054,21 @@ export const CreateCompanyBody = zod.object({
   "email": zod.string().optional(),
   "phone": zod.string().optional(),
   "address": zod.string().optional(),
-  "baseCurrency": zod.string().optional()
+  "baseCurrency": zod.string().optional(),
+  "legalName": zod.string().optional(),
+  "legalNameAr": zod.string().optional(),
+  "tradeName": zod.string().optional(),
+  "legalForm": zod.string().optional(),
+  "commercialRegister": zod.string().optional(),
+  "website": zod.string().optional(),
+  "logoUrl": zod.string().optional(),
+  "officialEmail": zod.string().optional(),
+  "fax": zod.string().optional(),
+  "poBox": zod.string().optional(),
+  "representativeName": zod.string().optional(),
+  "representativeTitle": zod.string().optional(),
+  "printHeader": zod.string().optional(),
+  "printFooter": zod.string().optional()
 })
 
 
@@ -1056,6 +1089,20 @@ export const GetCompanyResponse = zod.object({
   "phone": zod.string().nullish(),
   "address": zod.string().nullish(),
   "baseCurrency": zod.string().nullish(),
+  "legalName": zod.string().nullish(),
+  "legalNameAr": zod.string().nullish(),
+  "tradeName": zod.string().nullish(),
+  "legalForm": zod.string().nullish(),
+  "commercialRegister": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "logoUrl": zod.string().nullish(),
+  "officialEmail": zod.string().nullish(),
+  "fax": zod.string().nullish(),
+  "poBox": zod.string().nullish(),
+  "representativeName": zod.string().nullish(),
+  "representativeTitle": zod.string().nullish(),
+  "printHeader": zod.string().nullish(),
+  "printFooter": zod.string().nullish(),
   "branchCount": zod.number().optional(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
@@ -1076,11 +1123,25 @@ export const UpdateCompanyParams = zod.object({
 export const UpdateCompanyBody = zod.object({
   "name": zod.string().min(1).optional(),
   "nameAr": zod.string().min(1).optional(),
-  "taxNumber": zod.string().optional(),
-  "email": zod.string().optional(),
-  "phone": zod.string().optional(),
-  "address": zod.string().optional(),
-  "baseCurrency": zod.string().optional()
+  "taxNumber": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "baseCurrency": zod.string().nullish(),
+  "legalName": zod.string().nullish(),
+  "legalNameAr": zod.string().nullish(),
+  "tradeName": zod.string().nullish(),
+  "legalForm": zod.string().nullish(),
+  "commercialRegister": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "logoUrl": zod.string().nullish(),
+  "officialEmail": zod.string().nullish(),
+  "fax": zod.string().nullish(),
+  "poBox": zod.string().nullish(),
+  "representativeName": zod.string().nullish(),
+  "representativeTitle": zod.string().nullish(),
+  "printHeader": zod.string().nullish(),
+  "printFooter": zod.string().nullish()
 })
 
 export const UpdateCompanyResponse = zod.object({
@@ -1093,6 +1154,20 @@ export const UpdateCompanyResponse = zod.object({
   "phone": zod.string().nullish(),
   "address": zod.string().nullish(),
   "baseCurrency": zod.string().nullish(),
+  "legalName": zod.string().nullish(),
+  "legalNameAr": zod.string().nullish(),
+  "tradeName": zod.string().nullish(),
+  "legalForm": zod.string().nullish(),
+  "commercialRegister": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "logoUrl": zod.string().nullish(),
+  "officialEmail": zod.string().nullish(),
+  "fax": zod.string().nullish(),
+  "poBox": zod.string().nullish(),
+  "representativeName": zod.string().nullish(),
+  "representativeTitle": zod.string().nullish(),
+  "printHeader": zod.string().nullish(),
+  "printFooter": zod.string().nullish(),
   "branchCount": zod.number().optional(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
@@ -30234,6 +30309,9 @@ export const ListCorrespondenceResponse = zod.object({
   "assignedToEmployeeId": zod.string().nullish(),
   "attachmentUrl": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -30261,7 +30339,9 @@ export const CreateCorrespondenceBody = zod.object({
   "departmentId": zod.string().optional(),
   "assignedToEmployeeId": zod.string().optional(),
   "attachmentUrl": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "replyDueDate": zod.string().optional(),
+  "body": zod.string().optional()
 })
 
 
@@ -30289,6 +30369,9 @@ export const GetCorrespondenceResponse = zod.object({
   "assignedToEmployeeId": zod.string().nullish(),
   "attachmentUrl": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -30316,7 +30399,9 @@ export const UpdateCorrespondenceBody = zod.object({
   "departmentId": zod.string().optional(),
   "assignedToEmployeeId": zod.string().optional(),
   "attachmentUrl": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish()
 })
 
 export const UpdateCorrespondenceResponse = zod.object({
@@ -30336,6 +30421,9 @@ export const UpdateCorrespondenceResponse = zod.object({
   "assignedToEmployeeId": zod.string().nullish(),
   "attachmentUrl": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -36381,5 +36469,416 @@ export const MarkDocumentTransferViewedParams = zod.object({
 export const MarkDocumentTransferViewedResponse = zod.object({
   "success": zod.boolean()
 })
+
+
+/**
+ * @summary Users assigned to a role
+ */
+export const ListRoleUsersParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ListRoleUsersResponseItem = zod.object({
+  "id": zod.string(),
+  "username": zod.string(),
+  "fullName": zod.string(),
+  "email": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "status": zod.string().nullish(),
+  "companyId": zod.string().nullish()
+})
+export const ListRoleUsersResponse = zod.array(ListRoleUsersResponseItem)
+
+
+/**
+ * @summary List external relationship parties
+ */
+export const ListPrPartiesQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "partyType": zod.coerce.string().optional(),
+  "relationshipType": zod.coerce.string().optional(),
+  "importance": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "ownerEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListPrPartiesResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "partyType": zod.string(),
+  "relationshipType": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "contactTitle": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "importance": zod.string(),
+  "status": zod.string(),
+  "lastContactDate": zod.string().nullish(),
+  "nextFollowUpDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create a party
+ */
+
+
+
+
+export const CreatePrPartyBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1),
+  "name": zod.string().min(1),
+  "nameAr": zod.string().optional(),
+  "partyType": zod.string().optional(),
+  "relationshipType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "contactTitle": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "website": zod.string().optional(),
+  "address": zod.string().optional(),
+  "importance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "lastContactDate": zod.string().optional(),
+  "nextFollowUpDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a party
+ */
+export const GetPrPartyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPrPartyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "partyType": zod.string(),
+  "relationshipType": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "contactTitle": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "importance": zod.string(),
+  "status": zod.string(),
+  "lastContactDate": zod.string().nullish(),
+  "nextFollowUpDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a party
+ */
+export const UpdatePrPartyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const UpdatePrPartyBody = zod.object({
+  "code": zod.string().min(1).optional(),
+  "name": zod.string().min(1).optional(),
+  "nameAr": zod.string().optional(),
+  "partyType": zod.string().optional(),
+  "relationshipType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "contactPerson": zod.string().optional(),
+  "contactTitle": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "email": zod.string().optional(),
+  "website": zod.string().optional(),
+  "address": zod.string().optional(),
+  "importance": zod.string().optional(),
+  "status": zod.string().optional(),
+  "lastContactDate": zod.string().optional(),
+  "nextFollowUpDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePrPartyResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "partyType": zod.string(),
+  "relationshipType": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "contactPerson": zod.string().nullish(),
+  "contactTitle": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "email": zod.string().nullish(),
+  "website": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "importance": zod.string(),
+  "status": zod.string(),
+  "lastContactDate": zod.string().nullish(),
+  "nextFollowUpDate": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a party
+ */
+export const DeletePrPartyParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePrPartyResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List recorded contacts with external parties
+ */
+export const ListPrInteractionsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "partyId": zod.coerce.string().optional(),
+  "interactionType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "handledByEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListPrInteractionsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "partyId": zod.string(),
+  "partyName": zod.string().nullish(),
+  "code": zod.string(),
+  "interactionType": zod.string(),
+  "interactionDate": zod.string(),
+  "subject": zod.string(),
+  "handledByEmployeeId": zod.string().nullish(),
+  "counterpartName": zod.string().nullish(),
+  "purpose": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "followUpRequired": zod.boolean().optional(),
+  "followUpDate": zod.string().nullish(),
+  "status": zod.string(),
+  "correspondenceId": zod.string().nullish(),
+  "meetingId": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Record a contact
+ */
+
+
+
+
+export const CreatePrInteractionBody = zod.object({
+  "companyId": zod.string(),
+  "partyId": zod.string(),
+  "code": zod.string().min(1),
+  "interactionType": zod.string().optional(),
+  "interactionDate": zod.string().optional(),
+  "subject": zod.string().min(1),
+  "handledByEmployeeId": zod.string().optional(),
+  "counterpartName": zod.string().optional(),
+  "purpose": zod.string().optional(),
+  "outcome": zod.string().optional(),
+  "followUpRequired": zod.boolean().optional(),
+  "followUpDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "correspondenceId": zod.string().optional(),
+  "meetingId": zod.string().optional(),
+  "taskId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a recorded contact
+ */
+export const GetPrInteractionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetPrInteractionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "partyId": zod.string(),
+  "partyName": zod.string().nullish(),
+  "code": zod.string(),
+  "interactionType": zod.string(),
+  "interactionDate": zod.string(),
+  "subject": zod.string(),
+  "handledByEmployeeId": zod.string().nullish(),
+  "counterpartName": zod.string().nullish(),
+  "purpose": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "followUpRequired": zod.boolean().optional(),
+  "followUpDate": zod.string().nullish(),
+  "status": zod.string(),
+  "correspondenceId": zod.string().nullish(),
+  "meetingId": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a recorded contact
+ */
+export const UpdatePrInteractionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const UpdatePrInteractionBody = zod.object({
+  "partyId": zod.string().optional(),
+  "code": zod.string().min(1).optional(),
+  "interactionType": zod.string().optional(),
+  "interactionDate": zod.string().optional(),
+  "subject": zod.string().min(1).optional(),
+  "handledByEmployeeId": zod.string().optional(),
+  "counterpartName": zod.string().optional(),
+  "purpose": zod.string().optional(),
+  "outcome": zod.string().optional(),
+  "followUpRequired": zod.boolean().optional(),
+  "followUpDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "correspondenceId": zod.string().optional(),
+  "meetingId": zod.string().optional(),
+  "taskId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdatePrInteractionResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "partyId": zod.string(),
+  "partyName": zod.string().nullish(),
+  "code": zod.string(),
+  "interactionType": zod.string(),
+  "interactionDate": zod.string(),
+  "subject": zod.string(),
+  "handledByEmployeeId": zod.string().nullish(),
+  "counterpartName": zod.string().nullish(),
+  "purpose": zod.string().nullish(),
+  "outcome": zod.string().nullish(),
+  "followUpRequired": zod.boolean().optional(),
+  "followUpDate": zod.string().nullish(),
+  "status": zod.string(),
+  "correspondenceId": zod.string().nullish(),
+  "meetingId": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete a recorded contact
+ */
+export const DeletePrInteractionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeletePrInteractionResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Administrative workload across the registers the secretariat follows
+ */
+export const GetSecretariatOverviewQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional()
+})
+
+export const GetSecretariatOverviewResponse = zod.object({
+  "incomingCount": zod.number(),
+  "outgoingCount": zod.number(),
+  "internalCount": zod.number(),
+  "unreadInternalCount": zod.number(),
+  "meetingsScheduled": zod.number(),
+  "openDecisions": zod.number(),
+  "openTasks": zod.number(),
+  "overdueTasks": zod.number(),
+  "overdueDecisions": zod.number(),
+  "correspondenceAwaitingReply": zod.number(),
+  "documentsLinked": zod.number()
+})
+
+
+/**
+ * @summary One dated queue over correspondence, meetings, decisions and tasks
+ */
+export const ListSecretariatFollowUpsQueryParams = zod.object({
+  "companyId": zod.coerce.string().optional(),
+  "kind": zod.coerce.string().optional(),
+  "overdueOnly": zod.coerce.boolean().optional(),
+  "limit": zod.coerce.number().optional()
+})
+
+export const ListSecretariatFollowUpsResponseItem = zod.object({
+  "id": zod.string(),
+  "kind": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "status": zod.string(),
+  "priority": zod.string().nullish(),
+  "dueDate": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "overdue": zod.boolean().optional(),
+  "href": zod.string()
+})
+export const ListSecretariatFollowUpsResponse = zod.array(ListSecretariatFollowUpsResponseItem)
 
 

@@ -30,6 +30,11 @@ export interface Correspondence {
   attachmentUrl?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  replyDueDate?: string | null;
+  /** @nullable */
+  body?: string | null;
+  isInternal?: boolean;
   isActive: boolean;
   createdAt: string;
 }

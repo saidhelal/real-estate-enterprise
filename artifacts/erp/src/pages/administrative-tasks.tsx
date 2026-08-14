@@ -15,8 +15,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
+import { useDeclareScreenContext } from "@/lib/screen-context";
 
 export default function AdministrativeTasksPage() {
+  // The register itself is printable: the header offers the directive template,
+  // and a directive raised from here is about administrative work.
+  useDeclareScreenContext({ moduleKey: "generalAdmin", documentType: "administrative_task" });
+
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;

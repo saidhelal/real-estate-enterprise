@@ -24946,6 +24946,240 @@ paths:
         "404":
           description: Not found
 
+  /roles/{id}/users:
+    get:
+      operationId: listRoleUsers
+      tags: [roles]
+      summary: Users assigned to a role
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Assigned users
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/RoleUser" }
+        "404":
+          description: Not found
+
+  /pr-parties:
+    get:
+      operationId: listPrParties
+      tags: [publicRelations]
+      summary: List external relationship parties
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: partyType, in: query, required: false, schema: { type: string } }
+        - { name: relationshipType, in: query, required: false, schema: { type: string } }
+        - { name: importance, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: ownerEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Party list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrPartyListResponse"
+    post:
+      operationId: createPrParty
+      tags: [publicRelations]
+      summary: Create a party
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrPartyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrParty"
+  /pr-parties/{id}:
+    get:
+      operationId: getPrParty
+      tags: [publicRelations]
+      summary: Get a party
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Party
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrParty"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePrParty
+      tags: [publicRelations]
+      summary: Update a party
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrPartyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrParty"
+    delete:
+      operationId: deletePrParty
+      tags: [publicRelations]
+      summary: Soft-delete a party
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /pr-interactions:
+    get:
+      operationId: listPrInteractions
+      tags: [publicRelations]
+      summary: List recorded contacts with external parties
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: partyId, in: query, required: false, schema: { type: string } }
+        - { name: interactionType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: handledByEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Interaction list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrInteractionListResponse"
+    post:
+      operationId: createPrInteraction
+      tags: [publicRelations]
+      summary: Record a contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrInteractionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrInteraction"
+  /pr-interactions/{id}:
+    get:
+      operationId: getPrInteraction
+      tags: [publicRelations]
+      summary: Get a recorded contact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Interaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrInteraction"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePrInteraction
+      tags: [publicRelations]
+      summary: Update a recorded contact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrInteractionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrInteraction"
+    delete:
+      operationId: deletePrInteraction
+      tags: [publicRelations]
+      summary: Soft-delete a recorded contact
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /secretariat/overview:
+    get:
+      operationId: getSecretariatOverview
+      tags: [secretariat]
+      summary: Administrative workload across the registers the secretariat follows
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretariatOverview"
+  /secretariat/follow-ups:
+    get:
+      operationId: listSecretariatFollowUps
+      tags: [secretariat]
+      summary: One dated queue over correspondence, meetings, decisions and tasks
+      parameters:
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: kind, in: query, required: false, schema: { type: string } }
+        - { name: overdueOnly, in: query, required: false, schema: { type: boolean } }
+        - { name: limit, in: query, required: false, schema: { type: integer } }
+      responses:
+        "200":
+          description: Follow-up queue
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SecretariatFollowUp" }
+
 components:
   parameters:
     IdParam:
@@ -25579,6 +25813,11 @@ components:
         lastLoginAt: { type: ["string", "null"] }
         failedAttempts: { type: integer }
         companyId: { type: ["string", "null"] }
+        # The employee this login belongs to. Already stored on the row and
+        # already used to route internal correspondence; exposing it is what
+        # lets the administration screen show whether a login is attached to a
+        # person in the organisation chart or is a standalone account.
+        employeeId: { type: ["string", "null"] }
         roles:
           type: array
           items: { $ref: "#/components/schemas/Role" }
@@ -25671,6 +25910,20 @@ components:
         phone: { type: ["string", "null"] }
         address: { type: ["string", "null"] }
         baseCurrency: { type: ["string", "null"] }
+        legalName: { type: ["string", "null"] }
+        legalNameAr: { type: ["string", "null"] }
+        tradeName: { type: ["string", "null"] }
+        legalForm: { type: ["string", "null"] }
+        commercialRegister: { type: ["string", "null"] }
+        website: { type: ["string", "null"] }
+        logoUrl: { type: ["string", "null"] }
+        officialEmail: { type: ["string", "null"] }
+        fax: { type: ["string", "null"] }
+        poBox: { type: ["string", "null"] }
+        representativeName: { type: ["string", "null"] }
+        representativeTitle: { type: ["string", "null"] }
+        printHeader: { type: ["string", "null"] }
+        printFooter: { type: ["string", "null"] }
         branchCount: { type: integer }
         isActive: { type: boolean }
         createdAt: { type: string }
@@ -25687,17 +25940,259 @@ components:
         phone: { type: string }
         address: { type: string }
         baseCurrency: { type: string }
+        legalName: { type: string }
+        legalNameAr: { type: string }
+        tradeName: { type: string }
+        legalForm: { type: string }
+        commercialRegister: { type: string }
+        website: { type: string }
+        logoUrl: { type: string }
+        officialEmail: { type: string }
+        fax: { type: string }
+        poBox: { type: string }
+        representativeName: { type: string }
+        representativeTitle: { type: string }
+        printHeader: { type: string }
+        printFooter: { type: string }
 
     CompanyUpdate:
+      # The optional fields accept null as well as a string. A field that can
+      # only ever be set to a non-empty value cannot be cleared: once someone
+      # typed a fax number into the profile there would be no way to remove it
+      # again. `name`/`nameAr` stay non-nullable — the company must be called
+      # something.
       type: object
       properties:
         name: { type: string, minLength: 1 }
         nameAr: { type: string, minLength: 1 }
-        taxNumber: { type: string }
-        email: { type: string }
+        taxNumber: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        baseCurrency: { type: ["string", "null"] }
+        legalName: { type: ["string", "null"] }
+        legalNameAr: { type: ["string", "null"] }
+        tradeName: { type: ["string", "null"] }
+        legalForm: { type: ["string", "null"] }
+        commercialRegister: { type: ["string", "null"] }
+        website: { type: ["string", "null"] }
+        logoUrl: { type: ["string", "null"] }
+        officialEmail: { type: ["string", "null"] }
+        fax: { type: ["string", "null"] }
+        poBox: { type: ["string", "null"] }
+        representativeName: { type: ["string", "null"] }
+        representativeTitle: { type: ["string", "null"] }
+        printHeader: { type: ["string", "null"] }
+        printFooter: { type: ["string", "null"] }
+
+    RoleUser:
+      type: object
+      required: [id, username, fullName, isActive]
+      properties:
+        id: { type: string }
+        username: { type: string }
+        fullName: { type: string }
+        email: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        status: { type: ["string", "null"] }
+        companyId: { type: ["string", "null"] }
+
+    PrParty:
+      type: object
+      required: [id, companyId, code, name, partyType, relationshipType, importance, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        partyType: { type: string }
+        relationshipType: { type: string }
+        ownerEmployeeId: { type: ["string", "null"] }
+        contactPerson: { type: ["string", "null"] }
+        contactTitle: { type: ["string", "null"] }
+        phone: { type: ["string", "null"] }
+        email: { type: ["string", "null"] }
+        website: { type: ["string", "null"] }
+        address: { type: ["string", "null"] }
+        importance: { type: string }
+        status: { type: string }
+        lastContactDate: { type: ["string", "null"] }
+        nextFollowUpDate: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PrPartyInput:
+      type: object
+      required: [companyId, code, name]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        nameAr: { type: string }
+        partyType: { type: string }
+        relationshipType: { type: string }
+        ownerEmployeeId: { type: string }
+        contactPerson: { type: string }
+        contactTitle: { type: string }
         phone: { type: string }
+        email: { type: string }
+        website: { type: string }
         address: { type: string }
-        baseCurrency: { type: string }
+        importance: { type: string }
+        status: { type: string }
+        lastContactDate: { type: string }
+        nextFollowUpDate: { type: string }
+        notes: { type: string }
+    PrPartyUpdate:
+      type: object
+      properties:
+        code: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        nameAr: { type: string }
+        partyType: { type: string }
+        relationshipType: { type: string }
+        ownerEmployeeId: { type: string }
+        contactPerson: { type: string }
+        contactTitle: { type: string }
+        phone: { type: string }
+        email: { type: string }
+        website: { type: string }
+        address: { type: string }
+        importance: { type: string }
+        status: { type: string }
+        lastContactDate: { type: string }
+        nextFollowUpDate: { type: string }
+        notes: { type: string }
+    PrPartyListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PrParty" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    PrInteraction:
+      type: object
+      required: [id, companyId, partyId, code, interactionType, interactionDate, subject, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        partyId: { type: string }
+        partyName: { type: ["string", "null"] }
+        code: { type: string }
+        interactionType: { type: string }
+        interactionDate: { type: string }
+        subject: { type: string }
+        handledByEmployeeId: { type: ["string", "null"] }
+        counterpartName: { type: ["string", "null"] }
+        purpose: { type: ["string", "null"] }
+        outcome: { type: ["string", "null"] }
+        followUpRequired: { type: boolean }
+        followUpDate: { type: ["string", "null"] }
+        status: { type: string }
+        correspondenceId: { type: ["string", "null"] }
+        meetingId: { type: ["string", "null"] }
+        taskId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    PrInteractionInput:
+      type: object
+      required: [companyId, partyId, code, subject]
+      properties:
+        companyId: { type: string }
+        partyId: { type: string }
+        code: { type: string, minLength: 1 }
+        interactionType: { type: string }
+        interactionDate: { type: string }
+        subject: { type: string, minLength: 1 }
+        handledByEmployeeId: { type: string }
+        counterpartName: { type: string }
+        purpose: { type: string }
+        outcome: { type: string }
+        followUpRequired: { type: boolean }
+        followUpDate: { type: string }
+        status: { type: string }
+        correspondenceId: { type: string }
+        meetingId: { type: string }
+        taskId: { type: string }
+        notes: { type: string }
+    PrInteractionUpdate:
+      type: object
+      properties:
+        partyId: { type: string }
+        code: { type: string, minLength: 1 }
+        interactionType: { type: string }
+        interactionDate: { type: string }
+        subject: { type: string, minLength: 1 }
+        handledByEmployeeId: { type: string }
+        counterpartName: { type: string }
+        purpose: { type: string }
+        outcome: { type: string }
+        followUpRequired: { type: boolean }
+        followUpDate: { type: string }
+        status: { type: string }
+        correspondenceId: { type: string }
+        meetingId: { type: string }
+        taskId: { type: string }
+        notes: { type: string }
+    PrInteractionListResponse:
+      type: object
+      required: [data, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PrInteraction" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    SecretariatOverview:
+      type: object
+      required:
+        [
+          incomingCount,
+          outgoingCount,
+          internalCount,
+          unreadInternalCount,
+          meetingsScheduled,
+          openDecisions,
+          openTasks,
+          overdueTasks,
+          overdueDecisions,
+          correspondenceAwaitingReply,
+          documentsLinked,
+        ]
+      properties:
+        incomingCount: { type: integer }
+        outgoingCount: { type: integer }
+        internalCount: { type: integer }
+        unreadInternalCount: { type: integer }
+        meetingsScheduled: { type: integer }
+        openDecisions: { type: integer }
+        openTasks: { type: integer }
+        overdueTasks: { type: integer }
+        overdueDecisions: { type: integer }
+        correspondenceAwaitingReply: { type: integer }
+        documentsLinked: { type: integer }
+    SecretariatFollowUp:
+      type: object
+      required: [id, kind, code, title, status, href]
+      properties:
+        id: { type: string }
+        kind: { type: string }
+        code: { type: string }
+        title: { type: string }
+        status: { type: string }
+        priority: { type: ["string", "null"] }
+        dueDate: { type: ["string", "null"] }
+        assignedToEmployeeId: { type: ["string", "null"] }
+        overdue: { type: boolean }
+        href: { type: string }
 
     Branch:
       type: object
@@ -38342,6 +38837,12 @@ components:
         assignedToEmployeeId: { type: ["string", "null"] }
         attachmentUrl: { type: ["string", "null"] }
         notes: { type: ["string", "null"] }
+        # The secretariat's incoming register is a follow-up queue, not just a
+        # log: a letter that expects an answer carries the date it is owed by,
+        # and the letter's own text is what the print template renders.
+        replyDueDate: { type: ["string", "null"] }
+        body: { type: ["string", "null"] }
+        isInternal: { type: boolean }
         isActive: { type: boolean }
         createdAt: { type: string }
     CorrespondenceInput:
@@ -38363,6 +38864,8 @@ components:
         assignedToEmployeeId: { type: string }
         attachmentUrl: { type: string }
         notes: { type: string }
+        replyDueDate: { type: string }
+        body: { type: string }
     CorrespondenceUpdate:
       type: object
       properties:
@@ -38381,6 +38884,8 @@ components:
         assignedToEmployeeId: { type: string }
         attachmentUrl: { type: string }
         notes: { type: string }
+        replyDueDate: { type: ["string", "null"] }
+        body: { type: ["string", "null"] }
     CorrespondenceListResponse:
       type: object
       required: [data, total, page, pageSize]

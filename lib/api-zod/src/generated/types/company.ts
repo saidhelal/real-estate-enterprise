@@ -21,6 +21,34 @@ export interface Company {
   address?: string | null;
   /** @nullable */
   baseCurrency?: string | null;
+  /** @nullable */
+  legalName?: string | null;
+  /** @nullable */
+  legalNameAr?: string | null;
+  /** @nullable */
+  tradeName?: string | null;
+  /** @nullable */
+  legalForm?: string | null;
+  /** @nullable */
+  commercialRegister?: string | null;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  logoUrl?: string | null;
+  /** @nullable */
+  officialEmail?: string | null;
+  /** @nullable */
+  fax?: string | null;
+  /** @nullable */
+  poBox?: string | null;
+  /** @nullable */
+  representativeName?: string | null;
+  /** @nullable */
+  representativeTitle?: string | null;
+  /** @nullable */
+  printHeader?: string | null;
+  /** @nullable */
+  printFooter?: string | null;
   branchCount?: number;
   isActive: boolean;
   createdAt: string;

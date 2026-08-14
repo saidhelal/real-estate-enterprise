@@ -711,6 +711,8 @@ export interface User {
   failedAttempts?: number;
   /** @nullable */
   companyId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
   roles?: Role[];
   createdAt: string;
   /** @nullable */
@@ -789,6 +791,34 @@ export interface Company {
   address?: string | null;
   /** @nullable */
   baseCurrency?: string | null;
+  /** @nullable */
+  legalName?: string | null;
+  /** @nullable */
+  legalNameAr?: string | null;
+  /** @nullable */
+  tradeName?: string | null;
+  /** @nullable */
+  legalForm?: string | null;
+  /** @nullable */
+  commercialRegister?: string | null;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  logoUrl?: string | null;
+  /** @nullable */
+  officialEmail?: string | null;
+  /** @nullable */
+  fax?: string | null;
+  /** @nullable */
+  poBox?: string | null;
+  /** @nullable */
+  representativeName?: string | null;
+  /** @nullable */
+  representativeTitle?: string | null;
+  /** @nullable */
+  printHeader?: string | null;
+  /** @nullable */
+  printFooter?: string | null;
   branchCount?: number;
   isActive: boolean;
   createdAt: string;
@@ -806,6 +836,20 @@ export interface CompanyInput {
   phone?: string;
   address?: string;
   baseCurrency?: string;
+  legalName?: string;
+  legalNameAr?: string;
+  tradeName?: string;
+  legalForm?: string;
+  commercialRegister?: string;
+  website?: string;
+  logoUrl?: string;
+  officialEmail?: string;
+  fax?: string;
+  poBox?: string;
+  representativeName?: string;
+  representativeTitle?: string;
+  printHeader?: string;
+  printFooter?: string;
 }
 
 export interface CompanyUpdate {
@@ -813,11 +857,258 @@ export interface CompanyUpdate {
   name?: string;
   /** @minLength 1 */
   nameAr?: string;
-  taxNumber?: string;
-  email?: string;
+  /** @nullable */
+  taxNumber?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  address?: string | null;
+  /** @nullable */
+  baseCurrency?: string | null;
+  /** @nullable */
+  legalName?: string | null;
+  /** @nullable */
+  legalNameAr?: string | null;
+  /** @nullable */
+  tradeName?: string | null;
+  /** @nullable */
+  legalForm?: string | null;
+  /** @nullable */
+  commercialRegister?: string | null;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  logoUrl?: string | null;
+  /** @nullable */
+  officialEmail?: string | null;
+  /** @nullable */
+  fax?: string | null;
+  /** @nullable */
+  poBox?: string | null;
+  /** @nullable */
+  representativeName?: string | null;
+  /** @nullable */
+  representativeTitle?: string | null;
+  /** @nullable */
+  printHeader?: string | null;
+  /** @nullable */
+  printFooter?: string | null;
+}
+
+export interface RoleUser {
+  id: string;
+  username: string;
+  fullName: string;
+  /** @nullable */
+  email?: string | null;
+  isActive: boolean;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  companyId?: string | null;
+}
+
+export interface PrParty {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  partyType: string;
+  relationshipType: string;
+  /** @nullable */
+  ownerEmployeeId?: string | null;
+  /** @nullable */
+  contactPerson?: string | null;
+  /** @nullable */
+  contactTitle?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  address?: string | null;
+  importance: string;
+  status: string;
+  /** @nullable */
+  lastContactDate?: string | null;
+  /** @nullable */
+  nextFollowUpDate?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PrPartyInput {
+  companyId: string;
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 1 */
+  name: string;
+  nameAr?: string;
+  partyType?: string;
+  relationshipType?: string;
+  ownerEmployeeId?: string;
+  contactPerson?: string;
+  contactTitle?: string;
   phone?: string;
+  email?: string;
+  website?: string;
   address?: string;
-  baseCurrency?: string;
+  importance?: string;
+  status?: string;
+  lastContactDate?: string;
+  nextFollowUpDate?: string;
+  notes?: string;
+}
+
+export interface PrPartyUpdate {
+  /** @minLength 1 */
+  code?: string;
+  /** @minLength 1 */
+  name?: string;
+  nameAr?: string;
+  partyType?: string;
+  relationshipType?: string;
+  ownerEmployeeId?: string;
+  contactPerson?: string;
+  contactTitle?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+  importance?: string;
+  status?: string;
+  lastContactDate?: string;
+  nextFollowUpDate?: string;
+  notes?: string;
+}
+
+export interface PrPartyListResponse {
+  data: PrParty[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface PrInteraction {
+  id: string;
+  companyId: string;
+  partyId: string;
+  /** @nullable */
+  partyName?: string | null;
+  code: string;
+  interactionType: string;
+  interactionDate: string;
+  subject: string;
+  /** @nullable */
+  handledByEmployeeId?: string | null;
+  /** @nullable */
+  counterpartName?: string | null;
+  /** @nullable */
+  purpose?: string | null;
+  /** @nullable */
+  outcome?: string | null;
+  followUpRequired?: boolean;
+  /** @nullable */
+  followUpDate?: string | null;
+  status: string;
+  /** @nullable */
+  correspondenceId?: string | null;
+  /** @nullable */
+  meetingId?: string | null;
+  /** @nullable */
+  taskId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PrInteractionInput {
+  companyId: string;
+  partyId: string;
+  /** @minLength 1 */
+  code: string;
+  interactionType?: string;
+  interactionDate?: string;
+  /** @minLength 1 */
+  subject: string;
+  handledByEmployeeId?: string;
+  counterpartName?: string;
+  purpose?: string;
+  outcome?: string;
+  followUpRequired?: boolean;
+  followUpDate?: string;
+  status?: string;
+  correspondenceId?: string;
+  meetingId?: string;
+  taskId?: string;
+  notes?: string;
+}
+
+export interface PrInteractionUpdate {
+  partyId?: string;
+  /** @minLength 1 */
+  code?: string;
+  interactionType?: string;
+  interactionDate?: string;
+  /** @minLength 1 */
+  subject?: string;
+  handledByEmployeeId?: string;
+  counterpartName?: string;
+  purpose?: string;
+  outcome?: string;
+  followUpRequired?: boolean;
+  followUpDate?: string;
+  status?: string;
+  correspondenceId?: string;
+  meetingId?: string;
+  taskId?: string;
+  notes?: string;
+}
+
+export interface PrInteractionListResponse {
+  data: PrInteraction[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SecretariatOverview {
+  incomingCount: number;
+  outgoingCount: number;
+  internalCount: number;
+  unreadInternalCount: number;
+  meetingsScheduled: number;
+  openDecisions: number;
+  openTasks: number;
+  overdueTasks: number;
+  overdueDecisions: number;
+  correspondenceAwaitingReply: number;
+  documentsLinked: number;
+}
+
+export interface SecretariatFollowUp {
+  id: string;
+  kind: string;
+  code: string;
+  title: string;
+  status: string;
+  /** @nullable */
+  priority?: string | null;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  assignedToEmployeeId?: string | null;
+  overdue?: boolean;
+  href: string;
 }
 
 export interface Branch {
@@ -12758,6 +13049,11 @@ export interface Correspondence {
   attachmentUrl?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  replyDueDate?: string | null;
+  /** @nullable */
+  body?: string | null;
+  isInternal?: boolean;
   isActive: boolean;
   createdAt: string;
 }
@@ -12778,6 +13074,8 @@ export interface CorrespondenceInput {
   assignedToEmployeeId?: string;
   attachmentUrl?: string;
   notes?: string;
+  replyDueDate?: string;
+  body?: string;
 }
 
 export interface CorrespondenceUpdate {
@@ -12796,6 +13094,10 @@ export interface CorrespondenceUpdate {
   assignedToEmployeeId?: string;
   attachmentUrl?: string;
   notes?: string;
+  /** @nullable */
+  replyDueDate?: string | null;
+  /** @nullable */
+  body?: string | null;
 }
 
 export interface CorrespondenceListResponse {
@@ -17513,5 +17815,39 @@ export type ListSentDocumentsParams = {
 page?: number;
 pageSize?: number;
 search?: string;
+};
+
+export type ListPrPartiesParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+partyType?: string;
+relationshipType?: string;
+importance?: string;
+status?: string;
+ownerEmployeeId?: string;
+};
+
+export type ListPrInteractionsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+partyId?: string;
+interactionType?: string;
+status?: string;
+handledByEmployeeId?: string;
+};
+
+export type GetSecretariatOverviewParams = {
+companyId?: string;
+};
+
+export type ListSecretariatFollowUpsParams = {
+companyId?: string;
+kind?: string;
+overdueOnly?: boolean;
+limit?: number;
 };
 

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { accentClass } from "@/lib/design-tokens";
+import { accentChipClass, accentBarClass, accentSurfaceClass } from "@/lib/design-tokens";
 import {
   useGetRealEstateDashboard,
   useGetFinanceDashboard,
@@ -45,6 +45,7 @@ import {
   BarChart3,
   Settings,
   Home as HomeIcon,
+  LayoutDashboard,
   FileSignature,
   TrendingUp,
   CircleDollarSign,
@@ -88,15 +89,37 @@ type ModuleCard = {
 };
 
 const MODULES: ModuleCard[] = [
+  // Home and Dashboard used to be the two entries of the navigation general
+  // group. With the rail gone they are cards like everything else, pointing at
+  // the same existing routes and reusing the same labels and icons the
+  // navigation already declared — no new route, no second dashboard.
+  //
+  // Both take accent 0, the identity blue: they are system entries rather than
+  // departments, and giving them one shared accent says so. A department's
+  // accent still means "this department".
+  { titleKey: "nav.home", icon: HomeIcon, href: "/", accent: 0 },
+  { titleKey: "nav.dashboard", icon: LayoutDashboard, href: "/dashboard", accent: 0 },
   { titleKey: "home.mod.real_estate", icon: Building, href: "/projects", accent: 0, countKey: "real_estate" },
   { titleKey: "home.mod.sales", icon: Users, href: "/customers", accent: 1, countKey: "crm" },
   { titleKey: "home.mod.finance", icon: Calculator, href: "/accounting-dashboard", accent: 2, countKey: "finance" },
   { titleKey: "home.mod.procurement", icon: ShoppingCart, href: "/procurement-dashboard", accent: 3, countKey: "procurement" },
   { titleKey: "home.mod.engineering", icon: Compass, href: "/engineering-dashboard", accent: 4 },
   { titleKey: "home.mod.hr", icon: UserCog, href: "/hr-dashboard", accent: 5, countKey: "hr" },
+  // Contract Management — the department that owns the contract register. It
+  // lands on the contract list rather than a dashboard of its own: the register
+  // IS the department's front door, and inventing a second dashboard for it
+  // would be a screen with nothing on it that the list does not already say.
+  { titleKey: "nav.group.contracts", icon: FileSignature, href: "/contracts", accent: 3 },
   { titleKey: "home.mod.legal", icon: Scale, href: "/legal-dashboard", accent: 6, countKey: "legal" },
   { titleKey: "home.mod.customer_service", icon: MessageSquare, href: "/customer-service-dashboard", accent: 7, countKey: "customer_service" },
   { titleKey: "home.mod.land_bank", icon: LandPlot, href: "/land-bank-dashboard", accent: 8 },
+  // General Administration owns the Chairman and Executive Director
+  // workspaces and internal correspondence. They had tiles of their own here
+  // as well, which made this launcher a second, hand-kept way in to three
+  // screens that already have one — and the two lists could disagree.
+  // Their canonical entries live in the navigation SSOT, under the
+  // department's Leadership and Secretariat sections, and the department
+  // page renders them from that same source. Reached through this tile.
   { titleKey: "home.mod.general_admin", icon: Briefcase, href: "/general-admin-dashboard", accent: 9, countKey: "general_admin" },
   { titleKey: "home.mod.marketing", icon: Megaphone, href: "/marketing-dashboard", accent: 10, countKey: "marketing" },
   { titleKey: "home.mod.insurance", icon: ShieldCheck, href: "/insurance-dashboard", accent: 11, countKey: "insurance" },
@@ -189,7 +212,9 @@ export default function Home() {
     const mapped = MODULES.map((mod) => ({
       ...mod,
       label: t(mod.titleKey),
-      accentClassName: accentClass(mod.accent),
+      chipClassName: accentChipClass(mod.accent),
+      barClassName: accentBarClass(mod.accent),
+      surfaceClassName: accentSurfaceClass(mod.accent),
     }));
     if (!q) return mapped;
     return mapped.filter((mod) => mod.label.toLowerCase().includes(q));
@@ -237,26 +262,44 @@ export default function Home() {
             <Link
               key={mod.titleKey}
               href={mod.href}
-              className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
+              {/* The module owns its whole card: a soft tinted surface and a
+                  matching border, then the solid accent bar and icon chip on
+                  top. Text stays on `--foreground` because the tint sits at a
+                  tenth of the hue — close enough to the canvas that contrast is
+                  the same as it was on a white card. */}
               <Card
                 interactive
-                className="flex h-full flex-col items-center gap-3 p-4 text-center"
+                className={`relative flex h-full flex-col gap-2 overflow-hidden p-3 ${mod.surfaceClassName}`}
               >
-                <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${mod.accentClassName}`}>
-                  <mod.icon className="h-6 w-6" />
-                </span>
-                <span className="text-sm font-medium leading-snug text-foreground">
-                  {mod.label}
-                </span>
+                <span
+                  aria-hidden
+                  className={`absolute inset-y-0 start-0 w-1 transition-all group-hover:w-1.5 ${mod.barClassName}`}
+                />
+
+                <div className="flex items-start gap-2.5 ps-1.5">
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md shadow-sm ${mod.chipClassName}`}
+                  >
+                    <mod.icon className="h-4.5 w-4.5" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-sm font-semibold leading-tight text-foreground">
+                    {mod.label}
+                  </span>
+                </div>
+
                 {mod.countKey ? (
-                  counts[mod.countKey].loading ? (
-                    <Skeleton className="h-4 w-10" />
-                  ) : (
-                    <span className="text-base font-semibold tabular-nums text-foreground">
-                      {formatCount(counts[mod.countKey].value)}
-                    </span>
-                  )
+                  <div className="mt-auto flex items-baseline gap-1.5 ps-1.5">
+                    {counts[mod.countKey].loading ? (
+                      <Skeleton className="h-5 w-12" />
+                    ) : (
+                      <span className="text-lg font-bold leading-none tabular-nums text-foreground">
+                        {formatCount(counts[mod.countKey].value)}
+                      </span>
+                    )}
+                    <span className="text-2xs text-muted-foreground">{t("common.total")}</span>
+                  </div>
                 ) : null}
               </Card>
             </Link>

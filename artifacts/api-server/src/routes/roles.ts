@@ -1,12 +1,13 @@
 import { Router, type IRouter } from "express";
 import { and, eq } from "drizzle-orm";
-import { db, rolesTable, permissionsTable } from "@workspace/db";
+import { db, rolesTable, permissionsTable, userRolesTable, usersTable } from "@workspace/db";
 import {
   ListRolesResponse,
   CreateRoleBody,
   GetRoleResponse,
   UpdateRoleBody,
   ListPermissionsResponse,
+  ListRoleUsersResponse,
 } from "@workspace/api-zod";
 import { roleUserCounts } from "../lib/access";
 import { toRole } from "../lib/presenters";
@@ -15,6 +16,36 @@ import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
 router.use(requireAuth);
+
+/**
+ * Refuse a permission change that reaches beyond what the editor holds.
+ *
+ * Without this, `roles.update` is the only permission anyone ever needs: hold
+ * it, add `*` to your own role, and you hold everything. That is not a
+ * theoretical escalation — the permission matrix screen exists precisely to
+ * make bulk permission edits easy, so the guard has to live on the server
+ * where both the matrix and the role editor pass through it.
+ *
+ * The rule is applied to the *difference*, not the result: an editor may only
+ * grant, and only revoke, permissions they themselves hold. Revocation is
+ * included deliberately — being able to strip a permission you cannot see is
+ * its own way to take a system apart. A holder of `*` is unrestricted.
+ */
+function permissionDeltaBeyondCaller(
+  held: string[],
+  before: string[],
+  after: string[],
+): string[] {
+  if (held.includes("*")) return [];
+  const mine = new Set(held);
+  const was = new Set(before);
+  const now = new Set(after);
+  const changed = [
+    ...after.filter((p) => !was.has(p)),
+    ...before.filter((p) => !now.has(p)),
+  ];
+  return Array.from(new Set(changed.filter((p) => !mine.has(p))));
+}
 
 router.get("/roles", requirePermission("roles.view"), async (_req, res): Promise<void> => {
   const rows = await db
@@ -40,12 +71,20 @@ router.post("/roles", requirePermission("roles.create"), async (req, res): Promi
     res.status(409).json({ error: "Role name already exists" });
     return;
   }
+  const requested = parsed.data.permissions ?? [];
+  const beyond = permissionDeltaBeyondCaller(req.authUser?.permissions ?? [], [], requested);
+  if (beyond.length) {
+    res.status(403).json({
+      error: `You cannot grant permissions you do not hold: ${beyond.join(", ")}`,
+    });
+    return;
+  }
   const [row] = await db
     .insert(rolesTable)
     .values({
       name: parsed.data.name,
       description: parsed.data.description ?? "",
-      permissions: parsed.data.permissions ?? [],
+      permissions: requested,
     })
     .returning();
   await recordAudit(req, { action: "create", entity: "role", entityId: row.id, newValue: row });
@@ -84,7 +123,20 @@ router.patch("/roles/:id", requirePermission("roles.update"), async (req, res): 
   const update: Record<string, unknown> = {};
   if (parsed.data.name !== undefined) update.name = parsed.data.name;
   if (parsed.data.description !== undefined) update.description = parsed.data.description;
-  if (parsed.data.permissions !== undefined) update.permissions = parsed.data.permissions;
+  if (parsed.data.permissions !== undefined) {
+    const beyond = permissionDeltaBeyondCaller(
+      req.authUser?.permissions ?? [],
+      existing.permissions,
+      parsed.data.permissions,
+    );
+    if (beyond.length) {
+      res.status(403).json({
+        error: `You cannot change permissions you do not hold: ${beyond.join(", ")}`,
+      });
+      return;
+    }
+    update.permissions = parsed.data.permissions;
+  }
 
   const [row] = Object.keys(update).length
     ? await db.update(rolesTable).set(update).where(eq(rolesTable.id, id)).returning()
@@ -119,6 +171,49 @@ router.delete("/roles/:id", requirePermission("roles.delete"), async (req, res):
   await recordAudit(req, { action: "delete", entity: "role", entityId: id });
   res.json({ success: true });
 });
+
+/**
+ * Who actually holds this role.
+ *
+ * The list screen already shows a count; the count is what prompts the
+ * question. Answering it needs `users.view` as well as `roles.view` — the rows
+ * returned are user records, and someone allowed to read the role catalogue is
+ * not thereby allowed to enumerate staff.
+ */
+router.get(
+  "/roles/:id/users",
+  requirePermission("users.view"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    const [role] = await db
+      .select({ id: rolesTable.id })
+      .from(rolesTable)
+      .where(and(eq(rolesTable.id, id), eq(rolesTable.isDeleted, false)));
+    if (!role) {
+      res.status(404).json({ error: "Role not found" });
+      return;
+    }
+    const conds = [eq(userRolesTable.roleId, id), eq(usersTable.isDeleted, false)];
+    // A company-pinned caller sees only their own company's holders.
+    const scope = req.authUser?.companyId;
+    if (scope) conds.push(eq(usersTable.companyId, scope));
+    const rows = await db
+      .select({
+        id: usersTable.id,
+        username: usersTable.username,
+        fullName: usersTable.fullName,
+        email: usersTable.email,
+        isActive: usersTable.isActive,
+        status: usersTable.status,
+        companyId: usersTable.companyId,
+      })
+      .from(userRolesTable)
+      .innerJoin(usersTable, eq(usersTable.id, userRolesTable.userId))
+      .where(and(...conds))
+      .orderBy(usersTable.fullName);
+    res.json(ListRoleUsersResponse.parse(rows));
+  },
+);
 
 router.get("/permissions", requirePermission("roles.view"), async (_req, res): Promise<void> => {
   const rows = await db.select().from(permissionsTable).orderBy(permissionsTable.module);

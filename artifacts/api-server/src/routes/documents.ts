@@ -109,7 +109,23 @@ router.post(
       res.status(400).json({ error: parsed.error.message });
       return;
     }
-    const uploadUrl = await objectStorageService.getObjectEntityUploadURL();
+    let uploadUrl: string;
+    try {
+      uploadUrl = await objectStorageService.getObjectEntityUploadURL();
+    } catch (err) {
+      // Object storage is an external dependency with its own configuration.
+      // When it is absent the request is not a server fault and never will
+      // succeed on retry, so say which piece is missing rather than answering
+      // with a bare 500 that sends an operator hunting for a broken handler.
+      req.log?.warn({ err }, "Object storage is not configured");
+      res.status(503).json({
+        error:
+          "File storage is not configured on this environment, so uploads are unavailable. " +
+          "Everything else about documents — metadata, versions, links and the approval " +
+          "workflow — continues to work.",
+      });
+      return;
+    }
     const filePath = objectStorageService.normalizeObjectEntityPath(uploadUrl);
     // Record an immutable owner mapping so serving can authorize against the
     // path the server actually minted, not a forgeable client reference.

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { enumLabel } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
+import { useDeclareScreenContext } from "@/lib/screen-context";
 import { Printer, ArrowLeft } from "lucide-react";
 
 export default function ContractDocumentPage() {
@@ -24,6 +25,18 @@ export default function ContractDocumentPage() {
   const { data: companies } = useListCompanies();
   const { data: customers } = useListCustomers({ pageSize: 200 });
   const { data: units } = useListUnits({ pageSize: 200 });
+
+  // Tells the header what is on screen, so its print menu offers the contract
+  // templates and a directive raised here carries the contract. Declared above
+  // the loading and error returns: a hook has to run on every render, and the
+  // fields are optional precisely so it can run before the data arrives.
+  useDeclareScreenContext({
+    moduleKey: "sales",
+    documentType: "contract",
+    entityId: contract?.id,
+    label: contract?.code ? `${t("nav.contracts")} ${contract.code}` : undefined,
+    documentNumber: contract?.code ?? undefined,
+  });
 
   if (isLoading) return <p className="p-6 text-sm text-muted-foreground">{t("common.loading")}</p>;
   if (!contract) return <p className="p-6 text-sm text-muted-foreground">{t("common.error")}</p>;

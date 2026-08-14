@@ -5,6 +5,13 @@ import {
   customersTable,
   contractsTable,
   reservationsTable,
+
+  correspondenceTable,
+
+  administrativeTasksTable,
+  administrativeDecisionsTable,
+  meetingsTable,
+  prPartiesTable,
   unitsTable,
   customerInvoicesTable,
   receiptsTable,
@@ -70,6 +77,23 @@ const BASE_GROUPS: BindingGroup[] = [
       { token: "company.phone", label: "Company phone", labelAr: "هاتف الشركة", sample: "+966-11-0000000" },
       { token: "company.email", label: "Company email", labelAr: "بريد الشركة", sample: "info@example.com" },
       { token: "company.address", label: "Company address", labelAr: "عنوان الشركة", sample: "Riyadh" },
+      // The institutional profile. These are exactly the fields the Company
+      // Profile screen edits — a template that wants the legal name gets the
+      // one stored on the company row, never a name retyped into the template.
+      { token: "company.legalName", label: "Legal name (EN)", labelAr: "الاسم القانوني (إنجليزي)", sample: "Holding Company LLC" },
+      { token: "company.legalNameAr", label: "Legal name (AR)", labelAr: "الاسم القانوني (عربي)", sample: "الشركة القابضة ذ.م.م" },
+      { token: "company.tradeName", label: "Trade name", labelAr: "الاسم التجاري", sample: "Holding" },
+      { token: "company.legalForm", label: "Legal form", labelAr: "الشكل القانوني", sample: "LLC" },
+      { token: "company.commercialRegister", label: "Commercial register", labelAr: "السجل التجاري", sample: "1010000000" },
+      { token: "company.website", label: "Website", labelAr: "الموقع الإلكتروني", sample: "www.example.com" },
+      { token: "company.officialEmail", label: "Official email", labelAr: "البريد الرسمي", sample: "office@example.com" },
+      { token: "company.fax", label: "Fax", labelAr: "الفاكس", sample: "+966-11-0000001" },
+      { token: "company.poBox", label: "P.O. Box", labelAr: "صندوق البريد", sample: "12345" },
+      { token: "company.logoUrl", label: "Logo URL", labelAr: "رابط الشعار", sample: "" },
+      { token: "company.representativeName", label: "Representative", labelAr: "الممثل الرسمي", sample: "" },
+      { token: "company.representativeTitle", label: "Representative title", labelAr: "صفة الممثل", sample: "" },
+      { token: "company.printHeader", label: "Print header", labelAr: "ترويسة الطباعة", sample: "" },
+      { token: "company.printFooter", label: "Print footer", labelAr: "تذييل الطباعة", sample: "" },
     ],
   },
   {
@@ -115,6 +139,122 @@ const ENTITY_BINDINGS: Record<string, EntityBinding> = {
         { token: "contract.totalPrice", label: "Total price", labelAr: "السعر الإجمالي", prop: "totalPrice" },
         { token: "contract.downPayment", label: "Down payment", labelAr: "الدفعة المقدمة", prop: "downPayment" },
         { token: "contract.status", label: "Status", labelAr: "الحالة", prop: "status" },
+      ],
+    },
+  },
+  /**
+   * Internal correspondence and administrative directives.
+   *
+   * Both became printable records once the header gained a print action, and a
+   * template with no binding for them would render a form with empty fields —
+   * worse than no template at all. They join the same registry every other
+   * entity uses, so the binding catalogue, the renderer and the print job all
+   * pick them up with no further wiring.
+   */
+  correspondence: {
+    table: correspondenceTable,
+    group: {
+      group: "Correspondence",
+      groupAr: "المراسلة",
+      tokens: [
+        { token: "correspondence.code", label: "Reference", labelAr: "الرقم", prop: "code" },
+        { token: "correspondence.subject", label: "Subject", labelAr: "الموضوع", prop: "subject" },
+        { token: "correspondence.body", label: "Body", labelAr: "النص", prop: "body" },
+        { token: "correspondence.date", label: "Date", labelAr: "التاريخ", prop: "correspondenceDate" },
+        { token: "correspondence.priority", label: "Priority", labelAr: "الأولوية", prop: "priority" },
+        { token: "correspondence.status", label: "Status", labelAr: "الحالة", prop: "status" },
+        { token: "correspondence.kind", label: "Type", labelAr: "النوع", prop: "correspondenceKind" },
+        { token: "correspondence.sender", label: "Sender", labelAr: "المرسل", prop: "senderName" },
+        { token: "correspondence.recipient", label: "Recipient", labelAr: "المستلم", prop: "recipientName" },
+        { token: "correspondence.replyDue", label: "Reply due", labelAr: "موعد الرد", prop: "replyDueDate" },
+      ],
+    },
+  },
+  administrative_task: {
+    table: administrativeTasksTable,
+    group: {
+      group: "Directive",
+      groupAr: "التوجيه",
+      tokens: [
+        { token: "task.code", label: "Directive number", labelAr: "رقم التوجيه", prop: "code" },
+        { token: "task.title", label: "Subject", labelAr: "الموضوع", prop: "title" },
+        { token: "task.description", label: "Directive", labelAr: "نص التوجيه", prop: "description" },
+        { token: "task.priority", label: "Priority", labelAr: "الأولوية", prop: "priority" },
+        { token: "task.status", label: "Status", labelAr: "الحالة", prop: "status" },
+        { token: "task.startDate", label: "Issued on", labelAr: "تاريخ الإصدار", prop: "startDate" },
+        { token: "task.dueDate", label: "Due date", labelAr: "تاريخ الاستحقاق", prop: "dueDate" },
+        { token: "task.progress", label: "Progress", labelAr: "نسبة الإنجاز", prop: "progressPercent" },
+        { token: "task.notes", label: "Notes", labelAr: "ملاحظات", prop: "notes" },
+      ],
+    },
+  },
+  /**
+   * The three General Administration records that are genuinely printed:
+   * minutes go out to attendees, a decision is circulated as an issued
+   * document, and a relationship card is what someone carries into a meeting.
+   *
+   * The company's own profile needs no entry here — every template already
+   * resolves `{{company.*}}` from the base groups, which read the company row
+   * directly. Adding a `company_profile` entity would be a second path to the
+   * same values.
+   */
+  meeting: {
+    table: meetingsTable,
+    group: {
+      group: "Meeting",
+      groupAr: "الاجتماع",
+      tokens: [
+        { token: "meeting.code", label: "Meeting number", labelAr: "رقم الاجتماع", prop: "code" },
+        { token: "meeting.title", label: "Title", labelAr: "العنوان", prop: "title" },
+        { token: "meeting.type", label: "Meeting type", labelAr: "نوع الاجتماع", prop: "meetingType" },
+        { token: "meeting.date", label: "Held on", labelAr: "تاريخ الانعقاد", prop: "scheduledAt" },
+        { token: "meeting.location", label: "Location", labelAr: "المكان", prop: "location" },
+        { token: "meeting.status", label: "Status", labelAr: "الحالة", prop: "status" },
+        { token: "meeting.attendees", label: "Attendees", labelAr: "الحضور", prop: "attendees" },
+        { token: "meeting.agenda", label: "Agenda", labelAr: "جدول الأعمال", prop: "agenda" },
+        { token: "meeting.minutes", label: "Minutes", labelAr: "المحضر", prop: "minutes" },
+        { token: "meeting.notes", label: "Notes", labelAr: "ملاحظات", prop: "notes" },
+      ],
+    },
+  },
+  administrative_decision: {
+    table: administrativeDecisionsTable,
+    group: {
+      group: "Decision",
+      groupAr: "القرار",
+      tokens: [
+        { token: "decision.code", label: "Decision number", labelAr: "رقم القرار", prop: "code" },
+        { token: "decision.title", label: "Subject", labelAr: "الموضوع", prop: "title" },
+        { token: "decision.type", label: "Decision type", labelAr: "نوع القرار", prop: "decisionType" },
+        { token: "decision.date", label: "Issued on", labelAr: "تاريخ الإصدار", prop: "decisionDate" },
+        { token: "decision.description", label: "Decision", labelAr: "نص القرار", prop: "description" },
+        { token: "decision.status", label: "Status", labelAr: "الحالة", prop: "status" },
+        { token: "decision.dueDate", label: "Due date", labelAr: "تاريخ الاستحقاق", prop: "dueDate" },
+        { token: "decision.notes", label: "Notes", labelAr: "ملاحظات", prop: "notes" },
+      ],
+    },
+  },
+  pr_party: {
+    table: prPartiesTable,
+    group: {
+      group: "Relationship",
+      groupAr: "العلاقة",
+      tokens: [
+        { token: "party.code", label: "Party code", labelAr: "رمز الجهة", prop: "code" },
+        { token: "party.name", label: "Name", labelAr: "الاسم", prop: "name" },
+        { token: "party.nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", prop: "nameAr" },
+        { token: "party.type", label: "Party type", labelAr: "نوع الجهة", prop: "partyType" },
+        { token: "party.relationship", label: "Relationship", labelAr: "نوع العلاقة", prop: "relationshipType" },
+        { token: "party.importance", label: "Importance", labelAr: "الأهمية", prop: "importance" },
+        { token: "party.contactPerson", label: "Contact person", labelAr: "مسؤول التواصل", prop: "contactPerson" },
+        { token: "party.contactTitle", label: "Contact title", labelAr: "صفة المسؤول", prop: "contactTitle" },
+        { token: "party.phone", label: "Phone", labelAr: "الهاتف", prop: "phone" },
+        { token: "party.email", label: "Email", labelAr: "البريد الإلكتروني", prop: "email" },
+        { token: "party.address", label: "Address", labelAr: "العنوان", prop: "address" },
+        { token: "party.lastContact", label: "Last contact", labelAr: "آخر تواصل", prop: "lastContactDate" },
+        { token: "party.nextFollowUp", label: "Next follow-up", labelAr: "المتابعة القادمة", prop: "nextFollowUpDate" },
+        { token: "party.status", label: "Status", labelAr: "الحالة", prop: "status" },
+        { token: "party.notes", label: "Notes", labelAr: "ملاحظات", prop: "notes" },
       ],
     },
   },
@@ -295,6 +435,20 @@ export function buildTokenValues(input: TokenValueInput): Record<string, string>
     "company.phone": formatValue(company["phone"]),
     "company.email": formatValue(company["email"]),
     "company.address": formatValue(company["address"]),
+    "company.legalName": formatValue(company["legalName"]),
+    "company.legalNameAr": formatValue(company["legalNameAr"]),
+    "company.tradeName": formatValue(company["tradeName"]),
+    "company.legalForm": formatValue(company["legalForm"]),
+    "company.commercialRegister": formatValue(company["commercialRegister"]),
+    "company.website": formatValue(company["website"]),
+    "company.officialEmail": formatValue(company["officialEmail"]),
+    "company.fax": formatValue(company["fax"]),
+    "company.poBox": formatValue(company["poBox"]),
+    "company.logoUrl": formatValue(company["logoUrl"]),
+    "company.representativeName": formatValue(company["representativeName"]),
+    "company.representativeTitle": formatValue(company["representativeTitle"]),
+    "company.printHeader": formatValue(company["printHeader"]),
+    "company.printFooter": formatValue(company["printFooter"]),
     "user.name": formatValue(input.user?.fullName),
     "user.username": formatValue(input.user?.username),
   };

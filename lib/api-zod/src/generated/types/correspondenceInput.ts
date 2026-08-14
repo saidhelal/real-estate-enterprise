@@ -22,4 +22,6 @@ export interface CorrespondenceInput {
   assignedToEmployeeId?: string;
   attachmentUrl?: string;
   notes?: string;
+  replyDueDate?: string;
+  body?: string;
 }

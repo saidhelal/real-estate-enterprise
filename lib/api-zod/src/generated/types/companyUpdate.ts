@@ -11,9 +11,42 @@ export interface CompanyUpdate {
   name?: string;
   /** @minLength 1 */
   nameAr?: string;
-  taxNumber?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  baseCurrency?: string;
+  /** @nullable */
+  taxNumber?: string | null;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  address?: string | null;
+  /** @nullable */
+  baseCurrency?: string | null;
+  /** @nullable */
+  legalName?: string | null;
+  /** @nullable */
+  legalNameAr?: string | null;
+  /** @nullable */
+  tradeName?: string | null;
+  /** @nullable */
+  legalForm?: string | null;
+  /** @nullable */
+  commercialRegister?: string | null;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  logoUrl?: string | null;
+  /** @nullable */
+  officialEmail?: string | null;
+  /** @nullable */
+  fax?: string | null;
+  /** @nullable */
+  poBox?: string | null;
+  /** @nullable */
+  representativeName?: string | null;
+  /** @nullable */
+  representativeTitle?: string | null;
+  /** @nullable */
+  printHeader?: string | null;
+  /** @nullable */
+  printFooter?: string | null;
 }

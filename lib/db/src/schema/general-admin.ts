@@ -37,8 +37,63 @@ export const correspondenceTable = pgTable("correspondence", {
   assignedToEmployeeId: uuid("assigned_to_employee_id"),
   attachmentUrl: text("attachment_url"),
   notes: text("notes"),
+
+  /* ---- Internal correspondence ------------------------------------------
+   * The register above already models a letter: a code, a subject, a
+   * direction, a priority, a status and a department. Internal mail between
+   * staff is the same object with a known sender and known recipients instead
+   * of typed-in names, so it extends this table rather than starting a second
+   * one — one register, one numbering sequence, one audit history.
+   *
+   * Every column here is nullable: the existing incoming/outgoing rows predate
+   * them and stay valid exactly as they are.
+   */
+
+  /** `true` for staff-to-staff mail; the pre-existing register rows stay false. */
+  isInternal: boolean("is_internal").notNull().default(false),
+  /** Who wrote it, as an employee — not a free-text name. */
+  senderEmployeeId: uuid("sender_employee_id"),
+  /**
+   * Root of the conversation. A first message points at itself, so a thread is
+   * one indexed lookup rather than a recursive walk.
+   */
+  threadId: uuid("thread_id"),
+  /** The message this one answers, for rendering the reply chain in order. */
+  parentId: uuid("parent_id"),
+  /** informational | action_required | approval | follow_up */
+  correspondenceKind: text("correspondence_kind"),
+  /** normal | internal | confidential — drives who may open the thread. */
+  confidentiality: text("confidentiality").notNull().default("internal"),
+  body: text("body"),
+  /** Set when a reply is expected; surfaces the "needs reply" queue. */
+  replyDueDate: date("reply_due_date"),
+  sentAt: timestamp("sent_at", { withTimezone: true }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
   ...audit,
 });
+
+/**
+ * Who a piece of internal correspondence went to.
+ *
+ * A row per recipient rather than a list on the message: read state is
+ * per-person, and an inbox query is then a plain indexed join instead of a
+ * scan through an array. `kind` separates the addressee from those merely
+ * copied, which is what lets "needs my reply" mean something.
+ */
+export const correspondenceRecipientsTable = pgTable("correspondence_recipients", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  companyId: uuid("company_id").notNull(),
+  correspondenceId: uuid("correspondence_id").notNull(),
+  employeeId: uuid("employee_id").notNull(),
+  /** to | cc */
+  kind: text("kind").notNull().default("to"),
+  deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+  readAt: timestamp("read_at", { withTimezone: true }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
+  ...audit,
+});
+
+export type CorrespondenceRecipientRow = typeof correspondenceRecipientsTable.$inferSelect;
 export type CorrespondenceRow = typeof correspondenceTable.$inferSelect;
 
 // Corporate meetings: management/board meetings, their schedule (scheduledAt)

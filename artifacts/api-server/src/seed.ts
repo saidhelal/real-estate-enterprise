@@ -337,6 +337,14 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "visitorLogs", label: "Visitor Logs" },
   { module: "circulars", label: "Circulars" },
   { module: "policies", label: "Policies" },
+  // Secretariat is a follow-up desk over the registers above, not a register of
+  // its own: it owns no table, so it needs only a view permission. Registering
+  // a create/update/delete triple here would advertise writes that do not
+  // exist — a secretary creating a task still needs administrativeTasks.create.
+  { module: "secretariat", label: "Secretariat" },
+  // Public Relations: external bodies and the log of contacts with them.
+  { module: "publicRelations", label: "Public Relations Parties" },
+  { module: "publicRelationsInteractions", label: "Public Relations Interactions" },
   // Marketing Management (standalone module). Lead Sources reuse the CRM
   // `leadSources` module/permissions (no duplicate).
   { module: "marketing", label: "Marketing Campaigns" },

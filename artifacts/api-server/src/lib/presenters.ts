@@ -52,6 +52,7 @@ export function toUser(row: UserRow, roles: RoleApi[] = []) {
     lastLoginAt: iso(row.lastLoginAt),
     failedAttempts: row.failedAttempts,
     companyId: row.companyId,
+    employeeId: row.employeeId,
     roles,
     createdAt: row.createdAt.toISOString(),
     updatedAt: iso(row.updatedAt),
@@ -95,6 +96,24 @@ export function toCompany(row: CompanyRow, branchCount = 0) {
     phone: row.phone,
     address: row.address,
     baseCurrency: row.baseCurrency,
+    // Institutional profile — what the company is called on paper, how it is
+    // registered, who signs for it, and what its official stationery carries.
+    // Every print template resolves its company tokens from here, so this is
+    // the only place those values are read from.
+    legalName: row.legalName,
+    legalNameAr: row.legalNameAr,
+    tradeName: row.tradeName,
+    legalForm: row.legalForm,
+    commercialRegister: row.commercialRegister,
+    website: row.website,
+    logoUrl: row.logoUrl,
+    officialEmail: row.officialEmail,
+    fax: row.fax,
+    poBox: row.poBox,
+    representativeName: row.representativeName,
+    representativeTitle: row.representativeTitle,
+    printHeader: row.printHeader,
+    printFooter: row.printFooter,
     branchCount,
     isActive: row.isActive,
     createdAt: row.createdAt.toISOString(),

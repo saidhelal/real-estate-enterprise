@@ -16,12 +16,21 @@ import type { StatusTone } from "@/lib/design-tokens";
  * make the surrounding layout jitter as digit widths change.
  */
 
+/**
+ * The icon chip is the tile's entire colour budget: a small SOLID plate with a
+ * white glyph, never a tinted wash and never a fill on the card itself. A
+ * washed chip disappears against a white card at tile size, which is why the
+ * whole KPI row used to read as one grey block.
+ *
+ * `neutral` stays soft on purpose — a count that carries no judgement should
+ * not be dressed in a saturated plate just to look consistent.
+ */
 const TONE_PLATE: Record<StatusTone | "brand", string> = {
-  brand: "bg-primary-muted text-primary-muted-foreground",
-  success: "bg-success-subtle text-success-subtle-foreground",
-  warning: "bg-warning-subtle text-warning-subtle-foreground",
-  error: "bg-destructive-subtle text-destructive-subtle-foreground",
-  info: "bg-info-subtle text-info-subtle-foreground",
+  brand: "bg-primary text-primary-foreground",
+  success: "bg-success text-success-foreground",
+  warning: "bg-warning text-warning-foreground",
+  error: "bg-destructive text-destructive-foreground",
+  info: "bg-info text-info-foreground",
   neutral: "bg-muted text-muted-foreground",
 };
 
@@ -155,7 +164,7 @@ const KpiCard = React.forwardRef<HTMLDivElement, KpiCardProps>(
           {Icon ? (
             <div
               className={cn(
-                "flex shrink-0 items-center justify-center rounded-md",
+                "flex shrink-0 items-center justify-center rounded-md shadow-sm",
                 TONE_PLATE[tone],
                 emphasis ? "h-8 w-8" : "h-9 w-9",
               )}

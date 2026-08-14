@@ -216,18 +216,21 @@
   --spacing: 0.25rem;
 
   /* ---- Radius -----------------------------------------------------------
-   * Crisper than the previous 8px default. Enterprise density reads sharper
-   * with small radii: rounded corners cost horizontal room in dense tables and
-   * soften the grid that users scan along. */
-  --radius: 0.375rem;
+   * The ERP PYRAMIDS geometry: a soft, generously rounded system, copied from
+   * its own token scale (base 1rem; xs .25 / sm .5 / md .75 / lg 1.125 / xl
+   * 1.5rem). Corners carry a large part of what makes that identity
+   * recognisable, so the palette on its own would only have brought half of it.
+   * The two steps beyond xl have no PYRAMIDS counterpart and simply continue
+   * the same progression. */
+  --radius: 1rem;
   --radius-none: 0px;
-  --radius-xs: 0.125rem;      /* 2px — checkbox, tag */
-  --radius-sm: 0.1875rem;     /* 3px — inputs inside groups */
-  --radius-md: 0.25rem;       /* 4px — buttons, inputs (default control) */
-  --radius-lg: 0.375rem;      /* 6px — cards, popovers */
-  --radius-xl: 0.5rem;        /* 8px — dialogs, drawers */
-  --radius-2xl: 0.75rem;      /* 12px — marketing / empty-state art */
-  --radius-3xl: 1rem;
+  --radius-xs: 0.25rem;       /* 4px  — checkbox, tag */
+  --radius-sm: 0.5rem;        /* 8px  — inputs inside groups */
+  --radius-md: 0.75rem;       /* 12px — buttons, inputs (default control) */
+  --radius-lg: 1.125rem;      /* 18px — cards, popovers */
+  --radius-xl: 1.5rem;        /* 24px — dialogs, drawers */
+  --radius-2xl: 2rem;         /* 32px — marketing / empty-state art */
+  --radius-3xl: 2.5rem;
   --radius-full: 9999px;
 
   /* ---- Elevation --------------------------------------------------------
@@ -318,92 +321,92 @@
   /* Canvas is a cool near-white rather than pure white: content cards then read
    * as raised without needing a heavy shadow, which is what keeps a dense
    * screen calm. */
-  --background: 210 25% 97%;
-  --foreground: 216 33% 16%;
+  --background: 220 16% 97%;
+  --foreground: 222 42% 14%;
 
-  --surface: 0 0% 100%;
-  --surface-sunken: 210 22% 94%;
+  --surface: 220 20% 98%;
+  --surface-sunken: 220 16% 94%;
   --surface-raised: 0 0% 100%;
-  --surface-foreground: 216 33% 16%;
+  --surface-foreground: 222 42% 14%;
 
-  --border: 214 25% 88%;
-  --border-strong: 214 20% 76%;
-  --input: 214 22% 84%;
-  --ring: 213 88% 45%;
+  --border: 220 16% 90%;
+  --border-strong: 220 16% 78%;
+  --input: 220 16% 90%;
+  --ring: 221 83% 53%;
 
-  --shadow-color: 216 40% 22%;
+  --shadow-color: 222 47% 11%;
 
   --card: 0 0% 100%;
-  --card-foreground: 216 33% 16%;
-  --card-border: 214 25% 88%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 220 16% 90%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 216 33% 16%;
-  --popover-border: 214 25% 88%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 220 16% 90%;
 
   /* Brand ramp — the project's own enterprise blue. */
-  --brand-50: 210 100% 97%;
-  --brand-100: 209 96% 93%;
-  --brand-200: 209 94% 86%;
-  --brand-300: 210 92% 74%;
-  --brand-400: 211 90% 60%;
-  --brand-500: 212 88% 49%;
-  --brand-600: 213 88% 40%;
-  --brand-700: 214 84% 33%;
-  --brand-800: 215 78% 27%;
-  --brand-900: 216 70% 21%;
+  --brand-50: 221 83% 97%;
+  --brand-100: 221 83% 93%;
+  --brand-200: 221 83% 86%;
+  --brand-300: 221 83% 75%;
+  --brand-400: 221 83% 64%;
+  --brand-500: 221 83% 53%;
+  --brand-600: 224 82% 46%;
+  --brand-700: 226 80% 38%;
+  --brand-800: 228 76% 31%;
+  --brand-900: 230 70% 25%;
 
   /* brand-600 on white = 5.9:1 — AA for the white label it carries. */
-  --primary: 213 88% 40%;
+  --primary: 221 83% 53%;
   --primary-foreground: 0 0% 100%;
-  --primary-border: 213 88% 34%;
-  --primary-muted: 210 100% 96%;
-  --primary-muted-foreground: 215 78% 27%;
+  --primary-border: 224 82% 46%;
+  --primary-muted: 221 83% 96%;
+  --primary-muted-foreground: 221 83% 40%;
 
-  --secondary: 210 22% 95%;
-  --secondary-foreground: 216 30% 22%;
-  --secondary-border: 214 22% 87%;
+  --secondary: 220 16% 95%;
+  --secondary-foreground: 222 42% 14%;
+  --secondary-border: 220 16% 88%;
 
-  --muted: 210 22% 95%;
-  --muted-foreground: 215 16% 42%;
-  --muted-border: 214 22% 88%;
+  --muted: 220 16% 95%;
+  --muted-foreground: 222 14% 42%;
+  --muted-border: 220 16% 90%;
 
   /* Accent is the selection/hover tint, not a second brand colour. */
-  --accent: 210 100% 96%;
-  --accent-foreground: 215 78% 27%;
-  --accent-border: 209 94% 88%;
+  --accent: 221 83% 96%;
+  --accent-foreground: 221 83% 40%;
+  --accent-border: 221 83% 88%;
 
-  --destructive: 356 68% 44%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --destructive-border: 356 68% 38%;
-  --destructive-subtle: 356 90% 97%;
-  --destructive-subtle-foreground: 356 70% 32%;
+  --destructive-border: 0 84% 52%;
+  --destructive-subtle: 0 86% 97%;
+  --destructive-subtle-foreground: 0 72% 38%;
 
-  --success: 152 58% 30%;
+  --success: 142 71% 45%;
   --success-foreground: 0 0% 100%;
-  --success-border: 152 58% 25%;
-  --success-subtle: 150 65% 96%;
-  --success-subtle-foreground: 154 62% 22%;
+  --success-border: 142 71% 38%;
+  --success-subtle: 142 70% 96%;
+  --success-subtle-foreground: 142 68% 26%;
 
-  --warning: 33 92% 38%;
-  --warning-foreground: 0 0% 100%;
-  --warning-border: 33 92% 32%;
-  --warning-subtle: 42 96% 94%;
-  --warning-subtle-foreground: 28 82% 28%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 38 96% 14%;
+  --warning-border: 38 92% 42%;
+  --warning-subtle: 38 94% 95%;
+  --warning-subtle-foreground: 32 88% 30%;
 
-  --info: 205 88% 38%;
+  --info: 217 91% 60%;
   --info-foreground: 0 0% 100%;
-  --info-border: 205 88% 32%;
-  --info-subtle: 205 95% 96%;
-  --info-subtle-foreground: 207 82% 27%;
+  --info-border: 217 91% 52%;
+  --info-subtle: 217 92% 96%;
+  --info-subtle-foreground: 217 84% 34%;
 
-  --report: 265 62% 46%;
+  --report: 258 90% 66%;
   --report-foreground: 0 0% 100%;
-  --report-border: 265 62% 40%;
+  --report-border: 258 90% 58%;
 
-  --neutral: 215 18% 40%;
+  --neutral: 222 16% 46%;
   --neutral-foreground: 0 0% 100%;
-  --neutral-border: 215 18% 34%;
+  --neutral-border: 222 16% 38%;
 
   /* Shell. Header carries the brand; the sidebar stays neutral so the active
    * item is the only saturated thing in the navigation column. */
@@ -412,24 +415,24 @@
   --header-border: 216 40% 24%;
 
   --sidebar: 0 0% 100%;
-  --sidebar-foreground: 216 30% 24%;
-  --sidebar-border: 214 25% 89%;
-  --sidebar-primary: 213 88% 40%;
+  --sidebar-foreground: 222 42% 14%;
+  --sidebar-border: 220 16% 90%;
+  --sidebar-primary: 221 83% 53%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-primary-border: 213 88% 34%;
-  --sidebar-accent: 210 100% 96%;
-  --sidebar-accent-foreground: 215 78% 27%;
-  --sidebar-accent-border: 209 94% 88%;
-  --sidebar-ring: 213 88% 45%;
+  --sidebar-primary-border: 224 82% 46%;
+  --sidebar-accent: 221 83% 96%;
+  --sidebar-accent-foreground: 221 83% 40%;
+  --sidebar-accent-border: 221 83% 88%;
+  --sidebar-ring: 221 83% 53%;
 
-  --chart-1: 213 88% 45%;
-  --chart-2: 173 58% 36%;
-  --chart-3: 33 88% 48%;
-  --chart-4: 265 58% 55%;
-  --chart-5: 197 72% 42%;
-  --chart-6: 340 62% 50%;
-  --chart-7: 152 48% 38%;
-  --chart-8: 24 70% 45%;
+  --chart-1: 221 83% 53%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 38 92% 50%;
+  --chart-4: 258 90% 66%;
+  --chart-5: 199 89% 48%;
+  --chart-6: 340 75% 55%;
+  --chart-7: 142 71% 45%;
+  --chart-8: 24 88% 52%;
 
   /* Interaction tints consumed by hover-elevate / active-elevate-2. Kept as
    * translucent overlays so one rule works on any surface, brand or status
@@ -450,28 +453,28 @@
 .dark {
   color-scheme: dark;
 
-  --background: 217 33% 9%;
-  --foreground: 210 30% 96%;
+  --background: 222 47% 8%;
+  --foreground: 210 40% 96%;
 
-  --surface: 216 30% 13%;
-  --surface-sunken: 217 33% 7%;
-  --surface-raised: 215 28% 16%;
-  --surface-foreground: 210 30% 96%;
+  --surface: 222 45% 11%;
+  --surface-sunken: 222 47% 6%;
+  --surface-raised: 222 44% 15%;
+  --surface-foreground: 210 40% 96%;
 
-  --border: 216 22% 22%;
-  --border-strong: 215 18% 34%;
-  --input: 216 22% 26%;
-  --ring: 211 92% 62%;
+  --border: 217 33% 20%;
+  --border-strong: 217 33% 32%;
+  --input: 217 33% 22%;
+  --ring: 217 91% 64%;
 
   --shadow-color: 220 60% 3%;
 
-  --card: 216 30% 13%;
-  --card-foreground: 210 30% 96%;
-  --card-border: 216 22% 22%;
+  --card: 222 44% 13%;
+  --card-foreground: 210 40% 96%;
+  --card-border: 217 33% 20%;
 
-  --popover: 215 28% 16%;
-  --popover-foreground: 210 30% 96%;
-  --popover-border: 216 22% 26%;
+  --popover: 222 44% 13%;
+  --popover-foreground: 210 40% 96%;
+  --popover-border: 217 33% 20%;
 
   --brand-50: 216 70% 14%;
   --brand-100: 215 72% 19%;
@@ -484,54 +487,54 @@
   --brand-800: 209 96% 80%;
   --brand-900: 208 98% 89%;
 
-  --primary: 211 92% 62%;
-  --primary-foreground: 217 40% 10%;
-  --primary-border: 211 92% 68%;
-  --primary-muted: 215 60% 20%;
-  --primary-muted-foreground: 209 96% 84%;
+  --primary: 217 91% 64%;
+  --primary-foreground: 0 0% 100%;
+  --primary-border: 217 91% 70%;
+  --primary-muted: 217 44% 24%;
+  --primary-muted-foreground: 217 92% 86%;
 
-  --secondary: 216 24% 20%;
-  --secondary-foreground: 210 28% 92%;
+  --secondary: 217 33% 18%;
+  --secondary-foreground: 210 40% 96%;
   --secondary-border: 216 22% 27%;
 
-  --muted: 216 24% 20%;
-  --muted-foreground: 215 18% 66%;
+  --muted: 217 33% 18%;
+  --muted-foreground: 215 20% 65%;
   --muted-border: 216 22% 26%;
 
-  --accent: 215 55% 22%;
-  --accent-foreground: 209 96% 86%;
+  --accent: 217 40% 22%;
+  --accent-foreground: 210 40% 96%;
   --accent-border: 214 60% 32%;
 
-  --destructive: 356 72% 58%;
-  --destructive-foreground: 217 40% 10%;
+  --destructive: 0 74% 58%;
+  --destructive-foreground: 0 0% 100%;
   --destructive-border: 356 72% 64%;
-  --destructive-subtle: 356 45% 18%;
-  --destructive-subtle-foreground: 356 90% 86%;
+  --destructive-subtle: 0 50% 18%;
+  --destructive-subtle-foreground: 0 86% 86%;
 
-  --success: 152 52% 46%;
-  --success-foreground: 217 40% 10%;
+  --success: 142 69% 52%;
+  --success-foreground: 142 80% 8%;
   --success-border: 152 52% 52%;
-  --success-subtle: 154 40% 15%;
-  --success-subtle-foreground: 150 62% 78%;
+  --success-subtle: 142 44% 16%;
+  --success-subtle-foreground: 142 70% 82%;
 
-  --warning: 36 88% 55%;
-  --warning-foreground: 217 40% 10%;
+  --warning: 38 92% 58%;
+  --warning-foreground: 38 96% 10%;
   --warning-border: 36 88% 61%;
-  --warning-subtle: 32 50% 17%;
-  --warning-subtle-foreground: 40 90% 78%;
+  --warning-subtle: 38 48% 18%;
+  --warning-subtle-foreground: 38 92% 82%;
 
-  --info: 205 88% 58%;
-  --info-foreground: 217 40% 10%;
+  --info: 217 91% 66%;
+  --info-foreground: 217 90% 12%;
   --info-border: 205 88% 64%;
-  --info-subtle: 206 50% 17%;
-  --info-subtle-foreground: 205 92% 82%;
+  --info-subtle: 217 46% 20%;
+  --info-subtle-foreground: 217 92% 86%;
 
-  --report: 265 70% 68%;
-  --report-foreground: 217 40% 10%;
+  --report: 258 90% 74%;
+  --report-foreground: 258 80% 10%;
   --report-border: 265 70% 74%;
 
-  --neutral: 215 16% 55%;
-  --neutral-foreground: 217 40% 10%;
+  --neutral: 215 20% 65%;
+  --neutral-foreground: 222 47% 11%;
   --neutral-border: 215 16% 62%;
 
   --header: 217 36% 12%;
@@ -541,21 +544,21 @@
   --sidebar: 216 30% 12%;
   --sidebar-foreground: 210 24% 84%;
   --sidebar-border: 216 22% 20%;
-  --sidebar-primary: 211 92% 62%;
+  --sidebar-primary: 217 91% 64%;
   --sidebar-primary-foreground: 217 40% 10%;
   --sidebar-primary-border: 211 92% 68%;
-  --sidebar-accent: 215 55% 22%;
-  --sidebar-accent-foreground: 209 96% 86%;
+  --sidebar-accent: 217 40% 22%;
+  --sidebar-accent-foreground: 210 40% 96%;
   --sidebar-accent-border: 214 60% 32%;
-  --sidebar-ring: 211 92% 62%;
+  --sidebar-ring: 217 91% 64%;
 
-  --chart-1: 211 90% 62%;
+  --chart-1: 217 91% 64%;
   --chart-2: 173 55% 50%;
   --chart-3: 36 88% 58%;
-  --chart-4: 265 70% 70%;
+  --chart-4: 258 90% 74%;
   --chart-5: 197 75% 58%;
   --chart-6: 340 70% 65%;
-  --chart-7: 152 50% 52%;
+  --chart-7: 142 69% 52%;
   --chart-8: 24 78% 60%;
 
   --elevate-1: 210 40% 98% / 0.06;

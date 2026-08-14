@@ -8,6 +8,8 @@ import {
   useUpdateRole, 
   useDeleteRole,
   useListPermissions,
+  useListRoleUsers,
+  getListRoleUsersQueryKey,
   getListRolesQueryKey,
   RoleInput,
   Role
@@ -44,6 +46,7 @@ export default function RolesPage() {
   const { data: roles, isLoading } = useListRoles();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
+  const [holdersFor, setHoldersFor] = useState<Role | null>(null);
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -93,15 +96,16 @@ export default function RolesPage() {
               <TableHead>{t("common.name")}</TableHead>
               <TableHead>{t("common.description")}</TableHead>
               <TableHead>{t("roles.system")}</TableHead>
+              <TableHead>{t("roles.permission_count")}</TableHead>
               <TableHead>{t("roles.users")}</TableHead>
               <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
+              <TableState colSpan={6} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : roles?.length === 0 ? (
-              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
+              <TableState colSpan={6} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               roles?.map((role) => (
                 <TableRow key={role.id}>
@@ -110,7 +114,27 @@ export default function RolesPage() {
                   <TableCell>
                     {role.isSystem && <Badge variant="secondary">{t("roles.system")}</Badge>}
                   </TableCell>
-                  <TableCell>{role.userCount}</TableCell>
+                  <TableCell>
+                    {role.permissions.includes("*") ? (
+                      <Badge>{t("roles.full_access")}</Badge>
+                    ) : (
+                      role.permissions.length
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {role.userCount > 0 ? (
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="h-auto p-0"
+                        onClick={() => setHoldersFor(role)}
+                      >
+                        {role.userCount}
+                      </Button>
+                    ) : (
+                      <span className="text-muted-foreground">0</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-end space-x-2">
                     <DocumentsRowAction moduleKey="roles" sourceId={role.id} />
                     <Button variant="ghost" size="icon" onClick={() => setEditingRole(role)}>
@@ -128,6 +152,8 @@ export default function RolesPage() {
           </TableBody>
         </Table>
       </TableFrame>
+
+      <RoleHoldersDialog role={holdersFor} onClose={() => setHoldersFor(null)} />
 
       <Dialog open={!!editingRole} onOpenChange={(open) => !open && setEditingRole(null)}>
         <DialogContent className="max-w-2xl">
@@ -255,5 +281,49 @@ function RoleForm({ role, onSuccess }: { role?: Role; onSuccess: () => void }) {
         </Button>
       </div>
     </form>
+  );
+}
+
+/**
+ * Who holds a role.
+ *
+ * The list already showed a count; this answers the question the count raises.
+ * It reads the server's own endpoint rather than filtering a client-side user
+ * list, so a viewer without `users.view` gets nothing back — the same answer
+ * the API would give any other way of asking.
+ */
+function RoleHoldersDialog({ role, onClose }: { role: Role | null; onClose: () => void }) {
+  const { t } = useLanguage();
+  const { data, isLoading } = useListRoleUsers(role?.id ?? "", {
+    query: { enabled: !!role, queryKey: getListRoleUsersQueryKey(role?.id ?? "") },
+  });
+
+  return (
+    <Dialog open={!!role} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>{`${t("roles.holders")}${role ? ` — ${role.name}` : ""}`}</DialogTitle>
+        </DialogHeader>
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+        ) : (data ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("roles.no_holders")}</p>
+        ) : (
+          <ul className="divide-y">
+            {(data ?? []).map((u) => (
+              <li key={u.id} className="flex items-center justify-between py-2">
+                <div>
+                  <div className="text-sm font-medium">{u.fullName}</div>
+                  <div className="text-xs text-muted-foreground">{u.username}</div>
+                </div>
+                <Badge variant={u.isActive ? "secondary" : "outline"}>
+                  {u.isActive ? t("common.active") : t("common.inactive")}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -64,6 +64,18 @@ export const jobTitlesTable = pgTable("job_titles", {
   grade: text("grade"),
   description: text("description"),
   status: text("status").notNull().default("active"),
+  /**
+   * Marks this job title as one of the company's institutional leadership
+   * posts: `chairman` or `executive_director`.
+   *
+   * The post is the anchor, never a person. Nothing anywhere stores "user X is
+   * the chairman" — the chairman is whoever currently holds the job title
+   * carrying this flag, so a succession is a change to one employee's job
+   * title and every routing rule, permission and correspondence destination
+   * follows automatically. `null` for the ordinary titles, which is nearly all
+   * of them.
+   */
+  leadershipRole: text("leadership_role"),
   ...audit,
 });
 export type JobTitleRow = typeof jobTitlesTable.$inferSelect;

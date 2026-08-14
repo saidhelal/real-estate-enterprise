@@ -21,6 +21,9 @@ export type PageNavGroup = {
 // Authenticated routes that are not part of NAV_GROUPS still get a page crumb.
 const FALLBACK_LABELS: Record<string, string> = {
   "/change-password": "nav.change_password",
+  // Reached from the header bell rather than the navigation list, so it has no
+  // NAV_GROUPS entry to derive a crumb from.
+  "/notifications": "nav.notifications_center",
 };
 
 type NavMatch = {

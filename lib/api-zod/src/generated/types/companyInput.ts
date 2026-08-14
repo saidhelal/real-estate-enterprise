@@ -18,4 +18,18 @@ export interface CompanyInput {
   phone?: string;
   address?: string;
   baseCurrency?: string;
+  legalName?: string;
+  legalNameAr?: string;
+  tradeName?: string;
+  legalForm?: string;
+  commercialRegister?: string;
+  website?: string;
+  logoUrl?: string;
+  officialEmail?: string;
+  fax?: string;
+  poBox?: string;
+  representativeName?: string;
+  representativeTitle?: string;
+  printHeader?: string;
+  printFooter?: string;
 }

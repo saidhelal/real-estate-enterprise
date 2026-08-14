@@ -22,4 +22,8 @@ export interface CorrespondenceUpdate {
   assignedToEmployeeId?: string;
   attachmentUrl?: string;
   notes?: string;
+  /** @nullable */
+  replyDueDate?: string | null;
+  /** @nullable */
+  body?: string | null;
 }

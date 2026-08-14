@@ -126,6 +126,49 @@ export interface CrudConfig {
   hooks?: CrudHooks;
 }
 
+/**
+ * The company a request is confined to, or null for an unconfined caller.
+ *
+ * Company scoping used to be whatever `?companyId=` the caller happened to
+ * send, which is a filter, not a boundary: dropping the parameter returned
+ * every company's rows, and changing it returned someone else's. A tenant
+ * column that only the client decides to apply is not isolation.
+ *
+ * So it is read from the session instead. A user carrying a `companyId` is
+ * pinned to it and cannot widen or redirect the scope from the query string.
+ * A user without one — service accounts, the platform administrator, and every
+ * row that predates the column — keeps the previous behaviour exactly, which
+ * is what makes this safe to put in the shared engine rather than in each of
+ * the forty-odd modules that would otherwise each need their own copy.
+ */
+function callerCompanyId(req: Request): string | null {
+  return req.authUser?.companyId ?? null;
+}
+
+/**
+ * Does this table carry a company column at all? Reference tables like
+ * currencies and lookup types are deliberately global, and scoping them would
+ * empty them out for every tenant user.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function hasCompanyColumn(t: any): boolean {
+  return Boolean(t?.companyId);
+}
+
+/**
+ * Is this row outside the caller's company?
+ *
+ * Answered as "not found" rather than "forbidden" wherever it is used: a 403
+ * on a foreign id confirms the id exists, which turns a blocked read into a
+ * working existence oracle over another tenant's data.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function outOfScope(t: any, row: Row, req: Request): boolean {
+  const scope = callerCompanyId(req);
+  if (!scope || !hasCompanyColumn(t)) return false;
+  return String(row.companyId ?? "") !== scope;
+}
+
 /** Resolve the two historical spellings to one internal shape. */
 function normalise(cfg: CrudConfig) {
   // One family wrote "units", the other "/units". Strip the slash so the
@@ -163,8 +206,12 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
     const companyId = qStr(query, "companyId");
 
     const conds: SQL[] = [eq(t.isDeleted, false)];
-    // Company scoping stays an explicit predicate, exactly as every copy had it.
-    if (companyId) conds.push(eq(t.companyId, companyId));
+    // Company scoping stays an explicit predicate, exactly as every copy had
+    // it — but a caller pinned to a company overrides whatever was asked for,
+    // so a missing or foreign `?companyId=` cannot widen the result set.
+    const scope = callerCompanyId(req);
+    const effectiveCompanyId = hasCompanyColumn(t) && scope ? scope : companyId;
+    if (effectiveCompanyId) conds.push(eq(t.companyId, effectiveCompanyId));
     for (const col of filterCols) {
       const v = qStr(query, col);
       if (v) conds.push(eq(t[col], v));
@@ -202,7 +249,7 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
         .from(t)
         .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Row[];
       const row = found[0];
-      if (!row) {
+      if (!row || outOfScope(t, row, req)) {
         res.status(404).json({ error: cfg.notFoundMessage ?? `${cfg.entity} not found` });
         return;
       }
@@ -220,6 +267,10 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
       return;
     }
     const values = { ...(parsed.data as Row) };
+    // A pinned caller writes into their own company whatever the body claimed;
+    // otherwise a create is an unchecked way to plant rows in another tenant.
+    const createScope = callerCompanyId(req);
+    if (createScope && hasCompanyColumn(t)) values.companyId = createScope;
     hooks.derive?.(values);
 
     // A transactional hook makes the whole create atomic: if it throws, the
@@ -266,7 +317,7 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
       .from(t)
       .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Row[];
     const existing = existingRows[0];
-    if (!existing) {
+    if (!existing || outOfScope(t, existing, req)) {
       res.status(404).json({ error: cfg.notFoundMessage ?? `${cfg.entity} not found` });
       return;
     }
@@ -288,6 +339,10 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
       if (v !== undefined) update[k] = v;
     }
     for (const field of cfg.immutableFields ?? []) delete update[field];
+    // Several update schemas accept `companyId`. For a pinned caller that would
+    // be a one-field way to hand a row to another tenant, so it is dropped
+    // rather than rejected — the rest of the edit still applies.
+    if (callerCompanyId(req) && hasCompanyColumn(t)) delete update.companyId;
     hooks.derive?.(update);
     hooks.prepareUpdate?.(update, existing);
 
@@ -332,7 +387,7 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
       .from(t)
       .where(and(eq(t.id, id), eq(t.isDeleted, false)))) as Row[];
     const existing = existingRows[0];
-    if (!existing) {
+    if (!existing || outOfScope(t, existing, req)) {
       res.status(404).json({ error: cfg.notFoundMessage ?? `${cfg.entity} not found` });
       return;
     }

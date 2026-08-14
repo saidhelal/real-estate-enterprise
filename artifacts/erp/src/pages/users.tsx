@@ -1,9 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLanguage } from "@/lib/language-provider";
 import { PageHeader } from "@/components/ui/page-header";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
-import { 
-  useListUsers, 
+import { Toolbar, ToolbarStart, ToolbarEnd } from "@/components/ui/toolbar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  useListUsers,
+  useListEmployees, 
   useCreateUser, 
   useUpdateUser, 
   useDeleteUser,
@@ -33,7 +42,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TableState } from "@/components/ui/states";
-import { Plus, Search, Pencil, Trash2, KeyRound, UserCheck, UserX, ShieldCheck } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, KeyRound, UserCheck, UserX, ShieldCheck, ListChecks } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
@@ -64,7 +73,25 @@ function isPendingApproval(result: unknown): boolean {
 export default function UsersPage() {
   const { t } = useLanguage();
   const [search, setSearch] = useState("");
-  const { data: users, isLoading } = useListUsers({ search: search || undefined });
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [permissionsFor, setPermissionsFor] = useState<User | null>(null);
+  const { data: allUsers, isLoading } = useListUsers({ search: search || undefined });
+  const { data: employees } = useListEmployees({ pageSize: 300 });
+
+  // Status is filtered here rather than server-side because the list endpoint
+  // takes no status parameter; adding one to the contract for a handful of
+  // rows would be a change to the API for a purely presentational choice.
+  const users = (allUsers ?? []).filter(
+    (u) => statusFilter === "all" || u.status === statusFilter,
+  );
+
+  /** The employee behind a login, if it is attached to one. */
+  const employeeOf = (user: User) => {
+    if (!user.employeeId) return null;
+    const e = employees?.data?.find((x) => x.id === user.employeeId);
+    if (!e) return null;
+    return [e.firstName, e.lastName].filter(Boolean).join(" ") || e.code;
+  };
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [resettingUser, setResettingUser] = useState<User | null>(null);
@@ -140,14 +167,37 @@ export default function UsersPage() {
         </Dialog>
       </div>
 
-      <div className="flex items-center gap-2 max-w-sm">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <Input 
-          placeholder={t("common.search")} 
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+      <Toolbar>
+        <ToolbarStart>
+          <div className="flex items-center gap-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <Input
+              className="w-[220px]"
+              placeholder={t("common.search")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("users.all_statuses")}</SelectItem>
+              <SelectItem value="active">{t("common.active")}</SelectItem>
+              <SelectItem value="inactive">{t("common.inactive")}</SelectItem>
+              <SelectItem value="locked">{t("common.locked")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </ToolbarStart>
+        <ToolbarEnd>
+          <span className="text-sm text-muted-foreground">
+            {`${users.length} / ${allUsers?.length ?? 0}`}
+          </span>
+        </ToolbarEnd>
+      </Toolbar>
+
+      <EffectivePermissionsDialog user={permissionsFor} onClose={() => setPermissionsFor(null)} />
 
       <TableFrame>
         <Table>
@@ -156,21 +206,45 @@ export default function UsersPage() {
               <TableHead>{t("common.name")}</TableHead>
               <TableHead>{t("common.username")}</TableHead>
               <TableHead>{t("common.email")}</TableHead>
+              <TableHead>{t("users.employee")}</TableHead>
+              <TableHead>{t("users.roles")}</TableHead>
+              <TableHead>{t("users.last_login")}</TableHead>
               <TableHead>{t("common.status")}</TableHead>
               <TableHead className="text-end">{t("common.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableState colSpan={5} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
+              <TableState colSpan={8} isLoading loadingLabel={t("common.loading")} emptyTitle={t("common.no_results")} />
             ) : users?.length === 0 ? (
-              <TableState colSpan={5} isEmpty emptyTitle={t("common.no_results")} />
+              <TableState colSpan={8} isEmpty emptyTitle={t("common.no_results")} />
             ) : (
               users?.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.fullName}</TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {employeeOf(user) ?? (
+                      <span className="text-xs text-muted-foreground">{t("users.no_employee")}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {(user.roles ?? []).length === 0 ? (
+                        <span className="text-xs text-muted-foreground">{t("users.no_roles")}</span>
+                      ) : (
+                        (user.roles ?? []).map((r) => (
+                          <Badge key={r.id} variant="secondary">
+                            {r.name}
+                          </Badge>
+                        ))
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : "—"}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={user.isActive ? "default" : "secondary"}>
                       {user.status}
@@ -192,6 +266,10 @@ export default function UsersPage() {
                         <DropdownMenuItem onClick={() => setResettingUser(user)}>
                           <KeyRound className="me-2 h-4 w-4" />
                           {t("users.reset_password")}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setPermissionsFor(user)}>
+                          <ListChecks className="me-2 h-4 w-4" />
+                          {t("users.effective_permissions")}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setScopingUser(user)}>
                           <ShieldCheck className="me-2 h-4 w-4" />
@@ -550,5 +628,88 @@ function UserForm({ user, onSuccess }: { user?: User; onSuccess: () => void }) {
         </Button>
       </div>
     </form>
+  );
+}
+
+/**
+ * What this user can actually do.
+ *
+ * Permissions are not granted to people here — they are granted to roles, and
+ * a person holds the union of their roles'. Showing that union, grouped by
+ * resource and labelled with the role it came from, is what makes an
+ * administrator able to answer "why can they do that" without opening every
+ * role in turn.
+ */
+function EffectivePermissionsDialog({
+  user,
+  onClose,
+}: {
+  user: User | null;
+  onClose: () => void;
+}) {
+  const { t } = useLanguage();
+
+  const { wildcard, byModule, sourceOf } = useMemo(() => {
+    const source = new Map<string, string[]>();
+    let star = false;
+    for (const role of user?.roles ?? []) {
+      for (const code of role.permissions ?? []) {
+        if (code === "*") star = true;
+        source.set(code, [...(source.get(code) ?? []), role.name]);
+      }
+    }
+    const grouped = new Map<string, string[]>();
+    for (const code of source.keys()) {
+      if (code === "*") continue;
+      const i = code.indexOf(".");
+      const mod = i < 0 ? code : code.slice(0, i);
+      grouped.set(mod, [...(grouped.get(mod) ?? []), code].sort());
+    }
+    return {
+      wildcard: star,
+      byModule: [...grouped.entries()].sort(([a], [b]) => a.localeCompare(b)),
+      sourceOf: source,
+    };
+  }, [user]);
+
+  return (
+    <Dialog open={!!user} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {`${t("users.effective_permissions")}${user ? ` — ${user.fullName}` : ""}`}
+          </DialogTitle>
+        </DialogHeader>
+        <p className="text-xs text-muted-foreground">{t("users.inherited_hint")}</p>
+        {wildcard ? (
+          <div className="rounded-md border p-4">
+            <Badge className="mb-2">{t("roles.full_access")}</Badge>
+            <p className="text-sm text-muted-foreground">{t("users.wildcard_hint")}</p>
+          </div>
+        ) : byModule.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("users.no_permissions")}</p>
+        ) : (
+          <div className="space-y-3">
+            {byModule.map(([mod, codes]) => (
+              <div key={mod} className="rounded-md border p-3">
+                <p className="mb-2 text-sm font-semibold capitalize">
+                  {mod.replace(/([a-z0-9])([A-Z])/g, "$1 $2")}
+                </p>
+                <ul className="grid gap-1 sm:grid-cols-2">
+                  {codes.map((code) => (
+                    <li key={code} className="text-xs">
+                      <span className="font-mono">{code}</span>
+                      <span className="ms-2 text-muted-foreground">
+                        {(sourceOf.get(code) ?? []).join(", ")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

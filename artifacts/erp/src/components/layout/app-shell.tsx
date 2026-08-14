@@ -6,6 +6,8 @@ import { useLanguage } from "@/lib/language-provider";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/components/theme-provider";
 import { PageNav } from "@/components/layout/page-nav";
+import { DesktopNav } from "@/components/layout/desktop-nav";
+import { HeaderActions } from "@/components/layout/header-actions";
 import { EnterpriseAssistant } from "@/components/ai/enterprise-assistant";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -23,15 +25,20 @@ import {
   Hammer, FileBox, Award, GitPullRequestArrow, MinusCircle, PlusCircle,
   ShieldMinus, Coins, RotateCcw, FileSpreadsheet, CheckSquare, BarChart3,
   Truck, ShoppingCart, PackageCheck, PackageX, Store, Undo2,
-  Gavel, Scroll, Landmark, UserCog, Bell, FileSignature as FileSign,
+  Gavel, Scroll, Landmark, UserCog, Bell, Briefcase, FileSignature as FileSign,
   LandPlot, Map as MapIcon, ScrollText, Trees, FolderArchive, Handshake,
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
   Inbox, PhoneCall, Star, Printer, FlaskConical,
   Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
-  Share2, GitBranch,
+  Share2, GitBranch, Grid3x3,
   type LucideIcon,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  useListCompanies,
+  useGetNotificationsDashboard,
+  getGetNotificationsDashboardQueryKey,
+} from "@workspace/api-client-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -42,7 +49,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type NavItem = { href: string; icon: LucideIcon; labelKey: string };
+/**
+ * `permission` hides the entry from anyone who does not hold that code.
+ *
+ * Optional, and absent on every pre-existing entry: navigation has never been
+ * the access control — the server refuses the request either way — so adding
+ * the field cannot change who can reach what. What it fixes is the experience
+ * of being offered a screen that will only answer 403. The two ad-hoc href
+ * sets below predate it and stay as they are; new entries use this instead of
+ * growing a third special case.
+ */
+type NavItem = { href: string; icon: LucideIcon; labelKey: string; permission?: string };
 type NavSubGroup = { titleKey: string; items: NavItem[] };
 type NavGroup = { titleKey: string; items: NavItem[]; subGroups?: NavSubGroup[] };
 
@@ -50,7 +67,6 @@ const RAW_NAV_GROUPS: NavGroup[] = [
   { titleKey: "nav.group.general", items: [
     { href: "/", icon: Home, labelKey: "nav.home" },
     { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
-    { href: "/notifications", icon: Bell, labelKey: "nav.notifications_center" },
   ]},
   { titleKey: "nav.group.edms", items: [
     { href: "/documents-dashboard", icon: LayoutDashboard, labelKey: "nav.documents_dashboard" },
@@ -64,6 +80,9 @@ const RAW_NAV_GROUPS: NavGroup[] = [
     { href: "/crm-dashboard", icon: LayoutDashboard, labelKey: "nav.crm_dashboard" },
     { href: "/my-work", icon: ClipboardList, labelKey: "nav.my_work" },
     { href: "/leads", icon: UserPlus, labelKey: "nav.leads" },
+    // The customer register: a real screen the Sales launcher tile already
+    // pointed at, with no menu entry of its own until now.
+    { href: "/customers", icon: Contact, labelKey: "nav.customers" },
     { href: "/available-units", icon: Home, labelKey: "nav.available_units" },
     { href: "/crm-sales", icon: FileSign, labelKey: "nav.crm_sales" },
     { href: "/lead-follow-ups", icon: CalendarClock, labelKey: "nav.lead_follow_ups" },
@@ -200,76 +219,114 @@ const RAW_NAV_GROUPS: NavGroup[] = [
       { href: "/forms-printing/engineering", icon: Printer, labelKey: "nav.forms_printing" },
     ]},
   ]},
-  { titleKey: "nav.group.procurement", items: [
-    { href: "/procurement-dashboard", icon: Package, labelKey: "nav.procurement_dashboard" },
-    { href: "/supplier-categories", icon: Layers, labelKey: "nav.supplier_categories" },
-    { href: "/suppliers", icon: Store, labelKey: "nav.suppliers" },
-    { href: "/supplier-contacts", icon: Contact, labelKey: "nav.supplier_contacts" },
-    { href: "/supplier-evaluations", icon: BadgeCheck, labelKey: "nav.supplier_evaluations" },
-    { href: "/purchase-requests", icon: ClipboardList, labelKey: "nav.purchase_requests" },
-    { href: "/purchase-request-items", icon: ListOrdered, labelKey: "nav.purchase_request_items" },
-    { href: "/rfqs", icon: FileSearch, labelKey: "nav.rfqs" },
-    { href: "/rfq-items", icon: ListOrdered, labelKey: "nav.rfq_items" },
-    { href: "/rfq-suppliers", icon: Users, labelKey: "nav.rfq_suppliers" },
-    { href: "/supplier-quotations", icon: FileText, labelKey: "nav.supplier_quotations" },
-    { href: "/quotation-items", icon: ListOrdered, labelKey: "nav.quotation_items" },
-    { href: "/purchase-orders", icon: ShoppingCart, labelKey: "nav.purchase_orders" },
-    { href: "/purchase-order-items", icon: ListOrdered, labelKey: "nav.purchase_order_items" },
-    { href: "/purchase-contracts", icon: FileSignature, labelKey: "nav.purchase_contracts" },
-    { href: "/purchase-contract-amendments", icon: FilePen, labelKey: "nav.purchase_contract_amendments" },
-    { href: "/goods-receipt-notes", icon: PackageCheck, labelKey: "nav.goods_receipt_notes" },
-    { href: "/grn-items", icon: Boxes, labelKey: "nav.grn_items" },
-    { href: "/purchase-returns", icon: Undo2, labelKey: "nav.purchase_returns" },
-    { href: "/purchase-return-items", icon: PackageX, labelKey: "nav.purchase_return_items" },
-    { href: "/procurement-approvals", icon: CheckSquare, labelKey: "nav.procurement_approvals" },
-    { href: "/procurement-reports", icon: BarChart3, labelKey: "nav.procurement_reports" },
-    { href: "/inventory-dashboard", icon: Gauge, labelKey: "nav.inventory_dashboard" },
-    { href: "/warehouses", icon: Store, labelKey: "nav.warehouses" },
-    { href: "/warehouse-locations", icon: MapPin, labelKey: "nav.warehouse_locations" },
-    { href: "/item-categories", icon: Layers, labelKey: "nav.item_categories" },
-    { href: "/item-groups", icon: Library, labelKey: "nav.item_groups" },
-    { href: "/units-of-measure", icon: Ruler, labelKey: "nav.units_of_measure" },
-    { href: "/inventory-items", icon: Package, labelKey: "nav.inventory_items" },
-    { href: "/reorder-levels", icon: AlertTriangle, labelKey: "nav.reorder_levels" },
-    { href: "/stock-opening-balances", icon: FileBox, labelKey: "nav.stock_opening_balances" },
-    { href: "/goods-receipts", icon: PackageCheck, labelKey: "nav.goods_receipts" },
-    { href: "/goods-receipt-items", icon: ListOrdered, labelKey: "nav.goods_receipt_items" },
-    { href: "/goods-issues", icon: PackageX, labelKey: "nav.goods_issues" },
-    { href: "/goods-issue-items", icon: ListOrdered, labelKey: "nav.goods_issue_items" },
-    { href: "/inventory-transfers", icon: ArrowLeftRight, labelKey: "nav.inventory_transfers" },
-    { href: "/inventory-transfer-items", icon: ListOrdered, labelKey: "nav.inventory_transfer_items" },
-    { href: "/stock-adjustments", icon: Scale, labelKey: "nav.stock_adjustments" },
-    { href: "/stock-adjustment-items", icon: ListOrdered, labelKey: "nav.stock_adjustment_items" },
-    { href: "/stock-counts", icon: ClipboardCheck, labelKey: "nav.stock_counts" },
-    { href: "/stock-count-items", icon: ListOrdered, labelKey: "nav.stock_count_items" },
-    { href: "/inventory-ledger", icon: BookOpen, labelKey: "nav.inventory_ledger" },
-    { href: "/inventory-reports", icon: BarChart3, labelKey: "nav.inventory_reports" },
+  { titleKey: "nav.group.procurement", items: [], subGroups: [
+    { titleKey: "nav.section.proc_suppliers", items: [
+      { href: "/supplier-categories", icon: Layers, labelKey: "nav.supplier_categories" },
+      { href: "/suppliers", icon: Store, labelKey: "nav.suppliers" },
+      { href: "/supplier-contacts", icon: Contact, labelKey: "nav.supplier_contacts" },
+      { href: "/supplier-evaluations", icon: BadgeCheck, labelKey: "nav.supplier_evaluations" },
+    ]},
+    { titleKey: "nav.section.proc_purchasing", items: [
+      { href: "/procurement-dashboard", icon: Package, labelKey: "nav.procurement_dashboard" },
+      { href: "/purchase-requests", icon: ClipboardList, labelKey: "nav.purchase_requests" },
+      { href: "/purchase-request-items", icon: ListOrdered, labelKey: "nav.purchase_request_items" },
+      { href: "/rfqs", icon: FileSearch, labelKey: "nav.rfqs" },
+      { href: "/rfq-items", icon: ListOrdered, labelKey: "nav.rfq_items" },
+      { href: "/rfq-suppliers", icon: Users, labelKey: "nav.rfq_suppliers" },
+      { href: "/supplier-quotations", icon: FileText, labelKey: "nav.supplier_quotations" },
+      { href: "/quotation-items", icon: ListOrdered, labelKey: "nav.quotation_items" },
+      { href: "/purchase-orders", icon: ShoppingCart, labelKey: "nav.purchase_orders" },
+      { href: "/purchase-order-items", icon: ListOrdered, labelKey: "nav.purchase_order_items" },
+      { href: "/purchase-contracts", icon: FileSignature, labelKey: "nav.purchase_contracts" },
+      { href: "/purchase-contract-amendments", icon: FilePen, labelKey: "nav.purchase_contract_amendments" },
+    ]},
+    { titleKey: "nav.section.proc_receiving", items: [
+      { href: "/goods-receipt-notes", icon: PackageCheck, labelKey: "nav.goods_receipt_notes" },
+      { href: "/grn-items", icon: Boxes, labelKey: "nav.grn_items" },
+      { href: "/purchase-returns", icon: Undo2, labelKey: "nav.purchase_returns" },
+      { href: "/purchase-return-items", icon: PackageX, labelKey: "nav.purchase_return_items" },
+      { href: "/procurement-approvals", icon: CheckSquare, labelKey: "nav.procurement_approvals" },
+      { href: "/procurement-reports", icon: BarChart3, labelKey: "nav.procurement_reports" },
+    ]},
+    { titleKey: "nav.section.inv_setup", items: [
+      { href: "/inventory-dashboard", icon: Gauge, labelKey: "nav.inventory_dashboard" },
+      { href: "/warehouses", icon: Store, labelKey: "nav.warehouses" },
+      { href: "/warehouse-locations", icon: MapPin, labelKey: "nav.warehouse_locations" },
+      { href: "/item-categories", icon: Layers, labelKey: "nav.item_categories" },
+      { href: "/item-groups", icon: Library, labelKey: "nav.item_groups" },
+      { href: "/units-of-measure", icon: Ruler, labelKey: "nav.units_of_measure" },
+      { href: "/inventory-items", icon: Package, labelKey: "nav.inventory_items" },
+      { href: "/reorder-levels", icon: AlertTriangle, labelKey: "nav.reorder_levels" },
+    ]},
+    { titleKey: "nav.section.inv_movements", items: [
+      { href: "/stock-opening-balances", icon: FileBox, labelKey: "nav.stock_opening_balances" },
+      { href: "/goods-receipts", icon: PackageCheck, labelKey: "nav.goods_receipts" },
+      { href: "/goods-receipt-items", icon: ListOrdered, labelKey: "nav.goods_receipt_items" },
+      { href: "/goods-issues", icon: PackageX, labelKey: "nav.goods_issues" },
+      { href: "/goods-issue-items", icon: ListOrdered, labelKey: "nav.goods_issue_items" },
+      { href: "/inventory-transfers", icon: ArrowLeftRight, labelKey: "nav.inventory_transfers" },
+      { href: "/inventory-transfer-items", icon: ListOrdered, labelKey: "nav.inventory_transfer_items" },
+    ]},
+    { titleKey: "nav.section.inv_control", items: [
+      { href: "/stock-adjustments", icon: Scale, labelKey: "nav.stock_adjustments" },
+      { href: "/stock-adjustment-items", icon: ListOrdered, labelKey: "nav.stock_adjustment_items" },
+      { href: "/stock-counts", icon: ClipboardCheck, labelKey: "nav.stock_counts" },
+      { href: "/stock-count-items", icon: ListOrdered, labelKey: "nav.stock_count_items" },
+      { href: "/inventory-ledger", icon: BookOpen, labelKey: "nav.inventory_ledger" },
+      { href: "/inventory-reports", icon: BarChart3, labelKey: "nav.inventory_reports" },
+    ]},
   ]},
   { titleKey: "nav.group.hr", items: [
     { href: "/hr-dashboard", icon: Gauge, labelKey: "nav.hr_dashboard" },
-    { href: "/departments", icon: Network, labelKey: "nav.departments" },
-    { href: "/sections", icon: Rows3, labelKey: "nav.sections" },
-    { href: "/job-titles", icon: BadgeCheck, labelKey: "nav.job_titles" },
-    { href: "/employees", icon: Users, labelKey: "nav.employees" },
-    { href: "/employee-documents", icon: FileText, labelKey: "nav.employee_documents" },
-    { href: "/shifts", icon: CalendarClock, labelKey: "nav.shifts" },
-    { href: "/attendance", icon: UserCheck, labelKey: "nav.attendance" },
-    { href: "/leave-types", icon: Layers, labelKey: "nav.leave_types" },
-    { href: "/leave-balances", icon: Scale, labelKey: "nav.leave_balances" },
-    { href: "/leave-requests", icon: CalendarRange, labelKey: "nav.leave_requests" },
-    { href: "/salary-components", icon: Coins, labelKey: "nav.salary_components" },
-    { href: "/payroll-periods", icon: CalendarDays, labelKey: "nav.payroll_periods" },
-    { href: "/payroll-runs", icon: Calculator, labelKey: "nav.payroll_runs" },
-    { href: "/payslips", icon: Receipt, labelKey: "nav.payslips" },
-    { href: "/employee-loans", icon: PiggyBank, labelKey: "nav.employee_loans" },
-    { href: "/employee-advances", icon: Wallet, labelKey: "nav.employee_advances" },
-    { href: "/kpi-templates", icon: GanttChartSquare, labelKey: "nav.kpi_templates" },
-    { href: "/employee-evaluations", icon: Award, labelKey: "nav.employee_evaluations" },
-    { href: "/hr-reports", icon: BarChart3, labelKey: "nav.hr_reports" },
+  ], subGroups: [
+    { titleKey: "nav.section.hr_org", items: [
+      { href: "/departments", icon: Network, labelKey: "nav.departments" },
+      { href: "/sections", icon: Rows3, labelKey: "nav.sections" },
+      { href: "/job-titles", icon: BadgeCheck, labelKey: "nav.job_titles" },
+    ]},
+    { titleKey: "nav.section.hr_people", items: [
+      { href: "/employees", icon: Users, labelKey: "nav.employees" },
+      { href: "/employee-documents", icon: FileText, labelKey: "nav.employee_documents" },
+    ]},
+    { titleKey: "nav.section.hr_time", items: [
+      { href: "/shifts", icon: CalendarClock, labelKey: "nav.shifts" },
+      { href: "/attendance", icon: UserCheck, labelKey: "nav.attendance" },
+      { href: "/leave-types", icon: Layers, labelKey: "nav.leave_types" },
+      { href: "/leave-balances", icon: Scale, labelKey: "nav.leave_balances" },
+      { href: "/leave-requests", icon: CalendarRange, labelKey: "nav.leave_requests" },
+    ]},
+    { titleKey: "nav.section.hr_payroll", items: [
+      { href: "/salary-components", icon: Coins, labelKey: "nav.salary_components" },
+      { href: "/payroll-periods", icon: CalendarDays, labelKey: "nav.payroll_periods" },
+      { href: "/payroll-runs", icon: Calculator, labelKey: "nav.payroll_runs" },
+      { href: "/payslips", icon: Receipt, labelKey: "nav.payslips" },
+      { href: "/employee-loans", icon: PiggyBank, labelKey: "nav.employee_loans" },
+      { href: "/employee-advances", icon: Wallet, labelKey: "nav.employee_advances" },
+    ]},
+    { titleKey: "nav.section.hr_performance", items: [
+      { href: "/kpi-templates", icon: GanttChartSquare, labelKey: "nav.kpi_templates" },
+      { href: "/employee-evaluations", icon: Award, labelKey: "nav.employee_evaluations" },
+    ]},
+    { titleKey: "nav.section.hr_reports", items: [
+      { href: "/hr-reports", icon: BarChart3, labelKey: "nav.hr_reports" },
+    ]},
   ]},
-  { titleKey: "nav.group.legal", items: [
-    { href: "/legal-dashboard", icon: Gauge, labelKey: "nav.legal_dashboard" },
-    { href: "/legal-approvals", icon: Gavel, labelKey: "nav.legal_approvals" },
+  // Contract Management — its own department.
+  //
+  // These screens were filed under Legal for organisational reasons only: the
+  // register behind them (`legal_contracts`) carries a `sourceModule` of
+  // sales | construction | procurement | legal, so it was never a legal-only
+  // artefact. Ownership moves here; nothing else does. The entity, its routes,
+  // its per-resource permissions (`legalContracts.*`, `contractTemplates.*`, …)
+  // and every integration stay exactly where they were, because moving a nav
+  // group is a labelling change, not a data change.
+  //
+  // `/contracts` — the sale contract screen — joins them. It had a declared
+  // route and a working page but no navigation entry at all, so the one screen
+  // that creates and edits a contract was reachable only from inside the sales
+  // workflow. That gap closes here.
+  { titleKey: "nav.group.contracts", items: [
+    { href: "/contracts", icon: FileSignature, labelKey: "nav.contracts" },
     { href: "/legal-contracts", icon: FileSign, labelKey: "nav.legal_contracts" },
     { href: "/contract-templates", icon: FileStack, labelKey: "nav.contract_templates" },
     { href: "/contract-versions", icon: FileText, labelKey: "nav.contract_versions" },
@@ -277,6 +334,13 @@ const RAW_NAV_GROUPS: NavGroup[] = [
     { href: "/contract-addendums", icon: FileCheck, labelKey: "nav.contract_addendums" },
     { href: "/legal-contract-attachments", icon: FileBox, labelKey: "nav.legal_contract_attachments" },
     { href: "/contract-events", icon: History, labelKey: "nav.contract_events" },
+  ]},
+  // Legal keeps what is genuinely legal work: disputes, and the review gate a
+  // contract passes THROUGH. Approval is not ownership — the contract is still
+  // managed above; Legal only rules on it.
+  { titleKey: "nav.group.legal", items: [
+    { href: "/legal-dashboard", icon: Gauge, labelKey: "nav.legal_dashboard" },
+    { href: "/legal-approvals", icon: Gavel, labelKey: "nav.legal_approvals" },
     { href: "/law-firms", icon: Landmark, labelKey: "nav.law_firms" },
     { href: "/legal-advisors", icon: UserCog, labelKey: "nav.legal_advisors" },
     { href: "/legal-cases", icon: Gavel, labelKey: "nav.legal_cases" },
@@ -298,23 +362,32 @@ const RAW_NAV_GROUPS: NavGroup[] = [
   ]},
   { titleKey: "nav.group.customer_service", items: [
     { href: "/customer-service-dashboard", icon: MessageSquare, labelKey: "nav.customer_service_dashboard" },
-    { href: "/support-tickets", icon: Inbox, labelKey: "nav.support_tickets" },
-    { href: "/complaints", icon: AlertTriangle, labelKey: "nav.complaints" },
-    { href: "/service-escalations", icon: Bell, labelKey: "nav.service_escalations" },
-    { href: "/call-logs", icon: PhoneCall, labelKey: "nav.call_logs" },
-    { href: "/sla-policies", icon: ClipboardList, labelKey: "nav.sla_policies" },
-    { href: "/handover-dashboard", icon: ClipboardCheck, labelKey: "nav.handover_dashboard" },
-    { href: "/handover-requests", icon: FileCheck, labelKey: "nav.handover_requests" },
-    { href: "/handover-schedules", icon: CalendarClock, labelKey: "nav.handover_schedules" },
-    { href: "/handover-checklist-items", icon: CheckSquare, labelKey: "nav.handover_checklist_items" },
-    { href: "/handover-minutes", icon: FileText, labelKey: "nav.handover_minutes" },
-    { href: "/handover-snags", icon: AlertTriangle, labelKey: "nav.handover_snags" },
-    { href: "/handover-approvals", icon: ShieldCheck, labelKey: "nav.handover_approvals" },
-    { href: "/maintenance-requests", icon: Wrench, labelKey: "nav.maintenance_requests" },
-    { href: "/work-orders", icon: Hammer, labelKey: "nav.work_orders" },
-    { href: "/customer-satisfaction-surveys", icon: Star, labelKey: "nav.customer_satisfaction_surveys" },
-    { href: "/handover-reports", icon: BarChart3, labelKey: "nav.handover_reports" },
-    { href: "/customer-service-reports", icon: BarChart3, labelKey: "nav.customer_service_reports" },
+  ], subGroups: [
+    { titleKey: "nav.section.cs_support", items: [
+      { href: "/support-tickets", icon: Inbox, labelKey: "nav.support_tickets" },
+      { href: "/complaints", icon: AlertTriangle, labelKey: "nav.complaints" },
+      { href: "/service-escalations", icon: Bell, labelKey: "nav.service_escalations" },
+      { href: "/call-logs", icon: PhoneCall, labelKey: "nav.call_logs" },
+      { href: "/sla-policies", icon: ClipboardList, labelKey: "nav.sla_policies" },
+    ]},
+    { titleKey: "nav.section.cs_handover", items: [
+      { href: "/handover-dashboard", icon: ClipboardCheck, labelKey: "nav.handover_dashboard" },
+      { href: "/handover-requests", icon: FileCheck, labelKey: "nav.handover_requests" },
+      { href: "/handover-schedules", icon: CalendarClock, labelKey: "nav.handover_schedules" },
+      { href: "/handover-checklist-items", icon: CheckSquare, labelKey: "nav.handover_checklist_items" },
+      { href: "/handover-minutes", icon: FileText, labelKey: "nav.handover_minutes" },
+      { href: "/handover-snags", icon: AlertTriangle, labelKey: "nav.handover_snags" },
+      { href: "/handover-approvals", icon: ShieldCheck, labelKey: "nav.handover_approvals" },
+    ]},
+    { titleKey: "nav.section.cs_maintenance", items: [
+      { href: "/maintenance-requests", icon: Wrench, labelKey: "nav.maintenance_requests" },
+      { href: "/work-orders", icon: Hammer, labelKey: "nav.work_orders" },
+    ]},
+    { titleKey: "nav.section.cs_reports", items: [
+      { href: "/customer-satisfaction-surveys", icon: Star, labelKey: "nav.customer_satisfaction_surveys" },
+      { href: "/handover-reports", icon: BarChart3, labelKey: "nav.handover_reports" },
+      { href: "/customer-service-reports", icon: BarChart3, labelKey: "nav.customer_service_reports" },
+    ]},
   ]},
   { titleKey: "nav.group.marketing", items: [
     { href: "/marketing-dashboard", icon: LayoutDashboard, labelKey: "nav.marketing_dashboard" },
@@ -329,73 +402,122 @@ const RAW_NAV_GROUPS: NavGroup[] = [
   ]},
   { titleKey: "nav.group.general_admin", items: [
     { href: "/general-admin-dashboard", icon: LayoutDashboard, labelKey: "nav.general_admin_dashboard" },
-    { href: "/correspondence", icon: FileText, labelKey: "nav.correspondence" },
-    { href: "/meetings", icon: CalendarClock, labelKey: "nav.meetings" },
-    { href: "/administrative-decisions", icon: Gavel, labelKey: "nav.administrative_decisions" },
-    { href: "/administrative-tasks", icon: CheckSquare, labelKey: "nav.administrative_tasks" },
-    { href: "/general-services", icon: Handshake, labelKey: "nav.general_services" },
-    { href: "/vehicles", icon: Truck, labelKey: "nav.vehicles" },
-    { href: "/drivers", icon: UserCheck, labelKey: "nav.drivers" },
-    { href: "/vehicle-missions", icon: MapPin, labelKey: "nav.vehicle_missions" },
-    { href: "/vehicle-maintenance", icon: Hammer, labelKey: "nav.vehicle_maintenance" },
-    { href: "/visitor-logs", icon: Contact, labelKey: "nav.visitor_logs" },
-    { href: "/circulars", icon: Megaphone, labelKey: "nav.circulars" },
-    { href: "/policies", icon: BookOpen, labelKey: "nav.policies" },
+  ], subGroups: [
+    { titleKey: "nav.section.ga_leadership", items: [
+      { href: "/chairman", icon: Landmark, labelKey: "nav.chairman" },
+      { href: "/executive-director", icon: Briefcase, labelKey: "nav.executive_director" },
+    ]},
+    { titleKey: "nav.section.ga_governance", items: [
+      { href: "/company-profile", icon: Building2, labelKey: "nav.company_profile", permission: "companies.view" },
+      { href: "/users", icon: Users, labelKey: "nav.users", permission: "users.view" },
+      { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles", permission: "roles.view" },
+      { href: "/permission-matrix", icon: Grid3x3, labelKey: "nav.permission_matrix", permission: "roles.view" },
+    ]},
+    { titleKey: "nav.section.ga_secretariat", items: [
+      { href: "/secretariat", icon: ClipboardList, labelKey: "nav.secretariat", permission: "secretariat.view" },
+      { href: "/internal-correspondence", icon: Inbox, labelKey: "nav.internal_correspondence" },
+      { href: "/correspondence", icon: FileText, labelKey: "nav.correspondence" },
+      { href: "/meetings", icon: CalendarClock, labelKey: "nav.meetings" },
+      { href: "/administrative-decisions", icon: Gavel, labelKey: "nav.administrative_decisions" },
+      { href: "/administrative-tasks", icon: CheckSquare, labelKey: "nav.administrative_tasks" },
+    ]},
+    { titleKey: "nav.section.ga_public_relations", items: [
+      { href: "/public-relations", icon: Share2, labelKey: "nav.public_relations", permission: "publicRelations.view" },
+    ]},
+    { titleKey: "nav.section.ga_services", items: [
+      { href: "/general-services", icon: Handshake, labelKey: "nav.general_services" },
+      { href: "/visitor-logs", icon: Contact, labelKey: "nav.visitor_logs" },
+      { href: "/circulars", icon: Megaphone, labelKey: "nav.circulars" },
+      { href: "/policies", icon: BookOpen, labelKey: "nav.policies" },
+    ]},
+    { titleKey: "nav.section.ga_fleet", items: [
+      { href: "/vehicles", icon: Truck, labelKey: "nav.vehicles" },
+      { href: "/drivers", icon: UserCheck, labelKey: "nav.drivers" },
+      { href: "/vehicle-missions", icon: MapPin, labelKey: "nav.vehicle_missions" },
+      { href: "/vehicle-maintenance", icon: Hammer, labelKey: "nav.vehicle_maintenance" },
+    ]},
   ]},
   { titleKey: "nav.group.insurance", items: [
     { href: "/insurance-dashboard", icon: LayoutDashboard, labelKey: "nav.insurance_dashboard" },
-    { href: "/employee-insurances", icon: ShieldCheck, labelKey: "nav.employee_insurances" },
-    { href: "/insurance-forms", icon: FileText, labelKey: "nav.insurance_forms" },
-    { href: "/insurance-additions", icon: PlusCircle, labelKey: "nav.insurance_additions" },
-    { href: "/insurance-exclusions", icon: MinusCircle, labelKey: "nav.insurance_exclusions" },
-    { href: "/insurance-data-amendments", icon: FilePen, labelKey: "nav.insurance_data_amendments" },
-    { href: "/insurance-subscriptions", icon: Wallet, labelKey: "nav.insurance_subscriptions" },
-    { href: "/insurance-payment-notices", icon: Bell, labelKey: "nav.insurance_payment_notices" },
-    { href: "/insurance-reconciliations", icon: ArrowLeftRight, labelKey: "nav.insurance_reconciliations" },
-    { href: "/insurance-arrears", icon: AlertTriangle, labelKey: "nav.insurance_arrears" },
-    { href: "/insurance-penalties", icon: ShieldAlert, labelKey: "nav.insurance_penalties" },
-    { href: "/service-terminations", icon: FileX, labelKey: "nav.service_terminations" },
-    { href: "/insurance-settlements", icon: Receipt, labelKey: "nav.insurance_settlements" },
-    { href: "/insurance-clearances", icon: FileCheck, labelKey: "nav.insurance_clearances" },
-    { href: "/subcontractor-insurances", icon: HardHat, labelKey: "nav.subcontractor_insurances" },
-    { href: "/project-labor-insurances", icon: Users, labelKey: "nav.project_labor_insurances" },
-    { href: "/insurance-insured-report", icon: FileSpreadsheet, labelKey: "nav.insurance_insured_report" },
-    { href: "/insurance-subscriptions-report", icon: FileSpreadsheet, labelKey: "nav.insurance_subscriptions_report" },
-    { href: "/insurance-arrears-report", icon: FileSpreadsheet, labelKey: "nav.insurance_arrears_report" },
-    { href: "/insurance-penalties-report", icon: FileSpreadsheet, labelKey: "nav.insurance_penalties_report" },
-    { href: "/insurance-contractors-report", icon: FileSpreadsheet, labelKey: "nav.insurance_contractors_report" },
+  ], subGroups: [
+    { titleKey: "nav.section.ins_policies", items: [
+      { href: "/employee-insurances", icon: ShieldCheck, labelKey: "nav.employee_insurances" },
+      { href: "/insurance-forms", icon: FileText, labelKey: "nav.insurance_forms" },
+      { href: "/insurance-subscriptions", icon: Wallet, labelKey: "nav.insurance_subscriptions" },
+    ]},
+    { titleKey: "nav.section.ins_amendments", items: [
+      { href: "/insurance-additions", icon: PlusCircle, labelKey: "nav.insurance_additions" },
+      { href: "/insurance-exclusions", icon: MinusCircle, labelKey: "nav.insurance_exclusions" },
+      { href: "/insurance-data-amendments", icon: FilePen, labelKey: "nav.insurance_data_amendments" },
+    ]},
+    { titleKey: "nav.section.ins_financial", items: [
+      { href: "/insurance-payment-notices", icon: Bell, labelKey: "nav.insurance_payment_notices" },
+      { href: "/insurance-reconciliations", icon: ArrowLeftRight, labelKey: "nav.insurance_reconciliations" },
+      { href: "/insurance-arrears", icon: AlertTriangle, labelKey: "nav.insurance_arrears" },
+      { href: "/insurance-penalties", icon: ShieldAlert, labelKey: "nav.insurance_penalties" },
+      { href: "/insurance-settlements", icon: Receipt, labelKey: "nav.insurance_settlements" },
+    ]},
+    { titleKey: "nav.section.ins_exit", items: [
+      { href: "/service-terminations", icon: FileX, labelKey: "nav.service_terminations" },
+      { href: "/insurance-clearances", icon: FileCheck, labelKey: "nav.insurance_clearances" },
+    ]},
+    { titleKey: "nav.section.ins_contractors", items: [
+      { href: "/subcontractor-insurances", icon: HardHat, labelKey: "nav.subcontractor_insurances" },
+      { href: "/project-labor-insurances", icon: Users, labelKey: "nav.project_labor_insurances" },
+    ]},
+    { titleKey: "nav.section.ins_reports", items: [
+      { href: "/insurance-insured-report", icon: FileSpreadsheet, labelKey: "nav.insurance_insured_report" },
+      { href: "/insurance-subscriptions-report", icon: FileSpreadsheet, labelKey: "nav.insurance_subscriptions_report" },
+      { href: "/insurance-arrears-report", icon: FileSpreadsheet, labelKey: "nav.insurance_arrears_report" },
+      { href: "/insurance-penalties-report", icon: FileSpreadsheet, labelKey: "nav.insurance_penalties_report" },
+      { href: "/insurance-contractors-report", icon: FileSpreadsheet, labelKey: "nav.insurance_contractors_report" },
+    ]},
   ]},
-  { titleKey: "nav.group.business_intelligence", items: [
-    { href: "/ai-assistant", icon: Sparkles, labelKey: "nav.ai_assistant" },
-    { href: "/ai-chat-erp", icon: MessagesSquare, labelKey: "nav.ai_chat_erp" },
-    { href: "/ai-analytics", icon: BarChart3, labelKey: "nav.ai_analytics" },
-    { href: "/ai-insights", icon: Lightbulb, labelKey: "nav.ai_insights" },
-    { href: "/ai-recommendations", icon: Target, labelKey: "nav.ai_recommendations" },
-    { href: "/ai-forecasting", icon: TrendingUp, labelKey: "nav.ai_forecasting" },
-    { href: "/ai-alerts", icon: BellRing, labelKey: "nav.ai_alerts" },
-    { href: "/ai-risk-analysis", icon: ShieldAlert, labelKey: "nav.ai_risk_analysis" },
-    { href: "/ai-decision-support", icon: Compass, labelKey: "nav.ai_decision_support" },
-    { href: "/ai-executive-advisor", icon: Brain, labelKey: "nav.ai_executive_advisor" },
-    { href: "/executive-oversight", icon: Gauge, labelKey: "nav.executive_oversight" },
-    { href: "/executive-dashboard", icon: Gauge, labelKey: "nav.executive_dashboard" },
-    { href: "/sales-analytics", icon: TrendingUp, labelKey: "nav.sales_analytics" },
-    { href: "/collection-analytics", icon: LineChart, labelKey: "nav.collection_analytics" },
-    { href: "/construction-analytics", icon: BarChart3, labelKey: "nav.construction_analytics" },
-    { href: "/procurement-analytics", icon: ShoppingCart, labelKey: "nav.procurement_analytics" },
-    { href: "/inventory-analytics", icon: Package, labelKey: "nav.inventory_analytics" },
-    { href: "/hr-analytics", icon: Users, labelKey: "nav.hr_analytics" },
-    { href: "/financial-analytics", icon: Calculator, labelKey: "nav.financial_analytics" },
-    { href: "/reports-engine", icon: FileSpreadsheet, labelKey: "nav.reports_engine" },
+  { titleKey: "nav.group.business_intelligence", items: [], subGroups: [
+    { titleKey: "nav.section.bi_ai", items: [
+      { href: "/ai-assistant", icon: Sparkles, labelKey: "nav.ai_assistant" },
+      { href: "/ai-chat-erp", icon: MessagesSquare, labelKey: "nav.ai_chat_erp" },
+      { href: "/ai-analytics", icon: BarChart3, labelKey: "nav.ai_analytics" },
+      { href: "/ai-insights", icon: Lightbulb, labelKey: "nav.ai_insights" },
+      { href: "/ai-recommendations", icon: Target, labelKey: "nav.ai_recommendations" },
+      { href: "/ai-forecasting", icon: TrendingUp, labelKey: "nav.ai_forecasting" },
+      { href: "/ai-alerts", icon: BellRing, labelKey: "nav.ai_alerts" },
+      { href: "/ai-risk-analysis", icon: ShieldAlert, labelKey: "nav.ai_risk_analysis" },
+      { href: "/ai-decision-support", icon: Compass, labelKey: "nav.ai_decision_support" },
+      { href: "/ai-executive-advisor", icon: Brain, labelKey: "nav.ai_executive_advisor" },
+    ]},
+    { titleKey: "nav.section.bi_executive", items: [
+      { href: "/executive-oversight", icon: Gauge, labelKey: "nav.executive_oversight" },
+      { href: "/executive-dashboard", icon: Gauge, labelKey: "nav.executive_dashboard" },
+    ]},
+    { titleKey: "nav.section.bi_analytics", items: [
+      { href: "/sales-analytics", icon: TrendingUp, labelKey: "nav.sales_analytics" },
+      { href: "/collection-analytics", icon: LineChart, labelKey: "nav.collection_analytics" },
+      { href: "/construction-analytics", icon: BarChart3, labelKey: "nav.construction_analytics" },
+      { href: "/procurement-analytics", icon: ShoppingCart, labelKey: "nav.procurement_analytics" },
+      { href: "/inventory-analytics", icon: Package, labelKey: "nav.inventory_analytics" },
+      { href: "/hr-analytics", icon: Users, labelKey: "nav.hr_analytics" },
+      { href: "/financial-analytics", icon: Calculator, labelKey: "nav.financial_analytics" },
+    ]},
+    { titleKey: "nav.section.bi_reports", items: [
+      { href: "/reports-engine", icon: FileSpreadsheet, labelKey: "nav.reports_engine" },
+    ]},
   ]},
   { titleKey: "nav.group.administration", items: [
-    { href: "/users", icon: Users, labelKey: "nav.users" },
-    { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles" },
+    // Users and Roles moved to General Administration — they are institutional
+    // administration, not system plumbing. `/companies` stays here: it is the
+    // multi-tenant register, distinct from the one company's own profile.
     { href: "/approvals", icon: CheckSquare, labelKey: "nav.approvals" },
     { href: "/companies", icon: Building2, labelKey: "nav.companies" },
     { href: "/branches", icon: MapPin, labelKey: "nav.branches" },
     { href: "/fiscal-years", icon: CalendarDays, labelKey: "nav.fiscal_years" },
     { href: "/currencies", icon: Banknote, labelKey: "nav.currencies" },
     { href: "/number-sequences", icon: Hash, labelKey: "nav.number_sequences" },
+    // Reachable from the header bell and from a launcher tile, but from no
+    // menu entry — so a user who dismissed the bell had no way back to it.
+    // Filed here rather than beside Home: adding a third entry to that group
+    // would push Home and Dashboard out of the bar's direct links.
+    { href: "/notifications", icon: Bell, labelKey: "nav.notifications_center" },
     { href: "/audit-logs", icon: ListOrdered, labelKey: "nav.audit_logs" },
     { href: "/login-history", icon: History, labelKey: "nav.login_history" },
     { href: "/settings", icon: Settings, labelKey: "nav.settings" },
@@ -436,7 +558,7 @@ const AI_NAV_HREFS = new Set<string>([
   "/ai-executive-advisor",
 ]);
 
-const NAV_GROUPS = RAW_NAV_GROUPS.map((group) => {
+export const NAV_GROUPS: NavGroup[] = RAW_NAV_GROUPS.map((group) => {
   const moduleKey = FORMS_MODULE_BY_GROUP[group.titleKey];
   if (!moduleKey) return group;
   return {
@@ -448,6 +570,74 @@ const NAV_GROUPS = RAW_NAV_GROUPS.map((group) => {
   };
 });
 
+/** What the filter needs to know about the signed-in user. */
+export interface NavViewer {
+  permissions?: string[];
+  roles?: string[];
+}
+
+/**
+ * The navigation this user may see.
+ *
+ * Every surface that shows navigation calls this — the horizontal bar, the
+ * mobile drawer, the breadcrumb, and the department cards. That is the whole
+ * point: a screen must not be reachable from one surface and invisible on
+ * another, and the only way to guarantee that is for all of them to ask the
+ * same question of the same data.
+ *
+ * Sub-group items are filtered too. They were not before, which meant a
+ * permission written on an item inside Finance or Engineering was silently
+ * ignored — the entry stayed visible and only the API refused. Nothing was
+ * exposed by it yet, because no sub-group item carried a permission; it was a
+ * trap waiting for the first one that did.
+ */
+export function filterNavGroups(user: NavViewer | null | undefined): NavGroup[] {
+  const isWildcard = !!user?.permissions?.includes("*");
+  const canViewAi = isWildcard || !!user?.permissions?.includes("ai.view");
+  // Sales Administration is restricted to Sales Admin / Sales Manager /
+  // Executive Manager / Owner roles (and super admins with the wildcard).
+  const rolesText = (user?.roles ?? []).join(" ").toLowerCase();
+  const canViewSalesAdmin =
+    isWildcard ||
+    /sales|admin|manager|owner|executive|director|مبيعات|سيلز|مدير|مالك|تنفيذي/.test(rolesText);
+
+  const allowed = (item: NavItem): boolean => {
+    if (!canViewAi && AI_NAV_HREFS.has(item.href)) return false;
+    if (!canViewSalesAdmin && SALES_ADMIN_HREFS.has(item.href)) return false;
+    if (item.permission && !isWildcard && !user?.permissions?.includes(item.permission)) {
+      return false;
+    }
+    return true;
+  };
+
+  return NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter(allowed),
+    subGroups: group.subGroups
+      ?.map((sub) => ({ ...sub, items: sub.items.filter(allowed) }))
+      // A section whose every screen is hidden is not a section any more.
+      .filter((sub) => sub.items.length > 0),
+  }));
+}
+
+/**
+ * The sections of one department, for a page that wants to show them as cards.
+ *
+ * Returns the sub-groups where a department has them, and otherwise the
+ * department's own items — so a caller gets "the things this department is
+ * made of" without having to know which shape it happens to use, and without
+ * keeping its own list of what those things are.
+ */
+export function navSectionsFor(
+  groups: NavGroup[],
+  titleKey: string,
+): Array<{ titleKey: string; items: NavItem[] }> {
+  const group = groups.find((g) => g.titleKey === titleKey);
+  if (!group) return [];
+  if (group.subGroups?.length) return group.subGroups;
+  return group.items.length ? [{ titleKey: group.titleKey, items: group.items }] : [];
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const { t, language, setLanguage, dir } = useLanguage();
@@ -455,6 +645,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { testing, canTest, busy, enter, exit, reset } = useTesting();
   const { toast } = useToast();
   const [location] = useLocation();
+
+  // Unread count for the header bell. Same endpoint the notifications screen
+  // already uses; `enabled` keeps it from firing before a company is known, so
+  // the shell adds no request on a cold start.
+  const { data: companies } = useListCompanies();
+  const notifParams = { companyId: companies?.[0]?.id };
+  const { data: notifDash } = useGetNotificationsDashboard(notifParams, {
+    query: {
+      enabled: !!notifParams.companyId,
+      queryKey: getGetNotificationsDashboardQueryKey(notifParams),
+    },
+  });
+  const unreadCount = notifDash?.unread ?? 0;
 
   const handleEnterTesting = async () => {
     toast({ title: t("testing.entering") });
@@ -485,27 +688,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const isWildcard = !!user?.permissions?.includes("*");
-  const canViewAi = isWildcard || !!user?.permissions?.includes("ai.view");
-  // Sales Administration is restricted to Sales Admin / Sales Manager / Executive
-  // Manager / Owner roles (and super admins with the "*" wildcard).
-  const rolesText = (user?.roles ?? []).join(" ").toLowerCase();
-  const canViewSalesAdmin =
-    isWildcard || /sales|admin|manager|owner|executive|director|مبيعات|سيلز|مدير|مالك|تنفيذي/.test(rolesText);
-  const navGroups = NAV_GROUPS.map((group) => ({
-    ...group,
-    items: group.items.filter((item) => {
-      if (!canViewAi && AI_NAV_HREFS.has(item.href)) return false;
-      if (!canViewSalesAdmin && SALES_ADMIN_HREFS.has(item.href)) return false;
-      return true;
-    }),
-  }));
+  // One filtered tree, shared by the horizontal bar, the mobile drawer and the
+  // breadcrumb below. Nothing here re-derives it.
+  const navGroups = filterNavGroups(user);
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     const matches = (item: NavItem) =>
       location === item.href || (item.href !== "/" && location.startsWith(item.href));
-    for (const group of NAV_GROUPS) {
+    // Seeded from the filtered tree too: opening a department the user cannot
+    // see would leave an empty expanded section in the drawer.
+    for (const group of navGroups) {
       let groupActive = group.items.some(matches);
       for (const sub of group.subGroups ?? []) {
         if (sub.items.some(matches)) {
@@ -596,28 +789,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span>{t("testing.banner")}</span>
         </div>
       )}
+      {/* No desktop sidebar: the content owns the full width of the page. The
+          navigation itself did not go anywhere — the same <NavLinks/>, built
+          from the same filtered tree as the horizontal bar and the breadcrumb,
+          is reached through the menu button below on every viewport instead of
+          being pinned open on large ones. */}
       <div className="flex w-full flex-1 min-h-0">
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-[var(--layout-sidebar-width)] flex-col border-e bg-sidebar md:flex">
-        <div className="flex h-[var(--layout-header-height)] items-center border-b px-4">
-          <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
-            <Building2 className="h-5 w-5 text-primary" />
-            <span>ERP System</span>
-          </Link>
-        </div>
-        <ScrollArea className="flex-1 overflow-auto py-1.5">
-          <nav className="grid items-start px-2 font-medium space-y-0.5">
-            <NavLinks />
-          </nav>
-        </ScrollArea>
-      </aside>
-
-      {/* Main Content */}
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="flex h-[var(--layout-header-height)] items-center gap-4 border-b bg-background px-4 lg:px-6">
+        <header className="flex h-[var(--layout-header-height)] items-center gap-3 border-b bg-background px-4 lg:px-6">
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+              <Button variant="outline" size="icon" className="shrink-0">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
@@ -634,6 +816,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </ScrollArea>
             </SheetContent>
           </Sheet>
+
+          {/* The brand mark used to live at the top of the sidebar; with the
+              rail gone it belongs here, and it keeps a one-click route home. */}
+          <Link href="/" className="flex shrink-0 items-center gap-2 text-sm font-semibold">
+            <Building2 className="h-5 w-5 text-primary" />
+            <span className="hidden sm:inline">ERP System</span>
+          </Link>
 
           <div className="flex flex-1 items-center justify-end gap-2">
             <OwnerModeControls />
@@ -674,6 +863,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <span className="hidden lg:inline">{t("testing.enter")}</span>
                 </Button>
               ))}
+            <HeaderActions />
+
             <Button
               variant="ghost"
               size="icon"
@@ -682,7 +873,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <span className="font-semibold">{language === "en" ? "EN" : "AR"}</span>
             </Button>
-            
+
+            {/* Notification centre, moved out of the navigation list. Same route
+                and same data as before — only the way in changed. The count is
+                positioned, not laid out inline, so the button keeps the icon
+                size of its neighbours whether the badge is there or not. */}
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="relative"
+              title={t("nav.notifications_center")}
+            >
+              <Link href="/notifications">
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span
+                    aria-hidden
+                    className="absolute -top-0.5 -end-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground"
+                  >
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+                <span className="sr-only">
+                  {t("nav.notifications_center")}
+                  {unreadCount > 0 ? ` (${unreadCount})` : ""}
+                </span>
+              </Link>
+            </Button>
+
             <Button
               variant="ghost"
               size="icon"
@@ -725,13 +944,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
+        {/* The sidebar contents, horizontally: same navGroups, same permission
+            filtering, just laid along the top. Desktop only — the drawer above
+            still owns navigation on small screens. */}
+        <DesktopNav navGroups={navGroups} />
+
         <main className="flex-1 p-3 md:p-4 overflow-auto">
-          <PageNav navGroups={NAV_GROUPS} />
+          {/* The breadcrumb reads the filtered tree, not the raw one. Reading
+              the raw tree let it name a department the user cannot open. */}
+          <PageNav navGroups={navGroups} />
           {children}
         </main>
       </div>
       </div>
-      {canViewAi && <EnterpriseAssistant />}
+      {/* The floating assistant follows the same AI gate the navigation uses:
+          if the AI screens are hidden, the assistant is too. Asked of the
+          filtered tree rather than re-deriving the rule here. */}
+      {navGroups.some((g) =>
+        [...g.items, ...(g.subGroups ?? []).flatMap((s) => s.items)].some((i) =>
+          AI_NAV_HREFS.has(i.href),
+        ),
+      ) && <EnterpriseAssistant />}
     </div>
   );
 }

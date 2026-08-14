@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { HealthCheckResponse } from "@workspace/api-zod";
-import { pool } from "@workspace/db";
+import { pool, db, operationsTable } from "@workspace/db";
+import { and, desc, eq, sql, type SQL } from "drizzle-orm";
 import { getModuleSummary } from "../lib/module-registry";
 import { getMetrics } from "../lib/metrics";
 import { getSchedulerStatus, getSchedulerTaskRuns } from "../lib/scheduler";
@@ -67,7 +68,7 @@ router.get("/readyz", async (_req, res) => {
   });
 });
 
-// Scheduler task detail for operations. Read-only, and permission-gated behind
+// Scheduler task detail for operationsTable. Read-only, and permission-gated behind
 // the existing system-administration resource rather than a new one — the
 // scheduler is platform infrastructure, not a business module with its own
 // permission namespace.
@@ -81,6 +82,62 @@ router.get(
       getSchedulerTaskRuns(),
     ]);
     res.json({ scheduler: status, tasks: runs });
+  },
+);
+
+/**
+ * Operation history — the read side of the Operation Contract.
+ *
+ * The contract has been persisting every non-CRUD operation (actor, target,
+ * idempotency key, outcome, duration) since it was introduced, but nothing
+ * could read the table back. That made the record write-only: an operator
+ * could not answer "did that sweep run, and what did it decide" without
+ * opening psql, which is the opposite of what an audit trail is for.
+ *
+ * Read-only and gated on the same `settings.view` permission as the scheduler
+ * view above: operations are platform infrastructure, so they belong to the
+ * existing system-administration namespace rather than a new permission.
+ * Company scope is honoured when the caller asks for it; `result` and `error`
+ * payloads are returned as stored because they are already redacted on write.
+ */
+router.get(
+  "/operations",
+  requireAuth,
+  requirePermission("settings.view"),
+  async (req, res): Promise<void> => {
+    const q = req.query as Record<string, unknown>;
+    const str = (k: string): string | undefined => {
+      const v = q[k];
+      return typeof v === "string" && v.trim() !== "" ? v.trim() : undefined;
+    };
+    const page = Math.max(1, Number(str("page") ?? 1) || 1);
+    const pageSize = Math.min(100, Math.max(1, Number(str("pageSize") ?? 20) || 20));
+
+    const filters: SQL[] = [];
+    const companyId = str("companyId");
+    if (companyId) filters.push(eq(operationsTable.companyId, companyId));
+    const status = str("status");
+    if (status) filters.push(eq(operationsTable.status, status));
+    const operationKey = str("operationKey");
+    if (operationKey) filters.push(eq(operationsTable.operationKey, operationKey));
+    const sourceModule = str("sourceModule");
+    if (sourceModule) filters.push(eq(operationsTable.sourceModule, sourceModule));
+    const where = filters.length ? and(...filters) : undefined;
+
+    const [counted] = (await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(operationsTable)
+      .where(where)) as { count: number }[];
+
+    const rows = await db
+      .select()
+      .from(operationsTable)
+      .where(where)
+      .orderBy(desc(operationsTable.requestedAt))
+      .limit(pageSize)
+      .offset((page - 1) * pageSize);
+
+    res.json({ data: rows, total: counted?.count ?? 0, page, pageSize });
   },
 );
 

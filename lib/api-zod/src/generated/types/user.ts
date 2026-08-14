@@ -23,6 +23,8 @@ export interface User {
   failedAttempts?: number;
   /** @nullable */
   companyId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
   roles?: Role[];
   createdAt: string;
   /** @nullable */

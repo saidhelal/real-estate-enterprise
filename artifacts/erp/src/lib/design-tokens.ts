@@ -217,6 +217,79 @@ export const ACCENT_CLASSES: readonly string[] = [
 ];
 
 /**
+ * The icon tile on a tinted card: one step stronger than the body, with the
+ * glyph drawn in the hue itself.
+ *
+ * Not a white glyph on a saturated fill. White survives on the blues and
+ * violets but collapses on the amber and lime end of the ramp, and a rule that
+ * only works for some of its inputs is not a rule. Hue-on-hue holds for every
+ * entry, and it is also the layering the reference identity uses on its tinted
+ * cards — body, then a stronger icon tile, with the solid fill reserved for the
+ * accent bar.
+ */
+export const ACCENT_CHIP_CLASSES: readonly string[] = [
+  "bg-chart-1/20 text-chart-1",
+  "bg-chart-2/20 text-chart-2",
+  "bg-chart-3/20 text-chart-3",
+  "bg-chart-4/20 text-chart-4",
+  "bg-chart-5/20 text-chart-5",
+  "bg-chart-6/20 text-chart-6",
+  "bg-chart-7/20 text-chart-7",
+  "bg-chart-8/20 text-chart-8",
+];
+
+/**
+ * The card body itself, tinted in the owner's colour, plus a border from the
+ * same family.
+ *
+ * This is the layering the reference identity describes: a soft-but-visible
+ * surface for the body, a stronger border, then the solid accent for the bar
+ * and the icon chip. A white card with only a coloured icon carries the
+ * identity on 4% of its area and reads as generic; tinting the body is what
+ * makes a module recognisable from across the screen.
+ *
+ * Alpha rather than a per-hue ramp because the palette exposes one value per
+ * series, not ten. `/10` composites over `--background` in light mode and over
+ * the dark canvas in dark mode, so a single class is correct in both themes and
+ * the tint stays far enough from the text to keep contrast untouched — the
+ * title still runs at `--foreground` against a near-canvas surface.
+ */
+export const ACCENT_SURFACE_CLASSES: readonly string[] = [
+  "bg-chart-1/10 border-chart-1/30",
+  "bg-chart-2/10 border-chart-2/30",
+  "bg-chart-3/10 border-chart-3/30",
+  "bg-chart-4/10 border-chart-4/30",
+  "bg-chart-5/10 border-chart-5/30",
+  "bg-chart-6/10 border-chart-6/30",
+  "bg-chart-7/10 border-chart-7/30",
+  "bg-chart-8/10 border-chart-8/30",
+];
+
+/** Border tint used on hover, one step stronger than the resting border. */
+export const ACCENT_HOVER_BORDER_CLASSES: readonly string[] = [
+  "hover:border-chart-1/60",
+  "hover:border-chart-2/60",
+  "hover:border-chart-3/60",
+  "hover:border-chart-4/60",
+  "hover:border-chart-5/60",
+  "hover:border-chart-6/60",
+  "hover:border-chart-7/60",
+  "hover:border-chart-8/60",
+];
+
+/** Fill for the slim inline-start bar that marks a card's owner. */
+export const ACCENT_BAR_CLASSES: readonly string[] = [
+  "bg-chart-1",
+  "bg-chart-2",
+  "bg-chart-3",
+  "bg-chart-4",
+  "bg-chart-5",
+  "bg-chart-6",
+  "bg-chart-7",
+  "bg-chart-8",
+];
+
+/**
  * The nth categorical accent, wrapping past the end of the ramp. Repeats are
  * acceptable where colour is secondary to an icon or a label; where it is the
  * only differentiator, keep the set under `ACCENT_CLASSES.length`.
@@ -226,4 +299,20 @@ export const ACCENT_CLASSES: readonly string[] = [
  */
 export function accentClass(index: number): string {
   return ACCENT_CLASSES[index % ACCENT_CLASSES.length];
+}
+
+/** Icon tile for the nth accent. */
+export function accentChipClass(index: number): string {
+  return ACCENT_CHIP_CLASSES[index % ACCENT_CHIP_CLASSES.length];
+}
+
+/** Accent bar fill for the nth accent. */
+export function accentBarClass(index: number): string {
+  return ACCENT_BAR_CLASSES[index % ACCENT_BAR_CLASSES.length];
+}
+
+/** Tinted body surface + matching border for the nth accent. */
+export function accentSurfaceClass(index: number): string {
+  const n = ACCENT_SURFACE_CLASSES.length;
+  return `${ACCENT_SURFACE_CLASSES[index % n]} ${ACCENT_HOVER_BORDER_CLASSES[index % n]}`;
 }

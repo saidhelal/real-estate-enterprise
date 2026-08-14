@@ -484,6 +484,7 @@ import type {
   GetProcurementDashboardParams,
   GetRealEstateDashboardParams,
   GetSalesAnalyticsParams,
+  GetSecretariatOverviewParams,
   GetTaxReportParams,
   GetTrialBalanceParams,
   GetUnitAvailabilityParams,
@@ -935,6 +936,8 @@ import type {
   ListPenaltyRulesParams,
   ListPhasesParams,
   ListPoliciesParams,
+  ListPrInteractionsParams,
+  ListPrPartiesParams,
   ListPrintJobsParams,
   ListProcurementApprovalsParams,
   ListProfitCentersParams,
@@ -961,6 +964,7 @@ import type {
   ListRfqSuppliersParams,
   ListRfqsParams,
   ListSalaryComponentsParams,
+  ListSecretariatFollowUpsParams,
   ListSectionsParams,
   ListSentDocumentsParams,
   ListServiceEscalationsParams,
@@ -1110,6 +1114,14 @@ import type {
   PortalUploadInput,
   PortalUploadResult,
   PortalVerifyOtpInput,
+  PrInteraction,
+  PrInteractionInput,
+  PrInteractionListResponse,
+  PrInteractionUpdate,
+  PrParty,
+  PrPartyInput,
+  PrPartyListResponse,
+  PrPartyUpdate,
   PrintJobInput,
   PrintJobListResponse,
   PrintJobResult,
@@ -1220,11 +1232,14 @@ import type {
   Role,
   RoleInput,
   RoleUpdate,
+  RoleUser,
   SalaryComponent,
   SalaryComponentInput,
   SalaryComponentListResponse,
   SalaryComponentUpdate,
   SalesAnalytics,
+  SecretariatFollowUp,
+  SecretariatOverview,
   Section,
   SectionInput,
   SectionListResponse,
@@ -105086,4 +105101,997 @@ export const useMarkDocumentTransferViewed = <TError = ErrorType<void>,
       > => {
       return useMutation(getMarkDocumentTransferViewedMutationOptions(options));
     }
+
+export const getListRoleUsersUrl = (id: string,) => {
+
+
+
+
+  return `/api/roles/${id}/users`
+}
+
+/**
+ * @summary Users assigned to a role
+ */
+export const listRoleUsers = async (id: string, options?: RequestInit): Promise<RoleUser[]> => {
+
+  return customFetch<RoleUser[]>(getListRoleUsersUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListRoleUsersQueryKey = (id: string,) => {
+    return [
+    `/api/roles/${id}/users`
+    ] as const;
+    }
+
+
+export const getListRoleUsersQueryOptions = <TData = Awaited<ReturnType<typeof listRoleUsers>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listRoleUsers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListRoleUsersQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listRoleUsers>>> = ({ signal }) => listRoleUsers(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listRoleUsers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListRoleUsersQueryResult = NonNullable<Awaited<ReturnType<typeof listRoleUsers>>>
+export type ListRoleUsersQueryError = ErrorType<void>
+
+
+/**
+ * @summary Users assigned to a role
+ */
+
+export function useListRoleUsers<TData = Awaited<ReturnType<typeof listRoleUsers>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listRoleUsers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListRoleUsersQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListPrPartiesUrl = (params?: ListPrPartiesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pr-parties?${stringifiedParams}` : `/api/pr-parties`
+}
+
+/**
+ * @summary List external relationship parties
+ */
+export const listPrParties = async (params?: ListPrPartiesParams, options?: RequestInit): Promise<PrPartyListResponse> => {
+
+  return customFetch<PrPartyListResponse>(getListPrPartiesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPrPartiesQueryKey = (params?: ListPrPartiesParams,) => {
+    return [
+    `/api/pr-parties`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPrPartiesQueryOptions = <TData = Awaited<ReturnType<typeof listPrParties>>, TError = ErrorType<unknown>>(params?: ListPrPartiesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrParties>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPrPartiesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPrParties>>> = ({ signal }) => listPrParties(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPrParties>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPrPartiesQueryResult = NonNullable<Awaited<ReturnType<typeof listPrParties>>>
+export type ListPrPartiesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List external relationship parties
+ */
+
+export function useListPrParties<TData = Awaited<ReturnType<typeof listPrParties>>, TError = ErrorType<unknown>>(
+ params?: ListPrPartiesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrParties>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPrPartiesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreatePrPartyUrl = () => {
+
+
+
+
+  return `/api/pr-parties`
+}
+
+/**
+ * @summary Create a party
+ */
+export const createPrParty = async (prPartyInput: PrPartyInput, options?: RequestInit): Promise<PrParty> => {
+
+  return customFetch<PrParty>(getCreatePrPartyUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      prPartyInput,)
+  }
+);}
+
+
+
+
+export const getCreatePrPartyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPrParty>>, TError,{data: BodyType<PrPartyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPrParty>>, TError,{data: BodyType<PrPartyInput>}, TContext> => {
+
+const mutationKey = ['createPrParty'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPrParty>>, {data: BodyType<PrPartyInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPrParty(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePrPartyMutationResult = NonNullable<Awaited<ReturnType<typeof createPrParty>>>
+    export type CreatePrPartyMutationBody = BodyType<PrPartyInput>
+    export type CreatePrPartyMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a party
+ */
+export const useCreatePrParty = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPrParty>>, TError,{data: BodyType<PrPartyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPrParty>>,
+        TError,
+        {data: BodyType<PrPartyInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePrPartyMutationOptions(options));
+    }
+
+export const getGetPrPartyUrl = (id: string,) => {
+
+
+
+
+  return `/api/pr-parties/${id}`
+}
+
+/**
+ * @summary Get a party
+ */
+export const getPrParty = async (id: string, options?: RequestInit): Promise<PrParty> => {
+
+  return customFetch<PrParty>(getGetPrPartyUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPrPartyQueryKey = (id: string,) => {
+    return [
+    `/api/pr-parties/${id}`
+    ] as const;
+    }
+
+
+export const getGetPrPartyQueryOptions = <TData = Awaited<ReturnType<typeof getPrParty>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPrParty>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPrPartyQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPrParty>>> = ({ signal }) => getPrParty(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPrParty>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPrPartyQueryResult = NonNullable<Awaited<ReturnType<typeof getPrParty>>>
+export type GetPrPartyQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a party
+ */
+
+export function useGetPrParty<TData = Awaited<ReturnType<typeof getPrParty>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPrParty>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPrPartyQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdatePrPartyUrl = (id: string,) => {
+
+
+
+
+  return `/api/pr-parties/${id}`
+}
+
+/**
+ * @summary Update a party
+ */
+export const updatePrParty = async (id: string,
+    prPartyUpdate: PrPartyUpdate, options?: RequestInit): Promise<PrParty> => {
+
+  return customFetch<PrParty>(getUpdatePrPartyUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      prPartyUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdatePrPartyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrParty>>, TError,{id: string;data: BodyType<PrPartyUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePrParty>>, TError,{id: string;data: BodyType<PrPartyUpdate>}, TContext> => {
+
+const mutationKey = ['updatePrParty'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePrParty>>, {id: string;data: BodyType<PrPartyUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updatePrParty(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePrPartyMutationResult = NonNullable<Awaited<ReturnType<typeof updatePrParty>>>
+    export type UpdatePrPartyMutationBody = BodyType<PrPartyUpdate>
+    export type UpdatePrPartyMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a party
+ */
+export const useUpdatePrParty = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrParty>>, TError,{id: string;data: BodyType<PrPartyUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePrParty>>,
+        TError,
+        {id: string;data: BodyType<PrPartyUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdatePrPartyMutationOptions(options));
+    }
+
+export const getDeletePrPartyUrl = (id: string,) => {
+
+
+
+
+  return `/api/pr-parties/${id}`
+}
+
+/**
+ * @summary Soft-delete a party
+ */
+export const deletePrParty = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getDeletePrPartyUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeletePrPartyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePrParty>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePrParty>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deletePrParty'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePrParty>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deletePrParty(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePrPartyMutationResult = NonNullable<Awaited<ReturnType<typeof deletePrParty>>>
+
+    export type DeletePrPartyMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Soft-delete a party
+ */
+export const useDeletePrParty = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePrParty>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deletePrParty>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeletePrPartyMutationOptions(options));
+    }
+
+export const getListPrInteractionsUrl = (params?: ListPrInteractionsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pr-interactions?${stringifiedParams}` : `/api/pr-interactions`
+}
+
+/**
+ * @summary List recorded contacts with external parties
+ */
+export const listPrInteractions = async (params?: ListPrInteractionsParams, options?: RequestInit): Promise<PrInteractionListResponse> => {
+
+  return customFetch<PrInteractionListResponse>(getListPrInteractionsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPrInteractionsQueryKey = (params?: ListPrInteractionsParams,) => {
+    return [
+    `/api/pr-interactions`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPrInteractionsQueryOptions = <TData = Awaited<ReturnType<typeof listPrInteractions>>, TError = ErrorType<unknown>>(params?: ListPrInteractionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrInteractions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPrInteractionsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPrInteractions>>> = ({ signal }) => listPrInteractions(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPrInteractions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPrInteractionsQueryResult = NonNullable<Awaited<ReturnType<typeof listPrInteractions>>>
+export type ListPrInteractionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List recorded contacts with external parties
+ */
+
+export function useListPrInteractions<TData = Awaited<ReturnType<typeof listPrInteractions>>, TError = ErrorType<unknown>>(
+ params?: ListPrInteractionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPrInteractions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPrInteractionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreatePrInteractionUrl = () => {
+
+
+
+
+  return `/api/pr-interactions`
+}
+
+/**
+ * @summary Record a contact
+ */
+export const createPrInteraction = async (prInteractionInput: PrInteractionInput, options?: RequestInit): Promise<PrInteraction> => {
+
+  return customFetch<PrInteraction>(getCreatePrInteractionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      prInteractionInput,)
+  }
+);}
+
+
+
+
+export const getCreatePrInteractionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPrInteraction>>, TError,{data: BodyType<PrInteractionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPrInteraction>>, TError,{data: BodyType<PrInteractionInput>}, TContext> => {
+
+const mutationKey = ['createPrInteraction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPrInteraction>>, {data: BodyType<PrInteractionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPrInteraction(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePrInteractionMutationResult = NonNullable<Awaited<ReturnType<typeof createPrInteraction>>>
+    export type CreatePrInteractionMutationBody = BodyType<PrInteractionInput>
+    export type CreatePrInteractionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Record a contact
+ */
+export const useCreatePrInteraction = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPrInteraction>>, TError,{data: BodyType<PrInteractionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPrInteraction>>,
+        TError,
+        {data: BodyType<PrInteractionInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePrInteractionMutationOptions(options));
+    }
+
+export const getGetPrInteractionUrl = (id: string,) => {
+
+
+
+
+  return `/api/pr-interactions/${id}`
+}
+
+/**
+ * @summary Get a recorded contact
+ */
+export const getPrInteraction = async (id: string, options?: RequestInit): Promise<PrInteraction> => {
+
+  return customFetch<PrInteraction>(getGetPrInteractionUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPrInteractionQueryKey = (id: string,) => {
+    return [
+    `/api/pr-interactions/${id}`
+    ] as const;
+    }
+
+
+export const getGetPrInteractionQueryOptions = <TData = Awaited<ReturnType<typeof getPrInteraction>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPrInteraction>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPrInteractionQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPrInteraction>>> = ({ signal }) => getPrInteraction(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPrInteraction>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPrInteractionQueryResult = NonNullable<Awaited<ReturnType<typeof getPrInteraction>>>
+export type GetPrInteractionQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a recorded contact
+ */
+
+export function useGetPrInteraction<TData = Awaited<ReturnType<typeof getPrInteraction>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPrInteraction>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPrInteractionQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdatePrInteractionUrl = (id: string,) => {
+
+
+
+
+  return `/api/pr-interactions/${id}`
+}
+
+/**
+ * @summary Update a recorded contact
+ */
+export const updatePrInteraction = async (id: string,
+    prInteractionUpdate: PrInteractionUpdate, options?: RequestInit): Promise<PrInteraction> => {
+
+  return customFetch<PrInteraction>(getUpdatePrInteractionUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      prInteractionUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdatePrInteractionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrInteraction>>, TError,{id: string;data: BodyType<PrInteractionUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePrInteraction>>, TError,{id: string;data: BodyType<PrInteractionUpdate>}, TContext> => {
+
+const mutationKey = ['updatePrInteraction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePrInteraction>>, {id: string;data: BodyType<PrInteractionUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updatePrInteraction(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePrInteractionMutationResult = NonNullable<Awaited<ReturnType<typeof updatePrInteraction>>>
+    export type UpdatePrInteractionMutationBody = BodyType<PrInteractionUpdate>
+    export type UpdatePrInteractionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a recorded contact
+ */
+export const useUpdatePrInteraction = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePrInteraction>>, TError,{id: string;data: BodyType<PrInteractionUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePrInteraction>>,
+        TError,
+        {id: string;data: BodyType<PrInteractionUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdatePrInteractionMutationOptions(options));
+    }
+
+export const getDeletePrInteractionUrl = (id: string,) => {
+
+
+
+
+  return `/api/pr-interactions/${id}`
+}
+
+/**
+ * @summary Soft-delete a recorded contact
+ */
+export const deletePrInteraction = async (id: string, options?: RequestInit): Promise<OkResponse> => {
+
+  return customFetch<OkResponse>(getDeletePrInteractionUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeletePrInteractionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePrInteraction>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePrInteraction>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deletePrInteraction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePrInteraction>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deletePrInteraction(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePrInteractionMutationResult = NonNullable<Awaited<ReturnType<typeof deletePrInteraction>>>
+
+    export type DeletePrInteractionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Soft-delete a recorded contact
+ */
+export const useDeletePrInteraction = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePrInteraction>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deletePrInteraction>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeletePrInteractionMutationOptions(options));
+    }
+
+export const getGetSecretariatOverviewUrl = (params?: GetSecretariatOverviewParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/secretariat/overview?${stringifiedParams}` : `/api/secretariat/overview`
+}
+
+/**
+ * @summary Administrative workload across the registers the secretariat follows
+ */
+export const getSecretariatOverview = async (params?: GetSecretariatOverviewParams, options?: RequestInit): Promise<SecretariatOverview> => {
+
+  return customFetch<SecretariatOverview>(getGetSecretariatOverviewUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSecretariatOverviewQueryKey = (params?: GetSecretariatOverviewParams,) => {
+    return [
+    `/api/secretariat/overview`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetSecretariatOverviewQueryOptions = <TData = Awaited<ReturnType<typeof getSecretariatOverview>>, TError = ErrorType<unknown>>(params?: GetSecretariatOverviewParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSecretariatOverview>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSecretariatOverviewQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSecretariatOverview>>> = ({ signal }) => getSecretariatOverview(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSecretariatOverview>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSecretariatOverviewQueryResult = NonNullable<Awaited<ReturnType<typeof getSecretariatOverview>>>
+export type GetSecretariatOverviewQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Administrative workload across the registers the secretariat follows
+ */
+
+export function useGetSecretariatOverview<TData = Awaited<ReturnType<typeof getSecretariatOverview>>, TError = ErrorType<unknown>>(
+ params?: GetSecretariatOverviewParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSecretariatOverview>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSecretariatOverviewQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListSecretariatFollowUpsUrl = (params?: ListSecretariatFollowUpsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/secretariat/follow-ups?${stringifiedParams}` : `/api/secretariat/follow-ups`
+}
+
+/**
+ * @summary One dated queue over correspondence, meetings, decisions and tasks
+ */
+export const listSecretariatFollowUps = async (params?: ListSecretariatFollowUpsParams, options?: RequestInit): Promise<SecretariatFollowUp[]> => {
+
+  return customFetch<SecretariatFollowUp[]>(getListSecretariatFollowUpsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSecretariatFollowUpsQueryKey = (params?: ListSecretariatFollowUpsParams,) => {
+    return [
+    `/api/secretariat/follow-ups`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSecretariatFollowUpsQueryOptions = <TData = Awaited<ReturnType<typeof listSecretariatFollowUps>>, TError = ErrorType<unknown>>(params?: ListSecretariatFollowUpsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSecretariatFollowUps>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSecretariatFollowUpsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSecretariatFollowUps>>> = ({ signal }) => listSecretariatFollowUps(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSecretariatFollowUps>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSecretariatFollowUpsQueryResult = NonNullable<Awaited<ReturnType<typeof listSecretariatFollowUps>>>
+export type ListSecretariatFollowUpsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary One dated queue over correspondence, meetings, decisions and tasks
+ */
+
+export function useListSecretariatFollowUps<TData = Awaited<ReturnType<typeof listSecretariatFollowUps>>, TError = ErrorType<unknown>>(
+ params?: ListSecretariatFollowUpsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSecretariatFollowUps>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSecretariatFollowUpsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 

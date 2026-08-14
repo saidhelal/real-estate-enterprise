@@ -10,6 +10,7 @@ import { TestingProvider } from "@/lib/testing-provider";
 import { OwnerModeProvider } from "@/lib/owner-mode-provider";
 import { LookupLabelProvider } from "@/lib/lookups";
 import { AppShell } from "@/components/layout/app-shell";
+import { ScreenContextProvider } from "@/lib/screen-context";
 
 import Login from "@/pages/login";
 import Home from "@/pages/home";
@@ -182,6 +183,13 @@ const HandoverMinutesPage = lazy(() => import("@/pages/handover-minutes"));
 const HandoverSnagsPage = lazy(() => import("@/pages/handover-snags"));
 const HandoverApprovalsPage = lazy(() => import("@/pages/handover-approvals"));
 const GeneralAdminDashboardPage = lazy(() => import("@/pages/general-admin-dashboard"));
+const ChairmanPage = lazy(() => import("@/pages/chairman"));
+const ExecutiveDirectorPage = lazy(() => import("@/pages/executive-director"));
+const InternalCorrespondencePage = lazy(() => import("@/pages/internal-correspondence"));
+const CompanyProfilePage = lazy(() => import("@/pages/company-profile"));
+const PermissionMatrixPage = lazy(() => import("@/pages/permission-matrix"));
+const SecretariatPage = lazy(() => import("@/pages/secretariat"));
+const PublicRelationsPage = lazy(() => import("@/pages/public-relations"));
 const MarketingDashboardPage = lazy(() => import("@/pages/marketing-dashboard"));
 const MarketingCampaignsPage = lazy(() => import("@/pages/marketing-campaigns"));
 const MarketingChannelsPage = lazy(() => import("@/pages/marketing-channels"));
@@ -364,6 +372,7 @@ function Router() {
     <Switch>
       <Route path="/login" component={Login} />
       <Route>
+        <ScreenContextProvider>
         <AppShell>
           <Suspense fallback={<RouteFallback />}>
           <Switch>
@@ -510,6 +519,13 @@ function Router() {
             <Route path="/handover-approvals" component={HandoverApprovalsPage} />
             <Route path="/handover-reports" component={HandoverReportsPage} />
             <Route path="/general-admin-dashboard" component={GeneralAdminDashboardPage} />
+            <Route path="/chairman" component={ChairmanPage} />
+            <Route path="/executive-director" component={ExecutiveDirectorPage} />
+            <Route path="/internal-correspondence" component={InternalCorrespondencePage} />
+            <Route path="/company-profile" component={CompanyProfilePage} />
+            <Route path="/permission-matrix" component={PermissionMatrixPage} />
+            <Route path="/secretariat" component={SecretariatPage} />
+            <Route path="/public-relations" component={PublicRelationsPage} />
             <Route path="/marketing-dashboard" component={MarketingDashboardPage} />
             <Route path="/marketing-campaigns" component={MarketingCampaignsPage} />
             <Route path="/marketing-channels" component={MarketingChannelsPage} />
@@ -713,6 +729,7 @@ function Router() {
           </Switch>
           </Suspense>
         </AppShell>
+        </ScreenContextProvider>
       </Route>
     </Switch>
   );

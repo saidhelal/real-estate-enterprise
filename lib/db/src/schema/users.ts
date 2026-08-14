@@ -2,6 +2,20 @@ import { pgTable, uuid, text, integer, boolean, timestamp } from "drizzle-orm/pg
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
+  /**
+   * The employee record this login belongs to.
+   *
+   * Login identity and organisational identity were separate islands: a user
+   * had a name and permissions, an employee had a manager and a department,
+   * and nothing joined them. That is fine until something needs to ask "who is
+   * this person's manager" — internal correspondence does, and the answer has
+   * to be authoritative rather than inferred from a matching email address,
+   * because getting it wrong routes confidential mail to the wrong person.
+   *
+   * Nullable on purpose: service accounts and administrators legitimately have
+   * no employee record, and every existing row predates the column.
+   */
+  employeeId: uuid("employee_id"),
   username: text("username").notNull().unique(),
   fullName: text("full_name").notNull(),
   email: text("email").notNull(),
