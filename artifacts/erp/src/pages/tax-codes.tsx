@@ -18,9 +18,12 @@ import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = enumOptions(["active", "inactive"]);
 
 export default function TaxCodesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_record_status } = useLookupOptions("record_status", ["active", "inactive"]);
+  const STATUS = lk_record_status;
   const { language, t } = useLanguage();
   const { options: TAX_TYPES } = useLookupOptions("tax_type", ["output", "input", "exempt"]);
   const { data: companies } = useListCompanies();

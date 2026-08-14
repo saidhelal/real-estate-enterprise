@@ -16,9 +16,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function DefectsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_priority_level } = useLookupOptions("priority_level", ["low", "medium", "high", "critical"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -42,7 +46,7 @@ export default function DefectsPage() {
     { name: "inspectionReportId", label: "Inspection Report", labelAr: "تقرير الفحص", type: "select", options: inspectionReportOptions },
     { name: "projectId", label: "Project", labelAr: "المشروع", type: "select", options: projectOptions },
     { name: "description", label: "Description", labelAr: "الوصف", required: true },
-    { name: "severity", label: "Severity", labelAr: "الخطورة", type: "select", options: enumOptions(["low", "medium", "high", "critical"]) },
+    { name: "severity", label: "Severity", labelAr: "الخطورة", type: "select", options: lk_priority_level },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "closed"]) },
     { name: "reportedDate", label: "Reported Date", labelAr: "تاريخ الإبلاغ", type: "date" },
   ];

@@ -12,6 +12,7 @@ import {
 import { roleUserCounts } from "../lib/access";
 import { toRole } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
+import { companyScope } from "../lib/register-crud";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
 const router: IRouter = Router();
@@ -196,7 +197,9 @@ router.get(
     const conds = [eq(userRolesTable.roleId, id), eq(usersTable.isDeleted, false)];
     // A company-pinned caller sees only their own company's holders.
     const scope = req.authUser?.companyId;
-    if (scope) conds.push(eq(usersTable.companyId, scope));
+    // One shared rule, so no endpoint can forget the tenant filter.
+    const scoped = companyScope(usersTable, req);
+    if (scoped) conds.push(scoped);
     const rows = await db
       .select({
         id: usersTable.id,

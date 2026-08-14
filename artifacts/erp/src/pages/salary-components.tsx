@@ -17,9 +17,12 @@ import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
-const STATUS = enumOptions(["active", "inactive"]);
 
 export default function SalaryComponentsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_record_status } = useLookupOptions("record_status", ["active", "inactive"]);
+  const STATUS = lk_record_status;
   const { language, t } = useLanguage();
   const { options: COMPONENT_TYPE } = useLookupOptions("salary_component_type", ["earning", "deduction"]);
   const CALC_TYPE = enumOptions(["fixed", "percentage"]);

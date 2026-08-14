@@ -12,7 +12,7 @@ import {
   UpdateRiskBody,
   ReviewRiskBody,
 } from "@workspace/api-zod";
-import { registerCrud, CrudRefused, type Row } from "../lib/register-crud";
+import { registerCrud, CrudRefused, type Row, companyScope } from "../lib/register-crud";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
 import { serializeRow } from "../lib/serialize";
@@ -168,7 +168,9 @@ router.post("/risks/:id/review", requirePermission("risks.update"), async (req, 
   }
   const scope = req.authUser?.companyId ?? null;
   const conds = [eq(risksTable.id, String(req.params.id)), eq(risksTable.isDeleted, false)];
-  if (scope) conds.push(eq(risksTable.companyId, scope));
+  // One shared rule, so no endpoint can forget the tenant filter.
+  const scoped = companyScope(risksTable, req);
+  if (scoped) conds.push(scoped);
   const [existing] = await db.select().from(risksTable).where(and(...conds));
   if (!existing) {
     res.status(404).json({ error: "risk not found" });

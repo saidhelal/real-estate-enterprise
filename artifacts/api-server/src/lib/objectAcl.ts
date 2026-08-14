@@ -1,4 +1,7 @@
-import { File } from "@google-cloud/storage";
+// The stored object, not a cloud client handle. This module only ever needed
+// exists/getMetadata/setMetadata, which the local provider offers under the
+// same names — so swapping the backend left the ACL rules untouched.
+import type { StoredObject } from "./objectStorage";
 
 const ACL_POLICY_METADATA_KEY = "custom:aclPolicy";
 
@@ -68,7 +71,7 @@ function createObjectAccessGroup(
 }
 
 export async function setObjectAclPolicy(
-  objectFile: File,
+  objectFile: StoredObject,
   aclPolicy: ObjectAclPolicy,
 ): Promise<void> {
   const [exists] = await objectFile.exists();
@@ -84,7 +87,7 @@ export async function setObjectAclPolicy(
 }
 
 export async function getObjectAclPolicy(
-  objectFile: File,
+  objectFile: StoredObject,
 ): Promise<ObjectAclPolicy | null> {
   const [metadata] = await objectFile.getMetadata();
   const aclPolicy = metadata?.metadata?.[ACL_POLICY_METADATA_KEY];
@@ -100,7 +103,7 @@ export async function canAccessObject({
   requestedPermission,
 }: {
   userId?: string;
-  objectFile: File;
+  objectFile: StoredObject;
   requestedPermission: ObjectPermission;
 }): Promise<boolean> {
   const aclPolicy = await getObjectAclPolicy(objectFile);

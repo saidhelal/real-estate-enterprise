@@ -21,6 +21,9 @@ import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function InventoryItemsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_record_status } = useLookupOptions("record_status", ["active", "inactive"]);
   const { language } = useLanguage();
   const ITEM_TYPE = enumOptions(["stock", "non_stock", "service", "asset"]);
   const { options: VALUATION_METHOD } = useLookupOptions("costing_method", ["fifo", "lifo", "average", "standard"]);
@@ -49,7 +52,7 @@ export default function InventoryItemsPage() {
     { name: "minStock", label: "Min Stock", labelAr: "الحد الأدنى للمخزون", type: "number" },
     { name: "maxStock", label: "Max Stock", labelAr: "الحد الأقصى للمخزون", type: "number" },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["active", "inactive"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_record_status },
   ];
 
   const columns: ResourceColumn<InventoryItem>[] = [

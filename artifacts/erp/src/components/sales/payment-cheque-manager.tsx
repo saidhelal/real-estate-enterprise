@@ -27,7 +27,7 @@ import {
 import { useLanguage } from "@/lib/language-provider";
 import { useAuth } from "@/lib/auth-provider";
 import { useToast } from "@/hooks/use-toast";
-import { saleStage, isManagerial, genCode } from "@/lib/sale-workflow";
+import { saleStage, isManagerial } from "@/lib/sale-workflow";
 import { enumLabel } from "@/lib/enums";
 import { ChequeLifecyclePanel } from "@/components/sales/cheque-lifecycle-panel";
 import { Wallet, Plus, Lock } from "lucide-react";
@@ -100,7 +100,6 @@ export function PaymentChequeManager({
       {
         data: {
           companyId,
-          code: genCode("RCP"),
           customerId: contract.customerId,
           contractId: contract.id,
           amount: itemAmount,

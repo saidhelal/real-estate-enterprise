@@ -48,7 +48,6 @@ import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 import {
   buildSchedule,
-  genCode,
   frequencyLabel,
   type Frequency,
   type ScheduleRow,
@@ -151,7 +150,6 @@ export function StartSaleDialog({
       const reservation = await createReservation.mutateAsync({
         data: {
           companyId,
-          code: genCode("RES"),
           unitId: unit.id,
           customerId,
           reservationDate: today(),
@@ -179,7 +177,6 @@ export function StartSaleDialog({
         const plan = await createPlan.mutateAsync({
           data: {
             companyId,
-            code: genCode("PLAN"),
             contractId: contract.id,
             totalAmount: net.toFixed(2),
             downPayment: down.toFixed(2),
@@ -205,7 +202,6 @@ export function StartSaleDialog({
             await createCheque.mutateAsync({
               data: {
                 companyId,
-                code: genCode("CHQ"),
                 direction: "incoming",
                 chequeNumber: chq.chequeNumber.trim(),
                 dueDate: row.dueDate,

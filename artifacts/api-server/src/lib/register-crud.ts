@@ -155,8 +155,32 @@ export interface CrudConfig {
  * is what makes this safe to put in the shared engine rather than in each of
  * the forty-odd modules that would otherwise each need their own copy.
  */
-function callerCompanyId(req: Request): string | null {
+export function callerCompanyId(req: Request): string | null {
   return req.authUser?.companyId ?? null;
+}
+
+/**
+ * The company condition for a table, or undefined when there is none to apply.
+ *
+ * The factory scopes every resource it registers. Custom action endpoints —
+ * approve, publish, transition — are not registered resources, so each was
+ * writing `if (scope) conds.push(eq(t.companyId, scope))` for itself. Six
+ * copies of one rule is six chances to forget it, and forgetting it is a
+ * tenant reading another tenant's row.
+ *
+ * Returns undefined for an unpinned caller (a service account or the platform
+ * administrator) and for a table with no company column, which is what makes
+ * it safe to drop into an existing condition list unchanged:
+ *
+ *   const conds = [eq(t.id, id), eq(t.isDeleted, false)];
+ *   const scoped = companyScope(t, req);
+ *   if (scoped) conds.push(scoped);
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function companyScope(t: any, req: Request): SQL | undefined {
+  const scope = callerCompanyId(req);
+  if (!scope || !hasCompanyColumn(t)) return undefined;
+  return eq(t.companyId, scope);
 }
 
 /**

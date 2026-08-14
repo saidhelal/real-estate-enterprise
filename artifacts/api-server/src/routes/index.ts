@@ -51,7 +51,6 @@ import notificationsRouter from "./notifications";
 import executiveOversightRouter from "./executive-oversight";
 import formTemplatesRouter from "./form-templates";
 import printJobsRouter from "./print-jobs";
-import portalRouter from "./portal";
 import documentsRouter from "./documents";
 import documentTransfersRouter from "./document-transfers";
 import testingRouter from "./testing";
@@ -64,12 +63,9 @@ const router: IRouter = Router();
 // app.ts, this contains module-mount and per-request runtime faults so one bad
 // module cannot take down the API. (Import-time faults cannot be isolated in
 // the single-file esbuild bundle — those surface as build/startup failures.)
-// Order is preserved — health/auth first, then portal BEFORE the ERP routers
-// (portal manages its own per-route auth and would otherwise be intercepted by
-// the ERP routers' router-level requireAuth).
+// Order is preserved — health and auth first, then the ERP routers.
 mountModule(router, "health", healthRouter);
 mountModule(router, "auth", authRouter);
-mountModule(router, "portal", portalRouter);
 mountModule(router, "users", usersRouter);
 mountModule(router, "roles", rolesRouter);
 mountModule(router, "companies", companiesRouter);

@@ -18,6 +18,12 @@ import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function SupportTicketsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_priority_level } = useLookupOptions("priority_level", ["low", "medium", "high", "critical"]);
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_work_item_status } = useLookupOptions("work_item_status", ["open", "in_progress", "resolved", "closed"]);
   const { language } = useLanguage();
   const { options: CATEGORY } = useLookupOptions("support_ticket_category", ["general", "billing", "technical", "account"]);
   const { data: companies } = useListCompanies();
@@ -38,9 +44,9 @@ export default function SupportTicketsPage() {
     },
     { name: "customerId", label: "Customer ID", labelAr: "معرّف العميل", required: true },
     { name: "category", label: "Category", labelAr: "الفئة", type: "select", options: CATEGORY },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "critical"]) },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: lk_priority_level },
     { name: "subject", label: "Subject", labelAr: "الموضوع", required: true },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "resolved", "closed"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_work_item_status },
     { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
     { name: "escalationLevel", label: "Escalation Level", labelAr: "مستوى التصعيد", type: "money" },
   ];

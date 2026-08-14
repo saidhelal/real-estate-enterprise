@@ -14,10 +14,14 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 import { useDeclareScreenContext } from "@/lib/screen-context";
 
 export default function AdministrativeTasksPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_urgency_level } = useLookupOptions("urgency_level", ["low", "medium", "high", "urgent"]);
   // The register itself is printable: the header offers the directive template,
   // and a directive raised from here is about administrative work.
   useDeclareScreenContext({ moduleKey: "generalAdmin", documentType: "administrative_task" });
@@ -43,7 +47,7 @@ export default function AdministrativeTasksPage() {
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
     { name: "assignedToEmployeeId", label: "Assigned To (Employee ID)", labelAr: "مُسند إلى (معرّف الموظف)" },
     { name: "assignedByUserId", label: "Assigned By (User ID)", labelAr: "أسند بواسطة (معرّف المستخدم)" },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "urgent"]) },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: lk_urgency_level },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "completed", "on_hold", "cancelled"]) },
     { name: "progressPercent", label: "Progress %", labelAr: "نسبة الإنجاز %", type: "money" },
     { name: "startDate", label: "Start Date", labelAr: "تاريخ البدء", type: "date" },

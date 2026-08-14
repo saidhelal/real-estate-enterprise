@@ -122,7 +122,12 @@ router.post("/leads", requirePermission("leads.create"), async (req, res): Promi
       return;
     }
   }
-  const [row] = await db.insert(leadsTable).values({ ...data }).returning();
+  // A lead has one code wherever it is booked in. The marketing intake route
+  // already issued it from the central sequence; this route took whatever the
+  // client sent, so the same entity had two rules depending on which door it
+  // came through. Both now draw on the one counter.
+  const code = (await nextNumber("Lead", req.authUser?.companyId ?? null)).value;
+  const [row] = await db.insert(leadsTable).values({ ...data, code }).returning();
   await recordAudit(req, { action: "create", entity: "lead", entityId: row.id, newValue: row });
   res.status(201).json(GetLeadResponse.parse(serializeRow(row)));
 });
@@ -141,6 +146,8 @@ router.patch("/leads/:id", requirePermission("leads.update"), async (req, res): 
   const [existing] = await db.select().from(leadsTable).where(and(eq(leadsTable.id, id), eq(leadsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   const update = { ...parsed.data };
+  // The code belongs to the sequence that issued it, not to the editor.
+  delete (update as Record<string, unknown>).code;
   const [row] = Object.keys(update).length
     ? await db.update(leadsTable).set(update).where(eq(leadsTable.id, id)).returning()
     : [existing];

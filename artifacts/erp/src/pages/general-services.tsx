@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function GeneralServicesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_urgency_level } = useLookupOptions("urgency_level", ["low", "medium", "high", "urgent"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -40,7 +44,7 @@ export default function GeneralServicesPage() {
     { name: "location", label: "Location", labelAr: "المكان" },
     { name: "requestedByEmployeeId", label: "Requested By (Employee ID)", labelAr: "مقدم الطلب (معرّف الموظف)" },
     { name: "assignedToEmployeeId", label: "Assigned To (Employee ID)", labelAr: "مُسند إلى (معرّف الموظف)" },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "urgent"]) },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: lk_urgency_level },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["requested", "in_progress", "completed", "cancelled"]) },
     { name: "serviceDate", label: "Service Date", labelAr: "تاريخ الخدمة", type: "date" },
     // Hospitality detail. The register serves cleaning and maintenance too, so

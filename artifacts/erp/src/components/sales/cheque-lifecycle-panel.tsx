@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/dialog";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
-import { genCode } from "@/lib/sale-workflow";
 import { enumLabel } from "@/lib/enums";
 import { Banknote, Plus, History } from "lucide-react";
 
@@ -124,7 +123,6 @@ export function ChequeLifecyclePanel({
       {
         data: {
           companyId,
-          code: genCode("CHQ"),
           direction: "incoming",
           chequeNumber: num,
           amount,

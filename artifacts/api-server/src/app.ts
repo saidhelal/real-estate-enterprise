@@ -11,6 +11,7 @@ import pinoHttp from "pino-http";
 import router from "./routes";
 import publicLegalRouter from "./routes/public-legal";
 import { governanceMiddleware } from "./middleware/governance";
+import objectUploadRouter from "./routes/object-upload";
 import { apiRateLimit, authRateLimit } from "./middleware/rate-limit";
 import { metricsMiddleware } from "./lib/metrics";
 import { logger } from "./lib/logger";
@@ -49,13 +50,19 @@ app.use(express.urlencoded({ extended: true }));
 // two auth realms share this ceiling because they share a signing secret.
 // Mounted before the health probes are matched, but those live on the router
 // below and an orchestrator polling /healthz stays far inside the general limit.
-app.use(["/api/auth/login", "/api/portal/login"], authRateLimit);
+app.use("/api/auth/login", authRateLimit);
 app.use("/api", apiRateLimit);
 
 // Public, unauthenticated contract verification (QR target). Mounted BEFORE the
 // governance gate and the auth-gated /api router so external scanners can read
 // non-confidential verification data without a session.
 app.use("/api/legal-verify", publicLegalRouter);
+
+// File uploads. Authorised by the signed handle in the URL, not by a session
+// header, because the browser PUTs the file with no headers of its own — the
+// same reason cloud storage issues signed URLs. Mounted before the auth gate
+// for that, and inert without a valid handle.
+app.use("/api", objectUploadRouter);
 
 // Governance gate: converts direct DELETEs and protected PATCHes into pending
 // change requests (202). Mounted under /api BEFORE the routers. Internal

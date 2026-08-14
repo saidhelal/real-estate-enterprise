@@ -4,6 +4,7 @@ import { setNextChangeReason, customFetch } from "@workspace/api-client-react";
 import { useOwnerMode } from "@/lib/owner-mode-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useLanguage } from "@/lib/language-provider";
+import { useAuth } from "@/lib/auth-provider";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,6 +114,37 @@ export interface ResourceField {
   /** Optional input placeholder (falls back to the label). */
   placeholder?: string;
   placeholderAr?: string;
+  /**
+   * The value a create form starts with.
+   *
+   * A **presentation** default, not a business rule: it fills the empty box so
+   * the common case needs no typing, and the user can overwrite it. It is
+   * applied on create only — an edit form always shows what is stored, because
+   * a default that overwrote a saved value would silently change records.
+   *
+   * The server remains the authority. If a field must end up with a value the
+   * user never chose, that belongs in the API's own defaulting, not here;
+   * putting it here alone would let a caller that is not this form skip it.
+   * Where both exist they must agree, and the API's is the SSOT.
+   *
+   * A function is allowed for values only knowable at render time (today's
+   * date). It is called once when the create form opens, never on edit.
+   */
+  default?: string | (() => string);
+  /**
+   * Who may see and change this field.
+   *
+   * `view` hides the field from anyone who lacks the permission — on the form
+   * and in the create payload, so a hidden field is never sent.
+   * `edit` shows it read-only instead, which is the right treatment for a
+   * value someone needs to read but not change.
+   *
+   * This is **presentation only**. The server decides what a request may do;
+   * this exists so the form does not offer an action that will come back 403.
+   * Never rely on it as the control — see `requirePermission` on the route,
+   * which is the enforcement and the SSOT.
+   */
+  permission?: { view?: string; edit?: string };
 
   /* ---- Field metadata ----------------------------------------------------
    * A label alone tells someone what a box is called, not what to put in it.
@@ -685,10 +717,37 @@ function ResourceForm<T extends { id: string }>({
   const updateMutation = useUpdate();
   const isEdit = !!record;
 
+  /*
+   * Field-level permission, as presentation only.
+   *
+   * A wildcard holder sees everything. Otherwise a field with `permission.view`
+   * the user lacks is not rendered and not sent, and one with `permission.edit`
+   * they lack renders read-only. The server is still the authority — this only
+   * stops the form offering an action that would come back 403.
+   */
+  const { user } = useAuth();
+  const holds = (code?: string): boolean => {
+    if (!code) return true;
+    const perms = user?.permissions ?? [];
+    return perms.includes("*") || perms.includes(code);
+  };
+  const canView = (f: ResourceField): boolean => holds(f.permission?.view);
+  const canEdit = (f: ResourceField): boolean =>
+    holds(f.permission?.view) && holds(f.permission?.edit);
+
   const initial: Record<string, string> = {};
   for (const f of fields) {
     const v = record ? (record as Record<string, unknown>)[f.name] : undefined;
-    initial[f.name] = v === null || v === undefined ? "" : String(v);
+    if (v !== null && v !== undefined) {
+      initial[f.name] = String(v);
+      continue;
+    }
+    // A default seeds an empty create form and nothing else. On edit the
+    // stored value wins even when it is empty, because filling a blank the
+    // user deliberately cleared would rewrite the record behind their back.
+    initial[f.name] = !isEdit && f.default !== undefined
+      ? (typeof f.default === "function" ? f.default() : f.default)
+      : "";
   }
   const [formData, setFormData] = useState<Record<string, string>>(initial);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
@@ -750,6 +809,9 @@ function ResourceForm<T extends { id: string }>({
     for (const f of fields) {
       if (f.filterOnly) continue;
       if (isEdit && f.createOnly) continue;
+      // A field the user may not see or may not change is not theirs to send.
+      // Filtering only the rendering would still submit the seeded default.
+      if (!canEdit(f)) continue;
       const raw = formData[f.name];
       if (raw === undefined || raw === "" || raw === NONE) continue;
       if (f.type === "number") payload[f.name] = Number(raw);
@@ -773,6 +835,8 @@ function ResourceForm<T extends { id: string }>({
       if (f.name === "companyId") continue;
       if (f.filterOnly) continue;
       if (isEdit && f.createOnly) continue;
+      // Never block a save on a field this user was not shown.
+      if (!canEdit(f)) continue;
       if (!f.required) continue;
       const raw = formData[f.name];
       const empty =
@@ -842,8 +906,10 @@ function ResourceForm<T extends { id: string }>({
     <form onSubmit={handleSubmit} className="space-y-4">
       {fields
         .filter((f) => f.name !== "companyId")
+        .filter(canView)
         .map((f) => {
-          const disabled = (isEdit && f.createOnly) || !!f.generated;
+          const disabled =
+            (isEdit && f.createOnly) || !!f.generated || !canEdit(f);
           const hasError = !!errors[f.name];
           const errorClass = hasError
             ? "border-destructive focus-visible:ring-destructive"

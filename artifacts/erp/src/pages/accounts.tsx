@@ -18,9 +18,12 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/language-provider";
 
 const SIDES = enumOptions(["debit", "credit"]);
-const STATUS = enumOptions(["active", "inactive"]);
 
 export default function AccountsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_record_status } = useLookupOptions("record_status", ["active", "inactive"]);
+  const STATUS = lk_record_status;
   const { language, t } = useLanguage();
   const { options: TYPES } = useLookupOptions("account_type", ["asset", "liability", "equity", "revenue", "expense"]);
   const { data: companies } = useListCompanies();

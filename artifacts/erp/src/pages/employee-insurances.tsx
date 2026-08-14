@@ -14,9 +14,12 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function EmployeeInsurancesPage() {
+  // Domain owned by the lookup engine; literal is the fallback.
+  const { options: lk_insurance_status } = useLookupOptions("insurance_status", ["active", "suspended", "expired", "terminated"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -42,7 +45,7 @@ export default function EmployeeInsurancesPage() {
     { name: "basicSalary", label: "Basic Salary", labelAr: "الراتب الأساسي", type: "money" },
     { name: "subscriptionDate", label: "Subscription Date", labelAr: "تاريخ الاشتراك", type: "date" },
     { name: "insuranceOffice", label: "Insurance Office", labelAr: "مكتب التأمين" },
-    { name: "insuranceStatus", label: "Status", labelAr: "الموقف التأميني", type: "select", options: enumOptions(["active","suspended","terminated","expired"]) },
+    { name: "insuranceStatus", label: "Status", labelAr: "الموقف التأميني", type: "select", options: lk_insurance_status },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 

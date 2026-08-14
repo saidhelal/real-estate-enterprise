@@ -40,6 +40,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { callerCompanyId } from "../lib/register-crud";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import {
   PostingError,
@@ -284,7 +285,10 @@ router.post("/customer-invoices", requirePermission("customerInvoices.create"), 
   try {
     const result = await db.transaction(async (tx) => {
       const { computed, subtotalCents, taxTotalCents } = await computeLines(tx, data.companyId, data.lines, "customer");
-      const number = data.number ?? (await nextJournalNumber(tx, data.companyId));
+      // Its own sequence (CINV), not the journal's: an invoice carrying a
+      // journal-entry number is unreadable to anyone reconciling the two. Any
+      // `number` the client sent is discarded — it is not theirs to choose.
+      const number = await nextJournalNumber(tx, callerCompanyId(req), "Customer Invoice");
       const [inv] = await tx.insert(customerInvoicesTable).values({
         companyId: data.companyId,
         branchId: data.branchId ?? null,
@@ -536,7 +540,8 @@ router.post("/supplier-invoices", requirePermission("supplierInvoices.create"), 
   try {
     const result = await db.transaction(async (tx) => {
       const { computed, subtotalCents, taxTotalCents } = await computeLines(tx, data.companyId, data.lines, "supplier");
-      const number = data.number ?? (await nextJournalNumber(tx, data.companyId));
+      // SINV, its own counter. A client-sent `number` is discarded.
+      const number = await nextJournalNumber(tx, callerCompanyId(req), "Supplier Invoice");
       const [inv] = await tx.insert(supplierInvoicesTable).values({
         companyId: data.companyId,
         branchId: data.branchId ?? null,
@@ -782,7 +787,8 @@ router.post("/payment-vouchers", requirePermission("paymentVouchers.create"), as
   const data = parsed.data;
   if (validAmount(data.amount) === null) { res.status(400).json({ error: "Invalid amount" }); return; }
   const result = await db.transaction(async (tx) => {
-    const code = data.code ?? (await nextJournalNumber(tx, data.companyId));
+    // PV, its own counter. A client-sent `code` is discarded.
+    const code = await nextJournalNumber(tx, callerCompanyId(req), "Payment Voucher");
     const [pv] = await tx.insert(paymentVouchersTable).values({
       companyId: data.companyId, branchId: data.branchId ?? null, code, payeeType: data.payeeType,
       supplierId: data.supplierId ?? null, contractorId: data.contractorId ?? null, payeeName: data.payeeName ?? null,

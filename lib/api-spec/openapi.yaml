@@ -168,420 +168,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /portal/auth/login:
-    post:
-      operationId: portalLogin
-      tags: [portal]
-      summary: Authenticate a customer portal user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PortalLoginInput"
-      responses:
-        "200":
-          description: Authenticated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PortalAuthSession"
-        "401":
-          description: Invalid credentials
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /portal/auth/forgot-password:
-    post:
-      operationId: portalForgotPassword
-      tags: [portal]
-      summary: Request a password-reset OTP
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PortalForgotPasswordInput"
-      responses:
-        "200":
-          description: OTP issued
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PortalForgotPasswordResult"
-
-  /portal/auth/verify-otp:
-    post:
-      operationId: portalVerifyOtp
-      tags: [portal]
-      summary: Verify an OTP and set a new password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PortalVerifyOtpInput"
-      responses:
-        "200":
-          description: Password reset
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OkResponse"
-        "400":
-          description: Invalid or expired code
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /portal/auth/refresh:
-    post:
-      operationId: portalRefresh
-      tags: [portal]
-      summary: Refresh portal access token
-      responses:
-        "200":
-          description: New access token
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PortalAccessToken"
-        "401":
-          description: Invalid or expired refresh token
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /portal/auth/logout:
-    post:
-      operationId: portalLogout
-      tags: [portal]
-      summary: End the current portal session
-      responses:
-        "200":
-          description: Logged out
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OkResponse"
-
-  /portal/me:
-    get:
-      operationId: getPortalMe
-      tags: [portal]
-      summary: Get the authenticated customer portal user
-      responses:
-        "200":
-          description: Current portal user
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PortalCurrentUser"
-        "401":
-          description: Not authenticated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /portal/dashboard:
-    get:
-      operationId: getPortalDashboard
-      tags: [portal]
-      summary: Customer portal dashboard summary
-      responses:
-        "200":
-          description: Dashboard
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PortalDashboard"
-
-  /portal/units:
-    get:
-      operationId: getPortalUnits
-      tags: [portal]
-      summary: Units owned/reserved by the customer
-      responses:
-        "200":
-          description: Units
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PortalUnit"
-
-  /portal/contracts:
-    get:
-      operationId: getPortalContracts
-      tags: [portal]
-      summary: Customer contracts
-      responses:
-        "200":
-          description: Contracts
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PortalContract"
-
-  /portal/installments:
-    get:
-      operationId: getPortalInstallments
-      tags: [portal]
-      summary: Customer installment schedule
-      responses:
-        "200":
-          description: Installments
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PortalInstallment"
-
-  /portal/collections:
-    get:
-      operationId: getPortalCollections
-      tags: [portal]
-      summary: Customer payment receipts/collections
-      responses:
-        "200":
-          description: Collections
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PortalCollection"
-
-  /portal/documents:
-    get:
-      operationId: getPortalDocuments
-      tags: [portal]
-      summary: Customer documents
-      responses:
-        "200":
-          description: Documents
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PortalDocument"
-
-  /portal/maintenance-requests:
-    get:
-      operationId: listMaintenanceRequests
-      tags: [portal]
-      summary: List customer maintenance requests
-      responses:
-        "200":
-          description: Maintenance requests
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/MaintenanceRequest"
-    post:
-      operationId: createMaintenanceRequest
-      tags: [portal]
-      summary: Create a maintenance request
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MaintenanceRequestInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MaintenanceRequest"
-
-  /portal/complaints:
-    get:
-      operationId: listComplaints
-      tags: [portal]
-      summary: List customer complaints
-      responses:
-        "200":
-          description: Complaints
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Complaint"
-    post:
-      operationId: createComplaint
-      tags: [portal]
-      summary: Create a complaint
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ComplaintInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Complaint"
-
-  /portal/notifications:
-    get:
-      operationId: getPortalNotifications
-      tags: [portal]
-      summary: Customer notifications
-      responses:
-        "200":
-          description: Notifications
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CustomerNotification"
-
-  /portal/notifications/{id}/read:
-    post:
-      operationId: markNotificationRead
-      tags: [portal]
-      summary: Mark a notification as read
-      parameters:
-        - $ref: "#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: Marked read
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OkResponse"
-
-  /portal/support-tickets:
-    get:
-      operationId: listSupportTickets
-      tags: [portal]
-      summary: List customer support tickets
-      responses:
-        "200":
-          description: Support tickets
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SupportTicket"
-    post:
-      operationId: createSupportTicket
-      tags: [portal]
-      summary: Open a support ticket
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SupportTicketInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SupportTicket"
-
-  /portal/support-tickets/{id}:
-    get:
-      operationId: getSupportTicket
-      tags: [portal]
-      summary: Get a support ticket with its messages
-      parameters:
-        - $ref: "#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: Support ticket
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SupportTicketDetail"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /portal/support-tickets/{id}/messages:
-    post:
-      operationId: createSupportTicketMessage
-      tags: [portal]
-      summary: Post a message to a support ticket
-      parameters:
-        - $ref: "#/components/parameters/IdParam"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SupportTicketMessageInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SupportTicketMessage"
-
-  /portal/device-tokens:
-    post:
-      operationId: registerDeviceToken
-      tags: [portal]
-      summary: Register a push notification device token
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DeviceTokenInput"
-      responses:
-        "200":
-          description: Registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OkResponse"
-
-  /portal/uploads:
-    post:
-      operationId: uploadPortalFile
-      tags: [portal]
-      summary: Get a presigned URL for uploading a portal file
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PortalUploadInput"
-      responses:
-        "200":
-          description: Upload target
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PortalUploadResult"
-
   /users:
     get:
       operationId: listUsers
@@ -25878,6 +25464,196 @@ paths:
               schema:
                 $ref: "#/components/schemas/NumberPreview"
 
+  /internal-correspondence/directory:
+    get:
+      operationId: getCorrespondenceDirectory
+      tags: [internalCorrespondence]
+      summary: Who the caller may write to, and who holds each leadership post
+      parameters:
+        - name: companyId
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Directory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceDirectory"
+        "409":
+          description: The login is not linked to an employee record
+  /internal-correspondence:
+    get:
+      operationId: listInternalCorrespondence
+      tags: [internalCorrespondence]
+      summary: One mailbox view — inbox, sent, drafts, archived or needs-reply
+      parameters:
+        - name: view
+          in: query
+          schema:
+            type: string
+            enum: [inbox, sent, drafts, archived, needs_reply]
+        - name: companyId
+          in: query
+          schema: { type: string }
+        - name: search
+          in: query
+          schema: { type: string }
+        - name: priority
+          in: query
+          schema: { type: string }
+        - name: correspondenceKind
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer }
+        - name: pageSize
+          in: query
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Mailbox page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceMailboxPage"
+    post:
+      operationId: composeInternalCorrespondence
+      tags: [internalCorrespondence]
+      summary: Compose a draft, or compose and send in one step
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComposeCorrespondenceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalCorrespondence"
+        "400":
+          description: Invalid request
+        "403":
+          description: Not authorised to write to one or more recipients
+        "409":
+          description: The login is not linked to an employee record
+  /internal-correspondence/unread-count:
+    get:
+      operationId: getCorrespondenceUnreadCount
+      tags: [internalCorrespondence]
+      summary: Unread count for the caller, for the inbox badge
+      responses:
+        "200":
+          description: Count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceUnreadCount"
+  /internal-correspondence/{id}:
+    get:
+      operationId: getInternalCorrespondence
+      tags: [internalCorrespondence]
+      summary: One message with its thread and linked documents
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Message and thread
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceThread"
+        "404":
+          description: Not found, or not visible to the caller
+  /internal-correspondence/{id}/send:
+    post:
+      operationId: sendInternalCorrespondenceDraft
+      tags: [internalCorrespondence]
+      summary: Send a draft the caller owns
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalCorrespondence"
+        "400":
+          description: A draft needs at least one recipient before it can be sent
+        "404":
+          description: Draft not found
+  /internal-correspondence/{id}/forward:
+    post:
+      operationId: forwardInternalCorrespondence
+      tags: [internalCorrespondence]
+      summary: Forward a message the caller can see to further recipients
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForwardCorrespondenceInput"
+      responses:
+        "201":
+          description: Forwarded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalCorrespondence"
+        "400":
+          description: At least one recipient is required
+        "403":
+          description: Not authorised to write to one or more recipients
+        "404":
+          description: Not found
+  /internal-correspondence/{id}/archive:
+    post:
+      operationId: archiveInternalCorrespondence
+      tags: [internalCorrespondence]
+      summary: File the caller's own copy away, leaving other inboxes untouched
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceArchiveResult"
+        "404":
+          description: Not addressed to the caller
+  /internal-correspondence/{id}/documents:
+    post:
+      operationId: linkCorrespondenceDocument
+      tags: [internalCorrespondence]
+      summary: Attach an existing document to a message
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LinkCorrespondenceDocumentInput"
+      responses:
+        "201":
+          description: Linked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentLink"
+        "400":
+          description: documentId is required
+        "404":
+          description: Not found
 components:
   parameters:
     IdParam:
@@ -26220,142 +25996,6 @@ components:
       properties:
         reviewNotes: { type: string }
 
-    PortalLoginInput:
-      type: object
-      required: [username, password]
-      properties:
-        username: { type: string, minLength: 1 }
-        password: { type: string, minLength: 1 }
-
-    PortalCurrentUser:
-      type: object
-      required: [id, username, customerId, customerName]
-      properties:
-        id: { type: string }
-        username: { type: string }
-        email: { type: ["string", "null"] }
-        phone: { type: ["string", "null"] }
-        customerId: { type: string }
-        customerName: { type: string }
-        customerNameAr: { type: ["string", "null"] }
-        companyId: { type: string }
-
-    PortalAuthSession:
-      type: object
-      required: [accessToken, code, refreshToken, user]
-      properties:
-        accessToken: { type: string }
-        refreshToken: { type: string }
-        user: { $ref: "#/components/schemas/PortalCurrentUser" }
-
-    PortalAccessToken:
-      type: object
-      required: [accessToken, code]
-      properties:
-        accessToken: { type: string }
-
-    PortalForgotPasswordInput:
-      type: object
-      required: [code, identifier]
-      properties:
-        identifier: { type: string, minLength: 1 }
-
-    PortalForgotPasswordResult:
-      type: object
-      required: [success, code]
-      properties:
-        success: { type: boolean }
-        devCode: { type: ["string", "null"] }
-
-    PortalVerifyOtpInput:
-      type: object
-      required: [code, identifier, newPassword]
-      properties:
-        identifier: { type: string, minLength: 1 }
-        code: { type: string, minLength: 1 }
-        newPassword: { type: string, minLength: 8 }
-
-    PortalDashboard:
-      type: object
-      required:
-        [unitsCount, contractsCount, totalContractValue, totalPaid, totalOutstanding, overdueCount, overdueAmount, openRequests, unreadNotifications]
-      properties:
-        unitsCount: { type: integer }
-        contractsCount: { type: integer }
-        totalContractValue: { type: string }
-        totalPaid: { type: string }
-        totalOutstanding: { type: string }
-        overdueCount: { type: integer }
-        overdueAmount: { type: string }
-        openRequests: { type: integer }
-        unreadNotifications: { type: integer }
-        nextDueDate: { type: ["string", "null"] }
-        nextDueAmount: { type: ["string", "null"] }
-        paymentTrend:
-          type: array
-          items: { $ref: "#/components/schemas/BiTrendPoint" }
-
-    PortalUnit:
-      type: object
-      required: [id, code, status]
-      properties:
-        id: { type: string }
-        code: { type: string }
-        projectName: { type: ["string", "null"] }
-        buildingName: { type: ["string", "null"] }
-        unitType: { type: ["string", "null"] }
-        area: { type: ["string", "null"] }
-        price: { type: ["string", "null"] }
-        status: { type: string }
-
-    PortalContract:
-      type: object
-      required: [id, code, contractDate, totalPrice, status]
-      properties:
-        id: { type: string }
-        code: { type: string }
-        unitId: { type: ["string", "null"] }
-        unitCode: { type: ["string", "null"] }
-        contractDate: { type: string }
-        totalPrice: { type: string }
-        downPayment: { type: ["string", "null"] }
-        status: { type: string }
-
-    PortalInstallment:
-      type: object
-      required: [id, code, dueDate, amount, status]
-      properties:
-        id: { type: string }
-        contractId: { type: ["string", "null"] }
-        contractCode: { type: ["string", "null"] }
-        installmentNo: { type: ["integer", "null"] }
-        dueDate: { type: string }
-        amount: { type: string }
-        paidAmount: { type: string }
-        status: { type: string }
-
-    PortalCollection:
-      type: object
-      required: [id, code, amount, paymentDate]
-      properties:
-        id: { type: string }
-        code: { type: ["string", "null"] }
-        amount: { type: string }
-        paymentDate: { type: string }
-        method: { type: ["string", "null"] }
-        reference: { type: ["string", "null"] }
-
-    PortalDocument:
-      type: object
-      required: [id, code, docType]
-      properties:
-        id: { type: string }
-        docType: { type: string }
-        docNumber: { type: ["string", "null"] }
-        fileUrl: { type: ["string", "null"] }
-        issueDate: { type: ["string", "null"] }
-        expiryDate: { type: ["string", "null"] }
-
     MaintenanceRequest:
       type: object
       required: [id, code, subject, category, priority, status, createdAt]
@@ -26481,20 +26121,6 @@ components:
         token: { type: string, minLength: 1 }
         platform: { type: string, enum: [web, ios, android] }
         deviceName: { type: string }
-
-    PortalUploadInput:
-      type: object
-      required: [fileName, contentType]
-      properties:
-        fileName: { type: string, minLength: 1 }
-        contentType: { type: string, minLength: 1 }
-
-    PortalUploadResult:
-      type: object
-      required: [uploadUrl, fileUrl]
-      properties:
-        uploadUrl: { type: string }
-        fileUrl: { type: string }
 
     User:
       type: object
@@ -28108,7 +27734,7 @@ components:
 
     LeadInput:
       type: object
-      required: [companyId, code, fullName]
+      required: [companyId, fullName]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -42514,3 +42140,140 @@ components:
           type: array
           items: { $ref: "#/components/schemas/DocumentTransferRecipient" }
         myStatus: { type: ["string", "null"] }
+    # ---- Internal correspondence -------------------------------------------
+    # Staff-to-staff official mail. It rides the existing correspondence
+    # register — same table, same numbering, same audit — so the message itself
+    # is a `Correspondence` with the per-person recipient rows attached. The
+    # schemas below add only what the register does not already describe.
+    CorrespondenceRecipientEntry:
+      type: object
+      required: [id, employeeId, kind]
+      properties:
+        id: { type: string }
+        employeeId: { type: string }
+        kind: { type: string }
+        readAt: { type: ["string", "null"] }
+        deliveredAt: { type: ["string", "null"] }
+        archivedAt: { type: ["string", "null"] }
+    InternalCorrespondence:
+      allOf:
+        - $ref: "#/components/schemas/Correspondence"
+        - type: object
+          required: [recipients]
+          properties:
+            senderEmployeeId: { type: ["string", "null"] }
+            sentAt: { type: ["string", "null"] }
+            parentId: { type: ["string", "null"] }
+            correspondenceKind: { type: ["string", "null"] }
+            confidentiality: { type: ["string", "null"] }
+            recipients:
+              type: array
+              items: { $ref: "#/components/schemas/CorrespondenceRecipientEntry" }
+    CorrespondenceDirectoryEmployee:
+      type: object
+      # Mirrors DirectoryEmployee in lib/correspondence-directory.ts: the
+      # server composes a display name rather than sending name parts.
+      required: [id, code, name]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        name: { type: string }
+        departmentId: { type: ["string", "null"] }
+        managerEmployeeId: { type: ["string", "null"] }
+        jobTitleId: { type: ["string", "null"] }
+    # Who currently holds each leadership post. Returned keyed by post, and as
+    # a list per post because a post can be held jointly or be vacant.
+    CorrespondenceLeadership:
+      type: object
+      required: [chairman, executiveDirector]
+      properties:
+        chairman:
+          type: array
+          items: { $ref: "#/components/schemas/CorrespondenceDirectoryEmployee" }
+        executiveDirector:
+          type: array
+          items: { $ref: "#/components/schemas/CorrespondenceDirectoryEmployee" }
+    CorrespondenceDirectory:
+      type: object
+      required: [me, recipients, leadership]
+      properties:
+        me: { $ref: "#/components/schemas/CorrespondenceDirectoryEmployee" }
+        recipients:
+          type: array
+          items: { $ref: "#/components/schemas/CorrespondenceDirectoryEmployee" }
+        leadership: { $ref: "#/components/schemas/CorrespondenceLeadership" }
+    CorrespondenceMailboxPage:
+      type: object
+      required: [data, total, page, pageSize, view]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/InternalCorrespondence" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+        view: { type: string }
+    CorrespondenceThread:
+      type: object
+      required: [correspondence, thread, references]
+      properties:
+        correspondence: { $ref: "#/components/schemas/InternalCorrespondence" }
+        thread:
+          type: array
+          items: { $ref: "#/components/schemas/InternalCorrespondence" }
+        references:
+          type: array
+          items: { type: object, additionalProperties: true }
+    CorrespondenceUnreadCount:
+      type: object
+      required: [unread]
+      properties:
+        unread: { type: integer }
+    CorrespondenceArchiveResult:
+      type: object
+      required: [id, archivedAt]
+      properties:
+        id: { type: string }
+        archivedAt: { type: string }
+    ComposeCorrespondenceInput:
+      type: object
+      # Only the shape belongs here. "A draft may have no recipient, sending may
+      # not" depends on what the request is trying to do, so it stays in the
+      # service where the intent is known.
+      required: [companyId, subject]
+      properties:
+        companyId: { type: string }
+        subject: { type: string }
+        body: { type: string }
+        priority: { type: string }
+        correspondenceKind: { type: string }
+        confidentiality: { type: string }
+        replyDueDate: { type: string }
+        to:
+          type: array
+          items: { type: string }
+        cc:
+          type: array
+          items: { type: string }
+        send: { type: boolean }
+        parentId: { type: string }
+        # Makes a repeated submit return the message that already exists rather
+        # than sending official correspondence twice.
+        idempotencyKey: { type: string }
+    ForwardCorrespondenceInput:
+      type: object
+      required: [to]
+      properties:
+        to:
+          type: array
+          items: { type: string }
+        cc:
+          type: array
+          items: { type: string }
+        note: { type: string }
+    LinkCorrespondenceDocumentInput:
+      type: object
+      required: [documentId]
+      properties:
+        documentId: { type: string }
+        linkType: { type: string }

@@ -22,6 +22,14 @@ import { formatSequenceSample } from "./presenters";
  *    definition is now created on first use instead.
  */
 
+/**
+ * A transaction handle the engine can run inside.
+ *
+ * Derived from drizzle's own transaction callback rather than declared, so it
+ * cannot drift from what `db.transaction` actually hands out.
+ */
+export type NumberTx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
 /** What a caller gets back, so the audit trail can say where it came from. */
 export interface GeneratedNumber {
   /** The formatted identifier, e.g. `CON-2026-000041`. */
@@ -93,6 +101,12 @@ function prefixCandidates(documentType: string): string[] {
  *
  * Preview and issue both go through here, so the number a form displays for a
  * type that has never been used is the number that type will actually get.
+ *
+ * A type that already has a sequence somewhere the caller can see keeps that
+ * prefix. Two companies both writing journal entries want `JE-` on both, with
+ * separate counters — not `JE-` for one and an invented `JEN-` for the other
+ * because the shared definition was mistaken for a rival. Only a genuinely new
+ * document type derives a prefix.
  */
 async function resolvePrefix(
   runner: Pick<typeof db, "select">,
@@ -111,6 +125,10 @@ async function resolvePrefix(
           : isNull(numberSequencesTable.companyId),
       ),
     );
+  // Same type, wider scope: adopt its prefix rather than deriving a rival one.
+  const sameType = rows.find((r) => r.documentType === documentType);
+  if (sameType) return sameType.prefix;
+
   const taken = new Set(
     rows.filter((r) => r.documentType !== documentType).map((r) => r.prefix.toUpperCase()),
   );
@@ -133,8 +151,18 @@ async function resolvePrefix(
 export async function nextNumber(
   documentType: string,
   companyId: string | null = null,
+  existingTx?: NumberTx,
 ): Promise<GeneratedNumber> {
-  return db.transaction(async (tx) => {
+  // Compose inside the caller's transaction when there is one, so a number and
+  // the row it belongs to commit or roll back together. Accounting needs this:
+  // a journal entry that failed to insert must not have consumed a number.
+  // Opening our own transaction here instead would let the counter advance for
+  // an entry that never existed.
+  const run = existingTx
+    ? (fn: (tx: NumberTx) => Promise<GeneratedNumber>) => fn(existingTx)
+    : (fn: (tx: NumberTx) => Promise<GeneratedNumber>) => db.transaction(fn);
+
+  return run(async (tx) => {
     /*
      * Serialise everyone drawing on this counter, before anything is read.
      *

@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function CorrespondencePage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_urgency_level } = useLookupOptions("urgency_level", ["low", "medium", "high", "urgent"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -41,7 +45,7 @@ export default function CorrespondencePage() {
     { name: "recipientName", label: "Recipient", labelAr: "المُستلِم" },
     { name: "refNumber", label: "Reference No.", labelAr: "رقم المرجع" },
     { name: "correspondenceDate", label: "Date", labelAr: "التاريخ", type: "date" },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "urgent"]) },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: lk_urgency_level },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["received", "in_progress", "replied", "archived", "closed"]) },
     { name: "assignedToEmployeeId", label: "Assigned To (Employee ID)", labelAr: "مُسند إلى (معرّف الموظف)" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },

@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function InsuranceSubscriptionsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_settlement_status } = useLookupOptions("settlement_status", ["pending", "paid", "cancelled"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -41,7 +45,7 @@ export default function InsuranceSubscriptionsPage() {
     { name: "employeeShare", label: "Employee Share", labelAr: "حصة الموظف", type: "money" },
     { name: "totalAmount", label: "Total Amount", labelAr: "إجمالي المبلغ", required: true, type: "money" },
     { name: "employeeCount", label: "Employees", labelAr: "عدد الموظفين", type: "number" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["pending","paid","cancelled"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_settlement_status },
     { name: "paymentDate", label: "Payment Date", labelAr: "تاريخ السداد", type: "date" },
     { name: "paymentMethod", label: "Payment Method", labelAr: "طريقة السداد" },
     { name: "reference", label: "Reference", labelAr: "المرجع" },

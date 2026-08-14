@@ -102,412 +102,6 @@ export const ChangePasswordResponse = zod.object({
 
 
 /**
- * @summary Authenticate a customer portal user
- */
-
-
-
-
-export const PortalLoginBody = zod.object({
-  "username": zod.string().min(1),
-  "password": zod.string().min(1)
-})
-
-export const PortalLoginResponse = zod.object({
-  "accessToken": zod.string(),
-  "refreshToken": zod.string(),
-  "user": zod.object({
-  "id": zod.string(),
-  "username": zod.string(),
-  "email": zod.string().nullish(),
-  "phone": zod.string().nullish(),
-  "customerId": zod.string(),
-  "customerName": zod.string(),
-  "customerNameAr": zod.string().nullish(),
-  "companyId": zod.string().optional()
-})
-})
-
-
-/**
- * @summary Request a password-reset OTP
- */
-
-
-
-export const PortalForgotPasswordBody = zod.object({
-  "identifier": zod.string().min(1)
-})
-
-export const PortalForgotPasswordResponse = zod.object({
-  "success": zod.boolean(),
-  "devCode": zod.string().nullish()
-})
-
-
-/**
- * @summary Verify an OTP and set a new password
- */
-
-
-export const portalVerifyOtpBodyNewPasswordMin = 8;
-
-
-
-export const PortalVerifyOtpBody = zod.object({
-  "identifier": zod.string().min(1),
-  "code": zod.string().min(1),
-  "newPassword": zod.string().min(portalVerifyOtpBodyNewPasswordMin)
-})
-
-export const PortalVerifyOtpResponse = zod.object({
-  "success": zod.boolean()
-})
-
-
-/**
- * @summary Refresh portal access token
- */
-export const PortalRefreshResponse = zod.object({
-  "accessToken": zod.string()
-})
-
-
-/**
- * @summary End the current portal session
- */
-export const PortalLogoutResponse = zod.object({
-  "success": zod.boolean()
-})
-
-
-/**
- * @summary Get the authenticated customer portal user
- */
-export const GetPortalMeResponse = zod.object({
-  "id": zod.string(),
-  "username": zod.string(),
-  "email": zod.string().nullish(),
-  "phone": zod.string().nullish(),
-  "customerId": zod.string(),
-  "customerName": zod.string(),
-  "customerNameAr": zod.string().nullish(),
-  "companyId": zod.string().optional()
-})
-
-
-/**
- * @summary Customer portal dashboard summary
- */
-export const GetPortalDashboardResponse = zod.object({
-  "unitsCount": zod.number(),
-  "contractsCount": zod.number(),
-  "totalContractValue": zod.string(),
-  "totalPaid": zod.string(),
-  "totalOutstanding": zod.string(),
-  "overdueCount": zod.number(),
-  "overdueAmount": zod.string(),
-  "openRequests": zod.number(),
-  "unreadNotifications": zod.number(),
-  "nextDueDate": zod.string().nullish(),
-  "nextDueAmount": zod.string().nullish(),
-  "paymentTrend": zod.array(zod.object({
-  "period": zod.string(),
-  "value": zod.string(),
-  "count": zod.number().optional()
-})).optional()
-})
-
-
-/**
- * @summary Units owned/reserved by the customer
- */
-export const GetPortalUnitsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "projectName": zod.string().nullish(),
-  "buildingName": zod.string().nullish(),
-  "unitType": zod.string().nullish(),
-  "area": zod.string().nullish(),
-  "price": zod.string().nullish(),
-  "status": zod.string()
-})
-export const GetPortalUnitsResponse = zod.array(GetPortalUnitsResponseItem)
-
-
-/**
- * @summary Customer contracts
- */
-export const GetPortalContractsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "unitId": zod.string().nullish(),
-  "unitCode": zod.string().nullish(),
-  "contractDate": zod.string(),
-  "totalPrice": zod.string(),
-  "downPayment": zod.string().nullish(),
-  "status": zod.string()
-})
-export const GetPortalContractsResponse = zod.array(GetPortalContractsResponseItem)
-
-
-/**
- * @summary Customer installment schedule
- */
-export const GetPortalInstallmentsResponseItem = zod.object({
-  "id": zod.string(),
-  "contractId": zod.string().nullish(),
-  "contractCode": zod.string().nullish(),
-  "installmentNo": zod.number().nullish(),
-  "dueDate": zod.string(),
-  "amount": zod.string(),
-  "paidAmount": zod.string().optional(),
-  "status": zod.string()
-})
-export const GetPortalInstallmentsResponse = zod.array(GetPortalInstallmentsResponseItem)
-
-
-/**
- * @summary Customer payment receipts/collections
- */
-export const GetPortalCollectionsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string().nullable(),
-  "amount": zod.string(),
-  "paymentDate": zod.string(),
-  "method": zod.string().nullish(),
-  "reference": zod.string().nullish()
-})
-export const GetPortalCollectionsResponse = zod.array(GetPortalCollectionsResponseItem)
-
-
-/**
- * @summary Customer documents
- */
-export const GetPortalDocumentsResponseItem = zod.object({
-  "id": zod.string(),
-  "docType": zod.string(),
-  "docNumber": zod.string().nullish(),
-  "fileUrl": zod.string().nullish(),
-  "issueDate": zod.string().nullish(),
-  "expiryDate": zod.string().nullish()
-})
-export const GetPortalDocumentsResponse = zod.array(GetPortalDocumentsResponseItem)
-
-
-/**
- * @summary List customer maintenance requests
- */
-export const ListMaintenanceRequestsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "unitId": zod.string().nullish(),
-  "contractId": zod.string().nullish(),
-  "category": zod.string(),
-  "priority": zod.string(),
-  "subject": zod.string(),
-  "description": zod.string().nullish(),
-  "status": zod.string(),
-  "attachmentUrl": zod.string().nullish(),
-  "resolvedAt": zod.string().nullish(),
-  "createdAt": zod.string(),
-  "updatedAt": zod.string().nullish()
-})
-export const ListMaintenanceRequestsResponse = zod.array(ListMaintenanceRequestsResponseItem)
-
-
-/**
- * @summary Create a maintenance request
- */
-
-
-
-export const CreateMaintenanceRequestBody = zod.object({
-  "unitId": zod.string().optional(),
-  "contractId": zod.string().optional(),
-  "category": zod.string().optional(),
-  "priority": zod.enum(['low', 'medium', 'high', 'urgent']).optional(),
-  "subject": zod.string().min(1),
-  "description": zod.string().optional(),
-  "attachmentUrl": zod.string().optional()
-})
-
-
-/**
- * @summary List customer complaints
- */
-export const ListComplaintsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "category": zod.string(),
-  "subject": zod.string(),
-  "description": zod.string().nullish(),
-  "status": zod.string(),
-  "attachmentUrl": zod.string().nullish(),
-  "resolvedAt": zod.string().nullish(),
-  "createdAt": zod.string(),
-  "updatedAt": zod.string().nullish()
-})
-export const ListComplaintsResponse = zod.array(ListComplaintsResponseItem)
-
-
-/**
- * @summary Create a complaint
- */
-
-
-
-export const CreateComplaintBody = zod.object({
-  "category": zod.string().optional(),
-  "subject": zod.string().min(1),
-  "description": zod.string().optional(),
-  "attachmentUrl": zod.string().optional()
-})
-
-
-/**
- * @summary Customer notifications
- */
-export const GetPortalNotificationsResponseItem = zod.object({
-  "id": zod.string(),
-  "title": zod.string(),
-  "body": zod.string().nullish(),
-  "category": zod.string().optional(),
-  "link": zod.string().nullish(),
-  "isRead": zod.boolean(),
-  "readAt": zod.string().nullish(),
-  "createdAt": zod.string()
-})
-export const GetPortalNotificationsResponse = zod.array(GetPortalNotificationsResponseItem)
-
-
-/**
- * @summary Mark a notification as read
- */
-export const MarkNotificationReadParams = zod.object({
-  "id": zod.coerce.string()
-})
-
-export const MarkNotificationReadResponse = zod.object({
-  "success": zod.boolean()
-})
-
-
-/**
- * @summary List customer support tickets
- */
-export const ListSupportTicketsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "subject": zod.string(),
-  "category": zod.string().optional(),
-  "priority": zod.string(),
-  "status": zod.string(),
-  "closedAt": zod.string().nullish(),
-  "createdAt": zod.string(),
-  "updatedAt": zod.string().nullish()
-})
-export const ListSupportTicketsResponse = zod.array(ListSupportTicketsResponseItem)
-
-
-/**
- * @summary Open a support ticket
- */
-
-
-
-
-export const CreateSupportTicketBody = zod.object({
-  "subject": zod.string().min(1),
-  "category": zod.string().optional(),
-  "priority": zod.enum(['low', 'medium', 'high', 'urgent']).optional(),
-  "body": zod.string().min(1)
-})
-
-
-/**
- * @summary Get a support ticket with its messages
- */
-export const GetSupportTicketParams = zod.object({
-  "id": zod.coerce.string()
-})
-
-export const GetSupportTicketResponse = zod.object({
-  "ticket": zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "subject": zod.string(),
-  "category": zod.string().optional(),
-  "priority": zod.string(),
-  "status": zod.string(),
-  "closedAt": zod.string().nullish(),
-  "createdAt": zod.string(),
-  "updatedAt": zod.string().nullish()
-}),
-  "messages": zod.array(zod.object({
-  "id": zod.string(),
-  "ticketId": zod.string(),
-  "authorType": zod.string(),
-  "authorName": zod.string().nullish(),
-  "body": zod.string(),
-  "attachmentUrl": zod.string().nullish(),
-  "createdAt": zod.string()
-}))
-})
-
-
-/**
- * @summary Post a message to a support ticket
- */
-export const CreateSupportTicketMessageParams = zod.object({
-  "id": zod.coerce.string()
-})
-
-
-
-
-export const CreateSupportTicketMessageBody = zod.object({
-  "body": zod.string().min(1),
-  "attachmentUrl": zod.string().optional()
-})
-
-
-/**
- * @summary Register a push notification device token
- */
-
-
-
-export const RegisterDeviceTokenBody = zod.object({
-  "token": zod.string().min(1),
-  "platform": zod.enum(['web', 'ios', 'android']).optional(),
-  "deviceName": zod.string().optional()
-})
-
-export const RegisterDeviceTokenResponse = zod.object({
-  "success": zod.boolean()
-})
-
-
-/**
- * @summary Get a presigned URL for uploading a portal file
- */
-
-
-
-
-export const UploadPortalFileBody = zod.object({
-  "fileName": zod.string().min(1),
-  "contentType": zod.string().min(1)
-})
-
-export const UploadPortalFileResponse = zod.object({
-  "uploadUrl": zod.string(),
-  "fileUrl": zod.string()
-})
-
-
-/**
  * @summary List users
  */
 export const ListUsersQueryParams = zod.object({
@@ -2670,7 +2264,7 @@ export const ListLeadsResponse = zod.object({
 export const CreateLeadBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "fullName": zod.string(),
   "phone": zod.string().optional(),
   "nationalId": zod.string().optional(),
@@ -38292,6 +37886,308 @@ export const PreviewNextNumberResponse = zod.object({
   "nextNumber": zod.number(),
   "code": zod.string(),
   "generated": zod.boolean()
+})
+
+
+/**
+ * @summary Who the caller may write to, and who holds each leadership post
+ */
+export const GetCorrespondenceDirectoryQueryParams = zod.object({
+  "companyId": zod.coerce.string()
+})
+
+export const GetCorrespondenceDirectoryResponse = zod.object({
+  "me": zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "managerEmployeeId": zod.string().nullish(),
+  "jobTitleId": zod.string().nullish()
+}),
+  "recipients": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "managerEmployeeId": zod.string().nullish(),
+  "jobTitleId": zod.string().nullish()
+})),
+  "leadership": zod.object({
+  "chairman": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "managerEmployeeId": zod.string().nullish(),
+  "jobTitleId": zod.string().nullish()
+})),
+  "executiveDirector": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "managerEmployeeId": zod.string().nullish(),
+  "jobTitleId": zod.string().nullish()
+}))
+})
+})
+
+
+/**
+ * @summary One mailbox view — inbox, sent, drafts, archived or needs-reply
+ */
+export const ListInternalCorrespondenceQueryParams = zod.object({
+  "view": zod.enum(['inbox', 'sent', 'drafts', 'archived', 'needs_reply']).optional(),
+  "companyId": zod.coerce.string().optional(),
+  "search": zod.coerce.string().optional(),
+  "priority": zod.coerce.string().optional(),
+  "correspondenceKind": zod.coerce.string().optional(),
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional()
+})
+
+export const ListInternalCorrespondenceResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "senderEmployeeId": zod.string().nullish(),
+  "sentAt": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "correspondenceKind": zod.string().nullish(),
+  "confidentiality": zod.string().nullish(),
+  "recipients": zod.array(zod.object({
+  "id": zod.string(),
+  "employeeId": zod.string(),
+  "kind": zod.string(),
+  "readAt": zod.string().nullish(),
+  "deliveredAt": zod.string().nullish(),
+  "archivedAt": zod.string().nullish()
+}))
+}))),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number(),
+  "view": zod.string()
+})
+
+
+/**
+ * @summary Compose a draft, or compose and send in one step
+ */
+export const ComposeInternalCorrespondenceBody = zod.object({
+  "companyId": zod.string(),
+  "subject": zod.string(),
+  "body": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "correspondenceKind": zod.string().optional(),
+  "confidentiality": zod.string().optional(),
+  "replyDueDate": zod.string().optional(),
+  "to": zod.array(zod.string()).optional(),
+  "cc": zod.array(zod.string()).optional(),
+  "send": zod.boolean().optional(),
+  "parentId": zod.string().optional(),
+  "idempotencyKey": zod.string().optional()
+})
+
+
+/**
+ * @summary Unread count for the caller, for the inbox badge
+ */
+export const GetCorrespondenceUnreadCountResponse = zod.object({
+  "unread": zod.number()
+})
+
+
+/**
+ * @summary One message with its thread and linked documents
+ */
+export const GetInternalCorrespondenceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetInternalCorrespondenceResponse = zod.object({
+  "correspondence": zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "senderEmployeeId": zod.string().nullish(),
+  "sentAt": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "correspondenceKind": zod.string().nullish(),
+  "confidentiality": zod.string().nullish(),
+  "recipients": zod.array(zod.object({
+  "id": zod.string(),
+  "employeeId": zod.string(),
+  "kind": zod.string(),
+  "readAt": zod.string().nullish(),
+  "deliveredAt": zod.string().nullish(),
+  "archivedAt": zod.string().nullish()
+}))
+})),
+  "thread": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "senderEmployeeId": zod.string().nullish(),
+  "sentAt": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "correspondenceKind": zod.string().nullish(),
+  "confidentiality": zod.string().nullish(),
+  "recipients": zod.array(zod.object({
+  "id": zod.string(),
+  "employeeId": zod.string(),
+  "kind": zod.string(),
+  "readAt": zod.string().nullish(),
+  "deliveredAt": zod.string().nullish(),
+  "archivedAt": zod.string().nullish()
+}))
+}))),
+  "references": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+/**
+ * @summary Send a draft the caller owns
+ */
+export const SendInternalCorrespondenceDraftParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const SendInternalCorrespondenceDraftResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "direction": zod.string(),
+  "correspondenceType": zod.string(),
+  "subject": zod.string(),
+  "senderName": zod.string().nullish(),
+  "recipientName": zod.string().nullish(),
+  "refNumber": zod.string().nullish(),
+  "correspondenceDate": zod.string(),
+  "priority": zod.string(),
+  "status": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "attachmentUrl": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "replyDueDate": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "isInternal": zod.boolean().optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "senderEmployeeId": zod.string().nullish(),
+  "sentAt": zod.string().nullish(),
+  "parentId": zod.string().nullish(),
+  "correspondenceKind": zod.string().nullish(),
+  "confidentiality": zod.string().nullish(),
+  "recipients": zod.array(zod.object({
+  "id": zod.string(),
+  "employeeId": zod.string(),
+  "kind": zod.string(),
+  "readAt": zod.string().nullish(),
+  "deliveredAt": zod.string().nullish(),
+  "archivedAt": zod.string().nullish()
+}))
+}))
+
+
+/**
+ * @summary Forward a message the caller can see to further recipients
+ */
+export const ForwardInternalCorrespondenceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ForwardInternalCorrespondenceBody = zod.object({
+  "to": zod.array(zod.string()),
+  "cc": zod.array(zod.string()).optional(),
+  "note": zod.string().optional()
+})
+
+
+/**
+ * @summary File the caller's own copy away, leaving other inboxes untouched
+ */
+export const ArchiveInternalCorrespondenceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ArchiveInternalCorrespondenceResponse = zod.object({
+  "id": zod.string(),
+  "archivedAt": zod.string()
+})
+
+
+/**
+ * @summary Attach an existing document to a message
+ */
+export const LinkCorrespondenceDocumentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const LinkCorrespondenceDocumentBody = zod.object({
+  "documentId": zod.string(),
+  "linkType": zod.string().optional()
 })
 
 

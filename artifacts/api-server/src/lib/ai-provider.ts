@@ -4,8 +4,8 @@
  * swapped from System Settings (`ai.provider` / `ai.model`) without touching any
  * route.
  *
- * Every supported provider is reached through the Replit AI integrations proxy,
- * which exposes an OpenAI-compatible Chat Completions endpoint. A provider is
+ * Every supported provider is reached through an OpenAI-compatible Chat
+ * Completions endpoint, whatever serves it. A provider is
  * therefore just a `(baseURL, apiKey)` pair sourced from its own
  * `AI_INTEGRATIONS_<PROVIDER>_*` env vars; selecting one only changes which
  * client we build. New providers are added to `AI_PROVIDERS` — no route change.
@@ -35,8 +35,9 @@ export const DEFAULT_AI_MODEL = process.env.AI_MODEL ?? "gpt-5";
 
 /**
  * Allowlist of selectable providers. `envPrefix` names the integration env var
- * pair (`<prefix>_BASE_URL` + `<prefix>_API_KEY`) provisioned by the Replit AI
- * integration for that provider.
+ * pair (`<prefix>_BASE_URL` + `<prefix>_API_KEY`) pointing at that provider's
+ * endpoint. Nothing here is tied to a particular host: set the pair to the
+ * vendor API directly, or to any compatible gateway.
  */
 export const AI_PROVIDERS = {
   openai: { label: "OpenAI", envPrefix: "AI_INTEGRATIONS_OPENAI" },

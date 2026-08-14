@@ -59,10 +59,8 @@ import {
   legalHearingsTable,
   legalClaimsTable,
   legalNoticesTable,
-  customerUsersTable,
   maintenanceRequestsTable,
   complaintsTable,
-  customerNotificationsTable,
   supportTicketsTable,
   supportTicketMessagesTable,
   lookupTypesTable,
@@ -842,6 +840,11 @@ async function seedNumberSequences(): Promise<void> {
       { documentType: "Supplier Invoice", prefix: "SINV", padding: 5, resetYearly: true },
       { documentType: "Contract", prefix: "CON", padding: 4, resetYearly: false },
       { documentType: "Journal Entry", prefix: "JE", padding: 6, resetYearly: true },
+      // EDMS document numbers. `resetYearly: false` and six digits keep the
+      // exact `DOC-000001` shape the archive already uses — the engine took
+      // this over from a `count(*) + 1` helper, and a number that suddenly
+      // grew a year segment would read as a different register.
+      { documentType: "document", prefix: "DOC", padding: 6, resetYearly: false },
       { documentType: "Employee", prefix: "EMP", padding: 5, resetYearly: false },
       { documentType: "Payroll Run", prefix: "PR", padding: 5, resetYearly: true },
       { documentType: "Leave Request", prefix: "LV", padding: 5, resetYearly: true },
@@ -1862,169 +1865,10 @@ async function seedLegal(): Promise<void> {
   console.log("Seeded legal demo data: 2 templates, 1 law firm, 1 advisor, 1 case (+hearing, claim, notice)");
 }
 
-const PORTAL_USER_PASSWORD = "Customer@123456";
-
-async function seedPortal(): Promise<void> {
-  // Opt-in only. This block mints a demo portal login (`customer1`) plus the
-  // maintenance request / complaint / support ticket that belong to it. Local
-  // development runs with exactly one real ERP account and no portal logins, so
-  // re-running the seed must not resurrect a demo account. Nothing in the ERP
-  // depends on a portal account existing — the portal routes simply have no one
-  // to authenticate. Set SEED_DEMO_PORTAL=1 to seed the demo portal again.
-  if (process.env.SEED_DEMO_PORTAL !== "1") {
-    console.log(
-      "Skipped customer portal demo account (set SEED_DEMO_PORTAL=1 to seed it)",
-    );
-    return;
-  }
-
-  const [company] = await db
-    .select()
-    .from(companiesTable)
-    .where(eq(companiesTable.code, "HQ001"));
-  if (!company) {
-    console.log("No sample company found, skipping portal demo data");
-    return;
-  }
-  const companyId = company.id;
-
-  // Attach a portal login to the first seeded customer for the demo company.
-  const [customer] = await db
-    .select()
-    .from(customersTable)
-    .where(eq(customersTable.companyId, companyId))
-    .orderBy(customersTable.code)
-    .limit(1);
-  if (!customer) {
-    console.log("Skipped portal seed: no customers found.");
-    return;
-  }
-
-  const passwordHash = await hashPassword(PORTAL_USER_PASSWORD);
-  const username = "customer1";
-
-  let [portalUser] = await db
-    .select()
-    .from(customerUsersTable)
-    .where(eq(customerUsersTable.username, username));
-
-  if (portalUser) {
-    // Re-running the seed resets the password and clears any lockout so the
-    // demo account is always recoverable.
-    await db
-      .update(customerUsersTable)
-      .set({
-        passwordHash,
-        status: "active",
-        isActive: true,
-        lockedUntil: null,
-        failedAttempts: "0",
-      })
-      .where(eq(customerUsersTable.id, portalUser.id));
-  } else {
-    [portalUser] = await db
-      .insert(customerUsersTable)
-      .values({
-        companyId,
-        customerId: customer.id,
-        username,
-        email: customer.email,
-        phone: customer.phone,
-        passwordHash,
-        status: "active",
-      })
-      .returning();
-  }
-
-  // Idempotent demo content keyed by deterministic codes.
-  const [existingMr] = await db
-    .select()
-    .from(maintenanceRequestsTable)
-    .where(eq(maintenanceRequestsTable.code, "MR-DEMO-001"));
-  if (!existingMr) {
-    await db.insert(maintenanceRequestsTable).values({
-      companyId,
-      customerId: customer.id,
-      customerUserId: portalUser.id,
-      code: "MR-DEMO-001",
-      category: "plumbing",
-      priority: "high",
-      subject: "Water leak in kitchen",
-      description: "There is a persistent leak under the kitchen sink.",
-      status: "open",
-    });
-  }
-
-  const [existingCmp] = await db
-    .select()
-    .from(complaintsTable)
-    .where(eq(complaintsTable.code, "CMP-DEMO-001"));
-  if (!existingCmp) {
-    await db.insert(complaintsTable).values({
-      companyId,
-      customerId: customer.id,
-      customerUserId: portalUser.id,
-      code: "CMP-DEMO-001",
-      category: "billing",
-      subject: "Question about last installment",
-      description: "I was charged earlier than the agreed due date.",
-      status: "open",
-    });
-  }
-
-  const [existingNotif] = await db
-    .select()
-    .from(customerNotificationsTable)
-    .where(
-      and(
-        eq(customerNotificationsTable.customerId, customer.id),
-        eq(customerNotificationsTable.title, "Welcome to your customer portal"),
-      ),
-    );
-  if (!existingNotif) {
-    await db.insert(customerNotificationsTable).values({
-      companyId,
-      customerId: customer.id,
-      customerUserId: portalUser.id,
-      title: "Welcome to your customer portal",
-      body: "You can now view your units, contracts, installments and raise requests.",
-      category: "general",
-    });
-  }
-
-  const [existingTicket] = await db
-    .select()
-    .from(supportTicketsTable)
-    .where(eq(supportTicketsTable.code, "TKT-DEMO-001"));
-  if (!existingTicket) {
-    const [ticket] = await db
-      .insert(supportTicketsTable)
-      .values({
-        companyId,
-        customerId: customer.id,
-        customerUserId: portalUser.id,
-        code: "TKT-DEMO-001",
-        subject: "How do I download my contract?",
-        category: "general",
-        priority: "medium",
-        status: "open",
-      })
-      .returning();
-    await db.insert(supportTicketMessagesTable).values({
-      companyId,
-      ticketId: ticket.id,
-      customerId: customer.id,
-      authorType: "customer",
-      authorId: portalUser.id,
-      authorName: customer.fullName,
-      body: "I need a copy of my signed contract. Where can I find it?",
-    });
-  }
-
-  console.log(
-    `Seeded customer portal demo (username: ${username}, password: ${PORTAL_USER_PASSWORD})`,
-  );
-}
+// The customer portal was removed: customers are business records managed by
+// staff inside the ERP, and no customer holds a login. There is nothing here
+// to seed — no portal account, no SEED_DEMO_PORTAL switch. Customer business
+// data (customers, leads, contracts) is seeded by the modules that own it.
 
 // Master Data engine: seed each category as a system lookup type and its options
 // as system lookup values. Stored value codes are kept identical to the existing
@@ -2139,7 +1983,6 @@ export async function seedAll(): Promise<void> {
   await seedHr();
   await backfillLegalContracts();
   await seedLegal();
-  await seedPortal();
   console.log("Seed complete.");
 }
 

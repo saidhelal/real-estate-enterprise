@@ -119,7 +119,6 @@ const ChequeStatusHistorysPage = lazy(() => import("@/pages/cheque-status-histor
 const ChequeReportsPage = lazy(() => import("@/pages/cheque-reports"));
 const ProfitCentersPage = lazy(() => import("@/pages/profit-centers"));
 const YearEndClosingPage = lazy(() => import("@/pages/year-end-closing"));
-const FinancialReportsPage = lazy(() => import("@/pages/financial-reports"));
 
 const ExecutiveDashboardPage = lazy(() => import("@/pages/executive-dashboard"));
 const ExecutiveOversightPage = lazy(() => import("@/pages/executive-oversight"));
@@ -487,9 +486,7 @@ function Router() {
             <Route path="/cheque-status-history" component={ChequeStatusHistorysPage} />
             <Route path="/cheque-reports" component={ChequeReportsPage} />
             <Route path="/profit-centers" component={ProfitCentersPage} />
-            <Route path="/year-end-closing" component={YearEndClosingPage} />
-            <Route path="/financial-reports" component={FinancialReportsPage} />
-            <Route path="/engineering-dashboard" component={EngineeringDashboardPage} />
+            <Route path="/year-end-closing" component={YearEndClosingPage} />            <Route path="/engineering-dashboard" component={EngineeringDashboardPage} />
             <Route path="/engineering-disciplines" component={EngineeringDisciplinesPage} />
             <Route path="/consultants" component={ConsultantsPage} />
             <Route path="/design-packages" component={DesignPackagesPage} />

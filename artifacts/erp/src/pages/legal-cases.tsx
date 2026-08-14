@@ -24,9 +24,12 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const COUNTERPARTY_TYPE = enumOptions(["customer", "contractor", "supplier", "employee", "other"]);
 
 export default function LegalCasesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_counterparty_type } = useLookupOptions("counterparty_type", ["customer", "contractor", "supplier", "employee", "other"]);
+  const COUNTERPARTY_TYPE = lk_counterparty_type;
   const { language, t } = useLanguage();
   const CASE_TYPE = enumOptions(["civil", "commercial", "labor", "criminal", "administrative", "arbitration", "other"]);
   const { options: ROLE } = useLookupOptions("legal_case_role", ["plaintiff", "defendant", "third_party"]);

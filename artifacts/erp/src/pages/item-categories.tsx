@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel, enumOptions } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function ItemCategorysPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_record_status } = useLookupOptions("record_status", ["active", "inactive"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -40,7 +44,7 @@ export default function ItemCategorysPage() {
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", required: true, rtl: true },
     { name: "parentId", label: "Parent Category", labelAr: "الفئة الأم", type: "select", options: parentOptions },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["active", "inactive"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_record_status },
   ];
 
   const columns: ResourceColumn<ItemCategory>[] = [

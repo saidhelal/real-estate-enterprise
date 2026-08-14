@@ -6,6 +6,7 @@ import {
   correspondenceRecipientsTable,
   documentLinksTable,
 } from "@workspace/db";
+import { ComposeInternalCorrespondenceBody } from "@workspace/api-zod";
 import { requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
 import { notify } from "../lib/notify";
@@ -394,6 +395,20 @@ router.get(
 /* Compose / send / reply / forward                                           */
 /* -------------------------------------------------------------------------- */
 
+/*
+ * The request shape comes from the contract.
+ *
+ * `ComposeInternalCorrespondenceBody` is generated from `openapi.yaml`, like
+ * every other route's body — this module used to be the one exception, first
+ * with hand-written `if` chains and then with a local zod schema. Both were a
+ * second place the shape was written down, and a second place it could drift
+ * from what the client was told to send.
+ *
+ * Shape belongs to the contract; rules that depend on what the request is
+ * trying to do (a draft may have no recipient, sending may not) stay in the
+ * handler, where the intent is known.
+ */
+
 interface ComposeBody {
   companyId?: string;
   subject?: string;
@@ -424,23 +439,28 @@ router.post(
     if (!me) return;
     const b = (req.body ?? {}) as ComposeBody;
 
-    if (!b.companyId) {
-      res.status(400).json({ error: "companyId is required." });
+    // Shape is checked declaratively, in one schema, the way every contract
+    // route is checked — not by a chain of hand-written `if`s that each decide
+    // their own message and are easy to add to and easy to forget.
+    const shape = ComposeInternalCorrespondenceBody.safeParse(b);
+    if (!shape.success) {
+      res.status(400).json({ error: shape.error.issues[0]?.message ?? "Invalid request." });
       return;
     }
-    if (!b.subject?.trim()) {
-      res.status(400).json({ error: "A subject is required." });
-      return;
-    }
+
     const to = (b.to ?? []).filter(Boolean);
     const cc = (b.cc ?? []).filter(Boolean);
+    // A business rule, not a shape: a draft may have no recipient, sending may
+    // not. It stays here rather than in the schema because it depends on what
+    // the request is trying to do.
     if (b.send && to.length === 0) {
       res.status(400).json({ error: "At least one recipient is required to send." });
       return;
     }
 
-    // The gate. The picker only suggests; this is what decides.
-    const check = await assertAddressable(b.companyId, me, [...to, ...cc]);
+    // The gate. The picker only suggests; this is what decides. `companyId`
+    // comes from the parsed value, which the schema has already proved present.
+    const check = await assertAddressable(shape.data.companyId, me, [...to, ...cc]);
     if (!check.ok) {
       res.status(403).json({
         error: "You are not authorised to write to one or more of these recipients.",

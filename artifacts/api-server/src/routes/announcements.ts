@@ -37,6 +37,9 @@ router.use(requireAuth);
 /** Load a circular inside the caller's company, or null. */
 async function loadCircular(id: string, scope: string | null) {
   const conds = [eq(circularsTable.id, id), eq(circularsTable.isDeleted, false)];
+  // Already factored: the one loader every endpoint here goes through, taking
+  // the scope its caller read from the session. `companyScope` is for the
+  // endpoints that build a condition list inline and have `req` to hand.
   if (scope) conds.push(eq(circularsTable.companyId, scope));
   const [row] = await db.select().from(circularsTable).where(and(...conds));
   return row ?? null;

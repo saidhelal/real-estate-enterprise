@@ -19,6 +19,9 @@ import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 
 export default function WarehousesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_record_status } = useLookupOptions("record_status", ["active", "inactive"]);
   const { language } = useLanguage();
   const { options: WAREHOUSE_TYPE } = useLookupOptions("warehouse_type", ["main", "transit", "virtual", "quarantine"]);
   const { data: companies } = useListCompanies();
@@ -35,7 +38,7 @@ export default function WarehousesPage() {
     { name: "address", label: "Address", labelAr: "العنوان", type: "textarea" },
     { name: "manager", label: "Manager", labelAr: "المدير" },
     { name: "phone", label: "Phone", labelAr: "الهاتف" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["active", "inactive"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_record_status },
   ];
 
   const columns: ResourceColumn<Warehouse>[] = [

@@ -368,149 +368,6 @@ export interface ChangeRequestReview {
   reviewNotes?: string;
 }
 
-export interface PortalLoginInput {
-  /** @minLength 1 */
-  username: string;
-  /** @minLength 1 */
-  password: string;
-}
-
-export interface PortalCurrentUser {
-  id: string;
-  username: string;
-  /** @nullable */
-  email?: string | null;
-  /** @nullable */
-  phone?: string | null;
-  customerId: string;
-  customerName: string;
-  /** @nullable */
-  customerNameAr?: string | null;
-  companyId?: string;
-}
-
-export interface PortalAuthSession {
-  accessToken: string;
-  refreshToken: string;
-  user: PortalCurrentUser;
-}
-
-export interface PortalAccessToken {
-  accessToken: string;
-}
-
-export interface PortalForgotPasswordInput {
-  /** @minLength 1 */
-  identifier: string;
-}
-
-export interface PortalForgotPasswordResult {
-  success: boolean;
-  /** @nullable */
-  devCode?: string | null;
-}
-
-export interface PortalVerifyOtpInput {
-  /** @minLength 1 */
-  identifier: string;
-  /** @minLength 1 */
-  code: string;
-  /** @minLength 8 */
-  newPassword: string;
-}
-
-export interface BiTrendPoint {
-  period: string;
-  value: string;
-  count?: number;
-}
-
-export interface PortalDashboard {
-  unitsCount: number;
-  contractsCount: number;
-  totalContractValue: string;
-  totalPaid: string;
-  totalOutstanding: string;
-  overdueCount: number;
-  overdueAmount: string;
-  openRequests: number;
-  unreadNotifications: number;
-  /** @nullable */
-  nextDueDate?: string | null;
-  /** @nullable */
-  nextDueAmount?: string | null;
-  paymentTrend?: BiTrendPoint[];
-}
-
-export interface PortalUnit {
-  id: string;
-  code: string;
-  /** @nullable */
-  projectName?: string | null;
-  /** @nullable */
-  buildingName?: string | null;
-  /** @nullable */
-  unitType?: string | null;
-  /** @nullable */
-  area?: string | null;
-  /** @nullable */
-  price?: string | null;
-  status: string;
-}
-
-export interface PortalContract {
-  id: string;
-  code: string;
-  /** @nullable */
-  unitId?: string | null;
-  /** @nullable */
-  unitCode?: string | null;
-  contractDate: string;
-  totalPrice: string;
-  /** @nullable */
-  downPayment?: string | null;
-  status: string;
-}
-
-export interface PortalInstallment {
-  id: string;
-  /** @nullable */
-  contractId?: string | null;
-  /** @nullable */
-  contractCode?: string | null;
-  /** @nullable */
-  installmentNo?: number | null;
-  dueDate: string;
-  amount: string;
-  paidAmount?: string;
-  status: string;
-}
-
-export interface PortalCollection {
-  id: string;
-  /** @nullable */
-  code: string | null;
-  amount: string;
-  paymentDate: string;
-  /** @nullable */
-  method?: string | null;
-  /** @nullable */
-  reference?: string | null;
-}
-
-export interface PortalDocument {
-  id: string;
-  docType: string;
-  /** @nullable */
-  docNumber?: string | null;
-  /** @nullable */
-  fileUrl?: string | null;
-  /** @nullable */
-  issueDate?: string | null;
-  /** @nullable */
-  expiryDate?: string | null;
-}
-
 export interface MaintenanceRequest {
   id: string;
   code: string;
@@ -663,18 +520,6 @@ export interface DeviceTokenInput {
   token: string;
   platform?: DeviceTokenInputPlatform;
   deviceName?: string;
-}
-
-export interface PortalUploadInput {
-  /** @minLength 1 */
-  fileName: string;
-  /** @minLength 1 */
-  contentType: string;
-}
-
-export interface PortalUploadResult {
-  uploadUrl: string;
-  fileUrl: string;
 }
 
 export type UserStatus = typeof UserStatus[keyof typeof UserStatus];
@@ -2365,7 +2210,7 @@ export interface Lead {
 export interface LeadInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   fullName: string;
   phone?: string;
   nationalId?: string;
@@ -3392,6 +3237,12 @@ export interface BiGroupPoint {
   key: string;
   /** @nullable */
   label?: string | null;
+  value: string;
+  count?: number;
+}
+
+export interface BiTrendPoint {
+  period: string;
   value: string;
   count?: number;
 }
@@ -16197,6 +16048,106 @@ export interface DocumentTransferDetail {
   myStatus?: string | null;
 }
 
+export interface CorrespondenceRecipientEntry {
+  id: string;
+  employeeId: string;
+  kind: string;
+  /** @nullable */
+  readAt?: string | null;
+  /** @nullable */
+  deliveredAt?: string | null;
+  /** @nullable */
+  archivedAt?: string | null;
+}
+
+export type InternalCorrespondence = Correspondence & ({
+  /** @nullable */
+  senderEmployeeId?: string | null;
+  /** @nullable */
+  sentAt?: string | null;
+  /** @nullable */
+  parentId?: string | null;
+  /** @nullable */
+  correspondenceKind?: string | null;
+  /** @nullable */
+  confidentiality?: string | null;
+  recipients: CorrespondenceRecipientEntry[];
+});
+
+export interface CorrespondenceDirectoryEmployee {
+  id: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  managerEmployeeId?: string | null;
+  /** @nullable */
+  jobTitleId?: string | null;
+}
+
+export interface CorrespondenceLeadership {
+  chairman: CorrespondenceDirectoryEmployee[];
+  executiveDirector: CorrespondenceDirectoryEmployee[];
+}
+
+export interface CorrespondenceDirectory {
+  me: CorrespondenceDirectoryEmployee;
+  recipients: CorrespondenceDirectoryEmployee[];
+  leadership: CorrespondenceLeadership;
+}
+
+export interface CorrespondenceMailboxPage {
+  data: InternalCorrespondence[];
+  total: number;
+  page: number;
+  pageSize: number;
+  view: string;
+}
+
+export type CorrespondenceThreadReferencesItem = { [key: string]: unknown };
+
+export interface CorrespondenceThread {
+  correspondence: InternalCorrespondence;
+  thread: InternalCorrespondence[];
+  references: CorrespondenceThreadReferencesItem[];
+}
+
+export interface CorrespondenceUnreadCount {
+  unread: number;
+}
+
+export interface CorrespondenceArchiveResult {
+  id: string;
+  archivedAt: string;
+}
+
+export interface ComposeCorrespondenceInput {
+  companyId: string;
+  subject: string;
+  body?: string;
+  priority?: string;
+  correspondenceKind?: string;
+  confidentiality?: string;
+  replyDueDate?: string;
+  to?: string[];
+  cc?: string[];
+  send?: boolean;
+  parentId?: string;
+  idempotencyKey?: string;
+}
+
+export interface ForwardCorrespondenceInput {
+  to: string[];
+  cc?: string[];
+  note?: string;
+}
+
+export interface LinkCorrespondenceDocumentInput {
+  documentId: string;
+  linkType?: string;
+}
+
 export type ListUsersParams = {
 search?: string;
 status?: ListUsersStatus;
@@ -18582,4 +18533,29 @@ ownerEmployeeId?: string;
 export type PreviewNextNumberParams = {
 documentType: string;
 };
+
+export type GetCorrespondenceDirectoryParams = {
+companyId: string;
+};
+
+export type ListInternalCorrespondenceParams = {
+view?: ListInternalCorrespondenceView;
+companyId?: string;
+search?: string;
+priority?: string;
+correspondenceKind?: string;
+page?: number;
+pageSize?: number;
+};
+
+export type ListInternalCorrespondenceView = typeof ListInternalCorrespondenceView[keyof typeof ListInternalCorrespondenceView];
+
+
+export const ListInternalCorrespondenceView = {
+  inbox: 'inbox',
+  sent: 'sent',
+  drafts: 'drafts',
+  archived: 'archived',
+  needs_reply: 'needs_reply',
+} as const;
 

@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
-import { BarChart3, FileSpreadsheet } from "lucide-react";
+import { FileSpreadsheet } from "lucide-react";
 
 export default function CrmReportsPage() {
   const { language, t } = useLanguage();
@@ -49,20 +49,11 @@ export default function CrmReportsPage() {
         <KpiCard label={ar ? "العقود" : "Contracts"} value={contractCount} />
       </div>
 
+      {/* CRM reporting links to CRM records. A card here used to open the
+          financial statements, which are accounting's, not this department's —
+          a report belongs to the domain that owns the question it answers, and
+          reaching across for one is how the same report ends up in two places. */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Link href="/financial-reports">
-          <Card interactive>
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                {ar ? "التقارير المالية" : "Financial Reports"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0 text-sm text-muted-foreground">
-              {ar ? "تقارير مالية تفصيلية مع تصدير" : "Detailed financial reports with export"}
-            </CardContent>
-          </Card>
-        </Link>
         <Link href="/lead-conversions">
           <Card interactive>
             <CardHeader className="pb-2">

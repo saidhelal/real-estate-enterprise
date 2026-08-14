@@ -37,7 +37,6 @@ import {
 import { Upload, UserPlus, Loader2 } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
-import { genCode } from "@/lib/sale-workflow";
 
 /** Excel header aliases (English + Arabic) mapped to lead fields. */
 const HEADER_ALIASES: Record<keyof LeadInput | "mobile", string[]> = {
@@ -254,7 +253,6 @@ export default function LeadsPage() {
       const customer = await createCustomer.mutateAsync({
         data: {
           companyId,
-          code: genCode("CUST"),
           fullName: lead.fullName,
           ...(lead.branchId ? { branchId: lead.branchId } : {}),
           ...(lead.phone ? { phone: lead.phone } : {}),

@@ -17,14 +17,18 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const RECIPIENT_TYPE = enumOptions(["customer", "contractor", "supplier", "employee", "other"]);
 
 export default function LegalNoticesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_counterparty_type } = useLookupOptions("counterparty_type", ["customer", "contractor", "supplier", "employee", "other"]);
+  const RECIPIENT_TYPE = lk_counterparty_type;
   const { language, t } = useLanguage();
   const NOTICE_TYPE = enumOptions(["warning", "demand", "termination", "legal", "other"]);
   const queryClient = useQueryClient();

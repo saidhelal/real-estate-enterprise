@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function ProjectLaborInsurancesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_insurance_status } = useLookupOptions("insurance_status", ["active", "suspended", "expired", "terminated"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -41,7 +45,7 @@ export default function ProjectLaborInsurancesPage() {
     { name: "workerCount", label: "Workers", labelAr: "عدد العمال", type: "number" },
     { name: "startDate", label: "Start Date", labelAr: "تاريخ البدء", type: "date" },
     { name: "endDate", label: "End Date", labelAr: "تاريخ الانتهاء", type: "date" },
-    { name: "insuranceStatus", label: "Status", labelAr: "الموقف التأميني", type: "select", options: enumOptions(["active","suspended","expired","terminated"]) },
+    { name: "insuranceStatus", label: "Status", labelAr: "الموقف التأميني", type: "select", options: lk_insurance_status },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },
   ];
 

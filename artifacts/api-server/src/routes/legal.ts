@@ -54,10 +54,21 @@ import {
 
 const objectStorageService = new ObjectStorageService();
 
-/** Absolute, public base URL for verification links (prefers the published domain). */
+/**
+ * Absolute, public base URL for verification links.
+ *
+ * These end up in a QR code printed on a contract, so the host has to be the
+ * one an outside reader can reach — not the one the process happens to be
+ * bound to. `PUBLIC_BASE_URL` names it when the deployment sits behind a proxy
+ * or a domain; otherwise the request's own host is right, which is the case
+ * for local development.
+ *
+ * It read `REPLIT_DOMAINS` before, which meant the printed link was correct
+ * only on one hosting platform and silently wrong everywhere else.
+ */
 function publicBaseUrl(req: import("express").Request): string {
-  const domain = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
-  if (domain) return `https://${domain}`;
+  const configured = process.env.PUBLIC_BASE_URL?.trim().replace(/\/+$/, "");
+  if (configured) return configured;
   const host = req.get("host") ?? "localhost";
   return `${req.protocol}://${host}`;
 }

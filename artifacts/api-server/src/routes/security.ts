@@ -22,7 +22,7 @@ import {
   GetSecurityIncidentResponse,
   UpdateSecurityIncidentBody,
 } from "@workspace/api-zod";
-import { registerCrud, CrudRefused, type Row } from "../lib/register-crud";
+import { registerCrud, CrudRefused, type Row, companyScope } from "../lib/register-crud";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
 import { notify } from "../lib/notify";
@@ -132,7 +132,9 @@ router.post(
     }
     const scope = req.authUser?.companyId ?? null;
     const conds = [eq(securityShiftsTable.id, String(req.params.id)), eq(securityShiftsTable.isDeleted, false)];
-    if (scope) conds.push(eq(securityShiftsTable.companyId, scope));
+    // One shared rule, so no endpoint can forget the tenant filter.
+    const scoped = companyScope(securityShiftsTable, req);
+    if (scoped) conds.push(scoped);
     const [existing] = await db.select().from(securityShiftsTable).where(and(...conds));
     if (!existing) {
       res.status(404).json({ error: "securityShift not found" });

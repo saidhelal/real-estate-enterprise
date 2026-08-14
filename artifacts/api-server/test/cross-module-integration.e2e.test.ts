@@ -122,15 +122,18 @@ describe("full Lead -> Sale -> Finance -> Legal -> Handover -> Customer Service 
     const tag = uniq();
 
     // ----- 1. CRM: a lead enters the funnel ------------------------------
-    const leadCode = `LEAD-${tag}`;
     const lead = await client.post("/api/leads", {
       companyId,
-      code: leadCode,
       fullName: `Prospect ${tag}`,
       phone: "+96650000000",
       status: "new",
     });
     expect(lead.status, JSON.stringify(lead.json)).toBe(201);
+    // The code is the server's, from the central sequence — the caller no
+    // longer chooses one. Searching by what was issued is the stronger check:
+    // it proves the record is findable by the identifier it actually has.
+    const leadCode = lead.json.code as string;
+    expect(leadCode, "the server must issue a lead code").toBeTruthy();
     const foundLead = await client.get(`/api/leads?search=${leadCode}&companyId=${companyId}`);
     expect(foundLead.status).toBe(200);
     expect((foundLead.json.data as Array<{ id: string }>).some((l) => l.id === lead.json.id)).toBe(true);

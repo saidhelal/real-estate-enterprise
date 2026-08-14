@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function InsurancePenaltiesPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_settlement_status } = useLookupOptions("settlement_status", ["pending", "paid", "cancelled"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -40,7 +44,7 @@ export default function InsurancePenaltiesPage() {
     { name: "amount", label: "Amount", labelAr: "المبلغ", required: true, type: "money" },
     { name: "penaltyDate", label: "Penalty Date", labelAr: "تاريخ الغرامة", type: "date" },
     { name: "reason", label: "Reason", labelAr: "السبب" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["pending","paid","cancelled"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_settlement_status },
     { name: "paymentDate", label: "Payment Date", labelAr: "تاريخ السداد", type: "date" },
     { name: "reference", label: "Reference", labelAr: "المرجع" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },

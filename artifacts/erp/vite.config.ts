@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 const rawPort = process.env.PORT;
 
@@ -31,20 +30,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer({
-              root: path.resolve(import.meta.dirname, ".."),
-            }),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
   ],
   resolve: {
     alias: {
@@ -66,12 +51,12 @@ export default defineConfig({
     fs: {
       strict: true,
     },
-    // Local development only. On Replit an external router served the API and
-    // this app from one origin, so the app calls `/api/...` relatively and the
-    // session cookies (HttpOnly, SameSite=lax) ride along automatically. Running
-    // the two as separate localhost ports would make those calls cross-origin,
-    // and the generated client sends no `credentials`, so the cookies would be
-    // dropped and every request would 401. Proxying restores the single origin.
+    // The app calls `/api/...` relatively, so the API and this app must answer
+    // on one origin for the session cookies (HttpOnly, SameSite=lax) to ride
+    // along. Running the two as separate localhost ports would make those calls
+    // cross-origin, and the generated client sends no `credentials`, so the
+    // cookies would be dropped and every request would 401. Proxying restores
+    // the single origin.
     proxy: {
       "/api": {
         target: process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8080",

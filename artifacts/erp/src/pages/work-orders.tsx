@@ -14,9 +14,13 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function WorkOrdersPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_priority_level } = useLookupOptions("priority_level", ["low", "medium", "high", "critical"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -40,7 +44,7 @@ export default function WorkOrdersPage() {
     { name: "sourceId", label: "Source ID", labelAr: "معرّف المصدر" },
     { name: "title", label: "Title", labelAr: "العنوان", required: true },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
-    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: enumOptions(["low", "medium", "high", "critical"]) },
+    { name: "priority", label: "Priority", labelAr: "الأولوية", type: "select", options: lk_priority_level },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "on_hold", "done", "cancelled"]) },
     { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
     { name: "scheduledDate", label: "Scheduled Date", labelAr: "تاريخ الجدولة", type: "date" },

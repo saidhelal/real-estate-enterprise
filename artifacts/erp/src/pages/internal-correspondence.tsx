@@ -40,7 +40,7 @@ import {
   useDirectory,
   useForward,
   useMailbox,
-  type Correspondence,
+  type InternalCorrespondence,
   type MailboxView,
 } from "@/lib/correspondence";
 import type { StatusTone } from "@/lib/design-tokens";
@@ -107,7 +107,7 @@ export default function InternalCorrespondencePage() {
   const nameOf = useMemo(() => {
     const byId = new Map((directory.data?.recipients ?? []).map((e) => [e.id, e.name]));
     if (directory.data?.me) byId.set(directory.data.me.id, directory.data.me.name);
-    return (id: string | null) => (id ? byId.get(id) ?? id.slice(0, 8) : "—");
+    return (id: string | null | undefined) => (id ? byId.get(id) ?? id.slice(0, 8) : "—");
   }, [directory.data]);
 
   // A login with no employee record cannot take part; say so plainly rather
@@ -230,7 +230,7 @@ export default function InternalCorrespondencePage() {
                         variant="ghost"
                         size="sm"
                         onClick={() =>
-                          archive.mutate(r.id, {
+                          archive.mutate({ id: r.id }, {
                             onSuccess: () => toast({ title: t("corr.archive") }),
                           })
                         }
@@ -278,7 +278,7 @@ function ThreadDialog({
   onClose: () => void;
   thread: ReturnType<typeof useCorrespondenceThread>["data"];
   isLoading: boolean;
-  nameOf: (id: string | null) => string;
+  nameOf: (id: string | null | undefined) => string;
   companyId?: string;
 }) {
   const { t } = useLanguage();
@@ -353,7 +353,7 @@ function ThreadDialog({
                 disabled={!forwardTo || forward.isPending}
                 onClick={() =>
                   forward.mutate(
-                    { id: root.id, to: [forwardTo] },
+                    { id: root.id, data: { to: [forwardTo] } },
                     {
                       onSuccess: () => {
                         toast({ title: t("corr.forward") });
@@ -450,15 +450,17 @@ function ComposeForm({
     if (!companyId) return;
     compose.mutate(
       {
-        companyId,
-        subject: subject.trim(),
-        body: body.trim() || undefined,
-        priority,
-        correspondenceKind: kind,
-        to: [to],
-        send,
-        parentId,
-        idempotencyKey: send ? idempotencyKey : undefined,
+        data: {
+          companyId,
+          subject: subject.trim(),
+          body: body.trim() || undefined,
+          priority,
+          correspondenceKind: kind,
+          to: [to],
+          send,
+          parentId,
+          idempotencyKey: send ? idempotencyKey : undefined,
+        },
       },
       {
         onSuccess: () => {

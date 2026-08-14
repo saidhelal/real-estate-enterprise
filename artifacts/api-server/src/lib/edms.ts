@@ -4,9 +4,10 @@ import {
   documentsTable,
   documentVersionsTable,
   documentObjectOwnersTable,
-  notificationsTable,
 } from "@workspace/db";
 import type { AuthUser } from "./auth";
+import { notify } from "./notify";
+import { nextNumber } from "./doc-number";
 import { serializeRow } from "./serialize";
 
 /** A Drizzle transaction handle (or the base db) for owner-claim writes. */
@@ -93,17 +94,20 @@ export const MODULE = "documents";
 type Row = Record<string, unknown>;
 
 /**
- * Generate the next human document number for a company (DOC-000001). Counts
- * every row ever created for the company (including soft-deleted) so numbers
- * are never reused.
+ * The next document number for a company, from the one central engine.
+ *
+ * It used to be `count(*) + 1` over the documents table. That is not a
+ * sequence: two uploads a moment apart both counted the same total and both
+ * became `DOC-000001`, and nothing in the schema was watching — the column is
+ * `notNull` but not unique, so the duplicate would simply be stored. Counting
+ * also made the number a function of how many rows exist, so a hard delete
+ * would hand a live document's number to the next one created.
+ *
+ * The engine gives a real counter: advisory-locked, scoped per company,
+ * transaction-safe, and never reissuing a value.
  */
 export async function generateDocumentNumber(companyId: string): Promise<string> {
-  const rows = (await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(documentsTable)
-    .where(eq(documentsTable.companyId, companyId))) as { count: number }[];
-  const next = (rows[0]?.count ?? 0) + 1;
-  return `DOC-${String(next).padStart(6, "0")}`;
+  return (await nextNumber("document", companyId)).value;
 }
 
 /**
@@ -224,9 +228,21 @@ export async function loadVersions(documentId: string): Promise<Row[]> {
 }
 
 /**
- * Best-effort internal notification. Never throws (mirrors recordAudit): a
- * notification failure must not block the underlying document action. Skips
- * cleanly when there is no recipient.
+ * Notify one person about a document.
+ *
+ * A convenience shape over the notification engine — one recipient, the
+ * document module's category and link filled in — not a second implementation.
+ * It used to insert into `notifications` itself, which meant it missed the one
+ * thing the engine guarantees: idempotency per
+ * (recipient, sourceModule, sourceId, eventType). The expiry scan below runs
+ * on demand and can run twice in a day, so every re-run added a second copy of
+ * the same warning to the same inbox.
+ *
+ * It also filed everything under `general_admin`, so document notifications
+ * were uncategorised wherever the inbox groups by category.
+ *
+ * Best-effort is preserved: a notification failure must never block the
+ * document action that triggered it.
  */
 export async function notifyUser(input: {
   companyId?: string | null;
@@ -241,14 +257,13 @@ export async function notifyUser(input: {
 }): Promise<boolean> {
   if (!input.recipientUserId) return false;
   try {
-    await db.insert(notificationsTable).values({
+    const created = await notify(db, {
+      recipientUserIds: [input.recipientUserId],
       companyId: input.companyId ?? null,
-      recipientUserId: input.recipientUserId,
       actorUserId: input.actorUserId ?? null,
-      category: "general_admin",
+      category: "documents",
       eventType: input.eventType,
       priority: input.priority ?? "normal",
-      channel: "in_app",
       title: input.title,
       body: input.body ?? null,
       sourceModule: "documents",
@@ -256,7 +271,7 @@ export async function notifyUser(input: {
       sourceRef: input.sourceRef ?? null,
       link: input.sourceId ? `/documents/${input.sourceId}` : null,
     });
-    return true;
+    return created > 0;
   } catch {
     return false;
   }

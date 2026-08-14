@@ -16,6 +16,7 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,7 +39,6 @@ import { useObjectUpload } from "@/lib/document-files";
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const CONTRACT_TYPE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
 
 /**
  * Smart-variable palette ({{group.field}} placeholders) is served by the API
@@ -52,6 +52,8 @@ type TokenCatalogGroup = {
 };
 
 export default function ContractTemplatesPage() {
+  // Domain owned by the lookup engine; literal is the fallback.
+  const { options: CONTRACT_TYPE } = useLookupOptions("contract_type", ["sales", "construction", "procurement", "legal", "other"]);
   const { language, t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();

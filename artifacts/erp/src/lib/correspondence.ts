@@ -1,112 +1,109 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { customFetch } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  useListInternalCorrespondence,
+  useGetInternalCorrespondence,
+  useGetCorrespondenceDirectory,
+  useGetCorrespondenceUnreadCount,
+  useComposeInternalCorrespondence,
+  useSendInternalCorrespondenceDraft,
+  useForwardInternalCorrespondence,
+  useArchiveInternalCorrespondence,
+  useLinkCorrespondenceDocument,
+  getListInternalCorrespondenceQueryKey,
+  getGetInternalCorrespondenceQueryKey,
+  getGetCorrespondenceDirectoryQueryKey,
+  getGetCorrespondenceUnreadCountQueryKey,
+  type ListInternalCorrespondenceParams,
+  type InternalCorrespondence,
+  type CorrespondenceMailboxPage,
+  type CorrespondenceThread,
+  type CorrespondenceDirectory,
+  type CorrespondenceDirectoryEmployee,
+  type CorrespondenceRecipientEntry,
+  type ComposeCorrespondenceInput,
+} from "@workspace/api-client-react";
 
 /**
- * Query hooks for internal correspondence.
+ * Internal correspondence — the domain layer over the generated contract.
  *
- * These endpoints sit outside the generated OpenAPI client, so the hooks are
- * written by hand — but they ride the same `customFetch` transport as every
- * generated call, which is what keeps the base URL, cookie handling, token
- * refresh and change-reason plumbing identical. A second fetch wrapper here
- * would silently lose all of it.
+ * Every type and every request here now comes from `openapi.yaml` through the
+ * generated client. This file used to declare its own interfaces and call
+ * `customFetch` by hand, which meant the shape of a message was written down
+ * twice — once in the spec the server validates against, once here — and
+ * nothing checked that the two agreed.
+ *
+ * What stays is the part that is genuinely this module's, and that the
+ * generated code has no way to know: composing a message raises a
+ * notification, so the header bell has to re-read as well as the mailbox. That
+ * is a business consequence, not API typing, so it belongs on this side of the
+ * line rather than inside generated code.
  */
 
+/** Which mailbox a list request is asking for. */
 export type MailboxView = "inbox" | "sent" | "drafts" | "archived" | "needs_reply";
 
-export interface DirectoryEmployee {
-  id: string;
-  code: string;
-  name: string;
-  departmentId: string | null;
-  managerEmployeeId: string | null;
-  jobTitleId: string | null;
+// Re-exported so screens import their types from the module they belong to,
+// without re-declaring any of them.
+export type {
+  InternalCorrespondence,
+  CorrespondenceMailboxPage,
+  CorrespondenceThread,
+  CorrespondenceDirectory,
+  CorrespondenceDirectoryEmployee,
+  CorrespondenceRecipientEntry,
+  ComposeCorrespondenceInput,
+  ListInternalCorrespondenceParams,
+};
+
+/**
+ * Everything this module caches.
+ *
+ * Built from the generated key builders rather than a string of our own, so
+ * invalidation cannot miss a query whose key the generator decides.
+ */
+function correspondenceQueryRoots(): string[] {
+  return [
+    getListInternalCorrespondenceQueryKey()[0],
+    getGetCorrespondenceUnreadCountQueryKey()[0],
+    getGetCorrespondenceDirectoryQueryKey({ companyId: "" })[0],
+    getGetInternalCorrespondenceQueryKey("")[0],
+  ];
 }
 
-export interface CorrespondenceRecipient {
-  id: string;
-  employeeId: string;
-  kind: "to" | "cc";
-  readAt: string | null;
-  deliveredAt: string | null;
-  archivedAt: string | null;
+/**
+ * Refresh what a write changes.
+ *
+ * The mailbox and the unread badge are this module's own. The notifications
+ * dashboard is not — but a new message raises a notification, so leaving it
+ * stale would show a bell that disagrees with the inbox beside it.
+ */
+function useInvalidate(): () => void {
+  const qc = useQueryClient();
+  return () => {
+    // Prefix matching: one call covers every page, view and filter combination
+    // of a list query without enumerating them.
+    for (const root of correspondenceQueryRoots()) {
+      void qc.invalidateQueries({ queryKey: [root] });
+    }
+    void qc.invalidateQueries({ queryKey: ["/api/notifications-dashboard"] });
+  };
 }
 
-export interface Correspondence {
-  id: string;
-  code: string;
-  subject: string;
-  body: string | null;
-  priority: string;
-  status: string;
-  correspondenceKind: string | null;
-  confidentiality: string | null;
-  senderEmployeeId: string | null;
-  threadId: string | null;
-  parentId: string | null;
-  replyDueDate: string | null;
-  sentAt: string | null;
-  archivedAt: string | null;
-  createdAt: string;
-  recipients: CorrespondenceRecipient[];
-}
+/* ---- Reads ---------------------------------------------------------------
+ * Straight through to the generated hooks. They are re-exported under this
+ * module's names so screens keep reading as domain code, and so a screen never
+ * has to know which generated symbol backs which mailbox.
+ */
 
-export interface MailboxPage {
-  data: Correspondence[];
-  total: number;
-  page: number;
-  pageSize: number;
-  view: MailboxView;
-}
-
-export interface DirectoryResponse {
-  me: DirectoryEmployee;
-  recipients: DirectoryEmployee[];
-  leadership: { chairman: DirectoryEmployee[]; executiveDirector: DirectoryEmployee[] };
-}
-
-export interface ThreadResponse {
-  correspondence: Correspondence;
-  thread: Correspondence[];
-  references: Array<{ id: string; documentId: string }>;
-}
-
-const BASE = "/api/internal-correspondence";
-
-/** The key prefix every correspondence query shares, so one invalidate clears them all. */
-export const correspondenceKey = ["internal-correspondence"] as const;
-
-export interface MailboxParams {
-  view: MailboxView;
-  companyId?: string;
-  search?: string;
-  priority?: string;
-  correspondenceKind?: string;
-  page?: number;
-  pageSize?: number;
-}
-
-function qs(params: Record<string, unknown>): string {
-  const sp = new URLSearchParams();
-  for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== null && String(v).trim() !== "") sp.set(k, String(v));
-  }
-  const s = sp.toString();
-  return s ? `?${s}` : "";
-}
-
-export function useMailbox(params: MailboxParams, enabled = true) {
-  return useQuery({
-    queryKey: [...correspondenceKey, "mailbox", params],
-    enabled,
-    queryFn: () => customFetch<MailboxPage>(`${BASE}${qs({ ...params } as unknown as Record<string, unknown>)}`),
+export function useMailbox(params: ListInternalCorrespondenceParams, enabled = true) {
+  return useListInternalCorrespondence(params, {
+    query: { enabled, queryKey: getListInternalCorrespondenceQueryKey(params) },
   });
 }
 
 export function useCorrespondenceThread(id: string | null) {
-  return useQuery({
-    queryKey: [...correspondenceKey, "thread", id],
-    enabled: !!id,
-    queryFn: () => customFetch<ThreadResponse>(`${BASE}/${id}`),
+  return useGetInternalCorrespondence(id ?? "", {
+    query: { enabled: !!id, queryKey: getGetInternalCorrespondenceQueryKey(id ?? "") },
   });
 }
 
@@ -118,94 +115,43 @@ export function useCorrespondenceThread(id: string | null) {
  * invited to compose a message that is then refused on send.
  */
 export function useDirectory(companyId?: string) {
-  return useQuery({
-    queryKey: [...correspondenceKey, "directory", companyId],
-    enabled: !!companyId,
-    queryFn: () => customFetch<DirectoryResponse>(`${BASE}/directory${qs({ companyId })}`),
+  const params = { companyId: companyId ?? "" };
+  return useGetCorrespondenceDirectory(params, {
+    query: { enabled: !!companyId, queryKey: getGetCorrespondenceDirectoryQueryKey(params) },
   });
 }
 
 export function useUnreadCount(enabled = true) {
-  return useQuery({
-    queryKey: [...correspondenceKey, "unread"],
-    enabled,
-    queryFn: () => customFetch<{ unread: number }>(`${BASE}/unread-count`),
+  return useGetCorrespondenceUnreadCount({
+    query: { enabled, queryKey: getGetCorrespondenceUnreadCountQueryKey() },
   });
 }
 
-export interface ComposeInput {
-  companyId: string;
-  subject: string;
-  body?: string;
-  priority?: string;
-  correspondenceKind?: string;
-  replyDueDate?: string;
-  to?: string[];
-  cc?: string[];
-  send?: boolean;
-  parentId?: string;
-  /** Guards against a double submit creating two official messages. */
-  idempotencyKey?: string;
-}
-
-function useInvalidate() {
-  const qc = useQueryClient();
-  return () => {
-    void qc.invalidateQueries({ queryKey: correspondenceKey });
-    // A new message raises a notification, so the bell has to re-read too.
-    void qc.invalidateQueries({ queryKey: ["/api/notifications-dashboard"] });
-  };
-}
+/* ---- Writes --------------------------------------------------------------
+ * The generated mutation, plus the cross-module refresh it should trigger.
+ */
 
 export function useCompose() {
   const invalidate = useInvalidate();
-  return useMutation({
-    mutationFn: (input: ComposeInput) =>
-      customFetch<Correspondence & { replayed?: boolean }>(BASE, {
-        method: "POST",
-        body: JSON.stringify(input),
-      }),
-    onSuccess: invalidate,
-  });
+  return useComposeInternalCorrespondence({ mutation: { onSuccess: invalidate } });
 }
 
 export function useSendDraft() {
   const invalidate = useInvalidate();
-  return useMutation({
-    mutationFn: (id: string) => customFetch<Correspondence>(`${BASE}/${id}/send`, { method: "POST" }),
-    onSuccess: invalidate,
-  });
+  return useSendInternalCorrespondenceDraft({ mutation: { onSuccess: invalidate } });
 }
 
 export function useForward() {
   const invalidate = useInvalidate();
-  return useMutation({
-    mutationFn: ({ id, to, note }: { id: string; to: string[]; note?: string }) =>
-      customFetch<Correspondence>(`${BASE}/${id}/forward`, {
-        method: "POST",
-        body: JSON.stringify({ to, note }),
-      }),
-    onSuccess: invalidate,
-  });
+  return useForwardInternalCorrespondence({ mutation: { onSuccess: invalidate } });
 }
 
 export function useArchive() {
   const invalidate = useInvalidate();
-  return useMutation({
-    mutationFn: (id: string) =>
-      customFetch<{ id: string }>(`${BASE}/${id}/archive`, { method: "POST" }),
-    onSuccess: invalidate,
-  });
+  return useArchiveInternalCorrespondence({ mutation: { onSuccess: invalidate } });
 }
 
 export function useLinkDocument() {
   const invalidate = useInvalidate();
-  return useMutation({
-    mutationFn: ({ id, documentId }: { id: string; documentId: string }) =>
-      customFetch<{ correspondenceId: string }>(`${BASE}/${id}/documents`, {
-        method: "POST",
-        body: JSON.stringify({ documentId }),
-      }),
-    onSuccess: invalidate,
-  });
+  return useLinkCorrespondenceDocument({ mutation: { onSuccess: invalidate } });
 }

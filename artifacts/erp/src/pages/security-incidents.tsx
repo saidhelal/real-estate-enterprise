@@ -14,6 +14,7 @@ import {
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 /**
@@ -28,6 +29,9 @@ import { useLanguage } from "@/lib/language-provider";
  * the same component, so this file describes the fields and nothing else.
  */
 export default function SecurityIncidentsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_priority_level } = useLookupOptions("priority_level", ["low", "medium", "high", "critical"]);
   const { language } = useLanguage();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
@@ -49,7 +53,7 @@ export default function SecurityIncidentsPage() {
     },
     { name: "occurredAt", label: "Occurred At", labelAr: "وقت الحدوث" },
     { name: "incidentType", label: "Type", labelAr: "نوع البلاغ", type: "select", options: enumOptions(["intrusion", "theft", "fire", "injury", "vandalism", "dispute", "breach", "other"]) },
-    { name: "severity", label: "Severity", labelAr: "درجة الخطورة", type: "select", options: enumOptions(["low", "medium", "high", "critical"]) },
+    { name: "severity", label: "Severity", labelAr: "درجة الخطورة", type: "select", options: lk_priority_level },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea", required: true },
     { name: "location", label: "Location", labelAr: "الموقع" },
     { name: "pointId", label: "Security Point", labelAr: "نقطة الحراسة" },

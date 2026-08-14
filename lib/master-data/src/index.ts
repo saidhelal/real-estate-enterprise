@@ -441,6 +441,34 @@ export interface LookupCategory {
 // The resolver falls back to LABELS for any code, so these categories do not need
 // to be exhaustive — they describe the admin-managed option lists.
 export const LOOKUP_CATEGORIES: LookupCategory[] = [
+  /*
+   * Cross-cutting domains.
+   *
+   * These are not one module's vocabulary — they are the same small question
+   * asked all over the system ("is this row live?", "how urgent?"), and each
+   * screen used to answer it with its own literal array. The identical set
+   * `["active","inactive"]` was written out in twenty-one screens, so changing
+   * what "inactive" means, or adding "archived", meant editing twenty-one
+   * files and hoping none was missed.
+   *
+   * The value codes are unchanged, so nothing stored has to be rewritten and
+   * every existing row still resolves.
+   */
+  { code: "record_status", nameEn: "Record Statuses", nameAr: "حالات السجل", module: "shared", valueCodes: ["active", "inactive"] },
+  { code: "priority_level", nameEn: "Priority Levels", nameAr: "مستويات الأولوية", module: "shared", valueCodes: ["low", "medium", "high", "critical"] },
+  { code: "urgency_level", nameEn: "Urgency Levels", nameAr: "مستويات الإلحاح", module: "shared", valueCodes: ["low", "medium", "high", "urgent"] },
+  { code: "settlement_status", nameEn: "Settlement Statuses", nameAr: "حالات السداد", module: "shared", valueCodes: ["pending", "paid", "cancelled"] },
+  { code: "work_item_status", nameEn: "Work Item Statuses", nameAr: "حالات بند العمل", module: "shared", valueCodes: ["open", "in_progress", "resolved", "closed"] },
+  { code: "approval_flow_status", nameEn: "Approval Flow Statuses", nameAr: "حالات مسار الاعتماد", module: "shared", valueCodes: ["draft", "pending", "submitted", "approved", "rejected"] },
+  { code: "approval_decision", nameEn: "Approval Decisions", nameAr: "قرارات الاعتماد", module: "shared", valueCodes: ["pending", "approved", "rejected"] },
+  // The other party to a case, contract or notice — one question the legal
+  // screens each answered with their own copy of the same five codes.
+  { code: "counterparty_type", nameEn: "Counterparty Types", nameAr: "أنواع الطرف الآخر", module: "shared", valueCodes: ["customer", "contractor", "supplier", "employee", "other"] },
+  { code: "insurance_status", nameEn: "Insurance Statuses", nameAr: "حالات التأمين", module: "insurance", valueCodes: ["active", "suspended", "expired", "terminated"] },
+  // The kind of contract a template or a legal contract is. Not to be confused
+  // with `sourceModule`, which carries the same five words for a different
+  // question — which module a record came from — and stays separate.
+  { code: "contract_type", nameEn: "Contract Types", nameAr: "أنواع العقود", module: "legal", valueCodes: ["sales", "construction", "procurement", "legal", "other"] },
   // Shared / finance
   { code: "payment_method", nameEn: "Payment Methods", nameAr: "طرق الدفع", module: "finance", valueCodes: ["cash", "bank_transfer", "cheque", "card"] },
   // CRM & Sales

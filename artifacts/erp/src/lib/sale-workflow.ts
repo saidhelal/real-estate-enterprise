@@ -165,10 +165,24 @@ export function isManagerial(user: CurrentUser | null): boolean {
   return /manager|owner|executive|director|admin|مدير|مالك|تنفيذي/.test(roles);
 }
 
-/** Client-side unique business code for records that require one at create. */
-export function genCode(prefix: string): string {
-  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 5)}`.toUpperCase();
-}
+/*
+ * `genCode` was here, and it is deliberately not replaced.
+ *
+ * It built a business code in the browser from a timestamp and a random
+ * suffix, and six call sites used it for reservations, installment plans,
+ * cheques, receipts and customers. A code the client invents is not an
+ * identifier — two browsers can invent the same one, and nothing in the
+ * database was watching.
+ *
+ * All six of those entities are issued from the central sequence engine on
+ * save, so the value was already being discarded by the server; the call sites
+ * only ever used the record that came back. The generator is gone rather than
+ * left unused, so it cannot be reached for again.
+ *
+ * A form that needs to show the number before saving asks the server:
+ * GET /api/number-preview?documentType=... — the same engine that will issue
+ * it. See `ResourceField.generated` / `generatorKey`.
+ */
 
 export type Frequency = "monthly" | "quarterly" | "semi_annual" | "annual" | "custom";
 

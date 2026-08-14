@@ -111,7 +111,10 @@ const RAW_NAV_GROUPS: NavGroup[] = [
       { href: "/profit-centers", icon: TrendingUp, labelKey: "nav.profit_centers" },
       { href: "/fiscal-periods", icon: CalendarRange, labelKey: "nav.fiscal_periods" },
       { href: "/year-end-closing", icon: CalendarDays, labelKey: "nav.year_end_closing" },
-      { href: "/financial-reports", icon: BarChart3, labelKey: "nav.financial_reports" },
+      // The four statements below are the accounting reports. A hand-written
+      // "Financial Reports" hub screen listed them a second time and could
+      // drift from this list — it already had, reaching across into Budget
+      // Management. The department workspace renders them from here.
       { href: "/trial-balance", icon: Scale, labelKey: "nav.trial_balance" },
       { href: "/balance-sheet", icon: GanttChartSquare, labelKey: "nav.balance_sheet" },
       { href: "/income-statement", icon: TrendingUp, labelKey: "nav.income_statement" },

@@ -11,6 +11,7 @@ import {
 } from "@workspace/api-zod";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
+import { companyScope } from "../lib/register-crud";
 import { notify } from "../lib/notify";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { nextNumber } from "../lib/doc-number";
@@ -77,7 +78,9 @@ function scopeOf(req: Request): string | null {
 async function load(id: string, req: Request): Promise<Record<string, unknown> | null> {
   const conds: SQL[] = [eq(delegationsTable.id, id), eq(delegationsTable.isDeleted, false)];
   const scope = scopeOf(req);
-  if (scope) conds.push(eq(delegationsTable.companyId, scope));
+  // One shared rule, so no endpoint can forget the tenant filter.
+  const scoped = companyScope(delegationsTable, req);
+  if (scoped) conds.push(scoped);
   const [row] = await db.select().from(delegationsTable).where(and(...conds));
   return (row as Record<string, unknown>) ?? null;
 }
@@ -95,7 +98,9 @@ router.get("/delegations", requirePermission("delegations.view"), async (req, re
   const { page, pageSize, offset } = pageParams(query);
   const conds: SQL[] = [eq(delegationsTable.isDeleted, false)];
   const scope = scopeOf(req);
-  if (scope) conds.push(eq(delegationsTable.companyId, scope));
+  // One shared rule, so no endpoint can forget the tenant filter.
+  const scoped = companyScope(delegationsTable, req);
+  if (scoped) conds.push(scoped);
   else {
     const companyId = qStr(query, "companyId");
     if (companyId) conds.push(eq(delegationsTable.companyId, companyId));

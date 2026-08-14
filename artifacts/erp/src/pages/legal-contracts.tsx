@@ -24,6 +24,7 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { enumOptions, enumLabel } from "@/lib/enums";
+import { useLookupOptions } from "@/lib/lookups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,11 +37,15 @@ import {
 import { useLanguage } from "@/lib/language-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const COUNTERPARTY_TYPE = enumOptions(["customer", "contractor", "supplier", "employee", "other"]);
 
 export default function LegalContractsPage() {
+  // Domain owned by the lookup engine; literal is the fallback.
+  const { options: CONTRACT_TYPE } = useLookupOptions("contract_type", ["sales", "construction", "procurement", "legal", "other"]);
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_counterparty_type } = useLookupOptions("counterparty_type", ["customer", "contractor", "supplier", "employee", "other"]);
+  const COUNTERPARTY_TYPE = lk_counterparty_type;
   const { language, t } = useLanguage();
-  const CONTRACT_TYPE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
   const SOURCE_MODULE = enumOptions(["sales", "construction", "procurement", "legal", "other"]);
   const queryClient = useQueryClient();
   const { toast } = useToast();

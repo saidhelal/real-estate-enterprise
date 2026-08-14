@@ -9,7 +9,7 @@
 export interface LeadInput {
   companyId: string;
   branchId?: string;
-  code: string;
+  code?: string;
   fullName: string;
   phone?: string;
   nationalId?: string;

@@ -6,11 +6,10 @@ import {
   fiscalPeriodsTable,
   journalEntriesTable,
   journalEntryLinesTable,
-  numberSequencesTable,
 } from "@workspace/db";
 import type { JournalEntryRow } from "@workspace/db";
 import { toCents, fromCents } from "./money";
-import { formatSequenceSample } from "./presenters";
+import { nextNumber } from "./doc-number";
 
 // Transaction client type extracted from drizzle's transaction callback, so the
 // posting service composes inside an existing business transaction (e.g. when a
@@ -168,34 +167,29 @@ async function periodForPosting(
   return period ? period.id : null;
 }
 
-/** Generate the next journal entry number within the transaction. */
-export async function nextJournalNumber(tx: Tx, _companyId: string): Promise<string> {
-  const [seq] = await tx
-    .select()
-    .from(numberSequencesTable)
-    .where(
-      and(
-        eq(numberSequencesTable.documentType, "Journal Entry"),
-        eq(numberSequencesTable.isActive, true),
-        eq(numberSequencesTable.isDeleted, false),
-      ),
-    )
-    .orderBy(numberSequencesTable.createdAt)
-    .limit(1)
-    .for("update");
-  if (seq) {
-    const code = formatSequenceSample(seq.prefix, seq.nextNumber, seq.padding, seq.resetYearly);
-    await tx
-      .update(numberSequencesTable)
-      .set({ nextNumber: seq.nextNumber + 1 })
-      .where(eq(numberSequencesTable.id, seq.id));
-    return code;
-  }
-  // Fallback when no sequence is configured.
-  const now = new Date();
-  const stamp = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
-  const rand = Math.floor(Math.random() * 1_000_000).toString().padStart(6, "0");
-  return `JV-${stamp}-${rand}`;
+/**
+ * The next number for an accounting document, from the one central engine.
+ *
+ * This used to be a second numbering engine: it read `number_sequences`
+ * itself, took `companyId` and ignored it — so every tenant drew from one
+ * counter — never reset for a new year, held no advisory lock (the race the
+ * central engine had to fix), and fell back to `Math.random()` for what is a
+ * financial identifier. Every one of those defects is gone by delegating
+ * rather than by being repaired here; repairing them would have produced two
+ * correct engines instead of one.
+ *
+ * `documentType` is passed by the caller because these documents are not all
+ * journal entries: an invoice is not a voucher and must not share its counter.
+ *
+ * The caller's transaction is threaded through, so the number and the row it
+ * belongs to commit together.
+ */
+export async function nextJournalNumber(
+  tx: Tx,
+  companyId: string | null,
+  documentType = "Journal Entry",
+): Promise<string> {
+  return (await nextNumber(documentType, companyId, tx)).value;
 }
 
 /**

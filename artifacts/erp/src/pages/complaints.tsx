@@ -18,6 +18,9 @@ import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
 
 export default function ComplaintsPage() {
+  // Domain owned by the lookup engine. The literal is the fallback used
+  // until the registry is seeded, so behaviour is unchanged either way.
+  const { options: lk_work_item_status } = useLookupOptions("work_item_status", ["open", "in_progress", "resolved", "closed"]);
   const { language } = useLanguage();
   const { options: CATEGORY } = useLookupOptions("complaint_category", ["general", "billing", "maintenance", "support"]);
   const { data: companies } = useListCompanies();
@@ -40,7 +43,7 @@ export default function ComplaintsPage() {
     { name: "category", label: "Category", labelAr: "الفئة", type: "select", options: CATEGORY },
     { name: "subject", label: "Subject", labelAr: "الموضوع", required: true },
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
-    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["open", "in_progress", "resolved", "closed"]) },
+    { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_work_item_status },
     { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
     { name: "escalationLevel", label: "Escalation Level", labelAr: "مستوى التصعيد", type: "money" },
     { name: "attachmentUrl", label: "Attachment URL", labelAr: "رابط المرفق" },

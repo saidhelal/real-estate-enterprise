@@ -38,13 +38,21 @@ export const numberSequencesTable = pgTable("number_sequences", {
    * a unique index, so a single index on the pair would still admit any number
    * of global (null-company) rows — exactly the duplicates being fixed. One
    * index covers the company-scoped rows, the other the global ones.
+   *
+   * Both are also restricted to live rows. This table soft-deletes, and the
+   * duplicates that prompted these indexes were resolved by soft-deleting the
+   * losers and keeping the highest counter — so an index over every row could
+   * never be created: nineteen document types still carry four dead copies
+   * each. Uniqueness is a statement about definitions that are in use, and
+   * excluding `is_deleted` rows is what makes it one. The alternative was to
+   * hard-delete history to satisfy an index, which is the wrong way round.
    */
   uniqueIndex("number_sequences_type_company_uq")
     .on(t.documentType, t.companyId)
-    .where(sql`${t.companyId} is not null`),
+    .where(sql`${t.companyId} is not null and ${t.isDeleted} = false`),
   uniqueIndex("number_sequences_type_global_uq")
     .on(t.documentType)
-    .where(sql`${t.companyId} is null`),
+    .where(sql`${t.companyId} is null and ${t.isDeleted} = false`),
 ]);
 
 export type NumberSequenceRow = typeof numberSequencesTable.$inferSelect;
