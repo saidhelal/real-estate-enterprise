@@ -133,6 +133,8 @@ router.delete("/marketing-campaigns/:id", requirePermission("marketing.delete"),
 
 registerCrud(router, {
   base: "/marketing-channels",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "marketingChannel" },
   module: "marketingChannels",
   entity: "marketingChannel",
   table: marketingChannelsTable,
@@ -149,6 +151,8 @@ registerCrud(router, {
 // lead-intake time. Distribution logs are read-only (written only by the engine).
 registerCrud(router, {
   base: "/marketing-distribution-rules",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "marketingDistributionRule" },
   module: "marketingDistributionRules",
   entity: "marketingDistributionRule",
   table: marketingDistributionRulesTable,
@@ -162,6 +166,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/marketing-distribution-agents",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "marketingDistributionAgent" },
   module: "marketingDistributionAgents",
   entity: "marketingDistributionAgent",
   table: marketingDistributionAgentsTable,

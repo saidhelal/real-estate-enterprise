@@ -20,6 +20,22 @@ export interface CorrectiveAction {
   /** @nullable */
   completedDate?: string | null;
   status: string;
+  /** @nullable */
+  nonconformityId?: string | null;
+  actionType?: string;
+  /** @nullable */
+  ownerEmployeeId?: string | null;
+  progressPercent?: number;
+  /** @nullable */
+  verifiedByEmployeeId?: string | null;
+  /** @nullable */
+  verifiedAt?: string | null;
+  /** @nullable */
+  verificationNotes?: string | null;
+  /** @nullable */
+  taskId?: string | null;
+  /** @nullable */
+  notes?: string | null;
   isActive: boolean;
   createdAt: string;
 }

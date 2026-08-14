@@ -9,7 +9,7 @@
 export interface PrPartyInput {
   companyId: string;
   /** @minLength 1 */
-  code: string;
+  code?: string;
   /** @minLength 1 */
   name: string;
   nameAr?: string;

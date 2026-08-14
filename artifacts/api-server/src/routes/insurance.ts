@@ -149,6 +149,8 @@ function postingHooks(post: PostConfig | undefined) {
 
 registerCrud(router, {
   base: "/employee-insurances",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "employeeInsurance" },
   module: "employeeInsurances",
   entity: "employeeInsurance",
   table: employeeInsurancesTable,
@@ -163,6 +165,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-forms",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceForm" },
   module: "insuranceForms",
   entity: "insuranceForm",
   table: insuranceFormsTable,
@@ -177,6 +181,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-additions",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceAddition" },
   module: "insuranceAdditions",
   entity: "insuranceAddition",
   table: insuranceAdditionsTable,
@@ -191,6 +197,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-exclusions",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceExclusion" },
   module: "insuranceExclusions",
   entity: "insuranceExclusion",
   table: insuranceExclusionsTable,
@@ -205,6 +213,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-data-amendments",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceDataAmendment" },
   module: "insuranceDataAmendments",
   entity: "insuranceDataAmendment",
   table: insuranceDataAmendmentsTable,
@@ -219,6 +229,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-subscriptions",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceSubscription" },
   module: "insuranceSubscriptions",
   entity: "insuranceSubscription",
   table: insuranceSubscriptionsTable,
@@ -234,6 +246,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-payment-notices",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insurancePaymentNotice" },
   module: "insurancePaymentNotices",
   entity: "insurancePaymentNotice",
   table: insurancePaymentNoticesTable,
@@ -248,6 +262,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-reconciliations",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceReconciliation" },
   module: "insuranceReconciliations",
   entity: "insuranceReconciliation",
   table: insuranceReconciliationsTable,
@@ -262,6 +278,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-arrears",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceArrear" },
   module: "insuranceArrears",
   entity: "insuranceArrear",
   table: insuranceArrearsTable,
@@ -276,6 +294,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-penalties",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insurancePenalty" },
   module: "insurancePenalties",
   entity: "insurancePenalty",
   table: insurancePenaltiesTable,
@@ -291,6 +311,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/service-terminations",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "serviceTermination" },
   module: "serviceTerminations",
   entity: "serviceTermination",
   table: serviceTerminationsTable,
@@ -305,6 +327,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-settlements",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceSettlement" },
   module: "insuranceSettlements",
   entity: "insuranceSettlement",
   table: insuranceSettlementsTable,
@@ -319,6 +343,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/insurance-clearances",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "insuranceClearance" },
   module: "insuranceClearances",
   entity: "insuranceClearance",
   table: insuranceClearancesTable,
@@ -333,6 +359,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/subcontractor-insurances",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "subcontractorInsurance" },
   module: "subcontractorInsurances",
   entity: "subcontractorInsurance",
   table: subcontractorInsurancesTable,
@@ -347,6 +375,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/project-labor-insurances",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "projectLaborInsurance" },
   module: "projectLaborInsurances",
   entity: "projectLaborInsurance",
   table: projectLaborInsurancesTable,

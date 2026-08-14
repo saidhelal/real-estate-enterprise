@@ -22,7 +22,18 @@ export default function SubcontractorInsurancesPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "subcontractorInsurance",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "contractorName", label: "Contractor Name", labelAr: "اسم المقاول", required: true },
     { name: "contractorType", label: "Contractor Type", labelAr: "نوع المقاول", type: "select", options: enumOptions(["subcontractor","supplier_contractor"]) },
     { name: "insuranceNumber", label: "Insurance Number", labelAr: "رقم التأمين" },

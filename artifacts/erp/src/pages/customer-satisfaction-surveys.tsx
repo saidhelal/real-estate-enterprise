@@ -22,7 +22,18 @@ export default function CustomerSatisfactionSurveysPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "customerSatisfactionSurvey",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "customerId", label: "Customer ID", labelAr: "معرّف العميل" },
     { name: "channel", label: "Channel", labelAr: "القناة", type: "select", options: enumOptions(["general", "periodic", "handover", "complaint", "maintenance", "work_order"]) },
     { name: "sourceType", label: "Source Type", labelAr: "نوع المصدر", type: "select", options: enumOptions(["handover", "complaint", "maintenance", "work_order"]) },

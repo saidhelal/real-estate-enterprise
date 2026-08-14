@@ -8,7 +8,7 @@
 
 export interface AdministrativeDecisionInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   decisionType?: string;
   decisionDate?: string;

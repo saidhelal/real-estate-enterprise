@@ -8,7 +8,7 @@
 
 export interface VehicleMissionInput {
   companyId: string;
-  code: string;
+  code?: string;
   vehicleId?: string;
   driverId?: string;
   purpose: string;

@@ -14,4 +14,12 @@ export interface CorrectiveActionUpdate {
   dueDate?: string;
   completedDate?: string;
   status?: string;
+  nonconformityId?: string;
+  actionType?: string;
+  ownerEmployeeId?: string;
+  progressPercent?: number;
+  verifiedByEmployeeId?: string;
+  verificationNotes?: string;
+  taskId?: string;
+  notes?: string;
 }

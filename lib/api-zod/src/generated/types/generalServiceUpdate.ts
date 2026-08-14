@@ -20,4 +20,9 @@ export interface GeneralServiceUpdate {
   serviceDate?: string;
   cost?: string;
   notes?: string;
+  serviceTime?: string;
+  departmentId?: string;
+  attendeesCount?: number;
+  requiredItems?: string;
+  meetingId?: string;
 }

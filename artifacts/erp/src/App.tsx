@@ -188,6 +188,13 @@ const ExecutiveDirectorPage = lazy(() => import("@/pages/executive-director"));
 const InternalCorrespondencePage = lazy(() => import("@/pages/internal-correspondence"));
 const CompanyProfilePage = lazy(() => import("@/pages/company-profile"));
 const PermissionMatrixPage = lazy(() => import("@/pages/permission-matrix"));
+const SecurityPointsPage = lazy(() => import("@/pages/security-points"));
+const SecurityShiftsPage = lazy(() => import("@/pages/security-shifts"));
+const SecurityIncidentsPage = lazy(() => import("@/pages/security-incidents"));
+const NonconformitiesPage = lazy(() => import("@/pages/nonconformities"));
+const RisksPage = lazy(() => import("@/pages/risks"));
+const DelegationsPage = lazy(() => import("@/pages/delegations"));
+const PermissionInspectorPage = lazy(() => import("@/pages/permission-inspector"));
 const SecretariatPage = lazy(() => import("@/pages/secretariat"));
 const PublicRelationsPage = lazy(() => import("@/pages/public-relations"));
 const MarketingDashboardPage = lazy(() => import("@/pages/marketing-dashboard"));
@@ -524,6 +531,13 @@ function Router() {
             <Route path="/internal-correspondence" component={InternalCorrespondencePage} />
             <Route path="/company-profile" component={CompanyProfilePage} />
             <Route path="/permission-matrix" component={PermissionMatrixPage} />
+            <Route path="/security-points" component={SecurityPointsPage} />
+            <Route path="/security-shifts" component={SecurityShiftsPage} />
+            <Route path="/security-incidents" component={SecurityIncidentsPage} />
+            <Route path="/nonconformities" component={NonconformitiesPage} />
+            <Route path="/risks" component={RisksPage} />
+            <Route path="/delegations" component={DelegationsPage} />
+            <Route path="/permission-inspector" component={PermissionInspectorPage} />
             <Route path="/secretariat" component={SecretariatPage} />
             <Route path="/public-relations" component={PublicRelationsPage} />
             <Route path="/marketing-dashboard" component={MarketingDashboardPage} />

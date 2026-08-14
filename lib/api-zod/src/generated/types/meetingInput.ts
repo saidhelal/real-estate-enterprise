@@ -8,7 +8,7 @@
 
 export interface MeetingInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   meetingType?: string;
   scheduledAt?: string;

@@ -28,6 +28,18 @@ export interface GeneralService {
   cost?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  serviceTime?: string | null;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  attendeesCount?: number | null;
+  /** @nullable */
+  requiredItems?: string | null;
+  /** @nullable */
+  meetingId?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
   isActive: boolean;
   createdAt: string;
 }

@@ -8,7 +8,7 @@
 
 export interface CorrespondenceInput {
   companyId: string;
-  code: string;
+  code?: string;
   direction?: string;
   correspondenceType?: string;
   subject: string;

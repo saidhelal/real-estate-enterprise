@@ -4,6 +4,7 @@ import { db } from "@workspace/db";
 import { serializeRow, pageParams, qStr } from "./serialize";
 import { recordAudit } from "./audit";
 import { requirePermission } from "../middleware/auth";
+import { nextNumber } from "./doc-number";
 
 /**
  * The one CRUD route factory.
@@ -122,6 +123,19 @@ export interface CrudConfig {
    * already driven a downstream record and may no longer move.
    */
   immutableFields?: string[];
+
+  /**
+   * Have the system issue this record's business code.
+   *
+   * Set it and the module stops accepting a code from the client: the value is
+   * drawn from the central sequence engine, scoped to the caller's company, and
+   * the field becomes immutable afterwards. A code the caller can choose is not
+   * an identifier — two callers eventually choose the same one, and no unique
+   * index in this schema would catch it.
+   *
+   * `documentType` names the sequence; `field` defaults to `code`.
+   */
+  generatedCode?: { documentType: string; field?: string };
 
   hooks?: CrudHooks;
 }
@@ -271,6 +285,23 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
     // otherwise a create is an unchecked way to plant rows in another tenant.
     const createScope = callerCompanyId(req);
     if (createScope && hasCompanyColumn(t)) values.companyId = createScope;
+
+    // A system-issued code is taken from the central sequence, never from the
+    // body. Whatever the client sent is discarded rather than rejected: the
+    // field is not theirs to set, and failing the request would only teach
+    // callers to keep sending it.
+    if (cfg.generatedCode) {
+      const field = cfg.generatedCode.field ?? "code";
+      // The sequence is chosen by the caller's own company and nothing else.
+      // Falling back to the body's `companyId` made the create draw from a
+      // different counter than the preview endpoint reads, so the number the
+      // form showed was not the number the record got — and it would also
+      // have let an unpinned caller take numbers from a named tenant's
+      // sequence, which is the thing session-scoping exists to prevent.
+      const issued = await nextNumber(cfg.generatedCode.documentType, createScope);
+      values[field] = issued.value;
+    }
+
     hooks.derive?.(values);
 
     // A transactional hook makes the whole create atomic: if it throws, the
@@ -339,12 +370,25 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
       if (v !== undefined) update[k] = v;
     }
     for (const field of cfg.immutableFields ?? []) delete update[field];
+    if (cfg.generatedCode) delete update[cfg.generatedCode.field ?? "code"];
     // Several update schemas accept `companyId`. For a pinned caller that would
     // be a one-field way to hand a row to another tenant, so it is dropped
     // rather than rejected — the rest of the edit still applies.
     if (callerCompanyId(req) && hasCompanyColumn(t)) delete update.companyId;
-    hooks.derive?.(update);
-    hooks.prepareUpdate?.(update, existing);
+    // `CrudRefused` is honoured from these hooks too, not only from
+    // `guardMutation`. A module that refuses an edit while shaping the payload
+    // — because the payload is what makes it invalid — was otherwise turning a
+    // deliberate business refusal into a 500.
+    try {
+      hooks.derive?.(update);
+      hooks.prepareUpdate?.(update, existing);
+    } catch (err) {
+      if (err instanceof CrudRefused) {
+        res.status(err.status).json({ error: err.message });
+        return;
+      }
+      throw err;
+    }
 
     let row = existing;
     if (hooks.inUpdateTx) {

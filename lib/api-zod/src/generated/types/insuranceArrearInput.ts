@@ -8,7 +8,7 @@
 
 export interface InsuranceArrearInput {
   companyId: string;
-  code: string;
+  code?: string;
   period?: string;
   subscriptionId?: string;
   amount?: string;

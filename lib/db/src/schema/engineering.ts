@@ -241,6 +241,21 @@ export const defectsTable = pgTable("defects", {
 });
 export type DefectRow = typeof defectsTable.$inferSelect;
 
+/**
+ * The one corrective-action register.
+ *
+ * It began as "what is being done about this construction defect" and is now
+ * also "what is being done about this quality finding" — the same object with
+ * a different parent. Exactly one of `defectId` and `nonconformityId` is set
+ * on any given row; both are nullable so neither owner is privileged and
+ * every pre-existing row stays valid.
+ *
+ * Quality management needs two things a defect action never did: a distinction
+ * between fixing this instance and preventing recurrence (`actionType`), and
+ * verification by someone other than the person who did the work. Those live
+ * here rather than in a parallel table, so there is one place to look for
+ * "what are we doing about this" whatever raised it.
+ */
 export const correctiveActionsTable = pgTable("corrective_actions", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyId: uuid("company_id").notNull(),
@@ -251,6 +266,23 @@ export const correctiveActionsTable = pgTable("corrective_actions", {
   dueDate: date("due_date"),
   completedDate: date("completed_date"),
   status: text("status").notNull().default("open"),
+
+  /* ---- Quality management ------------------------------------------------ */
+  /** The quality finding this action answers, when it came from one. */
+  nonconformityId: uuid("nonconformity_id"),
+  /** corrective (fix this) | preventive (stop it recurring) */
+  actionType: text("action_type").notNull().default("corrective"),
+  /** The owner as an employee, where the free-text `assignedTo` is not enough. */
+  ownerEmployeeId: uuid("owner_employee_id"),
+  progressPercent: integer("progress_percent").notNull().default(0),
+  /** Confirmation that it actually worked — deliberately a different person
+   *  from whoever completed it. */
+  verifiedByEmployeeId: uuid("verified_by_employee_id"),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  verificationNotes: text("verification_notes"),
+  /** The follow-up assignment, in the register that owns assignments. */
+  taskId: uuid("task_id"),
+  notes: text("notes"),
   ...audit,
 });
 export type CorrectiveActionRow = typeof correctiveActionsTable.$inferSelect;

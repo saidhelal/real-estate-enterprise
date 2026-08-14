@@ -8,7 +8,7 @@
 
 export interface ProjectLaborInsuranceInput {
   companyId: string;
-  code: string;
+  code?: string;
   laborName: string;
   projectId?: string;
   subcontractorInsuranceId?: string;

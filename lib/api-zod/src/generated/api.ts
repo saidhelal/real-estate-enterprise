@@ -272,7 +272,7 @@ export const GetPortalInstallmentsResponse = zod.array(GetPortalInstallmentsResp
  */
 export const GetPortalCollectionsResponseItem = zod.object({
   "id": zod.string(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amount": zod.string(),
   "paymentDate": zod.string(),
   "method": zod.string().nullish(),
@@ -4727,7 +4727,7 @@ export const ListContractAmendmentsResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "contractId": zod.string(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amendmentDate": zod.string(),
   "description": zod.string(),
   "oldValue": zod.string().nullish(),
@@ -4748,7 +4748,7 @@ export const ListContractAmendmentsResponse = zod.object({
 export const CreateContractAmendmentBody = zod.object({
   "companyId": zod.string(),
   "contractId": zod.string(),
-  "code": zod.string().optional(),
+  "code": zod.string(),
   "amendmentDate": zod.string(),
   "description": zod.string(),
   "oldValue": zod.string().optional(),
@@ -4768,7 +4768,7 @@ export const GetContractAmendmentResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "contractId": zod.string(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amendmentDate": zod.string(),
   "description": zod.string(),
   "oldValue": zod.string().nullish(),
@@ -4801,7 +4801,7 @@ export const UpdateContractAmendmentResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "contractId": zod.string(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amendmentDate": zod.string(),
   "description": zod.string(),
   "oldValue": zod.string().nullish(),
@@ -10411,6 +10411,15 @@ export const ListCorrectiveActionsResponse = zod.object({
   "dueDate": zod.string().nullish(),
   "completedDate": zod.string().nullish(),
   "status": zod.string(),
+  "nonconformityId": zod.string().nullish(),
+  "actionType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "progressPercent": zod.number().optional(),
+  "verifiedByEmployeeId": zod.string().nullish(),
+  "verifiedAt": zod.string().nullish(),
+  "verificationNotes": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -10431,7 +10440,15 @@ export const CreateCorrectiveActionBody = zod.object({
   "assignedTo": zod.string().optional(),
   "dueDate": zod.string().optional(),
   "completedDate": zod.string().optional(),
-  "status": zod.string().optional()
+  "status": zod.string().optional(),
+  "nonconformityId": zod.string().optional(),
+  "actionType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "progressPercent": zod.number().optional(),
+  "verifiedByEmployeeId": zod.string().optional(),
+  "verificationNotes": zod.string().optional(),
+  "taskId": zod.string().optional(),
+  "notes": zod.string().optional()
 })
 
 
@@ -10452,6 +10469,15 @@ export const GetCorrectiveActionResponse = zod.object({
   "dueDate": zod.string().nullish(),
   "completedDate": zod.string().nullish(),
   "status": zod.string(),
+  "nonconformityId": zod.string().nullish(),
+  "actionType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "progressPercent": zod.number().optional(),
+  "verifiedByEmployeeId": zod.string().nullish(),
+  "verifiedAt": zod.string().nullish(),
+  "verificationNotes": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -10471,7 +10497,15 @@ export const UpdateCorrectiveActionBody = zod.object({
   "assignedTo": zod.string().optional(),
   "dueDate": zod.string().optional(),
   "completedDate": zod.string().optional(),
-  "status": zod.string().optional()
+  "status": zod.string().optional(),
+  "nonconformityId": zod.string().optional(),
+  "actionType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "progressPercent": zod.number().optional(),
+  "verifiedByEmployeeId": zod.string().optional(),
+  "verificationNotes": zod.string().optional(),
+  "taskId": zod.string().optional(),
+  "notes": zod.string().optional()
 })
 
 export const UpdateCorrectiveActionResponse = zod.object({
@@ -10484,6 +10518,15 @@ export const UpdateCorrectiveActionResponse = zod.object({
   "dueDate": zod.string().nullish(),
   "completedDate": zod.string().nullish(),
   "status": zod.string(),
+  "nonconformityId": zod.string().nullish(),
+  "actionType": zod.string().optional(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "progressPercent": zod.number().optional(),
+  "verifiedByEmployeeId": zod.string().nullish(),
+  "verifiedAt": zod.string().nullish(),
+  "verificationNotes": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -20628,7 +20671,7 @@ export const ListEmployeeDocumentsResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "employeeId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "documentType": zod.string(),
   "title": zod.string(),
   "documentNumber": zod.string().nullish(),
@@ -20652,7 +20695,7 @@ export const ListEmployeeDocumentsResponse = zod.object({
 export const CreateEmployeeDocumentBody = zod.object({
   "companyId": zod.string(),
   "employeeId": zod.string().optional(),
-  "code": zod.string().optional(),
+  "code": zod.string(),
   "documentType": zod.string().optional(),
   "title": zod.string(),
   "documentNumber": zod.string().optional(),
@@ -20675,7 +20718,7 @@ export const GetEmployeeDocumentResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "employeeId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "documentType": zod.string(),
   "title": zod.string(),
   "documentNumber": zod.string().nullish(),
@@ -20713,7 +20756,7 @@ export const UpdateEmployeeDocumentResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "employeeId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "documentType": zod.string(),
   "title": zod.string(),
   "documentNumber": zod.string().nullish(),
@@ -23807,7 +23850,7 @@ export const ListLegalContractAmendmentsResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalContractId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amendmentDate": zod.string().nullish(),
   "description": zod.string(),
   "descriptionAr": zod.string().nullish(),
@@ -23832,7 +23875,7 @@ export const ListLegalContractAmendmentsResponse = zod.object({
 export const CreateLegalContractAmendmentBody = zod.object({
   "companyId": zod.string(),
   "legalContractId": zod.string().optional(),
-  "code": zod.string().optional(),
+  "code": zod.string(),
   "amendmentDate": zod.string().optional(),
   "description": zod.string(),
   "descriptionAr": zod.string().optional(),
@@ -23856,7 +23899,7 @@ export const GetLegalContractAmendmentResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalContractId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amendmentDate": zod.string().nullish(),
   "description": zod.string(),
   "descriptionAr": zod.string().nullish(),
@@ -23896,7 +23939,7 @@ export const UpdateLegalContractAmendmentResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalContractId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "amendmentDate": zod.string().nullish(),
   "description": zod.string(),
   "descriptionAr": zod.string().nullish(),
@@ -23938,7 +23981,7 @@ export const ListContractAddendumsResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalContractId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "title": zod.string(),
   "addendumDate": zod.string().nullish(),
   "content": zod.string().nullish(),
@@ -23958,7 +24001,7 @@ export const ListContractAddendumsResponse = zod.object({
 export const CreateContractAddendumBody = zod.object({
   "companyId": zod.string(),
   "legalContractId": zod.string().optional(),
-  "code": zod.string().optional(),
+  "code": zod.string(),
   "title": zod.string(),
   "addendumDate": zod.string().optional(),
   "content": zod.string().optional(),
@@ -23977,7 +24020,7 @@ export const GetContractAddendumResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalContractId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "title": zod.string(),
   "addendumDate": zod.string().nullish(),
   "content": zod.string().nullish(),
@@ -24007,7 +24050,7 @@ export const UpdateContractAddendumResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalContractId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "title": zod.string(),
   "addendumDate": zod.string().nullish(),
   "content": zod.string().nullish(),
@@ -24714,7 +24757,7 @@ export const ListLegalHearingsResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalCaseId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "hearingDate": zod.string().nullish(),
   "hearingTime": zod.string().nullish(),
   "location": zod.string().nullish(),
@@ -24738,7 +24781,7 @@ export const ListLegalHearingsResponse = zod.object({
 export const CreateLegalHearingBody = zod.object({
   "companyId": zod.string(),
   "legalCaseId": zod.string().optional(),
-  "code": zod.string().optional(),
+  "code": zod.string(),
   "hearingDate": zod.string().optional(),
   "hearingTime": zod.string().optional(),
   "location": zod.string().optional(),
@@ -24761,7 +24804,7 @@ export const GetLegalHearingResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalCaseId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "hearingDate": zod.string().nullish(),
   "hearingTime": zod.string().nullish(),
   "location": zod.string().nullish(),
@@ -24799,7 +24842,7 @@ export const UpdateLegalHearingResponse = zod.object({
   "id": zod.string(),
   "companyId": zod.string(),
   "legalCaseId": zod.string().nullish(),
-  "code": zod.string().nullish(),
+  "code": zod.string().nullable(),
   "hearingDate": zod.string().nullish(),
   "hearingTime": zod.string().nullish(),
   "location": zod.string().nullish(),
@@ -28068,7 +28111,7 @@ export const ListCallLogsResponse = zod.object({
  */
 export const CreateCallLogBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "customerId": zod.string().optional(),
   "direction": zod.string().optional(),
   "channel": zod.string().optional(),
@@ -28222,7 +28265,7 @@ export const ListWorkOrdersResponse = zod.object({
  */
 export const CreateWorkOrderBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "customerId": zod.string().optional(),
   "unitId": zod.string().optional(),
   "sourceType": zod.string().optional(),
@@ -28375,7 +28418,7 @@ export const ListCustomerSatisfactionSurveysResponse = zod.object({
  */
 export const CreateCustomerSatisfactionSurveyBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "customerId": zod.string().optional(),
   "channel": zod.string().optional(),
   "sourceType": zod.string().optional(),
@@ -29732,7 +29775,7 @@ export const CreateMarketingCampaignBody = zod.object({
   "companyId": zod.string(),
   "branchId": zod.string().optional(),
   "projectId": zod.string().optional(),
-  "code": zod.string().optional(),
+  "code": zod.string(),
   "name": zod.string(),
   "campaignType": zod.string().optional(),
   "startDate": zod.string().optional(),
@@ -29865,7 +29908,7 @@ export const ListMarketingChannelsResponse = zod.object({
  */
 export const CreateMarketingChannelBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string().optional(),
   "channelType": zod.string().optional(),
@@ -30028,7 +30071,7 @@ export const ListMarketingDistributionRulesResponse = zod.object({
  */
 export const CreateMarketingDistributionRuleBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string().optional(),
   "campaignId": zod.string().optional(),
@@ -30326,7 +30369,7 @@ export const ListCorrespondenceResponse = zod.object({
  */
 export const CreateCorrespondenceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "direction": zod.string().optional(),
   "correspondenceType": zod.string().optional(),
   "subject": zod.string(),
@@ -30483,7 +30526,7 @@ export const ListMeetingsResponse = zod.object({
  */
 export const CreateMeetingBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "meetingType": zod.string().optional(),
   "scheduledAt": zod.string().optional(),
@@ -30619,7 +30662,7 @@ export const ListAdministrativeDecisionsResponse = zod.object({
  */
 export const CreateAdministrativeDecisionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "decisionType": zod.string().optional(),
   "decisionDate": zod.string().optional(),
@@ -30756,7 +30799,7 @@ export const ListAdministrativeTasksResponse = zod.object({
  */
 export const CreateAdministrativeTaskBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "description": zod.string().optional(),
   "assignedToEmployeeId": zod.string().optional(),
@@ -30883,6 +30926,12 @@ export const ListGeneralServicesResponse = zod.object({
   "serviceDate": zod.string().nullish(),
   "cost": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "serviceTime": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "attendeesCount": zod.number().nullish(),
+  "requiredItems": zod.string().nullish(),
+  "meetingId": zod.string().nullish(),
+  "completedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -30897,7 +30946,7 @@ export const ListGeneralServicesResponse = zod.object({
  */
 export const CreateGeneralServiceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "serviceType": zod.string().optional(),
   "title": zod.string(),
   "description": zod.string().optional(),
@@ -30908,7 +30957,12 @@ export const CreateGeneralServiceBody = zod.object({
   "status": zod.string().optional(),
   "serviceDate": zod.string().optional(),
   "cost": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "serviceTime": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "attendeesCount": zod.number().optional(),
+  "requiredItems": zod.string().optional(),
+  "meetingId": zod.string().optional()
 })
 
 
@@ -30934,6 +30988,12 @@ export const GetGeneralServiceResponse = zod.object({
   "serviceDate": zod.string().nullish(),
   "cost": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "serviceTime": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "attendeesCount": zod.number().nullish(),
+  "requiredItems": zod.string().nullish(),
+  "meetingId": zod.string().nullish(),
+  "completedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -30959,7 +31019,12 @@ export const UpdateGeneralServiceBody = zod.object({
   "status": zod.string().optional(),
   "serviceDate": zod.string().optional(),
   "cost": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "serviceTime": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "attendeesCount": zod.number().optional(),
+  "requiredItems": zod.string().optional(),
+  "meetingId": zod.string().optional()
 })
 
 export const UpdateGeneralServiceResponse = zod.object({
@@ -30977,6 +31042,12 @@ export const UpdateGeneralServiceResponse = zod.object({
   "serviceDate": zod.string().nullish(),
   "cost": zod.string().nullish(),
   "notes": zod.string().nullish(),
+  "serviceTime": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "attendeesCount": zod.number().nullish(),
+  "requiredItems": zod.string().nullish(),
+  "meetingId": zod.string().nullish(),
+  "completedAt": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -31040,7 +31111,7 @@ export const ListVehiclesResponse = zod.object({
  */
 export const CreateVehicleBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "plateNumber": zod.string(),
   "make": zod.string().optional(),
   "model": zod.string().optional(),
@@ -31184,7 +31255,7 @@ export const ListDriversResponse = zod.object({
  */
 export const CreateDriverBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string().optional(),
   "fullName": zod.string(),
   "licenseNumber": zod.string().optional(),
@@ -31312,7 +31383,7 @@ export const ListVehicleMissionsResponse = zod.object({
  */
 export const CreateVehicleMissionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "vehicleId": zod.string().optional(),
   "driverId": zod.string().optional(),
   "purpose": zod.string(),
@@ -31452,7 +31523,7 @@ export const ListVehicleMaintenanceResponse = zod.object({
  */
 export const CreateVehicleMaintenanceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "vehicleId": zod.string().optional(),
   "logType": zod.string().optional(),
   "serviceDate": zod.string().optional(),
@@ -31594,7 +31665,7 @@ export const ListVisitorLogsResponse = zod.object({
  */
 export const CreateVisitorLogBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "visitorName": zod.string(),
   "idNumber": zod.string().optional(),
   "visitorCompany": zod.string().optional(),
@@ -31727,6 +31798,16 @@ export const ListCircularsResponse = zod.object({
   "body": zod.string().nullish(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
+  "circularType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "branchId": zod.string().nullish(),
+  "publishAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "publishedAt": zod.string().nullish(),
+  "publishedByUserId": zod.string().nullish(),
+  "targetedCount": zod.number().nullish(),
+  "readCount": zod.number().nullish(),
+  "unreadCount": zod.number().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })),
@@ -31741,7 +31822,7 @@ export const ListCircularsResponse = zod.object({
  */
 export const CreateCircularBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "circularNumber": zod.string().optional(),
   "issueDate": zod.string().optional(),
@@ -31751,7 +31832,12 @@ export const CreateCircularBody = zod.object({
   "departmentId": zod.string().optional(),
   "body": zod.string().optional(),
   "status": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "circularType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "publishAt": zod.string().optional(),
+  "expiresAt": zod.string().optional()
 })
 
 
@@ -31776,6 +31862,16 @@ export const GetCircularResponse = zod.object({
   "body": zod.string().nullish(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
+  "circularType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "branchId": zod.string().nullish(),
+  "publishAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "publishedAt": zod.string().nullish(),
+  "publishedByUserId": zod.string().nullish(),
+  "targetedCount": zod.number().nullish(),
+  "readCount": zod.number().nullish(),
+  "unreadCount": zod.number().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -31800,7 +31896,12 @@ export const UpdateCircularBody = zod.object({
   "departmentId": zod.string().optional(),
   "body": zod.string().optional(),
   "status": zod.string().optional(),
-  "notes": zod.string().optional()
+  "notes": zod.string().optional(),
+  "circularType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "publishAt": zod.string().optional(),
+  "expiresAt": zod.string().optional()
 })
 
 export const UpdateCircularResponse = zod.object({
@@ -31817,6 +31918,16 @@ export const UpdateCircularResponse = zod.object({
   "body": zod.string().nullish(),
   "status": zod.string(),
   "notes": zod.string().nullish(),
+  "circularType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "branchId": zod.string().nullish(),
+  "publishAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "publishedAt": zod.string().nullish(),
+  "publishedByUserId": zod.string().nullish(),
+  "targetedCount": zod.number().nullish(),
+  "readCount": zod.number().nullish(),
+  "unreadCount": zod.number().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -31876,7 +31987,7 @@ export const ListPoliciesResponse = zod.object({
  */
 export const CreatePolicyBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "title": zod.string(),
   "policyType": zod.string().optional(),
   "version": zod.string().optional(),
@@ -32028,7 +32139,7 @@ export const ListEmployeeInsurancesResponse = zod.object({
  */
 export const CreateEmployeeInsuranceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string(),
   "insuranceNumber": zod.string().optional(),
   "insuranceAuthority": zod.string().optional(),
@@ -32160,7 +32271,7 @@ export const ListInsuranceFormsResponse = zod.object({
  */
 export const CreateInsuranceFormBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "formType": zod.string().optional(),
   "formNumber": zod.string().optional(),
   "employeeInsuranceId": zod.string().optional(),
@@ -32279,7 +32390,7 @@ export const ListInsuranceAdditionsResponse = zod.object({
  */
 export const CreateInsuranceAdditionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string(),
   "employeeInsuranceId": zod.string().optional(),
   "additionDate": zod.string().optional(),
@@ -32399,7 +32510,7 @@ export const ListInsuranceExclusionsResponse = zod.object({
  */
 export const CreateInsuranceExclusionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string(),
   "employeeInsuranceId": zod.string().optional(),
   "exclusionDate": zod.string().optional(),
@@ -32521,7 +32632,7 @@ export const ListInsuranceDataAmendmentsResponse = zod.object({
  */
 export const CreateInsuranceDataAmendmentBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string(),
   "employeeInsuranceId": zod.string().optional(),
   "amendmentType": zod.string().optional(),
@@ -32654,7 +32765,7 @@ export const ListInsuranceSubscriptionsResponse = zod.object({
  */
 export const CreateInsuranceSubscriptionBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "branchId": zod.string().optional(),
   "period": zod.string(),
   "dueDate": zod.string().optional(),
@@ -32794,7 +32905,7 @@ export const ListInsurancePaymentNoticesResponse = zod.object({
  */
 export const CreateInsurancePaymentNoticeBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "noticeNumber": zod.string().optional(),
   "subscriptionId": zod.string().optional(),
   "period": zod.string().optional(),
@@ -32917,7 +33028,7 @@ export const ListInsuranceReconciliationsResponse = zod.object({
  */
 export const CreateInsuranceReconciliationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "period": zod.string(),
   "expectedAmount": zod.string().optional(),
   "actualAmount": zod.string().optional(),
@@ -33037,7 +33148,7 @@ export const ListInsuranceArrearsResponse = zod.object({
  */
 export const CreateInsuranceArrearBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "period": zod.string().optional(),
   "subscriptionId": zod.string().optional(),
   "amount": zod.string().optional(),
@@ -33160,7 +33271,7 @@ export const ListInsurancePenaltiesResponse = zod.object({
  */
 export const CreateInsurancePenaltyBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "branchId": zod.string().optional(),
   "penaltyType": zod.string().optional(),
   "subscriptionId": zod.string().optional(),
@@ -33292,7 +33403,7 @@ export const ListServiceTerminationsResponse = zod.object({
  */
 export const CreateServiceTerminationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string(),
   "employeeInsuranceId": zod.string().optional(),
   "terminationDate": zod.string().optional(),
@@ -33411,7 +33522,7 @@ export const ListInsuranceSettlementsResponse = zod.object({
  */
 export const CreateInsuranceSettlementBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "serviceTerminationId": zod.string().optional(),
   "employeeId": zod.string(),
   "settlementAmount": zod.string().optional(),
@@ -33526,7 +33637,7 @@ export const ListInsuranceClearancesResponse = zod.object({
  */
 export const CreateInsuranceClearanceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "employeeId": zod.string(),
   "serviceTerminationId": zod.string().optional(),
   "clearanceDate": zod.string().optional(),
@@ -33644,7 +33755,7 @@ export const ListSubcontractorInsurancesResponse = zod.object({
  */
 export const CreateSubcontractorInsuranceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "contractorName": zod.string(),
   "contractorType": zod.string().optional(),
   "insuranceNumber": zod.string().optional(),
@@ -33774,7 +33885,7 @@ export const ListProjectLaborInsurancesResponse = zod.object({
  */
 export const CreateProjectLaborInsuranceBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "laborName": zod.string(),
   "projectId": zod.string().optional(),
   "subcontractorInsuranceId": zod.string().optional(),
@@ -36544,7 +36655,7 @@ export const ListPrPartiesResponse = zod.object({
 
 export const CreatePrPartyBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string().min(1),
+  "code": zod.string().min(1).optional(),
   "name": zod.string().min(1),
   "nameAr": zod.string().optional(),
   "partyType": zod.string().optional(),
@@ -36718,7 +36829,7 @@ export const ListPrInteractionsResponse = zod.object({
 export const CreatePrInteractionBody = zod.object({
   "companyId": zod.string(),
   "partyId": zod.string(),
-  "code": zod.string().min(1),
+  "code": zod.string().min(1).optional(),
   "interactionType": zod.string().optional(),
   "interactionDate": zod.string().optional(),
   "subject": zod.string().min(1),
@@ -36836,6 +36947,280 @@ export const DeletePrInteractionResponse = zod.object({
 
 
 /**
+ * @summary List authority delegations
+ */
+export const ListDelegationsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "delegatorUserId": zod.coerce.string().optional(),
+  "delegateUserId": zod.coerce.string().optional()
+})
+
+export const ListDelegationsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "delegatorUserId": zod.string(),
+  "delegatorName": zod.string().nullish(),
+  "delegateUserId": zod.string(),
+  "delegateName": zod.string().nullish(),
+  "permissions": zod.array(zod.string()),
+  "reason": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "status": zod.string(),
+  "activatedByUserId": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "revokedByUserId": zod.string().nullish(),
+  "revokedAt": zod.string().nullish(),
+  "revokeReason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Draft a delegation
+ */
+
+
+
+
+
+
+export const CreateDelegationBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1),
+  "delegateUserId": zod.string().min(1),
+  "permissions": zod.array(zod.string()).min(1),
+  "reason": zod.string().min(1),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a delegation
+ */
+export const GetDelegationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetDelegationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "delegatorUserId": zod.string(),
+  "delegatorName": zod.string().nullish(),
+  "delegateUserId": zod.string(),
+  "delegateName": zod.string().nullish(),
+  "permissions": zod.array(zod.string()),
+  "reason": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "status": zod.string(),
+  "activatedByUserId": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "revokedByUserId": zod.string().nullish(),
+  "revokedAt": zod.string().nullish(),
+  "revokeReason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Amend a draft delegation
+ */
+export const UpdateDelegationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const UpdateDelegationBody = zod.object({
+  "permissions": zod.array(zod.string()).optional(),
+  "reason": zod.string().min(1).optional(),
+  "startDate": zod.string().optional(),
+  "endDate": zod.string().optional(),
+  "notes": zod.string().nullish()
+})
+
+export const UpdateDelegationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "delegatorUserId": zod.string(),
+  "delegatorName": zod.string().nullish(),
+  "delegateUserId": zod.string(),
+  "delegateName": zod.string().nullish(),
+  "permissions": zod.array(zod.string()),
+  "reason": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "status": zod.string(),
+  "activatedByUserId": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "revokedByUserId": zod.string().nullish(),
+  "revokedAt": zod.string().nullish(),
+  "revokeReason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Put a delegation into effect
+ */
+export const ActivateDelegationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ActivateDelegationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "delegatorUserId": zod.string(),
+  "delegatorName": zod.string().nullish(),
+  "delegateUserId": zod.string(),
+  "delegateName": zod.string().nullish(),
+  "permissions": zod.array(zod.string()),
+  "reason": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "status": zod.string(),
+  "activatedByUserId": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "revokedByUserId": zod.string().nullish(),
+  "revokedAt": zod.string().nullish(),
+  "revokeReason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Withdraw a live delegation
+ */
+export const RevokeDelegationParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const RevokeDelegationBody = zod.object({
+  "revokeReason": zod.string().min(1)
+})
+
+export const RevokeDelegationResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "delegatorUserId": zod.string(),
+  "delegatorName": zod.string().nullish(),
+  "delegateUserId": zod.string(),
+  "delegateName": zod.string().nullish(),
+  "permissions": zod.array(zod.string()),
+  "reason": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "status": zod.string(),
+  "activatedByUserId": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "revokedByUserId": zod.string().nullish(),
+  "revokedAt": zod.string().nullish(),
+  "revokeReason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Permission codes the caller is allowed to hand over
+ */
+export const ListDelegatablePermissionsResponse = zod.object({
+  "codes": zod.array(zod.string()),
+  "wildcard": zod.boolean()
+})
+
+
+/**
+ * @summary Where a user's authority actually comes from
+ */
+export const InspectUserPermissionsParams = zod.object({
+  "userId": zod.coerce.string()
+})
+
+export const InspectUserPermissionsResponse = zod.object({
+  "userId": zod.string(),
+  "username": zod.string(),
+  "fullName": zod.string(),
+  "email": zod.string().nullish(),
+  "isActive": zod.boolean().optional(),
+  "status": zod.string().nullish(),
+  "companyId": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "wildcard": zod.boolean(),
+  "roles": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "isSystem": zod.boolean(),
+  "permissions": zod.array(zod.string()),
+  "userCount": zod.number(),
+  "createdAt": zod.string()
+})),
+  "grants": zod.array(zod.object({
+  "code": zod.string(),
+  "sources": zod.array(zod.object({
+  "kind": zod.string(),
+  "label": zod.string(),
+  "expiresOn": zod.string().nullish()
+}))
+})),
+  "delegations": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "delegatorUserId": zod.string(),
+  "delegatorName": zod.string().nullish(),
+  "delegateUserId": zod.string(),
+  "delegateName": zod.string().nullish(),
+  "permissions": zod.array(zod.string()),
+  "reason": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "status": zod.string(),
+  "activatedByUserId": zod.string().nullish(),
+  "activatedAt": zod.string().nullish(),
+  "revokedByUserId": zod.string().nullish(),
+  "revokedAt": zod.string().nullish(),
+  "revokeReason": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "riskFlags": zod.array(zod.string())
+})
+
+
+/**
  * @summary Administrative workload across the registers the secretariat follows
  */
 export const GetSecretariatOverviewQueryParams = zod.object({
@@ -36880,5 +37265,1033 @@ export const ListSecretariatFollowUpsResponseItem = zod.object({
   "href": zod.string()
 })
 export const ListSecretariatFollowUpsResponse = zod.array(ListSecretariatFollowUpsResponseItem)
+
+
+/**
+ * @summary Publish an announcement to its audience
+ */
+export const PublishCircularParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PublishCircularResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "circularNumber": zod.string().nullish(),
+  "issueDate": zod.string(),
+  "effectiveDate": zod.string().nullish(),
+  "issuedByEmployeeId": zod.string().nullish(),
+  "audience": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "circularType": zod.string().optional(),
+  "priority": zod.string().optional(),
+  "branchId": zod.string().nullish(),
+  "publishAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "publishedAt": zod.string().nullish(),
+  "publishedByUserId": zod.string().nullish(),
+  "targetedCount": zod.number().nullish(),
+  "readCount": zod.number().nullish(),
+  "unreadCount": zod.number().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Record that the caller has read this announcement
+ */
+export const MarkCircularReadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const MarkCircularReadResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "circularId": zod.string(),
+  "userId": zod.string(),
+  "userName": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "deliveredAt": zod.string().nullish(),
+  "readAt": zod.string().nullish(),
+  "acknowledgedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Who has read this announcement, and who has not
+ */
+export const ListCircularReceiptsParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ListCircularReceiptsResponse = zod.object({
+  "targeted": zod.number(),
+  "read": zod.number(),
+  "unread": zod.number(),
+  "readPercent": zod.number(),
+  "receipts": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "circularId": zod.string(),
+  "userId": zod.string(),
+  "userName": zod.string().nullish(),
+  "employeeId": zod.string().nullish(),
+  "deliveredAt": zod.string().nullish(),
+  "readAt": zod.string().nullish(),
+  "acknowledgedAt": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
+ * @summary Published announcements addressed to the caller
+ */
+export const ListMyAnnouncementsQueryParams = zod.object({
+  "unreadOnly": zod.coerce.boolean().optional()
+})
+
+export const ListMyAnnouncementsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "body": zod.string().nullish(),
+  "circularType": zod.string(),
+  "priority": zod.string(),
+  "issueDate": zod.string(),
+  "publishedAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "read": zod.boolean(),
+  "readAt": zod.string().nullish()
+})),
+  "unread": zod.number(),
+  "total": zod.number()
+})
+
+
+/**
+ * @summary List SecurityPoint
+ */
+export const ListSecurityPointsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "pointType": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "branchId": zod.coerce.string().optional()
+})
+
+export const ListSecurityPointsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "pointType": zod.string(),
+  "location": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "supervisorEmployeeId": zod.string().nullish(),
+  "instructions": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create SecurityPoint
+ */
+
+
+
+
+export const CreateSecurityPointBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1).optional(),
+  "name": zod.string().min(1),
+  "nameAr": zod.string().optional(),
+  "pointType": zod.string().optional(),
+  "location": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "supervisorEmployeeId": zod.string().optional(),
+  "instructions": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get SecurityPoint
+ */
+export const GetSecurityPointParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSecurityPointResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "pointType": zod.string(),
+  "location": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "supervisorEmployeeId": zod.string().nullish(),
+  "instructions": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update SecurityPoint
+ */
+export const UpdateSecurityPointParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const UpdateSecurityPointBody = zod.object({
+  "code": zod.string().min(1).optional(),
+  "name": zod.string().min(1).optional(),
+  "nameAr": zod.string().optional(),
+  "pointType": zod.string().optional(),
+  "location": zod.string().optional(),
+  "branchId": zod.string().optional(),
+  "supervisorEmployeeId": zod.string().optional(),
+  "instructions": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSecurityPointResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "name": zod.string(),
+  "nameAr": zod.string().nullish(),
+  "pointType": zod.string(),
+  "location": zod.string().nullish(),
+  "branchId": zod.string().nullish(),
+  "supervisorEmployeeId": zod.string().nullish(),
+  "instructions": zod.string().nullish(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete SecurityPoint
+ */
+export const DeleteSecurityPointParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSecurityPointResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List SecurityShift
+ */
+export const ListSecurityShiftsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "pointId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "shiftType": zod.coerce.string().optional(),
+  "guardEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListSecurityShiftsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "pointId": zod.string(),
+  "guardEmployeeId": zod.string().nullish(),
+  "shiftDate": zod.string(),
+  "shiftType": zod.string(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "status": zod.string(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "handedOverToEmployeeId": zod.string().nullish(),
+  "handoverNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create SecurityShift
+ */
+
+
+
+
+export const CreateSecurityShiftBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1).optional(),
+  "pointId": zod.string().min(1),
+  "guardEmployeeId": zod.string().optional(),
+  "shiftDate": zod.string(),
+  "shiftType": zod.string().optional(),
+  "startAt": zod.string().optional(),
+  "endAt": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get SecurityShift
+ */
+export const GetSecurityShiftParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSecurityShiftResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "pointId": zod.string(),
+  "guardEmployeeId": zod.string().nullish(),
+  "shiftDate": zod.string(),
+  "shiftType": zod.string(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "status": zod.string(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "handedOverToEmployeeId": zod.string().nullish(),
+  "handoverNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update SecurityShift
+ */
+export const UpdateSecurityShiftParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const UpdateSecurityShiftBody = zod.object({
+  "code": zod.string().min(1).optional(),
+  "pointId": zod.string().optional(),
+  "guardEmployeeId": zod.string().optional(),
+  "shiftDate": zod.string().optional(),
+  "shiftType": zod.string().optional(),
+  "startAt": zod.string().optional(),
+  "endAt": zod.string().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSecurityShiftResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "pointId": zod.string(),
+  "guardEmployeeId": zod.string().nullish(),
+  "shiftDate": zod.string(),
+  "shiftType": zod.string(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "status": zod.string(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "handedOverToEmployeeId": zod.string().nullish(),
+  "handoverNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete SecurityShift
+ */
+export const DeleteSecurityShiftParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSecurityShiftResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List SecurityIncident
+ */
+export const ListSecurityIncidentsQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "pointId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "severity": zod.coerce.string().optional(),
+  "incidentType": zod.coerce.string().optional(),
+  "assignedToEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListSecurityIncidentsResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "occurredAt": zod.string(),
+  "reportedAt": zod.string().optional(),
+  "pointId": zod.string().nullish(),
+  "shiftId": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "incidentType": zod.string(),
+  "severity": zod.string(),
+  "description": zod.string(),
+  "reportedByEmployeeId": zod.string().nullish(),
+  "reportedByName": zod.string().nullish(),
+  "visitorLogId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "actionTaken": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create SecurityIncident
+ */
+
+
+
+
+export const CreateSecurityIncidentBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1).optional(),
+  "occurredAt": zod.string().optional(),
+  "pointId": zod.string().optional(),
+  "shiftId": zod.string().optional(),
+  "location": zod.string().optional(),
+  "incidentType": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "description": zod.string().min(1),
+  "reportedByEmployeeId": zod.string().optional(),
+  "reportedByName": zod.string().optional(),
+  "visitorLogId": zod.string().optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get SecurityIncident
+ */
+export const GetSecurityIncidentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetSecurityIncidentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "occurredAt": zod.string(),
+  "reportedAt": zod.string().optional(),
+  "pointId": zod.string().nullish(),
+  "shiftId": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "incidentType": zod.string(),
+  "severity": zod.string(),
+  "description": zod.string(),
+  "reportedByEmployeeId": zod.string().nullish(),
+  "reportedByName": zod.string().nullish(),
+  "visitorLogId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "actionTaken": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update SecurityIncident
+ */
+export const UpdateSecurityIncidentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const UpdateSecurityIncidentBody = zod.object({
+  "code": zod.string().min(1).optional(),
+  "occurredAt": zod.string().optional(),
+  "pointId": zod.string().optional(),
+  "shiftId": zod.string().optional(),
+  "location": zod.string().optional(),
+  "incidentType": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "description": zod.string().min(1).optional(),
+  "assignedToEmployeeId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "actionTaken": zod.string().optional(),
+  "visitorLogId": zod.string().optional(),
+  "taskId": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSecurityIncidentResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "occurredAt": zod.string(),
+  "reportedAt": zod.string().optional(),
+  "pointId": zod.string().nullish(),
+  "shiftId": zod.string().nullish(),
+  "location": zod.string().nullish(),
+  "incidentType": zod.string(),
+  "severity": zod.string(),
+  "description": zod.string(),
+  "reportedByEmployeeId": zod.string().nullish(),
+  "reportedByName": zod.string().nullish(),
+  "visitorLogId": zod.string().nullish(),
+  "assignedToEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "actionTaken": zod.string().nullish(),
+  "resolvedAt": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "taskId": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete SecurityIncident
+ */
+export const DeleteSecurityIncidentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteSecurityIncidentResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Nonconformity
+ */
+export const ListNonconformitysQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "severity": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "source": zod.coerce.string().optional(),
+  "ownerEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListNonconformitysResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "source": zod.string(),
+  "raisedDate": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "severity": zod.string(),
+  "policyId": zod.string().nullish(),
+  "rootCause": zod.string().nullish(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "closureNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "openActions": zod.number().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create Nonconformity
+ */
+
+
+
+
+
+export const CreateNonconformityBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1).optional(),
+  "source": zod.string().optional(),
+  "raisedDate": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "title": zod.string().min(1),
+  "description": zod.string().min(1),
+  "category": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "policyId": zod.string().optional(),
+  "rootCause": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get Nonconformity
+ */
+export const GetNonconformityParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetNonconformityResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "source": zod.string(),
+  "raisedDate": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "severity": zod.string(),
+  "policyId": zod.string().nullish(),
+  "rootCause": zod.string().nullish(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "closureNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "openActions": zod.number().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update Nonconformity
+ */
+export const UpdateNonconformityParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+
+export const UpdateNonconformityBody = zod.object({
+  "code": zod.string().min(1).optional(),
+  "source": zod.string().optional(),
+  "raisedDate": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "title": zod.string().min(1).optional(),
+  "description": zod.string().min(1).optional(),
+  "category": zod.string().optional(),
+  "severity": zod.string().optional(),
+  "policyId": zod.string().optional(),
+  "rootCause": zod.string().optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "status": zod.string().optional(),
+  "dueDate": zod.string().optional(),
+  "closureNotes": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateNonconformityResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "source": zod.string(),
+  "raisedDate": zod.string(),
+  "departmentId": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "severity": zod.string(),
+  "policyId": zod.string().nullish(),
+  "rootCause": zod.string().nullish(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "status": zod.string(),
+  "dueDate": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "closureNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "openActions": zod.number().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete Nonconformity
+ */
+export const DeleteNonconformityParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteNonconformityResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List Risk
+ */
+export const ListRisksQueryParams = zod.object({
+  "page": zod.coerce.number().optional(),
+  "pageSize": zod.coerce.number().optional(),
+  "search": zod.coerce.string().optional(),
+  "companyId": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "riskLevel": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "ownerEmployeeId": zod.coerce.string().optional()
+})
+
+export const ListRisksResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "source": zod.string(),
+  "likelihood": zod.number(),
+  "impact": zod.number(),
+  "riskScore": zod.number(),
+  "riskLevel": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "treatmentStrategy": zod.string(),
+  "treatmentPlan": zod.string().nullish(),
+  "treatmentDueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "lastReviewedAt": zod.string().nullish(),
+  "nextReviewDate": zod.string().nullish(),
+  "residualScore": zod.number().nullish(),
+  "residualLevel": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "exposureAmount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * @summary Create Risk
+ */
+
+
+export const createRiskBodyLikelihoodMax = 5;
+
+export const createRiskBodyImpactMax = 5;
+
+
+
+export const CreateRiskBody = zod.object({
+  "companyId": zod.string(),
+  "code": zod.string().min(1).optional(),
+  "title": zod.string().min(1),
+  "description": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "category": zod.string().optional(),
+  "source": zod.string().optional(),
+  "likelihood": zod.number().min(1).max(createRiskBodyLikelihoodMax),
+  "impact": zod.number().min(1).max(createRiskBodyImpactMax),
+  "ownerEmployeeId": zod.string().optional(),
+  "treatmentStrategy": zod.string().optional(),
+  "treatmentPlan": zod.string().optional(),
+  "treatmentDueDate": zod.string().optional(),
+  "nextReviewDate": zod.string().optional(),
+  "exposureAmount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get Risk
+ */
+export const GetRiskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetRiskResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "source": zod.string(),
+  "likelihood": zod.number(),
+  "impact": zod.number(),
+  "riskScore": zod.number(),
+  "riskLevel": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "treatmentStrategy": zod.string(),
+  "treatmentPlan": zod.string().nullish(),
+  "treatmentDueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "lastReviewedAt": zod.string().nullish(),
+  "nextReviewDate": zod.string().nullish(),
+  "residualScore": zod.number().nullish(),
+  "residualLevel": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "exposureAmount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update Risk
+ */
+export const UpdateRiskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+export const updateRiskBodyLikelihoodMax = 5;
+
+export const updateRiskBodyImpactMax = 5;
+
+
+
+export const UpdateRiskBody = zod.object({
+  "code": zod.string().min(1).optional(),
+  "title": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "departmentId": zod.string().optional(),
+  "category": zod.string().optional(),
+  "source": zod.string().optional(),
+  "likelihood": zod.number().min(1).max(updateRiskBodyLikelihoodMax).optional(),
+  "impact": zod.number().min(1).max(updateRiskBodyImpactMax).optional(),
+  "ownerEmployeeId": zod.string().optional(),
+  "treatmentStrategy": zod.string().optional(),
+  "treatmentPlan": zod.string().optional(),
+  "treatmentDueDate": zod.string().optional(),
+  "status": zod.string().optional(),
+  "nextReviewDate": zod.string().optional(),
+  "residualScore": zod.number().optional(),
+  "exposureAmount": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateRiskResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "source": zod.string(),
+  "likelihood": zod.number(),
+  "impact": zod.number(),
+  "riskScore": zod.number(),
+  "riskLevel": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "treatmentStrategy": zod.string(),
+  "treatmentPlan": zod.string().nullish(),
+  "treatmentDueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "lastReviewedAt": zod.string().nullish(),
+  "nextReviewDate": zod.string().nullish(),
+  "residualScore": zod.number().nullish(),
+  "residualLevel": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "exposureAmount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Soft-delete Risk
+ */
+export const DeleteRiskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteRiskResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Hand the post over to the next guard
+ */
+export const HandoverSecurityShiftParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+
+export const HandoverSecurityShiftBody = zod.object({
+  "handedOverToEmployeeId": zod.string().min(1),
+  "handoverNotes": zod.string().min(1)
+})
+
+export const HandoverSecurityShiftResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "pointId": zod.string(),
+  "guardEmployeeId": zod.string().nullish(),
+  "shiftDate": zod.string(),
+  "shiftType": zod.string(),
+  "startAt": zod.string().nullish(),
+  "endAt": zod.string().nullish(),
+  "status": zod.string(),
+  "checkInAt": zod.string().nullish(),
+  "checkOutAt": zod.string().nullish(),
+  "handedOverToEmployeeId": zod.string().nullish(),
+  "handoverNotes": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Record a periodic review of a risk
+ */
+export const ReviewRiskParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReviewRiskBody = zod.object({
+  "residualScore": zod.number().optional(),
+  "notes": zod.string().optional(),
+  "nextReviewDate": zod.string().optional()
+})
+
+export const ReviewRiskResponse = zod.object({
+  "id": zod.string(),
+  "companyId": zod.string(),
+  "code": zod.string(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "departmentId": zod.string().nullish(),
+  "category": zod.string(),
+  "source": zod.string(),
+  "likelihood": zod.number(),
+  "impact": zod.number(),
+  "riskScore": zod.number(),
+  "riskLevel": zod.string(),
+  "ownerEmployeeId": zod.string().nullish(),
+  "treatmentStrategy": zod.string(),
+  "treatmentPlan": zod.string().nullish(),
+  "treatmentDueDate": zod.string().nullish(),
+  "status": zod.string(),
+  "lastReviewedAt": zod.string().nullish(),
+  "nextReviewDate": zod.string().nullish(),
+  "residualScore": zod.number().nullish(),
+  "residualLevel": zod.string().nullish(),
+  "closedAt": zod.string().nullish(),
+  "exposureAmount": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary The identifier the system would issue next, without consuming it
+ */
+export const PreviewNextNumberQueryParams = zod.object({
+  "documentType": zod.coerce.string()
+})
+
+export const PreviewNextNumberResponse = zod.object({
+  "documentType": zod.string(),
+  "companyId": zod.string().nullish(),
+  "prefix": zod.string(),
+  "periodYear": zod.number().nullish(),
+  "nextNumber": zod.number(),
+  "code": zod.string(),
+  "generated": zod.boolean()
+})
 
 

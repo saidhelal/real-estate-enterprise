@@ -345,6 +345,21 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   // Public Relations: external bodies and the log of contacts with them.
   { module: "publicRelations", label: "Public Relations Parties" },
   { module: "publicRelationsInteractions", label: "Public Relations Interactions" },
+  // Delegations: a dated hand-over of authority. "approve" is separate from
+  // "create" on purpose — drafting a delegation and putting it into effect
+  // are different acts and should be separable between people.
+  // The permission inspector needs no module of its own: it reports on users
+  // and is gated on `users.view`, the permission that already governs that.
+  { module: "delegations", label: "Delegations", extraActions: ["approve"] },
+  // Corporate security. Visitors stay on visitorLogs and guard requests stay
+  // on generalServices; these are the three registers that had no owner.
+  { module: "securityPoints", label: "Security Points" },
+  { module: "securityShifts", label: "Security Shifts" },
+  { module: "securityIncidents", label: "Security Incidents" },
+  // Quality and governance. Corrective actions are NOT here — they reuse the
+  // existing correctiveActions module, which already owns that register.
+  { module: "nonconformities", label: "Nonconformities", extraActions: ["close"] },
+  { module: "risks", label: "Risk Register", extraActions: ["review"] },
   // Marketing Management (standalone module). Lead Sources reuse the CRM
   // `leadSources` module/permissions (no duplicate).
   { module: "marketing", label: "Marketing Campaigns" },

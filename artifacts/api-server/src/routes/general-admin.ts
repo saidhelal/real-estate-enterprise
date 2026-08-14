@@ -94,6 +94,8 @@ import { registerCrud } from "../lib/register-crud";
 
 registerCrud(router, {
   base: "/correspondence",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "correspondence" },
   module: "correspondence",
   entity: "correspondence",
   table: correspondenceTable,
@@ -107,6 +109,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/meetings",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "meeting" },
   module: "meetings",
   entity: "meeting",
   table: meetingsTable,
@@ -120,6 +124,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/administrative-decisions",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "administrativeDecision" },
   module: "administrativeDecisions",
   entity: "administrativeDecision",
   table: administrativeDecisionsTable,
@@ -133,6 +139,9 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/administrative-tasks",
+  // Directive numbers come from the central sequence. The header button used
+  // to stamp `DIR-${Date.now()}`, which is not a business number.
+  generatedCode: { documentType: "administrativeTask" },
   module: "administrativeTasks",
   entity: "administrativeTask",
   table: administrativeTasksTable,
@@ -146,6 +155,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/general-services",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "generalService" },
   module: "generalServices",
   entity: "generalService",
   table: generalServiceRequestsTable,
@@ -159,6 +170,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/vehicles",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "vehicle" },
   module: "vehicles",
   entity: "vehicle",
   table: vehiclesTable,
@@ -172,6 +185,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/drivers",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "driver" },
   module: "drivers",
   entity: "driver",
   table: driversTable,
@@ -185,6 +200,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/vehicle-missions",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "vehicleMission" },
   module: "vehicleMissions",
   entity: "vehicleMission",
   table: vehicleMissionsTable,
@@ -198,6 +215,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/vehicle-maintenance",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "vehicleMaintenance" },
   module: "vehicleMaintenance",
   entity: "vehicleMaintenance",
   table: vehicleMaintenanceLogsTable,
@@ -211,6 +230,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/visitor-logs",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "visitorLog" },
   module: "visitorLogs",
   entity: "visitorLog",
   table: visitorLogsTable,
@@ -224,6 +245,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/circulars",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "circular" },
   module: "circulars",
   entity: "circular",
   table: circularsTable,
@@ -237,6 +260,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/policies",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "policy" },
   module: "policies",
   entity: "policy",
   table: policiesTable,

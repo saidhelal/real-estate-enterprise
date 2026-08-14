@@ -12,7 +12,7 @@ export interface LegalHearing {
   /** @nullable */
   legalCaseId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   /** @nullable */
   hearingDate?: string | null;
   /** @nullable */

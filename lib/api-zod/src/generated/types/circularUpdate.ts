@@ -19,4 +19,9 @@ export interface CircularUpdate {
   body?: string;
   status?: string;
   notes?: string;
+  circularType?: string;
+  priority?: string;
+  branchId?: string;
+  publishAt?: string;
+  expiresAt?: string;
 }

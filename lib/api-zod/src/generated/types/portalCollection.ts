@@ -9,7 +9,7 @@
 export interface PortalCollection {
   id: string;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   amount: string;
   paymentDate: string;
   /** @nullable */

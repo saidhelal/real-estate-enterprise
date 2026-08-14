@@ -8,7 +8,7 @@
 
 export interface CallLogInput {
   companyId: string;
-  code: string;
+  code?: string;
   customerId?: string;
   direction?: string;
   channel?: string;

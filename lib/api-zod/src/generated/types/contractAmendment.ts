@@ -11,7 +11,7 @@ export interface ContractAmendment {
   companyId: string;
   contractId: string;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   amendmentDate: string;
   description: string;
   /** @nullable */

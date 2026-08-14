@@ -26,6 +26,24 @@ export interface Circular {
   status: string;
   /** @nullable */
   notes?: string | null;
+  circularType?: string;
+  priority?: string;
+  /** @nullable */
+  branchId?: string | null;
+  /** @nullable */
+  publishAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  /** @nullable */
+  publishedAt?: string | null;
+  /** @nullable */
+  publishedByUserId?: string | null;
+  /** @nullable */
+  targetedCount?: number | null;
+  /** @nullable */
+  readCount?: number | null;
+  /** @nullable */
+  unreadCount?: number | null;
   isActive: boolean;
   createdAt: string;
 }

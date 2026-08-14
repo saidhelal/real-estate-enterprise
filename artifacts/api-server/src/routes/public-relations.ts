@@ -72,6 +72,9 @@ async function refreshPartyContactDates(partyId: string): Promise<void> {
 
 registerCrud(router, {
   base: "/pr-parties",
+  // The code is issued by the central sequence engine, not accepted from
+  // the client — see `generatedCode` in register-crud.
+  generatedCode: { documentType: "prParty" },
   module: "publicRelations",
   entity: "prParty",
   table: prPartiesTable,
@@ -117,6 +120,9 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/pr-interactions",
+  // The code is issued by the central sequence engine, not accepted from
+  // the client — see `generatedCode` in register-crud.
+  generatedCode: { documentType: "prInteraction" },
   module: "publicRelationsInteractions",
   entity: "prInteraction",
   table: prInteractionsTable,

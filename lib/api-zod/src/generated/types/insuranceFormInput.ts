@@ -8,7 +8,7 @@
 
 export interface InsuranceFormInput {
   companyId: string;
-  code: string;
+  code?: string;
   formType?: string;
   formNumber?: string;
   employeeInsuranceId?: string;

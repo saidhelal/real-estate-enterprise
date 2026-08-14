@@ -8,7 +8,7 @@
 
 export interface VisitorLogInput {
   companyId: string;
-  code: string;
+  code?: string;
   visitorName: string;
   idNumber?: string;
   visitorCompany?: string;

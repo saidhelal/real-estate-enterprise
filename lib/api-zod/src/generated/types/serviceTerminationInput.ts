@@ -8,7 +8,7 @@
 
 export interface ServiceTerminationInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   terminationDate?: string;

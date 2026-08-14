@@ -8,7 +8,7 @@
 
 export interface PolicyInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   policyType?: string;
   version?: string;

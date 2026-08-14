@@ -8,7 +8,7 @@
 
 export interface InsuranceReconciliationInput {
   companyId: string;
-  code: string;
+  code?: string;
   period: string;
   expectedAmount?: string;
   actualAmount?: string;

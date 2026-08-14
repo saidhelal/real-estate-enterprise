@@ -1,0 +1,1 @@
+ALTER TABLE "number_sequences" ADD COLUMN "period_year" integer;

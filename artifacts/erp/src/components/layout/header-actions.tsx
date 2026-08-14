@@ -165,7 +165,6 @@ function DirectiveButton() {
           companyId,
           // The register numbers its own rows elsewhere; a directive raised
           // from the header still needs a code, so it carries a timestamped one.
-          code: `DIR-${Date.now()}`,
           title: title.trim(),
           description: [description.trim(), contextNote].filter(Boolean).join("\n\n") || undefined,
           assignedToEmployeeId: assignee,

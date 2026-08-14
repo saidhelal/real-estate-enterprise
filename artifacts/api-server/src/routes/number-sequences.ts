@@ -9,6 +9,9 @@ import {
 import { toNumberSequence } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import { previewNumber, sequenceShapeFor } from "../lib/doc-number";
+import { PreviewNextNumberResponse } from "@workspace/api-zod";
+import { qStr } from "../lib/serialize";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -93,6 +96,46 @@ router.delete("/number-sequences/:id", requirePermission("numberSequences.delete
   }
   await recordAudit(req, { action: "delete", entity: "numberSequence", entityId: id });
   res.json({ success: true });
+});
+
+
+/**
+ * What the system would issue next for a document type.
+ *
+ * Read-only by construction: it reads the counter and formats a value, and
+ * writes nothing. Opening a create form a hundred times must not burn a
+ * hundred numbers, so the reservation stays where it belongs — on the create
+ * itself, inside the same transaction as the row.
+ *
+ * This means the previewed value is a *forecast*, not a promise. If someone
+ * else saves first, the next caller is issued the following number and the
+ * form shows what was actually issued. That is the honest behaviour: the
+ * alternative, handing out reservations on form-open, leaks numbers every time
+ * a user changes their mind.
+ *
+ * Company comes from the session, never the query string — otherwise this
+ * would report another tenant's document volume.
+ */
+router.get("/number-preview", requirePermission("numberSequences.view"), async (req, res): Promise<void> => {
+  const documentType = qStr(req.query as Record<string, unknown>, "documentType");
+  if (!documentType) {
+    res.status(400).json({ error: "documentType is required" });
+    return;
+  }
+  const companyId = req.authUser?.companyId ?? null;
+  const shape = await sequenceShapeFor(documentType, companyId);
+  const code = await previewNumber(documentType, companyId);
+  res.json(
+    PreviewNextNumberResponse.parse({
+      documentType,
+      companyId,
+      prefix: shape.prefix,
+      periodYear: shape.periodYear,
+      nextNumber: shape.nextNumber,
+      code,
+      generated: true,
+    }),
+  );
 });
 
 export default router;

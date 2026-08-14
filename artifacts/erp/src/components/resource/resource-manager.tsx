@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { setNextChangeReason } from "@workspace/api-client-react";
+import { setNextChangeReason, customFetch } from "@workspace/api-client-react";
 import { useOwnerMode } from "@/lib/owner-mode-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
 import { useLanguage } from "@/lib/language-provider";
@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
@@ -112,6 +113,40 @@ export interface ResourceField {
   /** Optional input placeholder (falls back to the label). */
   placeholder?: string;
   placeholderAr?: string;
+
+  /* ---- Field metadata ----------------------------------------------------
+   * A label alone tells someone what a box is called, not what to put in it.
+   * These are the one place that is described, so every screen built on this
+   * component explains itself the same way and no screen re-describes a field
+   * in its own words.
+   */
+  /** One line under the input saying what to enter, and why. */
+  description?: string;
+  descriptionAr?: string;
+  /** A concrete example, shown alongside the description. */
+  example?: string;
+  /**
+   * The server issues this value; the input is locked and labelled as such.
+   * Use for codes, document numbers and references the system owns — the
+   * field is not editable at creation either, because the value does not
+   * exist until the record is saved.
+   */
+  generated?: boolean;
+  /**
+   * A reference issued by someone else, entered by hand. The opposite of
+   * `generated`, and marked so the user can tell the two apart: one is the
+   * system's identifier, the other is the counterparty's.
+   */
+  externalReference?: boolean;
+  /**
+   * Which sequence issues this field, matching the `documentType` the server
+   * registered in `generatedCode`.
+   *
+   * With it, the create form shows the value the system will issue *before*
+   * saving, instead of an empty box the user cannot fill. Without it a
+   * generated field is still locked — it simply is not previewed.
+   */
+  generatorKey?: string;
   /**
    * Name of the parent select field (or several, for multi-parent narrowing).
    * This field's options are filtered to those whose ancestor id(s) match every
@@ -657,10 +692,53 @@ function ResourceForm<T extends { id: string }>({
   }
   const [formData, setFormData] = useState<Record<string, string>>(initial);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  /**
+   * What the server says it will issue, per generated field.
+   *
+   * Fetched once when a create form opens. It is a forecast, not a
+   * reservation: previewing does not consume a number, so opening the form
+   * and closing it again costs nothing. If someone else saves first, the
+   * value actually issued is written back here after the create.
+   */
+  const [preview, setPreview] = useState<Record<string, string>>({});
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const generatedFields = fields.filter((f) => f.generated && f.generatorKey);
+
+  useEffect(() => {
+    // Only on create: an existing record already has its number.
+    if (isEdit || generatedFields.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const entries = await Promise.all(
+          generatedFields.map(async (f) => {
+            const res = await customFetch<{ code: string }>(
+              `/number-preview?documentType=${encodeURIComponent(f.generatorKey!)}`,
+            );
+            return [f.name, res.code] as const;
+          }),
+        );
+        if (!cancelled) setPreview(Object.fromEntries(entries));
+      } catch {
+        // A failed preview must not block the form: the number is issued by
+        // the server on save regardless of whether it could be shown first.
+        if (!cancelled) setPreviewFailed(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, fields.map((f) => f.generatorKey ?? "").join("|")]);
   const fieldRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const fieldLabel = (f: ResourceField) =>
     language === "ar" && f.labelAr ? f.labelAr : f.label;
+
+  /** The localised help line for a field, if it has one. */
+  const fieldDescription = (f: ResourceField): string | undefined =>
+    (language === "ar" ? f.descriptionAr : f.description) ?? f.description;
 
   const fieldPlaceholder = (f: ResourceField) => {
     const p = language === "ar" && f.placeholderAr ? f.placeholderAr : f.placeholder;
@@ -732,6 +810,18 @@ function ResourceForm<T extends { id: string }>({
         { data: payload },
         {
           onSuccess: (result: unknown) => {
+            // The number actually issued may differ from the forecast if
+            // someone saved in between. Show what was issued rather than
+            // treating the difference as a failure.
+            const issued = result as Record<string, unknown> | null;
+            if (issued && typeof issued === "object") {
+              const settled: Record<string, string> = {};
+              for (const f of generatedFields) {
+                const v = issued[f.name];
+                if (typeof v === "string") settled[f.name] = v;
+              }
+              if (Object.keys(settled).length) setPreview((p) => ({ ...p, ...settled }));
+            }
             toast({
               title: isPendingApproval(result) ? t("governance.submitted") : t("common.created"),
             });
@@ -753,7 +843,7 @@ function ResourceForm<T extends { id: string }>({
       {fields
         .filter((f) => f.name !== "companyId")
         .map((f) => {
-          const disabled = isEdit && f.createOnly;
+          const disabled = (isEdit && f.createOnly) || !!f.generated;
           const hasError = !!errors[f.name];
           const errorClass = hasError
             ? "border-destructive focus-visible:ring-destructive"
@@ -853,18 +943,40 @@ function ResourceForm<T extends { id: string }>({
                         : "text"
                   }
                   step={f.type === "money" ? "0.01" : undefined}
-                  value={formData[f.name] ?? ""}
+                  value={
+                    f.generated ? (preview[f.name] ?? "") : (formData[f.name] ?? "")
+                  }
                   onChange={(e) => setValue(f.name, e.target.value)}
-                  placeholder={fieldPlaceholder(f)}
+                  placeholder={
+                    f.generated
+                      ? previewFailed
+                        ? t("field.preview_unavailable")
+                        : t("field.preview_loading")
+                      : fieldPlaceholder(f)
+                  }
+                  readOnly={!!f.generated}
                   aria-invalid={hasError}
                   disabled={disabled}
                   className={errorClass}
                   dir={f.rtl ? "rtl" : undefined}
                 />
               )}
-              {hasError && (
+              {hasError ? (
                 <p className="text-xs text-destructive">{t("validation.required")}</p>
-              )}
+              ) : fieldDescription(f) || f.example ? (
+                // Help text sits under the input, read after the label rather
+                // than competing with it. An error takes the slot when there is
+                // one — a field cannot be both wrong and merely unexplained.
+                <p className="text-xs text-muted-foreground">
+                  {fieldDescription(f)}
+                  {f.example ? (
+                    <span className="opacity-80">
+                      {fieldDescription(f) ? " — " : ""}
+                      {t("field.example")}: {f.example}
+                    </span>
+                  ) : null}
+                </p>
+              ) : null}
             </div>
           );
         })}

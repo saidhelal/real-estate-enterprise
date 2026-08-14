@@ -30,7 +30,7 @@ import {
   Database, ListPlus, SlidersHorizontal, Settings2, Search, ChevronDown,
   Inbox, PhoneCall, Star, Printer, FlaskConical,
   Sparkles, Brain, Bot, Lightbulb, MessagesSquare, BellRing, Target,
-  Share2, GitBranch, Grid3x3,
+  Share2, GitBranch, Grid3x3, ShieldQuestion,
   type LucideIcon,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -407,28 +407,46 @@ const RAW_NAV_GROUPS: NavGroup[] = [
       { href: "/chairman", icon: Landmark, labelKey: "nav.chairman" },
       { href: "/executive-director", icon: Briefcase, labelKey: "nav.executive_director" },
     ]},
+    { titleKey: "nav.section.ga_board", items: [
+      { href: "/meetings", icon: CalendarClock, labelKey: "nav.meetings" },
+      { href: "/administrative-decisions", icon: Gavel, labelKey: "nav.administrative_decisions" },
+    ]},
     { titleKey: "nav.section.ga_governance", items: [
       { href: "/company-profile", icon: Building2, labelKey: "nav.company_profile", permission: "companies.view" },
       { href: "/users", icon: Users, labelKey: "nav.users", permission: "users.view" },
       { href: "/roles", icon: ShieldCheck, labelKey: "nav.roles", permission: "roles.view" },
       { href: "/permission-matrix", icon: Grid3x3, labelKey: "nav.permission_matrix", permission: "roles.view" },
+      { href: "/delegations", icon: UserCheck, labelKey: "nav.delegations", permission: "delegations.view" },
+      { href: "/permission-inspector", icon: ShieldQuestion, labelKey: "nav.permission_inspector", permission: "users.view" },
     ]},
     { titleKey: "nav.section.ga_secretariat", items: [
       { href: "/secretariat", icon: ClipboardList, labelKey: "nav.secretariat", permission: "secretariat.view" },
       { href: "/internal-correspondence", icon: Inbox, labelKey: "nav.internal_correspondence" },
       { href: "/correspondence", icon: FileText, labelKey: "nav.correspondence" },
-      { href: "/meetings", icon: CalendarClock, labelKey: "nav.meetings" },
-      { href: "/administrative-decisions", icon: Gavel, labelKey: "nav.administrative_decisions" },
       { href: "/administrative-tasks", icon: CheckSquare, labelKey: "nav.administrative_tasks" },
     ]},
     { titleKey: "nav.section.ga_public_relations", items: [
       { href: "/public-relations", icon: Share2, labelKey: "nav.public_relations", permission: "publicRelations.view" },
     ]},
+    { titleKey: "nav.section.ga_branches", items: [
+      { href: "/branches", icon: MapPin, labelKey: "nav.branches", permission: "branches.view" },
+    ]},
+    { titleKey: "nav.section.ga_quality", items: [
+      { href: "/policies", icon: BookOpen, labelKey: "nav.policies" },
+      { href: "/nonconformities", icon: FileX, labelKey: "nav.nonconformities", permission: "nonconformities.view" },
+      { href: "/risks", icon: ShieldMinus, labelKey: "nav.risks", permission: "risks.view" },
+    ]},
+    { titleKey: "nav.section.ga_announcements", items: [
+      { href: "/circulars", icon: Megaphone, labelKey: "nav.circulars" },
+    ]},
+    { titleKey: "nav.section.ga_security", items: [
+      { href: "/security-points", icon: ShieldAlert, labelKey: "nav.security_points", permission: "securityPoints.view" },
+      { href: "/security-shifts", icon: CalendarClock, labelKey: "nav.security_shifts", permission: "securityShifts.view" },
+      { href: "/security-incidents", icon: AlertTriangle, labelKey: "nav.security_incidents", permission: "securityIncidents.view" },
+    ]},
     { titleKey: "nav.section.ga_services", items: [
       { href: "/general-services", icon: Handshake, labelKey: "nav.general_services" },
       { href: "/visitor-logs", icon: Contact, labelKey: "nav.visitor_logs" },
-      { href: "/circulars", icon: Megaphone, labelKey: "nav.circulars" },
-      { href: "/policies", icon: BookOpen, labelKey: "nav.policies" },
     ]},
     { titleKey: "nav.section.ga_fleet", items: [
       { href: "/vehicles", icon: Truck, labelKey: "nav.vehicles" },
@@ -509,7 +527,6 @@ const RAW_NAV_GROUPS: NavGroup[] = [
     // multi-tenant register, distinct from the one company's own profile.
     { href: "/approvals", icon: CheckSquare, labelKey: "nav.approvals" },
     { href: "/companies", icon: Building2, labelKey: "nav.companies" },
-    { href: "/branches", icon: MapPin, labelKey: "nav.branches" },
     { href: "/fiscal-years", icon: CalendarDays, labelKey: "nav.fiscal_years" },
     { href: "/currencies", icon: Banknote, labelKey: "nav.currencies" },
     { href: "/number-sequences", icon: Hash, labelKey: "nav.number_sequences" },

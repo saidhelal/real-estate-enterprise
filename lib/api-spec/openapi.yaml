@@ -25147,6 +25147,149 @@ paths:
               schema:
                 $ref: "#/components/schemas/OkResponse"
 
+  /delegations:
+    get:
+      operationId: listDelegations
+      tags: [delegations]
+      summary: List authority delegations
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: delegatorUserId, in: query, required: false, schema: { type: string } }
+        - { name: delegateUserId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: Delegation list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DelegationListResponse"
+    post:
+      operationId: createDelegation
+      tags: [delegations]
+      summary: Draft a delegation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DelegationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+        "403":
+          description: Beyond the delegator's own authority
+  /delegations/{id}:
+    get:
+      operationId: getDelegation
+      tags: [delegations]
+      summary: Get a delegation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Delegation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateDelegation
+      tags: [delegations]
+      summary: Amend a draft delegation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DelegationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+  /delegations/{id}/activate:
+    post:
+      operationId: activateDelegation
+      tags: [delegations]
+      summary: Put a delegation into effect
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Activated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+        "409":
+          description: Not in a state that can be activated
+  /delegations/{id}/revoke:
+    post:
+      operationId: revokeDelegation
+      tags: [delegations]
+      summary: Withdraw a live delegation
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DelegationRevokeInput"
+      responses:
+        "200":
+          description: Revoked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+  /delegations/delegatable:
+    get:
+      operationId: listDelegatablePermissions
+      tags: [delegations]
+      summary: Permission codes the caller is allowed to hand over
+      responses:
+        "200":
+          description: Delegatable codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DelegatablePermissions"
+
+  /permission-inspector/{userId}:
+    get:
+      operationId: inspectUserPermissions
+      tags: [permissionInspector]
+      summary: Where a user's authority actually comes from
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Inspection result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionInspection"
+        "404":
+          description: Not found
+
   /secretariat/overview:
     get:
       operationId: getSecretariatOverview
@@ -25179,6 +25322,561 @@ paths:
               schema:
                 type: array
                 items: { $ref: "#/components/schemas/SecretariatFollowUp" }
+
+  /circulars/{id}/publish:
+    post:
+      operationId: publishCircular
+      tags: [circulars]
+      summary: Publish an announcement to its audience
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Circular"
+        "409":
+          description: Not in a publishable state
+  /circulars/{id}/read:
+    post:
+      operationId: markCircularRead
+      tags: [circulars]
+      summary: Record that the caller has read this announcement
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Receipt recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CircularReceipt"
+        "404":
+          description: Not addressed to the caller
+  /circulars/{id}/receipts:
+    get:
+      operationId: listCircularReceipts
+      tags: [circulars]
+      summary: Who has read this announcement, and who has not
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Receipts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CircularReceiptReport"
+  /my-announcements:
+    get:
+      operationId: listMyAnnouncements
+      tags: [circulars]
+      summary: Published announcements addressed to the caller
+      parameters:
+        - { name: unreadOnly, in: query, required: false, schema: { type: boolean } }
+      responses:
+        "200":
+          description: Announcements
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MyAnnouncementListResponse"
+
+  /security-points:
+    get:
+      operationId: listSecurityPoints
+      tags: [security]
+      summary: List SecurityPoint
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: pointType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: branchId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityPointListResponse"
+    post:
+      operationId: createSecurityPoint
+      tags: [security]
+      summary: Create SecurityPoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityPointInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityPoint"
+  /security-points/{id}:
+    get:
+      operationId: getSecurityPoint
+      tags: [security]
+      summary: Get SecurityPoint
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityPoint"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateSecurityPoint
+      tags: [security]
+      summary: Update SecurityPoint
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityPointUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityPoint"
+    delete:
+      operationId: deleteSecurityPoint
+      tags: [security]
+      summary: Soft-delete SecurityPoint
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /security-shifts:
+    get:
+      operationId: listSecurityShifts
+      tags: [security]
+      summary: List SecurityShift
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: pointId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: shiftType, in: query, required: false, schema: { type: string } }
+        - { name: guardEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityShiftListResponse"
+    post:
+      operationId: createSecurityShift
+      tags: [security]
+      summary: Create SecurityShift
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityShiftInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityShift"
+  /security-shifts/{id}:
+    get:
+      operationId: getSecurityShift
+      tags: [security]
+      summary: Get SecurityShift
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityShift"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateSecurityShift
+      tags: [security]
+      summary: Update SecurityShift
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityShiftUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityShift"
+    delete:
+      operationId: deleteSecurityShift
+      tags: [security]
+      summary: Soft-delete SecurityShift
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /security-incidents:
+    get:
+      operationId: listSecurityIncidents
+      tags: [security]
+      summary: List SecurityIncident
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: pointId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: severity, in: query, required: false, schema: { type: string } }
+        - { name: incidentType, in: query, required: false, schema: { type: string } }
+        - { name: assignedToEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityIncidentListResponse"
+    post:
+      operationId: createSecurityIncident
+      tags: [security]
+      summary: Create SecurityIncident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityIncidentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityIncident"
+  /security-incidents/{id}:
+    get:
+      operationId: getSecurityIncident
+      tags: [security]
+      summary: Get SecurityIncident
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityIncident"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateSecurityIncident
+      tags: [security]
+      summary: Update SecurityIncident
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityIncidentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityIncident"
+    delete:
+      operationId: deleteSecurityIncident
+      tags: [security]
+      summary: Soft-delete SecurityIncident
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /nonconformities:
+    get:
+      operationId: listNonconformitys
+      tags: [quality]
+      summary: List Nonconformity
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: severity, in: query, required: false, schema: { type: string } }
+        - { name: category, in: query, required: false, schema: { type: string } }
+        - { name: source, in: query, required: false, schema: { type: string } }
+        - { name: ownerEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NonconformityListResponse"
+    post:
+      operationId: createNonconformity
+      tags: [quality]
+      summary: Create Nonconformity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NonconformityInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Nonconformity"
+  /nonconformities/{id}:
+    get:
+      operationId: getNonconformity
+      tags: [quality]
+      summary: Get Nonconformity
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Nonconformity"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateNonconformity
+      tags: [quality]
+      summary: Update Nonconformity
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NonconformityUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Nonconformity"
+    delete:
+      operationId: deleteNonconformity
+      tags: [quality]
+      summary: Soft-delete Nonconformity
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /risks:
+    get:
+      operationId: listRisks
+      tags: [quality]
+      summary: List Risk
+      parameters:
+        - { name: page, in: query, required: false, schema: { type: integer } }
+        - { name: pageSize, in: query, required: false, schema: { type: integer } }
+        - { name: search, in: query, required: false, schema: { type: string } }
+        - { name: companyId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: riskLevel, in: query, required: false, schema: { type: string } }
+        - { name: category, in: query, required: false, schema: { type: string } }
+        - { name: ownerEmployeeId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskListResponse"
+    post:
+      operationId: createRisk
+      tags: [quality]
+      summary: Create Risk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiskInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Risk"
+  /risks/{id}:
+    get:
+      operationId: getRisk
+      tags: [quality]
+      summary: Get Risk
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Risk"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateRisk
+      tags: [quality]
+      summary: Update Risk
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiskUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Risk"
+    delete:
+      operationId: deleteRisk
+      tags: [quality]
+      summary: Soft-delete Risk
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+
+  /security-shifts/{id}/handover:
+    post:
+      operationId: handoverSecurityShift
+      tags: [security]
+      summary: Hand the post over to the next guard
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecurityShiftHandoverInput"
+      responses:
+        "200":
+          description: Handed over
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityShift"
+        "409":
+          description: Not in a state that can be handed over
+  /risks/{id}/review:
+    post:
+      operationId: reviewRisk
+      tags: [quality]
+      summary: Record a periodic review of a risk
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiskReviewInput"
+      responses:
+        "200":
+          description: Reviewed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Risk"
+
+  /number-preview:
+    get:
+      operationId: previewNextNumber
+      tags: [numberSequences]
+      summary: The identifier the system would issue next, without consuming it
+      parameters:
+        - { name: documentType, in: query, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Preview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NumberPreview"
 
 components:
   parameters:
@@ -25245,7 +25943,7 @@ components:
         heading: { type: string }
         body: { type: string }
         severity: { type: string, enum: [info, positive, warning, critical] }
-      required: [heading, body]
+      required: [heading, code, body]
 
     AiAnalysisResult:
       type: object
@@ -25260,17 +25958,17 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AiAnalysisSection"
-      required: [feature, title, summary, generatedAt, model, dataAvailable, sections]
+      required: [feature, code, title, summary, generatedAt, model, dataAvailable, sections]
 
     Error:
       type: object
-      required: [error]
+      required: [error, code]
       properties:
         error: { type: string }
 
     OkResponse:
       type: object
-      required: [success]
+      required: [success, code]
       properties:
         success: { type: boolean }
 
@@ -25318,7 +26016,7 @@ components:
 
     LookupTypeListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -25329,7 +26027,7 @@ components:
 
     LookupValue:
       type: object
-      required: [id, typeId, code, labelEn, labelAr, sortOrder, isArchived, isSystem, isActive, createdAt]
+      required: [id, code, typeId, labelEn, labelAr, sortOrder, isArchived, isSystem, isActive, createdAt]
       properties:
         id: { type: string }
         typeId: { type: string }
@@ -25348,7 +26046,7 @@ components:
 
     LookupValueInput:
       type: object
-      required: [typeId, code, labelEn, labelAr]
+      required: [code, typeId, labelEn, labelAr]
       properties:
         typeId: { type: string, minLength: 1 }
         code: { type: string, minLength: 1 }
@@ -25544,7 +26242,7 @@ components:
 
     PortalAuthSession:
       type: object
-      required: [accessToken, refreshToken, user]
+      required: [accessToken, code, refreshToken, user]
       properties:
         accessToken: { type: string }
         refreshToken: { type: string }
@@ -25552,26 +26250,26 @@ components:
 
     PortalAccessToken:
       type: object
-      required: [accessToken]
+      required: [accessToken, code]
       properties:
         accessToken: { type: string }
 
     PortalForgotPasswordInput:
       type: object
-      required: [identifier]
+      required: [code, identifier]
       properties:
         identifier: { type: string, minLength: 1 }
 
     PortalForgotPasswordResult:
       type: object
-      required: [success]
+      required: [success, code]
       properties:
         success: { type: boolean }
         devCode: { type: ["string", "null"] }
 
     PortalVerifyOtpInput:
       type: object
-      required: [identifier, code, newPassword]
+      required: [code, identifier, newPassword]
       properties:
         identifier: { type: string, minLength: 1 }
         code: { type: string, minLength: 1 }
@@ -25625,7 +26323,7 @@ components:
 
     PortalInstallment:
       type: object
-      required: [id, dueDate, amount, status]
+      required: [id, code, dueDate, amount, status]
       properties:
         id: { type: string }
         contractId: { type: ["string", "null"] }
@@ -25638,7 +26336,7 @@ components:
 
     PortalCollection:
       type: object
-      required: [id, amount, paymentDate]
+      required: [id, code, amount, paymentDate]
       properties:
         id: { type: string }
         code: { type: ["string", "null"] }
@@ -25649,7 +26347,7 @@ components:
 
     PortalDocument:
       type: object
-      required: [id, docType]
+      required: [id, code, docType]
       properties:
         id: { type: string }
         docType: { type: string }
@@ -25714,7 +26412,7 @@ components:
 
     CustomerNotification:
       type: object
-      required: [id, title, isRead, createdAt]
+      required: [id, code, title, isRead, createdAt]
       properties:
         id: { type: string }
         title: { type: string }
@@ -25826,7 +26524,7 @@ components:
 
     UserInput:
       type: object
-      required: [username, fullName, email, password]
+      required: [code, username, fullName, email, password]
       properties:
         username: { type: string, minLength: 3 }
         fullName: { type: string, minLength: 1 }
@@ -25851,7 +26549,7 @@ components:
 
     UserStatusUpdate:
       type: object
-      required: [status]
+      required: [status, code]
       properties:
         status: { type: string, enum: [active, inactive, locked] }
 
@@ -25866,7 +26564,7 @@ components:
 
     Role:
       type: object
-      required: [id, name, description, isSystem, permissions, userCount, createdAt]
+      required: [id, code, name, description, isSystem, permissions, userCount, createdAt]
       properties:
         id: { type: string }
         name: { type: string }
@@ -25880,7 +26578,7 @@ components:
 
     RoleInput:
       type: object
-      required: [name]
+      required: [code, name]
       properties:
         name: { type: string, minLength: 1 }
         description: { type: string }
@@ -25987,7 +26685,7 @@ components:
 
     RoleUser:
       type: object
-      required: [id, username, fullName, isActive]
+      required: [id, code, username, fullName, isActive]
       properties:
         id: { type: string }
         username: { type: string }
@@ -26024,7 +26722,7 @@ components:
         createdAt: { type: string }
     PrPartyInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         code: { type: string, minLength: 1 }
@@ -26066,7 +26764,7 @@ components:
         notes: { type: string }
     PrPartyListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26077,7 +26775,7 @@ components:
 
     PrInteraction:
       type: object
-      required: [id, companyId, partyId, code, interactionType, interactionDate, subject, status, isActive, createdAt]
+      required: [id, companyId, code, partyId, interactionType, interactionDate, subject, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -26102,7 +26800,7 @@ components:
         createdAt: { type: string }
     PrInteractionInput:
       type: object
-      required: [companyId, partyId, code, subject]
+      required: [companyId, partyId, subject]
       properties:
         companyId: { type: string }
         partyId: { type: string }
@@ -26142,7 +26840,7 @@ components:
         notes: { type: string }
     PrInteractionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26150,6 +26848,539 @@ components:
         total: { type: integer }
         page: { type: integer }
         pageSize: { type: integer }
+
+    Delegation:
+      type: object
+      required:
+        [id, companyId, code, delegatorUserId, delegateUserId, permissions, reason, startDate, endDate, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        delegatorUserId: { type: string }
+        delegatorName: { type: ["string", "null"] }
+        delegateUserId: { type: string }
+        delegateName: { type: ["string", "null"] }
+        permissions:
+          type: array
+          items: { type: string }
+        reason: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        status: { type: string }
+        activatedByUserId: { type: ["string", "null"] }
+        activatedAt: { type: ["string", "null"] }
+        revokedByUserId: { type: ["string", "null"] }
+        revokedAt: { type: ["string", "null"] }
+        revokeReason: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    DelegationInput:
+      type: object
+      required: [companyId, code, delegateUserId, permissions, reason, startDate, endDate]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        delegateUserId: { type: string, minLength: 1 }
+        permissions:
+          type: array
+          minItems: 1
+          items: { type: string }
+        reason: { type: string, minLength: 1 }
+        startDate: { type: string }
+        endDate: { type: string }
+        notes: { type: string }
+    DelegationUpdate:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items: { type: string }
+        reason: { type: string, minLength: 1 }
+        startDate: { type: string }
+        endDate: { type: string }
+        notes: { type: ["string", "null"] }
+    DelegationRevokeInput:
+      type: object
+      required: [code, revokeReason]
+      properties:
+        revokeReason: { type: string, minLength: 1 }
+    DelegationListResponse:
+      type: object
+      required: [data, code, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Delegation" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    DelegatablePermissions:
+      type: object
+      required: [codes, code, wildcard]
+      properties:
+        codes:
+          type: array
+          items: { type: string }
+        wildcard: { type: boolean }
+
+    PermissionGrant:
+      type: object
+      required: [sources, code]
+      properties:
+        code: { type: string }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/PermissionSource" }
+    PermissionSource:
+      type: object
+      required: [kind, label]
+      properties:
+        kind: { type: string }
+        label: { type: string }
+        expiresOn: { type: ["string", "null"] }
+    PermissionInspection:
+      type: object
+      required: [userId, username, fullName, wildcard, roles, grants, delegations, riskFlags]
+      properties:
+        userId: { type: string }
+        username: { type: string }
+        fullName: { type: string }
+        email: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        status: { type: ["string", "null"] }
+        companyId: { type: ["string", "null"] }
+        employeeId: { type: ["string", "null"] }
+        wildcard: { type: boolean }
+        roles:
+          type: array
+          items: { $ref: "#/components/schemas/Role" }
+        grants:
+          type: array
+          items: { $ref: "#/components/schemas/PermissionGrant" }
+        delegations:
+          type: array
+          items: { $ref: "#/components/schemas/Delegation" }
+        riskFlags:
+          type: array
+          items: { type: string }
+
+    CircularReceipt:
+      type: object
+      required: [id, companyId, code, circularId, userId, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        circularId: { type: string }
+        userId: { type: string }
+        userName: { type: ["string", "null"] }
+        employeeId: { type: ["string", "null"] }
+        deliveredAt: { type: ["string", "null"] }
+        readAt: { type: ["string", "null"] }
+        acknowledgedAt: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    CircularReceiptReport:
+      type: object
+      required: [targeted, code, read, unread, readPercent, receipts]
+      properties:
+        targeted: { type: integer }
+        read: { type: integer }
+        unread: { type: integer }
+        readPercent: { type: integer }
+        receipts:
+          type: array
+          items: { $ref: "#/components/schemas/CircularReceipt" }
+    MyAnnouncement:
+      type: object
+      required: [id, code, title, circularType, priority, issueDate, read]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        title: { type: string }
+        body: { type: ["string", "null"] }
+        circularType: { type: string }
+        priority: { type: string }
+        issueDate: { type: string }
+        publishedAt: { type: ["string", "null"] }
+        expiresAt: { type: ["string", "null"] }
+        read: { type: boolean }
+        readAt: { type: ["string", "null"] }
+    MyAnnouncementListResponse:
+      type: object
+      required: [data, code, unread, total]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/MyAnnouncement" }
+        unread: { type: integer }
+        total: { type: integer }
+
+    SecurityPoint:
+      type: object
+      required: [id, companyId, code, name, pointType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        nameAr: { type: ["string", "null"] }
+        pointType: { type: string }
+        location: { type: ["string", "null"] }
+        branchId: { type: ["string", "null"] }
+        supervisorEmployeeId: { type: ["string", "null"] }
+        instructions: { type: ["string", "null"] }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    SecurityPointInput:
+      type: object
+      required: [companyId, name]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        nameAr: { type: string }
+        pointType: { type: string }
+        location: { type: string }
+        branchId: { type: string }
+        supervisorEmployeeId: { type: string }
+        instructions: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    SecurityPointUpdate:
+      type: object
+      properties:
+        code: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        nameAr: { type: string }
+        pointType: { type: string }
+        location: { type: string }
+        branchId: { type: string }
+        supervisorEmployeeId: { type: string }
+        instructions: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    SecurityPointListResponse:
+      type: object
+      required: [data, code, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SecurityPoint" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    SecurityShift:
+      type: object
+      required: [id, companyId, code, pointId, shiftDate, shiftType, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        pointId: { type: string }
+        guardEmployeeId: { type: ["string", "null"] }
+        shiftDate: { type: string }
+        shiftType: { type: string }
+        startAt: { type: ["string", "null"] }
+        endAt: { type: ["string", "null"] }
+        status: { type: string }
+        checkInAt: { type: ["string", "null"] }
+        checkOutAt: { type: ["string", "null"] }
+        handedOverToEmployeeId: { type: ["string", "null"] }
+        handoverNotes: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    SecurityShiftInput:
+      type: object
+      required: [companyId, pointId, shiftDate]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        pointId: { type: string, minLength: 1 }
+        guardEmployeeId: { type: string }
+        shiftDate: { type: string }
+        shiftType: { type: string }
+        startAt: { type: string }
+        endAt: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    SecurityShiftUpdate:
+      type: object
+      properties:
+        code: { type: string, minLength: 1 }
+        pointId: { type: string }
+        guardEmployeeId: { type: string }
+        shiftDate: { type: string }
+        shiftType: { type: string }
+        startAt: { type: string }
+        endAt: { type: string }
+        status: { type: string }
+        notes: { type: string }
+    SecurityShiftListResponse:
+      type: object
+      required: [data, code, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SecurityShift" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    SecurityShiftHandoverInput:
+      type: object
+      required: [code, handedOverToEmployeeId, handoverNotes]
+      properties:
+        handedOverToEmployeeId: { type: string, minLength: 1 }
+        handoverNotes: { type: string, minLength: 1 }
+
+    SecurityIncident:
+      type: object
+      required: [id, companyId, code, occurredAt, incidentType, severity, description, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        occurredAt: { type: string }
+        reportedAt: { type: string }
+        pointId: { type: ["string", "null"] }
+        shiftId: { type: ["string", "null"] }
+        location: { type: ["string", "null"] }
+        incidentType: { type: string }
+        severity: { type: string }
+        description: { type: string }
+        reportedByEmployeeId: { type: ["string", "null"] }
+        reportedByName: { type: ["string", "null"] }
+        visitorLogId: { type: ["string", "null"] }
+        assignedToEmployeeId: { type: ["string", "null"] }
+        status: { type: string }
+        actionTaken: { type: ["string", "null"] }
+        resolvedAt: { type: ["string", "null"] }
+        closedAt: { type: ["string", "null"] }
+        taskId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    SecurityIncidentInput:
+      type: object
+      required: [companyId, description]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        occurredAt: { type: string }
+        pointId: { type: string }
+        shiftId: { type: string }
+        location: { type: string }
+        incidentType: { type: string }
+        severity: { type: string }
+        description: { type: string, minLength: 1 }
+        reportedByEmployeeId: { type: string }
+        reportedByName: { type: string }
+        visitorLogId: { type: string }
+        assignedToEmployeeId: { type: string }
+        notes: { type: string }
+    SecurityIncidentUpdate:
+      type: object
+      properties:
+        code: { type: string, minLength: 1 }
+        occurredAt: { type: string }
+        pointId: { type: string }
+        shiftId: { type: string }
+        location: { type: string }
+        incidentType: { type: string }
+        severity: { type: string }
+        description: { type: string, minLength: 1 }
+        assignedToEmployeeId: { type: string }
+        status: { type: string }
+        actionTaken: { type: string }
+        visitorLogId: { type: string }
+        taskId: { type: string }
+        notes: { type: string }
+    SecurityIncidentListResponse:
+      type: object
+      required: [data, code, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/SecurityIncident" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Nonconformity:
+      type: object
+      required: [id, companyId, code, source, raisedDate, title, description, category, severity, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        source: { type: string }
+        raisedDate: { type: string }
+        departmentId: { type: ["string", "null"] }
+        title: { type: string }
+        description: { type: string }
+        category: { type: string }
+        severity: { type: string }
+        policyId: { type: ["string", "null"] }
+        rootCause: { type: ["string", "null"] }
+        ownerEmployeeId: { type: ["string", "null"] }
+        status: { type: string }
+        dueDate: { type: ["string", "null"] }
+        closedAt: { type: ["string", "null"] }
+        closureNotes: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        openActions: { type: ["integer", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    NonconformityInput:
+      type: object
+      required: [companyId, title, description]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        source: { type: string }
+        raisedDate: { type: string }
+        departmentId: { type: string }
+        title: { type: string, minLength: 1 }
+        description: { type: string, minLength: 1 }
+        category: { type: string }
+        severity: { type: string }
+        policyId: { type: string }
+        rootCause: { type: string }
+        ownerEmployeeId: { type: string }
+        dueDate: { type: string }
+        notes: { type: string }
+    NonconformityUpdate:
+      type: object
+      properties:
+        code: { type: string, minLength: 1 }
+        source: { type: string }
+        raisedDate: { type: string }
+        departmentId: { type: string }
+        title: { type: string, minLength: 1 }
+        description: { type: string, minLength: 1 }
+        category: { type: string }
+        severity: { type: string }
+        policyId: { type: string }
+        rootCause: { type: string }
+        ownerEmployeeId: { type: string }
+        status: { type: string }
+        dueDate: { type: string }
+        closureNotes: { type: string }
+        notes: { type: string }
+    NonconformityListResponse:
+      type: object
+      required: [data, code, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Nonconformity" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+
+    Risk:
+      type: object
+      required: [id, companyId, code, title, category, source, likelihood, impact, riskScore, riskLevel, treatmentStrategy, status, isActive, createdAt]
+      properties:
+        id: { type: string }
+        companyId: { type: string }
+        code: { type: string }
+        title: { type: string }
+        description: { type: ["string", "null"] }
+        departmentId: { type: ["string", "null"] }
+        category: { type: string }
+        source: { type: string }
+        likelihood: { type: integer }
+        impact: { type: integer }
+        riskScore: { type: integer }
+        riskLevel: { type: string }
+        ownerEmployeeId: { type: ["string", "null"] }
+        treatmentStrategy: { type: string }
+        treatmentPlan: { type: ["string", "null"] }
+        treatmentDueDate: { type: ["string", "null"] }
+        status: { type: string }
+        lastReviewedAt: { type: ["string", "null"] }
+        nextReviewDate: { type: ["string", "null"] }
+        residualScore: { type: ["integer", "null"] }
+        residualLevel: { type: ["string", "null"] }
+        closedAt: { type: ["string", "null"] }
+        exposureAmount: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+    RiskInput:
+      type: object
+      required: [companyId, title, likelihood, impact]
+      properties:
+        companyId: { type: string }
+        code: { type: string, minLength: 1 }
+        title: { type: string, minLength: 1 }
+        description: { type: string }
+        departmentId: { type: string }
+        category: { type: string }
+        source: { type: string }
+        likelihood: { type: integer, minimum: 1, maximum: 5 }
+        impact: { type: integer, minimum: 1, maximum: 5 }
+        ownerEmployeeId: { type: string }
+        treatmentStrategy: { type: string }
+        treatmentPlan: { type: string }
+        treatmentDueDate: { type: string }
+        nextReviewDate: { type: string }
+        exposureAmount: { type: string }
+        notes: { type: string }
+    RiskUpdate:
+      type: object
+      properties:
+        code: { type: string, minLength: 1 }
+        title: { type: string, minLength: 1 }
+        description: { type: string }
+        departmentId: { type: string }
+        category: { type: string }
+        source: { type: string }
+        likelihood: { type: integer, minimum: 1, maximum: 5 }
+        impact: { type: integer, minimum: 1, maximum: 5 }
+        ownerEmployeeId: { type: string }
+        treatmentStrategy: { type: string }
+        treatmentPlan: { type: string }
+        treatmentDueDate: { type: string }
+        status: { type: string }
+        nextReviewDate: { type: string }
+        residualScore: { type: integer }
+        exposureAmount: { type: string }
+        notes: { type: string }
+    RiskListResponse:
+      type: object
+      required: [data, code, total, page, pageSize]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Risk" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    RiskReviewInput:
+      type: object
+      properties:
+        residualScore: { type: integer }
+        notes: { type: string }
+        nextReviewDate: { type: string }
+
+    NumberPreview:
+      type: object
+      required: [documentType, code, prefix, nextNumber, generated]
+      properties:
+        documentType: { type: string }
+        companyId: { type: ["string", "null"] }
+        prefix: { type: string }
+        periodYear: { type: ["integer", "null"] }
+        nextNumber: { type: integer }
+        code: { type: string }
+        generated: { type: boolean }
 
     SecretariatOverview:
       type: object
@@ -26181,7 +27412,7 @@ components:
         documentsLinked: { type: integer }
     SecretariatFollowUp:
       type: object
-      required: [id, kind, code, title, status, href]
+      required: [id, code, kind, title, status, href]
       properties:
         id: { type: string }
         kind: { type: string }
@@ -26234,7 +27465,7 @@ components:
 
     FiscalYear:
       type: object
-      required: [id, name, startDate, endDate, status, isActive, createdAt]
+      required: [id, code, name, startDate, endDate, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: ["string", "null"] }
@@ -26247,7 +27478,7 @@ components:
 
     FiscalYearInput:
       type: object
-      required: [name, startDate, endDate]
+      required: [code, name, startDate, endDate]
       properties:
         companyId: { type: string }
         name: { type: string, minLength: 1 }
@@ -26386,7 +27617,7 @@ components:
 
     LoginHistoryEntry:
       type: object
-      required: [id, userName, success, ipAddress, createdAt]
+      required: [id, code, userName, success, ipAddress, createdAt]
       properties:
         id: { type: string }
         userName: { type: string }
@@ -26397,7 +27628,7 @@ components:
 
     DashboardSummary:
       type: object
-      required: [users, companies, branches, roles, activeSessions, fiscalYears, currencies, auditEvents]
+      required: [users, code, companies, branches, roles, activeSessions, fiscalYears, currencies, auditEvents]
       properties:
         users: { type: integer }
         companies: { type: integer }
@@ -26442,7 +27673,7 @@ components:
 
     UnitTypeListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26485,7 +27716,7 @@ components:
 
     UnitStatusListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26543,7 +27774,7 @@ components:
 
     ProjectListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26554,7 +27785,7 @@ components:
 
     Phase:
       type: object
-      required: [id, companyId, projectId, code, name, nameAr, status, isActive, createdAt]
+      required: [id, companyId, code, projectId, name, nameAr, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -26570,7 +27801,7 @@ components:
 
     PhaseInput:
       type: object
-      required: [companyId, projectId, code, name, nameAr]
+      required: [companyId, code, projectId, name, nameAr]
       properties:
         companyId: { type: string }
         projectId: { type: string }
@@ -26595,7 +27826,7 @@ components:
 
     PhaseListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26606,7 +27837,7 @@ components:
 
     Building:
       type: object
-      required: [id, companyId, projectId, code, name, nameAr, floorsCount, isActive, createdAt]
+      required: [id, companyId, code, projectId, name, nameAr, floorsCount, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -26621,7 +27852,7 @@ components:
 
     BuildingInput:
       type: object
-      required: [companyId, projectId, code, name, nameAr]
+      required: [companyId, code, projectId, name, nameAr]
       properties:
         companyId: { type: string }
         projectId: { type: string }
@@ -26644,7 +27875,7 @@ components:
 
     BuildingListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26655,7 +27886,7 @@ components:
 
     Floor:
       type: object
-      required: [id, companyId, buildingId, code, name, nameAr, floorNumber, isActive, createdAt]
+      required: [id, companyId, code, buildingId, name, nameAr, floorNumber, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -26671,7 +27902,7 @@ components:
 
     FloorInput:
       type: object
-      required: [companyId, buildingId, code, name, nameAr]
+      required: [companyId, code, buildingId, name, nameAr]
       properties:
         companyId: { type: string }
         projectId: { type: string }
@@ -26696,7 +27927,7 @@ components:
 
     FloorListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26707,7 +27938,7 @@ components:
 
     Unit:
       type: object
-      required: [id, companyId, projectId, buildingId, floorId, code, name, nameAr, isActive, createdAt]
+      required: [id, companyId, code, projectId, buildingId, floorId, name, nameAr, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -26739,7 +27970,7 @@ components:
 
     UnitInput:
       type: object
-      required: [companyId, projectId, buildingId, floorId, code, name, nameAr]
+      required: [companyId, code, projectId, buildingId, floorId, name, nameAr]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -26796,7 +28027,7 @@ components:
 
     UnitStatusChange:
       type: object
-      required: [statusCode]
+      required: [statusCode, code]
       properties:
         statusCode:
           type: string
@@ -26804,7 +28035,7 @@ components:
 
     UnitListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -26844,7 +28075,7 @@ components:
 
     LeadSourceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27084,7 +28315,7 @@ components:
 
     LeadConversionInput:
       type: object
-      required: [companyId, leadId, customerId]
+      required: [companyId, code, leadId, customerId]
       properties:
         companyId: { type: string }
         leadId: { type: string }
@@ -27103,7 +28334,7 @@ components:
 
     LeadConversionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27300,7 +28531,7 @@ components:
 
     CustomerNoteInput:
       type: object
-      required: [companyId, customerId, note]
+      required: [companyId, code, customerId, note]
       properties:
         companyId: { type: string }
         customerId: { type: string }
@@ -27317,7 +28548,7 @@ components:
 
     CustomerNoteListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27401,7 +28632,7 @@ components:
 
     ReservationPaymentInput:
       type: object
-      required: [companyId, reservationId, paymentDate]
+      required: [companyId, code, reservationId, paymentDate]
       properties:
         companyId: { type: string }
         reservationId: { type: string }
@@ -27424,7 +28655,7 @@ components:
 
     ReservationPaymentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27495,7 +28726,7 @@ components:
 
     ContractListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27506,7 +28737,7 @@ components:
 
     ContractAmendment:
       type: object
-      required: [id, companyId, contractId, amendmentDate, description, isActive, createdAt]
+      required: [id, companyId, code, contractId, amendmentDate, description, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -27522,7 +28753,7 @@ components:
 
     ContractAmendmentInput:
       type: object
-      required: [companyId, contractId, amendmentDate, description]
+      required: [companyId, code, contractId, amendmentDate, description]
       properties:
         companyId: { type: string }
         contractId: { type: string }
@@ -27648,7 +28879,7 @@ components:
 
     UnitTransferListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27778,7 +29009,7 @@ components:
 
     InstallmentCollectionInput:
       type: object
-      required: [companyId, scheduleId, collectionDate]
+      required: [companyId, code, scheduleId, collectionDate]
       properties:
         companyId: { type: string }
         scheduleId: { type: string }
@@ -27801,7 +29032,7 @@ components:
 
     InstallmentCollectionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27850,7 +29081,7 @@ components:
 
     PenaltyRuleListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -27923,7 +29154,7 @@ components:
 
     UnitPricingInput:
       type: object
-      required: [companyId, priceListId, unitId]
+      required: [companyId, code, priceListId, unitId]
       properties:
         companyId: { type: string }
         priceListId: { type: string }
@@ -27942,7 +29173,7 @@ components:
 
     UnitPricingListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -28304,7 +29535,7 @@ components:
 
     TreasuryTransactionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -28420,7 +29651,7 @@ components:
 
     BankTransactionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -28750,7 +29981,7 @@ components:
 
     ReservationDocumentInput:
       type: object
-      required: [companyId, reservationId, docType]
+      required: [companyId, code, reservationId, docType]
       properties:
         companyId: { type: string }
         reservationId: { type: string }
@@ -28775,7 +30006,7 @@ components:
 
     ReservationDocumentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -28807,7 +30038,7 @@ components:
 
     FinancePartialInput:
       type: object
-      required: [chequeIds]
+      required: [code, chequeIds]
       properties:
         chequeIds:
           type: array
@@ -28821,7 +30052,7 @@ components:
 
     GenerateInstallmentsResult:
       type: object
-      required: [created]
+      required: [created, code]
       properties:
         created: { type: integer }
         planId: { type: string }
@@ -28884,7 +30115,7 @@ components:
 
     AccountListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29026,7 +30257,7 @@ components:
 
     AccountMappingInput:
       type: object
-      required: [companyId, eventKey]
+      required: [companyId, code, eventKey]
       properties:
         companyId: { type: string }
         eventKey: { type: string }
@@ -29045,7 +30276,7 @@ components:
 
     AccountMappingListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29056,7 +30287,7 @@ components:
 
     Budget:
       type: object
-      required: [id, companyId, fiscalYearId, code, name, nameAr, status, isActive, createdAt]
+      required: [id, companyId, code, fiscalYearId, name, nameAr, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -29074,7 +30305,7 @@ components:
 
     BudgetInput:
       type: object
-      required: [companyId, fiscalYearId, code, name, nameAr]
+      required: [companyId, code, fiscalYearId, name, nameAr]
       properties:
         companyId: { type: string }
         fiscalYearId: { type: string }
@@ -29293,7 +30524,7 @@ components:
 
     GeneralLedgerLine:
       type: object
-      required: [entryId, entryNumber, entryDate, debit, credit, balance]
+      required: [entryId, code, entryNumber, entryDate, debit, credit, balance]
       properties:
         entryId: { type: string }
         entryNumber: { type: string }
@@ -29307,7 +30538,7 @@ components:
 
     GeneralLedgerResponse:
       type: object
-      required: [data, total, page, pageSize, openingBalance, closingBalance, totalDebit, totalCredit]
+      required: [data, code, total, page, pageSize, openingBalance, closingBalance, totalDebit, totalCredit]
       properties:
         accountId: { type: ["string", "null"] }
         openingBalance: { type: string }
@@ -29335,7 +30566,7 @@ components:
 
     TrialBalanceResponse:
       type: object
-      required: [rows, totalDebit, totalCredit]
+      required: [rows, code, totalDebit, totalCredit]
       properties:
         rows:
           type: array
@@ -29373,7 +30604,7 @@ components:
 
     IncomeStatementResponse:
       type: object
-      required: [revenue, expenses, totalRevenue, totalExpenses, netIncome]
+      required: [revenue, code, expenses, totalRevenue, totalExpenses, netIncome]
       properties:
         revenue:
           type: array
@@ -29387,7 +30618,7 @@ components:
 
     CashFlowResponse:
       type: object
-      required: [operating, investing, financing, netChange, openingCash, closingCash]
+      required: [operating, code, investing, financing, netChange, openingCash, closingCash]
       properties:
         operating:
           type: array
@@ -29416,7 +30647,7 @@ components:
 
     BudgetVsActualResponse:
       type: object
-      required: [rows, totalBudgeted, totalActual, totalVariance]
+      required: [rows, code, totalBudgeted, totalActual, totalVariance]
       properties:
         rows:
           type: array
@@ -29427,7 +30658,7 @@ components:
 
     AccountingDashboardResponse:
       type: object
-      required: [totalAssets, totalLiabilities, totalEquity, totalRevenue, totalExpenses, netIncome]
+      required: [totalAssets, code, totalLiabilities, totalEquity, totalRevenue, totalExpenses, netIncome]
       properties:
         totalAssets: { type: string }
         totalLiabilities: { type: string }
@@ -29476,7 +30707,7 @@ components:
 
     EngineeringDisciplineListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29533,7 +30764,7 @@ components:
 
     ConsultantListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29587,7 +30818,7 @@ components:
 
     DesignPackageListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29632,7 +30863,7 @@ components:
 
     DrawingCategoryListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29683,7 +30914,7 @@ components:
 
     TechnicalSpecificationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29785,7 +31016,7 @@ components:
 
     DrawingRevisionInput:
       type: object
-      required: [companyId, drawingId, versionNumber]
+      required: [companyId, code, drawingId, versionNumber]
       properties:
         companyId: { type: string }
         drawingId: { type: string }
@@ -29809,7 +31040,7 @@ components:
 
     DrawingRevisionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -29945,7 +31176,7 @@ components:
 
     BoqQuantityRevisionInput:
       type: object
-      required: [companyId, boqItemId]
+      required: [companyId, code, boqItemId]
       properties:
         companyId: { type: string }
         boqItemId: { type: string }
@@ -29965,7 +31196,7 @@ components:
 
     BoqQuantityRevisionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30022,7 +31253,7 @@ components:
 
     CostEstimateListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30079,7 +31310,7 @@ components:
 
     InspectionRequestListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30127,7 +31358,7 @@ components:
 
     InspectionReportListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30178,7 +31409,7 @@ components:
 
     DefectListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30200,6 +31431,15 @@ components:
         dueDate: { type: ["string", "null"] }
         completedDate: { type: ["string", "null"] }
         status: { type: string }
+        nonconformityId: { type: ["string", "null"] }
+        actionType: { type: string }
+        ownerEmployeeId: { type: ["string", "null"] }
+        progressPercent: { type: integer }
+        verifiedByEmployeeId: { type: ["string", "null"] }
+        verifiedAt: { type: ["string", "null"] }
+        verificationNotes: { type: ["string", "null"] }
+        taskId: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
 
@@ -30215,6 +31455,14 @@ components:
         dueDate: { type: string }
         completedDate: { type: string }
         status: { type: string }
+        nonconformityId: { type: string }
+        actionType: { type: string }
+        ownerEmployeeId: { type: string }
+        progressPercent: { type: integer }
+        verifiedByEmployeeId: { type: string }
+        verificationNotes: { type: string }
+        taskId: { type: string }
+        notes: { type: string }
 
     CorrectiveActionUpdate:
       type: object
@@ -30226,10 +31474,18 @@ components:
         dueDate: { type: string }
         completedDate: { type: string }
         status: { type: string }
+        nonconformityId: { type: string }
+        actionType: { type: string }
+        ownerEmployeeId: { type: string }
+        progressPercent: { type: integer }
+        verifiedByEmployeeId: { type: string }
+        verificationNotes: { type: string }
+        taskId: { type: string }
+        notes: { type: string }
 
     CorrectiveActionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30289,7 +31545,7 @@ components:
 
     RfiListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30346,7 +31602,7 @@ components:
 
     TechnicalSubmittalListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30400,7 +31656,7 @@ components:
 
     MaterialSubmittalListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30451,7 +31707,7 @@ components:
 
     ConsultantResponseListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30519,7 +31775,7 @@ components:
 
     EngineeringDashboard:
       type: object
-      required: [drawingsCount, pendingDrawingApprovals, boqCount, totalBoqValue, openRfis, openDefects, openInspections, consultantsCount]
+      required: [drawingsCount, code, pendingDrawingApprovals, boqCount, totalBoqValue, openRfis, openDefects, openInspections, consultantsCount]
       properties:
         drawingsCount: { type: integer }
         pendingDrawingApprovals: { type: integer }
@@ -30597,7 +31853,7 @@ components:
 
     ContractorListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30726,7 +31982,7 @@ components:
 
     ContractBoqItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30777,7 +32033,7 @@ components:
 
     WorkProgressUpdateListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30933,7 +32189,7 @@ components:
 
     CertificateItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -30993,7 +32249,7 @@ components:
 
     VariationOrderListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31047,7 +32303,7 @@ components:
 
     ContractorDeductionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31101,7 +32357,7 @@ components:
 
     ContractorAdditionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31155,7 +32411,7 @@ components:
 
     RetentionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31209,7 +32465,7 @@ components:
 
     AdvancePaymentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31254,7 +32510,7 @@ components:
 
     AdvanceRecoveryListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31314,7 +32570,7 @@ components:
 
     ContractorInvoiceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31382,7 +32638,7 @@ components:
 
     ConstructionDashboard:
       type: object
-      required: [contractsCount, activeContracts, totalContractValue, totalCertified, totalDeductions, totalAdditions, retentionHeld, openVariations, pendingApprovals, pendingInvoices]
+      required: [contractsCount, code, activeContracts, totalContractValue, totalCertified, totalDeductions, totalAdditions, retentionHeld, openVariations, pendingApprovals, pendingInvoices]
       properties:
         contractsCount: { type: integer }
         activeContracts: { type: integer }
@@ -31447,7 +32703,7 @@ components:
 
     SupplierCategoryListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31546,7 +32802,7 @@ components:
 
     SupplierContactInput:
       type: object
-      required: [companyId, name]
+      required: [companyId, code, name]
       properties:
         companyId: { type: string }
         supplierId: { type: string }
@@ -31570,7 +32826,7 @@ components:
 
     SupplierContactListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31636,7 +32892,7 @@ components:
 
     SupplierEvaluationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31762,7 +33018,7 @@ components:
 
     PurchaseRequestItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31889,7 +33145,7 @@ components:
 
     RfqSupplierInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         rfqId: { type: string }
@@ -31909,7 +33165,7 @@ components:
 
     RfqSupplierListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -31999,7 +33255,7 @@ components:
 
     QuotationItemInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         quotationId: { type: string }
@@ -32023,7 +33279,7 @@ components:
 
     QuotationItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32143,7 +33399,7 @@ components:
 
     PurchaseOrderItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32203,7 +33459,7 @@ components:
 
     PurchaseContractListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32254,7 +33510,7 @@ components:
 
     PurchaseContractAmendmentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32380,7 +33636,7 @@ components:
 
     GrnItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32491,7 +33747,7 @@ components:
 
     PurchaseReturnItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32639,7 +33895,7 @@ components:
 
     HrPayrollReport:
       type: object
-      required: [totalEarnings, totalDeductions, totalNet]
+      required: [totalEarnings, code, totalDeductions, totalNet]
       properties:
         totalEarnings: { type: string }
         totalDeductions: { type: string }
@@ -32650,7 +33906,7 @@ components:
 
     HrEmployeeReport:
       type: object
-      required: [headcount]
+      required: [headcount, code]
       properties:
         headcount: { type: integer }
         byStatus:
@@ -32665,7 +33921,7 @@ components:
 
     HrTurnoverReport:
       type: object
-      required: [hires, terminations, active]
+      required: [hires, code, terminations, active]
       properties:
         hires: { type: integer }
         terminations: { type: integer }
@@ -32719,7 +33975,7 @@ components:
 
     WarehouseListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32779,7 +34035,7 @@ components:
 
     WarehouseLocationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32827,7 +34083,7 @@ components:
 
     ItemCategoryListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32875,7 +34131,7 @@ components:
 
     ItemGroupListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -32926,7 +34182,7 @@ components:
 
     UnitOfMeasureListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33061,7 +34317,7 @@ components:
 
     ReorderLevelListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33124,7 +34380,7 @@ components:
 
     StockOpeningBalanceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33244,7 +34500,7 @@ components:
 
     GoodsReceiptItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33358,7 +34614,7 @@ components:
 
     GoodsIssueItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33472,7 +34728,7 @@ components:
 
     InventoryTransferItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33586,7 +34842,7 @@ components:
 
     StockAdjustmentItemListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33777,7 +35033,7 @@ components:
 
     InventoryDashboard:
       type: object
-      required: [itemsCount, activeItems, warehousesCount, lowStockItems, totalStockValue, pendingReceipts, pendingIssues, pendingTransfers, pendingAdjustments]
+      required: [itemsCount, code, activeItems, warehousesCount, lowStockItems, totalStockValue, pendingReceipts, pendingIssues, pendingTransfers, pendingAdjustments]
       properties:
         itemsCount: { type: integer }
         activeItems: { type: integer }
@@ -33844,7 +35100,7 @@ components:
 
     CertificateStatusListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33895,7 +35151,7 @@ components:
 
     CertificateApprovalListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -33952,7 +35208,7 @@ components:
 
     CertificateApprovalLogListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34062,7 +35318,7 @@ components:
 
     ChequeListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34090,7 +35346,7 @@ components:
 
     ChequeStatusHistoryListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34144,7 +35400,7 @@ components:
 
     ProfitCenterListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34442,7 +35698,7 @@ components:
 
     SupplierInvoiceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34453,7 +35709,7 @@ components:
 
     PaymentAllocation:
       type: object
-      required: [id, paymentVoucherId, amount]
+      required: [id, code, paymentVoucherId, amount]
       properties:
         id: { type: string }
         paymentVoucherId: { type: string }
@@ -34463,7 +35719,7 @@ components:
 
     PaymentAllocationInput:
       type: object
-      required: [amount]
+      required: [code, amount]
       properties:
         supplierInvoiceId: { type: string }
         amount: { type: string }
@@ -34611,7 +35867,7 @@ components:
 
     AgingBucketRow:
       type: object
-      required: [partyId, partyName, current, days30, days60, days90, days120plus, total]
+      required: [partyId, code, partyName, current, days30, days60, days90, days120plus, total]
       properties:
         partyId: { type: string }
         partyName: { type: string }
@@ -34624,7 +35880,7 @@ components:
 
     AgingResponse:
       type: object
-      required: [rows, totals]
+      required: [rows, code, totals]
       properties:
         rows:
           type: array
@@ -34645,7 +35901,7 @@ components:
 
     TaxReportResponse:
       type: object
-      required: [rows, outputTax, inputTax, netTax]
+      required: [rows, code, outputTax, inputTax, netTax]
       properties:
         rows:
           type: array
@@ -34697,7 +35953,7 @@ components:
         status: { type: string }
     DepartmentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34744,7 +36000,7 @@ components:
         status: { type: string }
     SectionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34791,7 +36047,7 @@ components:
         status: { type: string }
     JobTitleListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34910,7 +36166,7 @@ components:
         notes: { type: string }
     EmployeeListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -34920,7 +36176,7 @@ components:
         pageSize: { type: integer }
     EmployeeDocument:
       type: object
-      required: [id, companyId, documentType, title, status, isActive, createdAt]
+      required: [id, companyId, code, documentType, title, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -34938,7 +36194,7 @@ components:
         createdAt: { type: string }
     EmployeeDocumentInput:
       type: object
-      required: [companyId, title]
+      required: [companyId, code, title]
       properties:
         companyId: { type: string }
         employeeId: { type: string }
@@ -34990,7 +36246,7 @@ components:
         createdAt: { type: string }
     EmployeeEmergencyContactInput:
       type: object
-      required: [companyId, name]
+      required: [companyId, code, name]
       properties:
         companyId: { type: string }
         employeeId: { type: string }
@@ -35010,7 +36266,7 @@ components:
         address: { type: string }
     EmployeeEmergencyContactListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35116,7 +36372,7 @@ components:
         notes: { type: string }
     AttendanceRecordListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35190,7 +36446,7 @@ components:
         createdAt: { type: string }
     LeaveBalanceInput:
       type: object
-      required: [companyId, year]
+      required: [companyId, code, year]
       properties:
         companyId: { type: string }
         employeeId: { type: string }
@@ -35210,7 +36466,7 @@ components:
         remaining: { type: string }
     LeaveBalanceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35266,7 +36522,7 @@ components:
         notes: { type: string }
     LeaveRequestListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35322,7 +36578,7 @@ components:
         status: { type: string }
     SalaryComponentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35372,7 +36628,7 @@ components:
         status: { type: string }
     PayrollPeriodListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35434,7 +36690,7 @@ components:
         status: { type: string }
     PayrollRunListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35513,7 +36769,7 @@ components:
         createdAt: { type: string }
     PayslipLineInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         payslipId: { type: string }
@@ -35531,7 +36787,7 @@ components:
         amount: { type: string }
     PayslipLineListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35629,7 +36885,7 @@ components:
         createdAt: { type: string }
     LoanInstallmentInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         employeeLoanId: { type: string }
@@ -35653,7 +36909,7 @@ components:
         payrollRunId: { type: string }
     LoanInstallmentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35716,7 +36972,7 @@ components:
         notes: { type: string }
     EmployeeAdvanceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35766,7 +37022,7 @@ components:
         status: { type: string }
     KpiTemplateListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -35872,7 +37128,7 @@ components:
         comments: { type: string }
     EmployeeEvaluationLineListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36006,7 +37262,7 @@ components:
         notes: { type: string }
     LegalContractListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36112,7 +37368,7 @@ components:
         createdAt: { type: string }
     ContractVersionInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -36132,7 +37388,7 @@ components:
         status: { type: string }
     ContractVersionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36142,7 +37398,7 @@ components:
         pageSize: { type: integer }
     LegalContractAmendment:
       type: object
-      required: [id, companyId, description, status, isActive, createdAt]
+      required: [id, companyId, code, description, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -36161,7 +37417,7 @@ components:
         createdAt: { type: string }
     LegalContractAmendmentInput:
       type: object
-      required: [companyId, description]
+      required: [companyId, code, description]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -36191,7 +37447,7 @@ components:
         approvedAt: { type: string }
     LegalContractAmendmentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36201,7 +37457,7 @@ components:
         pageSize: { type: integer }
     ContractAddendum:
       type: object
-      required: [id, companyId, title, status, isActive, createdAt]
+      required: [id, companyId, code, title, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -36215,7 +37471,7 @@ components:
         createdAt: { type: string }
     ContractAddendumInput:
       type: object
-      required: [companyId, title]
+      required: [companyId, code, title]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -36302,7 +37558,7 @@ components:
         createdAt: { type: string }
     ContractEventInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -36320,7 +37576,7 @@ components:
         eventDate: { type: string }
     ContractEventListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36376,7 +37632,7 @@ components:
         status: { type: string }
     LawFirmListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36438,7 +37694,7 @@ components:
         status: { type: string }
     LegalAdvisorListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36539,7 +37795,7 @@ components:
         notes: { type: string }
     LegalCaseListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36549,7 +37805,7 @@ components:
         pageSize: { type: integer }
     LegalHearing:
       type: object
-      required: [id, companyId, status, isActive, createdAt]
+      required: [id, companyId, code, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -36567,7 +37823,7 @@ components:
         createdAt: { type: string }
     LegalHearingInput:
       type: object
-      required: [companyId]
+      required: [companyId, code]
       properties:
         companyId: { type: string }
         legalCaseId: { type: string }
@@ -36595,7 +37851,7 @@ components:
         nextHearingDate: { type: string }
     LegalHearingListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36648,7 +37904,7 @@ components:
         description: { type: string }
     LegalClaimListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -36841,7 +38097,7 @@ components:
           items: { $ref: "#/components/schemas/LegalGroupCount" }
     LegalClaimReport:
       type: object
-      required: [total, totalAmount]
+      required: [total, code, totalAmount]
       properties:
         total: { type: integer }
         totalAmount: { type: string }
@@ -36853,7 +38109,7 @@ components:
           items: { $ref: "#/components/schemas/LegalGroupCount" }
     LegalAdvisorReport:
       type: object
-      required: [totalCases]
+      required: [totalCases, code]
       properties:
         totalCases: { type: integer }
         byAdvisor:
@@ -37189,7 +38445,7 @@ components:
 
     LandAcquisitionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37200,14 +38456,14 @@ components:
 
     LandBankStatusCount:
       type: object
-      required: [status, count]
+      required: [status, code, count]
       properties:
         status: { type: string }
         count: { type: integer }
 
     LandBankDashboard:
       type: object
-      required: [totalParcels, totalArea, totalMarketValue, totalAcquisitionCost, byStatus]
+      required: [totalParcels, code, totalArea, totalMarketValue, totalAcquisitionCost, byStatus]
       properties:
         totalParcels: { type: integer }
         totalArea: { type: string }
@@ -37535,7 +38791,7 @@ components:
 
     HandoverApprovalListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37546,14 +38802,14 @@ components:
 
     HandoverStatusCount:
       type: object
-      required: [status, count]
+      required: [status, code, count]
       properties:
         status: { type: string }
         count: { type: integer }
 
     HandoverDashboard:
       type: object
-      required: [totalRequests, scheduledCount, completedCount, openSnags, byStatus]
+      required: [totalRequests, code, scheduledCount, completedCount, openSnags, byStatus]
       properties:
         totalRequests: { type: integer }
         scheduledCount: { type: integer }
@@ -37609,7 +38865,7 @@ components:
 
     SlaPolicyListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37673,7 +38929,7 @@ components:
 
     ServiceEscalationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37684,7 +38940,7 @@ components:
 
     CsComplaint:
       type: object
-      required: [id, companyId, customerId, code, category, subject, status, isActive, createdAt]
+      required: [id, companyId, code, customerId, category, subject, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -37706,7 +38962,7 @@ components:
         createdAt: { type: string }
     CsComplaintInput:
       type: object
-      required: [companyId, customerId, code, subject]
+      required: [companyId, code, customerId, subject]
       properties:
         companyId: { type: string }
         customerId: { type: string }
@@ -37738,7 +38994,7 @@ components:
         escalationLevel: { type: string }
     CsComplaintListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37749,7 +39005,7 @@ components:
 
     CsMaintenanceRequest:
       type: object
-      required: [id, companyId, customerId, code, category, priority, subject, status, isActive, createdAt]
+      required: [id, companyId, code, customerId, category, priority, subject, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -37774,7 +39030,7 @@ components:
         createdAt: { type: string }
     CsMaintenanceRequestInput:
       type: object
-      required: [companyId, customerId, code, subject]
+      required: [companyId, code, customerId, subject]
       properties:
         companyId: { type: string }
         customerId: { type: string }
@@ -37812,7 +39068,7 @@ components:
         escalationLevel: { type: string }
     CsMaintenanceRequestListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37823,7 +39079,7 @@ components:
 
     CsSupportTicket:
       type: object
-      required: [id, companyId, customerId, code, subject, category, priority, status, isActive, createdAt]
+      required: [id, companyId, code, customerId, subject, category, priority, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -37844,7 +39100,7 @@ components:
         createdAt: { type: string }
     CsSupportTicketInput:
       type: object
-      required: [companyId, customerId, code, subject]
+      required: [companyId, code, customerId, subject]
       properties:
         companyId: { type: string }
         customerId: { type: string }
@@ -37876,7 +39132,7 @@ components:
         escalationLevel: { type: string }
     CsSupportTicketListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37909,7 +39165,7 @@ components:
         createdAt: { type: string }
     CallLogInput:
       type: object
-      required: [companyId, code, subject]
+      required: [companyId, subject]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -37945,7 +39201,7 @@ components:
         notes: { type: string }
     CallLogListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -37980,7 +39236,7 @@ components:
         createdAt: { type: string }
     WorkOrderInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38020,7 +39276,7 @@ components:
         notes: { type: string }
     WorkOrderListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38049,7 +39305,7 @@ components:
         createdAt: { type: string }
     CustomerSatisfactionSurveyInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38180,7 +39436,7 @@ components:
 
     AssetCategoryListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38265,7 +39521,7 @@ components:
 
     FixedAssetListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38329,7 +39585,7 @@ components:
 
     AssetTransferListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38387,7 +39643,7 @@ components:
 
     AssetDepreciationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38442,7 +39698,7 @@ components:
 
     AssetInventoryCountListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38514,14 +39770,14 @@ components:
 
     FixedAssetsStatusCount:
       type: object
-      required: [status, count]
+      required: [status, code, count]
       properties:
         status: { type: string }
         count: { type: integer }
 
     FixedAssetsDashboard:
       type: object
-      required: [totalAssets, totalAcquisitionCost, totalBookValue, totalAccumulatedDepreciation, byStatus]
+      required: [totalAssets, code, totalAcquisitionCost, totalBookValue, totalAccumulatedDepreciation, byStatus]
       properties:
         totalAssets: { type: integer }
         totalAcquisitionCost: { type: string }
@@ -38532,7 +39788,7 @@ components:
           items: { $ref: "#/components/schemas/FixedAssetsStatusCount" }
     MarketingDashboard:
       type: object
-      required: [campaignsCount, runningCampaignsCount, channelsCount, leadSourcesCount, totalBudget, totalActualCost]
+      required: [campaignsCount, code, runningCampaignsCount, channelsCount, leadSourcesCount, totalBudget, totalActualCost]
       properties:
         campaignsCount: { type: integer }
         runningCampaignsCount: { type: integer }
@@ -38563,7 +39819,7 @@ components:
         createdAt: { type: string }
     MarketingCampaignInput:
       type: object
-      required: [companyId, name]
+      required: [companyId, code, name]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -38597,7 +39853,7 @@ components:
         notes: { type: string }
     MarketingCampaignListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38621,7 +39877,7 @@ components:
         createdAt: { type: string }
     MarketingChannelInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38642,7 +39898,7 @@ components:
         notes: { type: string }
     MarketingChannelListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38653,7 +39909,7 @@ components:
 
     MarketingLeadIntakeInput:
       type: object
-      required: [companyId, fullName]
+      required: [companyId, code, fullName]
       properties:
         companyId: { type: string }
         branchId: { type: string }
@@ -38691,7 +39947,7 @@ components:
 
     MarketingDistributionRuleInput:
       type: object
-      required: [companyId, code, name, strategy]
+      required: [companyId, name, strategy]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38798,7 +40054,7 @@ components:
 
     MarketingDistributionLogListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38809,7 +40065,7 @@ components:
 
     GeneralAdminDashboard:
       type: object
-      required: [meetingsCount, decisionsCount, tasksCount, visitorsCount, vehiclesCount, assetsCount]
+      required: [meetingsCount, code, decisionsCount, tasksCount, visitorsCount, vehiclesCount, assetsCount]
       properties:
         meetingsCount: { type: integer }
         decisionsCount: { type: integer }
@@ -38847,7 +40103,7 @@ components:
         createdAt: { type: string }
     CorrespondenceInput:
       type: object
-      required: [companyId, code, subject]
+      required: [companyId, subject]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38888,7 +40144,7 @@ components:
         body: { type: ["string", "null"] }
     CorrespondenceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38917,7 +40173,7 @@ components:
         createdAt: { type: string }
     MeetingInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -38948,7 +40204,7 @@ components:
         notes: { type: string }
     MeetingListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -38977,7 +40233,7 @@ components:
         createdAt: { type: string }
     AdministrativeDecisionInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39008,7 +40264,7 @@ components:
         notes: { type: string }
     AdministrativeDecisionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39038,7 +40294,7 @@ components:
         createdAt: { type: string }
     AdministrativeTaskInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39071,7 +40327,7 @@ components:
         notes: { type: string }
     AdministrativeTaskListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39097,11 +40353,17 @@ components:
         serviceDate: { type: ["string", "null"] }
         cost: { type: ["string", "null"] }
         notes: { type: ["string", "null"] }
+        serviceTime: { type: ["string", "null"] }
+        departmentId: { type: ["string", "null"] }
+        attendeesCount: { type: ["integer", "null"] }
+        requiredItems: { type: ["string", "null"] }
+        meetingId: { type: ["string", "null"] }
+        completedAt: { type: ["string", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
     GeneralServiceInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39116,6 +40378,11 @@ components:
         serviceDate: { type: string }
         cost: { type: string }
         notes: { type: string }
+        serviceTime: { type: string }
+        departmentId: { type: string }
+        attendeesCount: { type: integer }
+        requiredItems: { type: string }
+        meetingId: { type: string }
     GeneralServiceUpdate:
       type: object
       properties:
@@ -39132,9 +40399,14 @@ components:
         serviceDate: { type: string }
         cost: { type: string }
         notes: { type: string }
+        serviceTime: { type: string }
+        departmentId: { type: string }
+        attendeesCount: { type: integer }
+        requiredItems: { type: string }
+        meetingId: { type: string }
     GeneralServiceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39166,7 +40438,7 @@ components:
         createdAt: { type: string }
     VehicleInput:
       type: object
-      required: [companyId, code, plateNumber]
+      required: [companyId, plateNumber]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39203,7 +40475,7 @@ components:
         notes: { type: string }
     VehicleListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39230,7 +40502,7 @@ components:
         createdAt: { type: string }
     DriverInput:
       type: object
-      required: [companyId, code, fullName]
+      required: [companyId, fullName]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39257,7 +40529,7 @@ components:
         notes: { type: string }
     DriverListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39287,7 +40559,7 @@ components:
         createdAt: { type: string }
     VehicleMissionInput:
       type: object
-      required: [companyId, code, purpose]
+      required: [companyId, purpose]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39320,7 +40592,7 @@ components:
         notes: { type: string }
     VehicleMissionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39350,7 +40622,7 @@ components:
         createdAt: { type: string }
     VehicleMaintenanceInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39383,7 +40655,7 @@ components:
         notes: { type: string }
     VehicleMaintenanceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39415,7 +40687,7 @@ components:
         createdAt: { type: string }
     VisitorLogInput:
       type: object
-      required: [companyId, code, visitorName]
+      required: [companyId, visitorName]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39452,7 +40724,7 @@ components:
         notes: { type: string }
     VisitorLogListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39477,11 +40749,21 @@ components:
         body: { type: ["string", "null"] }
         status: { type: string }
         notes: { type: ["string", "null"] }
+        circularType: { type: string }
+        priority: { type: string }
+        branchId: { type: ["string", "null"] }
+        publishAt: { type: ["string", "null"] }
+        expiresAt: { type: ["string", "null"] }
+        publishedAt: { type: ["string", "null"] }
+        publishedByUserId: { type: ["string", "null"] }
+        targetedCount: { type: ["integer", "null"] }
+        readCount: { type: ["integer", "null"] }
+        unreadCount: { type: ["integer", "null"] }
         isActive: { type: boolean }
         createdAt: { type: string }
     CircularInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39495,6 +40777,11 @@ components:
         body: { type: string }
         status: { type: string }
         notes: { type: string }
+        circularType: { type: string }
+        priority: { type: string }
+        branchId: { type: string }
+        publishAt: { type: string }
+        expiresAt: { type: string }
     CircularUpdate:
       type: object
       properties:
@@ -39510,9 +40797,14 @@ components:
         body: { type: string }
         status: { type: string }
         notes: { type: string }
+        circularType: { type: string }
+        priority: { type: string }
+        branchId: { type: string }
+        publishAt: { type: string }
+        expiresAt: { type: string }
     CircularListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39541,7 +40833,7 @@ components:
         createdAt: { type: string }
     PolicyInput:
       type: object
-      required: [companyId, code, title]
+      required: [companyId, title]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39572,7 +40864,7 @@ components:
         notes: { type: string }
     PolicyListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39583,7 +40875,7 @@ components:
     # === Insurance Management ===
     InsuranceDashboard:
       type: object
-      required: [insuredCount, suspendedCount, subscriptionsTotal, arrearsTotal, penaltiesTotal, alertsCount]
+      required: [insuredCount, code, suspendedCount, subscriptionsTotal, arrearsTotal, penaltiesTotal, alertsCount]
       properties:
         insuredCount: { type: integer }
         suspendedCount: { type: integer }
@@ -39612,7 +40904,7 @@ components:
         createdAt: { type: string }
     EmployeeInsuranceInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39643,7 +40935,7 @@ components:
         notes: { type: string }
     EmployeeInsuranceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39669,7 +40961,7 @@ components:
         createdAt: { type: string }
     InsuranceFormInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39694,7 +40986,7 @@ components:
         notes: { type: string }
     InsuranceFormListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39720,7 +41012,7 @@ components:
         createdAt: { type: string }
     InsuranceAdditionInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39745,7 +41037,7 @@ components:
         notes: { type: string }
     InsuranceAdditionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39771,7 +41063,7 @@ components:
         createdAt: { type: string }
     InsuranceExclusionInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39796,7 +41088,7 @@ components:
         notes: { type: string }
     InsuranceExclusionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39824,7 +41116,7 @@ components:
         createdAt: { type: string }
     InsuranceDataAmendmentInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39853,7 +41145,7 @@ components:
         notes: { type: string }
     InsuranceDataAmendmentListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39884,7 +41176,7 @@ components:
         createdAt: { type: string }
     InsuranceSubscriptionInput:
       type: object
-      required: [companyId, code, period]
+      required: [companyId, period]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39919,7 +41211,7 @@ components:
         notes: { type: string }
     InsuranceSubscriptionListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39946,7 +41238,7 @@ components:
         createdAt: { type: string }
     InsurancePaymentNoticeInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -39973,7 +41265,7 @@ components:
         notes: { type: string }
     InsurancePaymentNoticeListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -39999,7 +41291,7 @@ components:
         createdAt: { type: string }
     InsuranceReconciliationInput:
       type: object
-      required: [companyId, code, period]
+      required: [companyId, period]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40024,7 +41316,7 @@ components:
         notes: { type: string }
     InsuranceReconciliationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40050,7 +41342,7 @@ components:
         createdAt: { type: string }
     InsuranceArrearInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40075,7 +41367,7 @@ components:
         notes: { type: string }
     InsuranceArrearListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40104,7 +41396,7 @@ components:
         createdAt: { type: string }
     InsurancePenaltyInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40135,7 +41427,7 @@ components:
         notes: { type: string }
     InsurancePenaltyListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40161,7 +41453,7 @@ components:
         createdAt: { type: string }
     ServiceTerminationInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40186,7 +41478,7 @@ components:
         notes: { type: string }
     ServiceTerminationListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40211,7 +41503,7 @@ components:
         createdAt: { type: string }
     InsuranceSettlementInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40234,7 +41526,7 @@ components:
         notes: { type: string }
     InsuranceSettlementListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40259,7 +41551,7 @@ components:
         createdAt: { type: string }
     InsuranceClearanceInput:
       type: object
-      required: [companyId, code, employeeId]
+      required: [companyId, employeeId]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40282,7 +41574,7 @@ components:
         notes: { type: string }
     InsuranceClearanceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40310,7 +41602,7 @@ components:
         createdAt: { type: string }
     SubcontractorInsuranceInput:
       type: object
-      required: [companyId, code, contractorName]
+      required: [companyId, contractorName]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40339,7 +41631,7 @@ components:
         notes: { type: string }
     SubcontractorInsuranceListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40367,7 +41659,7 @@ components:
         createdAt: { type: string }
     ProjectLaborInsuranceInput:
       type: object
-      required: [companyId, code, laborName]
+      required: [companyId, laborName]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -40591,7 +41883,7 @@ components:
 
     FormTemplate:
       type: object
-      required: [id, companyId, moduleKey, code, name, documentType, sourceFormat, status, isActive, createdAt]
+      required: [id, companyId, code, moduleKey, name, documentType, sourceFormat, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -40637,7 +41929,7 @@ components:
         createdAt: { type: string }
     FormTemplateDetail:
       type: object
-      required: [template, versions]
+      required: [template, code, versions]
       properties:
         template: { $ref: "#/components/schemas/FormTemplate" }
         versions:
@@ -40645,7 +41937,7 @@ components:
           items: { $ref: "#/components/schemas/FormTemplateVersion" }
     FormTemplateListResponse:
       type: object
-      required: [data, total, page, pageSize]
+      required: [data, code, total, page, pageSize]
       properties:
         data:
           type: array
@@ -40655,14 +41947,14 @@ components:
         pageSize: { type: integer }
     FormTemplateVersionListResponse:
       type: object
-      required: [data]
+      required: [data, code]
       properties:
         data:
           type: array
           items: { $ref: "#/components/schemas/FormTemplateVersion" }
     FormTemplateInput:
       type: object
-      required: [companyId, moduleKey, code, name]
+      required: [companyId, code, moduleKey, name]
       properties:
         companyId: { type: string }
         moduleKey: { type: string }

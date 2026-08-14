@@ -9,7 +9,7 @@
 export interface LegalHearingInput {
   companyId: string;
   legalCaseId?: string;
-  code?: string;
+  code: string;
   hearingDate?: string;
   hearingTime?: string;
   location?: string;

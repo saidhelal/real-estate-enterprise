@@ -8,7 +8,7 @@
 
 export interface VehicleMaintenanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   vehicleId?: string;
   logType?: string;
   serviceDate?: string;

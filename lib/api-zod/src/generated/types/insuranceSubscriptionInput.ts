@@ -8,7 +8,7 @@
 
 export interface InsuranceSubscriptionInput {
   companyId: string;
-  code: string;
+  code?: string;
   branchId?: string;
   period: string;
   dueDate?: string;

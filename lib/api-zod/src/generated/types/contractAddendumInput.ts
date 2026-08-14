@@ -9,7 +9,7 @@
 export interface ContractAddendumInput {
   companyId: string;
   legalContractId?: string;
-  code?: string;
+  code: string;
   title: string;
   addendumDate?: string;
   content?: string;

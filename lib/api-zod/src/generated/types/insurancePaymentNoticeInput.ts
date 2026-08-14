@@ -8,7 +8,7 @@
 
 export interface InsurancePaymentNoticeInput {
   companyId: string;
-  code: string;
+  code?: string;
   noticeNumber?: string;
   subscriptionId?: string;
   period?: string;

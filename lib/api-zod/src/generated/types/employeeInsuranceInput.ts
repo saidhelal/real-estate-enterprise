@@ -8,7 +8,7 @@
 
 export interface EmployeeInsuranceInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   insuranceNumber?: string;
   insuranceAuthority?: string;

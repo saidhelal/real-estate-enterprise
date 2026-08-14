@@ -8,7 +8,7 @@
 
 export interface DriverInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   fullName: string;
   licenseNumber?: string;

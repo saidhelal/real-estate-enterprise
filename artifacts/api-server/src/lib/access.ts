@@ -2,6 +2,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { db, usersTable, rolesTable, userRolesTable, userScopesTable } from "@workspace/db";
 import type { AuthUser, UserScopes } from "./auth";
 import { toRole, type RoleApi } from "./presenters";
+import { delegatedPermissionsFor } from "./delegation-access";
 
 /** Load a user's branch/department/project scope grants. */
 export async function loadUserScopes(userId: string): Promise<UserScopes> {
@@ -88,6 +89,13 @@ export async function loadAuthUser(userId: string): Promise<AuthUser | null> {
       for (const perm of role.permissions) permissionSet.add(perm);
     }
   }
+
+  // Live delegations are added on top of the roles, in the one place the
+  // answer to "what may this user do" is produced. Putting them anywhere else
+  // would mean some call sites honoured a delegation and others did not.
+  // `delegatedPermissionsFor` never returns the wildcard, so a delegation can
+  // widen what someone may do but can never make them an administrator.
+  for (const perm of await delegatedPermissionsFor(user.id)) permissionSet.add(perm);
 
   return {
     id: user.id,

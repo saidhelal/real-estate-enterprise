@@ -8,7 +8,7 @@
 
 export interface GeneralServiceInput {
   companyId: string;
-  code: string;
+  code?: string;
   serviceType?: string;
   title: string;
   description?: string;
@@ -20,4 +20,9 @@ export interface GeneralServiceInput {
   serviceDate?: string;
   cost?: string;
   notes?: string;
+  serviceTime?: string;
+  departmentId?: string;
+  attendeesCount?: number;
+  requiredItems?: string;
+  meetingId?: string;
 }

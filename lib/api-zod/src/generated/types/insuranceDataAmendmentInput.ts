@@ -8,7 +8,7 @@
 
 export interface InsuranceDataAmendmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   amendmentType?: string;

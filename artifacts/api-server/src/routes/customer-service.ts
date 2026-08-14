@@ -280,6 +280,8 @@ import { registerCrud } from "../lib/register-crud";
 
 registerCrud(router, {
   base: "/complaints",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "complaint" },
   module: "complaints",
   entity: "complaint",
   table: complaintsTable,
@@ -293,6 +295,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/maintenance-requests",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "maintenanceRequest" },
   module: "maintenanceRequests",
   entity: "maintenanceRequest",
   table: maintenanceRequestsTable,
@@ -306,6 +310,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/support-tickets",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "supportTicket" },
   module: "supportTickets",
   entity: "supportTicket",
   table: supportTicketsTable,
@@ -319,6 +325,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/call-logs",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "callLog" },
   module: "callLogs",
   entity: "callLog",
   table: callLogsTable,
@@ -332,6 +340,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/work-orders",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "workOrder" },
   module: "workOrders",
   entity: "workOrder",
   table: workOrdersTable,
@@ -345,6 +355,8 @@ registerCrud(router, {
 
 registerCrud(router, {
   base: "/customer-satisfaction-surveys",
+  // Issued by the central sequence engine; the client cannot choose it.
+  generatedCode: { documentType: "customerSatisfactionSurvey" },
   module: "customerSatisfactionSurveys",
   entity: "customerSatisfactionSurvey",
   table: customerSatisfactionSurveysTable,

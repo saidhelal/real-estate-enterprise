@@ -12,7 +12,7 @@ export interface ContractAddendum {
   /** @nullable */
   legalContractId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   title: string;
   /** @nullable */
   addendumDate?: string | null;

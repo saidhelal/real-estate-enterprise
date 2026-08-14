@@ -6,6 +6,8 @@ import {
   numeric,
   date,
   timestamp,
+  integer,
+  index,
 } from "drizzle-orm/pg-core";
 
 const audit = {
@@ -174,6 +176,37 @@ export const generalServiceRequestsTable = pgTable("general_service_requests", {
   serviceDate: date("service_date"),
   cost: numeric("cost", { precision: 18, scale: 2 }),
   notes: text("notes"),
+
+  /* ---- Hospitality and scheduled service ---------------------------------
+   * The register already modelled "someone asked for a service": a type, a
+   * place, a requester, an owner, a priority and a status. What it could not
+   * express is *when* and *for how many* — which is the whole substance of a
+   * hospitality request, and the reason the buffet screen could only ever be
+   * a generic list.
+   *
+   * These extend the one register rather than starting a hospitality table:
+   * a request for catering and a request for cleaning are the same object
+   * with different values, and splitting them would mean two codes, two
+   * queues and two audit histories for one desk.
+   *
+   * All nullable — every existing row predates them and stays valid.
+   */
+  /** Time of day the service is needed; `serviceDate` carries the day. */
+  serviceTime: text("service_time"),
+  /** Which department asked. Free-standing from the requester, who may act
+   *  on behalf of another department. */
+  departmentId: uuid("department_id"),
+  /** Head-count, for catering quantities and room set-up. */
+  attendeesCount: integer("attendees_count"),
+  /** What was asked for, in the requester's words. Consumables are drawn
+   *  from Inventory when they are stock items; this is the request, not a
+   *  second stock ledger. */
+  requiredItems: text("required_items"),
+  /** The meeting this service is for — a reference into `meetings`, never a
+   *  copy of it. */
+  meetingId: uuid("meeting_id"),
+  /** Set when the request is closed, so "how long did this take" is answerable. */
+  completedAt: timestamp("completed_at", { withTimezone: true }),
   ...audit,
 });
 export type GeneralServiceRequestRow = typeof generalServiceRequestsTable.$inferSelect;
@@ -296,9 +329,68 @@ export const circularsTable = pgTable("circulars", {
   body: text("body"),
   status: text("status").notNull().default("draft"),
   notes: text("notes"),
+
+  /* ---- Internal announcements --------------------------------------------
+   * A circular IS an internal announcement — a titled notice, issued on a
+   * date, aimed at an audience. What was missing was publication and proof
+   * of receipt, so it could be written but not answered for.
+   */
+  /** announcement | policy_update | alert | event | memo */
+  circularType: text("circular_type").notNull().default("announcement"),
+  priority: text("priority").notNull().default("medium"),
+  /** Narrower targeting than `audience`, when the notice is site-specific. */
+  branchId: uuid("branch_id"),
+  /** When it becomes visible. Null with status=published means immediately;
+   *  a future value is a scheduled publication the scheduler picks up. */
+  publishAt: timestamp("publish_at", { withTimezone: true }),
+  /** After this, it stops appearing as current. */
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  publishedByUserId: uuid("published_by_user_id"),
+  /** Recipients resolved at publication, so the denominator of "how many
+   *  have read it" is fixed and cannot drift as staff join or leave. */
+  targetedCount: integer("targeted_count"),
   ...audit,
 });
 export type CircularRow = typeof circularsTable.$inferSelect;
+
+/**
+ * Who a circular went to, and whether they have read it.
+ *
+ * A row per recipient rather than a counter on the circular: "78% have read
+ * it" is not an answer anyone can act on — the useful question is *which*
+ * people have not, and only a per-person row can answer that. Read state is
+ * also inherently per-person, so a counter would be the wrong shape even if
+ * nobody ever asked who.
+ *
+ * Rows are created once, when the circular is published. Reading is recorded
+ * by stamping `readAt` on the existing row, never by inserting a new one, so
+ * opening a notice twice cannot inflate the figures.
+ */
+export const circularReceiptsTable = pgTable(
+  "circular_receipts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    companyId: uuid("company_id").notNull(),
+    circularId: uuid("circular_id").notNull(),
+    /** The login that must read it. */
+    userId: uuid("user_id").notNull(),
+    /** Their employee record where they have one, for departmental reporting. */
+    employeeId: uuid("employee_id"),
+    /** Set when the notice was put in front of them (list or notification). */
+    deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+    /** Set the first time they open it. Never overwritten. */
+    readAt: timestamp("read_at", { withTimezone: true }),
+    /** Optional explicit acknowledgement, separate from merely having read. */
+    acknowledgedAt: timestamp("acknowledged_at", { withTimezone: true }),
+    ...audit,
+  },
+  (t) => [
+    index("circular_receipts_circular_idx").on(t.circularId, t.readAt),
+    index("circular_receipts_user_idx").on(t.userId, t.readAt),
+  ],
+);
+export type CircularReceiptRow = typeof circularReceiptsTable.$inferSelect;
 
 // Regulations & policies (اللوائح والسياسات).
 export const policiesTable = pgTable("policies", {

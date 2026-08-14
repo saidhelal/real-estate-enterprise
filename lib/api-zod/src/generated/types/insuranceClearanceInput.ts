@@ -8,7 +8,7 @@
 
 export interface InsuranceClearanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   serviceTerminationId?: string;
   clearanceDate?: string;

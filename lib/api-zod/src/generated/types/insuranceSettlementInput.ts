@@ -8,7 +8,7 @@
 
 export interface InsuranceSettlementInput {
   companyId: string;
-  code: string;
+  code?: string;
   serviceTerminationId?: string;
   employeeId: string;
   settlementAmount?: string;

@@ -8,7 +8,7 @@
 
 export interface CustomerSatisfactionSurveyInput {
   companyId: string;
-  code: string;
+  code?: string;
   customerId?: string;
   channel?: string;
   sourceType?: string;

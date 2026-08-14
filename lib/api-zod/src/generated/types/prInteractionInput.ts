@@ -10,7 +10,7 @@ export interface PrInteractionInput {
   companyId: string;
   partyId: string;
   /** @minLength 1 */
-  code: string;
+  code?: string;
   interactionType?: string;
   interactionDate?: string;
   /** @minLength 1 */

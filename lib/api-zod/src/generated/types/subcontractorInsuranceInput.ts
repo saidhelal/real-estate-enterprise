@@ -8,7 +8,7 @@
 
 export interface SubcontractorInsuranceInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractorName: string;
   contractorType?: string;
   insuranceNumber?: string;

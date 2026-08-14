@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "number_sequences_type_company_uq" ON "number_sequences" USING btree ("document_type","company_id") WHERE "number_sequences"."company_id" is not null;--> statement-breakpoint
+CREATE UNIQUE INDEX "number_sequences_type_global_uq" ON "number_sequences" USING btree ("document_type") WHERE "number_sequences"."company_id" is null;

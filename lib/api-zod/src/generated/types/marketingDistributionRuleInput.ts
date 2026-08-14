@@ -8,7 +8,7 @@
 
 export interface MarketingDistributionRuleInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr?: string;
   campaignId?: string;

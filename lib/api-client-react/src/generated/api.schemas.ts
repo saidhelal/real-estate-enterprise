@@ -489,7 +489,7 @@ export interface PortalInstallment {
 export interface PortalCollection {
   id: string;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   amount: string;
   paymentDate: string;
   /** @nullable */
@@ -948,7 +948,7 @@ export interface PrParty {
 export interface PrPartyInput {
   companyId: string;
   /** @minLength 1 */
-  code: string;
+  code?: string;
   /** @minLength 1 */
   name: string;
   nameAr?: string;
@@ -1035,7 +1035,7 @@ export interface PrInteractionInput {
   companyId: string;
   partyId: string;
   /** @minLength 1 */
-  code: string;
+  code?: string;
   interactionType?: string;
   interactionDate?: string;
   /** @minLength 1 */
@@ -1079,6 +1079,582 @@ export interface PrInteractionListResponse {
   total: number;
   page: number;
   pageSize: number;
+}
+
+export interface Delegation {
+  id: string;
+  companyId: string;
+  code: string;
+  delegatorUserId: string;
+  /** @nullable */
+  delegatorName?: string | null;
+  delegateUserId: string;
+  /** @nullable */
+  delegateName?: string | null;
+  permissions: string[];
+  reason: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  /** @nullable */
+  activatedByUserId?: string | null;
+  /** @nullable */
+  activatedAt?: string | null;
+  /** @nullable */
+  revokedByUserId?: string | null;
+  /** @nullable */
+  revokedAt?: string | null;
+  /** @nullable */
+  revokeReason?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface DelegationInput {
+  companyId: string;
+  /** @minLength 1 */
+  code: string;
+  /** @minLength 1 */
+  delegateUserId: string;
+  /** @minItems 1 */
+  permissions: string[];
+  /** @minLength 1 */
+  reason: string;
+  startDate: string;
+  endDate: string;
+  notes?: string;
+}
+
+export interface DelegationUpdate {
+  permissions?: string[];
+  /** @minLength 1 */
+  reason?: string;
+  startDate?: string;
+  endDate?: string;
+  /** @nullable */
+  notes?: string | null;
+}
+
+export interface DelegationRevokeInput {
+  /** @minLength 1 */
+  revokeReason: string;
+}
+
+export interface DelegationListResponse {
+  data: Delegation[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface DelegatablePermissions {
+  codes: string[];
+  wildcard: boolean;
+}
+
+export interface PermissionSource {
+  kind: string;
+  label: string;
+  /** @nullable */
+  expiresOn?: string | null;
+}
+
+export interface PermissionGrant {
+  code: string;
+  sources: PermissionSource[];
+}
+
+export interface PermissionInspection {
+  userId: string;
+  username: string;
+  fullName: string;
+  /** @nullable */
+  email?: string | null;
+  isActive?: boolean;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  companyId?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
+  wildcard: boolean;
+  roles: Role[];
+  grants: PermissionGrant[];
+  delegations: Delegation[];
+  riskFlags: string[];
+}
+
+export interface CircularReceipt {
+  id: string;
+  companyId: string;
+  circularId: string;
+  userId: string;
+  /** @nullable */
+  userName?: string | null;
+  /** @nullable */
+  employeeId?: string | null;
+  /** @nullable */
+  deliveredAt?: string | null;
+  /** @nullable */
+  readAt?: string | null;
+  /** @nullable */
+  acknowledgedAt?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CircularReceiptReport {
+  targeted: number;
+  read: number;
+  unread: number;
+  readPercent: number;
+  receipts: CircularReceipt[];
+}
+
+export interface MyAnnouncement {
+  id: string;
+  code: string;
+  title: string;
+  /** @nullable */
+  body?: string | null;
+  circularType: string;
+  priority: string;
+  issueDate: string;
+  /** @nullable */
+  publishedAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  read: boolean;
+  /** @nullable */
+  readAt?: string | null;
+}
+
+export interface MyAnnouncementListResponse {
+  data: MyAnnouncement[];
+  unread: number;
+  total: number;
+}
+
+export interface SecurityPoint {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  nameAr?: string | null;
+  pointType: string;
+  /** @nullable */
+  location?: string | null;
+  /** @nullable */
+  branchId?: string | null;
+  /** @nullable */
+  supervisorEmployeeId?: string | null;
+  /** @nullable */
+  instructions?: string | null;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SecurityPointInput {
+  companyId: string;
+  /** @minLength 1 */
+  code?: string;
+  /** @minLength 1 */
+  name: string;
+  nameAr?: string;
+  pointType?: string;
+  location?: string;
+  branchId?: string;
+  supervisorEmployeeId?: string;
+  instructions?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SecurityPointUpdate {
+  /** @minLength 1 */
+  code?: string;
+  /** @minLength 1 */
+  name?: string;
+  nameAr?: string;
+  pointType?: string;
+  location?: string;
+  branchId?: string;
+  supervisorEmployeeId?: string;
+  instructions?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SecurityPointListResponse {
+  data: SecurityPoint[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SecurityShift {
+  id: string;
+  companyId: string;
+  code: string;
+  pointId: string;
+  /** @nullable */
+  guardEmployeeId?: string | null;
+  shiftDate: string;
+  shiftType: string;
+  /** @nullable */
+  startAt?: string | null;
+  /** @nullable */
+  endAt?: string | null;
+  status: string;
+  /** @nullable */
+  checkInAt?: string | null;
+  /** @nullable */
+  checkOutAt?: string | null;
+  /** @nullable */
+  handedOverToEmployeeId?: string | null;
+  /** @nullable */
+  handoverNotes?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SecurityShiftInput {
+  companyId: string;
+  /** @minLength 1 */
+  code?: string;
+  /** @minLength 1 */
+  pointId: string;
+  guardEmployeeId?: string;
+  shiftDate: string;
+  shiftType?: string;
+  startAt?: string;
+  endAt?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SecurityShiftUpdate {
+  /** @minLength 1 */
+  code?: string;
+  pointId?: string;
+  guardEmployeeId?: string;
+  shiftDate?: string;
+  shiftType?: string;
+  startAt?: string;
+  endAt?: string;
+  status?: string;
+  notes?: string;
+}
+
+export interface SecurityShiftListResponse {
+  data: SecurityShift[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SecurityShiftHandoverInput {
+  /** @minLength 1 */
+  handedOverToEmployeeId: string;
+  /** @minLength 1 */
+  handoverNotes: string;
+}
+
+export interface SecurityIncident {
+  id: string;
+  companyId: string;
+  code: string;
+  occurredAt: string;
+  reportedAt?: string;
+  /** @nullable */
+  pointId?: string | null;
+  /** @nullable */
+  shiftId?: string | null;
+  /** @nullable */
+  location?: string | null;
+  incidentType: string;
+  severity: string;
+  description: string;
+  /** @nullable */
+  reportedByEmployeeId?: string | null;
+  /** @nullable */
+  reportedByName?: string | null;
+  /** @nullable */
+  visitorLogId?: string | null;
+  /** @nullable */
+  assignedToEmployeeId?: string | null;
+  status: string;
+  /** @nullable */
+  actionTaken?: string | null;
+  /** @nullable */
+  resolvedAt?: string | null;
+  /** @nullable */
+  closedAt?: string | null;
+  /** @nullable */
+  taskId?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface SecurityIncidentInput {
+  companyId: string;
+  /** @minLength 1 */
+  code?: string;
+  occurredAt?: string;
+  pointId?: string;
+  shiftId?: string;
+  location?: string;
+  incidentType?: string;
+  severity?: string;
+  /** @minLength 1 */
+  description: string;
+  reportedByEmployeeId?: string;
+  reportedByName?: string;
+  visitorLogId?: string;
+  assignedToEmployeeId?: string;
+  notes?: string;
+}
+
+export interface SecurityIncidentUpdate {
+  /** @minLength 1 */
+  code?: string;
+  occurredAt?: string;
+  pointId?: string;
+  shiftId?: string;
+  location?: string;
+  incidentType?: string;
+  severity?: string;
+  /** @minLength 1 */
+  description?: string;
+  assignedToEmployeeId?: string;
+  status?: string;
+  actionTaken?: string;
+  visitorLogId?: string;
+  taskId?: string;
+  notes?: string;
+}
+
+export interface SecurityIncidentListResponse {
+  data: SecurityIncident[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Nonconformity {
+  id: string;
+  companyId: string;
+  code: string;
+  source: string;
+  raisedDate: string;
+  /** @nullable */
+  departmentId?: string | null;
+  title: string;
+  description: string;
+  category: string;
+  severity: string;
+  /** @nullable */
+  policyId?: string | null;
+  /** @nullable */
+  rootCause?: string | null;
+  /** @nullable */
+  ownerEmployeeId?: string | null;
+  status: string;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  closedAt?: string | null;
+  /** @nullable */
+  closureNotes?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  openActions?: number | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface NonconformityInput {
+  companyId: string;
+  /** @minLength 1 */
+  code?: string;
+  source?: string;
+  raisedDate?: string;
+  departmentId?: string;
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  description: string;
+  category?: string;
+  severity?: string;
+  policyId?: string;
+  rootCause?: string;
+  ownerEmployeeId?: string;
+  dueDate?: string;
+  notes?: string;
+}
+
+export interface NonconformityUpdate {
+  /** @minLength 1 */
+  code?: string;
+  source?: string;
+  raisedDate?: string;
+  departmentId?: string;
+  /** @minLength 1 */
+  title?: string;
+  /** @minLength 1 */
+  description?: string;
+  category?: string;
+  severity?: string;
+  policyId?: string;
+  rootCause?: string;
+  ownerEmployeeId?: string;
+  status?: string;
+  dueDate?: string;
+  closureNotes?: string;
+  notes?: string;
+}
+
+export interface NonconformityListResponse {
+  data: Nonconformity[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface Risk {
+  id: string;
+  companyId: string;
+  code: string;
+  title: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  departmentId?: string | null;
+  category: string;
+  source: string;
+  likelihood: number;
+  impact: number;
+  riskScore: number;
+  riskLevel: string;
+  /** @nullable */
+  ownerEmployeeId?: string | null;
+  treatmentStrategy: string;
+  /** @nullable */
+  treatmentPlan?: string | null;
+  /** @nullable */
+  treatmentDueDate?: string | null;
+  status: string;
+  /** @nullable */
+  lastReviewedAt?: string | null;
+  /** @nullable */
+  nextReviewDate?: string | null;
+  /** @nullable */
+  residualScore?: number | null;
+  /** @nullable */
+  residualLevel?: string | null;
+  /** @nullable */
+  closedAt?: string | null;
+  /** @nullable */
+  exposureAmount?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface RiskInput {
+  companyId: string;
+  /** @minLength 1 */
+  code?: string;
+  /** @minLength 1 */
+  title: string;
+  description?: string;
+  departmentId?: string;
+  category?: string;
+  source?: string;
+  /**
+     * @minimum 1
+     * @maximum 5
+     */
+  likelihood: number;
+  /**
+     * @minimum 1
+     * @maximum 5
+     */
+  impact: number;
+  ownerEmployeeId?: string;
+  treatmentStrategy?: string;
+  treatmentPlan?: string;
+  treatmentDueDate?: string;
+  nextReviewDate?: string;
+  exposureAmount?: string;
+  notes?: string;
+}
+
+export interface RiskUpdate {
+  /** @minLength 1 */
+  code?: string;
+  /** @minLength 1 */
+  title?: string;
+  description?: string;
+  departmentId?: string;
+  category?: string;
+  source?: string;
+  /**
+     * @minimum 1
+     * @maximum 5
+     */
+  likelihood?: number;
+  /**
+     * @minimum 1
+     * @maximum 5
+     */
+  impact?: number;
+  ownerEmployeeId?: string;
+  treatmentStrategy?: string;
+  treatmentPlan?: string;
+  treatmentDueDate?: string;
+  status?: string;
+  nextReviewDate?: string;
+  residualScore?: number;
+  exposureAmount?: string;
+  notes?: string;
+}
+
+export interface RiskListResponse {
+  data: Risk[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface RiskReviewInput {
+  residualScore?: number;
+  notes?: string;
+  nextReviewDate?: string;
+}
+
+export interface NumberPreview {
+  documentType: string;
+  /** @nullable */
+  companyId?: string | null;
+  prefix: string;
+  /** @nullable */
+  periodYear?: number | null;
+  nextNumber: number;
+  code: string;
+  generated: boolean;
 }
 
 export interface SecretariatOverview {
@@ -2365,7 +2941,7 @@ export interface ContractAmendment {
   companyId: string;
   contractId: string;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   amendmentDate: string;
   description: string;
   /** @nullable */
@@ -2381,7 +2957,7 @@ export interface ContractAmendment {
 export interface ContractAmendmentInput {
   companyId: string;
   contractId: string;
-  code?: string;
+  code: string;
   amendmentDate: string;
   description: string;
   oldValue?: string;
@@ -4727,6 +5303,22 @@ export interface CorrectiveAction {
   /** @nullable */
   completedDate?: string | null;
   status: string;
+  /** @nullable */
+  nonconformityId?: string | null;
+  actionType?: string;
+  /** @nullable */
+  ownerEmployeeId?: string | null;
+  progressPercent?: number;
+  /** @nullable */
+  verifiedByEmployeeId?: string | null;
+  /** @nullable */
+  verifiedAt?: string | null;
+  /** @nullable */
+  verificationNotes?: string | null;
+  /** @nullable */
+  taskId?: string | null;
+  /** @nullable */
+  notes?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -4740,6 +5332,14 @@ export interface CorrectiveActionInput {
   dueDate?: string;
   completedDate?: string;
   status?: string;
+  nonconformityId?: string;
+  actionType?: string;
+  ownerEmployeeId?: string;
+  progressPercent?: number;
+  verifiedByEmployeeId?: string;
+  verificationNotes?: string;
+  taskId?: string;
+  notes?: string;
 }
 
 export interface CorrectiveActionUpdate {
@@ -4750,6 +5350,14 @@ export interface CorrectiveActionUpdate {
   dueDate?: string;
   completedDate?: string;
   status?: string;
+  nonconformityId?: string;
+  actionType?: string;
+  ownerEmployeeId?: string;
+  progressPercent?: number;
+  verifiedByEmployeeId?: string;
+  verificationNotes?: string;
+  taskId?: string;
+  notes?: string;
 }
 
 export interface CorrectiveActionListResponse {
@@ -9246,7 +9854,7 @@ export interface EmployeeDocument {
   /** @nullable */
   employeeId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   documentType: string;
   title: string;
   /** @nullable */
@@ -9267,7 +9875,7 @@ export interface EmployeeDocument {
 export interface EmployeeDocumentInput {
   companyId: string;
   employeeId?: string;
-  code?: string;
+  code: string;
   documentType?: string;
   title: string;
   documentNumber?: string;
@@ -10491,7 +11099,7 @@ export interface LegalContractAmendment {
   /** @nullable */
   legalContractId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   /** @nullable */
   amendmentDate?: string | null;
   description: string;
@@ -10515,7 +11123,7 @@ export interface LegalContractAmendment {
 export interface LegalContractAmendmentInput {
   companyId: string;
   legalContractId?: string;
-  code?: string;
+  code: string;
   amendmentDate?: string;
   description: string;
   descriptionAr?: string;
@@ -10554,7 +11162,7 @@ export interface ContractAddendum {
   /** @nullable */
   legalContractId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   title: string;
   /** @nullable */
   addendumDate?: string | null;
@@ -10568,7 +11176,7 @@ export interface ContractAddendum {
 export interface ContractAddendumInput {
   companyId: string;
   legalContractId?: string;
-  code?: string;
+  code: string;
   title: string;
   addendumDate?: string;
   content?: string;
@@ -10918,7 +11526,7 @@ export interface LegalHearing {
   /** @nullable */
   legalCaseId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   /** @nullable */
   hearingDate?: string | null;
   /** @nullable */
@@ -10941,7 +11549,7 @@ export interface LegalHearing {
 export interface LegalHearingInput {
   companyId: string;
   legalCaseId?: string;
-  code?: string;
+  code: string;
   hearingDate?: string;
   hearingTime?: string;
   location?: string;
@@ -12182,7 +12790,7 @@ export interface CallLog {
 
 export interface CallLogInput {
   companyId: string;
-  code: string;
+  code?: string;
   customerId?: string;
   direction?: string;
   channel?: string;
@@ -12257,7 +12865,7 @@ export interface WorkOrder {
 
 export interface WorkOrderInput {
   companyId: string;
-  code: string;
+  code?: string;
   customerId?: string;
   unitId?: string;
   sourceType?: string;
@@ -12326,7 +12934,7 @@ export interface CustomerSatisfactionSurvey {
 
 export interface CustomerSatisfactionSurveyInput {
   companyId: string;
-  code: string;
+  code?: string;
   customerId?: string;
   channel?: string;
   sourceType?: string;
@@ -12794,7 +13402,7 @@ export interface MarketingCampaignInput {
   companyId: string;
   branchId?: string;
   projectId?: string;
-  code?: string;
+  code: string;
   name: string;
   campaignType?: string;
   startDate?: string;
@@ -12848,7 +13456,7 @@ export interface MarketingChannel {
 
 export interface MarketingChannelInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr?: string;
   channelType?: string;
@@ -12918,7 +13526,7 @@ export interface MarketingDistributionRule {
 
 export interface MarketingDistributionRuleInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr?: string;
   campaignId?: string;
@@ -13060,7 +13668,7 @@ export interface Correspondence {
 
 export interface CorrespondenceInput {
   companyId: string;
-  code: string;
+  code?: string;
   direction?: string;
   correspondenceType?: string;
   subject: string;
@@ -13134,7 +13742,7 @@ export interface Meeting {
 
 export interface MeetingInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   meetingType?: string;
   scheduledAt?: string;
@@ -13195,7 +13803,7 @@ export interface AdministrativeDecision {
 
 export interface AdministrativeDecisionInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   decisionType?: string;
   decisionDate?: string;
@@ -13258,7 +13866,7 @@ export interface AdministrativeTask {
 
 export interface AdministrativeTaskInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   description?: string;
   assignedToEmployeeId?: string;
@@ -13317,13 +13925,25 @@ export interface GeneralService {
   cost?: string | null;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  serviceTime?: string | null;
+  /** @nullable */
+  departmentId?: string | null;
+  /** @nullable */
+  attendeesCount?: number | null;
+  /** @nullable */
+  requiredItems?: string | null;
+  /** @nullable */
+  meetingId?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
   isActive: boolean;
   createdAt: string;
 }
 
 export interface GeneralServiceInput {
   companyId: string;
-  code: string;
+  code?: string;
   serviceType?: string;
   title: string;
   description?: string;
@@ -13335,6 +13955,11 @@ export interface GeneralServiceInput {
   serviceDate?: string;
   cost?: string;
   notes?: string;
+  serviceTime?: string;
+  departmentId?: string;
+  attendeesCount?: number;
+  requiredItems?: string;
+  meetingId?: string;
 }
 
 export interface GeneralServiceUpdate {
@@ -13351,6 +13976,11 @@ export interface GeneralServiceUpdate {
   serviceDate?: string;
   cost?: string;
   notes?: string;
+  serviceTime?: string;
+  departmentId?: string;
+  attendeesCount?: number;
+  requiredItems?: string;
+  meetingId?: string;
 }
 
 export interface GeneralServiceListResponse {
@@ -13392,7 +14022,7 @@ export interface Vehicle {
 
 export interface VehicleInput {
   companyId: string;
-  code: string;
+  code?: string;
   plateNumber: string;
   make?: string;
   model?: string;
@@ -13457,7 +14087,7 @@ export interface Driver {
 
 export interface DriverInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId?: string;
   fullName: string;
   licenseNumber?: string;
@@ -13518,7 +14148,7 @@ export interface VehicleMission {
 
 export interface VehicleMissionInput {
   companyId: string;
-  code: string;
+  code?: string;
   vehicleId?: string;
   driverId?: string;
   purpose: string;
@@ -13584,7 +14214,7 @@ export interface VehicleMaintenance {
 
 export interface VehicleMaintenanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   vehicleId?: string;
   logType?: string;
   serviceDate?: string;
@@ -13654,7 +14284,7 @@ export interface VisitorLog {
 
 export interface VisitorLogInput {
   companyId: string;
-  code: string;
+  code?: string;
   visitorName: string;
   idNumber?: string;
   visitorCompany?: string;
@@ -13715,13 +14345,31 @@ export interface Circular {
   status: string;
   /** @nullable */
   notes?: string | null;
+  circularType?: string;
+  priority?: string;
+  /** @nullable */
+  branchId?: string | null;
+  /** @nullable */
+  publishAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  /** @nullable */
+  publishedAt?: string | null;
+  /** @nullable */
+  publishedByUserId?: string | null;
+  /** @nullable */
+  targetedCount?: number | null;
+  /** @nullable */
+  readCount?: number | null;
+  /** @nullable */
+  unreadCount?: number | null;
   isActive: boolean;
   createdAt: string;
 }
 
 export interface CircularInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   circularNumber?: string;
   issueDate?: string;
@@ -13732,6 +14380,11 @@ export interface CircularInput {
   body?: string;
   status?: string;
   notes?: string;
+  circularType?: string;
+  priority?: string;
+  branchId?: string;
+  publishAt?: string;
+  expiresAt?: string;
 }
 
 export interface CircularUpdate {
@@ -13747,6 +14400,11 @@ export interface CircularUpdate {
   body?: string;
   status?: string;
   notes?: string;
+  circularType?: string;
+  priority?: string;
+  branchId?: string;
+  publishAt?: string;
+  expiresAt?: string;
 }
 
 export interface CircularListResponse {
@@ -13783,7 +14441,7 @@ export interface Policy {
 
 export interface PolicyInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   policyType?: string;
   version?: string;
@@ -13854,7 +14512,7 @@ export interface EmployeeInsurance {
 
 export interface EmployeeInsuranceInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   insuranceNumber?: string;
   insuranceAuthority?: string;
@@ -13911,7 +14569,7 @@ export interface InsuranceForm {
 
 export interface InsuranceFormInput {
   companyId: string;
-  code: string;
+  code?: string;
   formType?: string;
   formNumber?: string;
   employeeInsuranceId?: string;
@@ -13962,7 +14620,7 @@ export interface InsuranceAddition {
 
 export interface InsuranceAdditionInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   additionDate?: string;
@@ -14012,7 +14670,7 @@ export interface InsuranceExclusion {
 
 export interface InsuranceExclusionInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   exclusionDate?: string;
@@ -14066,7 +14724,7 @@ export interface InsuranceDataAmendment {
 
 export interface InsuranceDataAmendmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   amendmentType?: string;
@@ -14130,7 +14788,7 @@ export interface InsuranceSubscription {
 
 export interface InsuranceSubscriptionInput {
   companyId: string;
-  code: string;
+  code?: string;
   branchId?: string;
   period: string;
   dueDate?: string;
@@ -14194,7 +14852,7 @@ export interface InsurancePaymentNotice {
 
 export interface InsurancePaymentNoticeInput {
   companyId: string;
-  code: string;
+  code?: string;
   noticeNumber?: string;
   subscriptionId?: string;
   period?: string;
@@ -14247,7 +14905,7 @@ export interface InsuranceReconciliation {
 
 export interface InsuranceReconciliationInput {
   companyId: string;
-  code: string;
+  code?: string;
   period: string;
   expectedAmount?: string;
   actualAmount?: string;
@@ -14298,7 +14956,7 @@ export interface InsuranceArrear {
 
 export interface InsuranceArrearInput {
   companyId: string;
-  code: string;
+  code?: string;
   period?: string;
   subscriptionId?: string;
   amount?: string;
@@ -14354,7 +15012,7 @@ export interface InsurancePenalty {
 
 export interface InsurancePenaltyInput {
   companyId: string;
-  code: string;
+  code?: string;
   branchId?: string;
   penaltyType?: string;
   subscriptionId?: string;
@@ -14410,7 +15068,7 @@ export interface ServiceTermination {
 
 export interface ServiceTerminationInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   terminationDate?: string;
@@ -14459,7 +15117,7 @@ export interface InsuranceSettlement {
 
 export interface InsuranceSettlementInput {
   companyId: string;
-  code: string;
+  code?: string;
   serviceTerminationId?: string;
   employeeId: string;
   settlementAmount?: string;
@@ -14506,7 +15164,7 @@ export interface InsuranceClearance {
 
 export interface InsuranceClearanceInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   serviceTerminationId?: string;
   clearanceDate?: string;
@@ -14558,7 +15216,7 @@ export interface SubcontractorInsurance {
 
 export interface SubcontractorInsuranceInput {
   companyId: string;
-  code: string;
+  code?: string;
   contractorName: string;
   contractorType?: string;
   insuranceNumber?: string;
@@ -14617,7 +15275,7 @@ export interface ProjectLaborInsurance {
 
 export interface ProjectLaborInsuranceInput {
   companyId: string;
-  code: string;
+  code?: string;
   laborName: string;
   projectId?: string;
   subcontractorInsuranceId?: string;
@@ -17840,6 +18498,16 @@ status?: string;
 handledByEmployeeId?: string;
 };
 
+export type ListDelegationsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+delegatorUserId?: string;
+delegateUserId?: string;
+};
+
 export type GetSecretariatOverviewParams = {
 companyId?: string;
 };
@@ -17849,5 +18517,69 @@ companyId?: string;
 kind?: string;
 overdueOnly?: boolean;
 limit?: number;
+};
+
+export type ListMyAnnouncementsParams = {
+unreadOnly?: boolean;
+};
+
+export type ListSecurityPointsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+pointType?: string;
+status?: string;
+branchId?: string;
+};
+
+export type ListSecurityShiftsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+pointId?: string;
+status?: string;
+shiftType?: string;
+guardEmployeeId?: string;
+};
+
+export type ListSecurityIncidentsParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+pointId?: string;
+status?: string;
+severity?: string;
+incidentType?: string;
+assignedToEmployeeId?: string;
+};
+
+export type ListNonconformitysParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+severity?: string;
+category?: string;
+source?: string;
+ownerEmployeeId?: string;
+};
+
+export type ListRisksParams = {
+page?: number;
+pageSize?: number;
+search?: string;
+companyId?: string;
+status?: string;
+riskLevel?: string;
+category?: string;
+ownerEmployeeId?: string;
+};
+
+export type PreviewNextNumberParams = {
+documentType: string;
 };
 

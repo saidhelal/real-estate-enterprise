@@ -8,7 +8,7 @@
 
 export interface WorkOrderInput {
   companyId: string;
-  code: string;
+  code?: string;
   customerId?: string;
   unitId?: string;
   sourceType?: string;

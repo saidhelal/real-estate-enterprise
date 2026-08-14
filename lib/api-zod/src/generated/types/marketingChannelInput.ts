@@ -8,7 +8,7 @@
 
 export interface MarketingChannelInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr?: string;
   channelType?: string;

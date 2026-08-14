@@ -8,7 +8,7 @@
 
 export interface InsurancePenaltyInput {
   companyId: string;
-  code: string;
+  code?: string;
   branchId?: string;
   penaltyType?: string;
   subscriptionId?: string;

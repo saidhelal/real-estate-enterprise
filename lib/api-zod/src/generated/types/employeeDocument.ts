@@ -12,7 +12,7 @@ export interface EmployeeDocument {
   /** @nullable */
   employeeId?: string | null;
   /** @nullable */
-  code?: string | null;
+  code: string | null;
   documentType: string;
   title: string;
   /** @nullable */

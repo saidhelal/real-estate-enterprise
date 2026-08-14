@@ -8,7 +8,7 @@
 
 export interface VehicleInput {
   companyId: string;
-  code: string;
+  code?: string;
   plateNumber: string;
   make?: string;
   model?: string;

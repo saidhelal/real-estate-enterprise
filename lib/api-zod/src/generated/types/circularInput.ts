@@ -8,7 +8,7 @@
 
 export interface CircularInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   circularNumber?: string;
   issueDate?: string;
@@ -19,4 +19,9 @@ export interface CircularInput {
   body?: string;
   status?: string;
   notes?: string;
+  circularType?: string;
+  priority?: string;
+  branchId?: string;
+  publishAt?: string;
+  expiresAt?: string;
 }

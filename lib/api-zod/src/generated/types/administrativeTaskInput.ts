@@ -8,7 +8,7 @@
 
 export interface AdministrativeTaskInput {
   companyId: string;
-  code: string;
+  code?: string;
   title: string;
   description?: string;
   assignedToEmployeeId?: string;

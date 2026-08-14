@@ -41,7 +41,18 @@ export default function MarketingChannelsPage() {
   const companyId = companies?.[0]?.id;
 
   const fields: ResourceField[] = [
-    { name: "code", label: "Code", labelAr: "الرمز", required: true, createOnly: true },
+    {
+      name: "code",
+      label: "Reference",
+      labelAr: "الرمز",
+      // Issued by the central sequence engine on save; shown in the form
+      // before saving and never typed in.
+      generated: true,
+      generatorKey: "marketingChannel",
+      createOnly: true,
+      description: "The system issues this number automatically when the record is saved.",
+      descriptionAr: "يولّد النظام هذا الرقم تلقائيًا عند الحفظ، ولا يُدخل يدويًا.",
+    },
     { name: "name", label: "Name", labelAr: "الاسم", required: true },
     { name: "nameAr", label: "Name (Arabic)", labelAr: "الاسم بالعربية", rtl: true },
     { name: "channelType", label: "Type", labelAr: "النوع", type: "select", options: CHANNEL_TYPES },

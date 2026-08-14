@@ -8,7 +8,7 @@
 
 export interface InsuranceAdditionInput {
   companyId: string;
-  code: string;
+  code?: string;
   employeeId: string;
   employeeInsuranceId?: string;
   additionDate?: string;
