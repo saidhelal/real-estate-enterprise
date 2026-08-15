@@ -23,6 +23,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -40,7 +42,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FileText, FileSpreadsheet, Printer } from "lucide-react";
+import { Printer } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 
 type ReportType =
@@ -67,23 +69,6 @@ interface ReportModel {
   title: string;
   kpis: KeyValue[];
   table: ReportTable;
-}
-
-function escapeHtml(value: unknown): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function csvCell(value: unknown): string {
-  const s = String(value ?? "");
-  if (/[",\n]/.test(s)) {
-    return `"${s.replace(/"/g, '""')}"`;
-  }
-  return s;
 }
 
 export default function ReportsEnginePage() {
@@ -294,86 +279,30 @@ export default function ReportsEnginePage() {
   }, [reportType, executive.data, sales.data, collection.data, construction.data, procurement.data, inventory.data, hr.data, financial.data, t]);
 
   const companyName = companies?.[0]?.name ?? "";
-  const generatedAt = new Date().toISOString().slice(0, 10);
 
-  const handleExportPdf = () => {
-    const ar = language === "ar";
-    const dir = ar ? "rtl" : "ltr";
-    const kpiHtml = model.kpis
-      .map((k) => `<div class="kpi"><span>${escapeHtml(k.label)}</span><strong>${escapeHtml(k.value)}</strong></div>`)
-      .join("");
-    const headHtml = model.table.columns.map((c) => `<th>${escapeHtml(c)}</th>`).join("");
-    const bodyHtml = model.table.rows.length
-      ? model.table.rows
-          .map((row) => `<tr>${row.map((c) => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`)
-          .join("")
-      : `<tr><td colspan="${model.table.columns.length}" class="empty">—</td></tr>`;
-
-    const html = `<!doctype html><html dir="${dir}" lang="${ar ? "ar" : "en"}"><head><meta charset="utf-8"><title>${escapeHtml(model.title)}</title>
-      <style>
-        * { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; box-sizing: border-box; }
-        /* Standalone print document: this stylesheet ships inside a new window
-           with none of the app CSS loaded, so design tokens would resolve to
-           nothing. The literal colours below are correct and intentional. */
-        body { margin: 0; padding: 40px; color: #1a1a1a; }
-        .head { border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 20px; }
-        .company { font-size: 20px; font-weight: 700; }
-        .title { font-size: 18px; font-weight: 700; margin-top: 4px; }
-        .meta { color:#666; font-size: 13px; margin-top:6px; }
-        .kpis { display:flex; flex-wrap:wrap; gap:20px; margin-bottom:24px; }
-        .kpi { display:flex; flex-direction:column; min-width:140px; }
-        .kpi span { color:#666; font-size:12px; }
-        .kpi strong { font-size:18px; }
-        table { width:100%; border-collapse: collapse; }
-        th, td { padding: 9px 8px; border-bottom: 1px solid #eee; font-size: 13px; text-align: ${ar ? "right" : "left"}; }
-        th { background:#f5f5f5; font-weight:700; }
-        td.empty { text-align:center; color:#999; }
-        @media print { body { padding: 0; } }
-      </style></head><body>
-      <div class="head">
-        <div class="company">${escapeHtml(companyName)}</div>
-        <div class="title">${escapeHtml(model.title)}</div>
-        <div class="meta">${escapeHtml(t("bi.generated_at"))}: ${escapeHtml(generatedAt)}</div>
-      </div>
-      <div class="kpis">${kpiHtml}</div>
-      <table><thead><tr>${headHtml}</tr></thead><tbody>${bodyHtml}</tbody></table>
-      <script>window.onload = function(){ window.print(); }</script>
-      </body></html>`;
-
-    const w = window.open("", "_blank", "width=900,height=1000");
-    if (!w) return;
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-  };
-
-  const handleExportExcel = () => {
-    const lines: string[] = [];
-    lines.push([model.title].map(csvCell).join(","));
-    lines.push([companyName].map(csvCell).join(","));
-    lines.push([`${t("bi.generated_at")}: ${generatedAt}`].map(csvCell).join(","));
-    lines.push("");
-    lines.push([t("bi.col_metric"), t("bi.col_value")].map(csvCell).join(","));
-    for (const k of model.kpis) {
-      lines.push([k.label, k.value].map(csvCell).join(","));
-    }
-    lines.push("");
-    lines.push(model.table.columns.map(csvCell).join(","));
-    for (const row of model.table.rows) {
-      lines.push(row.map(csvCell).join(","));
-    }
-    const csv = "\uFEFF" + lines.join("\r\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${reportType}-report-${generatedAt}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
+  /**
+   * The report handed to the shared export engine.
+   *
+   * This page used to write its own XLSX (as CSV, so Excel opened it with a
+   * warning) and its own print HTML, side by side with the engine fourteen
+   * other report pages already used. Two writers means two answers to what a
+   * report looks like, and this one was the weaker: no number formatting, no
+   * column widths, no RTL sheet direction.
+   */
+  const buildReport = (): ReportExport => ({
+    title: model.title,
+    companyName,
+    language,
+    meta: [
+      ...(from ? [{ label: t("bi.from_date"), value: from }] : []),
+      ...(to ? [{ label: t("bi.to_date"), value: to }] : []),
+    ],
+    columns: model.table.columns.map((header) => ({ header })),
+    sections: [{ rows: model.table.rows }],
+    // The KPIs are the report's headline figures; the engine lays them out
+    // under the table, which is where a printed report carries its totals.
+    summary: model.kpis,
+  });
   const handlePrint = () => {
     window.print();
   };
@@ -452,14 +381,18 @@ export default function ReportsEnginePage() {
             </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button onClick={handleExportPdf} variant="outline">
-              <FileText className="h-4 w-4" />
-              {t("bi.export_pdf")}
-            </Button>
-            <Button onClick={handleExportExcel} variant="outline">
-              <FileSpreadsheet className="h-4 w-4" />
-              {t("bi.export_excel")}
-            </Button>
+            <ReportExportButton
+              build={buildReport}
+              baseFilename={`${reportType}-report`}
+              audit={{
+                reportType,
+                module: "bi",
+                recordCount: model.table.rows.length,
+                companyId,
+                fromDate: from || undefined,
+                toDate: to || undefined,
+              }}
+            />
             <Button onClick={handlePrint} variant="outline">
               <Printer className="h-4 w-4" />
               {t("bi.print")}

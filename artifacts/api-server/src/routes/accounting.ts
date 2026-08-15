@@ -54,10 +54,10 @@ import {
   GetCashFlowResponse,
   GetBudgetVsActualResponse,
   GetAccountingDashboardResponse,
-  RecordReportExportBody,
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { toCents, fromCents } from "../lib/money";
@@ -360,7 +360,12 @@ router.post("/fiscal-periods/:id/close", requirePermission("fiscalPeriods.close"
   const id = String(req.params.id);
   const [existing] = await db.select().from(fiscalPeriodsTable).where(and(eq(fiscalPeriodsTable.id, id), eq(fiscalPeriodsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status === "closed") { res.status(409).json({ error: "Period is already closed" }); return; }
+  try {
+    assertAction("fiscalPeriod", String(existing.status), "closed");
+  } catch (err) {
+    if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+    throw err;
+  }
   const [row] = await db.update(fiscalPeriodsTable).set({ status: "closed", closedAt: new Date(), closedBy: uid(req) }).where(eq(fiscalPeriodsTable.id, id)).returning();
   await recordAudit(req, { action: "update", entity: "fiscalPeriod", entityId: id, oldValue: existing, newValue: row });
   res.json(GetFiscalPeriodResponse.parse(serializeRow(row)));
@@ -370,7 +375,12 @@ router.post("/fiscal-periods/:id/reopen", requirePermission("fiscalPeriods.reope
   const id = String(req.params.id);
   const [existing] = await db.select().from(fiscalPeriodsTable).where(and(eq(fiscalPeriodsTable.id, id), eq(fiscalPeriodsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status !== "closed") { res.status(409).json({ error: "Only a closed period can be reopened" }); return; }
+  try {
+    assertAction("fiscalPeriod", String(existing.status), "open");
+  } catch (err) {
+    if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+    throw err;
+  }
   const [row] = await db.update(fiscalPeriodsTable).set({ status: "open", closedAt: null, closedBy: null }).where(eq(fiscalPeriodsTable.id, id)).returning();
   await recordAudit(req, { action: "update", entity: "fiscalPeriod", entityId: id, oldValue: existing, newValue: row });
   res.json(GetFiscalPeriodResponse.parse(serializeRow(row)));
@@ -1116,17 +1126,7 @@ router.get("/accounting/dashboard", requirePermission("accountingReports.view"),
   }));
 });
 
-router.post("/reports/export-audit", requirePermission("accountingReports.export"), async (req, res): Promise<void> => {
-  const parsed = RecordReportExportBody.safeParse(req.body);
-  if (!parsed.success) { res.status(400).json({ error: "Invalid body" }); return; }
-  const { reportType, format, ...filters } = parsed.data;
-  await recordAudit(req, {
-    action: "export",
-    entity: "accountingReport",
-    entityId: reportType,
-    newValue: { format, filters },
-  });
-  res.json({ success: true });
-});
+// The export-audit endpoint moved to routes/report-exports.ts: every module
+// exports now, so the log of it belongs to none of them.
 
 export default router;

@@ -6,11 +6,24 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ReportExportInputFormat } from './reportExportInputFormat';
-import type { ReportExportInputReportType } from './reportExportInputReportType';
 
 export interface ReportExportInput {
-  reportType: ReportExportInputReportType;
+  /**
+     * What was exported. This was an enum of the eight accounting reports, which meant every other export in the system left no trace — the register screens export the same figures and were simply not recorded. It is now the report or resource key, and `module` says which part of the system it belongs to.
+     * @minLength 1
+     */
+  reportType: string;
   format: ReportExportInputFormat;
+  /**
+     * The module owning the exported data, e.g. `units`. Its `.view` permission is what authorises the export; absent, the request is treated as an accounting report and needs accountingReports.export.
+     * @nullable
+     */
+  module?: string | null;
+  /**
+     * How many rows left the system, which is the part that matters in a review.
+     * @nullable
+     */
+  recordCount?: number | null;
   /** @nullable */
   companyId?: string | null;
   /** @nullable */

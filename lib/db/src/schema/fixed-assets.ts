@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 // Asset categories with default depreciation policy and COA account mapping.
 export const assetCategoriesTable = pgTable("asset_categories", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -39,7 +40,7 @@ export type AssetCategoryRow = typeof assetCategoriesTable.$inferSelect;
 // Fixed assets register.
 export const fixedAssetsTable = pgTable("fixed_assets", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -65,7 +66,7 @@ export type FixedAssetRow = typeof fixedAssetsTable.$inferSelect;
 // Transfers of an asset between branches / cost centers.
 export const assetTransfersTable = pgTable("asset_transfers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   assetId: uuid("asset_id").notNull(),
   fromBranchId: uuid("from_branch_id"),
@@ -84,7 +85,7 @@ export type AssetTransferRow = typeof assetTransfersTable.$inferSelect;
 // Depreciation entries posted (or drafted) per asset per period.
 export const assetDepreciationsTable = pgTable("asset_depreciations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   assetId: uuid("asset_id").notNull(),
   periodDate: date("period_date"),
@@ -101,7 +102,7 @@ export type AssetDepreciationRow = typeof assetDepreciationsTable.$inferSelect;
 // Physical inventory count lines per asset.
 export const assetInventoryCountsTable = pgTable("asset_inventory_counts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   assetId: uuid("asset_id"),
   branchId: uuid("branch_id"),
@@ -117,7 +118,7 @@ export type AssetInventoryCountRow = typeof assetInventoryCountsTable.$inferSele
 // Asset disposals (sale/scrap/donation/write-off) with gain/loss.
 export const assetDisposalsTable = pgTable("asset_disposals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   assetId: uuid("asset_id").notNull(),
   disposalDate: date("disposal_date"),

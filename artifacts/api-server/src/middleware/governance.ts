@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import type { Request, Response, NextFunction } from "express";
 import { db, changeRequestsTable } from "@workspace/db";
 import { ACCESS_COOKIE, verifyAccessToken, OWNER_COOKIE, verifyOwnerToken } from "../lib/auth";
-import { loadAuthUser } from "../lib/access";
+import { resolveRequestUser } from "./auth";
 import { toChangeRequest } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
 import { notify, recipientsByPermission } from "../lib/notify";
@@ -97,11 +97,13 @@ export async function governanceMiddleware(
     return;
   }
 
-  // Resolve the requesting user from the access-token cookie. If we cannot,
-  // defer to the downstream requireAuth (which will respond 401).
-  const token = req.cookies?.[ACCESS_COOKIE];
-  const userId = token ? verifyAccessToken(token) : null;
-  const user = userId ? await loadAuthUser(userId) : null;
+  // Resolve the requesting user. If we cannot, defer to the downstream
+  // requireAuth (which will respond 401).
+  //
+  // One resolution per request, shared with the tenant decision and with
+  // requireAuth: three separate lookups of the same user were three chances to
+  // answer differently, and one query where there had been three.
+  const user = await resolveRequestUser(req);
   if (!user) {
     next();
     return;

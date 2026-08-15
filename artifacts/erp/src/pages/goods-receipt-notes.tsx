@@ -4,6 +4,7 @@ import {
   useUpdateGoodsReceiptNote,
   useDeleteGoodsReceiptNote,
   getListGoodsReceiptNotesQueryKey,
+  useAcceptGoodsReceiptNote,
   useListPurchaseOrders,
   useListSuppliers,
   useListCompanies,
@@ -15,11 +16,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
+import { DocumentActionButton } from "@/components/inventory/post-document-action";
 import { enumLabel, enumOptions } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 
 export default function GoodsReceiptNotesPage() {
   const { language } = useLanguage();
+  const acceptMutation = useAcceptGoodsReceiptNote();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: poData } = useListPurchaseOrders({ pageSize: 200 });
@@ -70,6 +73,22 @@ export default function GoodsReceiptNotesPage() {
       useUpdate={useUpdateGoodsReceiptNote}
       useDelete={useDeleteGoodsReceiptNote}
       getListQueryKey={getListGoodsReceiptNotesQueryKey}
+      // Accepting is what tells the purchase order the goods arrived. Until
+      // it runs, the order has no idea anything was delivered against it.
+      rowActions={(r) =>
+        r.status === "draft" ? (
+          <DocumentActionButton
+            mutation={acceptMutation}
+            id={r.id}
+            queryKey={getListGoodsReceiptNotesQueryKey()}
+            label="procurement.accept"
+            successLabel="procurement.accepted"
+            failureLabel="procurement.accept_failed"
+          />
+        ) : null
+      }
+      canEdit={(r) => r.status === "draft"}
+      canDelete={(r) => r.status === "draft"}
       companyId={companyId}
     />
   );

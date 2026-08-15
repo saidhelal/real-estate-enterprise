@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -25,7 +26,7 @@ const audit = {
 
 export const engineeringDisciplinesTable = pgTable("engineering_disciplines", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -36,7 +37,7 @@ export type EngineeringDisciplineRow = typeof engineeringDisciplinesTable.$infer
 
 export const consultantsTable = pgTable("consultants", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -52,7 +53,7 @@ export type ConsultantRow = typeof consultantsTable.$inferSelect;
 
 export const designPackagesTable = pgTable("design_packages", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -67,7 +68,7 @@ export type DesignPackageRow = typeof designPackagesTable.$inferSelect;
 
 export const drawingCategoriesTable = pgTable("drawing_categories", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -79,7 +80,7 @@ export type DrawingCategoryRow = typeof drawingCategoriesTable.$inferSelect;
 
 export const technicalSpecificationsTable = pgTable("technical_specifications", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -97,7 +98,7 @@ export type TechnicalSpecificationRow = typeof technicalSpecificationsTable.$inf
 
 export const drawingsTable = pgTable("drawings", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar").notNull(),
@@ -119,7 +120,7 @@ export type DrawingRow = typeof drawingsTable.$inferSelect;
 
 export const drawingRevisionsTable = pgTable("drawing_revisions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   drawingId: uuid("drawing_id").notNull(),
   versionNumber: text("version_number").notNull(),
   revisionDate: date("revision_date"),
@@ -137,7 +138,7 @@ export type DrawingRevisionRow = typeof drawingRevisionsTable.$inferSelect;
 
 export const boqsTable = pgTable("boqs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar").notNull(),
@@ -153,7 +154,7 @@ export type BoqRow = typeof boqsTable.$inferSelect;
 
 export const boqItemsTable = pgTable("boq_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   boqId: uuid("boq_id").notNull(),
   itemCode: text("item_code").notNull(),
   description: text("description").notNull(),
@@ -168,7 +169,7 @@ export type BoqItemRow = typeof boqItemsTable.$inferSelect;
 
 export const boqQuantityRevisionsTable = pgTable("boq_quantity_revisions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   boqItemId: uuid("boq_item_id").notNull(),
   previousQuantity: numeric("previous_quantity", { precision: 16, scale: 3 }),
   newQuantity: numeric("new_quantity", { precision: 16, scale: 3 }),
@@ -180,7 +181,7 @@ export type BoqQuantityRevisionRow = typeof boqQuantityRevisionsTable.$inferSele
 
 export const costEstimatesTable = pgTable("cost_estimates", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar"),
@@ -200,7 +201,7 @@ export type CostEstimateRow = typeof costEstimatesTable.$inferSelect;
 
 export const inspectionRequestsTable = pgTable("inspection_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   projectId: uuid("project_id"),
   phaseId: uuid("phase_id"),
@@ -216,7 +217,7 @@ export type InspectionRequestRow = typeof inspectionRequestsTable.$inferSelect;
 
 export const inspectionReportsTable = pgTable("inspection_reports", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   inspectionRequestId: uuid("inspection_request_id"),
   reportDate: date("report_date"),
@@ -229,7 +230,7 @@ export type InspectionReportRow = typeof inspectionReportsTable.$inferSelect;
 
 export const defectsTable = pgTable("defects", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   inspectionReportId: uuid("inspection_report_id"),
   projectId: uuid("project_id"),
@@ -258,7 +259,7 @@ export type DefectRow = typeof defectsTable.$inferSelect;
  */
 export const correctiveActionsTable = pgTable("corrective_actions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   defectId: uuid("defect_id"),
   action: text("action").notNull(),
@@ -293,7 +294,7 @@ export type CorrectiveActionRow = typeof correctiveActionsTable.$inferSelect;
 
 export const rfisTable = pgTable("rfis", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   projectId: uuid("project_id"),
   subject: text("subject").notNull(),
@@ -310,7 +311,7 @@ export type RfiRow = typeof rfisTable.$inferSelect;
 
 export const technicalSubmittalsTable = pgTable("technical_submittals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   projectId: uuid("project_id"),
   title: text("title").notNull(),
@@ -326,7 +327,7 @@ export type TechnicalSubmittalRow = typeof technicalSubmittalsTable.$inferSelect
 
 export const materialSubmittalsTable = pgTable("material_submittals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   projectId: uuid("project_id"),
   materialName: text("material_name").notNull(),
@@ -341,7 +342,7 @@ export type MaterialSubmittalRow = typeof materialSubmittalsTable.$inferSelect;
 
 export const consultantResponsesTable = pgTable("consultant_responses", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   referenceType: text("reference_type").notNull().default("rfi"),
   referenceId: uuid("reference_id"),
@@ -359,7 +360,7 @@ export type ConsultantResponseRow = typeof consultantResponsesTable.$inferSelect
 
 export const engineeringProgressTable = pgTable("engineering_progress", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   projectId: uuid("project_id"),
   phaseId: uuid("phase_id"),

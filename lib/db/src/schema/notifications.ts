@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, boolean, timestamp } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -25,7 +26,7 @@ const audit = {
 // - trash    -> isDeleted = true   (سلة الإشعارات; recoverable via restore)
 export const notificationsTable = pgTable("notifications", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id"),
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   // Recipient inbox owner (whose notification this is).
   recipientUserId: uuid("recipient_user_id").notNull(),
   // User who triggered the underlying event, when known.

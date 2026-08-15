@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -27,7 +28,7 @@ const money = { precision: 14, scale: 2 } as const;
 
 export const departmentsTable = pgTable("departments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -42,7 +43,7 @@ export type DepartmentRow = typeof departmentsTable.$inferSelect;
 
 export const sectionsTable = pgTable("sections", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -56,7 +57,7 @@ export type SectionRow = typeof sectionsTable.$inferSelect;
 
 export const jobTitlesTable = pgTable("job_titles", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -86,7 +87,7 @@ export type JobTitleRow = typeof jobTitlesTable.$inferSelect;
 
 export const employeesTable = pgTable("employees", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   firstName: text("first_name").notNull(),
@@ -124,7 +125,7 @@ export type EmployeeRow = typeof employeesTable.$inferSelect;
 
 export const employeeDocumentsTable = pgTable("employee_documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   employeeId: uuid("employee_id"),
   code: text("code"),
   documentType: text("document_type").notNull().default("other"),
@@ -141,7 +142,7 @@ export type EmployeeDocumentRow = typeof employeeDocumentsTable.$inferSelect;
 
 export const employeeEmergencyContactsTable = pgTable("employee_emergency_contacts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   employeeId: uuid("employee_id"),
   name: text("name").notNull(),
   relationship: text("relationship"),
@@ -158,7 +159,7 @@ export type EmployeeEmergencyContactRow = typeof employeeEmergencyContactsTable.
 
 export const shiftsTable = pgTable("shifts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -173,7 +174,7 @@ export type ShiftRow = typeof shiftsTable.$inferSelect;
 
 export const attendanceRecordsTable = pgTable("attendance_records", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   employeeId: uuid("employee_id"),
   shiftId: uuid("shift_id"),
   attendanceDate: date("attendance_date").notNull(),
@@ -194,7 +195,7 @@ export type AttendanceRecordRow = typeof attendanceRecordsTable.$inferSelect;
 
 export const leaveTypesTable = pgTable("leave_types", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -209,7 +210,7 @@ export type LeaveTypeRow = typeof leaveTypesTable.$inferSelect;
 
 export const leaveBalancesTable = pgTable("leave_balances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   employeeId: uuid("employee_id"),
   leaveTypeId: uuid("leave_type_id"),
   year: integer("year").notNull(),
@@ -222,7 +223,7 @@ export type LeaveBalanceRow = typeof leaveBalancesTable.$inferSelect;
 
 export const leaveRequestsTable = pgTable("leave_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id"),
   leaveTypeId: uuid("leave_type_id"),
@@ -245,7 +246,7 @@ export type LeaveRequestRow = typeof leaveRequestsTable.$inferSelect;
 
 export const salaryComponentsTable = pgTable("salary_components", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -262,7 +263,7 @@ export type SalaryComponentRow = typeof salaryComponentsTable.$inferSelect;
 
 export const payrollPeriodsTable = pgTable("payroll_periods", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   year: integer("year").notNull(),
@@ -277,7 +278,7 @@ export type PayrollPeriodRow = typeof payrollPeriodsTable.$inferSelect;
 
 export const payrollRunsTable = pgTable("payroll_runs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   payrollPeriodId: uuid("payroll_period_id"),
@@ -300,7 +301,7 @@ export type PayrollRunRow = typeof payrollRunsTable.$inferSelect;
 
 export const payslipsTable = pgTable("payslips", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   payrollRunId: uuid("payroll_run_id"),
   employeeId: uuid("employee_id"),
@@ -317,7 +318,7 @@ export type PayslipRow = typeof payslipsTable.$inferSelect;
 
 export const payslipLinesTable = pgTable("payslip_lines", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   payslipId: uuid("payslip_id"),
   salaryComponentId: uuid("salary_component_id"),
   componentType: text("component_type").notNull().default("earning"),
@@ -333,7 +334,7 @@ export type PayslipLineRow = typeof payslipLinesTable.$inferSelect;
 
 export const employeeLoansTable = pgTable("employee_loans", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id"),
   loanType: text("loan_type").notNull().default("personal"),
@@ -358,7 +359,7 @@ export type EmployeeLoanRow = typeof employeeLoansTable.$inferSelect;
 
 export const loanInstallmentsTable = pgTable("loan_installments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   employeeLoanId: uuid("employee_loan_id"),
   employeeId: uuid("employee_id"),
   installmentNumber: integer("installment_number").notNull().default(1),
@@ -373,7 +374,7 @@ export type LoanInstallmentRow = typeof loanInstallmentsTable.$inferSelect;
 
 export const employeeAdvancesTable = pgTable("employee_advances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id"),
   amount: numeric("amount", money).notNull().default("0"),
@@ -399,7 +400,7 @@ export type EmployeeAdvanceRow = typeof employeeAdvancesTable.$inferSelect;
 
 export const kpiTemplatesTable = pgTable("kpi_templates", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -414,7 +415,7 @@ export type KpiTemplateRow = typeof kpiTemplatesTable.$inferSelect;
 
 export const employeeEvaluationsTable = pgTable("employee_evaluations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id"),
   evaluatorEmployeeId: uuid("evaluator_employee_id"),
@@ -432,7 +433,7 @@ export type EmployeeEvaluationRow = typeof employeeEvaluationsTable.$inferSelect
 
 export const employeeEvaluationLinesTable = pgTable("employee_evaluation_lines", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   evaluationId: uuid("evaluation_id"),
   kpiTemplateId: uuid("kpi_template_id"),
   description: text("description"),

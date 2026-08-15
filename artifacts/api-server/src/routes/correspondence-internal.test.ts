@@ -12,6 +12,8 @@ import {
   rolesTable,
   userRolesTable,
   usersTable,
+  companiesTable,
+  numberSequencesTable,
 } from "@workspace/db";
 import app from "../app";
 import { ACCESS_COOKIE, signAccessToken, hashPassword } from "../lib/auth";
@@ -89,6 +91,15 @@ const api = (userId: string) => ({
 beforeAll(async () => {
   const passwordHash = await hashPassword("Test@123456");
 
+  // The fixture organisation needs its companies to exist: every table below
+  // carries a company_id with a foreign key, so inserting an employee for a
+  // company that was never created is refused by the database — as it should
+  // be. This used to pass only because nothing enforced the relationship.
+  await db.insert(companiesTable).values([
+    { id: COMPANY, code: `${tag}-C1`, name: `${tag} Company`, nameAr: "شركة اختبار" },
+    { id: OTHER_COMPANY, code: `${tag}-C2`, name: `${tag} Other`, nameAr: "شركة أخرى" },
+  ]).onConflictDoNothing();
+
   await db.insert(rolesTable).values([
     {
       id: roleId,
@@ -128,18 +139,33 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  if (created.length) {
-    await db
-      .delete(correspondenceRecipientsTable)
-      .where(inArray(correspondenceRecipientsTable.correspondenceId, created));
-    await db.delete(correspondenceTable).where(inArray(correspondenceTable.id, created));
-  }
+  const fixtureCompanies = [COMPANY, OTHER_COMPANY];
+
+  // Cleaned by company, not by the ids this file happened to remember.
+  // Forwarding creates a *new* correspondence that `created` never learned
+  // about, so tracking ids left two of them behind on every run — and once
+  // the companies below were deleted, those rows pointed at a company that no
+  // longer existed. Eighteen orphans accumulated that way, and they are what
+  // blocks four foreign keys from being added.
+  await db
+    .delete(correspondenceRecipientsTable)
+    .where(inArray(correspondenceRecipientsTable.companyId, fixtureCompanies));
+  await db
+    .delete(correspondenceTable)
+    .where(inArray(correspondenceTable.companyId, fixtureCompanies));
+  // The counters the engine created on first use for these companies. Nothing
+  // else will ever draw from them again.
+  await db
+    .delete(numberSequencesTable)
+    .where(inArray(numberSequencesTable.companyId, fixtureCompanies));
   await db.delete(notificationsTable).where(inArray(notificationsTable.recipientUserId, allUserIds));
   await db.delete(userRolesTable).where(inArray(userRolesTable.userId, allUserIds));
   await db.delete(usersTable).where(inArray(usersTable.id, allUserIds));
   await db.delete(employeesTable).where(inArray(employeesTable.id, allEmpIds));
   await db.delete(jobTitlesTable).where(inArray(jobTitlesTable.id, allTitleIds));
   await db.delete(rolesTable).where(eq(rolesTable.id, roleId));
+  // Last: the companies every fixture row pointed at.
+  await db.delete(companiesTable).where(inArray(companiesTable.id, [COMPANY, OTHER_COMPANY]));
   await pool.end();
 });
 

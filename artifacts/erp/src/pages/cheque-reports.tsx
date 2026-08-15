@@ -26,6 +26,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Label } from "@/components/ui/label";
 import { enumLabel, statusTone } from "@/lib/enums";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 
 const STATUS_FILTERS = [
   "all",
@@ -77,12 +79,68 @@ export default function ChequeReportsPage() {
   });
   const totalAmount = rows.reduce((s, r) => s + (Number(r.amount) || 0), 0);
 
+  /**
+   * The report as the shared export engine wants it.
+   *
+   * Built from the same rows and the same labels the table above renders, so
+   * the spreadsheet says what the screen says — including the language, which
+   * is why `enumLabel` is applied here too rather than exporting raw statuses.
+   */
+  const buildReport = (): ReportExport => ({
+    title: t("nav.cheque_reports"),
+    companyName: companies?.[0]?.name ?? "",
+    language: language === "ar" ? "ar" : "en",
+    meta: [
+      { label: t("acc.direction"), value: direction === "all" ? t("common.all") : enumLabel(direction, language) },
+      { label: t("common.status"), value: status === "all" ? t("common.all") : enumLabel(status, language) },
+    ],
+    columns: [
+      { header: t("common.code") },
+      { header: t("acc.cheque_number") },
+      { header: t("acc.direction") },
+      { header: t("acc.bank_name") },
+      { header: t("acc.amount"), numeric: true },
+      { header: t("acc.due_date") },
+      { header: t("common.status") },
+    ],
+    sections: [
+      {
+        rows: rows.map((r) => [
+          r.code,
+          r.chequeNumber,
+          enumLabel(r.direction, language),
+          r.bankName ?? "-",
+          r.amount ?? "-",
+          r.dueDate ?? "-",
+          enumLabel(r.status, language),
+        ]),
+      },
+    ],
+    summary: [
+      { label: t("acc.count"), value: String(rows.length) },
+      { label: t("acc.total_amount"), value: totalAmount.toFixed(2) },
+    ],
+  });
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <PageHeader
         title={t("nav.cheque_reports")}
         description={t("acc.cheque_reports_desc")}
         bordered={false}
+        actions={
+          <ReportExportButton
+            build={buildReport}
+            baseFilename={t("nav.cheque_reports")}
+            disabled={isLoading || rows.length === 0}
+            audit={{
+              reportType: "cheque-reports",
+              module: "cheques",
+              companyId,
+              recordCount: rows.length,
+            }}
+          />
+        }
       />
 
       <div className="flex flex-wrap items-end gap-4">

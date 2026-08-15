@@ -15,6 +15,7 @@ import {
 } from "@workspace/api-zod";
 import { toFiscalYear } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { toCents, fromCents } from "../lib/money";
 import { createEntry, reverseEntry, PostingError, type EntryLineInput } from "../lib/posting";
@@ -116,7 +117,12 @@ router.post("/fiscal-years/:id/year-end-close", requirePermission("fiscalYears.c
         .where(and(eq(fiscalYearsTable.id, id), eq(fiscalYearsTable.isDeleted, false)))
         .for("update");
       if (!fy) return { status: 404 as const, error: "Fiscal year not found" };
-      if (fy.status === "closed") return { status: 409 as const, error: "Fiscal year is already closed" };
+      try {
+        assertAction("fiscalYear", String(fy.status), "closed");
+      } catch (err) {
+        if (err instanceof LifecycleError) return { status: 409 as const, error: err.message };
+        throw err;
+      }
       if (!fy.companyId) return { status: 400 as const, error: "Year-end close requires a company-scoped fiscal year" };
 
       const closingDate = typeof closingDateBody.closingDate === "string" && closingDateBody.closingDate

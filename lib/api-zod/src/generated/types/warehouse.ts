@@ -14,7 +14,8 @@ export interface Warehouse {
   nameAr: string;
   /** @nullable */
   branchId?: string | null;
-  warehouseType: string;
+  /** @nullable */
+  warehouseType?: string | null;
   /** @nullable */
   address?: string | null;
   /** @nullable */

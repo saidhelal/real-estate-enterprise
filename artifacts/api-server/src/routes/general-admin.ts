@@ -4,6 +4,7 @@ import { sql } from "drizzle-orm";
 import {
   db,
   correspondenceTable,
+  correspondenceRecipientsTable,
   meetingsTable,
   administrativeDecisionsTable,
   administrativeTasksTable,
@@ -90,6 +91,7 @@ interface CrudSchema {
 }
 
 import { registerCrud } from "../lib/register-crud";
+import { applyNextServiceDate } from "../lib/fleet-service";
 
 
 registerCrud(router, {
@@ -105,6 +107,29 @@ registerCrud(router, {
   createBody: CreateCorrespondenceBody,
   getResp: GetCorrespondenceResponse,
   updateBody: UpdateCorrespondenceBody,
+  hooks: {
+    /**
+     * A deleted correspondence leaves nobody's inbox holding it.
+     *
+     * `correspondence_recipients` is written by the internal-correspondence
+     * engine and has no register of its own, so nothing ever removed those
+     * rows: deleting a correspondence hid the letter while every recipient row
+     * stayed live, pointing at a document that no longer existed. The rows are
+     * part of the correspondence, not records in their own right, so they go
+     * with it — inside the same transaction, so neither can outlive the other.
+     */
+    async inDeleteTx(tx, row) {
+      await tx
+        .update(correspondenceRecipientsTable)
+        .set({ isDeleted: true })
+        .where(
+          and(
+            eq(correspondenceRecipientsTable.correspondenceId, row.id as string),
+            eq(correspondenceRecipientsTable.isDeleted, false),
+          ),
+        );
+    },
+  },
 });
 
 registerCrud(router, {
@@ -226,6 +251,16 @@ registerCrud(router, {
   createBody: CreateVehicleMaintenanceBody,
   getResp: GetVehicleMaintenanceResponse,
   updateBody: UpdateVehicleMaintenanceBody,
+  hooks: {
+    // The next service date is derived from the approved interval, not typed:
+    // two clerks must not be able to schedule the same vehicle differently.
+    async inCreateTx(tx, row) {
+      await applyNextServiceDate(tx, String(row.id));
+    },
+    async inUpdateTx(tx, updated) {
+      await applyNextServiceDate(tx, String(updated.id));
+    },
+  },
 });
 
 registerCrud(router, {

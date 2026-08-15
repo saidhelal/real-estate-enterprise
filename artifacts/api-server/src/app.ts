@@ -11,6 +11,7 @@ import pinoHttp from "pino-http";
 import router from "./routes";
 import publicLegalRouter from "./routes/public-legal";
 import { governanceMiddleware } from "./middleware/governance";
+import { tenantContext } from "./middleware/auth";
 import objectUploadRouter from "./routes/object-upload";
 import { apiRateLimit, authRateLimit } from "./middleware/rate-limit";
 import { metricsMiddleware } from "./lib/metrics";
@@ -63,6 +64,12 @@ app.use("/api/legal-verify", publicLegalRouter);
 // same reason cloud storage issues signed URLs. Mounted before the auth gate
 // for that, and inert without a valid handle.
 app.use("/api", objectUploadRouter);
+
+// Which schema this request reads and writes. Mounted before governance, which
+// writes change requests of its own: while the tenant was chosen further down
+// inside requireAuth, governance ran outside the context and parked every
+// sandbox change request in production.
+app.use("/api", tenantContext);
 
 // Governance gate: converts direct DELETEs and protected PATCHes into pending
 // change requests (202). Mounted under /api BEFORE the routers. Internal

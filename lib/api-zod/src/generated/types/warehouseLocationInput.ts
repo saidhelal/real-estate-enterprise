@@ -8,7 +8,7 @@
 
 export interface WarehouseLocationInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   warehouseId?: string;

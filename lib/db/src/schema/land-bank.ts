@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 // Land parcels / plots held by the company (the land bank register).
 export const landParcelsTable = pgTable("land_parcels", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -42,7 +43,7 @@ export type LandParcelRow = typeof landParcelsTable.$inferSelect;
 // Ownership records for a parcel (title deeds, shares).
 export const landOwnershipsTable = pgTable("land_ownerships", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parcelId: uuid("parcel_id").notNull(),
   ownerName: text("owner_name").notNull(),
   ownerNameAr: text("owner_name_ar"),
@@ -58,7 +59,7 @@ export type LandOwnershipRow = typeof landOwnershipsTable.$inferSelect;
 // Legal status history / standing for a parcel.
 export const landLegalStatusesTable = pgTable("land_legal_statuses", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parcelId: uuid("parcel_id").notNull(),
   status: text("status").notNull().default("clear"),
   authority: text("authority"),
@@ -72,7 +73,7 @@ export type LandLegalStatusRow = typeof landLegalStatusesTable.$inferSelect;
 // How a parcel is utilized / allocated (e.g. to a project).
 export const landUtilizationsTable = pgTable("land_utilizations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parcelId: uuid("parcel_id").notNull(),
   utilizationType: text("utilization_type").notNull().default("development"),
   allocatedArea: numeric("allocated_area", { precision: 16, scale: 2 }).notNull().default("0"),
@@ -86,7 +87,7 @@ export type LandUtilizationRow = typeof landUtilizationsTable.$inferSelect;
 // Documents attached to a parcel (deeds, surveys, permits).
 export const landDocumentsTable = pgTable("land_documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parcelId: uuid("parcel_id").notNull(),
   docType: text("doc_type").notNull().default("deed"),
   title: text("title").notNull(),
@@ -102,7 +103,7 @@ export type LandDocumentRow = typeof landDocumentsTable.$inferSelect;
 // Acquisition records (how/when/at what cost the parcel was acquired).
 export const landAcquisitionsTable = pgTable("land_acquisitions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parcelId: uuid("parcel_id").notNull(),
   acquisitionType: text("acquisition_type").notNull().default("purchase"),
   sellerName: text("seller_name"),

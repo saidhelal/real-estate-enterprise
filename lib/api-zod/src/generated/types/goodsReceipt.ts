@@ -12,7 +12,8 @@ export interface GoodsReceipt {
   code: string;
   /** @nullable */
   receiptDate?: string | null;
-  receiptType: string;
+  /** @nullable */
+  receiptType?: string | null;
   /** @nullable */
   warehouseId?: string | null;
   /** @nullable */

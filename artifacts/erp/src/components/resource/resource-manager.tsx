@@ -3,6 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { setNextChangeReason, customFetch } from "@workspace/api-client-react";
 import { useOwnerMode } from "@/lib/owner-mode-provider";
 import { DocumentsRowAction } from "@/components/documents/documents-row-action";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
+import { cellText, fetchExportRows } from "./export-rows";
 import { useLanguage } from "@/lib/language-provider";
 import { useAuth } from "@/lib/auth-provider";
 import { useToast } from "@/hooks/use-toast";
@@ -48,7 +51,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PageHeader } from "@/components/ui/page-header";
-import { Toolbar, ToolbarStart } from "@/components/ui/toolbar";
+import { Toolbar, ToolbarStart, ToolbarEnd } from "@/components/ui/toolbar";
 import { EmptyState, LoadingState, ErrorState } from "@/components/ui/states";
 import { cn } from "@/lib/utils";
 import { NONE, resetDescendants, visibleOptions } from "./cascade";
@@ -262,6 +265,13 @@ export interface ResourceManagerProps<T extends { id: string }> {
   attachments?: boolean;
   /** Toolbar select filters injected into the list query (server-side). */
   filters?: ResourceFilter[];
+  /**
+   * Offer Excel/PDF export of the filtered list. Defaults to true: every
+   * register holds figures someone eventually needs in a spreadsheet, and the
+   * alternative to offering it here is people photographing the screen.
+   * The button hides itself for anyone without the resource's `.view`.
+   */
+  exportable?: boolean;
   pageSize?: number;
 }
 
@@ -294,16 +304,22 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
     attachmentsModuleKey,
     attachments = true,
     filters,
+    exportable = true,
     pageSize = 10,
   } = props;
+
+  // The list endpoint this manager is driving, e.g. `/api/units`. Both the
+  // attachments key and the export read it, so it is derived once.
+  const resourcePath = (() => {
+    const first = getListQueryKey()?.[0];
+    return typeof first === "string" ? first : "";
+  })();
+  const resourceKey = resourcePath.replace(/^\/api\//, "").replace(/^\//, "");
 
   const attachmentsKey = (() => {
     if (!attachments) return "";
     if (attachmentsModuleKey) return attachmentsModuleKey;
-    const first = getListQueryKey()?.[0];
-    return typeof first === "string"
-      ? first.replace(/^\/api\//, "").replace(/^\//, "")
-      : "";
+    return resourceKey;
   })();
 
   const { language, t } = useLanguage();
@@ -358,6 +374,52 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: getListQueryKey() });
+
+  /**
+   * The filtered list as a report.
+   *
+   * It re-fetches rather than exporting `rows`, because `rows` is one page and
+   * nobody wants ten records when the register holds four hundred. The search
+   * and filters go along, so the file matches what the screen was showing.
+   *
+   * Cells come from the same `render` the table uses, read back as text, so a
+   * column added to a screen appears in its export with nothing else written.
+   */
+  const buildExport = async (): Promise<ReportExport | null> => {
+    const { rows: all, total: serverTotal, complete } = await fetchExportRows<T>(
+      resourcePath,
+      params,
+    );
+    if (!complete) {
+      // Better a stated limit than a file that silently ends early.
+      toast({
+        title: t("common.export_partial_title"),
+        description: t("common.export_partial_body")
+          .replace("{shown}", String(all.length))
+          .replace("{total}", String(serverTotal)),
+      });
+    }
+    return {
+      title: heading,
+      companyName: "",
+      language: language === "ar" ? "ar" : "en",
+      meta: [
+        ...(search.trim() ? [{ label: t("common.search"), value: search.trim() }] : []),
+        ...(filters ?? [])
+          .filter((f) => filterValues[f.name])
+          .map((f) => ({
+            label: language === "ar" && f.labelAr ? f.labelAr : f.label,
+            value:
+              f.options.find((o) => o.value === filterValues[f.name])?.[
+                language === "ar" ? "labelAr" : "label"
+              ] ??
+              filterValues[f.name],
+          })),
+      ],
+      columns: columns.map((c) => ({ header: colHeader(c) })),
+      sections: [{ rows: all.map((row) => columns.map((c) => cellText(c.render(row)))) }],
+    };
+  };
 
   const confirmDelete = () => {
     if (!deleteTarget) return;
@@ -434,7 +496,7 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
         {/* Search and filters sit inside the table's own frame rather than
             floating above it, so the controls read as belonging to this list
             and the table header starts at the same offset on every screen. */}
-        {(searchable || (filters && filters.length > 0)) && (
+        {(searchable || exportable || (filters && filters.length > 0)) && (
           <Toolbar transparent className="border-b border-border">
             <ToolbarStart>
           {searchable && (
@@ -481,6 +543,23 @@ export function ResourceManager<T extends { id: string }>(props: ResourceManager
                 </Button>
               )}
             </ToolbarStart>
+            {/* Export sits with the search and the filters because it exports
+                what they select — the whole filtered set, not the page. */}
+            {exportable && resourcePath && (
+              <ToolbarEnd>
+                <ReportExportButton
+                  compact
+                  build={buildExport}
+                  baseFilename={heading}
+                  disabled={isLoading || isError || total === 0}
+                  audit={{
+                    reportType: resourceKey,
+                    module: resourceKey,
+                    companyId,
+                  }}
+                />
+              </ToolbarEnd>
+            )}
           </Toolbar>
         )}
 

@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 /**
  * Change requests are the backbone of the governance model: NO record may be
@@ -11,7 +12,7 @@ import { pgTable, uuid, text, boolean, timestamp, jsonb } from "drizzle-orm/pg-c
  */
 export const changeRequestsTable = pgTable("change_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id"),
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   /** 'delete' | 'edit' */
   requestType: text("request_type").notNull(),
   /** Resource segment, e.g. 'contracts' (used for display + audit). */

@@ -28,7 +28,16 @@ export default function PurchaseOrderItemsPage() {
     { name: "descriptionAr", label: "Description (Arabic)", labelAr: "الوصف بالعربية", rtl: true },
     { name: "unit", label: "Unit", labelAr: "الوحدة" },
     { name: "quantity", label: "Quantity", labelAr: "الكمية", type: "money" },
-    { name: "receivedQuantity", label: "Received Quantity", labelAr: "الكمية المستلمة", type: "money" },
+    {
+      name: "receivedQuantity",
+      label: "Received Quantity",
+      labelAr: "الكمية المستلمة",
+      // Maintained by accepting a goods receipt note against this line. Typed
+      // by hand it was a claim about a delivery, not a record of one.
+      generated: true,
+      description: "Updated automatically when a goods receipt note is accepted against this line.",
+      descriptionAr: "يتم تحديثها تلقائيًا عند اعتماد إشعار استلام بضاعة على هذا البند.",
+    },
     { name: "unitPrice", label: "Unit Price", labelAr: "سعر الوحدة", type: "money" },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },
     { name: "notes", label: "Notes", labelAr: "ملاحظات", type: "textarea" },

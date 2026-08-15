@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -26,7 +27,7 @@ const audit = {
 // output, VAT recoverable for input).
 export const taxCodesTable = pgTable("tax_codes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -47,7 +48,7 @@ export type TaxCodeRow = typeof taxCodesTable.$inferSelect;
 // `paidAmount` toward `total`.
 export const customerInvoicesTable = pgTable("customer_invoices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   number: text("number").notNull(),
   customerId: uuid("customer_id").notNull(),
@@ -81,7 +82,7 @@ export type CustomerInvoiceRow = typeof customerInvoicesTable.$inferSelect;
 
 export const customerInvoiceLinesTable = pgTable("customer_invoice_lines", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   invoiceId: uuid("invoice_id").notNull(),
   lineNumber: integer("line_number").notNull().default(1),
   description: text("description").notNull(),
@@ -105,7 +106,7 @@ export type CustomerInvoiceLineRow = typeof customerInvoiceLinesTable.$inferSele
 // account. Settlement is recorded via payment_allocations.
 export const supplierInvoicesTable = pgTable("supplier_invoices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   number: text("number").notNull(),
   supplierId: uuid("supplier_id").notNull(),
@@ -139,7 +140,7 @@ export type SupplierInvoiceRow = typeof supplierInvoicesTable.$inferSelect;
 
 export const supplierInvoiceLinesTable = pgTable("supplier_invoice_lines", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   invoiceId: uuid("invoice_id").notNull(),
   lineNumber: integer("line_number").notNull().default(1),
   description: text("description").notNull(),
@@ -165,7 +166,7 @@ export type SupplierInvoiceLineRow = typeof supplierInvoiceLinesTable.$inferSele
 // recorded via payment_allocations.
 export const paymentVouchersTable = pgTable("payment_vouchers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   payeeType: text("payee_type").notNull().default("supplier"),
@@ -206,7 +207,7 @@ export type PaymentVoucherRow = typeof paymentVouchersTable.$inferSelect;
 // it settles, raising their paidAmount.
 export const receiptAllocationsTable = pgTable("receipt_allocations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   receiptId: uuid("receipt_id").notNull(),
   customerInvoiceId: uuid("customer_invoice_id"),
   scheduleId: uuid("schedule_id"),
@@ -219,7 +220,7 @@ export type ReceiptAllocationRow = typeof receiptAllocationsTable.$inferSelect;
 // Links a payment voucher to the supplier invoice(s) it settles.
 export const paymentAllocationsTable = pgTable("payment_allocations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   paymentVoucherId: uuid("payment_voucher_id").notNull(),
   supplierInvoiceId: uuid("supplier_invoice_id"),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),

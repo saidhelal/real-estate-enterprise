@@ -2,6 +2,8 @@ import { and, eq } from "drizzle-orm";
 import { db, companiesTable } from "@workspace/db";
 import { registerTask, type TaskRunResult } from "./scheduler";
 import { scanDocumentExpiry } from "./edms";
+import { sweepCompany } from "./sla";
+import { sweepReorderLevels } from "./stock";
 import { executeOperation, systemActor } from "./operations";
 import "./operation-definitions";
 
@@ -101,11 +103,79 @@ async function overdueInstallmentsSweep(): Promise<TaskRunResult> {
 }
 
 /**
+ * Missed service deadlines.
+ *
+ * `sla.ts` decides what a deadline is, when it has been missed and who is
+ * answerable; this supplies the clock and the tenant loop, like the other two.
+ *
+ * It runs far more often than the daily sweeps because an SLA is measured in
+ * hours: a four-hour promise noticed six hours late has already failed twice
+ * over. The sweep is convergent — an escalation is raised only when the level
+ * it would write exceeds the level already on the record — so running it every
+ * fifteen minutes produces one escalation per breach, not ninety-six.
+ */
+async function slaBreachSweep(): Promise<TaskRunResult> {
+  const companyIds = await activeCompanyIds();
+  const totals = { companies: companyIds.length, breached: 0, raised: 0, notified: 0, skippedNoRecipients: 0 };
+
+  for (const companyId of companyIds) {
+    const r = await sweepCompany(companyId);
+    totals.breached += r.breached;
+    totals.raised += r.raised;
+    totals.notified += r.notified;
+    totals.skippedNoRecipients += r.skippedNoRecipients;
+  }
+  return totals;
+}
+
+/**
+ * Stock that has fallen to its reorder level.
+ *
+ * `stock.ts` decides what "low" means and who is answerable; this supplies the
+ * clock and the tenant loop, like the others. Daily rather than hourly: a
+ * reorder level is a purchasing signal, not an incident, and the notifier
+ * de-duplicates per item so a shortage lasting a fortnight produces one alert.
+ */
+async function reorderLevelSweep(): Promise<TaskRunResult> {
+  const companyIds = await activeCompanyIds();
+  const totals = { companies: companyIds.length, checked: 0, below: 0, notified: 0 };
+
+  for (const companyId of companyIds) {
+    const r = await sweepReorderLevels(companyId);
+    totals.checked += r.checked;
+    totals.below += r.below;
+    totals.notified += r.notified;
+  }
+  return totals;
+}
+
+/**
  * Register the full task set. Called once from the API bootstrap, before
  * `startScheduler()` — the registry must be complete before the first tick so
  * boot replay can see every task.
  */
 export function registerScheduledTasks(): void {
+  registerTask({
+    key: "inventory.reorder-level-sweep",
+    description: "Notify purchasing when stock reaches its reorder level",
+    intervalMs: 12 * HOUR,
+    timeoutMs: 5 * MINUTE,
+    enabled: true,
+    replayOnBoot: true,
+    handler: reorderLevelSweep,
+  });
+
+  registerTask({
+    key: "customer-service.sla-breach-sweep",
+    description: "Escalate complaints, tickets and maintenance requests that missed their SLA",
+    intervalMs: 15 * MINUTE,
+    timeoutMs: 5 * MINUTE,
+    enabled: true,
+    // A breach that happened during a deploy is still a breach.
+    replayOnBoot: true,
+    handler: slaBreachSweep,
+  });
+
   registerTask({
     key: "documents.expiry-sweep",
     description: "Flip past-due documents to expired and notify owners of expiring documents",

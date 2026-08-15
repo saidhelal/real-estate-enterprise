@@ -25654,6 +25654,104 @@ paths:
           description: documentId is required
         "404":
           description: Not found
+  /goods-receipts/{id}/post:
+    post:
+      operationId: postGoodsReceipt
+      tags: [goodsReceipts]
+      summary: Post a goods receipt so the stock actually arrives in the warehouse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockPostingResult"
+        "400":
+          description: The document cannot be posted as it stands
+        "404":
+          description: Not found
+        "409":
+          description: Already posted, or not enough stock
+  /goods-issues/{id}/post:
+    post:
+      operationId: postGoodsIssue
+      tags: [goodsIssues]
+      summary: Post a goods issue so the stock actually leaves the warehouse
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockPostingResult"
+        "400":
+          description: The document cannot be posted as it stands
+        "404":
+          description: Not found
+        "409":
+          description: Already posted, or not enough stock
+  /inventory-transfers/{id}/post:
+    post:
+      operationId: postInventoryTransfer
+      tags: [inventoryTransfers]
+      summary: Post a transfer so the stock moves between warehouses
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockPostingResult"
+        "400":
+          description: The document cannot be posted as it stands
+        "404":
+          description: Not found
+        "409":
+          description: Already posted, or not enough stock
+  /stock-adjustments/{id}/post:
+    post:
+      operationId: postStockAdjustment
+      tags: [stockAdjustments]
+      summary: Post an adjustment so the counted quantity becomes the stock on hand
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockPostingResult"
+        "400":
+          description: The document cannot be posted as it stands
+        "404":
+          description: Not found
+        "409":
+          description: Already posted, or not enough stock
+  /goods-receipt-notes/{id}/accept:
+    post:
+      operationId: acceptGoodsReceiptNote
+      tags: [goodsReceiptNotes]
+      summary: Accept a goods receipt note and advance the purchase order behind it
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GrnAcceptResult"
+        "404":
+          description: Not found
+        "409":
+          description: Already accepted, or the receipt exceeds what was ordered
 components:
   parameters:
     IdParam:
@@ -25662,6 +25760,27 @@ components:
       required: true
       schema: { type: string }
   schemas:
+    GrnAcceptResult:
+      type: object
+      required: [id, status, linesUpdated, ordersAdvanced]
+      properties:
+        id: { type: string }
+        status: { type: string }
+        linesUpdated:
+          type: integer
+          description: Purchase order lines whose received quantity moved.
+        ordersAdvanced:
+          type: integer
+          description: Purchase orders that became partially or fully received.
+    StockPostingResult:
+      type: object
+      required: [id, status, movements]
+      properties:
+        id: { type: string }
+        status: { type: string }
+        movements:
+          type: integer
+          description: Ledger entries written. A transfer writes two per line, one out and one in.
     HealthStatus:
       type: object
       properties:
@@ -25876,10 +25995,25 @@ components:
       properties:
         reportType:
           type: string
-          enum: [trial-balance, general-ledger, balance-sheet, income-statement, cash-flow, ar-aging, ap-aging, tax]
+          minLength: 1
+          description: >-
+            What was exported. This was an enum of the eight accounting
+            reports, which meant every other export in the system left no
+            trace — the register screens export the same figures and were
+            simply not recorded. It is now the report or resource key, and
+            `module` says which part of the system it belongs to.
         format:
           type: string
           enum: [excel, pdf]
+        module:
+          type: ["string", "null"]
+          description: >-
+            The module owning the exported data, e.g. `units`. Its `.view`
+            permission is what authorises the export; absent, the request is
+            treated as an accounting report and needs accountingReports.export.
+        recordCount:
+          type: ["integer", "null"]
+          description: How many rows left the system, which is the part that matters in a review.
         companyId: { type: ["string", "null"] }
         fromDate: { type: ["string", "null"] }
         toDate: { type: ["string", "null"] }
@@ -30642,7 +30776,7 @@ components:
 
     DrawingRevisionInput:
       type: object
-      required: [companyId, code, drawingId, versionNumber]
+      required: [companyId, drawingId, versionNumber]
       properties:
         companyId: { type: string }
         drawingId: { type: string }
@@ -30802,7 +30936,7 @@ components:
 
     BoqQuantityRevisionInput:
       type: object
-      required: [companyId, code, boqItemId]
+      required: [companyId, boqItemId]
       properties:
         companyId: { type: string }
         boqItemId: { type: string }
@@ -32428,7 +32562,7 @@ components:
 
     SupplierContactInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         supplierId: { type: string }
@@ -33555,7 +33689,7 @@ components:
 
     Warehouse:
       type: object
-      required: [id, companyId, code, name, nameAr, warehouseType, status, isActive, createdAt]
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -33563,7 +33697,9 @@ components:
         name: { type: string }
         nameAr: { type: string }
         branchId: { type: ["string", "null"] }
-        warehouseType: { type: string }
+        # Nullable in the database. Declaring it a required string made one
+        # warehouse saved without a type break the list endpoint for everyone.
+        warehouseType: { type: ["string", "null"] }
         address: { type: ["string", "null"] }
         manager: { type: ["string", "null"] }
         phone: { type: ["string", "null"] }
@@ -33573,7 +33709,7 @@ components:
 
     WarehouseInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33631,7 +33767,7 @@ components:
 
     WarehouseLocationInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33784,7 +33920,7 @@ components:
 
     UnitOfMeasureInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -33819,7 +33955,7 @@ components:
 
     InventoryItem:
       type: object
-      required: [id, companyId, code, name, nameAr, itemType, valuationMethod, status, isActive, createdAt]
+      required: [id, companyId, code, name, nameAr, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -33829,11 +33965,11 @@ components:
         categoryId: { type: ["string", "null"] }
         groupId: { type: ["string", "null"] }
         uomId: { type: ["string", "null"] }
-        itemType: { type: string }
+        itemType: { type: ["string", "null"] }
         barcode: { type: ["string", "null"] }
         costPrice: { type: ["string", "null"] }
         sellingPrice: { type: ["string", "null"] }
-        valuationMethod: { type: string }
+        valuationMethod: { type: ["string", "null"] }
         reorderPoint: { type: ["string", "null"] }
         minStock: { type: ["string", "null"] }
         maxStock: { type: ["string", "null"] }
@@ -34017,13 +34153,13 @@ components:
 
     GoodsReceipt:
       type: object
-      required: [id, companyId, code, receiptType, status, isActive, createdAt]
+      required: [id, companyId, code, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
         code: { type: string }
         receiptDate: { type: ["string", "null"] }
-        receiptType: { type: string }
+        receiptType: { type: ["string", "null"] }
         warehouseId: { type: ["string", "null"] }
         supplierId: { type: ["string", "null"] }
         poId: { type: ["string", "null"] }
@@ -34137,13 +34273,13 @@ components:
 
     GoodsIssue:
       type: object
-      required: [id, companyId, code, issueType, status, isActive, createdAt]
+      required: [id, companyId, code, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
         code: { type: string }
         issueDate: { type: ["string", "null"] }
-        issueType: { type: string }
+        issueType: { type: ["string", "null"] }
         warehouseId: { type: ["string", "null"] }
         issuedTo: { type: ["string", "null"] }
         costCenter: { type: ["string", "null"] }
@@ -34251,7 +34387,7 @@ components:
 
     InventoryTransfer:
       type: object
-      required: [id, companyId, code, transferType, status, isActive, createdAt]
+      required: [id, companyId, code, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -34259,7 +34395,7 @@ components:
         transferDate: { type: ["string", "null"] }
         fromWarehouseId: { type: ["string", "null"] }
         toWarehouseId: { type: ["string", "null"] }
-        transferType: { type: string }
+        transferType: { type: ["string", "null"] }
         totalValue: { type: ["string", "null"] }
         status: { type: string }
         requestedBy: { type: ["string", "null"] }
@@ -34365,14 +34501,14 @@ components:
 
     StockAdjustment:
       type: object
-      required: [id, companyId, code, adjustmentType, status, isActive, createdAt]
+      required: [id, companyId, code, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
         code: { type: string }
         adjustmentDate: { type: ["string", "null"] }
         warehouseId: { type: ["string", "null"] }
-        adjustmentType: { type: string }
+        adjustmentType: { type: ["string", "null"] }
         reason: { type: ["string", "null"] }
         totalValue: { type: ["string", "null"] }
         status: { type: string }
@@ -34479,14 +34615,14 @@ components:
 
     StockCount:
       type: object
-      required: [id, companyId, code, countType, status, isActive, createdAt]
+      required: [id, companyId, code, status, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
         code: { type: string }
         countDate: { type: ["string", "null"] }
         warehouseId: { type: ["string", "null"] }
-        countType: { type: string }
+        countType: { type: ["string", "null"] }
         status: { type: string }
         countedBy: { type: ["string", "null"] }
         supervisedBy: { type: ["string", "null"] }
@@ -34590,7 +34726,7 @@ components:
 
     InventoryLedger:
       type: object
-      required: [id, companyId, transactionType, isActive, createdAt]
+      required: [id, companyId, isActive, createdAt]
       properties:
         id: { type: string }
         companyId: { type: string }
@@ -34598,7 +34734,7 @@ components:
         warehouseId: { type: ["string", "null"] }
         locationId: { type: ["string", "null"] }
         transactionDate: { type: ["string", "null"] }
-        transactionType: { type: string }
+        transactionType: { type: ["string", "null"] }
         referenceType: { type: ["string", "null"] }
         referenceNumber: { type: ["string", "null"] }
         quantityIn: { type: ["string", "null"] }
@@ -35555,7 +35691,7 @@ components:
         createdAt: { type: string }
     DepartmentInput:
       type: object
-      required: [companyId, code, name, nameAr]
+      required: [companyId, name, nameAr]
       properties:
         companyId: { type: string }
         code: { type: string }
@@ -35872,7 +36008,7 @@ components:
         createdAt: { type: string }
     EmployeeEmergencyContactInput:
       type: object
-      required: [companyId, code, name]
+      required: [companyId, name]
       properties:
         companyId: { type: string }
         employeeId: { type: string }
@@ -37184,7 +37320,7 @@ components:
         createdAt: { type: string }
     ContractEventInput:
       type: object
-      required: [companyId, code]
+      required: [companyId]
       properties:
         companyId: { type: string }
         legalContractId: { type: string }
@@ -38588,7 +38724,7 @@ components:
         createdAt: { type: string }
     CsComplaintInput:
       type: object
-      required: [companyId, code, customerId, subject]
+      required: [companyId, customerId, subject]
       properties:
         companyId: { type: string }
         customerId: { type: string }
@@ -38656,7 +38792,7 @@ components:
         createdAt: { type: string }
     CsMaintenanceRequestInput:
       type: object
-      required: [companyId, code, customerId, subject]
+      required: [companyId, customerId, subject]
       properties:
         companyId: { type: string }
         customerId: { type: string }
@@ -38726,7 +38862,7 @@ components:
         createdAt: { type: string }
     CsSupportTicketInput:
       type: object
-      required: [companyId, code, customerId, subject]
+      required: [companyId, customerId, subject]
       properties:
         companyId: { type: string }
         customerId: { type: string }

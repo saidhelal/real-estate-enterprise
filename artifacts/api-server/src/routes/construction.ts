@@ -77,11 +77,30 @@ interface WorkflowConfig {
   sourceField: string;
 }
 
-import { registerCrud, type CrudConfig as SharedCrudConfig, type Tx } from "../lib/register-crud";
+import { registerCrud, CrudRefused, type CrudConfig as SharedCrudConfig, type Tx } from "../lib/register-crud";
+import { assertCertificateApproved } from "../lib/construction-approval";
+import { applyCertificateTotals, applyItemTotals } from "../lib/certificate-amounts";
+import { PostingError } from "../lib/posting";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
+
+/**
+ * Registers whose rows are components of a payment certificate.
+ *
+ * Each carries a certificate id, and the certificate's deduction, addition,
+ * retention and advance-recovery totals are derived from them. Changing one
+ * therefore changes the certificate's net, so the parent is recomputed
+ * whenever a component is written or removed — otherwise the money a
+ * contractor is paid would depend on the order someone happened to save in.
+ */
+const CERTIFICATE_COMPONENTS = new Set([
+  "contractorDeduction",
+  "contractorAddition",
+  "retention",
+  "advanceRecovery",
+]);
 
 const POSTED_STATUSES = new Set(["posted", "paid", "closed"]);
 
@@ -226,6 +245,12 @@ function constructionHooks(cfg: CrudConfig) {
       }
     },
     inCreateTx: async (tx: Tx, created: Record<string, unknown>, req: import("express").Request) => {
+      // Derived cumulative figures, computed before anything reads them.
+      if (cfg.entity === "paymentCertificate") await applyCertificateTotals(tx, String(created.id));
+      if (CERTIFICATE_COMPONENTS.has(cfg.entity) && created.certificateId) {
+        await applyCertificateTotals(tx, String(created.certificateId));
+      }
+      if (cfg.entity === "certificateItem") await applyItemTotals(tx, String(created.id));
       if (!fin || fin.postOnStatus) return;
       const amount = created[fin.amountField];
       if (typeof amount !== "string" || amount.trim() === "") return;
@@ -256,6 +281,40 @@ function constructionHooks(cfg: CrudConfig) {
         fin?.postOnStatus !== undefined &&
         newStatus === fin.postOnStatus &&
         existing.status !== fin.postOnStatus;
+
+      // A payment certificate pays a contractor the moment it posts. The
+      // approval levels recorded against it are the control on that money, and
+      // nothing consulted them: anyone holding `paymentCertificates.update`
+      // could PATCH the status to `posted` with every approval still pending.
+      //
+      // Refused here, inside the transaction, so the status change and the
+      // ledger entry roll back together.
+      if (transitionsToPosted && cfg.entity === "paymentCertificate") {
+        try {
+          await assertCertificateApproved(tx, String(updated.id), String(updated.code ?? ""));
+        } catch (err) {
+          if (err instanceof PostingError) throw new CrudRefused(err.message, err.status);
+          throw err;
+        }
+      }
+
+      // The cumulative figures are arithmetic over the certificates already
+      // issued against this contract, not something a user should retype: the
+      // running total a contractor is paid against was a text box, so it was
+      // whatever the person filling in the certificate believed it to be.
+      if (cfg.entity === "paymentCertificate") {
+        await applyCertificateTotals(tx, String(updated.id));
+      }
+      if (CERTIFICATE_COMPONENTS.has(cfg.entity)) {
+        // Both parents: moving a deduction from one certificate to another
+        // changes the net of the one it left as much as the one it joined.
+        for (const parent of new Set([existing.certificateId, updated.certificateId])) {
+          if (parent) await applyCertificateTotals(tx, String(parent));
+        }
+      }
+      if (cfg.entity === "certificateItem") {
+        await applyItemTotals(tx, String(updated.id));
+      }
       if (fin && transitionsToPosted) {
         const amount = updated[fin.amountField];
         if (typeof amount === "string" && amount.trim() !== "") {

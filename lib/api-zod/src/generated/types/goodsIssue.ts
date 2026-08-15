@@ -12,7 +12,8 @@ export interface GoodsIssue {
   code: string;
   /** @nullable */
   issueDate?: string | null;
-  issueType: string;
+  /** @nullable */
+  issueType?: string | null;
   /** @nullable */
   warehouseId?: string | null;
   /** @nullable */

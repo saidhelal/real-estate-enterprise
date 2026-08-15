@@ -33,7 +33,16 @@ export default function CertificateItemsPage() {
     { name: "contractQuantity", label: "Contract Quantity", labelAr: "الكمية التعاقدية", type: "money" },
     { name: "previousQuantity", label: "Previous Quantity", labelAr: "الكمية السابقة", type: "money" },
     { name: "currentQuantity", label: "Current Quantity", labelAr: "الكمية الحالية", type: "money" },
-    { name: "cumulativeQuantity", label: "Cumulative Quantity", labelAr: "الكمية التراكمية", type: "money" },
+    {
+      name: "cumulativeQuantity",
+      label: "Cumulative Quantity",
+      labelAr: "الكمية التراكمية",
+      type: "money",
+      // Previous + current for this line, computed on save.
+      generated: true,
+      description: "Previous quantity plus this period's.",
+      descriptionAr: "الكمية السابقة مضافًا إليها كمية هذه الفترة.",
+    },
     { name: "rate", label: "Rate", labelAr: "السعر", type: "money" },
     { name: "amount", label: "Amount", labelAr: "المبلغ", type: "money" },
   ];

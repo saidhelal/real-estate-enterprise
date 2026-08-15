@@ -92,6 +92,27 @@
       "when": 1786740619139,
       "tag": "0012_new_korvac",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1786745252657,
+      "tag": "0013_conscious_the_fallen",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1786758757484,
+      "tag": "0014_worthless_goblin_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1786762399825,
+      "tag": "0015_regular_wither",
+      "breakpoints": true
     }
   ]
 }

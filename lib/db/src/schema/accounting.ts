@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -26,7 +27,7 @@ const audit = {
 // (leaf) accounts may receive journal lines.
 export const accountsTable = pgTable("accounts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parentId: uuid("parent_id"),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -47,7 +48,7 @@ export type AccountRow = typeof accountsTable.$inferSelect;
 // self reference; `projectId` optionally links to a real-estate project.
 export const costCentersTable = pgTable("cost_centers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parentId: uuid("parent_id"),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -67,7 +68,7 @@ export type CostCenterRow = typeof costCentersTable.$inferSelect;
 // historical journal lines.
 export const profitCentersTable = pgTable("profit_centers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   parentId: uuid("parent_id"),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -85,7 +86,7 @@ export type ProfitCenterRow = typeof profitCentersTable.$inferSelect;
 // `closed`. Reopening flips it back to `open`.
 export const fiscalPeriodsTable = pgTable("fiscal_periods", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   fiscalYearId: uuid("fiscal_year_id").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -106,7 +107,7 @@ export type FiscalPeriodRow = typeof fiscalPeriodsTable.$inferSelect;
 // originating record (receipt, collection, contract, etc.).
 export const journalEntriesTable = pgTable("journal_entries", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   number: text("number").notNull(),
   entryDate: date("entry_date", { mode: "string" }).notNull(),
@@ -138,7 +139,7 @@ export type JournalEntryRow = typeof journalEntriesTable.$inferSelect;
 export const journalEntryLinesTable = pgTable("journal_entry_lines", {
   id: uuid("id").primaryKey().defaultRandom(),
   entryId: uuid("entry_id").notNull(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   accountId: uuid("account_id").notNull(),
   costCenterId: uuid("cost_center_id"),
   profitCenterId: uuid("profit_center_id"),
@@ -155,7 +156,7 @@ export type JournalEntryLineRow = typeof journalEntryLinesTable.$inferSelect;
 // accounts to use, so integration hooks resolve accounts by key.
 export const accountMappingsTable = pgTable("account_mappings", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   eventKey: text("event_key").notNull(),
   debitAccountId: uuid("debit_account_id"),
   creditAccountId: uuid("credit_account_id"),
@@ -167,7 +168,7 @@ export type AccountMappingRow = typeof accountMappingsTable.$inferSelect;
 // ===================== budgets =====================
 export const budgetsTable = pgTable("budgets", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   fiscalYearId: uuid("fiscal_year_id").notNull(),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -183,7 +184,7 @@ export type BudgetRow = typeof budgetsTable.$inferSelect;
 export const budgetLinesTable = pgTable("budget_lines", {
   id: uuid("id").primaryKey().defaultRandom(),
   budgetId: uuid("budget_id").notNull(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   accountId: uuid("account_id").notNull(),
   costCenterId: uuid("cost_center_id"),
   profitCenterId: uuid("profit_center_id"),

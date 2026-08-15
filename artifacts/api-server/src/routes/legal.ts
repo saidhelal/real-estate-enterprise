@@ -40,6 +40,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { PostingError, type Tx } from "../lib/posting";
 import { ObjectStorageService } from "../lib/objectStorage";
@@ -77,6 +78,20 @@ function publicBaseUrl(req: import("express").Request): string {
 // contract leaves draft/under_review (approved, active, archived, …) it is
 // locked: PATCH/DELETE are refused so the approved record can never be altered.
 const LEGAL_CONTRACT_EDITABLE_STATUSES = ["draft", "under_review"];
+
+/**
+ * Re-throw a lifecycle refusal in the shape this module already reports.
+ * Both carry 409 and a sentence for the operator; the handlers here catch
+ * PostingError, so a LifecycleError would otherwise surface as a 500.
+ */
+function assertLifecycle(check: () => void): void {
+  try {
+    check();
+  } catch (err) {
+    if (err instanceof LifecycleError) throw new PostingError(err.status, err.message);
+    throw err;
+  }
+}
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -368,7 +383,8 @@ router.post("/legal-contracts/:id/archive", requirePermission("legalContracts.ar
     const row = await db.transaction(async (tx) => {
       const c = await loadForUpdate(tx, legalContractsTable, id);
       if (!c) return null;
-      if (c.status === "archived") throw new PostingError(409, "Contract is already archived");
+      // Every state the lifecycle knows, not only the one remembered here.
+      assertLifecycle(() => assertAction("legalContract", String(c.status), "archived"));
       const [updated] = await tx
         .update(legalContractsTable)
         .set({ status: "archived", lockedAt: (c.lockedAt as Date | null) ?? new Date() })
@@ -620,7 +636,7 @@ router.post("/legal-contracts/:id/terminate", requirePermission("legalContracts.
     const row = await db.transaction(async (tx) => {
       const c = await loadForUpdate(tx, legalContractsTable, id);
       if (!c) return null;
-      if (c.status === "terminated" || c.status === "cancelled") throw new PostingError(409, "Contract is already terminated or cancelled");
+      assertLifecycle(() => assertAction("legalContract", String(c.status), "terminated"));
       const [updated] = await tx
         .update(legalContractsTable)
         .set({ status: "terminated", terminatedAt: new Date(), terminationReason: reason })
@@ -680,7 +696,7 @@ router.post("/legal-cases/:id/close", requirePermission("legalCases.close"), asy
     const row = await db.transaction(async (tx) => {
       const c = await loadForUpdate(tx, legalCasesTable, id);
       if (!c) return null;
-      if (c.status === "closed") throw new PostingError(409, "Case is already closed");
+      assertLifecycle(() => assertAction("legalCase", String(c.status), "closed"));
       const set: Record<string, unknown> = { status: "closed", closedAt: new Date() };
       if (outcome) set.outcome = outcome;
       if (outcomeAmount) set.outcomeAmount = outcomeAmount;

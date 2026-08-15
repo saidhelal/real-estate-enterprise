@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -25,7 +26,7 @@ const audit = {
 
 export const contractorsTable = pgTable("contractors", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -45,7 +46,7 @@ export type ContractorRow = typeof contractorsTable.$inferSelect;
 
 export const contractorContractsTable = pgTable("contractor_contracts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar").notNull(),
@@ -69,7 +70,7 @@ export type ContractorContractRow = typeof contractorContractsTable.$inferSelect
 
 export const contractBoqItemsTable = pgTable("contract_boq_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   contractId: uuid("contract_id"),
   boqItemId: uuid("boq_item_id"),
   description: text("description"),
@@ -88,7 +89,7 @@ export type ContractBoqItemRow = typeof contractBoqItemsTable.$inferSelect;
 
 export const workProgressUpdatesTable = pgTable("work_progress_updates", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   asOfDate: date("as_of_date"),
@@ -106,7 +107,7 @@ export type WorkProgressUpdateRow = typeof workProgressUpdatesTable.$inferSelect
 
 export const paymentCertificatesTable = pgTable("payment_certificates", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   projectId: uuid("project_id"),
@@ -135,7 +136,7 @@ export type PaymentCertificateRow = typeof paymentCertificatesTable.$inferSelect
 
 export const certificateItemsTable = pgTable("certificate_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   certificateId: uuid("certificate_id"),
   boqItemId: uuid("boq_item_id"),
   description: text("description"),
@@ -156,7 +157,7 @@ export type CertificateItemRow = typeof certificateItemsTable.$inferSelect;
 
 export const variationOrdersTable = pgTable("variation_orders", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   title: text("title").notNull(),
@@ -177,7 +178,7 @@ export type VariationOrderRow = typeof variationOrdersTable.$inferSelect;
 
 export const contractorDeductionsTable = pgTable("contractor_deductions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   certificateId: uuid("certificate_id"),
@@ -192,7 +193,7 @@ export type ContractorDeductionRow = typeof contractorDeductionsTable.$inferSele
 
 export const contractorAdditionsTable = pgTable("contractor_additions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   certificateId: uuid("certificate_id"),
@@ -211,7 +212,7 @@ export type ContractorAdditionRow = typeof contractorAdditionsTable.$inferSelect
 
 export const retentionsTable = pgTable("retentions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   certificateId: uuid("certificate_id"),
@@ -226,7 +227,7 @@ export type RetentionRow = typeof retentionsTable.$inferSelect;
 
 export const advancePaymentsTable = pgTable("advance_payments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   amount: numeric("amount"),
@@ -241,7 +242,7 @@ export type AdvancePaymentRow = typeof advancePaymentsTable.$inferSelect;
 
 export const advanceRecoveriesTable = pgTable("advance_recoveries", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   advanceId: uuid("advance_id"),
   certificateId: uuid("certificate_id"),
@@ -257,7 +258,7 @@ export type AdvanceRecoveryRow = typeof advanceRecoveriesTable.$inferSelect;
 
 export const contractorInvoicesTable = pgTable("contractor_invoices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   certificateId: uuid("certificate_id"),
@@ -278,7 +279,7 @@ export type ContractorInvoiceRow = typeof contractorInvoicesTable.$inferSelect;
 
 export const contractApprovalsTable = pgTable("contract_approvals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   entityType: text("entity_type"),
@@ -298,7 +299,7 @@ export type ContractApprovalRow = typeof contractApprovalsTable.$inferSelect;
 
 export const certificateStatusesTable = pgTable("certificate_statuses", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -311,7 +312,7 @@ export type CertificateStatusRow = typeof certificateStatusesTable.$inferSelect;
 
 export const certificateApprovalsTable = pgTable("certificate_approvals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   certificateId: uuid("certificate_id"),
   level: text("level").notNull().default("site_engineer"),
@@ -325,7 +326,7 @@ export type CertificateApprovalRow = typeof certificateApprovalsTable.$inferSele
 
 export const certificateApprovalLogsTable = pgTable("certificate_approval_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   certificateId: uuid("certificate_id"),
   approvalId: uuid("approval_id"),

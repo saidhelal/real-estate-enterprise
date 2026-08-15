@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, boolean, date, timestamp } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -27,7 +28,7 @@ const audit = {
  */
 export const prPartiesTable = pgTable("pr_parties", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -71,7 +72,7 @@ export type PrPartyRow = typeof prPartiesTable.$inferSelect;
  */
 export const prInteractionsTable = pgTable("pr_interactions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   partyId: uuid("party_id").notNull(),
   code: text("code").notNull(),
   /** meeting | call | letter | visit | email | event */

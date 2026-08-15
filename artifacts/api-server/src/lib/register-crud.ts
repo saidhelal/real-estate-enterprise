@@ -337,7 +337,14 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
         const inserted = (await tx.insert(t).values(values).returning()) as Row[];
         const created = inserted[0];
         await hooks.inCreateTx!(tx, created, req);
-        return created;
+        // Re-read, because the hook may have changed the row it was given —
+        // a derived total, a stamped deadline. Returning the pre-hook copy
+        // sent the caller a record that contradicted the database, and the
+        // screen then showed the number the user typed rather than the one
+        // the system computed. Same transaction, so this cannot see anyone
+        // else's write.
+        const [after] = (await tx.select().from(t).where(eq(t.id, created.id))) as Row[];
+        return after ?? created;
       });
     } else {
       const inserted = (await db.insert(t).values(values).returning()) as Row[];
@@ -416,15 +423,32 @@ export function registerCrud(router: IRouter, cfg: CrudConfig): void {
 
     let row = existing;
     if (hooks.inUpdateTx) {
-      row = await db.transaction(async (tx) => {
-        let updated = existing;
-        if (Object.keys(update).length) {
-          const rows = (await tx.update(t).set(update).where(eq(t.id, id)).returning()) as Row[];
-          updated = rows[0];
+      try {
+        row = await db.transaction(async (tx) => {
+          let updated = existing;
+          if (Object.keys(update).length) {
+            const rows = (await tx.update(t).set(update).where(eq(t.id, id)).returning()) as Row[];
+            updated = rows[0];
+          }
+          await hooks.inUpdateTx!(tx, updated, existing, req);
+          // Re-read for the same reason as the create path: the hook may have
+          // recomputed a derived column, and the response must be what was
+          // stored rather than what was written on the way in.
+          const [after] = (await tx.select().from(t).where(eq(t.id, id))) as Row[];
+          return after ?? updated;
+        });
+      } catch (err) {
+        // A refusal from inside the update transaction is a business answer,
+        // not a fault — and the transaction has already rolled the write back.
+        // Every other hook point honoured `CrudRefused`; this one turned it
+        // into a 500, which is why a module with a rule that can only be
+        // checked against the written row had nowhere safe to put it.
+        if (err instanceof CrudRefused) {
+          res.status(err.status).json({ error: err.message });
+          return;
         }
-        await hooks.inUpdateTx!(tx, updated, existing, req);
-        return updated;
-      });
+        throw err;
+      }
     } else if (Object.keys(update).length) {
       const updated = (await db.update(t).set(update).where(eq(t.id, id)).returning()) as Row[];
       row = updated[0];

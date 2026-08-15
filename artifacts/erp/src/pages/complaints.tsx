@@ -13,6 +13,7 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { Badge } from "@/components/ui/badge";
+import { SlaCell } from "@/components/customer-service/sla-cell";
 import { enumOptions, enumLabel } from "@/lib/enums";
 import { useLookupOptions } from "@/lib/lookups";
 import { useLanguage } from "@/lib/language-provider";
@@ -45,7 +46,16 @@ export default function ComplaintsPage() {
     { name: "description", label: "Description", labelAr: "الوصف", type: "textarea" },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: lk_work_item_status },
     { name: "assignedToUserId", label: "Assigned To (User ID)", labelAr: "مُسند إلى (معرّف المستخدم)" },
-    { name: "escalationLevel", label: "Escalation Level", labelAr: "مستوى التصعيد", type: "money" },
+    {
+      name: "escalationLevel",
+      label: "Escalation Level",
+      labelAr: "مستوى التصعيد",
+      // Raised by the SLA engine when a deadline passes, never typed: a level
+      // someone entered by hand would claim an escalation that never happened.
+      generated: true,
+      description: "Raised automatically when the agreed response time passes.",
+      descriptionAr: "يرتفع تلقائيًا عند تجاوز وقت الاستجابة المتفق عليه.",
+    },
     { name: "attachmentUrl", label: "Attachment URL", labelAr: "رابط المرفق" },
   ];
 
@@ -54,6 +64,17 @@ export default function ComplaintsPage() {
     { header: "Subject", headerAr: "الموضوع", render: (r) => r.subject },
     { header: "Category", headerAr: "الفئة", render: (r) => <Badge variant="secondary">{enumLabel(r.category, language)}</Badge> },
     { header: "Status", headerAr: "الحالة", render: (r) => <Badge variant="secondary">{enumLabel(r.status, language)}</Badge> },
+    {
+      header: "SLA",
+      headerAr: "مستوى الخدمة",
+      render: (r) => (
+        <SlaCell
+          dueAt={r.dueAt}
+          escalationLevel={r.escalationLevel}
+          closed={["resolved", "closed", "cancelled", "rejected"].includes(String(r.status))}
+        />
+      ),
+    },
   ];
 
   return (

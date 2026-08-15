@@ -16,7 +16,8 @@ export interface InventoryTransfer {
   fromWarehouseId?: string | null;
   /** @nullable */
   toWarehouseId?: string | null;
-  transferType: string;
+  /** @nullable */
+  transferType?: string | null;
   /** @nullable */
   totalValue?: string | null;
   status: string;

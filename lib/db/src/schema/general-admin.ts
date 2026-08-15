@@ -9,6 +9,7 @@ import {
   integer,
   index,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -24,7 +25,7 @@ const audit = {
 // internal memos (المراسلات). Archived items (الأرشيف) use status = "archived".
 export const correspondenceTable = pgTable("correspondence", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   direction: text("direction").notNull().default("incoming"),
   correspondenceType: text("correspondence_type").notNull().default("letter"),
@@ -84,7 +85,7 @@ export const correspondenceTable = pgTable("correspondence", {
  */
 export const correspondenceRecipientsTable = pgTable("correspondence_recipients", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   correspondenceId: uuid("correspondence_id").notNull(),
   employeeId: uuid("employee_id").notNull(),
   /** to | cc */
@@ -102,7 +103,7 @@ export type CorrespondenceRow = typeof correspondenceTable.$inferSelect;
 // and recorded minutes (محاضر الاجتماعات).
 export const meetingsTable = pgTable("meetings", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   meetingType: text("meeting_type").notNull().default("management"),
@@ -122,7 +123,7 @@ export type MeetingRow = typeof meetingsTable.$inferSelect;
 // Optionally linked to the meeting that issued them.
 export const administrativeDecisionsTable = pgTable("administrative_decisions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   decisionType: text("decision_type").notNull().default("management"),
@@ -142,7 +143,7 @@ export type AdministrativeDecisionRow = typeof administrativeDecisionsTable.$inf
 // (متابعة الإنجاز via status/progressPercent). Overdue rows drive alerts.
 export const administrativeTasksTable = pgTable("administrative_tasks", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   description: text("description"),
@@ -163,7 +164,7 @@ export type AdministrativeTaskRow = typeof administrativeTasksTable.$inferSelect
 // security (الأمن), internal maintenance (الصيانة الداخلية).
 export const generalServiceRequestsTable = pgTable("general_service_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   serviceType: text("service_type").notNull().default("cleaning"),
   title: text("title").notNull(),
@@ -215,7 +216,7 @@ export type GeneralServiceRequestRow = typeof generalServiceRequestsTable.$infer
 // fixed-assets register; assignedDriverId points at the drivers table.
 export const vehiclesTable = pgTable("vehicles", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   plateNumber: text("plate_number").notNull(),
   make: text("make"),
@@ -227,6 +228,18 @@ export const vehiclesTable = pgTable("vehicles", {
   status: text("status").notNull().default("available"),
   assignedDriverId: uuid("assigned_driver_id"),
   currentOdometer: numeric("current_odometer", { precision: 12, scale: 2 }),
+  currentOperatingHours: numeric("current_operating_hours", { precision: 12, scale: 2 }),
+  /**
+   * When this vehicle is next due, by use rather than by time.
+   *
+   * Both are per vehicle and both are nullable, on purpose: a service
+   * interval in kilometres belongs to the machine, not to the company, and a
+   * sedan and a generator do not share one. A null means this vehicle has no
+   * distance (or hours) rule, and the six-month rule alone governs it —
+   * which is the honest position when nobody has specified one.
+   */
+  serviceIntervalKm: numeric("service_interval_km", { precision: 12, scale: 2 }),
+  serviceIntervalHours: numeric("service_interval_hours", { precision: 12, scale: 2 }),
   registrationExpiry: date("registration_expiry"),
   insuranceExpiry: date("insurance_expiry"),
   notes: text("notes"),
@@ -237,7 +250,7 @@ export type VehicleRow = typeof vehiclesTable.$inferSelect;
 // Drivers (السائقون). Optionally linked to an HR employee via employeeId.
 export const driversTable = pgTable("drivers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id"),
   fullName: text("full_name").notNull(),
@@ -254,7 +267,7 @@ export type DriverRow = typeof driversTable.$inferSelect;
 // Vehicle missions / dispatch trips (المأموريات).
 export const vehicleMissionsTable = pgTable("vehicle_missions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   vehicleId: uuid("vehicle_id"),
   driverId: uuid("driver_id"),
@@ -274,7 +287,7 @@ export type VehicleMissionRow = typeof vehicleMissionsTable.$inferSelect;
 // Vehicle fuel & maintenance logs (الوقود والصيانة).
 export const vehicleMaintenanceLogsTable = pgTable("vehicle_maintenance_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   vehicleId: uuid("vehicle_id"),
   logType: text("log_type").notNull().default("fuel"),
@@ -295,7 +308,7 @@ export type VehicleMaintenanceLogRow = typeof vehicleMaintenanceLogsTable.$infer
 // (permitNumber/permitStatus) and the visit log (checkIn/checkOut).
 export const visitorLogsTable = pgTable("visitor_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   visitorName: text("visitor_name").notNull(),
   idNumber: text("id_number"),
@@ -317,7 +330,7 @@ export type VisitorLogRow = typeof visitorLogsTable.$inferSelect;
 // Internal circulars (التعاميم الداخلية).
 export const circularsTable = pgTable("circulars", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   circularNumber: text("circular_number"),
@@ -371,7 +384,7 @@ export const circularReceiptsTable = pgTable(
   "circular_receipts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     circularId: uuid("circular_id").notNull(),
     /** The login that must read it. */
     userId: uuid("user_id").notNull(),
@@ -395,7 +408,7 @@ export type CircularReceiptRow = typeof circularReceiptsTable.$inferSelect;
 // Regulations & policies (اللوائح والسياسات).
 export const policiesTable = pgTable("policies", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   policyType: text("policy_type").notNull().default("policy"),

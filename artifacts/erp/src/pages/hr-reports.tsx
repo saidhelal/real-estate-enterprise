@@ -26,6 +26,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
 import { enumLabel } from "@/lib/enums";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 
 type Group = { key?: string | null; count: number };
 
@@ -97,12 +99,72 @@ export default function HrReportsPage() {
 
   const noData = t("hr.no_data");
 
+
+  /**
+   * The whole page as one report.
+   *
+   * Five cards, five sections — the engine renders them in order with their
+   * headings, so the spreadsheet reads the way the screen does. The payroll
+   * and turnover cards are label/value pairs rather than groups, which the
+   * same two-column shape expresses without a second layout.
+   */
+  const buildReport = (): ReportExport => {
+    const groups = (rows: Group[], render: (k?: string | null) => string) =>
+      rows.map((r) => [render(r.key), r.count] as (string | number)[]);
+
+    return {
+      title: t("hr.reports"),
+      companyName: companies?.[0]?.name ?? "",
+      language: language === "ar" ? "ar" : "en",
+      meta: [],
+      columns: [{ header: t("common.name") }, { header: t("common.count"), numeric: true }],
+      sections: [
+        {
+          title: t("hr.report_employees_by_department"),
+          rows: groups((employeeReport?.byDepartment ?? []) as Group[], (k) => String(departmentName(k) ?? "-")),
+        },
+        {
+          title: t("hr.report_leave_by_status"),
+          rows: groups((leaveReport?.byStatus ?? []) as Group[], (k) => enumLabel(k, language)),
+        },
+        {
+          title: t("hr.report_attendance_by_status"),
+          rows: groups((attendanceReport?.byStatus ?? []) as Group[], (k) => enumLabel(k, language)),
+        },
+        {
+          title: t("hr.report_payroll"),
+          rows: [
+            [t("hr.total_earnings"), payrollReport?.totalEarnings ?? "0"],
+            [t("hr.total_deductions"), payrollReport?.totalDeductions ?? "0"],
+            [t("hr.total_net"), payrollReport?.totalNet ?? "0"],
+          ],
+        },
+        {
+          title: t("hr.report_turnover"),
+          rows: [
+            [t("hr.hires"), turnoverReport?.hires ?? 0],
+            [t("hr.terminations"), turnoverReport?.terminations ?? 0],
+            [t("hr.active_employees"), turnoverReport?.active ?? 0],
+          ],
+        },
+      ],
+    };
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <PageHeader
         title={t("hr.reports")}
         description={t("hr.reports_subtitle")}
         bordered={false}
+        actions={
+          <ReportExportButton
+            build={buildReport}
+            baseFilename={t("hr.reports")}
+            disabled={!enabled}
+            audit={{ reportType: "hr-reports", module: "employees", companyId }}
+          />
+        }
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

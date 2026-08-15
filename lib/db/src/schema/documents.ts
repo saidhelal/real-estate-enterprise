@@ -10,6 +10,7 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -44,7 +45,7 @@ const audit = {
 // (branchId/departmentId/projectId + ownerUserId) drive scoped visibility.
 export const documentsTable = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   // Auto-generated human document number (DOC-000001).
   documentNumber: text("document_number").notNull(),
   name: text("name").notNull(),
@@ -120,7 +121,7 @@ export type DocumentRow = typeof documentsTable.$inferSelect;
 // fileObjectPath (an internal /objects/... path).
 export const documentVersionsTable = pgTable("document_versions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   documentId: uuid("document_id").notNull(),
   versionNumber: integer("version_number").notNull().default(1),
   fileObjectPath: text("file_object_path").notNull(),
@@ -145,7 +146,7 @@ export type DocumentVersionRow = typeof documentVersionsTable.$inferSelect;
 // primary link) by moduleKey + sourceId.
 export const documentLinksTable = pgTable("document_links", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   documentId: uuid("document_id").notNull(),
   moduleKey: text("module_key").notNull(),
   sourceId: text("source_id").notNull(),
@@ -162,7 +163,7 @@ export type DocumentLinkRow = typeof documentLinksTable.$inferSelect;
 // One row per uploaded object path (version files, signatures, stamps).
 export const documentObjectOwnersTable = pgTable("document_object_owners", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id"),
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   objectPath: text("object_path").notNull().unique(),
   documentId: uuid("document_id"),
   // What this object is for: version | signature | stamp.
@@ -195,7 +196,7 @@ export const documentTransfersTable = pgTable(
   "document_transfers",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     documentId: uuid("document_id").notNull(),
     senderUserId: uuid("sender_user_id").notNull(),
     senderUserName: text("sender_user_name"),
@@ -225,7 +226,7 @@ export const documentTransferRecipientsTable = pgTable(
   "document_transfer_recipients",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     transferId: uuid("transfer_id").notNull(),
     documentId: uuid("document_id").notNull(),
     recipientUserId: uuid("recipient_user_id").notNull(),

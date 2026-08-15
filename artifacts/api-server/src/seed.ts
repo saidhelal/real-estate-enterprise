@@ -209,7 +209,7 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "purchaseContracts", label: "Purchase Contracts", extraActions: ["approve"] },
   { module: "purchaseContractAmendments", label: "Purchase Contract Amendments", extraActions: ["approve"] },
   // Procurement — Goods Receipt
-  { module: "goodsReceiptNotes", label: "Goods Receipt Notes", extraActions: ["inspect"] },
+  { module: "goodsReceiptNotes", label: "Goods Receipt Notes", extraActions: ["inspect", "accept"] },
   { module: "grnItems", label: "GRN Items" },
   // Procurement — Purchase Returns
   { module: "purchaseReturns", label: "Purchase Returns", extraActions: ["approve"] },
@@ -226,13 +226,13 @@ const MODULES: Array<{ module: string; label: string; extraActions?: string[] }>
   { module: "reorderLevels", label: "Reorder Levels" },
   // Inventory — Transactions
   { module: "stockOpeningBalances", label: "Stock Opening Balances" },
-  { module: "goodsReceipts", label: "Goods Receipts", extraActions: ["complete"] },
+  { module: "goodsReceipts", label: "Goods Receipts", extraActions: ["complete", "post"] },
   { module: "goodsReceiptItems", label: "Goods Receipt Items" },
-  { module: "goodsIssues", label: "Goods Issues", extraActions: ["complete"] },
+  { module: "goodsIssues", label: "Goods Issues", extraActions: ["complete", "post"] },
   { module: "goodsIssueItems", label: "Goods Issue Items" },
-  { module: "inventoryTransfers", label: "Inventory Transfers", extraActions: ["complete"] },
+  { module: "inventoryTransfers", label: "Inventory Transfers", extraActions: ["complete", "post"] },
   { module: "inventoryTransferItems", label: "Inventory Transfer Items" },
-  { module: "stockAdjustments", label: "Stock Adjustments", extraActions: ["approve"] },
+  { module: "stockAdjustments", label: "Stock Adjustments", extraActions: ["approve", "post"] },
   { module: "stockAdjustmentItems", label: "Stock Adjustment Items" },
   { module: "stockCounts", label: "Stock Counts", extraActions: ["complete"] },
   { module: "stockCountItems", label: "Stock Count Items" },

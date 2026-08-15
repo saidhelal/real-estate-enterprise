@@ -156,11 +156,27 @@ router.patch("/users/:id", requirePermission("users.update"), async (req, res): 
 
 router.delete("/users/:id", requirePermission("users.delete"), async (req, res): Promise<void> => {
   const id = String(req.params.id);
-  const [row] = await db
-    .update(usersTable)
-    .set({ isDeleted: true, isActive: false })
-    .where(and(eq(usersTable.id, id), eq(usersTable.isDeleted, false)))
-    .returning();
+
+  const row = await db.transaction(async (tx) => {
+    const [updated] = await tx
+      .update(usersTable)
+      .set({ isDeleted: true, isActive: false })
+      .where(and(eq(usersTable.id, id), eq(usersTable.isDeleted, false)))
+      .returning();
+    if (!updated) return null;
+
+    // The role assignments go with the account.
+    //
+    // `user_roles` is a link table — no soft-delete column, no history; it
+    // records that an assignment *exists*. Leaving the links behind meant a
+    // deleted user still held its roles, so restoring the account would have
+    // silently restored every permission it once had, without anyone granting
+    // them. Forty-two such links had accumulated. Re-granting a role to a
+    // restored user should be a deliberate act.
+    await tx.delete(userRolesTable).where(eq(userRolesTable.userId, id));
+    return updated;
+  });
+
   if (!row) {
     res.status(404).json({ error: "User not found" });
     return;

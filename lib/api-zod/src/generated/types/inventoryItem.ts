@@ -18,14 +18,16 @@ export interface InventoryItem {
   groupId?: string | null;
   /** @nullable */
   uomId?: string | null;
-  itemType: string;
+  /** @nullable */
+  itemType?: string | null;
   /** @nullable */
   barcode?: string | null;
   /** @nullable */
   costPrice?: string | null;
   /** @nullable */
   sellingPrice?: string | null;
-  valuationMethod: string;
+  /** @nullable */
+  valuationMethod?: string | null;
   /** @nullable */
   reorderPoint?: string | null;
   /** @nullable */

@@ -51,6 +51,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import {
   postAutomaticEntry,
@@ -62,10 +63,25 @@ import {
   type EntryLineInput,
 } from "../lib/posting";
 
+/**
+ * Run a lifecycle check and re-throw its refusal in the shape this module
+ * already reports. Both carry 409 and a sentence for the operator; only the
+ * error class differs, and the handlers here catch PostingError.
+ */
+function assertLifecycle(check: () => void): void {
+  try {
+    check();
+  } catch (err) {
+    if (err instanceof LifecycleError) throw new PostingError(err.status, err.message);
+    throw err;
+  }
+}
+
 const router: IRouter = Router();
 router.use(requireAuth);
 
 import { registerCrud, type CrudConfig } from "../lib/register-crud";
+import { applyLineScore, applyEvaluationScore } from "../lib/evaluation-score";
 
 // HR-local helper, unrelated to CRUD infrastructure — it sat next to the old
 // factory and stays here, used by the leave/attendance handlers below.
@@ -157,7 +173,26 @@ const resources: CrudConfig[] = [
     search: ["code", "evaluationPeriod"] },
   { path: "employee-evaluation-lines", table: employeeEvaluationLinesTable, module: "employeeEvaluationLines", entity: "employeeEvaluationLine",
     createBody: CreateEmployeeEvaluationLineBody, updateBody: UpdateEmployeeEvaluationLineBody, listResponse: ListEmployeeEvaluationLinesResponse,
-    search: ["description"] },
+    search: ["description"],
+    // A line's weighted score, and the evaluation's total, are arithmetic over
+    // the company's own weights — not numbers to be typed into an appraisal.
+    hooks: {
+      async inCreateTx(tx: Tx, row: Record<string, unknown>) {
+        await applyLineScore(tx, String(row.id));
+        if (row.evaluationId) await applyEvaluationScore(tx, String(row.evaluationId));
+      },
+      async inUpdateTx(tx: Tx, updated: Record<string, unknown>, existing: Record<string, unknown>) {
+        await applyLineScore(tx, String(updated.id));
+        // Both parents: moving a line between evaluations changes the total of
+        // the one it left as much as the one it joined.
+        for (const parent of new Set([existing.evaluationId, updated.evaluationId])) {
+          if (parent) await applyEvaluationScore(tx, String(parent));
+        }
+      },
+      async inDeleteTx(tx: Tx, row: Record<string, unknown>) {
+        if (row.evaluationId) await applyEvaluationScore(tx, String(row.evaluationId));
+      },
+    } },
 ];
 
 for (const cfg of resources) registerCrud(router, cfg);
@@ -212,8 +247,9 @@ router.post("/leave-requests/:id/approve", requirePermission("leaveRequests.appr
     const row = await db.transaction(async (tx) => {
       const lr = await loadForUpdate(tx, leaveRequestsTable, id);
       if (!lr) return null;
-      if (lr.status === "approved") throw new PostingError(409, "Leave request is already approved");
-      if (lr.status === "rejected") throw new PostingError(409, "Leave request was rejected");
+      // The lifecycle knows every state a leave request can be in, not just
+      // the two that were remembered here.
+      assertLifecycle(() => assertAction("leaveRequest", String(lr.status), "approved"));
       const [updated] = await tx
         .update(leaveRequestsTable)
         .set({ status: "approved", approvedBy: userId, approvedAt: new Date() })
@@ -263,7 +299,7 @@ router.post("/leave-requests/:id/reject", requirePermission("leaveRequests.rejec
     const row = await db.transaction(async (tx) => {
       const lr = await loadForUpdate(tx, leaveRequestsTable, id);
       if (!lr) return null;
-      if (lr.status === "approved") throw new PostingError(409, "Cannot reject an approved leave request");
+      assertLifecycle(() => assertAction("leaveRequest", String(lr.status), "rejected"));
       const [updated] = await tx
         .update(leaveRequestsTable)
         .set({ status: "rejected", rejectedReason: reason })
@@ -313,7 +349,7 @@ router.post("/payroll-runs/:id/post", requirePermission("payrollRuns.post"), asy
     const row = await db.transaction(async (tx) => {
       const run = await loadForUpdate(tx, payrollRunsTable, id);
       if (!run) return null;
-      if (run.status === "posted") throw new PostingError(409, "Payroll run is already posted");
+      assertLifecycle(() => assertAction("payrollRun", String(run.status), "posted"));
       if (run.status !== "approved") throw new PostingError(409, "Only an approved payroll run can be posted");
       const companyId = run.companyId as string;
       const earnings = String(run.totalEarnings ?? "0");
@@ -424,8 +460,7 @@ router.post("/employee-loans/:id/disburse", requirePermission("employeeLoans.dis
     const row = await db.transaction(async (tx) => {
       const loan = await loadForUpdate(tx, employeeLoansTable, id);
       if (!loan) return null;
-      if (loan.status === "disbursed") throw new PostingError(409, "Loan is already disbursed");
-      if (loan.status !== "approved") throw new PostingError(409, "Only an approved loan can be disbursed");
+      assertLifecycle(() => assertAction("employeeLoan", String(loan.status), "disbursed"));
       const entry = await postAutomaticEntry(tx, {
         companyId: loan.companyId as string,
         eventKey: "loan.disbursement",
@@ -491,8 +526,7 @@ router.post("/employee-advances/:id/pay", requirePermission("employeeAdvances.pa
     const row = await db.transaction(async (tx) => {
       const adv = await loadForUpdate(tx, employeeAdvancesTable, id);
       if (!adv) return null;
-      if (adv.status === "paid") throw new PostingError(409, "Advance is already paid");
-      if (adv.status !== "approved") throw new PostingError(409, "Only an approved advance can be paid");
+      assertLifecycle(() => assertAction("employeeAdvance", String(adv.status), "paid"));
       const entry = await postAutomaticEntry(tx, {
         companyId: adv.companyId as string,
         eventKey: "advance.payment",

@@ -6,6 +6,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -19,7 +20,7 @@ const audit = {
 
 export const customersTable = pgTable("customers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   fullName: text("full_name").notNull(),
@@ -47,7 +48,7 @@ export type CustomerRow = typeof customersTable.$inferSelect;
 
 export const customerContactsTable = pgTable("customer_contacts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   customerId: uuid("customer_id").notNull(),
   name: text("name").notNull(),
   relation: text("relation"),
@@ -59,7 +60,7 @@ export type CustomerContactRow = typeof customerContactsTable.$inferSelect;
 
 export const customerDocumentsTable = pgTable("customer_documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   customerId: uuid("customer_id").notNull(),
   docType: text("doc_type").notNull(),
   docNumber: text("doc_number"),
@@ -73,7 +74,7 @@ export type CustomerDocumentRow = typeof customerDocumentsTable.$inferSelect;
 
 export const customerNotesTable = pgTable("customer_notes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   customerId: uuid("customer_id").notNull(),
   note: text("note").notNull(),
   userId: uuid("user_id"),

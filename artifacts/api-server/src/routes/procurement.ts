@@ -48,7 +48,10 @@ import {
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
 import { requireAuth, requirePermission } from "../middleware/auth";
-import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
+import { postAutomaticEntry, reverseAutomaticEntriesForSource, PostingError } from "../lib/posting";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
+import { receiveAgainstOrder } from "../lib/procurement-match";
+import { applySupplierScore } from "../lib/evaluation-score";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -125,7 +128,18 @@ const resources: CrudConfig[] = [
   { path: "supplier-evaluations", table: supplierEvaluationsTable, module: "supplierEvaluations", entity: "supplierEvaluation",
     generatedCode: { documentType: "supplierEvaluation" },
     createBody: CreateSupplierEvaluationBody, updateBody: UpdateSupplierEvaluationBody, listResponse: ListSupplierEvaluationsResponse,
-    search: ["code", "period"] },
+    search: ["code", "period"],
+    // The overall score is the weighted combination of the four criteria. It
+    // is written only once the business has set the weighting; until then the
+    // engine declines to produce a number nobody chose.
+    hooks: {
+      async inCreateTx(tx: Tx, row: Record<string, unknown>) {
+        await applySupplierScore(tx, String(row.id));
+      },
+      async inUpdateTx(tx: Tx, updated: Record<string, unknown>) {
+        await applySupplierScore(tx, String(updated.id));
+      },
+    } },
   // Purchase requests
   { path: "purchase-requests", table: purchaseRequestsTable, module: "purchaseRequests", entity: "purchaseRequest",
     generatedCode: { documentType: "purchaseRequest" },
@@ -294,5 +308,74 @@ router.get("/procurement/dashboard", async (req, res): Promise<void> => {
     requestsByStatus,
   });
 });
+
+/**
+ * Accept a goods receipt note.
+ *
+ * Accepting is the moment the receipt counts against the order it fulfils:
+ * the order's lines learn what has arrived, and the order itself becomes
+ * partially or fully received. Until this runs a purchase order has no idea
+ * anything was delivered, which is how one used to sit at "approved" with
+ * every line already on the shelf.
+ */
+router.post(
+  "/goods-receipt-notes/:id/accept",
+  requirePermission("goodsReceiptNotes.accept", "goodsReceiptNotes.update"),
+  async (req, res): Promise<void> => {
+    const id = String(req.params.id);
+    try {
+      const result = await db.transaction(async (tx) => {
+        const [existing] = await tx
+          .select()
+          .from(goodsReceiptNotesTable)
+          .where(and(eq(goodsReceiptNotesTable.id, id), eq(goodsReceiptNotesTable.isDeleted, false)))
+          .for("update");
+        if (!existing) throw new PostingError(404, "Goods receipt note not found");
+
+        try {
+          assertAction("goodsReceiptNote", String(existing.status), "accepted");
+        } catch (err) {
+          if (err instanceof LifecycleError) throw new PostingError(err.status, err.message);
+          throw err;
+        }
+
+        // The order lines and the acceptance commit together: an accepted
+        // receipt whose order never learned of it is the state this fixes.
+        const matched = await receiveAgainstOrder(tx, id);
+        const [updated] = await tx
+          .update(goodsReceiptNotesTable)
+          .set({ status: "accepted" })
+          .where(eq(goodsReceiptNotesTable.id, id))
+          .returning();
+
+        return { existing, updated, ...matched };
+      });
+
+      await recordAudit(req, {
+        action: "accept",
+        entity: "goodsReceiptNote",
+        entityId: id,
+        oldValue: result.existing,
+        newValue: {
+          ...result.updated,
+          linesUpdated: result.linesUpdated,
+          ordersAdvanced: result.ordersAdvanced,
+        },
+      });
+      res.json({
+        id,
+        status: "accepted",
+        linesUpdated: result.linesUpdated,
+        ordersAdvanced: result.ordersAdvanced,
+      });
+    } catch (err) {
+      if (err instanceof PostingError) {
+        res.status(err.status).json({ error: err.message });
+        return;
+      }
+      throw err;
+    }
+  },
+);
 
 export default router;

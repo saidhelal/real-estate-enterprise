@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -20,7 +21,7 @@ const audit = {
 
 export const unitPriceListsTable = pgTable("unit_price_lists", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -33,7 +34,7 @@ export type UnitPriceListRow = typeof unitPriceListsTable.$inferSelect;
 
 export const unitPricingTable = pgTable("unit_pricing", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   priceListId: uuid("price_list_id").notNull(),
   unitId: uuid("unit_id").notNull(),
   price: numeric("price", { precision: 14, scale: 2 }).notNull().default("0"),
@@ -44,7 +45,7 @@ export type UnitPricingRow = typeof unitPricingTable.$inferSelect;
 
 export const unitDiscountsTable = pgTable("unit_discounts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),

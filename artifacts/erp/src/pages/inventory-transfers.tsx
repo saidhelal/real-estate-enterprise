@@ -4,6 +4,7 @@ import {
   useUpdateInventoryTransfer,
   useDeleteInventoryTransfer,
   getListInventoryTransfersQueryKey,
+  usePostInventoryTransfer,
   useListWarehouses,
   useListCompanies,
   type InventoryTransfer,
@@ -14,11 +15,13 @@ import {
   type ResourceColumn,
 } from "@/components/resource/resource-manager";
 import { useLanguage } from "@/lib/language-provider";
+import { PostDocumentAction } from "@/components/inventory/post-document-action";
 import { enumLabel, enumOptions } from "@/lib/enums";
 import { Badge } from "@/components/ui/badge";
 
 export default function InventoryTransfersPage() {
   const { language } = useLanguage();
+  const postMutation = usePostInventoryTransfer();
   const { data: companies } = useListCompanies();
   const companyId = companies?.[0]?.id;
   const { data: fromWarehouseData } = useListWarehouses({ pageSize: 200 });
@@ -66,6 +69,16 @@ export default function InventoryTransfersPage() {
       useUpdate={useUpdateInventoryTransfer}
       useDelete={useDeleteInventoryTransfer}
       getListQueryKey={getListInventoryTransfersQueryKey}
+      // Posting is what moves the stock; a draft that is never posted
+      // changes nothing in the warehouse. Once posted the document is
+      // locked, because the movements it wrote have already been read.
+      rowActions={(r) =>
+        r.status === "draft" ? (
+          <PostDocumentAction mutation={postMutation} id={r.id} queryKey={getListInventoryTransfersQueryKey()} />
+        ) : null
+      }
+      canEdit={(r) => r.status === "draft"}
+      canDelete={(r) => r.status === "draft"}
       companyId={companyId}
     />
   );

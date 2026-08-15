@@ -14,7 +14,8 @@ export interface StockCount {
   countDate?: string | null;
   /** @nullable */
   warehouseId?: string | null;
-  countType: string;
+  /** @nullable */
+  countType?: string | null;
   status: string;
   /** @nullable */
   countedBy?: string | null;

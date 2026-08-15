@@ -1,8 +1,9 @@
 import { pgTable, uuid, text, boolean, timestamp } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 export const branchesTable = pgTable("branches", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),

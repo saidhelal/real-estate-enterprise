@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, integer, boolean, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 import { sql } from "drizzle-orm";
 
 export const numberSequencesTable = pgTable("number_sequences", {
@@ -17,7 +18,14 @@ export const numberSequencesTable = pgTable("number_sequences", {
    * current year, so no in-flight sequence jumps on deploy.
    */
   periodYear: integer("period_year"),
-  companyId: uuid("company_id"),
+  /**
+   * The company this counter belongs to, or null for a global sequence.
+   *
+   * Nullable on purpose — a global counter is a real case — but when it does
+   * name a company, that company must exist: a sequence pointing at a deleted
+   * tenant issues numbers nobody can trace back to anything.
+   */
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   isActive: boolean("is_active").notNull().default(true),
   isDeleted: boolean("is_deleted").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

@@ -17,7 +17,8 @@ export interface InventoryLedger {
   locationId?: string | null;
   /** @nullable */
   transactionDate?: string | null;
-  transactionType: string;
+  /** @nullable */
+  transactionType?: string | null;
   /** @nullable */
   referenceType?: string | null;
   /** @nullable */

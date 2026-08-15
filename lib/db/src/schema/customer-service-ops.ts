@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 // Call Center log: inbound/outbound customer interactions handled by service staff.
 export const callLogsTable = pgTable("call_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   customerId: uuid("customer_id"),
   direction: text("direction").notNull().default("inbound"),
@@ -44,7 +45,7 @@ export type CallLogRow = typeof callLogsTable.$inferSelect;
 // request or complaint). Status + progressPercent provide execution follow-up.
 export const workOrdersTable = pgTable("work_orders", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   customerId: uuid("customer_id"),
   unitId: uuid("unit_id"),
@@ -69,7 +70,7 @@ export type WorkOrderRow = typeof workOrdersTable.$inferSelect;
 // (handover/complaint/maintenance/work order) or a general periodic survey.
 export const customerSatisfactionSurveysTable = pgTable("customer_satisfaction_surveys", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   customerId: uuid("customer_id"),
   channel: text("channel").notNull().default("general"),

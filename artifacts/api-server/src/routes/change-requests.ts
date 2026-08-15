@@ -8,6 +8,8 @@ import {
 } from "@workspace/api-zod";
 import { toChangeRequest } from "../lib/presenters";
 import { recordAudit } from "../lib/audit";
+import { canApprove } from "../lib/approval-authority";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { internalExecuteHeaders } from "../middleware/governance";
 import { notify } from "../lib/notify";
@@ -72,8 +74,27 @@ router.post(
       res.status(404).json({ error: "Change request not found" });
       return;
     }
-    if (row.status !== "pending") {
-      res.status(409).json({ error: `Change request already ${row.status}` });
+    // The lifecycle decides what a change request may become. The guard used
+    // to be an inline status check here and an identical one on reject.
+    try {
+      assertAction("changeRequest", row.status, "approved");
+    } catch (err) {
+      if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+      throw err;
+    }
+
+    // Who may approve this, and for how much. Both rules live in one module so
+    // no approval path can check one and forget the other. Refused here rather
+    // than after the status flip, so a blocked approval leaves no trace of
+    // having half-happened.
+    const authority = await canApprove({
+      requestedBy: row.requestedBy,
+      approverId: approver.id,
+      approverPermissions: approver.permissions,
+      payload: row.payload,
+    });
+    if (!authority.allowed) {
+      res.status(403).json({ error: authority.reason });
       return;
     }
 
@@ -193,9 +214,13 @@ router.post(
       res.status(404).json({ error: "Change request not found" });
       return;
     }
-    if (row.status !== "pending") {
-      res.status(409).json({ error: `Change request already ${row.status}` });
-      return;
+    // The lifecycle decides what a change request may become. The guard used
+    // to be an inline status check here and an identical one on reject.
+    try {
+      assertAction("changeRequest", row.status, "rejected");
+    } catch (err) {
+      if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+      throw err;
     }
 
     const [updated] = await db

@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -31,7 +32,7 @@ const money = { precision: 14, scale: 2 } as const;
 // off this table.
 export const legalContractsTable = pgTable("legal_contracts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   title: text("title").notNull(),
@@ -83,7 +84,7 @@ export type LegalContractRow = typeof legalContractsTable.$inferSelect;
 
 export const contractTemplatesTable = pgTable("contract_templates", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -105,7 +106,7 @@ export type ContractTemplateRow = typeof contractTemplatesTable.$inferSelect;
 
 export const contractVersionsTable = pgTable("contract_versions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalContractId: uuid("legal_contract_id"),
   versionNumber: integer("version_number").notNull().default(1),
   content: text("content"),
@@ -120,7 +121,7 @@ export type ContractVersionRow = typeof contractVersionsTable.$inferSelect;
 // sales "contract_amendments" and procurement "purchase_contract_amendments".
 export const legalContractAmendmentsTable = pgTable("legal_contract_amendments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalContractId: uuid("legal_contract_id"),
   code: text("code"),
   amendmentDate: date("amendment_date"),
@@ -138,7 +139,7 @@ export type LegalContractAmendmentRow = typeof legalContractAmendmentsTable.$inf
 
 export const contractAddendumsTable = pgTable("contract_addendums", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalContractId: uuid("legal_contract_id"),
   code: text("code"),
   title: text("title").notNull(),
@@ -151,7 +152,7 @@ export type ContractAddendumRow = typeof contractAddendumsTable.$inferSelect;
 
 export const legalContractAttachmentsTable = pgTable("legal_contract_attachments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalContractId: uuid("legal_contract_id"),
   title: text("title").notNull(),
   documentType: text("document_type").notNull().default("other"),
@@ -165,7 +166,7 @@ export type LegalContractAttachmentRow = typeof legalContractAttachmentsTable.$i
 // Immutable-ish lifecycle event log for a legal contract.
 export const contractEventsTable = pgTable("contract_events", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalContractId: uuid("legal_contract_id"),
   eventType: text("event_type").notNull().default("note"),
   description: text("description"),
@@ -181,7 +182,7 @@ export type ContractEventRow = typeof contractEventsTable.$inferSelect;
 
 export const lawFirmsTable = pgTable("law_firms", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -198,7 +199,7 @@ export type LawFirmRow = typeof lawFirmsTable.$inferSelect;
 
 export const legalAdvisorsTable = pgTable("legal_advisors", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -218,7 +219,7 @@ export type LegalAdvisorRow = typeof legalAdvisorsTable.$inferSelect;
 
 export const legalCasesTable = pgTable("legal_cases", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   title: text("title").notNull(),
@@ -254,7 +255,7 @@ export type LegalCaseRow = typeof legalCasesTable.$inferSelect;
 
 export const legalHearingsTable = pgTable("legal_hearings", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalCaseId: uuid("legal_case_id"),
   code: text("code"),
   hearingDate: date("hearing_date"),
@@ -272,7 +273,7 @@ export type LegalHearingRow = typeof legalHearingsTable.$inferSelect;
 
 export const legalClaimsTable = pgTable("legal_claims", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalCaseId: uuid("legal_case_id"),
   code: text("code").notNull(),
   // financial | contractual | damages | other
@@ -291,7 +292,7 @@ export type LegalClaimRow = typeof legalClaimsTable.$inferSelect;
 
 export const legalNoticesTable = pgTable("legal_notices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   // warning | demand | termination | legal | other
   noticeType: text("notice_type").notNull().default("legal"),
@@ -315,7 +316,7 @@ export type LegalNoticeRow = typeof legalNoticesTable.$inferSelect;
 // Generic junction linking a case to any other module record.
 export const legalCaseLinksTable = pgTable("legal_case_links", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   legalCaseId: uuid("legal_case_id"),
   // customer | contractor | supplier | employee | project | contract | reservation | other
   linkedModule: text("linked_module").notNull().default("other"),

@@ -39,6 +39,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 
@@ -397,7 +398,14 @@ router.post("/handover-approvals/:id/approve", requirePermission("handoverApprov
   const id = String(req.params.id);
   const [existing] = await db.select().from(handoverApprovalsTable).where(and(eq(handoverApprovalsTable.id, id), eq(handoverApprovalsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status === "approved") { res.status(409).json({ error: "Already approved" }); return; }
+  // A rejected approval is a decision, not a draft: the lifecycle refuses it
+  // here too, which the old single-state check let through.
+  try {
+    assertAction("handoverApproval", String(existing.status), "approved");
+  } catch (err) {
+    if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+    throw err;
+  }
   const today = new Date().toISOString().slice(0, 10);
   const [row] = await db.update(handoverApprovalsTable).set({ status: "approved", approvalDate: today }).where(eq(handoverApprovalsTable.id, id)).returning();
   await recordAudit(req, { action: "approve", entity: "handoverApproval", entityId: id, oldValue: existing, newValue: row });
@@ -408,7 +416,12 @@ router.post("/handover-approvals/:id/reject", requirePermission("handoverApprova
   const id = String(req.params.id);
   const [existing] = await db.select().from(handoverApprovalsTable).where(and(eq(handoverApprovalsTable.id, id), eq(handoverApprovalsTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status === "rejected") { res.status(409).json({ error: "Already rejected" }); return; }
+  try {
+    assertAction("handoverApproval", String(existing.status), "rejected");
+  } catch (err) {
+    if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+    throw err;
+  }
   const [row] = await db.update(handoverApprovalsTable).set({ status: "rejected" }).where(eq(handoverApprovalsTable.id, id)).returning();
   await recordAudit(req, { action: "reject", entity: "handoverApproval", entityId: id, oldValue: existing, newValue: row });
   res.json(GetHandoverApprovalResponse.parse(serializeRow(row)));

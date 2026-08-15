@@ -15,6 +15,7 @@ import {
 } from "@workspace/api-zod";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { notify } from "../lib/notify";
 import { serializeRow, qStr } from "../lib/serialize";
 
@@ -102,9 +103,14 @@ router.post(
       res.status(404).json({ error: "circular not found" });
       return;
     }
-    if (circular.status === "published") {
-      res.status(409).json({ error: "This announcement is already published." });
-      return;
+    try {
+      assertAction("circular", String(circular.status), "published");
+    } catch (err) {
+      if (err instanceof LifecycleError) {
+        res.status(err.status).json({ error: err.message });
+        return;
+      }
+      throw err;
     }
 
     const audience = await resolveAudience(circular as unknown as Record<string, unknown>);

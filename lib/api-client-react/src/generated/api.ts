@@ -520,6 +520,7 @@ import type {
   GoodsReceiptNoteListResponse,
   GoodsReceiptNoteUpdate,
   GoodsReceiptUpdate,
+  GrnAcceptResult,
   GrnItem,
   GrnItemInput,
   GrnItemListResponse,
@@ -1314,6 +1315,7 @@ import type {
   StockOpeningBalanceInput,
   StockOpeningBalanceListResponse,
   StockOpeningBalanceUpdate,
+  StockPostingResult,
   SubcontractorInsurance,
   SubcontractorInsuranceInput,
   SubcontractorInsuranceListResponse,
@@ -108021,5 +108023,355 @@ export const useLinkCorrespondenceDocument = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getLinkCorrespondenceDocumentMutationOptions(options));
+    }
+
+export const getPostGoodsReceiptUrl = (id: string,) => {
+
+
+
+
+  return `/api/goods-receipts/${id}/post`
+}
+
+/**
+ * @summary Post a goods receipt so the stock actually arrives in the warehouse
+ */
+export const postGoodsReceipt = async (id: string, options?: RequestInit): Promise<StockPostingResult> => {
+
+  return customFetch<StockPostingResult>(getPostGoodsReceiptUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getPostGoodsReceiptMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postGoodsReceipt>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postGoodsReceipt>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postGoodsReceipt'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postGoodsReceipt>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postGoodsReceipt(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostGoodsReceiptMutationResult = NonNullable<Awaited<ReturnType<typeof postGoodsReceipt>>>
+
+    export type PostGoodsReceiptMutationError = ErrorType<void>
+
+    /**
+ * @summary Post a goods receipt so the stock actually arrives in the warehouse
+ */
+export const usePostGoodsReceipt = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postGoodsReceipt>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postGoodsReceipt>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getPostGoodsReceiptMutationOptions(options));
+    }
+
+export const getPostGoodsIssueUrl = (id: string,) => {
+
+
+
+
+  return `/api/goods-issues/${id}/post`
+}
+
+/**
+ * @summary Post a goods issue so the stock actually leaves the warehouse
+ */
+export const postGoodsIssue = async (id: string, options?: RequestInit): Promise<StockPostingResult> => {
+
+  return customFetch<StockPostingResult>(getPostGoodsIssueUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getPostGoodsIssueMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postGoodsIssue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postGoodsIssue>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postGoodsIssue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postGoodsIssue>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postGoodsIssue(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostGoodsIssueMutationResult = NonNullable<Awaited<ReturnType<typeof postGoodsIssue>>>
+
+    export type PostGoodsIssueMutationError = ErrorType<void>
+
+    /**
+ * @summary Post a goods issue so the stock actually leaves the warehouse
+ */
+export const usePostGoodsIssue = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postGoodsIssue>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postGoodsIssue>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getPostGoodsIssueMutationOptions(options));
+    }
+
+export const getPostInventoryTransferUrl = (id: string,) => {
+
+
+
+
+  return `/api/inventory-transfers/${id}/post`
+}
+
+/**
+ * @summary Post a transfer so the stock moves between warehouses
+ */
+export const postInventoryTransfer = async (id: string, options?: RequestInit): Promise<StockPostingResult> => {
+
+  return customFetch<StockPostingResult>(getPostInventoryTransferUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getPostInventoryTransferMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postInventoryTransfer>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postInventoryTransfer>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postInventoryTransfer'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postInventoryTransfer>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postInventoryTransfer(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostInventoryTransferMutationResult = NonNullable<Awaited<ReturnType<typeof postInventoryTransfer>>>
+
+    export type PostInventoryTransferMutationError = ErrorType<void>
+
+    /**
+ * @summary Post a transfer so the stock moves between warehouses
+ */
+export const usePostInventoryTransfer = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postInventoryTransfer>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postInventoryTransfer>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getPostInventoryTransferMutationOptions(options));
+    }
+
+export const getPostStockAdjustmentUrl = (id: string,) => {
+
+
+
+
+  return `/api/stock-adjustments/${id}/post`
+}
+
+/**
+ * @summary Post an adjustment so the counted quantity becomes the stock on hand
+ */
+export const postStockAdjustment = async (id: string, options?: RequestInit): Promise<StockPostingResult> => {
+
+  return customFetch<StockPostingResult>(getPostStockAdjustmentUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getPostStockAdjustmentMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postStockAdjustment>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postStockAdjustment>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postStockAdjustment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postStockAdjustment>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postStockAdjustment(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostStockAdjustmentMutationResult = NonNullable<Awaited<ReturnType<typeof postStockAdjustment>>>
+
+    export type PostStockAdjustmentMutationError = ErrorType<void>
+
+    /**
+ * @summary Post an adjustment so the counted quantity becomes the stock on hand
+ */
+export const usePostStockAdjustment = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postStockAdjustment>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postStockAdjustment>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getPostStockAdjustmentMutationOptions(options));
+    }
+
+export const getAcceptGoodsReceiptNoteUrl = (id: string,) => {
+
+
+
+
+  return `/api/goods-receipt-notes/${id}/accept`
+}
+
+/**
+ * @summary Accept a goods receipt note and advance the purchase order behind it
+ */
+export const acceptGoodsReceiptNote = async (id: string, options?: RequestInit): Promise<GrnAcceptResult> => {
+
+  return customFetch<GrnAcceptResult>(getAcceptGoodsReceiptNoteUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getAcceptGoodsReceiptNoteMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof acceptGoodsReceiptNote>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof acceptGoodsReceiptNote>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['acceptGoodsReceiptNote'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof acceptGoodsReceiptNote>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  acceptGoodsReceiptNote(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AcceptGoodsReceiptNoteMutationResult = NonNullable<Awaited<ReturnType<typeof acceptGoodsReceiptNote>>>
+
+    export type AcceptGoodsReceiptNoteMutationError = ErrorType<void>
+
+    /**
+ * @summary Accept a goods receipt note and advance the purchase order behind it
+ */
+export const useAcceptGoodsReceiptNote = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof acceptGoodsReceiptNote>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof acceptGoodsReceiptNote>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getAcceptGoodsReceiptNoteMutationOptions(options));
     }
 

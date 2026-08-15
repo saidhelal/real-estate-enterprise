@@ -69,6 +69,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 import { recomputeUnitStatus, ensureLegalContractForContract } from "../lib/integrations";
 import { notify, recipientsByPermission } from "../lib/notify";
@@ -964,7 +965,14 @@ router.post("/reservations/:id/convert", requirePermission("contracts.create"), 
       .where(and(eq(reservationsTable.id, id), eq(reservationsTable.isDeleted, false)))
       .for("update");
     if (!reservation) { conflict = "404"; return null; }
-    if (reservation.status === "converted") { conflict = "Reservation already converted"; return null; }
+    // Cancelled and expired reservations are refused here too; the old check
+    // saw only the converted one.
+    try {
+      assertAction("reservation", String(reservation.status), "converted");
+    } catch (err) {
+      if (err instanceof LifecycleError) { conflict = err.message; return null; }
+      throw err;
+    }
     const [existingContract] = await tx
       .select()
       .from(contractsTable)

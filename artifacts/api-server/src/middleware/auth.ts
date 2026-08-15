@@ -17,8 +17,63 @@ declare global {
       authUser?: AuthUser;
       /** True when this request is served from the isolated demo sandbox. */
       testingMode?: boolean;
+      /**
+       * The caller as production knows them, resolved once per request.
+       * `null` means the cookie was missing or invalid — distinct from
+       * `undefined`, which means nobody has looked yet.
+       */
+      resolvedUser?: AuthUser | null;
     }
   }
+}
+
+/**
+ * Who is calling, according to production, resolved at most once per request.
+ *
+ * Three places need this — the tenant decision, governance, and requireAuth —
+ * and each used to look it up for itself, so a governed DELETE cost three
+ * identical queries and, worse, three chances to answer differently.
+ *
+ * Identity always lives in production, never in the sandbox: the lookup is
+ * pinned there so a request already routed to `demo` still authenticates
+ * against the real user table.
+ */
+export async function resolveRequestUser(req: Request): Promise<AuthUser | null> {
+  if (req.resolvedUser !== undefined) return req.resolvedUser;
+
+  const token = req.cookies?.[ACCESS_COOKIE];
+  const userId = token ? verifyAccessToken(token) : null;
+  const user = userId ? await runWithTenant("production", () => loadAuthUser(userId)) : null;
+  req.resolvedUser = user;
+  return user;
+}
+
+/**
+ * Choose the schema this request writes to, before anything writes.
+ *
+ * Testing Mode routes every database access to an isolated `demo` schema. That
+ * routing was established inside `requireAuth`, which is mounted per-router —
+ * so the governance middleware, which runs *ahead* of the routers, was outside
+ * the context and parked its change requests in `public`. A sandbox that
+ * writes real rows is not a sandbox: 256 change requests reached production
+ * from sessions that believed they were isolated.
+ *
+ * Mounted once, before governance, so everything downstream inherits one
+ * decision. The rule itself is unchanged — both the testing cookie and a real
+ * super-admin production identity are still required, which is what keeps this
+ * from being a way to get elevated permissions.
+ */
+export async function tenantContext(
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): Promise<void> {
+  const user = await resolveRequestUser(req);
+  const testing = !!user?.permissions.includes("*") && req.cookies?.[TESTING_COOKIE] === "1";
+  req.testingMode = testing;
+
+  if (testing) runWithTenant("demo", () => next());
+  else next();
 }
 
 /**
@@ -42,12 +97,12 @@ export async function requireAuth(
     return;
   }
 
-  // Identity always lives in production. Force the lookup onto the production
-  // tenant: several ERP sub-routers each apply their own router-level requireAuth
-  // and are mounted without a path prefix, so an earlier sibling router may have
-  // already wrapped this request's continuation in the demo tenant. Without this
-  // pin, loadAuthUser would query demo.users for a production user id and 401.
-  const user = await runWithTenant("production", () => loadAuthUser(userId));
+  // Identity always lives in production; `resolveRequestUser` pins the lookup
+  // there. Several ERP sub-routers each apply their own router-level
+  // requireAuth and are mounted without a path prefix, so by the time this runs
+  // the request may already be inside the demo tenant — without the pin,
+  // the lookup would query demo.users for a production user id and 401.
+  const user = await resolveRequestUser(req);
   if (!user) {
     res.status(401).json({ error: "User no longer exists" });
     return;
@@ -69,20 +124,17 @@ export async function requireAuth(
     }
   }
 
-  // Tenant routing: auth itself ran on production (loadAuthUser above). From here
-  // on, if the request is in Testing Mode every db access in the downstream
-  // handlers resolves to the isolated demo schema, captured in AsyncLocalStorage
-  // for the rest of the request; the default/no-cookie path stays on production.
+  // Which schema this request writes to was decided by `tenantContext`, before
+  // governance ran. Deciding it again here would be a second answer to the same
+  // question — and it was the *absence* of a decision upstream that let the
+  // sandbox write change requests into production.
   //
-  // Testing Mode is a super-admin-only capability. A request is routed to the
-  // isolated demo schema only when BOTH the testing cookie is present (set via
-  // /testing/enter) AND the real (production) user is a super admin. Gating on
-  // the production permission set — resolved above, before any elevation — means
-  // a non-super-admin can never reach the demo tenant or be elevated, even if
-  // they somehow hold a stale testing cookie. The /testing/* control plane
-  // enforces the same super-admin requirement on entering, exiting, resetting.
-  const isSuperAdmin = user.permissions.includes("*");
-  const testing = isSuperAdmin && req.cookies?.[TESTING_COOKIE] === "1";
+  // `testingMode` is only undefined if `tenantContext` was not mounted, which
+  // no path through this app allows; the same rule is applied as a fallback so
+  // a future mount order cannot silently drop the sandbox routing.
+  const testing =
+    req.testingMode ??
+    (user.permissions.includes("*") && req.cookies?.[TESTING_COOKIE] === "1");
   req.testingMode = testing;
 
   if (testing) {
@@ -93,11 +145,30 @@ export async function requireAuth(
     // Production role records and stored permissions are never modified, and
     // every db access in downstream handlers resolves to the demo schema.
     req.authUser = { ...user, permissions: ["*"] };
+    // The context is already `demo` when tenantContext ran; re-entering it is a
+    // no-op that also covers the fallback path above.
     runWithTenant("demo", () => next());
   } else {
     req.authUser = user;
     next();
   }
+}
+
+/**
+ * Does this user hold at least one of these permissions?
+ *
+ * The same question `requirePermission` asks, exposed for the handlers that
+ * cannot ask it as middleware — when which permission applies depends on the
+ * request body, middleware runs too early to know. One answer either way:
+ * `requirePermission` is this function plus a response.
+ */
+export function hasPermission(
+  user: Request["authUser"],
+  ...required: string[]
+): boolean {
+  if (!user) return false;
+  if (user.permissions.includes("*")) return true;
+  return required.some((perm) => user.permissions.includes(perm));
 }
 
 /**
@@ -113,12 +184,7 @@ export function requirePermission(...required: string[]) {
       res.status(401).json({ error: "Not authenticated" });
       return;
     }
-    if (user.permissions.includes("*")) {
-      next();
-      return;
-    }
-    const allowed = required.some((perm) => user.permissions.includes(perm));
-    if (!allowed) {
+    if (!hasPermission(user, ...required)) {
       res.status(403).json({ error: "You do not have permission to perform this action." });
       return;
     }

@@ -9,7 +9,7 @@
 export interface CsComplaintInput {
   companyId: string;
   customerId: string;
-  code: string;
+  code?: string;
   category?: string;
   subject: string;
   description?: string;

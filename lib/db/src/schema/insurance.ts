@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -26,7 +27,7 @@ const audit = {
 // employeeId references the HR employee by uuid (no hard FK, repo convention).
 export const employeeInsurancesTable = pgTable("employee_insurances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id").notNull(),
   insuranceNumber: text("insurance_number"),
@@ -48,7 +49,7 @@ export type EmployeeInsuranceRow = typeof employeeInsurancesTable.$inferSelect;
 // government forms with their submission lifecycle.
 export const insuranceFormsTable = pgTable("insurance_forms", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   formType: text("form_type").notNull().default("addition"),
   formNumber: text("form_number"),
@@ -64,7 +65,7 @@ export type InsuranceFormRow = typeof insuranceFormsTable.$inferSelect;
 // Employee additions to the insurance scheme (إضافات الموظفين).
 export const insuranceAdditionsTable = pgTable("insurance_additions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id").notNull(),
   employeeInsuranceId: uuid("employee_insurance_id"),
@@ -80,7 +81,7 @@ export type InsuranceAdditionRow = typeof insuranceAdditionsTable.$inferSelect;
 // Employee exclusions from the insurance scheme (استبعادات الموظفين).
 export const insuranceExclusionsTable = pgTable("insurance_exclusions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id").notNull(),
   employeeInsuranceId: uuid("employee_insurance_id"),
@@ -96,7 +97,7 @@ export type InsuranceExclusionRow = typeof insuranceExclusionsTable.$inferSelect
 // Insured-data amendments (تعديلات البيانات): salary/name/data corrections.
 export const insuranceDataAmendmentsTable = pgTable("insurance_data_amendments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id").notNull(),
   employeeInsuranceId: uuid("employee_insurance_id"),
@@ -117,7 +118,7 @@ export type InsuranceDataAmendmentRow = typeof insuranceDataAmendmentsTable.$inf
 // via event key `insurance.subscription` on create; reverses on delete.
 export const insuranceSubscriptionsTable = pgTable("insurance_subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   period: text("period").notNull(),
@@ -138,7 +139,7 @@ export type InsuranceSubscriptionRow = typeof insuranceSubscriptionsTable.$infer
 // Payment notices issued by the insurance authority (إشعارات السداد).
 export const insurancePaymentNoticesTable = pgTable("insurance_payment_notices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   noticeNumber: text("notice_number"),
   subscriptionId: uuid("subscription_id"),
@@ -155,7 +156,7 @@ export type InsurancePaymentNoticeRow = typeof insurancePaymentNoticesTable.$inf
 // Monthly reconciliations between expected and paid amounts (المطابقات الشهرية).
 export const insuranceReconciliationsTable = pgTable("insurance_reconciliations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   period: text("period").notNull(),
   expectedAmount: numeric("expected_amount", { precision: 14, scale: 2 }),
@@ -171,7 +172,7 @@ export type InsuranceReconciliationRow = typeof insuranceReconciliationsTable.$i
 // Outstanding arrears (المتأخرات).
 export const insuranceArrearsTable = pgTable("insurance_arrears", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   period: text("period"),
   subscriptionId: uuid("subscription_id"),
@@ -188,7 +189,7 @@ export type InsuranceArrearRow = typeof insuranceArrearsTable.$inferSelect;
 // `insurance.penalty` on create; reverses on delete.
 export const insurancePenaltiesTable = pgTable("insurance_penalties", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   penaltyType: text("penalty_type").notNull().default("late_payment"),
@@ -209,7 +210,7 @@ export type InsurancePenaltyRow = typeof insurancePenaltiesTable.$inferSelect;
 // Service termination records (إنهاء الخدمة).
 export const serviceTerminationsTable = pgTable("service_terminations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id").notNull(),
   employeeInsuranceId: uuid("employee_insurance_id"),
@@ -225,7 +226,7 @@ export type ServiceTerminationRow = typeof serviceTerminationsTable.$inferSelect
 // Insurance settlements on termination (التسويات التأمينية).
 export const insuranceSettlementsTable = pgTable("insurance_settlements", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   serviceTerminationId: uuid("service_termination_id"),
   employeeId: uuid("employee_id").notNull(),
@@ -240,7 +241,7 @@ export type InsuranceSettlementRow = typeof insuranceSettlementsTable.$inferSele
 // Final clearances (المخالصات).
 export const insuranceClearancesTable = pgTable("insurance_clearances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   employeeId: uuid("employee_id").notNull(),
   serviceTerminationId: uuid("service_termination_id"),
@@ -259,7 +260,7 @@ export type InsuranceClearanceRow = typeof insuranceClearancesTable.$inferSelect
 // الموقف التأميني للمقاولين). projectId references a project by uuid (no FK).
 export const subcontractorInsurancesTable = pgTable("subcontractor_insurances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractorName: text("contractor_name").notNull(),
   contractorType: text("contractor_type").notNull().default("subcontractor"),
@@ -277,7 +278,7 @@ export type SubcontractorInsuranceRow = typeof subcontractorInsurancesTable.$inf
 // Project labor insurance (عمالة المشروعات).
 export const projectLaborInsurancesTable = pgTable("project_labor_insurances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   laborName: text("labor_name").notNull(),
   projectId: uuid("project_id"),

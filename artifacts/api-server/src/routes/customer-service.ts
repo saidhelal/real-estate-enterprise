@@ -280,7 +280,45 @@ interface CrudSchema {
     | { success: false; error: { message: string } };
 }
 
-import { registerCrud } from "../lib/register-crud";
+import { registerCrud, type Row } from "../lib/register-crud";
+import type { Tx } from "../lib/posting";
+
+import { applyOnCreate, stampFirstResponse, type SlaSource } from "../lib/sla";
+
+/**
+ * SLA hooks for a governed register.
+ *
+ * Three registers are governed by an SLA and each needs exactly the same two
+ * things: a deadline stamped when the record is created, and the first
+ * response stamped when someone first works it. Written out three times these
+ * would be three chances to disagree, so the register declares only *which*
+ * kind of record it is — lib/sla.ts owns every rule about what that means.
+ */
+function slaHooks(source: SlaSource) {
+  return {
+    // In the insert transaction: a record must never be committed without the
+    // deadline it is being judged against.
+    async inCreateTx(tx: Tx, row: Row): Promise<void> {
+      const stamp = await applyOnCreate(tx, source, row as { companyId: string; priority?: unknown; createdAt?: unknown });
+      if (!stamp.slaPolicyId) return;
+      await tx
+        .update(TABLES[source])
+        .set({ slaPolicyId: stamp.slaPolicyId, dueAt: stamp.dueAt })
+        .where(eq(TABLES[source].id, row.id as string));
+    },
+    prepareUpdate(update: Row, existing: Row): void {
+      const stamp = stampFirstResponse(existing, update);
+      if (stamp) update.firstResponseAt = stamp.firstResponseAt;
+    },
+  };
+}
+
+const TABLES = {
+  complaint: complaintsTable,
+  supportTicket: supportTicketsTable,
+  maintenanceRequest: maintenanceRequestsTable,
+} as const;
+
 
 
 registerCrud(router, {
@@ -296,6 +334,7 @@ registerCrud(router, {
   createBody: CreateCsComplaintBody,
   getResp: GetCsComplaintResponse,
   updateBody: UpdateCsComplaintBody,
+  hooks: slaHooks("complaint"),
 });
 
 registerCrud(router, {
@@ -311,6 +350,7 @@ registerCrud(router, {
   createBody: CreateCsMaintenanceRequestBody,
   getResp: GetCsMaintenanceRequestResponse,
   updateBody: UpdateCsMaintenanceRequestBody,
+  hooks: slaHooks("maintenanceRequest"),
 });
 
 registerCrud(router, {
@@ -326,6 +366,7 @@ registerCrud(router, {
   createBody: CreateCsSupportTicketBody,
   getResp: GetCsSupportTicketResponse,
   updateBody: UpdateCsSupportTicketBody,
+  hooks: slaHooks("supportTicket"),
 });
 
 registerCrud(router, {

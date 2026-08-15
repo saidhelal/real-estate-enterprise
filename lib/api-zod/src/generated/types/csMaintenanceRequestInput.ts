@@ -9,7 +9,7 @@
 export interface CsMaintenanceRequestInput {
   companyId: string;
   customerId: string;
-  code: string;
+  code?: string;
   unitId?: string;
   contractId?: string;
   category?: string;

@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -20,7 +21,7 @@ const audit = {
 
 export const reservationsTable = pgTable("reservations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   unitId: uuid("unit_id").notNull(),
@@ -36,7 +37,7 @@ export type ReservationRow = typeof reservationsTable.$inferSelect;
 
 export const reservationPaymentsTable = pgTable("reservation_payments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   reservationId: uuid("reservation_id").notNull(),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
   paymentDate: date("payment_date").notNull(),
@@ -49,7 +50,7 @@ export type ReservationPaymentRow = typeof reservationPaymentsTable.$inferSelect
 
 export const contractsTable = pgTable("contracts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   reservationId: uuid("reservation_id"),
@@ -79,7 +80,7 @@ export type ContractRow = typeof contractsTable.$inferSelect;
 
 export const contractAmendmentsTable = pgTable("contract_amendments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   contractId: uuid("contract_id").notNull(),
   code: text("code"),
   amendmentDate: date("amendment_date").notNull(),
@@ -93,7 +94,7 @@ export type ContractAmendmentRow = typeof contractAmendmentsTable.$inferSelect;
 
 export const contractCancellationsTable = pgTable("contract_cancellations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   contractId: uuid("contract_id").notNull(),
   cancellationDate: date("cancellation_date").notNull(),
   reason: text("reason"),
@@ -106,7 +107,7 @@ export type ContractCancellationRow = typeof contractCancellationsTable.$inferSe
 
 export const contractNotesTable = pgTable("contract_notes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   contractId: uuid("contract_id").notNull(),
   note: text("note").notNull(),
   userId: uuid("user_id"),
@@ -116,7 +117,7 @@ export type ContractNoteRow = typeof contractNotesTable.$inferSelect;
 
 export const contractDocumentsTable = pgTable("contract_documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   contractId: uuid("contract_id").notNull(),
   docType: text("doc_type").notNull(),
   docNumber: text("doc_number"),
@@ -130,7 +131,7 @@ export type ContractDocumentRow = typeof contractDocumentsTable.$inferSelect;
 
 export const reservationNotesTable = pgTable("reservation_notes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   reservationId: uuid("reservation_id").notNull(),
   note: text("note").notNull(),
   userId: uuid("user_id"),
@@ -140,7 +141,7 @@ export type ReservationNoteRow = typeof reservationNotesTable.$inferSelect;
 
 export const reservationDocumentsTable = pgTable("reservation_documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   reservationId: uuid("reservation_id").notNull(),
   docType: text("doc_type").notNull(),
   docNumber: text("doc_number"),
@@ -154,7 +155,7 @@ export type ReservationDocumentRow = typeof reservationDocumentsTable.$inferSele
 
 export const unitTransfersTable = pgTable("unit_transfers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   contractId: uuid("contract_id").notNull(),
   fromUnitId: uuid("from_unit_id").notNull(),
   toUnitId: uuid("to_unit_id").notNull(),

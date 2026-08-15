@@ -21,6 +21,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 import { enumLabel } from "@/lib/enums";
 
 function num(v: string | null | undefined): number {
@@ -107,12 +109,54 @@ export default function ProcurementReportsPage() {
   const totalReceived = grns.reduce((acc, r) => acc + num(r.totalAmount), 0);
   const totalReturned = returns.reduce((acc, r) => acc + num(r.totalAmount), 0);
 
+
+  /**
+   * The report for the shared export engine.
+   *
+   * Two sections, because the screen shows two things: the supplier list and
+   * the totals across the cycle. The engine renders sections in order, so the
+   * spreadsheet reads the way the page does.
+   */
+  const buildReport = (): ReportExport => ({
+    title: t("proc.reports"),
+    companyName: companies?.[0]?.name ?? "",
+    language: language === "ar" ? "ar" : "en",
+    meta: [],
+    columns: [
+      { header: t("common.code") },
+      { header: t("proc.supplier") },
+      { header: t("common.status") },
+      { header: t("proc.purchase_volume"), numeric: true },
+    ],
+    sections: [
+      {
+        rows: supplierRows.map((r) => [r.code, r.name, enumLabel(r.status, language), r.volume]),
+        totalRow: [t("proc.total"), "", "", totalVolume],
+      },
+    ],
+    summary: [
+      { label: t("proc.count"), value: String(orders.length) },
+      { label: t("proc.total"), value: fmt(totalOrders) },
+      { label: t("proc.total_contract_value"), value: fmt(totalContractValue) },
+      { label: t("proc.total_received"), value: fmt(totalReceived) },
+      { label: t("proc.total_returned"), value: fmt(totalReturned) },
+    ],
+  });
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <PageHeader
         title={t("proc.reports")}
         description={t("proc.reports_subtitle")}
         bordered={false}
+        actions={
+          <ReportExportButton
+            build={buildReport}
+            baseFilename={t("proc.reports")}
+            disabled={supplierRows.length === 0}
+            audit={{ reportType: "procurement-reports", module: "suppliers", recordCount: supplierRows.length }}
+          />
+        }
       />
 
       <Card>

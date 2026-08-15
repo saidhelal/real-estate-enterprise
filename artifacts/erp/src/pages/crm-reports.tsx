@@ -13,6 +13,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 import { FileSpreadsheet } from "lucide-react";
 
 export default function CrmReportsPage() {
@@ -31,6 +33,33 @@ export default function CrmReportsPage() {
   const conversionCount = conversions?.total ?? conversions?.data.length ?? 0;
   const conversionRate = leadCount > 0 ? `${Math.round((conversionCount / leadCount) * 100)}%` : "—";
 
+
+  /**
+   * Five figures and what they are called.
+   *
+   * This page has no table — it is a set of KPIs — so the report is one
+   * section of label/value rows. The same engine, because a KPI sheet and a
+   * ledger listing are the same problem once the numbers are chosen.
+   */
+  const buildReport = (): ReportExport => ({
+    title: t("nav.crm_reports"),
+    companyName: "",
+    language: ar ? "ar" : "en",
+    meta: [],
+    columns: [{ header: t("bi.col_metric") }, { header: t("bi.col_value"), numeric: true }],
+    sections: [
+      {
+        rows: [
+          [ar ? "إجمالي العملاء المحتملين" : "Total Leads", leadCount],
+          [ar ? "التحويلات" : "Conversions", conversionCount],
+          [ar ? "نسبة التحويل" : "Conversion Rate", conversionRate],
+          [ar ? "الحجوزات" : "Reservations", reservationCount],
+          [ar ? "العقود" : "Contracts", contractCount],
+        ],
+      },
+    ],
+  });
+
   if (isLoading) return <p className="text-sm text-muted-foreground">{t("common.loading")}</p>;
 
   return (
@@ -39,6 +68,13 @@ export default function CrmReportsPage() {
         title={t("nav.crm_reports")}
         description={ar ? "مؤشرات الأداء الرئيسية للمبيعات والتحويل" : "Key performance indicators for sales and conversion"}
         bordered={false}
+        actions={
+          <ReportExportButton
+            build={buildReport}
+            baseFilename={t("nav.crm_reports")}
+            audit={{ reportType: "crm-reports", module: "leads", recordCount: leadCount }}
+          />
+        }
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">

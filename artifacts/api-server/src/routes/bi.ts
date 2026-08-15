@@ -44,6 +44,7 @@ import {
   GetFinancialAnalyticsResponse,
 } from "@workspace/api-zod";
 import { requireAuth, requirePermission } from "../middleware/auth";
+import { valuedPositions } from "../lib/stock";
 
 const router: IRouter = Router();
 router.use("/bi", requireAuth);
@@ -478,23 +479,13 @@ router.get("/bi/inventory-analytics", async (req, res): Promise<void> => {
   const itemScope: SQL[] = [eq(inventoryItemsTable.isDeleted, false)];
   if (company) itemScope.push(eq(inventoryItemsTable.companyId, company));
 
-  const companyClause = company ? sql`where company_id = ${company}` : sql``;
 
-  const [itemsRow, latest, valueByItem] = await Promise.all([
+  const [itemsRow, latest, valueByItem, itemRows] = await Promise.all([
     db.select({ value: count() }).from(inventoryItemsTable).where(and(...itemScope)),
-    db.execute(sql`
-      select i.id as id, i.name as name, i.name_ar as name_ar,
-             coalesce(i.reorder_point, 0) as reorder_point,
-             coalesce(l.bq, 0) as balance_quantity,
-             coalesce(l.bv, 0) as balance_value
-      from inventory_items i
-      left join (
-        select distinct on (item_id) item_id, balance_quantity as bq, balance_value as bv
-        from inventory_ledger ${companyClause}
-        order by item_id, transaction_date desc nulls last, created_at desc
-      ) l on l.item_id = i.id
-      where i.is_deleted = false ${company ? sql`and i.company_id = ${company}` : sql``}
-    `),
+    // Positions come from the valuation engine, the single owner of what
+    // stock is worth. This used its own latest-row-per-item query, which
+    // reported one warehouse for an item held in several.
+    valuedPositions(db, company ?? null),
     db
       .select({ key: inventoryItemsTable.id, label: inventoryItemsTable.name, value: moneySum(inventoryItemsTable.costPrice) })
       .from(inventoryItemsTable)
@@ -502,30 +493,50 @@ router.get("/bi/inventory-analytics", async (req, res): Promise<void> => {
       .groupBy(inventoryItemsTable.id, inventoryItemsTable.name)
       .orderBy(desc(moneySum(inventoryItemsTable.costPrice)))
       .limit(10),
+    // The reorder point and the name live on the item, not on a movement.
+    db
+      .select({
+        id: inventoryItemsTable.id,
+        name: inventoryItemsTable.name,
+        reorderPoint: inventoryItemsTable.reorderPoint,
+      })
+      .from(inventoryItemsTable)
+      .where(and(...itemScope)),
   ]);
 
-  const rows = (latest.rows ?? latest) as Array<{
-    id: string;
-    name: string;
-    name_ar: string;
-    reorder_point: string | number;
-    balance_quantity: string | number;
-    balance_value: string | number;
-  }>;
+  // One row per item and warehouse. An item in three warehouses is three
+  // positions, and the totals below add all of them.
+  const reorderPoints = new Map<string, number>();
+  const itemNames = new Map<string, string>();
+  for (const i of itemRows) {
+    reorderPoints.set(i.id, Number(i.reorderPoint ?? 0) || 0);
+    itemNames.set(i.id, i.name ?? "");
+  }
 
   let totalStockValue = 0;
   let lowStockCount = 0;
   let outOfStockCount = 0;
   const lowStockItems: Array<{ key: string; label: string; value: string }> = [];
-  for (const r of rows) {
-    const bq = Number(r.balance_quantity);
-    const bv = Number(r.balance_value);
-    const rp = Number(r.reorder_point);
-    totalStockValue += Number.isFinite(bv) ? bv : 0;
-    if (bq <= 0) outOfStockCount += 1;
-    if (rp > 0 && bq <= rp) {
+  // Quantities add across warehouses before being compared to the reorder
+  // point: an item is short when the company is short of it, not when one
+  // shelf happens to be empty.
+  const byItem = new Map<string, { quantity: number; value: number }>();
+  for (const p of latest) {
+    const acc = byItem.get(p.itemId) ?? { quantity: 0, value: 0 };
+    acc.quantity += p.quantity;
+    acc.value += p.value;
+    byItem.set(p.itemId, acc);
+  }
+
+  for (const [itemId, acc] of byItem) {
+    totalStockValue += acc.value;
+    if (acc.quantity <= 0) outOfStockCount += 1;
+    const rp = reorderPoints.get(itemId) ?? 0;
+    if (rp > 0 && acc.quantity <= rp) {
       lowStockCount += 1;
-      if (lowStockItems.length < 20) lowStockItems.push({ key: r.id, label: r.name, value: String(bq) });
+      if (lowStockItems.length < 20) {
+        lowStockItems.push({ key: itemId, label: itemNames.get(itemId) ?? "", value: String(acc.quantity) });
+      }
     }
   }
 
@@ -535,7 +546,7 @@ router.get("/bi/inventory-analytics", async (req, res): Promise<void> => {
       totalStockValue: totalStockValue.toFixed(2),
       lowStockCount,
       outOfStockCount,
-      valueByItem: valueByItem.map((r) => ({ key: r.key, label: r.label ?? null, value: r.value })),
+      valueByItem: valueByItem.map((r: { key: string; label: string | null; value: string }) => ({ key: r.key, label: r.label ?? null, value: r.value })),
       lowStockItems,
     }),
   );

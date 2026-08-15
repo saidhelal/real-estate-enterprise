@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -22,7 +23,7 @@ const audit = {
 // (complaints, maintenance requests, support tickets).
 export const slaPoliciesTable = pgTable("sla_policies", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -39,7 +40,7 @@ export type SlaPolicyRow = typeof slaPoliciesTable.$inferSelect;
 // when SLA targets are breached or manual escalation is required.
 export const serviceEscalationsTable = pgTable("service_escalations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   sourceType: text("source_type").notNull().default("complaint"),
   sourceId: uuid("source_id").notNull(),

@@ -15,6 +15,7 @@ import {
   numeric,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -28,7 +29,7 @@ const audit = {
 // Maintenance requests raised by a customer for an owned unit.
 export const maintenanceRequestsTable = pgTable("maintenance_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   customerId: uuid("customer_id").notNull(),
   customerUserId: uuid("customer_user_id"),
   code: text("code").notNull(),
@@ -54,7 +55,7 @@ export type MaintenanceRequestRow = typeof maintenanceRequestsTable.$inferSelect
 // General complaints raised by a customer.
 export const complaintsTable = pgTable("complaints", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   customerId: uuid("customer_id").notNull(),
   customerUserId: uuid("customer_user_id"),
   code: text("code").notNull(),
@@ -76,7 +77,7 @@ export type ComplaintRow = typeof complaintsTable.$inferSelect;
 // Support tickets (threaded via support_ticket_messages).
 export const supportTicketsTable = pgTable("support_tickets", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   customerId: uuid("customer_id").notNull(),
   customerUserId: uuid("customer_user_id"),
   code: text("code").notNull(),
@@ -97,7 +98,7 @@ export type SupportTicketRow = typeof supportTicketsTable.$inferSelect;
 
 export const supportTicketMessagesTable = pgTable("support_ticket_messages", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   ticketId: uuid("ticket_id").notNull(),
   customerId: uuid("customer_id").notNull(),
   // "customer" or "staff"

@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -25,7 +26,7 @@ const audit = {
 
 export const supplierCategoriesTable = pgTable("supplier_categories", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -37,7 +38,7 @@ export type SupplierCategoryRow = typeof supplierCategoriesTable.$inferSelect;
 
 export const suppliersTable = pgTable("suppliers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -61,7 +62,7 @@ export type SupplierRow = typeof suppliersTable.$inferSelect;
 
 export const supplierContactsTable = pgTable("supplier_contacts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   supplierId: uuid("supplier_id"),
   name: text("name").notNull(),
   position: text("position"),
@@ -75,7 +76,7 @@ export type SupplierContactRow = typeof supplierContactsTable.$inferSelect;
 
 export const supplierEvaluationsTable = pgTable("supplier_evaluations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   supplierId: uuid("supplier_id"),
   evaluationDate: date("evaluation_date"),
@@ -84,6 +85,15 @@ export const supplierEvaluationsTable = pgTable("supplier_evaluations", {
   deliveryScore: numeric("delivery_score"),
   priceScore: numeric("price_score"),
   serviceScore: numeric("service_score"),
+  /**
+   * Safety, documents and compliance — the fifth evaluation criterion.
+   *
+   * The register carried four scores while the approved weighting names five.
+   * Without this column the tenth of the score it is worth had nowhere to be
+   * recorded, and an overall score computed from four of five criteria would
+   * be wrong by exactly the weight of the missing one.
+   */
+  complianceScore: numeric("compliance_score"),
   overallScore: numeric("overall_score"),
   evaluatedBy: text("evaluated_by"),
   status: text("status").notNull().default("draft"),
@@ -98,7 +108,7 @@ export type SupplierEvaluationRow = typeof supplierEvaluationsTable.$inferSelect
 
 export const purchaseRequestsTable = pgTable("purchase_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar").notNull(),
@@ -118,7 +128,7 @@ export type PurchaseRequestRow = typeof purchaseRequestsTable.$inferSelect;
 
 export const purchaseRequestItemsTable = pgTable("purchase_request_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   requestId: uuid("request_id"),
   itemCode: text("item_code"),
   description: text("description"),
@@ -138,7 +148,7 @@ export type PurchaseRequestItemRow = typeof purchaseRequestItemsTable.$inferSele
 
 export const rfqsTable = pgTable("rfqs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar").notNull(),
@@ -153,7 +163,7 @@ export type RfqRow = typeof rfqsTable.$inferSelect;
 
 export const rfqItemsTable = pgTable("rfq_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   rfqId: uuid("rfq_id"),
   description: text("description"),
   descriptionAr: text("description_ar"),
@@ -166,7 +176,7 @@ export type RfqItemRow = typeof rfqItemsTable.$inferSelect;
 
 export const rfqSuppliersTable = pgTable("rfq_suppliers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   rfqId: uuid("rfq_id"),
   supplierId: uuid("supplier_id"),
   invitedDate: date("invited_date"),
@@ -182,7 +192,7 @@ export type RfqSupplierRow = typeof rfqSuppliersTable.$inferSelect;
 
 export const supplierQuotationsTable = pgTable("supplier_quotations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   rfqId: uuid("rfq_id"),
   supplierId: uuid("supplier_id"),
@@ -200,7 +210,7 @@ export type SupplierQuotationRow = typeof supplierQuotationsTable.$inferSelect;
 
 export const quotationItemsTable = pgTable("quotation_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   quotationId: uuid("quotation_id"),
   description: text("description"),
   unit: text("unit"),
@@ -218,7 +228,7 @@ export type QuotationItemRow = typeof quotationItemsTable.$inferSelect;
 
 export const purchaseOrdersTable = pgTable("purchase_orders", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   supplierId: uuid("supplier_id"),
   quotationId: uuid("quotation_id"),
@@ -236,7 +246,7 @@ export type PurchaseOrderRow = typeof purchaseOrdersTable.$inferSelect;
 
 export const purchaseOrderItemsTable = pgTable("purchase_order_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   poId: uuid("po_id"),
   description: text("description"),
   descriptionAr: text("description_ar"),
@@ -256,7 +266,7 @@ export type PurchaseOrderItemRow = typeof purchaseOrderItemsTable.$inferSelect;
 
 export const purchaseContractsTable = pgTable("purchase_contracts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar").notNull(),
@@ -275,7 +285,7 @@ export type PurchaseContractRow = typeof purchaseContractsTable.$inferSelect;
 
 export const purchaseContractAmendmentsTable = pgTable("purchase_contract_amendments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id"),
   amendmentNumber: text("amendment_number"),
@@ -293,7 +303,7 @@ export type PurchaseContractAmendmentRow = typeof purchaseContractAmendmentsTabl
 
 export const goodsReceiptNotesTable = pgTable("goods_receipt_notes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   poId: uuid("po_id"),
   supplierId: uuid("supplier_id"),
@@ -311,7 +321,7 @@ export type GoodsReceiptNoteRow = typeof goodsReceiptNotesTable.$inferSelect;
 
 export const grnItemsTable = pgTable("grn_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   grnId: uuid("grn_id"),
   poItemId: uuid("po_item_id"),
   description: text("description"),
@@ -333,7 +343,7 @@ export type GrnItemRow = typeof grnItemsTable.$inferSelect;
 
 export const purchaseReturnsTable = pgTable("purchase_returns", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   grnId: uuid("grn_id"),
   supplierId: uuid("supplier_id"),
@@ -349,7 +359,7 @@ export type PurchaseReturnRow = typeof purchaseReturnsTable.$inferSelect;
 
 export const purchaseReturnItemsTable = pgTable("purchase_return_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   returnId: uuid("return_id"),
   description: text("description"),
   unit: text("unit"),
@@ -368,7 +378,7 @@ export type PurchaseReturnItemRow = typeof purchaseReturnItemsTable.$inferSelect
 
 export const procurementApprovalsTable = pgTable("procurement_approvals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   entityType: text("entity_type"),
   entityId: uuid("entity_id"),

@@ -8,7 +8,7 @@
 
 export interface DepartmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   parentId?: string;

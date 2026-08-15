@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 
 export const unitTypesTable = pgTable("unit_types", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -32,7 +33,7 @@ export type UnitTypeRow = typeof unitTypesTable.$inferSelect;
 
 export const unitStatusesTable = pgTable("unit_statuses", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -43,7 +44,7 @@ export type UnitStatusRow = typeof unitStatusesTable.$inferSelect;
 
 export const projectsTable = pgTable("projects", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -59,7 +60,7 @@ export type ProjectRow = typeof projectsTable.$inferSelect;
 
 export const phasesTable = pgTable("phases", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   projectId: uuid("project_id").notNull(),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -73,7 +74,7 @@ export type PhaseRow = typeof phasesTable.$inferSelect;
 
 export const buildingsTable = pgTable("buildings", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   projectId: uuid("project_id").notNull(),
   phaseId: uuid("phase_id"),
   code: text("code").notNull(),
@@ -86,7 +87,7 @@ export type BuildingRow = typeof buildingsTable.$inferSelect;
 
 export const floorsTable = pgTable("floors", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   projectId: uuid("project_id"),
   phaseId: uuid("phase_id"),
   buildingId: uuid("building_id").notNull(),
@@ -100,7 +101,7 @@ export type FloorRow = typeof floorsTable.$inferSelect;
 
 export const unitsTable = pgTable("units", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   projectId: uuid("project_id").notNull(),
   phaseId: uuid("phase_id"),

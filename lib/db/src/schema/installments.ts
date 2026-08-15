@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 
 export const installmentPlansTable = pgTable("installment_plans", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   contractId: uuid("contract_id").notNull(),
   totalAmount: numeric("total_amount", { precision: 14, scale: 2 }).notNull().default("0"),
@@ -36,7 +37,7 @@ export type InstallmentPlanRow = typeof installmentPlansTable.$inferSelect;
 
 export const installmentSchedulesTable = pgTable("installment_schedules", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   planId: uuid("plan_id").notNull(),
   installmentNumber: integer("installment_number").notNull().default(1),
   dueDate: date("due_date").notNull(),
@@ -49,7 +50,7 @@ export type InstallmentScheduleRow = typeof installmentSchedulesTable.$inferSele
 
 export const installmentCollectionsTable = pgTable("installment_collections", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   scheduleId: uuid("schedule_id").notNull(),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
   collectionDate: date("collection_date").notNull(),
@@ -62,7 +63,7 @@ export type InstallmentCollectionRow = typeof installmentCollectionsTable.$infer
 
 export const penaltyRulesTable = pgTable("penalty_rules", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),

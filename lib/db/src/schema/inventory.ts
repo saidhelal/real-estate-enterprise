@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -20,7 +21,7 @@ const audit = {
 
 export const warehousesTable = pgTable("warehouses", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -36,7 +37,7 @@ export type WarehouseRow = typeof warehousesTable.$inferSelect;
 
 export const warehouseLocationsTable = pgTable("warehouse_locations", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -53,7 +54,7 @@ export type WarehouseLocationRow = typeof warehouseLocationsTable.$inferSelect;
 
 export const itemCategoriesTable = pgTable("item_categories", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -66,7 +67,7 @@ export type ItemCategoryRow = typeof itemCategoriesTable.$inferSelect;
 
 export const itemGroupsTable = pgTable("item_groups", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -79,7 +80,7 @@ export type ItemGroupRow = typeof itemGroupsTable.$inferSelect;
 
 export const unitsOfMeasureTable = pgTable("units_of_measure", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -93,7 +94,7 @@ export type UnitOfMeasureRow = typeof unitsOfMeasureTable.$inferSelect;
 
 export const inventoryItemsTable = pgTable("inventory_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -116,7 +117,7 @@ export type InventoryItemRow = typeof inventoryItemsTable.$inferSelect;
 
 export const reorderLevelsTable = pgTable("reorder_levels", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   itemId: uuid("item_id"),
   warehouseId: uuid("warehouse_id"),
   minQuantity: numeric("min_quantity"),
@@ -132,7 +133,7 @@ export type ReorderLevelRow = typeof reorderLevelsTable.$inferSelect;
 
 export const stockOpeningBalancesTable = pgTable("stock_opening_balances", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   itemId: uuid("item_id"),
   warehouseId: uuid("warehouse_id"),
@@ -150,7 +151,7 @@ export type StockOpeningBalanceRow = typeof stockOpeningBalancesTable.$inferSele
 
 export const goodsReceiptsTable = pgTable("goods_receipts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   receiptDate: date("receipt_date"),
   receiptType: text("receipt_type"),
@@ -168,7 +169,7 @@ export type GoodsReceiptRow = typeof goodsReceiptsTable.$inferSelect;
 
 export const goodsReceiptItemsTable = pgTable("goods_receipt_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   receiptId: uuid("receipt_id"),
   itemId: uuid("item_id"),
   locationId: uuid("location_id"),
@@ -184,7 +185,7 @@ export type GoodsReceiptItemRow = typeof goodsReceiptItemsTable.$inferSelect;
 
 export const goodsIssuesTable = pgTable("goods_issues", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   issueDate: date("issue_date"),
   issueType: text("issue_type"),
@@ -201,7 +202,7 @@ export type GoodsIssueRow = typeof goodsIssuesTable.$inferSelect;
 
 export const goodsIssueItemsTable = pgTable("goods_issue_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   issueId: uuid("issue_id"),
   itemId: uuid("item_id"),
   locationId: uuid("location_id"),
@@ -216,7 +217,7 @@ export type GoodsIssueItemRow = typeof goodsIssueItemsTable.$inferSelect;
 
 export const inventoryTransfersTable = pgTable("inventory_transfers", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   transferDate: date("transfer_date"),
   fromWarehouseId: uuid("from_warehouse_id"),
@@ -233,7 +234,7 @@ export type InventoryTransferRow = typeof inventoryTransfersTable.$inferSelect;
 
 export const inventoryTransferItemsTable = pgTable("inventory_transfer_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   transferId: uuid("transfer_id"),
   itemId: uuid("item_id"),
   fromLocationId: uuid("from_location_id"),
@@ -248,7 +249,7 @@ export type InventoryTransferItemRow = typeof inventoryTransferItemsTable.$infer
 
 export const stockAdjustmentsTable = pgTable("stock_adjustments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   adjustmentDate: date("adjustment_date"),
   warehouseId: uuid("warehouse_id"),
@@ -264,7 +265,7 @@ export type StockAdjustmentRow = typeof stockAdjustmentsTable.$inferSelect;
 
 export const stockAdjustmentItemsTable = pgTable("stock_adjustment_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   adjustmentId: uuid("adjustment_id"),
   itemId: uuid("item_id"),
   locationId: uuid("location_id"),
@@ -280,7 +281,7 @@ export type StockAdjustmentItemRow = typeof stockAdjustmentItemsTable.$inferSele
 
 export const stockCountsTable = pgTable("stock_counts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   countDate: date("count_date"),
   warehouseId: uuid("warehouse_id"),
@@ -295,7 +296,7 @@ export type StockCountRow = typeof stockCountsTable.$inferSelect;
 
 export const stockCountItemsTable = pgTable("stock_count_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   countId: uuid("count_id"),
   itemId: uuid("item_id"),
   locationId: uuid("location_id"),
@@ -311,7 +312,7 @@ export type StockCountItemRow = typeof stockCountItemsTable.$inferSelect;
 
 export const inventoryLedgerTable = pgTable("inventory_ledger", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   itemId: uuid("item_id"),
   warehouseId: uuid("warehouse_id"),
   locationId: uuid("location_id"),

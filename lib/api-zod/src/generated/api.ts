@@ -8365,9 +8365,14 @@ export const GetAccountingDashboardResponse = zod.object({
 /**
  * @summary Record an audit log entry for an accounting report export (Excel/PDF)
  */
+
+
+
 export const RecordReportExportBody = zod.object({
-  "reportType": zod.enum(['trial-balance', 'general-ledger', 'balance-sheet', 'income-statement', 'cash-flow', 'ar-aging', 'ap-aging', 'tax']),
+  "reportType": zod.string().min(1).describe('What was exported. This was an enum of the eight accounting reports, which meant every other export in the system left no trace — the register screens export the same figures and were simply not recorded. It is now the report or resource key, and `module` says which part of the system it belongs to.'),
   "format": zod.enum(['excel', 'pdf']),
+  "module": zod.string().nullish().describe('The module owning the exported data, e.g. `units`. Its `.view` permission is what authorises the export; absent, the request is treated as an accounting report and needs accountingReports.export.'),
+  "recordCount": zod.number().nullish().describe('How many rows left the system, which is the part that matters in a review.'),
   "companyId": zod.string().nullish(),
   "fromDate": zod.string().nullish(),
   "toDate": zod.string().nullish(),
@@ -15014,7 +15019,7 @@ export const ListWarehousesResponse = zod.object({
   "name": zod.string(),
   "nameAr": zod.string(),
   "branchId": zod.string().nullish(),
-  "warehouseType": zod.string(),
+  "warehouseType": zod.string().nullish(),
   "address": zod.string().nullish(),
   "manager": zod.string().nullish(),
   "phone": zod.string().nullish(),
@@ -15033,7 +15038,7 @@ export const ListWarehousesResponse = zod.object({
  */
 export const CreateWarehouseBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "branchId": zod.string().optional(),
@@ -15059,7 +15064,7 @@ export const GetWarehouseResponse = zod.object({
   "name": zod.string(),
   "nameAr": zod.string(),
   "branchId": zod.string().nullish(),
-  "warehouseType": zod.string(),
+  "warehouseType": zod.string().nullish(),
   "address": zod.string().nullish(),
   "manager": zod.string().nullish(),
   "phone": zod.string().nullish(),
@@ -15095,7 +15100,7 @@ export const UpdateWarehouseResponse = zod.object({
   "name": zod.string(),
   "nameAr": zod.string(),
   "branchId": zod.string().nullish(),
-  "warehouseType": zod.string(),
+  "warehouseType": zod.string().nullish(),
   "address": zod.string().nullish(),
   "manager": zod.string().nullish(),
   "phone": zod.string().nullish(),
@@ -15155,7 +15160,7 @@ export const ListWarehouseLocationsResponse = zod.object({
  */
 export const CreateWarehouseLocationBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "warehouseId": zod.string().optional(),
@@ -15490,7 +15495,7 @@ export const ListUnitOfMeasuresResponse = zod.object({
  */
 export const CreateUnitOfMeasureBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "symbol": zod.string().optional(),
@@ -15586,11 +15591,11 @@ export const ListInventoryItemsResponse = zod.object({
   "categoryId": zod.string().nullish(),
   "groupId": zod.string().nullish(),
   "uomId": zod.string().nullish(),
-  "itemType": zod.string(),
+  "itemType": zod.string().nullish(),
   "barcode": zod.string().nullish(),
   "costPrice": zod.string().nullish(),
   "sellingPrice": zod.string().nullish(),
-  "valuationMethod": zod.string(),
+  "valuationMethod": zod.string().nullish(),
   "reorderPoint": zod.string().nullish(),
   "minStock": zod.string().nullish(),
   "maxStock": zod.string().nullish(),
@@ -15645,11 +15650,11 @@ export const GetInventoryItemResponse = zod.object({
   "categoryId": zod.string().nullish(),
   "groupId": zod.string().nullish(),
   "uomId": zod.string().nullish(),
-  "itemType": zod.string(),
+  "itemType": zod.string().nullish(),
   "barcode": zod.string().nullish(),
   "costPrice": zod.string().nullish(),
   "sellingPrice": zod.string().nullish(),
-  "valuationMethod": zod.string(),
+  "valuationMethod": zod.string().nullish(),
   "reorderPoint": zod.string().nullish(),
   "minStock": zod.string().nullish(),
   "maxStock": zod.string().nullish(),
@@ -15695,11 +15700,11 @@ export const UpdateInventoryItemResponse = zod.object({
   "categoryId": zod.string().nullish(),
   "groupId": zod.string().nullish(),
   "uomId": zod.string().nullish(),
-  "itemType": zod.string(),
+  "itemType": zod.string().nullish(),
   "barcode": zod.string().nullish(),
   "costPrice": zod.string().nullish(),
   "sellingPrice": zod.string().nullish(),
-  "valuationMethod": zod.string(),
+  "valuationMethod": zod.string().nullish(),
   "reorderPoint": zod.string().nullish(),
   "minStock": zod.string().nullish(),
   "maxStock": zod.string().nullish(),
@@ -15990,7 +15995,7 @@ export const ListGoodsReceiptsResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "receiptDate": zod.string().nullish(),
-  "receiptType": zod.string(),
+  "receiptType": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
   "supplierId": zod.string().nullish(),
   "poId": zod.string().nullish(),
@@ -16039,7 +16044,7 @@ export const GetGoodsReceiptResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "receiptDate": zod.string().nullish(),
-  "receiptType": zod.string(),
+  "receiptType": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
   "supplierId": zod.string().nullish(),
   "poId": zod.string().nullish(),
@@ -16079,7 +16084,7 @@ export const UpdateGoodsReceiptResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "receiptDate": zod.string().nullish(),
-  "receiptType": zod.string(),
+  "receiptType": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
   "supplierId": zod.string().nullish(),
   "poId": zod.string().nullish(),
@@ -16242,7 +16247,7 @@ export const ListGoodsIssuesResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "issueDate": zod.string().nullish(),
-  "issueType": zod.string(),
+  "issueType": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
   "issuedTo": zod.string().nullish(),
   "costCenter": zod.string().nullish(),
@@ -16289,7 +16294,7 @@ export const GetGoodsIssueResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "issueDate": zod.string().nullish(),
-  "issueType": zod.string(),
+  "issueType": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
   "issuedTo": zod.string().nullish(),
   "costCenter": zod.string().nullish(),
@@ -16327,7 +16332,7 @@ export const UpdateGoodsIssueResponse = zod.object({
   "companyId": zod.string(),
   "code": zod.string(),
   "issueDate": zod.string().nullish(),
-  "issueType": zod.string(),
+  "issueType": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
   "issuedTo": zod.string().nullish(),
   "costCenter": zod.string().nullish(),
@@ -16486,7 +16491,7 @@ export const ListInventoryTransfersResponse = zod.object({
   "transferDate": zod.string().nullish(),
   "fromWarehouseId": zod.string().nullish(),
   "toWarehouseId": zod.string().nullish(),
-  "transferType": zod.string(),
+  "transferType": zod.string().nullish(),
   "totalValue": zod.string().nullish(),
   "status": zod.string(),
   "requestedBy": zod.string().nullish(),
@@ -16533,7 +16538,7 @@ export const GetInventoryTransferResponse = zod.object({
   "transferDate": zod.string().nullish(),
   "fromWarehouseId": zod.string().nullish(),
   "toWarehouseId": zod.string().nullish(),
-  "transferType": zod.string(),
+  "transferType": zod.string().nullish(),
   "totalValue": zod.string().nullish(),
   "status": zod.string(),
   "requestedBy": zod.string().nullish(),
@@ -16571,7 +16576,7 @@ export const UpdateInventoryTransferResponse = zod.object({
   "transferDate": zod.string().nullish(),
   "fromWarehouseId": zod.string().nullish(),
   "toWarehouseId": zod.string().nullish(),
-  "transferType": zod.string(),
+  "transferType": zod.string().nullish(),
   "totalValue": zod.string().nullish(),
   "status": zod.string(),
   "requestedBy": zod.string().nullish(),
@@ -16727,7 +16732,7 @@ export const ListStockAdjustmentsResponse = zod.object({
   "code": zod.string(),
   "adjustmentDate": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
-  "adjustmentType": zod.string(),
+  "adjustmentType": zod.string().nullish(),
   "reason": zod.string().nullish(),
   "totalValue": zod.string().nullish(),
   "status": zod.string(),
@@ -16772,7 +16777,7 @@ export const GetStockAdjustmentResponse = zod.object({
   "code": zod.string(),
   "adjustmentDate": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
-  "adjustmentType": zod.string(),
+  "adjustmentType": zod.string().nullish(),
   "reason": zod.string().nullish(),
   "totalValue": zod.string().nullish(),
   "status": zod.string(),
@@ -16808,7 +16813,7 @@ export const UpdateStockAdjustmentResponse = zod.object({
   "code": zod.string(),
   "adjustmentDate": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
-  "adjustmentType": zod.string(),
+  "adjustmentType": zod.string().nullish(),
   "reason": zod.string().nullish(),
   "totalValue": zod.string().nullish(),
   "status": zod.string(),
@@ -16969,7 +16974,7 @@ export const ListStockCountsResponse = zod.object({
   "code": zod.string(),
   "countDate": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
-  "countType": zod.string(),
+  "countType": zod.string().nullish(),
   "status": zod.string(),
   "countedBy": zod.string().nullish(),
   "supervisedBy": zod.string().nullish(),
@@ -17012,7 +17017,7 @@ export const GetStockCountResponse = zod.object({
   "code": zod.string(),
   "countDate": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
-  "countType": zod.string(),
+  "countType": zod.string().nullish(),
   "status": zod.string(),
   "countedBy": zod.string().nullish(),
   "supervisedBy": zod.string().nullish(),
@@ -17046,7 +17051,7 @@ export const UpdateStockCountResponse = zod.object({
   "code": zod.string(),
   "countDate": zod.string().nullish(),
   "warehouseId": zod.string().nullish(),
-  "countType": zod.string(),
+  "countType": zod.string().nullish(),
   "status": zod.string(),
   "countedBy": zod.string().nullish(),
   "supervisedBy": zod.string().nullish(),
@@ -17207,7 +17212,7 @@ export const ListInventoryLedgersResponse = zod.object({
   "warehouseId": zod.string().nullish(),
   "locationId": zod.string().nullish(),
   "transactionDate": zod.string().nullish(),
-  "transactionType": zod.string(),
+  "transactionType": zod.string().nullish(),
   "referenceType": zod.string().nullish(),
   "referenceNumber": zod.string().nullish(),
   "quantityIn": zod.string().nullish(),
@@ -17260,7 +17265,7 @@ export const GetInventoryLedgerResponse = zod.object({
   "warehouseId": zod.string().nullish(),
   "locationId": zod.string().nullish(),
   "transactionDate": zod.string().nullish(),
-  "transactionType": zod.string(),
+  "transactionType": zod.string().nullish(),
   "referenceType": zod.string().nullish(),
   "referenceNumber": zod.string().nullish(),
   "quantityIn": zod.string().nullish(),
@@ -17304,7 +17309,7 @@ export const UpdateInventoryLedgerResponse = zod.object({
   "warehouseId": zod.string().nullish(),
   "locationId": zod.string().nullish(),
   "transactionDate": zod.string().nullish(),
-  "transactionType": zod.string(),
+  "transactionType": zod.string().nullish(),
   "referenceType": zod.string().nullish(),
   "referenceNumber": zod.string().nullish(),
   "quantityIn": zod.string().nullish(),
@@ -19717,7 +19722,7 @@ export const ListDepartmentsResponse = zod.object({
  */
 export const CreateDepartmentBody = zod.object({
   "companyId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "name": zod.string(),
   "nameAr": zod.string(),
   "parentId": zod.string().optional(),
@@ -27252,7 +27257,7 @@ export const ListCsComplaintsResponse = zod.object({
 export const CreateCsComplaintBody = zod.object({
   "companyId": zod.string(),
   "customerId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "category": zod.string().optional(),
   "subject": zod.string(),
   "description": zod.string().optional(),
@@ -27403,7 +27408,7 @@ export const ListCsMaintenanceRequestsResponse = zod.object({
 export const CreateCsMaintenanceRequestBody = zod.object({
   "companyId": zod.string(),
   "customerId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "unitId": zod.string().optional(),
   "contractId": zod.string().optional(),
   "category": zod.string().optional(),
@@ -27561,7 +27566,7 @@ export const ListCsSupportTicketsResponse = zod.object({
 export const CreateCsSupportTicketBody = zod.object({
   "companyId": zod.string(),
   "customerId": zod.string(),
-  "code": zod.string(),
+  "code": zod.string().optional(),
   "subject": zod.string(),
   "category": zod.string().optional(),
   "priority": zod.string().optional(),
@@ -38188,6 +38193,77 @@ export const LinkCorrespondenceDocumentParams = zod.object({
 export const LinkCorrespondenceDocumentBody = zod.object({
   "documentId": zod.string(),
   "linkType": zod.string().optional()
+})
+
+
+/**
+ * @summary Post a goods receipt so the stock actually arrives in the warehouse
+ */
+export const PostGoodsReceiptParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostGoodsReceiptResponse = zod.object({
+  "id": zod.string(),
+  "status": zod.string(),
+  "movements": zod.number().describe('Ledger entries written. A transfer writes two per line, one out and one in.')
+})
+
+
+/**
+ * @summary Post a goods issue so the stock actually leaves the warehouse
+ */
+export const PostGoodsIssueParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostGoodsIssueResponse = zod.object({
+  "id": zod.string(),
+  "status": zod.string(),
+  "movements": zod.number().describe('Ledger entries written. A transfer writes two per line, one out and one in.')
+})
+
+
+/**
+ * @summary Post a transfer so the stock moves between warehouses
+ */
+export const PostInventoryTransferParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostInventoryTransferResponse = zod.object({
+  "id": zod.string(),
+  "status": zod.string(),
+  "movements": zod.number().describe('Ledger entries written. A transfer writes two per line, one out and one in.')
+})
+
+
+/**
+ * @summary Post an adjustment so the counted quantity becomes the stock on hand
+ */
+export const PostStockAdjustmentParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const PostStockAdjustmentResponse = zod.object({
+  "id": zod.string(),
+  "status": zod.string(),
+  "movements": zod.number().describe('Ledger entries written. A transfer writes two per line, one out and one in.')
+})
+
+
+/**
+ * @summary Accept a goods receipt note and advance the purchase order behind it
+ */
+export const AcceptGoodsReceiptNoteParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AcceptGoodsReceiptNoteResponse = zod.object({
+  "id": zod.string(),
+  "status": zod.string(),
+  "linesUpdated": zod.number().describe('Purchase order lines whose received quantity moved.'),
+  "ordersAdvanced": zod.number().describe('Purchase orders that became partially or fully received.')
 })
 
 

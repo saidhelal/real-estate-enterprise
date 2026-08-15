@@ -25,6 +25,7 @@ import {
 import { registerCrud, CrudRefused, type Row, companyScope } from "../lib/register-crud";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { notify } from "../lib/notify";
 import { serializeRow } from "../lib/serialize";
 
@@ -140,9 +141,15 @@ router.post(
       res.status(404).json({ error: "securityShift not found" });
       return;
     }
-    if (existing.status === "handed_over" || existing.status === "completed") {
-      res.status(409).json({ error: `This shift is already ${existing.status}.` });
-      return;
+    // The lifecycle covers a cancelled shift too, which this check did not.
+    try {
+      assertAction("securityShift", String(existing.status), "handed_over");
+    } catch (err) {
+      if (err instanceof LifecycleError) {
+        res.status(err.status).json({ error: err.message });
+        return;
+      }
+      throw err;
     }
     const [row] = await db
       .update(securityShiftsTable)

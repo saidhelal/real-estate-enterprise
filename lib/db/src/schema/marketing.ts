@@ -9,6 +9,7 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -27,7 +28,7 @@ const audit = {
 // are integer-cent-safe numerics stored as strings.
 export const marketingCampaignsTable = pgTable("marketing_campaigns", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   projectId: uuid("project_id"),
   code: text("code").notNull(),
@@ -51,7 +52,7 @@ export type MarketingCampaignRow = typeof marketingCampaignsTable.$inferSelect;
 // which remain the single source of truth for lead provenance.
 export const marketingChannelsTable = pgTable("marketing_channels", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -75,7 +76,7 @@ export type MarketingChannelRow = typeof marketingChannelsTable.$inferSelect;
 //   - performance     -> agent with the highest conversion rate (conversions / assignments)
 export const marketingDistributionRulesTable = pgTable("marketing_distribution_rules", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -102,7 +103,7 @@ export type MarketingDistributionRuleRow = typeof marketingDistributionRulesTabl
 // leads. Agents referenced by plain user uuid (no FK), per scaffold convention.
 export const marketingDistributionAgentsTable = pgTable("marketing_distribution_agents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   userId: uuid("user_id").notNull(),
   weight: integer("weight").notNull().default(1),
   notes: text("notes"),
@@ -117,7 +118,7 @@ export type MarketingDistributionAgentRow = typeof marketingDistributionAgentsTa
 // human-readable reason. Read-only in the UI; powers distribution transparency.
 export const marketingDistributionLogsTable = pgTable("marketing_distribution_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   leadId: uuid("lead_id").notNull(),
   ruleId: uuid("rule_id"),
   assignedToUserId: uuid("assigned_to_user_id").notNull(),

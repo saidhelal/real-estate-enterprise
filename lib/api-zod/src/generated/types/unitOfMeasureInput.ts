@@ -8,7 +8,7 @@
 
 export interface UnitOfMeasureInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   symbol?: string;

@@ -7,6 +7,7 @@ import {
   jsonb,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -34,7 +35,7 @@ const audit = {
 // toggles active/disabled.
 export const formTemplatesTable = pgTable("form_templates", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   // Which module's "Forms & Printing" section owns this template
   // (e.g. customers, contracts, finance, procurement, hr, insurance, legal).
   moduleKey: text("module_key").notNull(),
@@ -64,7 +65,7 @@ export type FormTemplateRow = typeof formTemplatesTable.$inferSelect;
 // template's currentVersionId, so old documents never change.
 export const formTemplateVersionsTable = pgTable("form_template_versions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   templateId: uuid("template_id").notNull(),
   versionNumber: integer("version_number").notNull().default(1),
   // Bilingual printable HTML with {{token}} placeholders resolved at print time.
@@ -104,7 +105,7 @@ export type FormTemplateVersionRow = typeof formTemplateVersionsTable.$inferSele
 // printSequence is the running ordinal, isReprint = sequence > 1.
 export const printJobsTable = pgTable("print_jobs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   moduleKey: text("module_key").notNull(),
   templateId: uuid("template_id").notNull(),
   templateVersionId: uuid("template_version_id").notNull(),

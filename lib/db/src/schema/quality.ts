@@ -9,6 +9,7 @@ import {
   numeric,
   index,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -44,7 +45,7 @@ export const nonconformitiesTable = pgTable(
   "nonconformities",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     code: text("code").notNull(),
     /** internal_audit | external_audit | inspection | complaint | incident | review */
     source: text("source").notNull().default("internal_audit"),
@@ -101,7 +102,7 @@ export const risksTable = pgTable(
   "risks",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     code: text("code").notNull(),
     title: text("title").notNull(),
     description: text("description"),

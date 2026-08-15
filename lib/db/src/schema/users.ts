@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -28,7 +29,7 @@ export const usersTable = pgTable("users", {
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
   failedAttempts: integer("failed_attempts").notNull().default(0),
   lockedUntil: timestamp("locked_until", { withTimezone: true }),
-  companyId: uuid("company_id"),
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()

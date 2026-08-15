@@ -8,6 +8,7 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -27,7 +28,7 @@ const audit = {
 // `companyId` is null for global categories or set for company-scoped lists.
 export const lookupTypesTable = pgTable("lookup_types", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id"),
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull().unique(),
   nameEn: text("name_en").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -54,7 +55,7 @@ export const lookupValuesTable = pgTable(
     typeId: uuid("type_id")
       .notNull()
       .references(() => lookupTypesTable.id, { onDelete: "cascade" }),
-    companyId: uuid("company_id"),
+    companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
     parentId: uuid("parent_id"),
     code: text("code").notNull(),
     labelEn: text("label_en").notNull(),

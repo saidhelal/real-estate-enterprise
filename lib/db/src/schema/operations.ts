@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, integer, jsonb, timestamp, index, uniqueIndex } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 /**
  * Canonical record of a significant ERP operation.
@@ -54,7 +55,7 @@ export const operationsTable = pgTable(
      * by definition (a sweep's parent record); the per-company work it performs
      * is recorded with its own companyId.
      */
-    companyId: uuid("company_id"),
+    companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
 
     targetType: text("target_type"),
     targetId: text("target_id"),

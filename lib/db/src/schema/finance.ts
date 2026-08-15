@@ -8,6 +8,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 
 export const cashboxesTable = pgTable("cashboxes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   name: text("name").notNull(),
@@ -36,7 +37,7 @@ export type CashboxRow = typeof cashboxesTable.$inferSelect;
 
 export const treasuryTransactionsTable = pgTable("treasury_transactions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   cashboxId: uuid("cashbox_id").notNull(),
   type: text("type").notNull().default("in"),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
@@ -52,7 +53,7 @@ export type TreasuryTransactionRow = typeof treasuryTransactionsTable.$inferSele
 
 export const bankAccountsTable = pgTable("bank_accounts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   bankName: text("bank_name").notNull(),
@@ -69,7 +70,7 @@ export type BankAccountRow = typeof bankAccountsTable.$inferSelect;
 
 export const bankTransactionsTable = pgTable("bank_transactions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   bankAccountId: uuid("bank_account_id").notNull(),
   type: text("type").notNull().default("in"),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),
@@ -85,7 +86,7 @@ export type BankTransactionRow = typeof bankTransactionsTable.$inferSelect;
 
 export const receiptsTable = pgTable("receipts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   customerId: uuid("customer_id").notNull(),
@@ -132,7 +133,7 @@ export type ReceiptRow = typeof receiptsTable.$inferSelect;
 // `replacesChequeId`).
 export const chequesTable = pgTable("cheques", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   direction: text("direction").notNull().default("incoming"),
@@ -169,7 +170,7 @@ export type ChequeRow = typeof chequesTable.$inferSelect;
 // Append-only history of every cheque status transition.
 export const chequeStatusHistoryTable = pgTable("cheque_status_history", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   chequeId: uuid("cheque_id"),
   action: text("action"),
@@ -184,7 +185,7 @@ export type ChequeStatusHistoryRow = typeof chequeStatusHistoryTable.$inferSelec
 
 export const assessedPenaltiesTable = pgTable("assessed_penalties", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   scheduleId: uuid("schedule_id").notNull(),
   ruleId: uuid("rule_id").notNull(),
   amount: numeric("amount", { precision: 14, scale: 2 }).notNull().default("0"),

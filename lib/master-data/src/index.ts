@@ -423,6 +423,89 @@ export const LABELS: Record<string, LabelPair> = {
   supplier_contractor: { en: "Supplier Contractor", ar: "مقاول مورد" },
   data: { en: "Data", ar: "بيانات" },
   status: { en: "Status", ar: "الحالة" },
+
+  /* ---------------------------------------------------------------------
+   * Values the interface was rendering untranslated.
+   *
+   * `enumLabel` returns the raw value when this registry has no entry, so a
+   * status nobody registered appeared as `partially_received` — Latin script,
+   * mid-sentence, inside an Arabic table. It reads as a broken screen rather
+   * than as a missing translation, because the value was never presented as
+   * something translatable in the first place.
+   *
+   * An audit across every `enumOptions([...])` in the screens and every status
+   * the server writes found fifty-six such values. They are added here, in the
+   * one registry both the seed and the web layer read, rather than patched
+   * into the screens that happened to show them.
+   * ------------------------------------------------------------------- */
+
+  /* Purchase orders — how much of the order has arrived. */
+  partially_received: { en: "Partially Received", ar: "مستلم جزئيًا" },
+  fully_received: { en: "Fully Received", ar: "مستلم بالكامل" },
+
+  /* Approvals and delegations. */
+  executed: { en: "Executed", ar: "منفّذ" },
+  revoked: { en: "Revoked", ar: "ملغى التفويض" },
+  running: { en: "Running", ar: "قيد التنفيذ" },
+  disabled: { en: "Disabled", ar: "معطّل" },
+  ok: { en: "OK", ar: "سليم" },
+
+  /* Security — posts, shifts and incidents. */
+  handed_over: { en: "Handed Over", ar: "تم التسليم" },
+  gate: { en: "Gate", ar: "بوابة" },
+  lobby: { en: "Lobby", ar: "بهو" },
+  parking: { en: "Parking", ar: "موقف" },
+  perimeter: { en: "Perimeter", ar: "سور خارجي" },
+  floor: { en: "Floor", ar: "طابق" },
+  site: { en: "Site", ar: "موقع" },
+  morning: { en: "Morning", ar: "صباحية" },
+  evening: { en: "Evening", ar: "مسائية" },
+  night: { en: "Night", ar: "ليلية" },
+  theft: { en: "Theft", ar: "سرقة" },
+  vandalism: { en: "Vandalism", ar: "تخريب" },
+  intrusion: { en: "Intrusion", ar: "تسلل" },
+  fire: { en: "Fire", ar: "حريق" },
+  injury: { en: "Injury", ar: "إصابة" },
+  breach: { en: "Breach", ar: "اختراق" },
+  dispute: { en: "Dispute", ar: "مشادة" },
+  investigating: { en: "Investigating", ar: "قيد التحقيق" },
+
+  /* Quality — nonconformities. */
+  minor: { en: "Minor", ar: "طفيف" },
+  major: { en: "Major", ar: "جسيم" },
+  process: { en: "Process", ar: "إجراء" },
+  product: { en: "Product", ar: "منتج" },
+  documentation: { en: "Documentation", ar: "توثيق" },
+  internal_audit: { en: "Internal Audit", ar: "تدقيق داخلي" },
+  external_audit: { en: "External Audit", ar: "تدقيق خارجي" },
+  action_pending: { en: "Action Pending", ar: "بانتظار إجراء" },
+  verifying: { en: "Verifying", ar: "قيد التحقق" },
+  corrective: { en: "Corrective", ar: "تصحيحي" },
+
+  /* Quality — risk register. */
+  identified: { en: "Identified", ar: "محدَّد" },
+  assessment: { en: "Assessment", ar: "تقييم" },
+  assessed: { en: "Assessed", ar: "مُقيَّم" },
+  treating: { en: "Treating", ar: "قيد المعالجة" },
+  monitoring: { en: "Monitoring", ar: "قيد المتابعة" },
+  avoid: { en: "Avoid", ar: "تجنّب" },
+  reduce: { en: "Reduce", ar: "تخفيف" },
+  accept: { en: "Accept", ar: "قبول" },
+  strategic: { en: "Strategic", ar: "استراتيجي" },
+  operational: { en: "Operational", ar: "تشغيلي" },
+  compliance: { en: "Compliance", ar: "امتثال" },
+  reputational: { en: "Reputational", ar: "سمعة" },
+  safety: { en: "Safety", ar: "سلامة" },
+  it: { en: "IT", ar: "تقنية المعلومات" },
+  audit: { en: "Audit", ar: "تدقيق" },
+  incident: { en: "Incident", ar: "حادث" },
+
+  /* General administration — vehicles, services, announcements. */
+  fuel: { en: "Fuel", ar: "وقود" },
+  digital: { en: "Digital", ar: "رقمي" },
+  announcement: { en: "Announcement", ar: "إعلان" },
+  general: { en: "General", ar: "عام" },
+  installments: { en: "Installments", ar: "أقساط" },
 };
 
 export interface LookupCategory {

@@ -33,6 +33,16 @@ type ModuleProbe = {
   path: string;
   /** The single permission the probe user is granted; null = auth only. */
   permission: string | null;
+  /**
+   * Statuses that prove the request reached the handler, when 200/404 cannot.
+   *
+   * A few endpoints have a business precondition the probe user cannot meet —
+   * internal correspondence is addressed between *employees*, and a probe user
+   * has no employee record, so it answers 409. That refusal is the handler
+   * talking, which is exactly what this test wants to see; the thing it must
+   * never see is a 403 from a sibling module's guard.
+   */
+  reachedStatuses?: number[];
 };
 
 // One representative authenticated GET per module, in mount order. Permission
@@ -81,6 +91,22 @@ const PROBES: ModuleProbe[] = [
   { module: "print-jobs", path: "/api/print-jobs", permission: "formTemplates.view" },
   { module: "notifications", path: "/api/notifications", permission: null },
   { module: "testing", path: "/api/testing/status", permission: null },
+  // The final audit found thirteen mounted modules with no representative
+  // probe here, which meant a sibling guard could leak into any of them
+  // unnoticed. `health` and `auth` are deliberately absent: they are the two
+  // surfaces that must work *without* a session, and are covered by the
+  // unauthenticated assertions in this same file.
+  { module: "report-exports", path: "/api/reports/export-audit", permission: "accountingReports.export" },
+  { module: "correspondence-internal", path: "/api/internal-correspondence/directory", permission: "correspondence.view", reachedStatuses: [200, 404, 409] },
+  { module: "secretariat", path: "/api/secretariat/overview", permission: "secretariat.view" },
+  { module: "public-relations", path: "/api/pr-parties", permission: "publicRelations.view" },
+  { module: "delegations", path: "/api/delegations", permission: "delegations.view" },
+  { module: "permission-inspector", path: "/api/permission-inspector/00000000-0000-4000-8000-000000000000", permission: "users.view" },
+  { module: "security", path: "/api/security-points", permission: "securityPoints.view" },
+  { module: "quality", path: "/api/nonconformities", permission: "nonconformities.view" },
+  { module: "announcements", path: "/api/my-announcements", permission: null },
+  { module: "marketing", path: "/api/marketing-channels", permission: "marketingChannels.view" },
+  { module: "document-transfers", path: "/api/document-transfers/inbox", permission: null },
 ];
 
 const RUN = randomUUID().slice(0, 8);
@@ -148,8 +174,10 @@ describe("a basic (non-'*') role can reach every module it's allowed to", () => 
       // leaked across the path-less mount and blocked this module.
       expect(res.status).not.toBe(403);
       // The probe user holds this endpoint's own permission (or it is auth-only),
-      // so the request must succeed - 200, or 404 when the resource is absent.
-      expect([200, 404]).toContain(res.status);
+      // so the request must succeed - 200, or 404 when the resource is absent,
+      // or whatever this endpoint answers when its business precondition is
+      // unmet. All of those mean the request got past every guard.
+      expect(p.reachedStatuses ?? [200, 404]).toContain(res.status);
     },
   );
 });

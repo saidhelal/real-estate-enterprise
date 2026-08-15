@@ -5,6 +5,22 @@
  * Enterprise Real Estate ERP API
  * OpenAPI spec version: 0.1.0
  */
+export interface GrnAcceptResult {
+  id: string;
+  status: string;
+  /** Purchase order lines whose received quantity moved. */
+  linesUpdated: number;
+  /** Purchase orders that became partially or fully received. */
+  ordersAdvanced: number;
+}
+
+export interface StockPostingResult {
+  id: string;
+  status: string;
+  /** Ledger entries written. A transfer writes two per line, one out and one in. */
+  movements: number;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -223,20 +239,6 @@ export interface LookupValueListResponse {
   pageSize: number;
 }
 
-export type ReportExportInputReportType = typeof ReportExportInputReportType[keyof typeof ReportExportInputReportType];
-
-
-export const ReportExportInputReportType = {
-  'trial-balance': 'trial-balance',
-  'general-ledger': 'general-ledger',
-  'balance-sheet': 'balance-sheet',
-  'income-statement': 'income-statement',
-  'cash-flow': 'cash-flow',
-  'ar-aging': 'ar-aging',
-  'ap-aging': 'ap-aging',
-  tax: 'tax',
-} as const;
-
 export type ReportExportInputFormat = typeof ReportExportInputFormat[keyof typeof ReportExportInputFormat];
 
 
@@ -246,8 +248,22 @@ export const ReportExportInputFormat = {
 } as const;
 
 export interface ReportExportInput {
-  reportType: ReportExportInputReportType;
+  /**
+     * What was exported. This was an enum of the eight accounting reports, which meant every other export in the system left no trace — the register screens export the same figures and were simply not recorded. It is now the report or resource key, and `module` says which part of the system it belongs to.
+     * @minLength 1
+     */
+  reportType: string;
   format: ReportExportInputFormat;
+  /**
+     * The module owning the exported data, e.g. `units`. Its `.view` permission is what authorises the export; absent, the request is treated as an accounting report and needs accountingReports.export.
+     * @nullable
+     */
+  module?: string | null;
+  /**
+     * How many rows left the system, which is the part that matters in a review.
+     * @nullable
+     */
+  recordCount?: number | null;
   /** @nullable */
   companyId?: string | null;
   /** @nullable */
@@ -7532,7 +7548,8 @@ export interface Warehouse {
   nameAr: string;
   /** @nullable */
   branchId?: string | null;
-  warehouseType: string;
+  /** @nullable */
+  warehouseType?: string | null;
   /** @nullable */
   address?: string | null;
   /** @nullable */
@@ -7546,7 +7563,7 @@ export interface Warehouse {
 
 export interface WarehouseInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   branchId?: string;
@@ -7601,7 +7618,7 @@ export interface WarehouseLocation {
 
 export interface WarehouseLocationInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   warehouseId?: string;
@@ -7734,7 +7751,7 @@ export interface UnitOfMeasure {
 
 export interface UnitOfMeasureInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   symbol?: string;
@@ -7772,14 +7789,16 @@ export interface InventoryItem {
   groupId?: string | null;
   /** @nullable */
   uomId?: string | null;
-  itemType: string;
+  /** @nullable */
+  itemType?: string | null;
   /** @nullable */
   barcode?: string | null;
   /** @nullable */
   costPrice?: string | null;
   /** @nullable */
   sellingPrice?: string | null;
-  valuationMethod: string;
+  /** @nullable */
+  valuationMethod?: string | null;
   /** @nullable */
   reorderPoint?: string | null;
   /** @nullable */
@@ -7964,7 +7983,8 @@ export interface GoodsReceipt {
   code: string;
   /** @nullable */
   receiptDate?: string | null;
-  receiptType: string;
+  /** @nullable */
+  receiptType?: string | null;
   /** @nullable */
   warehouseId?: string | null;
   /** @nullable */
@@ -8083,7 +8103,8 @@ export interface GoodsIssue {
   code: string;
   /** @nullable */
   issueDate?: string | null;
-  issueType: string;
+  /** @nullable */
+  issueType?: string | null;
   /** @nullable */
   warehouseId?: string | null;
   /** @nullable */
@@ -8198,7 +8219,8 @@ export interface InventoryTransfer {
   fromWarehouseId?: string | null;
   /** @nullable */
   toWarehouseId?: string | null;
-  transferType: string;
+  /** @nullable */
+  transferType?: string | null;
   /** @nullable */
   totalValue?: string | null;
   status: string;
@@ -8307,7 +8329,8 @@ export interface StockAdjustment {
   adjustmentDate?: string | null;
   /** @nullable */
   warehouseId?: string | null;
-  adjustmentType: string;
+  /** @nullable */
+  adjustmentType?: string | null;
   /** @nullable */
   reason?: string | null;
   /** @nullable */
@@ -8418,7 +8441,8 @@ export interface StockCount {
   countDate?: string | null;
   /** @nullable */
   warehouseId?: string | null;
-  countType: string;
+  /** @nullable */
+  countType?: string | null;
   status: string;
   /** @nullable */
   countedBy?: string | null;
@@ -8528,7 +8552,8 @@ export interface InventoryLedger {
   locationId?: string | null;
   /** @nullable */
   transactionDate?: string | null;
-  transactionType: string;
+  /** @nullable */
+  transactionType?: string | null;
   /** @nullable */
   referenceType?: string | null;
   /** @nullable */
@@ -9442,7 +9467,7 @@ export interface Department {
 
 export interface DepartmentInput {
   companyId: string;
-  code: string;
+  code?: string;
   name: string;
   nameAr: string;
   parentId?: string;
@@ -12432,7 +12457,7 @@ export interface CsComplaint {
 export interface CsComplaintInput {
   companyId: string;
   customerId: string;
-  code: string;
+  code?: string;
   category?: string;
   subject: string;
   description?: string;
@@ -12505,7 +12530,7 @@ export interface CsMaintenanceRequest {
 export interface CsMaintenanceRequestInput {
   companyId: string;
   customerId: string;
-  code: string;
+  code?: string;
   unitId?: string;
   contractId?: string;
   category?: string;
@@ -12576,7 +12601,7 @@ export interface CsSupportTicket {
 export interface CsSupportTicketInput {
   companyId: string;
   customerId: string;
-  code: string;
+  code?: string;
   subject: string;
   category?: string;
   priority?: string;

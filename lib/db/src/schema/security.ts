@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, boolean, date, timestamp, index } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -28,7 +29,7 @@ const audit = {
 /** A post that has to be manned: a gate, a lobby, a site perimeter. */
 export const securityPointsTable = pgTable("security_points", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar"),
@@ -59,7 +60,7 @@ export const securityShiftsTable = pgTable(
   "security_shifts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     code: text("code").notNull(),
     pointId: uuid("point_id").notNull(),
     /** The guard. An HR employee — this is not a second staff register. */
@@ -95,7 +96,7 @@ export const securityIncidentsTable = pgTable(
   "security_incidents",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     code: text("code").notNull(),
     occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull().defaultNow(),
     reportedAt: timestamp("reported_at", { withTimezone: true }).notNull().defaultNow(),

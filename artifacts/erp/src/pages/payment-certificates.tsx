@@ -64,13 +64,70 @@ export default function PaymentCertificatesPage() {
     { name: "certificateNumber", label: "Certificate Number", labelAr: "رقم الشهادة" },
     { name: "periodFrom", label: "Period From", labelAr: "الفترة من", type: "date" },
     { name: "periodTo", label: "Period To", labelAr: "الفترة إلى", type: "date" },
-    { name: "grossAmount", label: "Gross Amount", labelAr: "المبلغ الإجمالي", type: "money" },
-    { name: "previousAmount", label: "Previous Amount", labelAr: "المبلغ السابق", type: "money" },
+    {
+      name: "grossAmount",
+      label: "Gross Amount",
+      labelAr: "المبلغ الإجمالي",
+      type: "money",
+      // Previous + current, computed from the certificates already issued
+      // against this contract. Typed by hand it was an opinion, not a total.
+      generated: true,
+      description: "Previous certified value plus this period.",
+      descriptionAr: "المبلغ المعتمد سابقًا مضافًا إليه مبلغ هذه الفترة.",
+    },
+    {
+      name: "previousAmount",
+      label: "Previous Amount",
+      labelAr: "المبلغ السابق",
+      type: "money",
+      generated: true,
+      description: "Total certified on earlier certificates for this contract.",
+      descriptionAr: "إجمالي ما تم اعتماده في المستخلصات السابقة لهذا العقد.",
+    },
     { name: "currentAmount", label: "Current Amount", labelAr: "المبلغ الحالي", type: "money" },
-    { name: "retentionAmount", label: "Retention Amount", labelAr: "مبلغ المحتجز", type: "money" },
-    { name: "advanceRecovery", label: "Advance Recovery", labelAr: "استرداد الدفعة المقدمة", type: "money" },
-    { name: "deductionsAmount", label: "Deductions Amount", labelAr: "مبلغ الخصومات", type: "money" },
-    { name: "additionsAmount", label: "Additions Amount", labelAr: "مبلغ الإضافات", type: "money" },
+    {
+      name: "retentionAmount",
+      label: "Retention Amount",
+      labelAr: "مبلغ المحتجز",
+      type: "money",
+      // Derived from the records attached to this certificate. Typed by hand it
+      // could disagree with the very documents it is supposed to total.
+      generated: true,
+      description: "Sum of retentions held against this certificate.",
+      descriptionAr: "مجموع المحتجزات القائمة على هذا المستخلص.",
+    },
+    {
+      name: "advanceRecovery",
+      label: "Advance Recovery",
+      labelAr: "استرداد الدفعة المقدمة",
+      type: "money",
+      // Derived from the advance recoveries attached to this certificate.
+      generated: true,
+      description: "Sum of the advance recoveries applied to this certificate.",
+      descriptionAr: "مجموع استردادات الدفعة المقدمة المطبّقة على هذا المستخلص.",
+    },
+    {
+      name: "deductionsAmount",
+      label: "Deductions Amount",
+      labelAr: "مبلغ الخصومات",
+      type: "money",
+      // Derived from the records attached to this certificate. Typed by hand it
+      // could disagree with the very documents it is supposed to total.
+      generated: true,
+      description: "Sum of the deductions filed against this certificate.",
+      descriptionAr: "مجموع الخصومات المسجّلة على هذا المستخلص.",
+    },
+    {
+      name: "additionsAmount",
+      label: "Additions Amount",
+      labelAr: "مبلغ الإضافات",
+      type: "money",
+      // Derived from the records attached to this certificate. Typed by hand it
+      // could disagree with the very documents it is supposed to total.
+      generated: true,
+      description: "Sum of the additions filed against this certificate.",
+      descriptionAr: "مجموع الإضافات المسجّلة على هذا المستخلص.",
+    },
     { name: "netAmount", label: "Net Amount", labelAr: "المبلغ الصافي", type: "money" },
     { name: "status", label: "Status", labelAr: "الحالة", type: "select", options: enumOptions(["draft", "submitted", "reviewed", "approved", "posted", "paid", "closed"]) },
     { name: "certificateDate", label: "Certificate Date", labelAr: "تاريخ الشهادة", type: "date" },

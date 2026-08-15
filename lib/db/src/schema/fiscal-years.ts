@@ -1,8 +1,9 @@
 import { pgTable, uuid, text, boolean, date, timestamp } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 export const fiscalYearsTable = pgTable("fiscal_years", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id"),
+  companyId: uuid("company_id").references(() => companiesTable.id, { onDelete: "restrict" }),
   name: text("name").notNull(),
   startDate: date("start_date", { mode: "string" }).notNull(),
   endDate: date("end_date", { mode: "string" }).notNull(),

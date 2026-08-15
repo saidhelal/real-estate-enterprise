@@ -24,6 +24,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/lib/language-provider";
+import { ReportExportButton } from "@/components/report-export-button";
+import type { ReportExport } from "@/lib/report-export";
 import { enumLabel } from "@/lib/enums";
 
 type Group = { key?: string | null; count: number };
@@ -100,12 +102,52 @@ export default function LegalReportsPage() {
   const countHeader = t("common.count");
   const statusBadge = (k: string | null | undefined) => <Badge variant="secondary">{enumLabel(k, language)}</Badge>;
 
+
+  /**
+   * Every group on the page as one report, section per group.
+   *
+   * Statuses and types go through  here exactly as the badges do,
+   * so an Arabic export carries Arabic values rather than raw keys.
+   */
+  const buildReport = (): ReportExport => {
+    const groups = (rows: Group[], render: (k?: string | null) => string) =>
+      rows.map((r) => [render(r.key), r.count] as (string | number)[]);
+    const label = (k?: string | null) => enumLabel(k, language);
+
+    return {
+      title: t("legal.reports"),
+      companyName: companies?.[0]?.name ?? "",
+      language: language === "ar" ? "ar" : "en",
+      meta: [],
+      columns: [{ header: t("common.name") }, { header: t("common.count"), numeric: true }],
+      sections: [
+        { title: t("legal.report_contracts") + " — " + t("common.status"), rows: groups((contractReport?.byStatus ?? []) as Group[], label) },
+        { title: t("legal.contract_type"), rows: groups((contractReport?.byType ?? []) as Group[], label) },
+        { title: t("legal.source_module"), rows: groups((contractReport?.bySource ?? []) as Group[], label) },
+        { title: t("legal.report_litigation") + " — " + t("common.status"), rows: groups((litigationReport?.byStatus ?? []) as Group[], label) },
+        { title: t("legal.case_type"), rows: groups((litigationReport?.byType ?? []) as Group[], label) },
+        { title: t("legal.report_claims") + " — " + t("common.status"), rows: groups((claimReport?.byStatus ?? []) as Group[], label) },
+        { title: t("legal.claim_type"), rows: groups((claimReport?.byType ?? []) as Group[], label) },
+        { title: t("legal.by_advisor"), rows: groups((advisorReport?.byAdvisor ?? []) as Group[], (k) => String(advisorName(k) ?? "-")) },
+        { title: t("legal.by_law_firm"), rows: groups((advisorReport?.byLawFirm ?? []) as Group[], (k) => String(lawFirmName(k) ?? "-")) },
+      ],
+    };
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <PageHeader
         title={t("legal.reports")}
         description={t("legal.reports_subtitle")}
         bordered={false}
+        actions={
+          <ReportExportButton
+            build={buildReport}
+            baseFilename={t("legal.reports")}
+            disabled={!enabled}
+            audit={{ reportType: "legal-reports", module: "legalContracts", companyId }}
+          />
+        }
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

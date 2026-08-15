@@ -9,7 +9,7 @@
 export interface CsSupportTicketInput {
   companyId: string;
   customerId: string;
-  code: string;
+  code?: string;
   subject: string;
   category?: string;
   priority?: string;

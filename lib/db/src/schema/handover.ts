@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 // Unit handover requests (initial/final delivery of a unit to a customer).
 export const handoverRequestsTable = pgTable("handover_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   unitId: uuid("unit_id").notNull(),
   customerId: uuid("customer_id"),
@@ -38,7 +39,7 @@ export type HandoverRequestRow = typeof handoverRequestsTable.$inferSelect;
 // Scheduled appointments for a handover request.
 export const handoverSchedulesTable = pgTable("handover_schedules", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   requestId: uuid("request_id").notNull(),
   scheduledDate: date("scheduled_date"),
   scheduledTime: text("scheduled_time"),
@@ -54,7 +55,7 @@ export type HandoverScheduleRow = typeof handoverSchedulesTable.$inferSelect;
 // Inspection checklist items verified during handover.
 export const handoverChecklistItemsTable = pgTable("handover_checklist_items", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   requestId: uuid("request_id").notNull(),
   item: text("item").notNull(),
   itemAr: text("item_ar"),
@@ -69,7 +70,7 @@ export type HandoverChecklistItemRow = typeof handoverChecklistItemsTable.$infer
 // Minutes of meeting recorded at handover.
 export const handoverMinutesTable = pgTable("handover_minutes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   requestId: uuid("request_id").notNull(),
   minuteDate: date("minute_date"),
   summary: text("summary").notNull(),
@@ -84,7 +85,7 @@ export type HandoverMinuteRow = typeof handoverMinutesTable.$inferSelect;
 // but scoped to a handover request for the punch-list workflow.
 export const handoverSnagsTable = pgTable("handover_snags", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   requestId: uuid("request_id").notNull(),
   title: text("title").notNull(),
   titleAr: text("title_ar"),
@@ -101,7 +102,7 @@ export type HandoverSnagRow = typeof handoverSnagsTable.$inferSelect;
 // Sign-off approvals for a handover request.
 export const handoverApprovalsTable = pgTable("handover_approvals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   requestId: uuid("request_id").notNull(),
   approverName: text("approver_name"),
   approverNameAr: text("approver_name_ar"),

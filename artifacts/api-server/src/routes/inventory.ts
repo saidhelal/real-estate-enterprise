@@ -45,6 +45,16 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
+import { PostingError } from "../lib/posting";
+import {
+  postGoodsReceipt,
+  postGoodsIssue,
+  postInventoryTransfer,
+  postStockAdjustment,
+  onHand,
+  inventoryValue,
+} from "../lib/stock";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import { postAutomaticEntry, reverseAutomaticEntriesForSource } from "../lib/posting";
 
@@ -248,13 +258,12 @@ router.get("/inventory/dashboard", async (req, res): Promise<void> => {
     countWhere(stockAdjustmentsTable, ne(stockAdjustmentsTable.status, "completed")),
   ]);
 
-  // Approximate on-hand stock value: opening balances + receipts - issues.
-  const [openingValue, receiptValue, issueValue] = await Promise.all([
-    sumWhere(stockOpeningBalancesTable, stockOpeningBalancesTable.totalValue),
-    sumWhere(goodsReceiptsTable, goodsReceiptsTable.totalValue),
-    sumWhere(goodsIssuesTable, goodsIssuesTable.totalValue),
-  ]);
-  const totalStockValue = (openingValue + receiptValue - issueValue).toFixed(2);
+  // Stock value comes from the valuation engine, which is the only thing
+  // that decides what stock is worth. This screen used to add up document
+  // headers instead — opening + receipts - issues — and said so by calling
+  // itself approximate: it counted a receipt that was never posted, and
+  // ignored transfers and adjustments entirely.
+  const totalStockValue = (await inventoryValue(db, companyId ?? null)).toFixed(2);
 
   // Low-stock: reorder rules whose min quantity exceeds the item's net ledger
   // balance (sum of quantity in - quantity out) for that item + warehouse.
@@ -263,6 +272,7 @@ router.get("/inventory/dashboard", async (req, res): Promise<void> => {
   if (rlc) rlConds.push(rlc);
   const reorderRules = await db
     .select({
+      companyId: reorderLevelsTable.companyId,
       itemId: reorderLevelsTable.itemId,
       warehouseId: reorderLevelsTable.warehouseId,
       minQuantity: reorderLevelsTable.minQuantity,
@@ -272,19 +282,12 @@ router.get("/inventory/dashboard", async (req, res): Promise<void> => {
 
   let lowStockItems = 0;
   for (const rl of reorderRules) {
-    if (!rl.itemId || !rl.warehouseId) continue;
-    const ledgerConds: SQL[] = [
-      eq(inventoryLedgerTable.isDeleted, false),
-      eq(inventoryLedgerTable.itemId, rl.itemId),
-      eq(inventoryLedgerTable.warehouseId, rl.warehouseId),
-    ];
-    const [{ bal }] = await db
-      .select({
-        bal: sql<string>`coalesce(sum(coalesce(${inventoryLedgerTable.quantityIn}, 0) - coalesce(${inventoryLedgerTable.quantityOut}, 0)), 0)::text`,
-      })
-      .from(inventoryLedgerTable)
-      .where(and(...ledgerConds));
-    if (Number(rl.minQuantity ?? 0) > Number(bal)) lowStockItems++;
+    if (!rl.itemId || !rl.warehouseId || !rl.companyId) continue;
+    // `onHand` is the one definition of how much stock there is. This screen
+    // used to compute it inline, which is why the figure existed here and
+    // nowhere else — including in the code that must refuse an over-issue.
+    const balance = await onHand(db, rl.companyId, rl.itemId, rl.warehouseId);
+    if (Number(rl.minQuantity ?? 0) > balance) lowStockItems++;
   }
 
   const rcConds: SQL[] = [eq(goodsReceiptsTable.isDeleted, false)];
@@ -319,5 +322,110 @@ router.get("/inventory/dashboard", async (req, res): Promise<void> => {
     issuesByStatus,
   });
 });
+
+/* ------------------------------------------------------------------ */
+/* Posting: the act that actually moves stock                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The four documents that move stock, and how each one moves it.
+ *
+ * They differ only in which table holds the document and which function reads
+ * its lines — the transaction, the lifecycle guard, the status flip and the
+ * audit trail are identical, so they are written once. Writing them four times
+ * is how three of the four end up missing a guard nobody notices for a year.
+ */
+const POSTABLE = [
+  {
+    segment: "goods-receipts",
+    module: "goodsReceipts",
+    entity: "goodsReceipt",
+    documentType: "goodsReceipt",
+    table: goodsReceiptsTable,
+    post: postGoodsReceipt,
+  },
+  {
+    segment: "goods-issues",
+    module: "goodsIssues",
+    entity: "goodsIssue",
+    documentType: "goodsIssue",
+    table: goodsIssuesTable,
+    post: postGoodsIssue,
+  },
+  {
+    segment: "inventory-transfers",
+    module: "inventoryTransfers",
+    entity: "inventoryTransfer",
+    documentType: "inventoryTransfer",
+    table: inventoryTransfersTable,
+    post: postInventoryTransfer,
+  },
+  {
+    segment: "stock-adjustments",
+    module: "stockAdjustments",
+    entity: "stockAdjustment",
+    documentType: "stockAdjustment",
+    table: stockAdjustmentsTable,
+    post: postStockAdjustment,
+  },
+] as const;
+
+for (const doc of POSTABLE) {
+  router.post(
+    `/${doc.segment}/:id/post`,
+    // Posting is a distinct authority from editing a draft: writing a
+    // warehouse movement is not the same act as correcting a typo on one.
+    requirePermission(`${doc.module}.post`, `${doc.module}.update`),
+    async (req, res): Promise<void> => {
+      const id = String(req.params.id);
+      try {
+        const result = await db.transaction(async (tx) => {
+          const [existing] = await tx
+            .select()
+            .from(doc.table)
+            .where(and(eq(doc.table.id, id), eq(doc.table.isDeleted, false)))
+            .for("update");
+          if (!existing) throw new PostingError(404, `${doc.entity} not found`);
+
+          // The lifecycle refuses a second posting, and every other state it
+          // knows — a cancelled document cannot be posted either.
+          try {
+            assertAction(doc.documentType, String(existing.status), "posted");
+          } catch (err) {
+            if (err instanceof LifecycleError) throw new PostingError(err.status, err.message);
+            throw err;
+          }
+
+          // The movements and the status flip commit together: a posted
+          // document with no movements, or movements with no posted document,
+          // is a stock figure that disagrees with the paperwork.
+          const { movements } = await doc.post(tx, id);
+          const [updated] = await tx
+            .update(doc.table)
+            .set({ status: "posted" })
+            .where(eq(doc.table.id, id))
+            .returning();
+
+          return { existing, updated, movements };
+        });
+
+        await recordAudit(req, {
+          action: "post",
+          entity: doc.entity,
+          entityId: id,
+          oldValue: result.existing,
+          newValue: { ...result.updated, movements: result.movements },
+        });
+        res.json({ id, status: "posted", movements: result.movements });
+      } catch (err) {
+        if (err instanceof PostingError) {
+          res.status(err.status).json({ error: err.message });
+          return;
+        }
+        throw err;
+      }
+    },
+  );
+}
 
 export default router;

@@ -53,7 +53,16 @@ export default function EmployeeEvaluationsPage() {
     { name: "evaluatorEmployeeId", label: t("hr.evaluator"), type: "select", options: employeeOptions },
     { name: "evaluationPeriod", label: t("hr.evaluation_period") },
     { name: "evaluationDate", label: t("hr.evaluation_date"), type: "date" },
-    { name: "totalScore", label: t("hr.total_score"), type: "number" },
+    {
+      name: "totalScore",
+      label: t("hr.total_score"),
+      type: "number",
+      // Derived from the evaluation lines and the weights the company set on
+      // its own KPIs. Typed by hand it was an opinion about an appraisal.
+      generated: true,
+      description: "Weighted average of the evaluation lines.",
+      descriptionAr: "المتوسط المرجّح لبنود التقييم.",
+    },
     { name: "rating", label: t("hr.rating"), type: "select", options: RATING },
     { name: "strengths", label: t("hr.strengths"), type: "textarea" },
     { name: "weaknesses", label: t("hr.weaknesses"), type: "textarea" },

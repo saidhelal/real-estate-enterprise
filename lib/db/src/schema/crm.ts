@@ -8,6 +8,7 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 const audit = {
   isActive: boolean("is_active").notNull().default(true),
@@ -21,7 +22,7 @@ const audit = {
 
 export const leadSourcesTable = pgTable("lead_sources", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   code: text("code").notNull(),
   name: text("name").notNull(),
   nameAr: text("name_ar").notNull(),
@@ -31,7 +32,7 @@ export type LeadSourceRow = typeof leadSourcesTable.$inferSelect;
 
 export const leadsTable = pgTable("leads", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   branchId: uuid("branch_id"),
   code: text("code").notNull(),
   fullName: text("full_name").notNull(),
@@ -60,7 +61,7 @@ export type LeadRow = typeof leadsTable.$inferSelect;
 
 export const leadActivitiesTable = pgTable("lead_activities", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   leadId: uuid("lead_id"),
   customerId: uuid("customer_id"),
   activityType: text("activity_type").notNull().default("note"),
@@ -74,7 +75,7 @@ export type LeadActivityRow = typeof leadActivitiesTable.$inferSelect;
 
 export const leadFollowUpsTable = pgTable("lead_follow_ups", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   leadId: uuid("lead_id"),
   customerId: uuid("customer_id"),
   dueDate: date("due_date").notNull(),
@@ -87,7 +88,7 @@ export type LeadFollowUpRow = typeof leadFollowUpsTable.$inferSelect;
 
 export const leadAssignmentsTable = pgTable("lead_assignments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   leadId: uuid("lead_id").notNull(),
   assignedToUserId: uuid("assigned_to_user_id").notNull(),
   assignedByUserId: uuid("assigned_by_user_id"),
@@ -101,7 +102,7 @@ export type LeadAssignmentRow = typeof leadAssignmentsTable.$inferSelect;
 
 export const leadConversionsTable = pgTable("lead_conversions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  companyId: uuid("company_id").notNull(),
+  companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
   leadId: uuid("lead_id").notNull(),
   customerId: uuid("customer_id").notNull(),
   convertedByUserId: uuid("converted_by_user_id"),

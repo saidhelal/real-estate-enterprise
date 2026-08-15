@@ -14,7 +14,8 @@ export interface StockAdjustment {
   adjustmentDate?: string | null;
   /** @nullable */
   warehouseId?: string | null;
-  adjustmentType: string;
+  /** @nullable */
+  adjustmentType?: string | null;
   /** @nullable */
   reason?: string | null;
   /** @nullable */

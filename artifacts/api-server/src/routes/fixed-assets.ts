@@ -40,6 +40,7 @@ import {
 } from "@workspace/api-zod";
 import { serializeRow, pageParams, qStr } from "../lib/serialize";
 import { recordAudit } from "../lib/audit";
+import { assertAction, LifecycleError } from "../lib/lifecycle";
 import { nextNumber } from "../lib/doc-number";
 import { requireAuth, requirePermission } from "../middleware/auth";
 import {
@@ -352,7 +353,14 @@ router.post("/asset-transfers/:id/approve", requirePermission("assetTransfers.ap
   const id = String(req.params.id);
   const [existing] = await db.select().from(assetTransfersTable).where(and(eq(assetTransfersTable.id, id), eq(assetTransfersTable.isDeleted, false)));
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
-  if (existing.status === "approved") { res.status(409).json({ error: "Already approved" }); return; }
+  // The lifecycle covers every state, including the ones this check never
+  // mentioned — a rejected or cancelled transfer cannot be approved either.
+  try {
+    assertAction("assetTransfer", String(existing.status), "approved");
+  } catch (err) {
+    if (err instanceof LifecycleError) { res.status(err.status).json({ error: err.message }); return; }
+    throw err;
+  }
   const [row] = await db.update(assetTransfersTable).set({ status: "approved" }).where(eq(assetTransfersTable.id, id)).returning();
   await recordAudit(req, { action: "approve", entity: "assetTransfer", entityId: id, oldValue: existing, newValue: row });
   res.json(GetAssetTransferResponse.parse(serializeRow(row)));
@@ -621,7 +629,12 @@ router.post("/asset-disposals/:id/approve", requirePermission("assetDisposals.ap
     const result = await db.transaction(async (tx) => {
       const [existing] = await tx.select().from(assetDisposalsTable).where(and(eq(assetDisposalsTable.id, id), eq(assetDisposalsTable.isDeleted, false))).for("update");
       if (!existing) return { notFound: true as const };
-      if (existing.status === "approved") return { conflict: "Already approved" as const };
+      try {
+        assertAction("assetDisposal", String(existing.status), "approved");
+      } catch (err) {
+        if (err instanceof LifecycleError) return { conflict: err.message };
+        throw err;
+      }
       const [row] = await tx.update(assetDisposalsTable).set({ status: "approved" }).where(eq(assetDisposalsTable.id, id)).returning();
       // Automatic ledger posting for the disposal (best-effort; skips if unconfigured).
       await postDisposalEntry(tx, existing, req.authUser?.id ?? null);

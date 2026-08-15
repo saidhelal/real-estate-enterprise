@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, date, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { companiesTable } from "./companies";
 
 /**
  * A temporary hand-over of authority from one login to another.
@@ -20,7 +21,7 @@ export const delegationsTable = pgTable(
   "delegations",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    companyId: uuid("company_id").notNull(),
+    companyId: uuid("company_id").notNull().references(() => companiesTable.id, { onDelete: "restrict" }),
     code: text("code").notNull(),
 
     /** Who is handing authority over. */
